@@ -10,12 +10,11 @@ import java.util.Objects;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.account.rpc.Account;
-import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.user.rpc.User;
-import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroLegacyUserUtils;
+import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.user.rpc.User;
 
 public class AbnAmroIcsCredentials {
     public static final String ABN_AMRO_ICS_PROVIDER_NAME = "nl-abnamro-ics-abstract";
@@ -23,14 +22,15 @@ public class AbnAmroIcsCredentials {
     public static final String CONTRACT_NUMBERS_FIELD_NAME = "contracts";
     public static final String BC_NUMBER_FIELD_NAME = "bcNumber";
 
-    private static final TypeReference<Set<Long>> LONG_SET_TYPE_REFERENCE = new TypeReference<Set<Long>>() {
-    };
+    private static final TypeReference<Set<Long>> LONG_SET_TYPE_REFERENCE =
+            new TypeReference<Set<Long>>() {};
 
     private final Credentials credentials;
 
     public AbnAmroIcsCredentials(Credentials credentials) {
         Preconditions.checkNotNull(credentials, "Credentials can't be null");
-        Preconditions.checkArgument(isAbnAmroIcsCredentials(credentials), "Credentials is of wrong provider");
+        Preconditions.checkArgument(
+                isAbnAmroIcsCredentials(credentials), "Credentials is of wrong provider");
 
         this.credentials = credentials;
     }
@@ -41,7 +41,8 @@ public class AbnAmroIcsCredentials {
 
     public static AbnAmroIcsCredentials create(User user, List<Account> accounts) {
 
-        AbnAmroIcsCredentials credentials = create(user.getId(), AbnAmroLegacyUserUtils.getBcNumber(user).get());
+        AbnAmroIcsCredentials credentials =
+                create(user.getId(), AbnAmroLegacyUserUtils.getBcNumber(user).get());
 
         credentials.addContractNumbers(accounts);
 
@@ -52,7 +53,8 @@ public class AbnAmroIcsCredentials {
         return create(userId, bcNumber, Sets.<Long>newHashSet());
     }
 
-    public static AbnAmroIcsCredentials create(String userId, String bcNumber, Set<Long> contracts) {
+    public static AbnAmroIcsCredentials create(
+            String userId, String bcNumber, Set<Long> contracts) {
 
         Preconditions.checkNotNull(bcNumber);
         Preconditions.checkNotNull(userId);
@@ -80,7 +82,8 @@ public class AbnAmroIcsCredentials {
     }
 
     /**
-     * Add contract numbers to the credential if they are included. Excluded accounts will not be added.
+     * Add contract numbers to the credential if they are included. Excluded accounts will not be
+     * added.
      */
     public void addContractNumbers(List<Account> accounts) {
 
@@ -88,9 +91,11 @@ public class AbnAmroIcsCredentials {
             return;
         }
 
-        Set<Long> accountNumbers = FluentIterable.from(accounts)
-                .filter(account -> !account.isExcluded())
-                .transform(account -> Long.valueOf(account.getAccountNumber())).toSet();
+        Set<Long> accountNumbers =
+                FluentIterable.from(accounts)
+                        .filter(account -> !account.isExcluded())
+                        .transform(account -> Long.valueOf(account.getAccountNumber()))
+                        .toSet();
 
         addContractNumbers(accountNumbers);
     }
@@ -107,9 +112,11 @@ public class AbnAmroIcsCredentials {
             contracts.addAll(newContracts);
         }
 
-        credentials.setField(CONTRACT_NUMBERS_FIELD_NAME, SerializationUtils.serializeToString(contracts));
+        credentials.setField(
+                CONTRACT_NUMBERS_FIELD_NAME, SerializationUtils.serializeToString(contracts));
 
-        // Set the status depending on if we have contracts on not. It is only possible to add contracts so the state
+        // Set the status depending on if we have contracts on not. It is only possible to add
+        // contracts so the state
         // machine is one of
         // a) NULL => CREATED
         // b) NULL => DISABLED => CREATED

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v14.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardDetailsEntity {
     @JsonProperty("ATMWithdrawals")
     protected Map<String, Object> atmWithdrawals = new HashMap<String, Object>();
+
     protected Map<String, Object> authorityRole = new HashMap<String, Object>();
     protected Map<String, Object> balance = new HashMap<String, Object>();
     protected Map<String, Object> balanceDate = new HashMap<String, Object>();

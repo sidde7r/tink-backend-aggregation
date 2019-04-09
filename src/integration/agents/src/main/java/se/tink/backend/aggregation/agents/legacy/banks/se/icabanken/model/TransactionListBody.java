@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionListBody {
     @JsonProperty("Transactions")
     private List<TransactionEntity> transactions;
+
     @JsonProperty("NoMoreTransactions")
     private boolean noMoreTransactions;
+
     @JsonProperty("FromDate")
     private String fromDate;
 
@@ -48,5 +49,4 @@ public class TransactionListBody {
     public void setNoMoreTransactions(boolean noMoreTransactions) {
         this.noMoreTransactions = noMoreTransactions;
     }
-
 }

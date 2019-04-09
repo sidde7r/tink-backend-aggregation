@@ -6,8 +6,8 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InsuranceHoldingEntity {
@@ -16,22 +16,31 @@ public class InsuranceHoldingEntity {
 
     @JsonProperty("FORS_NR")
     private String insuranceNumber;
+
     @JsonProperty("FOND_NR")
     private String fundNumber;
+
     @JsonProperty("FOND_NAMN_SMA")
     private String name;
+
     @JsonProperty("FOND_KURS_BELOPP")
     private Double marketValue;
+
     @JsonProperty("ANDEL_ANTAL")
     private Double quantity;
+
     @JsonProperty("ANDEL_BELOPP")
     private Double totalMarketValue;
+
     @JsonProperty("RORL_KOSTN_FORS")
     private Double variableCost;
+
     @JsonProperty("FAST_KOSTN_FORS")
     private Double fixedCost;
+
     @JsonProperty("GAV")
     private Double averageAcquisitionCost;
+
     @JsonProperty("ANSKAFF_KOSTNAD")
     private Double acquisitionCost;
 

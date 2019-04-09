@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
-import com.google.common.collect.Lists;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -43,6 +43,7 @@ public class SebGiroRequest extends SebRequest {
     }
 
     private static String getFormattedVariable(AccountIdentifier bgOrPgDestination) {
-        return Strings.padStart(bgOrPgDestination.getIdentifier(new DefaultAccountIdentifierFormatter()), 10, '0');
+        return Strings.padStart(
+                bgOrPgDestination.getIdentifier(new DefaultAccountIdentifierFormatter()), 10, '0');
     }
 }

@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import java.util.Optional;
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.date.DateUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -120,14 +120,13 @@ public class TransactionEntity {
         }
 
         switch (type.toLowerCase()) {
-        case "överföring":
-            return TransactionTypes.TRANSFER;
-        case "uttag":
-        case "insättning":
-            return TransactionTypes.DEFAULT;
-        default:
-            return TransactionTypes.DEFAULT;
+            case "överföring":
+                return TransactionTypes.TRANSFER;
+            case "uttag":
+            case "insättning":
+                return TransactionTypes.DEFAULT;
+            default:
+                return TransactionTypes.DEFAULT;
         }
-
     }
 }

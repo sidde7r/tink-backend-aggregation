@@ -9,10 +9,13 @@ import se.tink.libraries.uuid.UUIDUtils;
 public class TokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("token_type")
     private String type;
+
     @JsonProperty("validation_token")
     private String validationToken;
+
     @JsonProperty("expires_in")
     private int expiresIn;
 

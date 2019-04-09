@@ -8,12 +8,11 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.ProductEntity;
 
 public class AbnAmroAccountValidator {
 
-    private static final Set<String> PRODUCT_GROUPS = AbnAmroUtils.ACCOUNT_TYPE_BY_PRODUCT_GROUP.keySet();
+    private static final Set<String> PRODUCT_GROUPS =
+            AbnAmroUtils.ACCOUNT_TYPE_BY_PRODUCT_GROUP.keySet();
     private static final Set<String> CREDIT_CARD_GROUPS = AbnAmroUtils.CREDIT_CARD_PRODUCT_GROUPS;
 
-    /**
-     * Check whenever a contract can be converted to a Tink account
-     */
+    /** Check whenever a contract can be converted to a Tink account */
     public static ValidationResult validate(ContractEntity contractEntity) {
         if (contractEntity == null) {
             return ValidationResult.invalid("Account is null.");

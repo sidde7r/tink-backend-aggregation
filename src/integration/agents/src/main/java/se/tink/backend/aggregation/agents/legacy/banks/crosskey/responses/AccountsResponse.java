@@ -23,5 +23,4 @@ public class AccountsResponse extends BaseResponse {
     public List<AccountResponse> getAccounts() {
         return accounts != null ? accounts : Lists.<AccountResponse>newArrayList();
     }
-
 }

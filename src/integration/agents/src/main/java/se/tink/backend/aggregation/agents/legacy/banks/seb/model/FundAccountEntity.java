@@ -12,28 +12,40 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 public class FundAccountEntity {
     @JsonProperty("KONTO_NR")
     private String accountNumber;
+
     @JsonProperty("KTOSLAG_TXT")
     private String accountType;
+
     @JsonProperty("DISP_BEL")
     private Double disposableIncome;
+
     @JsonProperty("FONDID")
     private String fundId;
+
     @JsonProperty("ISIN_CODE")
     private String isin;
+
     @JsonProperty("FONDNAMN")
     private String name;
+
     @JsonProperty("ANDEL_ANT")
     private Double quantity;
+
     @JsonProperty("KURS")
     private Double price;
+
     @JsonProperty("VALUTA")
     private String currency;
+
     @JsonProperty("GAV")
     private Double averageAcquisitionCost;
+
     @JsonProperty("ACQUISITION_COST")
     private Double totalAcquisitionCost;
+
     @JsonProperty("MARKET_VALUE")
     private Double marketValue;
+
     @JsonProperty("FMS_ID")
     private String shortId;
 

@@ -8,7 +8,7 @@ public class BankAccountEntity {
 
     @JsonProperty("clearing_number")
     private String clearingNumber;
+
     @JsonProperty("bank_account_number")
     private String bankAccountNumber;
-
 }

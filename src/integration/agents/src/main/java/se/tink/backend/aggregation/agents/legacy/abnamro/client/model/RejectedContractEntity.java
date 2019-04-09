@@ -6,10 +6,11 @@ import com.google.common.collect.ImmutableMap;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RejectedContractEntity {
 
-    public static final ImmutableMap<Integer, String> REJECTION_REASONS = new ImmutableMap.Builder<Integer, String>()
-            .put(1, "INVALID OWNER")
-            .put(2, "FRS SUBSCRIPTION FAILED")
-            .build();
+    public static final ImmutableMap<Integer, String> REJECTION_REASONS =
+            new ImmutableMap.Builder<Integer, String>()
+                    .put(1, "INVALID OWNER")
+                    .put(2, "FRS SUBSCRIPTION FAILED")
+                    .build();
 
     private Long contractNumber;
 

@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,15 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "offerId",
-    "login",
-    "password"
-})
+@XmlType(
+        name = "",
+        propOrder = {"offerId", "login", "password"})
 @XmlRootElement(name = "UseOffer")
 public class UseOffer {
 
@@ -41,29 +35,20 @@ public class UseOffer {
     protected String login;
     protected String password;
 
-    /**
-     * Gets the value of the offerId property.
-     * 
-     */
+    /** Gets the value of the offerId property. */
     public int getOfferId() {
         return offerId;
     }
 
-    /**
-     * Sets the value of the offerId property.
-     * 
-     */
+    /** Sets the value of the offerId property. */
     public void setOfferId(int value) {
         this.offerId = value;
     }
 
     /**
      * Gets the value of the login property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getLogin() {
         return login;
@@ -71,11 +56,8 @@ public class UseOffer {
 
     /**
      * Sets the value of the login property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setLogin(String value) {
         this.login = value;
@@ -83,11 +65,8 @@ public class UseOffer {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPassword() {
         return password;
@@ -95,14 +74,10 @@ public class UseOffer {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPassword(String value) {
         this.password = value;
     }
-
 }

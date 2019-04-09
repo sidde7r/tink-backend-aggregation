@@ -45,8 +45,8 @@ public class GetRateResponse {
 
         GetRateResponse that = (GetRateResponse) o;
 
-        return Objects.equal(this.indicativeRate, that.indicativeRate) &&
-                Objects.equal(this.dateValid, that.dateValid);
+        return Objects.equal(this.indicativeRate, that.indicativeRate)
+                && Objects.equal(this.dateValid, that.dateValid);
     }
 
     @Override
@@ -62,4 +62,3 @@ public class GetRateResponse {
                 .toString();
     }
 }
-

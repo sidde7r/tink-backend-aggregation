@@ -12,9 +12,7 @@ public class BankIdRequest<MI> {
     @JsonProperty("Input")
     private BankIdInput<MI> input;
 
-    public BankIdRequest() {
-
-    }
+    public BankIdRequest() {}
 
     public BankIdRequest(MI moduleInput) {
         input = new BankIdInput<>(moduleInput);
@@ -30,7 +28,10 @@ public class BankIdRequest<MI> {
 
     public MessageContainer encrypt(BankIdResourceHelper bankIdResourceHelper) {
         try {
-            String encryptedMessage = bankIdResourceHelper.getEncryptionHelper().m12076a(MAPPER.writeValueAsBytes(this));
+            String encryptedMessage =
+                    bankIdResourceHelper
+                            .getEncryptionHelper()
+                            .m12076a(MAPPER.writeValueAsBytes(this));
             return new MessageContainer(encryptedMessage);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e.getMessage(), e);

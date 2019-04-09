@@ -20,7 +20,8 @@ public class C2806a {
         try {
             KeyFactory instance = KeyFactory.getInstance("RSA");
             Cipher instance2 = Cipher.getInstance(C2806a.m12090a("UlNBL05vbmUvUEtDUzFQYWRkaW5n"));
-            instance2.init(1, instance.generatePublic(new X509EncodedKeySpec(C2799a.m12061a(bArr, 0))));
+            instance2.init(
+                    1, instance.generatePublic(new X509EncodedKeySpec(C2799a.m12061a(bArr, 0))));
             return instance2.doFinal(bArr2);
         } catch (Throwable e) {
             throw new RuntimeException("Error encrypting", e);
@@ -30,7 +31,10 @@ public class C2806a {
     public static byte[] m12094a(C2807b c2807b, byte[] bArr, byte[] bArr2) {
         try {
             Cipher instance = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            instance.init(1, new SecretKeySpec(c2807b.m12097a(), c2807b.m12098b()), new IvParameterSpec(bArr2));
+            instance.init(
+                    1,
+                    new SecretKeySpec(c2807b.m12097a(), c2807b.m12098b()),
+                    new IvParameterSpec(bArr2));
             return instance.doFinal(bArr);
         } catch (Throwable e) {
             throw new RuntimeException("Error encrypting", e);

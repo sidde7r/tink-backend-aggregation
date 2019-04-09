@@ -10,6 +10,7 @@ import org.apache.commons.lang3.BooleanUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserPreferences {
     private String id;
+
     @JsonProperty("value")
     private Map<String, String> values;
 
@@ -30,11 +31,12 @@ public class UserPreferences {
     }
 
     public Optional<Boolean> getBoolean(String key) {
-        
+
         if (values == null) {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(BooleanUtils.toBoolean(values.get(Preconditions.checkNotNull(key))));
+        return Optional.ofNullable(
+                BooleanUtils.toBoolean(values.get(Preconditions.checkNotNull(key))));
     }
 }

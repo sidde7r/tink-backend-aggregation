@@ -5,9 +5,10 @@ import java.util.regex.Pattern;
 
 public class Sisow extends PaymentProvider {
 
-    private final static Pattern NAME = Pattern.compile("Stichting Sisow", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NAME =
+            Pattern.compile("Stichting Sisow", Pattern.CASE_INSENSITIVE);
 
-    private final static ImmutableList<Pattern> patterns = ImmutableList.of(ORDER_PATTERN);
+    private static final ImmutableList<Pattern> patterns = ImmutableList.of(ORDER_PATTERN);
 
     @Override
     protected Pattern getNamePattern() {

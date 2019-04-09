@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OrderBankIdRequest {
     @JsonProperty("subject")
     private String ssn;
+
     private Boolean useAnotherDevice;
 
     @JsonIgnore

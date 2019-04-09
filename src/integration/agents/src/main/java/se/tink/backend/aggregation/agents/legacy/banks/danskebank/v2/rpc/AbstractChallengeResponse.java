@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public abstract class AbstractChallengeResponse extends AbstractResponse {
 
-    // Depending on the risk, Danske respond differently, one for a ChallengeResponse signing, the other for a Confirmation.
+    // Depending on the risk, Danske respond differently, one for a ChallengeResponse signing, the
+    // other for a Confirmation.
 
     // Common field
     @JsonProperty("ChallengeData")
@@ -15,10 +16,13 @@ public abstract class AbstractChallengeResponse extends AbstractResponse {
     // For ChallengeResponse Signing
     @JsonProperty("BankID")
     private boolean bankId;
+
     @JsonProperty("Challenge")
     private String challenge;
+
     @JsonProperty("ChallengeNeeded")
     private boolean challengeNeeded;
+
     @JsonProperty("SecurityCardNumber")
     private String securityCardNumber;
 

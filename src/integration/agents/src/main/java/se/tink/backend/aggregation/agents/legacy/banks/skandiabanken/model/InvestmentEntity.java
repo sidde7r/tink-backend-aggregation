@@ -32,7 +32,9 @@ public class InvestmentEntity {
     private String disposableAmount;
 
     public double getDisposableAmount() {
-        return Strings.isNullOrEmpty(disposableAmount) ? 0D : StringUtils.parseAmount(disposableAmount);
+        return Strings.isNullOrEmpty(disposableAmount)
+                ? 0D
+                : StringUtils.parseAmount(disposableAmount);
     }
 
     public String getId() {
@@ -47,14 +49,14 @@ public class InvestmentEntity {
         return portfolios;
     }
 
-    public void setPortfolios(
-            List<PortfolioEntity> portfolios) {
+    public void setPortfolios(List<PortfolioEntity> portfolios) {
         this.portfolios = portfolios;
     }
 
     public double getInvestmentAmount() {
-        return investmentAmount == null || investmentAmount.isEmpty() ?
-                0d : StringUtils.parseAmount(investmentAmount);
+        return investmentAmount == null || investmentAmount.isEmpty()
+                ? 0d
+                : StringUtils.parseAmount(investmentAmount);
     }
 
     public void setInvestmentAmount(String investmentAmount) {
@@ -174,19 +176,20 @@ public class InvestmentEntity {
 
     private Portfolio.Type getPortfolioType() {
         switch (getSubType().toLowerCase()) {
-        case "investeringssparkonto":
-            return Portfolio.Type.ISK;
-        case "kapitalförsäkring - internet":
-        case "kapitalförsäkring":
-            return Portfolio.Type.KF;
-        case "tjänstepension":
-            return Portfolio.Type.PENSION;
-        case "värdepappersdepå":
-            return Portfolio.Type.DEPOT;
-        default:
-            LOGGER.warnExtraLong(SerializationUtils.serializeToString(this),
-                    LogTag.from("#Skandiabanken_unknown_portfolio_typ"));
-            return Portfolio.Type.OTHER;
+            case "investeringssparkonto":
+                return Portfolio.Type.ISK;
+            case "kapitalförsäkring - internet":
+            case "kapitalförsäkring":
+                return Portfolio.Type.KF;
+            case "tjänstepension":
+                return Portfolio.Type.PENSION;
+            case "värdepappersdepå":
+                return Portfolio.Type.DEPOT;
+            default:
+                LOGGER.warnExtraLong(
+                        SerializationUtils.serializeToString(this),
+                        LogTag.from("#Skandiabanken_unknown_portfolio_typ"));
+                return Portfolio.Type.OTHER;
         }
     }
 }

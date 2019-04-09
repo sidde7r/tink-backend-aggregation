@@ -5,14 +5,14 @@ import java.util.regex.Pattern;
 
 public class ClickAndBuy extends PaymentProvider {
 
-    private final static Pattern NAMES = Pattern.compile("ClickandBuy International.*", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NAMES =
+            Pattern.compile("ClickandBuy International.*", Pattern.CASE_INSENSITIVE);
 
-    /**
-     * Start with "ClickandBuy - " and the name of merchant, like "ClickandBuy - Tinder"
-     */
-    private static final Pattern PATTERN_1 = Pattern.compile("ClickandBuy\\s-\\s(?<value>.*)", Pattern.CASE_INSENSITIVE);
+    /** Start with "ClickandBuy - " and the name of merchant, like "ClickandBuy - Tinder" */
+    private static final Pattern PATTERN_1 =
+            Pattern.compile("ClickandBuy\\s-\\s(?<value>.*)", Pattern.CASE_INSENSITIVE);
 
-    private final static ImmutableList<Pattern> patterns = ImmutableList.of(PATTERN_1);
+    private static final ImmutableList<Pattern> patterns = ImmutableList.of(PATTERN_1);
 
     @Override
     protected Pattern getNamePattern() {

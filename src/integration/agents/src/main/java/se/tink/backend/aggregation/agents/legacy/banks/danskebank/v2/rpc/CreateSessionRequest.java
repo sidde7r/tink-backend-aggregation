@@ -1,26 +1,21 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Optional;
-import java.util.List;
 import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.Optional;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionRequest {
-    @JsonIgnore
-    private static final String DEVICE_APP_VERSION = "3.18.1";
-    @JsonIgnore
-    private static final String DEVICE_MANUFACTURER = "LGE";
-    @JsonIgnore
-    private static final String DEVICE_MODEL = "Nexus 5X";
-    @JsonIgnore
-    private static final String DEVICE_OS = "Android";
-    @JsonIgnore
-    private static final String DEVICE_OS_VERSION = "6.0.1";
+    @JsonIgnore private static final String DEVICE_APP_VERSION = "3.18.1";
+    @JsonIgnore private static final String DEVICE_MANUFACTURER = "LGE";
+    @JsonIgnore private static final String DEVICE_MODEL = "Nexus 5X";
+    @JsonIgnore private static final String DEVICE_OS = "Android";
+    @JsonIgnore private static final String DEVICE_OS_VERSION = "6.0.1";
 
     private String appVersion;
     private String country;
@@ -140,10 +135,16 @@ public class CreateSessionRequest {
         this.stopOnErrors = stopOnErrors;
     }
 
-    public static CreateSessionRequest create(InitSessionResponse initSessionResponse,
-            Credentials credentials, String country, String language, Optional<String> nssId) {
+    public static CreateSessionRequest create(
+            InitSessionResponse initSessionResponse,
+            Credentials credentials,
+            String country,
+            String language,
+            Optional<String> nssId) {
         String deviceId = createDeviceId(credentials);
-        String notificationId = MobileBankingEncryptionHelper.encryptInitSessionToken(initSessionResponse.getToken());
+        String notificationId =
+                MobileBankingEncryptionHelper.encryptInitSessionToken(
+                        initSessionResponse.getToken());
 
         CreateSessionRequest createSessionRequest = new CreateSessionRequest();
 

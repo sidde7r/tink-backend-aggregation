@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.se.collector;
 
-import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.api.client.Client;
@@ -10,8 +9,10 @@ import com.sun.jersey.api.client.WebResource;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.AccountEntities;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
@@ -23,13 +24,12 @@ import se.tink.backend.aggregation.agents.banks.se.collector.models.Transactions
 import se.tink.backend.aggregation.agents.banks.se.collector.models.WithdrawalRequest;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 class CollectorApiClient {
     private static final AggregationLogger log = new AggregationLogger(CollectorApiClient.class);
@@ -45,7 +45,7 @@ class CollectorApiClient {
     */
 
     private static final String ENV = "prod";
-//    private static final String ENV = "test";
+    //    private static final String ENV = "test";
 
     private static final String BASE_URL = "https://api.collector.se";
 
@@ -61,7 +61,8 @@ class CollectorApiClient {
     private static final String TRANSACTIONS_URI = ACCOUNTS_URI + "/%s/history";
     private static final String WITHDRAWAL_URI = ACCOUNTS_URI + "/%s/withdrawal";
 
-    private static final String SIGN_TEXT_FORMAT_COLLECTOR_SAVE = "Jag bekräftar öppnandet av sparkonto Collector Save %s och godkänner de allmänna villkoren för sparkontot och Collector Banks behandling av personuppgifter. Jag bekräftar även att jag mottagit information om statlig insättningsgaranti.";
+    private static final String SIGN_TEXT_FORMAT_COLLECTOR_SAVE =
+            "Jag bekräftar öppnandet av sparkonto Collector Save %s och godkänner de allmänna villkoren för sparkontot och Collector Banks behandling av personuppgifter. Jag bekräftar även att jag mottagit information om statlig insättningsgaranti.";
 
     private final Client client;
     private String subscriptionKey;
@@ -81,20 +82,26 @@ class CollectorApiClient {
 
     String initBankId(BankIdOperationType operationType, String username) {
         InitBankIdRequest request;
-        String uri = BankIdOperationType.AUTH.equals(operationType) ? BANKID_AUTH_URI : BANKID_SIGN_URI;
+        String uri =
+                BankIdOperationType.AUTH.equals(operationType) ? BANKID_AUTH_URI : BANKID_SIGN_URI;
 
         if (BankIdOperationType.AUTH.equals(operationType)) {
             request = new InitBankIdRequest(username);
         } else {
-            String message = String.format(SIGN_TEXT_FORMAT_COLLECTOR_SAVE,
-                    ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
+            String message =
+                    String.format(
+                            SIGN_TEXT_FORMAT_COLLECTOR_SAVE,
+                            ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()));
             request = new InitSignRequest(username, message);
         }
 
         String sessionId = post(uri, request, InitBankIdResponse.class).getSessionId();
 
-        Preconditions.checkState(!Strings.isNullOrEmpty(sessionId),
-                String.format("Didn't get sessionId when initiating BankID (operationType=%s)", operationType));
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(sessionId),
+                String.format(
+                        "Didn't get sessionId when initiating BankID (operationType=%s)",
+                        operationType));
 
         return sessionId;
     }
@@ -116,24 +123,31 @@ class CollectorApiClient {
     }
 
     CollectAuthenticationResponse refreshAccessToken(String refreshToken) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(refreshToken),
-                "RefreshToken not available");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(refreshToken), "RefreshToken not available");
 
-        return get(String.format(REFRESH_ACCESS_URI, refreshToken), CollectAuthenticationResponse.class);
+        return get(
+                String.format(REFRESH_ACCESS_URI, refreshToken),
+                CollectAuthenticationResponse.class);
     }
 
-    <T extends CollectBankIdResponse> Optional<T> collectBankId(String sessionId, Class<T> responseEntity)
-            throws BankIdException {
-        String uri = Objects.equals(responseEntity, CollectAuthenticationResponse.class)
-                ? COLLECT_AUTH_URI : COLLECT_SIGN_URI;
+    <T extends CollectBankIdResponse> Optional<T> collectBankId(
+            String sessionId, Class<T> responseEntity) throws BankIdException {
+        String uri =
+                Objects.equals(responseEntity, CollectAuthenticationResponse.class)
+                        ? COLLECT_AUTH_URI
+                        : COLLECT_SIGN_URI;
 
         T response = get(String.format(uri, sessionId), responseEntity);
 
-        log.info(String.format("BankID authentication in progress, status=%s", response.getStatus()));
+        log.info(
+                String.format(
+                        "BankID authentication in progress, status=%s", response.getStatus()));
 
         switch (response.getStatus()) {
             case DONE:
-                Preconditions.checkState(response.isValid(),
+                Preconditions.checkState(
+                        response.isValid(),
                         String.format("Invalid CollectBankIdResponse: %s", response));
 
                 return Optional.of(response);
@@ -144,7 +158,8 @@ class CollectorApiClient {
             case TIMEOUT:
                 throw BankIdError.TIMEOUT.exception();
             default:
-                throw new IllegalStateException("Unknown error detected while collecting BankID status: " + response);
+                throw new IllegalStateException(
+                        "Unknown error detected while collecting BankID status: " + response);
         }
     }
 
@@ -177,7 +192,9 @@ class CollectorApiClient {
 
         AccountIdentifier identifier = accountEntity.getWithdrawalIdentifier();
         if (!identifier.isValid()) {
-            log.error(String.format("identifier is not valid: %s", accountEntity.getWithdrawalAccount()));
+            log.error(
+                    String.format(
+                            "identifier is not valid: %s", accountEntity.getWithdrawalAccount()));
             return null;
         }
 
@@ -185,14 +202,20 @@ class CollectorApiClient {
     }
 
     List<Transaction> fetchTransactionsFor(Account account) {
-        TransactionsResponse response = get(String.format(TRANSACTIONS_URI, account.getBankId()), TransactionsResponse.class);
+        TransactionsResponse response =
+                get(
+                        String.format(TRANSACTIONS_URI, account.getBankId()),
+                        TransactionsResponse.class);
 
         return response.toTinkTransactions();
     }
 
     void makeWithdrawal(Transfer transfer, Account account) {
-        ClientResponse response = post(String.format(WITHDRAWAL_URI, account.getBankId()),
-                WithdrawalRequest.from(transfer), ClientResponse.class);
+        ClientResponse response =
+                post(
+                        String.format(WITHDRAWAL_URI, account.getBankId()),
+                        WithdrawalRequest.from(transfer),
+                        ClientResponse.class);
 
         if (!Objects.equals(response.getStatus(), ClientResponse.Status.CREATED.getStatusCode())) {
             throw new UniformInterfaceException(response);
@@ -208,11 +231,12 @@ class CollectorApiClient {
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        WebResource.Builder builder = client.resource(BASE_URL + uri)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header("Ocp-Apim-Subscription-Key", subscriptionKey)
-                .header("User-Agent", userAgent);
+        WebResource.Builder builder =
+                client.resource(BASE_URL + uri)
+                        .type(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header("Ocp-Apim-Subscription-Key", subscriptionKey)
+                        .header("User-Agent", userAgent);
 
         if (!Strings.isNullOrEmpty(accessToken)) {
             builder.header("Authorization", String.format("Bearer %s", accessToken));

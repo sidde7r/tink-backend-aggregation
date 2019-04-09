@@ -9,11 +9,16 @@ public class ValidateEInvoiceResponse extends Response<EmptyBody> {
     private static final int NO_VALIDATION_ERROR_STATUS_CODE = 0;
 
     private boolean isDateInvalidButChanged() {
-        // The response below will also return HTTP 409. I feel like the check below is specific enough.
-        return Objects.equal(getResponseStatus().getCode(), 1000) &&
-                Objects.equal(getResponseStatus().getServerMessage(), "Error validating invoice.") &&
-                // Simply relying on "Error validating invoice." is a bit too vague. Using the requirement below, too.
-                Objects.equal(getResponseStatus().getClientMessage(),
+        // The response below will also return HTTP 409. I feel like the check below is specific
+        // enough.
+        return Objects.equal(getResponseStatus().getCode(), 1000)
+                && Objects.equal(
+                        getResponseStatus().getServerMessage(), "Error validating invoice.")
+                &&
+                // Simply relying on "Error validating invoice." is a bit too vague. Using the
+                // requirement below, too.
+                Objects.equal(
+                        getResponseStatus().getClientMessage(),
                         "Angivet datum har ändrats till närmast möjliga dag.");
     }
 
@@ -24,5 +29,4 @@ public class ValidateEInvoiceResponse extends Response<EmptyBody> {
     public boolean isValidationError() {
         return getResponseStatus().getCode() != NO_VALIDATION_ERROR_STATUS_CODE;
     }
-
 }

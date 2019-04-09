@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import java.math.BigInteger;
@@ -9,12 +8,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,30 +23,24 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "any")
-public class Any
-    extends Wildcard
-{
+public class Any extends Wildcard {
 
     @XmlAttribute(name = "minOccurs")
     @XmlSchemaType(name = "nonNegativeInteger")
     protected BigInteger minOccurs;
+
     @XmlAttribute(name = "maxOccurs")
     @XmlSchemaType(name = "allNNI")
     protected String maxOccurs;
 
     /**
      * Gets the value of the minOccurs property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @return possible object is {@link BigInteger }
      */
     public BigInteger getMinOccurs() {
         if (minOccurs == null) {
@@ -60,11 +52,8 @@ public class Any
 
     /**
      * Sets the value of the minOccurs property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
+     *
+     * @param value allowed object is {@link BigInteger }
      */
     public void setMinOccurs(BigInteger value) {
         this.minOccurs = value;
@@ -72,11 +61,8 @@ public class Any
 
     /**
      * Gets the value of the maxOccurs property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getMaxOccurs() {
         if (maxOccurs == null) {
@@ -88,14 +74,10 @@ public class Any
 
     /**
      * Sets the value of the maxOccurs property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setMaxOccurs(String value) {
         this.maxOccurs = value;
     }
-
 }

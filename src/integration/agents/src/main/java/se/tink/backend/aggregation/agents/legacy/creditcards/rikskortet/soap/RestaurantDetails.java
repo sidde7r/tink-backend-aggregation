@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for RestaurantDetails complex type.
- * 
+ * Java class for RestaurantDetails complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="RestaurantDetails">
  *   &lt;complexContent>
@@ -30,62 +28,60 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RestaurantDetails", propOrder = {
-    "isFavourite",
-    "imageUrl",
-    "restaurant",
-    "week1",
-    "week2",
-    "week3",
-    "week4",
-    "offers"
-})
+@XmlType(
+        name = "RestaurantDetails",
+        propOrder = {
+            "isFavourite",
+            "imageUrl",
+            "restaurant",
+            "week1",
+            "week2",
+            "week3",
+            "week4",
+            "offers"
+        })
 public class RestaurantDetails {
 
     @XmlElement(name = "IsFavourite")
     protected boolean isFavourite;
+
     @XmlElement(name = "ImageUrl")
     protected String imageUrl;
+
     @XmlElement(name = "Restaurant")
     protected RestaurantInfo restaurant;
+
     @XmlElement(name = "Week1")
     protected ArrayOfMenuDetails week1;
+
     @XmlElement(name = "Week2")
     protected ArrayOfMenuDetails week2;
+
     @XmlElement(name = "Week3")
     protected ArrayOfMenuDetails week3;
+
     @XmlElement(name = "Week4")
     protected ArrayOfMenuDetails week4;
+
     @XmlElement(name = "Offers")
     protected ArrayOfOfferDetails offers;
 
-    /**
-     * Gets the value of the isFavourite property.
-     * 
-     */
+    /** Gets the value of the isFavourite property. */
     public boolean isIsFavourite() {
         return isFavourite;
     }
 
-    /**
-     * Sets the value of the isFavourite property.
-     * 
-     */
+    /** Sets the value of the isFavourite property. */
     public void setIsFavourite(boolean value) {
         this.isFavourite = value;
     }
 
     /**
      * Gets the value of the imageUrl property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getImageUrl() {
         return imageUrl;
@@ -93,11 +89,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the imageUrl property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setImageUrl(String value) {
         this.imageUrl = value;
@@ -105,11 +98,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the restaurant property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RestaurantInfo }
-     *     
+     *
+     * @return possible object is {@link RestaurantInfo }
      */
     public RestaurantInfo getRestaurant() {
         return restaurant;
@@ -117,11 +107,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the restaurant property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RestaurantInfo }
-     *     
+     *
+     * @param value allowed object is {@link RestaurantInfo }
      */
     public void setRestaurant(RestaurantInfo value) {
         this.restaurant = value;
@@ -129,11 +116,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the week1 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfMenuDetails }
      */
     public ArrayOfMenuDetails getWeek1() {
         return week1;
@@ -141,11 +125,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the week1 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfMenuDetails }
      */
     public void setWeek1(ArrayOfMenuDetails value) {
         this.week1 = value;
@@ -153,11 +134,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the week2 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfMenuDetails }
      */
     public ArrayOfMenuDetails getWeek2() {
         return week2;
@@ -165,11 +143,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the week2 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfMenuDetails }
      */
     public void setWeek2(ArrayOfMenuDetails value) {
         this.week2 = value;
@@ -177,11 +152,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the week3 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfMenuDetails }
      */
     public ArrayOfMenuDetails getWeek3() {
         return week3;
@@ -189,11 +161,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the week3 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfMenuDetails }
      */
     public void setWeek3(ArrayOfMenuDetails value) {
         this.week3 = value;
@@ -201,11 +170,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the week4 property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfMenuDetails }
      */
     public ArrayOfMenuDetails getWeek4() {
         return week4;
@@ -213,11 +179,8 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the week4 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfMenuDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfMenuDetails }
      */
     public void setWeek4(ArrayOfMenuDetails value) {
         this.week4 = value;
@@ -225,11 +188,8 @@ public class RestaurantDetails {
 
     /**
      * Gets the value of the offers property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfOfferDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfOfferDetails }
      */
     public ArrayOfOfferDetails getOffers() {
         return offers;
@@ -237,14 +197,10 @@ public class RestaurantDetails {
 
     /**
      * Sets the value of the offers property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfOfferDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfOfferDetails }
      */
     public void setOffers(ArrayOfOfferDetails value) {
         this.offers = value;
     }
-
 }

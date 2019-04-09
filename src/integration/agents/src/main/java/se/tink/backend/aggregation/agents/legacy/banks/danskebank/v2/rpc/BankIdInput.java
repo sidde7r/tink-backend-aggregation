@@ -6,10 +6,8 @@ public class BankIdInput<MI> {
     @JsonProperty("ModuleInput")
     private MI moduleInput;
 
-    public BankIdInput() {
-        
-    }
-    
+    public BankIdInput() {}
+
     public BankIdInput(MI moduleInput) {
         this.moduleInput = moduleInput;
     }

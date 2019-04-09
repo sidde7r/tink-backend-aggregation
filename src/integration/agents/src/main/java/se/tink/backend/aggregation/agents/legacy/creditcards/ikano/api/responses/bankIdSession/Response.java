@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class Response {
     @JsonProperty("_Progress")
     private ProgressEntity progress;
+
     @JsonProperty("_Session")
     public Session session;
 

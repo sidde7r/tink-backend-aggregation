@@ -14,7 +14,7 @@ public class SBABDateUtils {
         Date nextPossibleDate;
         if (isWithinSBAB) {
             nextPossibleDate = now;
-        } else  {
+        } else {
             nextPossibleDate = nextPossibleExternalDate(now);
         }
 
@@ -32,13 +32,13 @@ public class SBABDateUtils {
     }
 
     /**
-     * SBAB's Web Internet Bank: "Om du gör en överföring till ett konto utanför SBAB på en bankdag innan kl. 13.00
-     * förs pengarna över till mottagarens bank samma dag. Om du gör en överföring en bankdag efter kl. 13.00 eller en
-     * helgdag kommer pengarna fram nästa bankdag."
+     * SBAB's Web Internet Bank: "Om du gör en överföring till ett konto utanför SBAB på en bankdag
+     * innan kl. 13.00 förs pengarna över till mottagarens bank samma dag. Om du gör en överföring
+     * en bankdag efter kl. 13.00 eller en helgdag kommer pengarna fram nästa bankdag."
      *
-     * ~ EN: "If you make a transfer to an account outside of SBAB on a bank day before 13.00, the money will be
-     * transferred to the recipient the same day, If you make a transfer on a bank day after 13.00 or not on a bank day
-     * the money will arrive the next bank day."
+     * <p>~ EN: "If you make a transfer to an account outside of SBAB on a bank day before 13.00,
+     * the money will be transferred to the recipient the same day, If you make a transfer on a bank
+     * day after 13.00 or not on a bank day the money will arrive the next bank day."
      */
     private static void moveToNextMidnightIfAfterMiddayBreak(Calendar calendar) {
         int currentHour = calendar.get(Calendar.HOUR_OF_DAY);

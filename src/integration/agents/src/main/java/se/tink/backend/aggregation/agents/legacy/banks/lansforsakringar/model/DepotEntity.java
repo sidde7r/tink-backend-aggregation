@@ -20,8 +20,9 @@ public class DepotEntity {
     }
 
     public Double getTotalGrowthInRealValue() {
-        return totalGrowthInRealValue == null || totalGrowthInRealValue.isEmpty() ?
-                null : StringUtils.parseAmount(totalGrowthInRealValue);
+        return totalGrowthInRealValue == null || totalGrowthInRealValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(totalGrowthInRealValue);
     }
 
     public void setTotalGrowthInRealValue(String totalGrowthInRealValue) {
@@ -29,7 +30,9 @@ public class DepotEntity {
     }
 
     public Double getTotalValue() {
-        return totalValue == null || totalValue.isEmpty() ? null : StringUtils.parseAmount(totalValue);
+        return totalValue == null || totalValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(totalValue);
     }
 
     public void setTotalValue(String totalValue) {

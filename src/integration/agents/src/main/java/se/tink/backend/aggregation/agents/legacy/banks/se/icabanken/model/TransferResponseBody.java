@@ -16,5 +16,4 @@ public class TransferResponseBody {
     public void setProposedNewDate(String proposedNewDate) {
         this.proposedNewDate = proposedNewDate;
     }
-
 }

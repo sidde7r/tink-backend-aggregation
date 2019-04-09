@@ -7,9 +7,7 @@ public class BankIdResponse {
     @JsonProperty("Output")
     private BankIdOutput output;
 
-    public BankIdResponse() {
-
-    }
+    public BankIdResponse() {}
 
     public BankIdResponse(BankIdModuleOutput moduleOutput) {
         output = new BankIdOutput(moduleOutput);
@@ -42,9 +40,9 @@ public class BankIdResponse {
     }
 
     private BankIdModuleOutput getModuleOutput() {
-        if (output == null ||
-                output.getStaticOutput() == null ||
-                output.getStaticOutput().getModuleOutput() == null) {
+        if (output == null
+                || output.getStaticOutput() == null
+                || output.getStaticOutput().getModuleOutput() == null) {
             return null;
         }
 
@@ -52,8 +50,8 @@ public class BankIdResponse {
     }
 
     public boolean isWaitingForUserInput() {
-        return Objects.equal(getBankIdStatusCode(), "USER_SIGN") ||
-                Objects.equal(getBankIdStatusCode(), "OUTSTANDING_TRANSACTION");
+        return Objects.equal(getBankIdStatusCode(), "USER_SIGN")
+                || Objects.equal(getBankIdStatusCode(), "OUTSTANDING_TRANSACTION");
     }
 
     public boolean isUserAuthenticated() {
@@ -65,8 +63,10 @@ public class BankIdResponse {
     }
 
     public boolean isTimeout() {
-        return Objects.equal(getBankIdStatusCode(), "NO_CLIENT") ||
-                Objects.equal(getBankIdStatusCode(), "EXPIRED_TRANSACTION") ||
-                Objects.equal(getBankIdStatusCode(), "CANCELLED"); //note difference between cancelled and user_cancel
+        return Objects.equal(getBankIdStatusCode(), "NO_CLIENT")
+                || Objects.equal(getBankIdStatusCode(), "EXPIRED_TRANSACTION")
+                || Objects.equal(
+                        getBankIdStatusCode(),
+                        "CANCELLED"); // note difference between cancelled and user_cancel
     }
 }

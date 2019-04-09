@@ -11,7 +11,8 @@ public class LoanTermsEntity {
     @JsonProperty("amorteringPerManad")
     private int amortizationPerMonth;
 
-    // Note: this seems to be the same value as 'amorteringPerManad', with the only difference that it is a double.
+    // Note: this seems to be the same value as 'amorteringPerManad', with the only difference that
+    // it is a double.
     @JsonProperty("amorteringsbelopp")
     private double amortizationValue;
 

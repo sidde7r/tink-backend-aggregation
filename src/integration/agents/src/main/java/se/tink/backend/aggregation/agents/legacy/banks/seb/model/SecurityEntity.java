@@ -6,9 +6,7 @@ public class SecurityEntity {
     private String objectInfo3;
     private String objectInfo4;
 
-    public SecurityEntity() {
-
-    }
+    public SecurityEntity() {}
 
     public String getObjectInfo1() {
         return objectInfo1;

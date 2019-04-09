@@ -7,7 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AlandsBankenAgent extends CrossKeyAgent {
 
-    public AlandsBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AlandsBankenAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AlandsBankenConfig());
 
         apiClient.setRootUrl("https://mob.alandsbanken.se/cbs-inet-json-api-abs-v1/api/");

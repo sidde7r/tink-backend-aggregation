@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 @XmlRootElement
 public class InitialContextResponse {
     private BankingServiceResponse bankingServiceResponse;
+
     @JsonProperty("getInitialContextOut")
     private InitialContextData data;
 

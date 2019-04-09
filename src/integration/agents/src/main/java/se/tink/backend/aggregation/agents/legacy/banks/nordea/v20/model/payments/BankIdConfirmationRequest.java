@@ -7,12 +7,11 @@ public class BankIdConfirmationRequest {
         return bankIdConfirmationIn;
     }
 
-    public void setBankIdConfirmationIn(
-            BankIdConfirmationIn bankIdConfirmationIn) {
+    public void setBankIdConfirmationIn(BankIdConfirmationIn bankIdConfirmationIn) {
         this.bankIdConfirmationIn = bankIdConfirmationIn;
     }
 
-    public BankIdConfirmationRequest(String orderRef){
+    public BankIdConfirmationRequest(String orderRef) {
         bankIdConfirmationIn = new BankIdConfirmationIn();
         bankIdConfirmationIn.setOrderRef(orderRef);
     }

@@ -91,16 +91,18 @@ public class PaymentEntity {
     }
 
     public String calculateHash() {
-        return String.valueOf(java.util.Objects.hash(
-                getAmountForHash(amount),
-                recipient.getGiroNumber(),
-                reference,
-                fromAccount));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getAmountForHash(amount),
+                        recipient.getGiroNumber(),
+                        reference,
+                        fromAccount));
     }
 
     private String getAmountForHash(double amount) {
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 }

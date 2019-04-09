@@ -6,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -23,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getDataRequest"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getDataRequest"})
 @XmlRootElement(name = "GetDataBySecure")
 public class GetDataBySecure {
 
@@ -38,11 +35,8 @@ public class GetDataBySecure {
 
     /**
      * Gets the value of the getDataRequest property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link GetDataRequest }
-     *     
+     *
+     * @return possible object is {@link GetDataRequest }
      */
     public GetDataRequest getGetDataRequest() {
         return getDataRequest;
@@ -50,14 +44,10 @@ public class GetDataBySecure {
 
     /**
      * Sets the value of the getDataRequest property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link GetDataRequest }
-     *     
+     *
+     * @param value allowed object is {@link GetDataRequest }
      */
     public void setGetDataRequest(GetDataRequest value) {
         this.getDataRequest = value;
     }
-
 }

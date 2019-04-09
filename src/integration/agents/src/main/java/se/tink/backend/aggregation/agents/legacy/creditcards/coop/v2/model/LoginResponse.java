@@ -12,8 +12,7 @@ public class LoginResponse {
         return authenticateResult;
     }
 
-    public void setAuthenticateResult(
-            AuthenticateResult authenticateResult) {
+    public void setAuthenticateResult(AuthenticateResult authenticateResult) {
         this.authenticateResult = authenticateResult;
     }
 }

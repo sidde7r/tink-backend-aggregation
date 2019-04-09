@@ -1,4 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 

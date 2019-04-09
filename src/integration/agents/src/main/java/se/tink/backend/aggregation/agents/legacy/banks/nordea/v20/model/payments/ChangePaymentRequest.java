@@ -24,15 +24,23 @@ public class ChangePaymentRequest {
         this.changePaymentIn = changePaymentIn;
     }
 
-    public static ChangePaymentRequest copyFromPaymentDetails(List<ProductEntity> sourceAccounts,
-            PaymentDetailsResponseOut details) {
-        // From account id on details is not exactly same as on the change object, it's an identifier on the product entity
-        Preconditions.checkNotNull(details.getFromAccountId(), "No from account is set, didn't know this could happen");
+    public static ChangePaymentRequest copyFromPaymentDetails(
+            List<ProductEntity> sourceAccounts, PaymentDetailsResponseOut details) {
+        // From account id on details is not exactly same as on the change object, it's an
+        // identifier on the product entity
+        Preconditions.checkNotNull(
+                details.getFromAccountId(),
+                "No from account is set, didn't know this could happen");
         Preconditions.checkNotNull(sourceAccounts, "No source accounts");
 
-        Optional<ProductEntity> fromAccount = sourceAccounts.stream()
-                .filter(a -> NordeaAgentUtils.getAccountIdFilter(ImmutableSet.of(details.getFromAccountId())).apply(a))
-                .findFirst();
+        Optional<ProductEntity> fromAccount =
+                sourceAccounts.stream()
+                        .filter(
+                                a ->
+                                        NordeaAgentUtils.getAccountIdFilter(
+                                                        ImmutableSet.of(details.getFromAccountId()))
+                                                .apply(a))
+                        .findFirst();
         Preconditions.checkNotNull(fromAccount.orElse(null));
 
         ChangePaymentRequest changePaymentRequest = new ChangePaymentRequest();
@@ -43,15 +51,19 @@ public class ChangePaymentRequest {
         changePaymentRequest.changePaymentIn.setCurrency(details.getCurrency());
         changePaymentRequest.changePaymentIn.setDueDate(details.getDueDate());
         changePaymentRequest.changePaymentIn.setMessageRow(details.getMessageRow());
-        changePaymentRequest.changePaymentIn.setPaymentSubTypeExtension(details.getPaymentSubTypeExtension());
-        changePaymentRequest.changePaymentIn.setRecurringContinuously(details.isRecurringContinuously());
+        changePaymentRequest.changePaymentIn.setPaymentSubTypeExtension(
+                details.getPaymentSubTypeExtension());
+        changePaymentRequest.changePaymentIn.setRecurringContinuously(
+                details.isRecurringContinuously());
         changePaymentRequest.changePaymentIn.setRecurringFrequency(details.getRecurringFrequency());
-        changePaymentRequest.changePaymentIn.setRecurringNumberOfPayments(details.getRecurringNumberOfPayments());
+        changePaymentRequest.changePaymentIn.setRecurringNumberOfPayments(
+                details.getRecurringNumberOfPayments());
         changePaymentRequest.changePaymentIn.setStatusCode(details.getStatusCode());
 
         changePaymentRequest.changePaymentIn.setFromAccountId(fromAccount.get().getInternalId());
 
-        // Logic based on that an eInvoice with BGType seems to have toAccountId set from toAccountNumber
+        // Logic based on that an eInvoice with BGType seems to have toAccountId set from
+        // toAccountNumber
         if (!Strings.isNullOrEmpty(details.getToAccountId())) {
             changePaymentRequest.changePaymentIn.setToAccountId(details.getToAccountId());
         } else {
@@ -70,7 +82,8 @@ public class ChangePaymentRequest {
         // Seems default to have no receipt on eInvoices
         changePaymentRequest.changePaymentIn.setReceiptCodeNoReceipt();
 
-        // Guess this comes from if a payment should be stored as a template, does not seem to be that for eInvoices
+        // Guess this comes from if a payment should be stored as a template, does not seem to be
+        // that for eInvoices
         changePaymentRequest.changePaymentIn.setStorePayment(false);
 
         return changePaymentRequest;
@@ -78,7 +91,8 @@ public class ChangePaymentRequest {
 
     public void setAmount(Amount amount) {
         Preconditions.checkNotNull(amount);
-        Preconditions.checkArgument(Objects.equal(amount.getCurrency(), "SEK"), "Only SEK transfers are supported");
+        Preconditions.checkArgument(
+                Objects.equal(amount.getCurrency(), "SEK"), "Only SEK transfers are supported");
         Preconditions.checkNotNull(amount.getValue(), "Cannot set empty amount on payments");
 
         changePaymentIn.setAmount(amount.getValue());
@@ -92,7 +106,8 @@ public class ChangePaymentRequest {
     }
 
     public void setDestinationMessage(String destinationMessage) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(destinationMessage), "Empty destination message");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(destinationMessage), "Empty destination message");
 
         changePaymentIn.setMessageRow(destinationMessage);
     }

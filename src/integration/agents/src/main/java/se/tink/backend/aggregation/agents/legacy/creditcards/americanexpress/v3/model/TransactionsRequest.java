@@ -21,5 +21,4 @@ public class TransactionsRequest {
     public void setBillingIndexList(List<String> billingIndexList) {
         this.billingIndexList = billingIndexList;
     }
-
 }

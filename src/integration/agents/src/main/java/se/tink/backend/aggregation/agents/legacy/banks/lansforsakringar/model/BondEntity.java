@@ -10,8 +10,7 @@ import se.tink.libraries.strings.StringUtils;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BondEntity {
-    @JsonIgnore
-    private static final String CURRENCY = "SEK"; // Not available from LF
+    @JsonIgnore private static final String CURRENCY = "SEK"; // Not available from LF
     private String name;
     private String isinCode;
     private String marketValue;
@@ -38,7 +37,9 @@ public class BondEntity {
     }
 
     public Double getAcquisitionCostPerSecurity() {
-        return acquisitionCostPerSecurity != null ? StringUtils.parseAmount(acquisitionCostPerSecurity) : null;
+        return acquisitionCostPerSecurity != null
+                ? StringUtils.parseAmount(acquisitionCostPerSecurity)
+                : null;
     }
 
     public Double getAcquisitionCost() {
@@ -71,7 +72,7 @@ public class BondEntity {
         instrument.setProfit(getMarketValue() - getAcquisitionCost());
         instrument.setQuantity(quantity);
         instrument.setType(Instrument.Type.OTHER);
-        instrument.setUniqueIdentifier(getIsinCode()+getName().replaceAll(" ", ""));
+        instrument.setUniqueIdentifier(getIsinCode() + getName().replaceAll(" ", ""));
 
         return Optional.of(instrument);
     }

@@ -9,7 +9,7 @@ public enum C0570a {
     NSP(true, "GLA"),
     NSS(true, "NSS"),
     MHS(true, "MHS");
-    
+
     private final boolean f1552h;
     private final String f1553i;
 

@@ -7,6 +7,15 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -48,27 +57,17 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.demo.DemoCredentials.DemoUserFeature;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class DemoAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
@@ -174,6 +173,7 @@ public class DemoAgent extends AbstractAgent
 
         return true;
     }
+
     private List<Account> getAccounts() {
         if (accounts != null) {
             return accounts;
@@ -186,6 +186,7 @@ public class DemoAgent extends AbstractAgent
         }
         return accounts;
     }
+
     private List<Transaction> getTransactions(Account account) {
         if (demoCredentials.hasFeature(DemoUserFeature.GENERATE_TRANSACTIONS)) {
             return DemoTransactionsGenerator.generateTransactions(demoCredentials, account);
@@ -596,9 +597,16 @@ public class DemoAgent extends AbstractAgent
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
         getAccounts().stream()
-                .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
-                .forEach(account -> accounts.put(account,
-                        AccountFeatures.createForPortfolios(generateFakePortolio(account))));
+                .filter(
+                        account ->
+                                RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(
+                                        account.getType()))
+                .forEach(
+                        account ->
+                                accounts.put(
+                                        account,
+                                        AccountFeatures.createForPortfolios(
+                                                generateFakePortolio(account))));
         return new FetchInvestmentAccountsResponse(accounts);
     }
 
@@ -627,17 +635,21 @@ public class DemoAgent extends AbstractAgent
     public FetchEInvoicesResponse fetchEInvoices() {
         return new FetchEInvoicesResponse(getEInvoices());
     }
+
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
         for (Account account : accounts) {
             List<TransferDestinationPattern> destinations = new ArrayList<>();
-            destinations.add(TransferDestinationPattern.createForMultiMatch(
-                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
-            destinations.add(TransferDestinationPattern.createForMultiMatch(
-                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
-            destinations.add(TransferDestinationPattern.createForMultiMatch(
-                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+            destinations.add(
+                    TransferDestinationPattern.createForMultiMatch(
+                            AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
+            destinations.add(
+                    TransferDestinationPattern.createForMultiMatch(
+                            AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
+            destinations.add(
+                    TransferDestinationPattern.createForMultiMatch(
+                            AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
             transferDestinations.put(account, destinations);
         }
         return new FetchTransferDestinationsResponse(transferDestinations);

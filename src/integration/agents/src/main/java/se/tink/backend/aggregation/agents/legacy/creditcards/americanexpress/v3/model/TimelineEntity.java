@@ -42,5 +42,4 @@ public class TimelineEntity extends StatusEntity {
     public List<CardEntity> getCardList() {
         return cardList;
     }
-
 }

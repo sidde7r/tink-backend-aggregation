@@ -10,22 +10,22 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SecurityHoldingsResponse {
-    @JsonIgnore
-    private static final String NAME = "Aktiedepå";
+    @JsonIgnore private static final String NAME = "Aktiedepå";
     private SecurityHoldingsEntity securityHoldings;
 
     public SecurityHoldingsEntity getSecurityHoldings() {
         return securityHoldings;
     }
 
-    public void setSecurityHoldings(
-            SecurityHoldingsEntity securityHoldings) {
+    public void setSecurityHoldings(SecurityHoldingsEntity securityHoldings) {
         this.securityHoldings = securityHoldings;
     }
 
     public Optional<Account> toShareDepotAccount(ShareDepotWrapper shareDepotWrapper) {
-        if (getSecurityHoldings() == null || getSecurityHoldings().getTotalMarketValue() == null
-                || shareDepotWrapper == null || shareDepotWrapper.getDepot() == null
+        if (getSecurityHoldings() == null
+                || getSecurityHoldings().getTotalMarketValue() == null
+                || shareDepotWrapper == null
+                || shareDepotWrapper.getDepot() == null
                 || shareDepotWrapper.getDepot().getDepotNumber() == null) {
             return Optional.empty();
         }
@@ -44,11 +44,16 @@ public class SecurityHoldingsResponse {
     public Portfolio toShareDepotPortfolio(ShareDepotWrapper shareDepotWrapper, Double cashValue) {
         Portfolio portfolio = new Portfolio();
 
-        double totalMarketValue = StringUtils.parseAmount(getSecurityHoldings().getTotalMarketValue());
+        double totalMarketValue =
+                StringUtils.parseAmount(getSecurityHoldings().getTotalMarketValue());
 
         portfolio.setCashValue(cashValue);
-        portfolio.setTotalProfit(getSecurityHoldings().getTotalAcquisitionCost() != null ?
-                totalMarketValue - StringUtils.parseAmount(getSecurityHoldings().getTotalAcquisitionCost()) : null);
+        portfolio.setTotalProfit(
+                getSecurityHoldings().getTotalAcquisitionCost() != null
+                        ? totalMarketValue
+                                - StringUtils.parseAmount(
+                                        getSecurityHoldings().getTotalAcquisitionCost())
+                        : null);
         portfolio.setTotalValue(totalMarketValue);
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setUniqueIdentifier(shareDepotWrapper.getDepot().getDepotNumber());

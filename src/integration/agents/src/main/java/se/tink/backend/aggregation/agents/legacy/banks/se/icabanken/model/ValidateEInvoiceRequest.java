@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ValidateEInvoiceRequest {
     @JsonProperty("DebitAccountId")
     private String accountId;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 

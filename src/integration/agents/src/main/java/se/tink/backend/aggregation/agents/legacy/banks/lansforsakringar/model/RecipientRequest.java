@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 public class RecipientRequest {
     private String giroNumber;
 
-    public RecipientRequest() {
-
-    }
+    public RecipientRequest() {}
 
     public RecipientRequest(String giroNumber) {
         this.giroNumber = giroNumber;
@@ -18,5 +16,4 @@ public class RecipientRequest {
     public void setGiroNumber(String giroNumber) {
         this.giroNumber = giroNumber;
     }
-
 }

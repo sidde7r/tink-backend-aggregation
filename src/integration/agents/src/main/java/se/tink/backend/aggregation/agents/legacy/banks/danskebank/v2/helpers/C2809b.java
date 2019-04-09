@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
-import org.json.JSONException;
-
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.text.DateFormat;
@@ -10,6 +8,7 @@ import java.util.Formatter;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class C2809b {
@@ -66,9 +65,7 @@ public class C2809b {
         Formatter formatter = new Formatter();
         int length = bArr.length;
         for (int i = 0; i < length; i++) {
-            formatter.format("%02x", new Object[] {
-                Byte.valueOf(bArr[i])
-            });
+            formatter.format("%02x", new Object[] {Byte.valueOf(bArr[i])});
         }
         String formatter2 = formatter.toString();
         formatter.close();

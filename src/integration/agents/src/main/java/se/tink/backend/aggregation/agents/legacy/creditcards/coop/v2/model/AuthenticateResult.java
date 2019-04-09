@@ -7,10 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthenticateResult {
     @JsonProperty("MemberAccountType")
     private int memberAccountType;
+
     @JsonProperty("Token")
     private String token;
+
     @JsonProperty("UserID")
     private long userId;
+
     @JsonProperty("UserSummary")
     private UserSummaryEntity userSummary;
 

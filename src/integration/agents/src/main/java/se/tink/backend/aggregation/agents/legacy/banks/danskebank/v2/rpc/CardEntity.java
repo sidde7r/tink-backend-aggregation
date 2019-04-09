@@ -7,30 +7,43 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CardEntity {
     @JsonProperty("CardId")
     private String id;
+
     @JsonProperty("CardNo")
     private String number;
+
     @JsonProperty("CreditCardNo")
     private String creditNumber;
+
     @JsonProperty("DebitCardNo")
     private String debitNumber;
+
     @JsonProperty("CardStatus")
     private String status;
+
     @JsonProperty("CardName")
     private String cardName;
+
     @JsonProperty("ActionAllowed")
     private String actionAllowed;
+
     @JsonProperty("CardCategory")
     private String category;
+
     @JsonProperty("ExpireMonth")
     private String expireMonth;
+
     @JsonProperty("ExpireYear")
     private String expireYear;
+
     @JsonProperty("AccountName")
     private String accountName;
+
     @JsonProperty("AccountNo")
     private String accountNumber;
+
     @JsonProperty("ShowBalance")
     private String showBalance;
+
     @JsonProperty("Balance")
     private Double balance;
 

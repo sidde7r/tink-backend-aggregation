@@ -11,7 +11,12 @@ public class MarketParameters {
         return useOldBankId;
     }
 
-    public MarketParameters(String locale, String appId, String baseUrl, String clientVersion, boolean useOldBankId) {
+    public MarketParameters(
+            String locale,
+            String appId,
+            String baseUrl,
+            String clientVersion,
+            boolean useOldBankId) {
         this.locale = locale;
         this.appId = appId;
         this.baseUrl = baseUrl;

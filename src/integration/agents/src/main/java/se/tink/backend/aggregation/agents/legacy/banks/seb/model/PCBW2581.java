@@ -10,9 +10,9 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.LoanDetails;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -26,59 +26,82 @@ public class PCBW2581 {
 
     @JsonProperty("KONTRAKTNR")
     private String loanNumber;
+
     @JsonProperty("KTOSLAG_TXT")
     private String loanName;
+
     @JsonProperty("SKULD")
     private double currentDebt;
+
     @JsonProperty("RTE_SATS")
     private String interestRate;
+
     @JsonProperty("DATRTEJUST")
     private String nextDayOfTermsChange;
+
     @JsonProperty("AMORTERING")
     private Double monthlyAmortization;
+
     @JsonProperty("LANTAGARE1")
     private String applicant1;
+
     @JsonProperty("LANTAGARE2")
     private String applicant2;
+
     @JsonProperty("FLER_LANTAGARE_FL")
     private String multipleApplicants;
+
     @JsonProperty("OBJBETD1")
     private String objectInfo1;
+
     @JsonProperty("OBJBETD2")
     private String objectInfo2;
+
     @JsonProperty("OBJBETD3")
     private String objectInfo3;
+
     @JsonProperty("OBJBETD4")
     private String objectInfo4;
-    /**
-     * The fields bellow are not used
-     */
+    /** The fields bellow are not used */
     @JsonProperty("ROW_ID")
     private int ROW_ID;
+
     @JsonProperty("NASTA_FFDAT")
     private String NASTA_FFDAT;
+
     @JsonProperty("BELOPP")
     private Double BELOPP;
+
     @JsonProperty("RTE_FF_DATUM")
     private String RTE_FF_DATUM;
+
     @JsonProperty("INBETSATT")
     private String INBETSATT;
+
     @JsonProperty("RANTA")
     private Double RANTA;
+
     @JsonProperty("DRJBEL")
     private Double DRJBEL;
+
     @JsonProperty("OVRAVGBEL")
     private Double OVRAVGBEL;
+
     @JsonProperty("KUNDNR_LOP_NR")
     private String KUNDNR_LOP_NR;
+
     @JsonProperty("LANTAGARE_FL")
     private String LANTAGARE_FL;
+
     @JsonProperty("DATSLUTBET")
     private String DATSLUTBET;
+
     @JsonProperty("AVISERING_FL")
     private String AVISERING_FL;
+
     @JsonProperty("FORFALL_KOD")
     private String FORFALL_KOD;
+
     @JsonProperty("AVI_TXT")
     private String AVI_TXT;
 
@@ -250,9 +273,9 @@ public class PCBW2581 {
     }
 
     public Boolean hasCoApplicant() {
-        if (Objects.equal(multipleApplicants,"J")) {
+        if (Objects.equal(multipleApplicants, "J")) {
             return true;
-        } else if (Objects.equal(multipleApplicants,"N")) {
+        } else if (Objects.equal(multipleApplicants, "N")) {
             return false;
         }
         return null;

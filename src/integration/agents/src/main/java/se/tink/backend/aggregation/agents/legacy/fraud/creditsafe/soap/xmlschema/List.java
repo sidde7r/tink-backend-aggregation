@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,17 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 
-
 /**
- * 
- *           itemType attribute and simpleType child are mutually
- *           exclusive, but one or other is required
- *         
- * 
+ * itemType attribute and simpleType child are mutually exclusive, but one or other is required
+ *
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -32,29 +27,23 @@ import javax.xml.namespace.QName;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "simpleType"
-})
+@XmlType(
+        name = "",
+        propOrder = {"simpleType"})
 @XmlRootElement(name = "list")
-public class List
-    extends Annotated
-{
+public class List extends Annotated {
 
     protected LocalSimpleType simpleType;
+
     @XmlAttribute(name = "itemType")
     protected QName itemType;
 
     /**
      * Gets the value of the simpleType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link LocalSimpleType }
-     *     
+     *
+     * @return possible object is {@link LocalSimpleType }
      */
     public LocalSimpleType getSimpleType() {
         return simpleType;
@@ -62,11 +51,8 @@ public class List
 
     /**
      * Sets the value of the simpleType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link LocalSimpleType }
-     *     
+     *
+     * @param value allowed object is {@link LocalSimpleType }
      */
     public void setSimpleType(LocalSimpleType value) {
         this.simpleType = value;
@@ -74,11 +60,8 @@ public class List
 
     /**
      * Gets the value of the itemType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link QName }
-     *     
+     *
+     * @return possible object is {@link QName }
      */
     public QName getItemType() {
         return itemType;
@@ -86,14 +69,10 @@ public class List
 
     /**
      * Sets the value of the itemType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link QName }
-     *     
+     *
+     * @param value allowed object is {@link QName }
      */
     public void setItemType(QName value) {
         this.itemType = value;
     }
-
 }

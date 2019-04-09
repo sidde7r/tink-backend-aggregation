@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import java.util.ArrayList;
@@ -11,12 +10,11 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * <p>Java class for simpleType complex type.
- * 
+ * Java class for simpleType complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="simpleType">
  *   &lt;complexContent>
@@ -29,29 +27,22 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "simpleType", propOrder = {
-    "restriction",
-    "list",
-    "union"
-})
-@XmlSeeAlso({
-    TopLevelSimpleType.class,
-    LocalSimpleType.class
-})
-public abstract class SimpleType
-    extends Annotated
-{
+@XmlType(
+        name = "simpleType",
+        propOrder = {"restriction", "list", "union"})
+@XmlSeeAlso({TopLevelSimpleType.class, LocalSimpleType.class})
+public abstract class SimpleType extends Annotated {
 
     protected Restriction restriction;
     protected se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List list;
     protected Union union;
+
     @XmlAttribute(name = "final")
     @XmlSchemaType(name = "simpleDerivationSet")
     protected java.util.List<String> _final;
+
     @XmlAttribute(name = "name")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
@@ -59,11 +50,8 @@ public abstract class SimpleType
 
     /**
      * Gets the value of the restriction property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Restriction }
-     *     
+     *
+     * @return possible object is {@link Restriction }
      */
     public Restriction getRestriction() {
         return restriction;
@@ -71,11 +59,8 @@ public abstract class SimpleType
 
     /**
      * Sets the value of the restriction property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Restriction }
-     *     
+     *
+     * @param value allowed object is {@link Restriction }
      */
     public void setRestriction(Restriction value) {
         this.restriction = value;
@@ -83,11 +68,9 @@ public abstract class SimpleType
 
     /**
      * Gets the value of the list property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List }
-     *     
+     *
+     * @return possible object is {@link
+     *     se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List }
      */
     public se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List getList() {
         return list;
@@ -95,23 +78,19 @@ public abstract class SimpleType
 
     /**
      * Sets the value of the list property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List }
-     *     
+     *
+     * @param value allowed object is {@link
+     *     se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List }
      */
-    public void setList(se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List value) {
+    public void setList(
+            se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.List value) {
         this.list = value;
     }
 
     /**
      * Gets the value of the union property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Union }
-     *     
+     *
+     * @return possible object is {@link Union }
      */
     public Union getUnion() {
         return union;
@@ -119,11 +98,8 @@ public abstract class SimpleType
 
     /**
      * Sets the value of the union property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Union }
-     *     
+     *
+     * @param value allowed object is {@link Union }
      */
     public void setUnion(Union value) {
         this.union = value;
@@ -131,25 +107,18 @@ public abstract class SimpleType
 
     /**
      * Gets the value of the final property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the final property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the final property.
+     *
+     * <p>For example, to add a new item, do as follows:
+     *
      * <pre>
      *    getFinal().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link String }
      */
     public java.util.List<String> getFinal() {
         if (_final == null) {
@@ -160,11 +129,8 @@ public abstract class SimpleType
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getName() {
         return name;
@@ -172,14 +138,10 @@ public abstract class SimpleType
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) {
         this.name = value;
     }
-
 }

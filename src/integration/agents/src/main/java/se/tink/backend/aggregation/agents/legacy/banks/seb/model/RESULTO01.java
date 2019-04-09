@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class RESULTO01 {
     @JsonProperty("INIT_TIME")
     private String initTime;
+
     @JsonProperty("INIT_RESULT")
     private String initResult;
 

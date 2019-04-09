@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.WebResource;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.AccountEntity;
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.AuthenticateResult;
@@ -19,19 +20,20 @@ import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.TransactionR
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.TransactionResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class CoopApiClient {
 
-    private static final MetricId METRIC_COOP_GET_TRANSACTIONS = MetricId.newId("coop_get_transactions");
+    private static final MetricId METRIC_COOP_GET_TRANSACTIONS =
+            MetricId.newId("coop_get_transactions");
     private static final String APPLICATION_ID = "687D17CB-85C3-4547-9F8D-A346C7008EB1";
     private static final String BASE_URL = "https://www.coop.se/ExternalServices/V4";
     private static final String LOGIN_URL = BASE_URL + "/UserServiceV4.svc/Authenticate";
-    private static final String TRANSACTION_URL = BASE_URL + "/FinancialServiceV4.svc/GetTransactions";
+    private static final String TRANSACTION_URL =
+            BASE_URL + "/FinancialServiceV4.svc/GetTransactions";
     private static final String SUMMARY_URL = BASE_URL + "/UserServiceV4.svc/GetUserSummary";
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final AggregationLogger log = new AggregationLogger(CoopApiClient.class);
@@ -71,8 +73,8 @@ public class CoopApiClient {
 
             return true;
         } catch (UniformInterfaceException e) {
-            if (e.getResponse().getStatus() == Response.Status.UNAUTHORIZED.getStatusCode() &&
-                    Boolean.valueOf(e.getResponse().getHeaders().getFirst("jsonError"))) {
+            if (e.getResponse().getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()
+                    && Boolean.valueOf(e.getResponse().getHeaders().getFirst("jsonError"))) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
@@ -90,7 +92,8 @@ public class CoopApiClient {
     }
 
     public List<Transaction> getTransactions(int accountType, int pageSize) {
-        // We've seen a lot of 500 responses on first try to get transactions. When retrying it works.
+        // We've seen a lot of 500 responses on first try to get transactions. When retrying it
+        // works.
         // Let's retry in code and see if that solves it.
         try {
             TransactionResponse transactionResponse = fetchTransactions(accountType, pageSize);
@@ -155,5 +158,4 @@ public class CoopApiClient {
 
         return transactionRequest;
     }
-
 }

@@ -14,10 +14,11 @@ import se.tink.libraries.enums.GenericApplicationFieldGroupNames;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class WithdrawalAccount {
-    @JsonIgnore
-    private String bank;
+    @JsonIgnore private String bank;
+
     @JsonProperty("BankPrefix")
     private String clearingNumber;
+
     @JsonProperty("AccountNr")
     private String accountNumber;
 
@@ -54,14 +55,15 @@ class WithdrawalAccount {
             return null;
         }
         // mask half of the input string, do not disclose how long the original string is
-        return "*****" + s.substring(s.length()/2);
+        return "*****" + s.substring(s.length() / 2);
     }
 
     @Override
     public String toString() {
-        MoreObjects.ToStringHelper builder = MoreObjects.toStringHelper(this)
-                .add("BankClearingNr", mask(clearingNumber))
-                .add("BankAccountNr",  mask(accountNumber));
+        MoreObjects.ToStringHelper builder =
+                MoreObjects.toStringHelper(this)
+                        .add("BankClearingNr", mask(clearingNumber))
+                        .add("BankAccountNr", mask(accountNumber));
 
         if (Strings.isNullOrEmpty(bank)) {
             builder.add("Bank", bank);
@@ -70,16 +72,20 @@ class WithdrawalAccount {
         return builder.toString();
     }
 
-    public static WithdrawalAccount from(ListMultimap<String, GenericApplicationFieldGroup> fieldGroupByName) {
-        List<GenericApplicationFieldGroup> withdrawalAccountFieldGroups = fieldGroupByName
-                .get(GenericApplicationFieldGroupNames.WITHDRAWAL_ACCOUNT);
+    public static WithdrawalAccount from(
+            ListMultimap<String, GenericApplicationFieldGroup> fieldGroupByName) {
+        List<GenericApplicationFieldGroup> withdrawalAccountFieldGroups =
+                fieldGroupByName.get(GenericApplicationFieldGroupNames.WITHDRAWAL_ACCOUNT);
 
         // There should be only one.
-        GenericApplicationFieldGroup withdrawalAccountFieldGroup = withdrawalAccountFieldGroups.get(0);
+        GenericApplicationFieldGroup withdrawalAccountFieldGroup =
+                withdrawalAccountFieldGroups.get(0);
 
         WithdrawalAccount withdrawalAccount = new WithdrawalAccount();
-        withdrawalAccount.setAccountNumber(withdrawalAccountFieldGroup.getField(ApplicationFieldName.ACCOUNT_NUMBER));
-        withdrawalAccount.setClearingNumber(withdrawalAccountFieldGroup.getField(ApplicationFieldName.CLEARING_NUMBER));
+        withdrawalAccount.setAccountNumber(
+                withdrawalAccountFieldGroup.getField(ApplicationFieldName.ACCOUNT_NUMBER));
+        withdrawalAccount.setClearingNumber(
+                withdrawalAccountFieldGroup.getField(ApplicationFieldName.CLEARING_NUMBER));
 
         return withdrawalAccount;
     }

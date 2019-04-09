@@ -4,23 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionListResponse {
-	protected boolean hasMore;
-	protected int nextSequenceNumber;
+    protected boolean hasMore;
+    protected int nextSequenceNumber;
 
-	public boolean getHasMore() {
-		return hasMore;
-	}
+    public boolean getHasMore() {
+        return hasMore;
+    }
 
-	public void setHasMore(boolean hasMore) {
-		this.hasMore = hasMore;
-	}
+    public void setHasMore(boolean hasMore) {
+        this.hasMore = hasMore;
+    }
 
-	public int getNextSequenceNumber() {
-		return nextSequenceNumber;
-	}
+    public int getNextSequenceNumber() {
+        return nextSequenceNumber;
+    }
 
-	public void setNextSequenceNumber(int nextSequenceNumber) {
-		this.nextSequenceNumber = nextSequenceNumber;
-	}
-
+    public void setNextSequenceNumber(int nextSequenceNumber) {
+        this.nextSequenceNumber = nextSequenceNumber;
+    }
 }

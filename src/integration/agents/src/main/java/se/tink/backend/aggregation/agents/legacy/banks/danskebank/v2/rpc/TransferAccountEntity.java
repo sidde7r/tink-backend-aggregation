@@ -9,14 +9,18 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferAccountEntity implements GeneralAccountEntity {
-    private final static DanskeBankAccountIdentifierFormatter IDENTIFIER_FORMATTER = new DanskeBankAccountIdentifierFormatter();
+    private static final DanskeBankAccountIdentifierFormatter IDENTIFIER_FORMATTER =
+            new DanskeBankAccountIdentifierFormatter();
 
     @JsonProperty("AccountId")
     private String accountId;
+
     @JsonProperty("AccountNumber")
     private String accountNumber;
+
     @JsonProperty("AccountName")
     private String accountName;
+
     @JsonProperty("Bank")
     private String bank;
 
@@ -29,8 +33,10 @@ public class TransferAccountEntity implements GeneralAccountEntity {
     }
 
     public String getAccountNumber() {
-        // The accountNumber sometimes contains the clearing number (separated with a space), e.g. "clearing accountnr".
-        // However, when matching transfer destinations/sources with collected accounts they wont match unless
+        // The accountNumber sometimes contains the clearing number (separated with a space), e.g.
+        // "clearing accountnr".
+        // However, when matching transfer destinations/sources with collected accounts they wont
+        // match unless
         // we remove the clearing number (which is not present in the accounts list).
         // This regex removes the clearing number if present.
         return accountNumber.replaceFirst("^[^\\s]*\\s", "");
@@ -56,21 +62,21 @@ public class TransferAccountEntity implements GeneralAccountEntity {
         this.bank = bank;
     }
 
-
     /*
      * The methods below are for general purposes
      */
 
     /**
-     * Once this entity has been initialized we don't need to re-parse the identifier each time. Just reuse the same
-     * identifier object.
+     * Once this entity has been initialized we don't need to re-parse the identifier each time.
+     * Just reuse the same identifier object.
      */
     private SwedishIdentifier cachedGeneralGetAccountIdentifier;
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
         if (cachedGeneralGetAccountIdentifier == null) {
-            cachedGeneralGetAccountIdentifier = IDENTIFIER_FORMATTER.parseSwedishIdentifier(bank, getAccountNumber());
+            cachedGeneralGetAccountIdentifier =
+                    IDENTIFIER_FORMATTER.parseSwedishIdentifier(bank, getAccountNumber());
         }
 
         return cachedGeneralGetAccountIdentifier;

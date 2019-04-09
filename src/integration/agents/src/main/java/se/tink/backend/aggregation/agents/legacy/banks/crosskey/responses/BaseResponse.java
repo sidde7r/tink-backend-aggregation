@@ -12,7 +12,8 @@ public class BaseResponse {
     private String tanPosition;
     private String autoStartToken;
 
-    public static <T extends BaseResponse> T deserializeResponse(String response, Class<T> model, CrossKeyErrorHandler errorHandler) throws Exception {
+    public static <T extends BaseResponse> T deserializeResponse(
+            String response, Class<T> model, CrossKeyErrorHandler errorHandler) throws Exception {
         response = BaseResponse.filterResponse(response);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -22,7 +23,8 @@ public class BaseResponse {
         return r;
     }
 
-    public static BaseResponse deserializeResponse(String response, CrossKeyErrorHandler errorHandler) throws Exception {
+    public static BaseResponse deserializeResponse(
+            String response, CrossKeyErrorHandler errorHandler) throws Exception {
         return BaseResponse.deserializeResponse(response, BaseResponse.class, errorHandler);
     }
 
@@ -69,9 +71,9 @@ public class BaseResponse {
     }
 
     public void checkForErrors(CrossKeyErrorHandler errorHandler) throws Exception {
-        /** status.errors.size() - will throw NullPointerException if:
-         *  - The errors field doesn't exist in the response
-         *  - The response is empty
+        /**
+         * status.errors.size() - will throw NullPointerException if: - The errors field doesn't
+         * exist in the response - The response is empty
          */
         if (status.errors.size() > 0) {
             String errCode = status.errors.get(0);

@@ -8,7 +8,7 @@ public class LoginRequest extends MultivaluedMapImpl {
     public LoginRequest() {
         add("encryption", "1");
         add("fake_password", "");
-        add("referer","/now/mobile/2016.05.10-11.47.24/index.html");
+        add("referer", "/now/mobile/2016.05.10-11.47.24/index.html");
     }
 
     @Override

@@ -23,14 +23,17 @@ public class SummaryDataEntity extends StatusEntity {
         if (cardList == null) {
             return Collections.emptyList();
         }
-        
+
         return cardList.stream()
-                .filter(cardDetail -> {
-                    if (cardDetail.getMessage() != null && cardDetail.getMessage().getShortValue() != null) {
-                        return !"cancelled".equalsIgnoreCase(cardDetail.getMessage().getShortValue());
-                    }
-                    return true;
-                })
+                .filter(
+                        cardDetail -> {
+                            if (cardDetail.getMessage() != null
+                                    && cardDetail.getMessage().getShortValue() != null) {
+                                return !"cancelled"
+                                        .equalsIgnoreCase(cardDetail.getMessage().getShortValue());
+                            }
+                            return true;
+                        })
                 .collect(Collectors.toList());
     }
 

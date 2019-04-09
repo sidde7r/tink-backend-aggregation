@@ -12,13 +12,13 @@ import java.util.Date;
 import javax.annotation.Nullable;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentDetailsResponseOut {
@@ -26,7 +26,8 @@ public class PaymentDetailsResponseOut {
             new Function<PaymentDetailsResponseOut, Transfer>() {
                 @Nullable
                 @Override
-                public Transfer apply(@Nullable PaymentDetailsResponseOut paymentDetailsResponseOut) {
+                public Transfer apply(
+                        @Nullable PaymentDetailsResponseOut paymentDetailsResponseOut) {
                     if (paymentDetailsResponseOut == null) {
                         return null;
                     }
@@ -279,7 +280,10 @@ public class PaymentDetailsResponseOut {
 
         Transfer transfer = new Transfer();
         Payment.StatusCode statusCode = getStatusCode();
-        transfer.setType(statusCode == Payment.StatusCode.CONFIRMED ? TransferType.PAYMENT : TransferType.EINVOICE);
+        transfer.setType(
+                statusCode == Payment.StatusCode.CONFIRMED
+                        ? TransferType.PAYMENT
+                        : TransferType.EINVOICE);
         transfer.setDestination(getDestination());
         transfer.setAmount(Amount.inSEK(getAmount()));
         transfer.setSource(getTransferSource());
@@ -288,8 +292,11 @@ public class PaymentDetailsResponseOut {
         if (paymentDate != null) {
             transfer.setDueDate(DateUtils.flattenTime(paymentDate));
         } else {
-            Preconditions.checkNotNull(dueDate,
-                    String.format("Non-valid Transfer? PaymentDetailsResponse has dueDate == null: %s.", this));
+            Preconditions.checkNotNull(
+                    dueDate,
+                    String.format(
+                            "Non-valid Transfer? PaymentDetailsResponse has dueDate == null: %s.",
+                            this));
             transfer.setDueDate(DateUtils.flattenTime(dueDate));
         }
 
@@ -302,15 +309,15 @@ public class PaymentDetailsResponseOut {
     @JsonIgnore
     private AccountIdentifier getDestination() {
         Payment.SubTypeExtension subTypeExtension = getPaymentSubTypeExtension();
-        Preconditions.checkNotNull(subTypeExtension,
+        Preconditions.checkNotNull(
+                subTypeExtension,
                 "Could not parse sub type extension for einvoice: " + paymentSubTypeExtension);
 
-        return AccountIdentifier.create(subTypeExtension.getType(), getToAccountNumber(), getBeneficiaryName());
+        return AccountIdentifier.create(
+                subTypeExtension.getType(), getToAccountNumber(), getBeneficiaryName());
     }
 
-    /**
-     * Example: NDEASESSXXX-SE1-SEK-8607011234
-     */
+    /** Example: NDEASESSXXX-SE1-SEK-8607011234 */
     @JsonIgnore
     private AccountIdentifier getTransferSource() {
         String internalIdentifier = StringUtils.substringAfterLast(getFromAccountId(), "-");

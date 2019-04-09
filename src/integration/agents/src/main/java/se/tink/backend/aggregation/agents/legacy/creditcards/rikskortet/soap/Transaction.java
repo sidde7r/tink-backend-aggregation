@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Transaction complex type.
- * 
+ * Java class for Transaction complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Transaction">
  *   &lt;complexContent>
@@ -27,37 +25,32 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Transaction", propOrder = {
-    "last",
-    "day",
-    "week",
-    "month",
-    "year"
-})
+@XmlType(
+        name = "Transaction",
+        propOrder = {"last", "day", "week", "month", "year"})
 public class Transaction {
 
     @XmlElement(name = "Last")
     protected ArrayOfTransactionDetails last;
+
     @XmlElement(name = "Day")
     protected ArrayOfTransactionDetails day;
+
     @XmlElement(name = "Week")
     protected ArrayOfTransactionDetails week;
+
     @XmlElement(name = "Month")
     protected ArrayOfTransactionDetails month;
+
     @XmlElement(name = "Year")
     protected ArrayOfTransactionDetails year;
 
     /**
      * Gets the value of the last property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfTransactionDetails }
      */
     public ArrayOfTransactionDetails getLast() {
         return last;
@@ -65,11 +58,8 @@ public class Transaction {
 
     /**
      * Sets the value of the last property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfTransactionDetails }
      */
     public void setLast(ArrayOfTransactionDetails value) {
         this.last = value;
@@ -77,11 +67,8 @@ public class Transaction {
 
     /**
      * Gets the value of the day property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfTransactionDetails }
      */
     public ArrayOfTransactionDetails getDay() {
         return day;
@@ -89,11 +76,8 @@ public class Transaction {
 
     /**
      * Sets the value of the day property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfTransactionDetails }
      */
     public void setDay(ArrayOfTransactionDetails value) {
         this.day = value;
@@ -101,11 +85,8 @@ public class Transaction {
 
     /**
      * Gets the value of the week property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfTransactionDetails }
      */
     public ArrayOfTransactionDetails getWeek() {
         return week;
@@ -113,11 +94,8 @@ public class Transaction {
 
     /**
      * Sets the value of the week property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfTransactionDetails }
      */
     public void setWeek(ArrayOfTransactionDetails value) {
         this.week = value;
@@ -125,11 +103,8 @@ public class Transaction {
 
     /**
      * Gets the value of the month property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfTransactionDetails }
      */
     public ArrayOfTransactionDetails getMonth() {
         return month;
@@ -137,11 +112,8 @@ public class Transaction {
 
     /**
      * Sets the value of the month property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfTransactionDetails }
      */
     public void setMonth(ArrayOfTransactionDetails value) {
         this.month = value;
@@ -149,11 +121,8 @@ public class Transaction {
 
     /**
      * Gets the value of the year property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @return possible object is {@link ArrayOfTransactionDetails }
      */
     public ArrayOfTransactionDetails getYear() {
         return year;
@@ -161,14 +130,10 @@ public class Transaction {
 
     /**
      * Sets the value of the year property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfTransactionDetails }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfTransactionDetails }
      */
     public void setYear(ArrayOfTransactionDetails value) {
         this.year = value;
     }
-
 }

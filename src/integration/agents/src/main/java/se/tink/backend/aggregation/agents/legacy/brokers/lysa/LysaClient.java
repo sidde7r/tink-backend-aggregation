@@ -4,13 +4,13 @@ import com.google.common.base.Preconditions;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.StartBankIdRequest;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.StartBankIdResponse;
 import se.tink.libraries.social.security.SocialSecurityNumber;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 public class LysaClient {
     private static final String BASE_URL = "https://api.lysa.se/";
@@ -26,7 +26,8 @@ public class LysaClient {
     public StartBankIdResponse startBankId(String identificationNumber) {
         Preconditions.checkNotNull(identificationNumber);
 
-        SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(identificationNumber);
+        SocialSecurityNumber.Sweden socialSecurityNumber =
+                new SocialSecurityNumber.Sweden(identificationNumber);
         Preconditions.checkState(socialSecurityNumber.isValid());
 
         StartBankIdRequest request = new StartBankIdRequest();
@@ -42,16 +43,19 @@ public class LysaClient {
     }
 
     public List<TransactionEntity> getTransactions() {
-        return createClientRequest("transactions").get(new GenericType<List<TransactionEntity>>() {});
+        return createClientRequest("transactions")
+                .get(new GenericType<List<TransactionEntity>>() {});
     }
 
     private WebResource.Builder createClientRequest(String uri) {
         Preconditions.checkNotNull(uri);
 
-        WebResource.Builder builder = httpClient.resource(BASE_URL + uri)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header("User-Agent", aggregator);
+        WebResource.Builder builder =
+                httpClient
+                        .resource(BASE_URL + uri)
+                        .type(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .header("User-Agent", aggregator);
 
         return builder;
     }

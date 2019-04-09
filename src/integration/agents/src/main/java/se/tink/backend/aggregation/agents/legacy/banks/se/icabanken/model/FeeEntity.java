@@ -7,12 +7,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FeeEntity {
     @JsonProperty("Administration")
     private double amdministration;
+
     @JsonProperty("Buy")
     private double buy;
+
     @JsonProperty("Sell")
     private double sell;
+
     @JsonProperty("Norman")
     private long norman;
+
     @JsonProperty("YearlyFee")
     private double yearly;
 

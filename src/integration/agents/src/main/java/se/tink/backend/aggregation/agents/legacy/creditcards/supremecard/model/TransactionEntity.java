@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.creditcards.supremecard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.strings.StringUtils;
-
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -100,7 +99,7 @@ public class TransactionEntity {
     public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
-    
+
     public Transaction toTransaction() {
         Transaction transaction = new Transaction();
 
@@ -115,7 +114,7 @@ public class TransactionEntity {
         } else if (StringUtils.trimToNull(this.sellerName) == null) {
             transaction.setDescription(nameOfTransaction);
         }
-        
+
         return transaction;
     }
 }

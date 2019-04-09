@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardResponseEntity {

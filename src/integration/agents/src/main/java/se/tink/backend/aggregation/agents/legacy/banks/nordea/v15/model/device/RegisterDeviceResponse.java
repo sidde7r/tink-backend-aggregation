@@ -15,5 +15,4 @@ public class RegisterDeviceResponse {
     public void setData(RegisterDeviceResponseData data) {
         this.data = data;
     }
-
 }

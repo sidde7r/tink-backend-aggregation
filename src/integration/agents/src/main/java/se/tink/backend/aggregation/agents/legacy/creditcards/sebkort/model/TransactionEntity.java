@@ -112,5 +112,4 @@ public class TransactionEntity {
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
-
 }

@@ -23,8 +23,7 @@ public class BankIdConfirmationOut {
         return confirmPayments;
     }
 
-    public void setConfirmPayments(
-            BankIdConfirmPayments confirmPayments) {
+    public void setConfirmPayments(BankIdConfirmPayments confirmPayments) {
         this.confirmPayments = confirmPayments;
     }
 }

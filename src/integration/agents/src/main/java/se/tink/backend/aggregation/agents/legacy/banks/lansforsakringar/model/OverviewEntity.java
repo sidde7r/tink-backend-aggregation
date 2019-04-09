@@ -9,16 +9,19 @@ public class OverviewEntity {
 
     private CardResponseEntity cardResponse;
     private AccountResponseEntity accountResponse;
-    
+
     public CardResponseEntity getCardResponse() {
         return cardResponse;
     }
+
     public void setCardResponse(CardResponseEntity cardResponse) {
         this.cardResponse = cardResponse;
     }
+
     public AccountResponseEntity getAccountResponse() {
         return accountResponse;
     }
+
     public void setAccountResponse(AccountResponseEntity accountResponse) {
         this.accountResponse = accountResponse;
     }

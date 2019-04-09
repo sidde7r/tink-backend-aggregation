@@ -7,7 +7,9 @@ import com.google.common.base.Objects;
 public enum MortgageStatus {
     APPLICATION_CREATED("0"), // SEB har tagit emot din ansökan
     SEB_WILL_CONTACT_CUSTOMER("1"), // SEB kommer att kontakta  dig
-    INCOMPLETE_APPLICATION("2"), // Du behöver komplettera alt. Du behöver komplettera några uppgifter alt. Du behöver komplettera dina uppgifter
+    INCOMPLETE_APPLICATION(
+            "2"), // Du behöver komplettera alt. Du behöver komplettera några uppgifter alt. Du
+                  // behöver komplettera dina uppgifter
     APPLICATION_APPROVED("3"), // Bolånet är beviljat
     APPLICATION_REJECTED("4"), // Bolånet är avslaget
     MORTGAGE_TRANSFERRED("5"), // Bolånet är flyttat
@@ -32,7 +34,8 @@ public enum MortgageStatus {
             }
         }
 
-        throw new IllegalArgumentException(String.format(
-                "Invalid serialized value for Status: %s. Missing a mapping?", serialized));
+        throw new IllegalArgumentException(
+                String.format(
+                        "Invalid serialized value for Status: %s. Missing a mapping?", serialized));
     }
 }

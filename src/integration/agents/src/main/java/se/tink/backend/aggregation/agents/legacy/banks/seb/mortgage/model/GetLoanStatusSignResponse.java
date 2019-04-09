@@ -38,8 +38,8 @@ public class GetLoanStatusSignResponse {
 
         GetLoanStatusSignResponse that = (GetLoanStatusSignResponse) o;
 
-        return Objects.equal(this.status, that.status) &&
-                Objects.equal(this.errorsDescription, that.errorsDescription);
+        return Objects.equal(this.status, that.status)
+                && Objects.equal(this.errorsDescription, that.errorsDescription);
     }
 
     @Override
@@ -56,8 +56,15 @@ public class GetLoanStatusSignResponse {
     }
 
     public enum BankIdStatus {
-        USER_SIGN, COMPLETE, NO_CLIENT, OUTSTANDING_TRANSACTION, USER_CANCEL, EXPIRED_TRANSACTION, STARTED, ERROR,
-        USER_VALIDATION_ERROR // <- USER_VALIDATION_ERROR isn't sent from SEB, but we get 403 error status from them meaning that TryggVe validation failed
+        USER_SIGN,
+        COMPLETE,
+        NO_CLIENT,
+        OUTSTANDING_TRANSACTION,
+        USER_CANCEL,
+        EXPIRED_TRANSACTION,
+        STARTED,
+        ERROR,
+        USER_VALIDATION_ERROR // <- USER_VALIDATION_ERROR isn't sent from SEB, but we get 403 error
+                              // status from them meaning that TryggVe validation failed
     }
 }
-

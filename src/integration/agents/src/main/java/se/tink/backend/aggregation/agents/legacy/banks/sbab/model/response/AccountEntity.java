@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

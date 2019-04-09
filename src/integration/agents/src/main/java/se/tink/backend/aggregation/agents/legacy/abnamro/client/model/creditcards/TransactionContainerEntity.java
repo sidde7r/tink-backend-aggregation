@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionContainerEntity {
-    private final static Logger log = LoggerFactory.getLogger(TransactionContainerEntity.class);
-    private final static ImmutableSet<String> PENDING_TYPES = ImmutableSet.of("AUTHORIZATION");
-    private final static String EUR_CURRENCY_CODE = "EUR";
+    private static final Logger log = LoggerFactory.getLogger(TransactionContainerEntity.class);
+    private static final ImmutableSet<String> PENDING_TYPES = ImmutableSet.of("AUTHORIZATION");
+    private static final String EUR_CURRENCY_CODE = "EUR";
 
     private TransactionEntity creditCardTransaction;
 
@@ -22,9 +22,7 @@ public class TransactionContainerEntity {
         this.creditCardTransaction = creditCardTransaction;
     }
 
-    /**
-     * Return the amount on the transaction. The amount that we get from ABN is inverted.
-     */
+    /** Return the amount on the transaction. The amount that we get from ABN is inverted. */
     public Double getAmount() {
 
         if (creditCardTransaction.getBillingAmount() == null) {
@@ -37,8 +35,10 @@ public class TransactionContainerEntity {
 
     @JsonIgnore
     public boolean isInEUR() {
-        return creditCardTransaction != null && creditCardTransaction.getBillingAmount() != null &&
-                EUR_CURRENCY_CODE.equalsIgnoreCase(creditCardTransaction.getBillingAmount().getCurrencyCode());
+        return creditCardTransaction != null
+                && creditCardTransaction.getBillingAmount() != null
+                && EUR_CURRENCY_CODE.equalsIgnoreCase(
+                        creditCardTransaction.getBillingAmount().getCurrencyCode());
     }
 
     public boolean isPending() {

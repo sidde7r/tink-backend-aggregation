@@ -37,5 +37,4 @@ public class StrongLoginRequestIn {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
 }

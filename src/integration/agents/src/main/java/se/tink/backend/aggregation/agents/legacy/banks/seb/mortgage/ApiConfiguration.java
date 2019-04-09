@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface ApiConfiguration {
     String getBaseUrl();
+
     boolean isHttps();
+
     Map<String, String> getHeaders();
 }

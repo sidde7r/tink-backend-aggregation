@@ -1,22 +1,25 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
     @JsonProperty("AccountBalance")
     protected double accountBalance;
+
     @JsonProperty("Amount")
     protected double amount;
+
     @JsonProperty("PostedDate")
     protected String postedDate;
+
     @JsonProperty("MemoText")
     protected String memoText;
+
     @JsonProperty("Type")
     protected String type;
 
@@ -90,17 +93,17 @@ public class TransactionEntity {
         }
 
         switch (type.toLowerCase()) {
-        case "internationaltransaction":
-        case "notdefined":
-            return TransactionTypes.DEFAULT;
-        case "transfer":
-            return TransactionTypes.TRANSFER;
-        case "paymentbg":
-        case "paymentpg":
-        case "payment":
-            return TransactionTypes.PAYMENT;
-        default:
-            return TransactionTypes.DEFAULT;
+            case "internationaltransaction":
+            case "notdefined":
+                return TransactionTypes.DEFAULT;
+            case "transfer":
+                return TransactionTypes.TRANSFER;
+            case "paymentbg":
+            case "paymentpg":
+            case "payment":
+                return TransactionTypes.PAYMENT;
+            default:
+                return TransactionTypes.DEFAULT;
         }
     }
 }

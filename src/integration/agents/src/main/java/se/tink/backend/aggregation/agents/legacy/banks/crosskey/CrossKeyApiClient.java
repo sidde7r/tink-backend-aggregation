@@ -6,6 +6,7 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.banks.crosskey.errors.CrossKeyErrorHandler;
 import se.tink.backend.aggregation.agents.banks.crosskey.requests.AddDeviceRequest;
@@ -15,11 +16,10 @@ import se.tink.backend.aggregation.agents.banks.crosskey.requests.PinTanLoginSte
 import se.tink.backend.aggregation.agents.banks.crosskey.requests.TokenLoginWithConversionRequest;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.AccountsResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
-import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
+import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CrossKeyApiClient {
@@ -52,12 +52,13 @@ public class CrossKeyApiClient {
     private final Credentials credentials;
     private final String userAgent;
 
-    //Constant Values
+    // Constant Values
     private static final String VERSION_1_4_0 = "1.4.0-iOS";
 
     private final AggregationLogger log;
 
-    public CrossKeyApiClient(Client client, Credentials credentials, AggregationLogger log, String userAgent) {
+    public CrossKeyApiClient(
+            Client client, Credentials credentials, AggregationLogger log, String userAgent) {
         this.client = client;
         this.credentials = credentials;
         this.log = log;
@@ -81,15 +82,15 @@ public class CrossKeyApiClient {
     }
 
     public BaseResponse systemStatus() throws Exception {
-        URI parameters = new URIBuilder()
-                .addParameter("appId", appId)
-                .addParameter("language", language)
-                .build();
+        URI parameters =
+                new URIBuilder()
+                        .addParameter("appId", appId)
+                        .addParameter("language", language)
+                        .build();
 
         String uri = SYSTEM_STATUS_URI + parameters;
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(uri).get(String.class));
+        BaseResponse response = deserializeResponse(createClientRequest(uri).get(String.class));
 
         log.info("Requested system status");
 
@@ -98,8 +99,9 @@ public class CrossKeyApiClient {
 
     public BaseResponse autoStartBankId() throws Exception {
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(BANK_ID_AUTO_START_LOGIN).post(String.class));
+        BaseResponse response =
+                deserializeResponse(
+                        createClientRequest(BANK_ID_AUTO_START_LOGIN).post(String.class));
 
         log.info("Requested bank id auto-start token");
 
@@ -109,15 +111,18 @@ public class CrossKeyApiClient {
     public BaseResponse collectBankId() throws Exception {
 
         if (appId != null && appId.equalsIgnoreCase(VERSION_1_4_0)) {
-            BaseResponse response = deserializeResponse(
-                    createClientRequest(BANK_ID_AUTO_START_COLLECT_TESTING).post(String.class));
+            BaseResponse response =
+                    deserializeResponse(
+                            createClientRequest(BANK_ID_AUTO_START_COLLECT_TESTING)
+                                    .post(String.class));
 
             log.info("Requested bank id response");
 
             return response;
         } else {
-            BaseResponse response = deserializeResponse(
-                    createClientRequest(BANK_ID_AUTO_START_COLLECT).post(String.class));
+            BaseResponse response =
+                    deserializeResponse(
+                            createClientRequest(BANK_ID_AUTO_START_COLLECT).post(String.class));
 
             log.info("Requested bank id response");
 
@@ -130,8 +135,10 @@ public class CrossKeyApiClient {
         request.setUsername(credentials.getField(Field.Key.USERNAME));
         request.setPassword(credentials.getField(Field.Key.PASSWORD));
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(PIN_TAN_LOGIN_STEP_PIN_URI).post(String.class, request));
+        BaseResponse response =
+                deserializeResponse(
+                        createClientRequest(PIN_TAN_LOGIN_STEP_PIN_URI)
+                                .post(String.class, request));
 
         log.info("Identified user");
 
@@ -142,8 +149,10 @@ public class CrossKeyApiClient {
         PinTanLoginStepTanRequest request = new PinTanLoginStepTanRequest();
         request.setTan(oneTimeCode);
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(PIN_TAN_LOGIN_STEP_TAN_URI).post(String.class, request));
+        BaseResponse response =
+                deserializeResponse(
+                        createClientRequest(PIN_TAN_LOGIN_STEP_TAN_URI)
+                                .post(String.class, request));
 
         log.info("Logged in with pin code");
 
@@ -155,15 +164,18 @@ public class CrossKeyApiClient {
         request.setUdId(udId);
 
         if (appId != null && appId.equalsIgnoreCase(VERSION_1_4_0)) {
-            BaseResponse response = deserializeResponse(
-                    createClientRequest(ADD_DEVICE_URI_TESTING).post(String.class, request));
+            BaseResponse response =
+                    deserializeResponse(
+                            createClientRequest(ADD_DEVICE_URI_TESTING)
+                                    .post(String.class, request));
 
             log.info("Added device");
 
             return response;
         } else {
-            BaseResponse response = deserializeResponse(
-                    createClientRequest(ADD_DEVICE_URI).post(String.class, request));
+            BaseResponse response =
+                    deserializeResponse(
+                            createClientRequest(ADD_DEVICE_URI).post(String.class, request));
 
             log.info("Added device");
 
@@ -175,8 +187,9 @@ public class CrossKeyApiClient {
         GenerateTokenRequest request = new GenerateTokenRequest();
         request.setDeviceId(deviceId);
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(GENERATE_TOKEN_URI).post(String.class, request));
+        BaseResponse response =
+                deserializeResponse(
+                        createClientRequest(GENERATE_TOKEN_URI).post(String.class, request));
 
         log.info("Generated deviceToken");
 
@@ -190,8 +203,10 @@ public class CrossKeyApiClient {
         request.setPassword(credentials.getField(Field.Key.PASSWORD));
         request.setAppVersion(appId);
 
-        BaseResponse response = deserializeResponse(
-                createClientRequest(TOKEN_LOGIN_WITH_CONVERSION_URI).post(String.class, request));
+        BaseResponse response =
+                deserializeResponse(
+                        createClientRequest(TOKEN_LOGIN_WITH_CONVERSION_URI)
+                                .post(String.class, request));
 
         log.info("Logged in with deviceToken");
 
@@ -199,15 +214,13 @@ public class CrossKeyApiClient {
     }
 
     public AccountsResponse getAccounts() throws Exception {
-        URI parameters = new URIBuilder()
-                .addParameter("showHidden", "true")
-                .build();
+        URI parameters = new URIBuilder().addParameter("showHidden", "true").build();
 
         String uri = ACCOUNTS_URI + parameters;
 
-        AccountsResponse response = deserializeResponse(
-                createClientRequest(uri).get(String.class),
-                AccountsResponse.class);
+        AccountsResponse response =
+                deserializeResponse(
+                        createClientRequest(uri).get(String.class), AccountsResponse.class);
 
         log.info("Fetched " + response.getAccounts().size() + " accounts");
 
@@ -216,29 +229,36 @@ public class CrossKeyApiClient {
 
     public CrossKeyLoanDetails getLoanDetails(String accountId) throws Exception {
         String uri = String.format(LOAN_DETAILS_URI, accountId);
-        LoanDetailsResponse response = deserializeResponse(
-                createClientRequest(uri).get(String.class),
-                LoanDetailsResponse.class);
+        LoanDetailsResponse response =
+                deserializeResponse(
+                        createClientRequest(uri).get(String.class), LoanDetailsResponse.class);
         return response.getLoanDetailsVO();
     }
 
-    public TransactionsResponse getTransactionsFor(String accountId, DateTime fromDate, DateTime toDate)
-            throws Exception {
-        URI parameters = new URIBuilder()
-                .addParameter("accountId", accountId)
-                .addParameter("fromdate", fromDate != null ?
-                        ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(fromDate.toDate()) :
-                        "")
-                .addParameter("todate", toDate != null ?
-                        ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(toDate.toDate()) :
-                        "")
-                .build();
+    public TransactionsResponse getTransactionsFor(
+            String accountId, DateTime fromDate, DateTime toDate) throws Exception {
+        URI parameters =
+                new URIBuilder()
+                        .addParameter("accountId", accountId)
+                        .addParameter(
+                                "fromdate",
+                                fromDate != null
+                                        ? ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(
+                                                fromDate.toDate())
+                                        : "")
+                        .addParameter(
+                                "todate",
+                                toDate != null
+                                        ? ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(
+                                                toDate.toDate())
+                                        : "")
+                        .build();
 
         String uri = TRANSACTIONS_URI + parameters;
 
-        TransactionsResponse response = deserializeResponse(
-                createClientRequest(uri).get(String.class),
-                TransactionsResponse.class);
+        TransactionsResponse response =
+                deserializeResponse(
+                        createClientRequest(uri).get(String.class), TransactionsResponse.class);
 
         if (response.getTransactions().size() == 0) {
             log.info("No more transactions to fetch from the account");
@@ -258,12 +278,14 @@ public class CrossKeyApiClient {
         return BaseResponse.deserializeResponse(response, errorHandler);
     }
 
-    private <T extends BaseResponse> T deserializeResponse(String response, Class<T> model) throws Exception {
+    private <T extends BaseResponse> T deserializeResponse(String response, Class<T> model)
+            throws Exception {
         return BaseResponse.deserializeResponse(response, model, errorHandler);
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(rootUrl + uri).header("User-Agent", userAgent)
+        return client.resource(rootUrl + uri)
+                .header("User-Agent", userAgent)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

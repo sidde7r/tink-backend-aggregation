@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LoginAnonymousPostResponse {
     @JsonProperty("expires_in")
     private Integer expiresIn;
+
     @JsonProperty("session_type")
     private String sessionType;
+
     @JsonProperty("logged_in")
     private Boolean loggedIn;
 

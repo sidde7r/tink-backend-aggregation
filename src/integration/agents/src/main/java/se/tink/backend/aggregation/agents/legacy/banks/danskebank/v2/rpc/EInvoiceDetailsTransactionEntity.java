@@ -10,14 +10,19 @@ import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 public class EInvoiceDetailsTransactionEntity {
     @JsonProperty("Amount")
     private Double amount;
+
     @JsonProperty("Receiver")
     private String receiver;
+
     @JsonProperty("Reference")
     private String reference;
+
     @JsonProperty("Text")
     private String text;
+
     @JsonProperty("Time")
     private String time;
+
     @JsonProperty("ToAccountId")
     private String toAccountId;
 

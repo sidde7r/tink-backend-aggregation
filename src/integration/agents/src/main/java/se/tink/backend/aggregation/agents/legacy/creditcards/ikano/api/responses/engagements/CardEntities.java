@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.List;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.BaseResponse;
-import se.tink.backend.agents.rpc.Account;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntities extends BaseResponse {
@@ -26,7 +26,8 @@ public class CardEntities extends BaseResponse {
         return cards != null ? cards : Lists.<CardEntity>newArrayList();
     }
 
-    public CardEntity getCardFor(Account account) throws IkanoApiAgent.AccountRelationNotFoundException {
+    public CardEntity getCardFor(Account account)
+            throws IkanoApiAgent.AccountRelationNotFoundException {
         for (CardEntity card : getCards()) {
             if (card.isRelatedTo(account)) {
                 return card;
@@ -42,7 +43,8 @@ public class CardEntities extends BaseResponse {
         }
     }
 
-    public void keepSelectedCardTypes(CardType cardType) throws IkanoApiAgent.CardNotFoundException {
+    public void keepSelectedCardTypes(CardType cardType)
+            throws IkanoApiAgent.CardNotFoundException {
         ensureHasCards();
 
         List<CardEntity> cardsWithCorrectType = Lists.newArrayList();

@@ -40,5 +40,4 @@ public class InvoiceBillingUnitContractEntity {
     public void setCreditAmount(String creditAmount) {
         this.creditAmount = creditAmount;
     }
-
 }

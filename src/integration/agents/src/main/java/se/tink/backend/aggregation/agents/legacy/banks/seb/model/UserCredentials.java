@@ -6,11 +6,11 @@ public class UserCredentials {
 
     @JsonProperty("ApplicationName")
     public String ApplicationName = "MASP";
+
     @JsonProperty("UserId")
     public String UserId;
 
     public UserCredentials(String username) {
         UserId = username;
     }
-
 }

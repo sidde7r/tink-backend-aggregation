@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments;
 
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
 public class InitBankIdPaymentRequest {
@@ -24,7 +23,8 @@ public class InitBankIdPaymentRequest {
         return initBankIdConfirmPaymentsIn;
     }
 
-    public void setInitBankIdConfirmPaymentsIn(InitBankIdConfirmPaymentsIn initBankIdConfirmPaymentsIn) {
+    public void setInitBankIdConfirmPaymentsIn(
+            InitBankIdConfirmPaymentsIn initBankIdConfirmPaymentsIn) {
         this.initBankIdConfirmPaymentsIn = initBankIdConfirmPaymentsIn;
     }
 }

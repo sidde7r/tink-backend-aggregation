@@ -14,5 +14,4 @@ public class SecurityToken {
     public void setAuthenticationToken(AuthenticationToken authenticationToken) {
         this.authenticationToken = authenticationToken;
     }
-
 }

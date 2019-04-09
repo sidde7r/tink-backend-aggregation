@@ -49,5 +49,4 @@ public class UpdatePaymentRequest {
     public void setFromAccountNumber(String fromAccountNumber) {
         this.fromAccountNumber = fromAccountNumber;
     }
-
 }

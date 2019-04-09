@@ -8,20 +8,23 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class Filters {
 
-    private static final NordeaAccountIdentifierFormatter FORMATTER = new NordeaAccountIdentifierFormatter();
+    private static final NordeaAccountIdentifierFormatter FORMATTER =
+            new NordeaAccountIdentifierFormatter();
 
     public static Predicate<ProductEntity> productWithAccountNumber(final String accountNumber) {
         return entity -> Objects.equal(entity.getAccountNumber(true), accountNumber);
     }
 
-    public static Predicate<ProductEntity> productThatCanPayWithAccountNumber(final String accountNumber) {
+    public static Predicate<ProductEntity> productThatCanPayWithAccountNumber(
+            final String accountNumber) {
         return entity -> {
             boolean paymentAccount = entity.canMakePayment();
             return paymentAccount && Objects.equal(entity.getAccountNumber(true), accountNumber);
         };
     }
 
-    public static Predicate<BeneficiaryEntity> beneficiariesWithAccountNumber(final String accountNumber) {
+    public static Predicate<BeneficiaryEntity> beneficiariesWithAccountNumber(
+            final String accountNumber) {
         return entity -> {
             String cleanedAccountNumber = entity.getCleanedAccountNumber();
 
@@ -46,5 +49,4 @@ public class Filters {
             }
         };
     }
-
 }

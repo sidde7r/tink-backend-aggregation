@@ -19,21 +19,21 @@ public class JerseyClientWrapper implements HttpClient {
 
     @Override
     public <T> T get(ApiRequest request, Class<T> responseModel) {
-        return createResource(request)
-                .get(responseModel);
+        return createResource(request).get(responseModel);
     }
 
     @Override
     public <T> T post(ApiRequest request, Class<T> responseModel) {
         return createResource(request)
-                .type(MediaType.APPLICATION_JSON + "; charset=utf-8") // SEB requires utf-8 content type
+                .type(
+                        MediaType.APPLICATION_JSON
+                                + "; charset=utf-8") // SEB requires utf-8 content type
                 .post(responseModel, request);
     }
 
     private WebResource.Builder createResource(ApiRequest request) {
         String uri = createUri(apiConfiguration, request);
-        WebResource.Builder resource = client.resource(uri)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        WebResource.Builder resource = client.resource(uri).accept(MediaType.APPLICATION_JSON_TYPE);
 
         // Add all headers from api configuration (Basic auth headers, host headers etc)
         for (Map.Entry<String, String> header : apiConfiguration.getHeaders().entrySet()) {

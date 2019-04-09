@@ -13,14 +13,19 @@ public class Payload {
 
     @JsonProperty("ResultInfo")
     public ResultInfo resultInfo;
+
     @JsonProperty("VODB")
     public VODB VODB;
+
     @JsonProperty("__type")
     public String type = "SEB_CS.SEBCSService";
+
     @JsonProperty("ServiceInput")
     public List<ServiceInput> ServiceInput = new ArrayList<ServiceInput>();
+
     @JsonProperty("UserCredentials")
     public UserCredentials UserCredentials;
+
     @JsonProperty("ServiceInfo")
     public String getServiceInfo() {
         return null;

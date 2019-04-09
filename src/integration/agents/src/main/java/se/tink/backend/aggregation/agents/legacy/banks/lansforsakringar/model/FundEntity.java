@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FundEntity {
-    @JsonIgnore
-    private static final String CURRENCY = "SEK";
+    @JsonIgnore private static final String CURRENCY = "SEK";
     private long fundId;
     private String name;
     private String company;
@@ -121,14 +120,18 @@ public class FundEntity {
     public Optional<Instrument> toInstrument(FundInformationEntity fundInformation) {
         HoldingEntity holding = getHolding();
 
-        if (holding == null || holding.getNumberOfShares() == 0 || holding.getPurchaseValue() == 0
-                || fundInformation == null || fundInformation.getIsinCode() == null) {
+        if (holding == null
+                || holding.getNumberOfShares() == 0
+                || holding.getPurchaseValue() == 0
+                || fundInformation == null
+                || fundInformation.getIsinCode() == null) {
             return Optional.empty();
         }
 
         Instrument instrument = new Instrument();
 
-        instrument.setAverageAcquisitionPrice(holding.getPurchaseValue() / holding.getNumberOfShares());
+        instrument.setAverageAcquisitionPrice(
+                holding.getPurchaseValue() / holding.getNumberOfShares());
         instrument.setCurrency(CURRENCY); // If LF adds a currency field, change this.
         instrument.setIsin(fundInformation.getIsinCode());
         instrument.setMarketPlace(fundInformation.getCompany());

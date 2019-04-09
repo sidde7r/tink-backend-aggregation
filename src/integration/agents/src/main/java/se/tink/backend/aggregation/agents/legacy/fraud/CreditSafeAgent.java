@@ -18,6 +18,8 @@ import javax.xml.ws.handler.Handler;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.xerces.dom.ElementNSImpl;
 import org.w3c.dom.Node;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -34,13 +36,6 @@ import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataResponse;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataSoap;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataTest;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Language;
-import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.user.rpc.User;
-import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.fraud.FraudAddressContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudCompanyContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudCompanyDirector;
@@ -53,10 +48,15 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudIdentityContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudIncomeContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudNonPaymentContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudRealEstateEngagementContent;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.user.rpc.User;
 
 @SuppressWarnings("unused")
 public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -81,7 +81,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
     private Splitter splitter = Splitter.on(" ");
     private boolean hasRefreshed = false;
 
-    public CreditSafeAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CreditSafeAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -162,14 +163,17 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
             } else {
 
-                String errorMessage = error.getRejectText() + " - " +
-                        error.getRejectComment() + " - " + error.getCauseOfReject();
+                String errorMessage =
+                        error.getRejectText()
+                                + " - "
+                                + error.getRejectComment()
+                                + " - "
+                                + error.getCauseOfReject();
 
                 log.warn("CreditSafe refresh gave error:" + errorMessage);
                 statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessage);
             }
             return;
-
         }
 
         statusUpdater.updateStatus(CredentialsStatus.UPDATING);
@@ -189,21 +193,21 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
             while (parent != null) {
                 switch (parent.getNodeName()) {
-                case "GETDATA_RESPONSE":
-                    parseGeneralData(generalDataMap, parent);
-                    break;
-                case "ROP_PRIVATE_CLAIMS":
-                    parseTagData(nonPaymentsPrivateList, parent);
-                    break;
-                case "ROP_PUBLIC_CLAIMS":
-                    parseTagData(nonPaymentsPublicList, parent);
-                    break;
-                case "DETAILREALESTATE":
-                    parseTagData(realEstateList, parent);
-                    break;
-                case "COMPANY_ENGAGEMENTS":
-                    parseTagData(companyEngagementList, parent);
-                    break;
+                    case "GETDATA_RESPONSE":
+                        parseGeneralData(generalDataMap, parent);
+                        break;
+                    case "ROP_PRIVATE_CLAIMS":
+                        parseTagData(nonPaymentsPrivateList, parent);
+                        break;
+                    case "ROP_PUBLIC_CLAIMS":
+                        parseTagData(nonPaymentsPublicList, parent);
+                        break;
+                    case "DETAILREALESTATE":
+                        parseTagData(realEstateList, parent);
+                        break;
+                    case "COMPANY_ENGAGEMENTS":
+                        parseTagData(companyEngagementList, parent);
+                        break;
                 }
                 parent = parent.getNextSibling();
             }
@@ -223,14 +227,10 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         detailsContent.addAll(extractIncomeContent(generalDataMap));
         detailsContent.addAll(extractCompanyEngagementContent(companyEngagementList));
 
-
         systemUpdater.updateFraudDetailsContent(detailsContent);
     }
 
-    /**
-     * Parses the a specific tag data.
-     * 
-     */
+    /** Parses the a specific tag data. */
     private void parseTagData(List<Map<String, String>> dataMap, Node parent) {
         Map<String, String> resultMap = Maps.newHashMap();
         dataMap.add(resultMap);
@@ -244,10 +244,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         }
     }
 
-    /**
-     * Recursively parses the data in GETDATA_RESPONSE tag.
-     * 
-     */
+    /** Recursively parses the data in GETDATA_RESPONSE tag. */
     private void parseGeneralData(Map<String, String> resultMap, Node parent) {
         Node child = parent.getFirstChild();
         while (child != null) {
@@ -339,7 +336,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return contents;
     }
 
-    private List<FraudNonPaymentContent> extractNonPaymentsContent(List<Map<String, String>> nonPaymentsList) {
+    private List<FraudNonPaymentContent> extractNonPaymentsContent(
+            List<Map<String, String>> nonPaymentsList) {
         List<FraudNonPaymentContent> contents = Lists.newArrayList();
 
         for (Map<String, String> dataMap : nonPaymentsList) {
@@ -372,13 +370,15 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
             // For public claims, there is no Creditor, use the type text instead.
 
-            if (Strings.isNullOrEmpty(content.getName()) && !Strings.isNullOrEmpty(content.getType())) {
+            if (Strings.isNullOrEmpty(content.getName())
+                    && !Strings.isNullOrEmpty(content.getType())) {
                 content.setName(content.getType());
             }
 
             // Remove non-payments that are older than 3 years (legal reasons).
-            
-            if (!Strings.isNullOrEmpty(content.getName()) && content.getDate().after(DateUtils.addYears(new Date(), -3))) {
+
+            if (!Strings.isNullOrEmpty(content.getName())
+                    && content.getDate().after(DateUtils.addYears(new Date(), -3))) {
                 contents.add(content);
             } else {
                 log.info("Not adding non-payment details, too old, " + content.getName());
@@ -388,7 +388,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return contents;
     }
 
-    private List<FraudCreditScoringContent> extractCreditScoringContent(Map<String, String> resultMap) {
+    private List<FraudCreditScoringContent> extractCreditScoringContent(
+            Map<String, String> resultMap) {
         List<FraudCreditScoringContent> contents = Lists.newArrayList();
 
         FraudCreditScoringContent content = new FraudCreditScoringContent();
@@ -407,7 +408,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return contents;
     }
 
-    private List<FraudRealEstateEngagementContent> extractRealEstateContent(List<Map<String, String>> realEstateList) {
+    private List<FraudRealEstateEngagementContent> extractRealEstateContent(
+            List<Map<String, String>> realEstateList) {
         List<FraudRealEstateEngagementContent> contents = Lists.newArrayList();
 
         for (Map<String, String> dataMap : realEstateList) {
@@ -526,7 +528,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return contents;
     }
 
-    private List<FraudDetailsContent> extractCompanyEngagementContent(List<Map<String, String>> companyEngagementList) {
+    private List<FraudDetailsContent> extractCompanyEngagementContent(
+            List<Map<String, String>> companyEngagementList) {
         List<FraudDetailsContent> contents = Lists.newArrayList();
 
         for (Map<String, String> dataMap : companyEngagementList) {
@@ -588,7 +591,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
     /**
      * Takes a org. number and looks up company details.
-     * 
+     *
      * @return
      */
     public FraudCompanyContent seedCompanyData(String orgNumber) {
@@ -633,12 +636,12 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         while (parent != null) {
             switch (parent.getNodeName()) {
-            case "GETDATA_RESPONSE":
-                parseGeneralData(generalDataMap, parent);
-                break;
-            case "DIRECTORS":
-                parseTagData(directorsList, parent);
-                break;
+                case "GETDATA_RESPONSE":
+                    parseGeneralData(generalDataMap, parent);
+                    break;
+                case "DIRECTORS":
+                    parseTagData(directorsList, parent);
+                    break;
             }
             parent = parent.getNextSibling();
         }
@@ -659,7 +662,8 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         try {
             int status = Integer.parseInt(statusCodeValue.replace("s", "").replace("S", ""));
-            // Status codes can be found in GD>Product>Project>Fraud Detection>From CreditSafe>HämtaData Appendix.xls
+            // Status codes can be found in GD>Product>Project>Fraud Detection>From
+            // CreditSafe>HämtaData Appendix.xls
             return status < STATUS_CODE_FIRST_INACTIVE; // not including
         } catch (NumberFormatException e) {
             log.error("Could not parse status from company with orgnr: " + orgNumber, e);
@@ -668,7 +672,9 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         return false;
     }
 
-    public FraudCompanyContent createFraudCompanyContent(String orgNumber, Map<String, String> generalDataMap,
+    public FraudCompanyContent createFraudCompanyContent(
+            String orgNumber,
+            Map<String, String> generalDataMap,
             List<Map<String, String>> directorsList) {
         FraudCompanyContent companyContent = new FraudCompanyContent();
 
@@ -813,24 +819,24 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         if (errorCode != null) {
 
             switch (errorCode) {
-            case "S2":
-                return catalog.getString("protected identity");
-            case "S3":
-                return catalog.getString("locked identity");
-            case "S4":
-                return catalog.getString("deceased");
-            case "S5":
-                return catalog.getString("removed from register");
-            case "S6":
-                return catalog.getString("emigrated");
-            case "S7":
-                return catalog.getString("changed person number");
+                case "S2":
+                    return catalog.getString("protected identity");
+                case "S3":
+                    return catalog.getString("locked identity");
+                case "S4":
+                    return catalog.getString("deceased");
+                case "S5":
+                    return catalog.getString("removed from register");
+                case "S6":
+                    return catalog.getString("emigrated");
+                case "S7":
+                    return catalog.getString("changed person number");
             }
         }
         return null;
     }
 
-    public List<FraudDetailsContent> seedPersonData(String  personNumber) {
+    public List<FraudDetailsContent> seedPersonData(String personNumber) {
         log.info(String.format("Seeding person data for %s.", personNumber));
         GetData client = new GetData();
         GetDataSoap service = client.getGetDataSoap();
@@ -867,19 +873,19 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         while (parent != null) {
             switch (parent.getNodeName()) {
-            case "GETDATA_RESPONSE":
-                parseGeneralData(generalDataMap, parent);
-                break;
+                case "GETDATA_RESPONSE":
+                    parseGeneralData(generalDataMap, parent);
+                    break;
             }
             parent = parent.getNextSibling();
         }
 
         List<FraudDetailsContent> detailsContent = Lists.newArrayList();
         detailsContent.addAll(extractAddressContent(generalDataMap));
-        
+
         return detailsContent;
     }
-    
+
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         if (credentials.isDemoCredentials()) {
@@ -893,13 +899,16 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
         if (!Strings.isNullOrEmpty(credentials.getSupplementalInformation())) {
             log.info("Request from fraud activation service.");
-            credentials.setSensitivePayload(FraudUtils.ID_CONTROL_AUTH_KEY, credentials.getSupplementalInformation());
+            credentials.setSensitivePayload(
+                    FraudUtils.ID_CONTROL_AUTH_KEY, credentials.getSupplementalInformation());
         }
 
-        String authTokenGenerated = StringUtils.hashAsStringSHA1(credentials.getUsername(),
-                FraudUtils.ID_CONTROL_AUTH_SALT);
+        String authTokenGenerated =
+                StringUtils.hashAsStringSHA1(
+                        credentials.getUsername(), FraudUtils.ID_CONTROL_AUTH_SALT);
 
-        // If there there is no FraudUtils.ID_CONTROL_AUTH_KEY on the credentials payload, authenticate with BankID.
+        // If there there is no FraudUtils.ID_CONTROL_AUTH_KEY on the credentials payload,
+        // authenticate with BankID.
         // If there is a token, validate the token against the person number.
 
         String authTokenActual = credentials.getSensitivePayload(FraudUtils.ID_CONTROL_AUTH_KEY);
@@ -910,16 +919,19 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                     log.info("No auth token exists, but cannot ask for BankId for auto refresh.");
                     throw SessionError.SESSION_EXPIRED.exception();
                 }
-                
+
                 log.info("No auth token exists.");
 
                 // Create the authenticator
 
-                SignicatBankIdAuthenticator authenticator = new SignicatBankIdAuthenticator(credentials.getField(Field.Key.USERNAME),
-                        credentials.getUserId(),
-                        credentials.getId(),
-                        context.getCatalog(),
-                        new CredentialsSignicatBankIdAuthenticationHandler(credentials, context));
+                SignicatBankIdAuthenticator authenticator =
+                        new SignicatBankIdAuthenticator(
+                                credentials.getField(Field.Key.USERNAME),
+                                credentials.getUserId(),
+                                credentials.getId(),
+                                context.getCatalog(),
+                                new CredentialsSignicatBankIdAuthenticationHandler(
+                                        credentials, context));
 
                 // Run the authenticator synchronously.
 
@@ -928,18 +940,21 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                 // Save token for future.
 
                 if (credentials.getStatus() != CredentialsStatus.AUTHENTICATION_ERROR) {
-                    credentials.setSensitivePayload(FraudUtils.ID_CONTROL_AUTH_KEY, authTokenGenerated);
+                    credentials.setSensitivePayload(
+                            FraudUtils.ID_CONTROL_AUTH_KEY, authTokenGenerated);
                 }
             } else {
-                Preconditions.checkState(authTokenGenerated.equals(authTokenActual),
+                Preconditions.checkState(
+                        authTokenGenerated.equals(authTokenActual),
                         "Auth token exists but is incorrect. generated: %s, actual: %s",
-                        authTokenGenerated, authTokenActual);
+                        authTokenGenerated,
+                        authTokenActual);
             }
         }
 
         credentials.setSupplementalInformation(null);
         statusUpdater.updateStatus(CredentialsStatus.UPDATING);
-        
+
         return true;
     }
 

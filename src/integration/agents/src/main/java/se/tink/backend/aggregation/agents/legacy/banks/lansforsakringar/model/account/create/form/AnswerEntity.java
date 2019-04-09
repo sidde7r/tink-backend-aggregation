@@ -7,8 +7,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AnswerEntity {
 
-    public AnswerEntity() {
-    }
+    public AnswerEntity() {}
 
     public AnswerEntity(String questionId, Object answer) {
         this.questionId = questionId;

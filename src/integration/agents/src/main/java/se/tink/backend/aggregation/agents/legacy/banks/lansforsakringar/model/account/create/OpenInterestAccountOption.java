@@ -33,7 +33,7 @@ public class OpenInterestAccountOption {
     public void setRate(Double rate) {
         this.rate = rate;
     }
-    
+
     public static SavingsAccountTypes getAccountType(String description) {
         if (description.toLowerCase().contains("fastränte")) {
             return SavingsAccountTypes.fixedrate;

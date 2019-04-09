@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivityEntity {
@@ -33,5 +32,4 @@ public class ActivityEntity {
     public void setStatementBalance(String statementBalance) {
         this.statementBalance = statementBalance;
     }
-
 }

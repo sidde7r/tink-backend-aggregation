@@ -7,9 +7,9 @@ import com.google.common.collect.Iterables;
 import java.util.Date;
 import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
@@ -37,20 +37,24 @@ public class SebInvoiceTransferRequestEntity extends SebTransferRequestEntity {
     }
 
     /**
-     * Only for invoices of type PG and BG, requires validation checking of OCR/Message before creating
+     * Only for invoices of type PG and BG, requires validation checking of OCR/Message before
+     * creating
      *
-     * TODO: Support several message lines if needed
+     * <p>TODO: Support several message lines if needed
      */
-    public static SebInvoiceTransferRequestEntity createInvoiceTransfer(Transfer transfer, String customerNumber
-            , boolean isDestinationMessageOcr) throws IllegalArgumentException {
-        SebInvoiceTransferRequestEntity requestEntity = new SebInvoiceTransferRequestEntity(transfer, customerNumber);
+    public static SebInvoiceTransferRequestEntity createInvoiceTransfer(
+            Transfer transfer, String customerNumber, boolean isDestinationMessageOcr)
+            throws IllegalArgumentException {
+        SebInvoiceTransferRequestEntity requestEntity =
+                new SebInvoiceTransferRequestEntity(transfer, customerNumber);
         requestEntity.destinationAccountType = getAccountType(transfer.getDestination());
 
         if (isDestinationMessageOcr) {
             requestEntity.ocr = transfer.getDestinationMessage();
         } else {
-            List<String> messageLines = Splitter.fixedLength(MSG_LINE_SIZE)
-                    .splitToList(transfer.getDestinationMessage());
+            List<String> messageLines =
+                    Splitter.fixedLength(MSG_LINE_SIZE)
+                            .splitToList(transfer.getDestinationMessage());
 
             if (messageLines.size() > 4) {
                 throw new IllegalStateException("Message contains of more than 100 letters");

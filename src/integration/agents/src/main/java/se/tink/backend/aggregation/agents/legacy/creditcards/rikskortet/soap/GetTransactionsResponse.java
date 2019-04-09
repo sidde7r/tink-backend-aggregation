@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getTransactionsResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getTransactionsResult"})
 @XmlRootElement(name = "GetTransactionsResponse")
 public class GetTransactionsResponse {
 
@@ -39,11 +35,8 @@ public class GetTransactionsResponse {
 
     /**
      * Gets the value of the getTransactionsResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Transaction }
-     *     
+     *
+     * @return possible object is {@link Transaction }
      */
     public Transaction getGetTransactionsResult() {
         return getTransactionsResult;
@@ -51,14 +44,10 @@ public class GetTransactionsResponse {
 
     /**
      * Sets the value of the getTransactionsResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Transaction }
-     *     
+     *
+     * @param value allowed object is {@link Transaction }
      */
     public void setGetTransactionsResult(Transaction value) {
         this.getTransactionsResult = value;
     }
-
 }

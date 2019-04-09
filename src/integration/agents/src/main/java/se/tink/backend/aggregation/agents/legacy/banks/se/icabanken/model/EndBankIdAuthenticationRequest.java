@@ -8,6 +8,7 @@ public class EndBankIdAuthenticationRequest {
 
     @JsonProperty("RequestId")
     private String requestId;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 
@@ -26,5 +27,4 @@ public class EndBankIdAuthenticationRequest {
     public String getRequestId() {
         return requestId;
     }
-
 }

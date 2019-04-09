@@ -4,21 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListCardTransactionRequest {
-	protected String cardNumber;
-	protected int requestedPage;
+    protected String cardNumber;
+    protected int requestedPage;
 
-	public ListCardTransactionRequest(int requestedPage, String cardNumber) {
-		this.requestedPage = requestedPage;
-		this.cardNumber = cardNumber;
-	}
+    public ListCardTransactionRequest(int requestedPage, String cardNumber) {
+        this.requestedPage = requestedPage;
+        this.cardNumber = cardNumber;
+    }
 
-	public int getRequestedPage() {
-		return requestedPage;
-	}
+    public int getRequestedPage() {
+        return requestedPage;
+    }
 
-	public void setRequestedPage(int requestedPage) {
-		this.requestedPage = requestedPage;
-	}
+    public void setRequestedPage(int requestedPage) {
+        this.requestedPage = requestedPage;
+    }
 
     public String getCardNumber() {
         return cardNumber;

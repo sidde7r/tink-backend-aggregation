@@ -20,5 +20,4 @@ public class VerifyBankIdModuleInput extends BankIdModuleInput {
         super(OPERATION);
         this.orderReference = orderReference;
     }
-
 }

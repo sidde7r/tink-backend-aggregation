@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.api.client.util.Objects;
-import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Optional;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -33,7 +33,7 @@ public class EInvoiceBody {
 
     public Optional<EInvoiceEntity> getInvoiceById(String uuid) {
         Preconditions.checkNotNull(uuid);
-        
+
         for (EInvoiceEntity eInvoice : eInvoices) {
             if (Objects.equal(eInvoice.getUuid(), uuid)) {
                 return Optional.of(eInvoice);

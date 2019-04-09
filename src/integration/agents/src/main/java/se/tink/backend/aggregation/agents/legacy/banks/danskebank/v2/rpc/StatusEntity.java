@@ -5,24 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusEntity {
-	@JsonProperty("StatusCode")
-	protected int statusCode;
-	@JsonProperty("StatusText")
-	protected String statusText;
+    @JsonProperty("StatusCode")
+    protected int statusCode;
 
-	public int getStatusCode() {
-		return statusCode;
-	}
+    @JsonProperty("StatusText")
+    protected String statusText;
 
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-	public String getStatusText() {
-		return statusText;
-	}
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
-	public void setStatusText(String statusText) {
-		this.statusText = statusText;
-	}
+    public String getStatusText() {
+        return statusText;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
 }

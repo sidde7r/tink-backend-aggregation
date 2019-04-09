@@ -55,5 +55,4 @@ public class TimelineRequest {
     public void setLocalTime(String localTime) {
         this.localTime = localTime;
     }
-
 }

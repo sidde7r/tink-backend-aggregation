@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 public class SavingsGoalEntity {
     @JsonIgnore
     private static final AggregationLogger log = new AggregationLogger(SavingsGoalEntity.class);
+
     private String id;
     private String name;
     private Double amount;

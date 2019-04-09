@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.AuthenticatedRequest;
+import se.tink.libraries.user.rpc.User;
 
 public class AbnAmroLegacyUserUtils {
 
@@ -16,7 +16,8 @@ public class AbnAmroLegacyUserUtils {
     private static final String GRIP_DEEPLINK_PREFIX = "^grip://";
 
     // List of bc numbers that are test users on ABN side
-    public static final ImmutableList<String> TEST_USERS_BC_NUMBERS = ImmutableList.of("105238465", "203339193");
+    public static final ImmutableList<String> TEST_USERS_BC_NUMBERS =
+            ImmutableList.of("105238465", "203339193");
 
     public static String getUsername(AuthenticatedRequest request) {
         return getUsername(request.getBcNumber());

@@ -12,8 +12,10 @@ public class TransactionEntity {
 
     @JsonProperty("Amount")
     private Double amount;
+
     @JsonProperty("Date")
     private String date;
+
     @JsonProperty("Text")
     private String description;
 

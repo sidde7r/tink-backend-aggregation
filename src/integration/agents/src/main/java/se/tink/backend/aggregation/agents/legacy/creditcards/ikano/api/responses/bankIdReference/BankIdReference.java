@@ -15,6 +15,7 @@ public class BankIdReference extends BaseResponse {
             return response.getReference();
         }
 
-        throw new UserErrorException("Det angivna personnumret kunde inte identifieras, vänligen kontrollera personnumret och försök igen");
+        throw new UserErrorException(
+                "Det angivna personnumret kunde inte identifieras, vänligen kontrollera personnumret och försök igen");
     }
 }

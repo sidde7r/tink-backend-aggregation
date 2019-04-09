@@ -8,6 +8,7 @@ public class InitBankIdResponse {
 
     @JsonProperty("pending_authorization_code")
     private String pendingAuthorizationCode;
+
     @JsonProperty("autostart_token")
     private String autostartToken;
 

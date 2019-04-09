@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments.PaymentEntity;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
@@ -38,20 +38,22 @@ public class NordeaAgentUtils {
     protected static final Map<String, AccountTypes> ACCOUNT_TYPES_BY_CODE = Maps.newHashMap();
     protected static final Map<String, AccountTypes> ACCOUNT_TYPES_BY_NAME = Maps.newHashMap();
     private static final Map<String, Loan.Type> LOAN_TYPES_BY_CODE = Maps.newHashMap();
-    protected static final Splitter CLEANUP_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+    protected static final Splitter CLEANUP_SPLITTER =
+            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
     protected static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
-    /**
-     * Standard transaction ordering based on date and inserted.
-     */
-    public static final Ordering<Transaction> TRANSACTION_ORDERING = new Ordering<Transaction>() {
-        @Override
-        public int compare(Transaction left, Transaction right) {
-            return ComparisonChain.start().compare(left.getDate(), right.getDate())
-                    .compare(left.getDescription(), right.getDescription()).compare(left.getId(), right.getId())
-                    .result();
-        }
-    };
+    /** Standard transaction ordering based on date and inserted. */
+    public static final Ordering<Transaction> TRANSACTION_ORDERING =
+            new Ordering<Transaction>() {
+                @Override
+                public int compare(Transaction left, Transaction right) {
+                    return ComparisonChain.start()
+                            .compare(left.getDate(), right.getDate())
+                            .compare(left.getDescription(), right.getDescription())
+                            .compare(left.getId(), right.getId())
+                            .result();
+                }
+            };
 
     public static final Function<PaymentEntity, Transaction> PAYMENT_TO_TRANSACTION =
             PaymentEntity::toTransaction;
@@ -282,7 +284,8 @@ public class NordeaAgentUtils {
 
         addAccountType("SE4000", "Spara Kapital", AccountTypes.SAVINGS);
         addAccountType("SE4300", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
-        // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0), guess it might be a
+        // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0), guess
+        // it might be a
         // mistake that SE4309 is actually SE4300.
         addAccountType("SE0037", "Boflex Pension", AccountTypes.PENSION);
         addAccountType("SE0052", "ISK Depålikvidkonto", AccountTypes.SAVINGS);
@@ -355,7 +358,6 @@ public class NordeaAgentUtils {
         addAccountType("SE7901", "Belastningsnummer", AccountTypes.SAVINGS);
         addAccountType("SE8001", "Business Gold", AccountTypes.CREDIT_CARD);
         addAccountType("SE8002", "First card", AccountTypes.CREDIT_CARD);
-
 
         addAccountType("SE46100601", "Bonuskonto 2006 utgåva 1", AccountTypes.CHECKING);
         addAccountType("SE46100602", "Bonuskonto 2006 utgåva 2", AccountTypes.CHECKING);
@@ -448,7 +450,8 @@ public class NordeaAgentUtils {
         addAccountType("SE00020", "Studentlån", AccountTypes.LOAN, Loan.Type.STUDENT);
         addAccountType("SE00021", "Startlån", AccountTypes.LOAN, Loan.Type.BLANCO);
         addAccountType("SE00022", "Privatlån", AccountTypes.LOAN, Loan.Type.BLANCO);
-        addAccountType("SE00090", "Låna person, utan säkerhet", AccountTypes.LOAN, Loan.Type.BLANCO);
+        addAccountType(
+                "SE00090", "Låna person, utan säkerhet", AccountTypes.LOAN, Loan.Type.BLANCO);
         addAccountType("SE00091", "Låna spar", AccountTypes.LOAN);
         addAccountType("SE00092", "Låna bostad", AccountTypes.LOAN, Loan.Type.MORTGAGE);
         addAccountType("SE00093", "Låna person, med säkerhet", AccountTypes.LOAN);
@@ -495,71 +498,71 @@ public class NordeaAgentUtils {
         addAccountType("SE30104", "Reverslån, Nordea finans", AccountTypes.LOAN);
         addAccountType("SE30301", "Reverslån, Nordea finans", AccountTypes.LOAN);
 
-        addAccountType("FI0033","Time deposit invest. acct", AccountTypes.INVESTMENT);
-        addAccountType("FI0035","Time deposit acc", AccountTypes.INVESTMENT);
-        addAccountType("FI0313","Time deposit acc", AccountTypes.INVESTMENT);
-        addAccountType("FI0314","ASP-tili", AccountTypes.INVESTMENT);
-        addAccountType("FI0315","DepositPlus", AccountTypes.INVESTMENT);
-        addAccountType("FI0316","InvestmentDeposit account", AccountTypes.INVESTMENT);
-        addAccountType("FI0323","ProPersonnel Account", AccountTypes.INVESTMENT);
+        addAccountType("FI0033", "Time deposit invest. acct", AccountTypes.INVESTMENT);
+        addAccountType("FI0035", "Time deposit acc", AccountTypes.INVESTMENT);
+        addAccountType("FI0313", "Time deposit acc", AccountTypes.INVESTMENT);
+        addAccountType("FI0314", "ASP-tili", AccountTypes.INVESTMENT);
+        addAccountType("FI0315", "DepositPlus", AccountTypes.INVESTMENT);
+        addAccountType("FI0316", "InvestmentDeposit account", AccountTypes.INVESTMENT);
+        addAccountType("FI0323", "ProPersonnel Account", AccountTypes.INVESTMENT);
         addAccountType("FI0324", "Entrepreneurs PerkAccount", AccountTypes.INVESTMENT);
-        addAccountType("FI0325","Continuous investment account", AccountTypes.INVESTMENT);
-        addAccountType("FI0326","Junior account", AccountTypes.INVESTMENT);
-        addAccountType("FI0328","Time deposit acc", AccountTypes.INVESTMENT);
-        addAccountType("FI0329","Interest Extra Account", AccountTypes.INVESTMENT);
-        addAccountType("FI033","Fixed-term investment account", AccountTypes.INVESTMENT);
+        addAccountType("FI0325", "Continuous investment account", AccountTypes.INVESTMENT);
+        addAccountType("FI0326", "Junior account", AccountTypes.INVESTMENT);
+        addAccountType("FI0328", "Time deposit acc", AccountTypes.INVESTMENT);
+        addAccountType("FI0329", "Interest Extra Account", AccountTypes.INVESTMENT);
+        addAccountType("FI033", "Fixed-term investment account", AccountTypes.INVESTMENT);
 
-        addAccountType("FI0331","Current account", AccountTypes.CHECKING);
-        addAccountType("FI0337","CurrentAccount", AccountTypes.CHECKING);
-        addAccountType("FI0339","Growth Account", AccountTypes.CHECKING);
-        addAccountType("FI0340","Deposit account", AccountTypes.CHECKING);
-        addAccountType("FI0342","Disposal account", AccountTypes.CHECKING);
-        addAccountType("FI0343","ASP-tili", AccountTypes.CHECKING);
-        addAccountType("FI0344","Servicing account", AccountTypes.CHECKING);
-        addAccountType("FI0345","Tele account", AccountTypes.CHECKING);
-        addAccountType("FI0346","Tele account", AccountTypes.CHECKING);
-        addAccountType("FI0347","Parkki account", AccountTypes.CHECKING);
-        addAccountType("FI0348","Disposal account", AccountTypes.CHECKING);
-        addAccountType("FI0349","HomeFlex", AccountTypes.CHECKING);
-        addAccountType("FI035","Fixed-term account", AccountTypes.CHECKING);
-        addAccountType("FI0351","Direct usage account", AccountTypes.CHECKING);
-        addAccountType("FI0352","Korkoplustili", AccountTypes.CHECKING);
-        addAccountType("FI0353","PerkAccount", AccountTypes.CHECKING);
-        addAccountType("FI0354","Direct usage credit", AccountTypes.CHECKING);
-        addAccountType("FI0355","Time deposit sav. account", AccountTypes.CHECKING);
-        addAccountType("FI0361","Fixed-term currency acc.", AccountTypes.CHECKING);
-        addAccountType("FI0364","PS-tili", AccountTypes.CHECKING);
-        addAccountType("FI0610","Sight curr. deposit acc", AccountTypes.CHECKING);
-        addAccountType("FI0620","Personal currency acc", AccountTypes.CHECKING);
-        addAccountType("FI0630","Currency account/Gold", AccountTypes.CHECKING);
+        addAccountType("FI0331", "Current account", AccountTypes.CHECKING);
+        addAccountType("FI0337", "CurrentAccount", AccountTypes.CHECKING);
+        addAccountType("FI0339", "Growth Account", AccountTypes.CHECKING);
+        addAccountType("FI0340", "Deposit account", AccountTypes.CHECKING);
+        addAccountType("FI0342", "Disposal account", AccountTypes.CHECKING);
+        addAccountType("FI0343", "ASP-tili", AccountTypes.CHECKING);
+        addAccountType("FI0344", "Servicing account", AccountTypes.CHECKING);
+        addAccountType("FI0345", "Tele account", AccountTypes.CHECKING);
+        addAccountType("FI0346", "Tele account", AccountTypes.CHECKING);
+        addAccountType("FI0347", "Parkki account", AccountTypes.CHECKING);
+        addAccountType("FI0348", "Disposal account", AccountTypes.CHECKING);
+        addAccountType("FI0349", "HomeFlex", AccountTypes.CHECKING);
+        addAccountType("FI035", "Fixed-term account", AccountTypes.CHECKING);
+        addAccountType("FI0351", "Direct usage account", AccountTypes.CHECKING);
+        addAccountType("FI0352", "Korkoplustili", AccountTypes.CHECKING);
+        addAccountType("FI0353", "PerkAccount", AccountTypes.CHECKING);
+        addAccountType("FI0354", "Direct usage credit", AccountTypes.CHECKING);
+        addAccountType("FI0355", "Time deposit sav. account", AccountTypes.CHECKING);
+        addAccountType("FI0361", "Fixed-term currency acc.", AccountTypes.CHECKING);
+        addAccountType("FI0364", "PS-tili", AccountTypes.CHECKING);
+        addAccountType("FI0610", "Sight curr. deposit acc", AccountTypes.CHECKING);
+        addAccountType("FI0620", "Personal currency acc", AccountTypes.CHECKING);
+        addAccountType("FI0630", "Currency account/Gold", AccountTypes.CHECKING);
 
         addAccountType("FI11111", "House loan", AccountTypes.LOAN);
 
-        addAccountType("FI35300","Visa Silver", AccountTypes.CREDIT_CARD);
-        addAccountType("FI35700","Visa Silver", AccountTypes.CREDIT_CARD);
-        addAccountType("FI36300","Visa Gold", AccountTypes.CREDIT_CARD);
-        addAccountType("FI36690","Nordea Electron", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39000","Nordea Credit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39100","Nordea Credit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39200","Nordea Gold", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39210","MasterCard Premium", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39300","Nordea Gold", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39310","MasterCard Premium", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39412","Finnair Plus MC", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39415","Stockmann MC", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39512","Finnair Plus MC", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39514","Tuohi MasterCard", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39515","Stockmann MC", AccountTypes.CREDIT_CARD);
-        addAccountType("FI39700","Nordea Platinum", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82020","MasterCard Liiga", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82120","MasterCard Liiga", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82400","Visa Debit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82500","Business Visa Debit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82890","Nordea Electron", AccountTypes.CREDIT_CARD);
-        addAccountType("FI82900","Nordea Credit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI83000","Nordea Credit", AccountTypes.CREDIT_CARD);
-        addAccountType("FI83100","Nordea Gold", AccountTypes.CREDIT_CARD);
-        addAccountType("FI83200","Nordea Black", AccountTypes.CREDIT_CARD);
+        addAccountType("FI35300", "Visa Silver", AccountTypes.CREDIT_CARD);
+        addAccountType("FI35700", "Visa Silver", AccountTypes.CREDIT_CARD);
+        addAccountType("FI36300", "Visa Gold", AccountTypes.CREDIT_CARD);
+        addAccountType("FI36690", "Nordea Electron", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39000", "Nordea Credit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39100", "Nordea Credit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39200", "Nordea Gold", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39210", "MasterCard Premium", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39300", "Nordea Gold", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39310", "MasterCard Premium", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39412", "Finnair Plus MC", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39415", "Stockmann MC", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39512", "Finnair Plus MC", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39514", "Tuohi MasterCard", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39515", "Stockmann MC", AccountTypes.CREDIT_CARD);
+        addAccountType("FI39700", "Nordea Platinum", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82020", "MasterCard Liiga", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82120", "MasterCard Liiga", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82400", "Visa Debit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82500", "Business Visa Debit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82890", "Nordea Electron", AccountTypes.CREDIT_CARD);
+        addAccountType("FI82900", "Nordea Credit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI83000", "Nordea Credit", AccountTypes.CREDIT_CARD);
+        addAccountType("FI83100", "Nordea Gold", AccountTypes.CREDIT_CARD);
+        addAccountType("FI83200", "Nordea Black", AccountTypes.CREDIT_CARD);
         addAccountType("FI0", "A1 Car Credit", AccountTypes.CREDIT_CARD);
     }
 
@@ -569,7 +572,8 @@ public class NordeaAgentUtils {
         ACCOUNT_NAMES_BY_CODE.put(code, name);
     }
 
-    private static void addAccountType(String code, String name, AccountTypes type, Loan.Type loanType) {
+    private static void addAccountType(
+            String code, String name, AccountTypes type, Loan.Type loanType) {
         addAccountType(code, name, type);
         LOAN_TYPES_BY_CODE.put(code, loanType);
     }
@@ -586,9 +590,9 @@ public class NordeaAgentUtils {
         return ACCOUNT_TYPES_BY_NAME.get(name);
     }
 
-
     public static Loan.Type getLoanTypeForCode(String productTypeExtension) {
-        if (Strings.isNullOrEmpty(productTypeExtension) || !LOAN_TYPES_BY_CODE.containsKey(productTypeExtension)) {
+        if (Strings.isNullOrEmpty(productTypeExtension)
+                || !LOAN_TYPES_BY_CODE.containsKey(productTypeExtension)) {
             return Loan.Type.OTHER;
         }
 
@@ -610,8 +614,10 @@ public class NordeaAgentUtils {
 
             if (!transaction.isPending()) {
                 try {
-                    transaction.setDate(DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT
-                            .parse(description.substring(0, 6))));
+                    transaction.setDate(
+                            DateUtils.flattenTime(
+                                    ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(
+                                            description.substring(0, 6))));
                     description = description.substring(7);
                 } catch (Exception e) {
                     // NOOP: The date is not present.
@@ -625,7 +631,8 @@ public class NordeaAgentUtils {
             if (description.startsWith("PG") || description.startsWith("BG")) {
                 descriptionIndex = description.indexOf(" ", 4);
 
-                transaction.setPayload(TransactionPayloadTypes.GIRO, description.substring(0, descriptionIndex));
+                transaction.setPayload(
+                        TransactionPayloadTypes.GIRO, description.substring(0, descriptionIndex));
             }
 
             description = description.substring(descriptionIndex);
@@ -643,8 +650,10 @@ public class NordeaAgentUtils {
             }
 
             try {
-                transaction.setDate(DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT
-                        .parse(description.substring(0, 6))));
+                transaction.setDate(
+                        DateUtils.flattenTime(
+                                ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(
+                                        description.substring(0, 6))));
                 description = description.substring(7);
             } catch (Exception e) {
                 // NOOP: The date is not present.
@@ -664,8 +673,10 @@ public class NordeaAgentUtils {
             description = description.substring(8);
 
             try {
-                transaction.setDate(DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT
-                        .parse(description.substring(0, 6))));
+                transaction.setDate(
+                        DateUtils.flattenTime(
+                                ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(
+                                        description.substring(0, 6))));
                 description = description.substring(7);
             } catch (Exception e) {
                 // NOOP: The date is not present.
@@ -682,22 +693,22 @@ public class NordeaAgentUtils {
         if (!Strings.isNullOrEmpty(transactionType)) {
 
             switch (transactionType) {
-                case "e-lasku":     // translate( E-faktura )
+                case "e-lasku": // translate( E-faktura )
                     transaction.setType(TransactionTypes.PAYMENT);
                     break;
-                case "e-maksu":     // translate( E-betalning )
+                case "e-maksu": // translate( E-betalning )
                     transaction.setType(TransactionTypes.PAYMENT);
                     break;
-            case "Pano": // transalate( Insättning )
+                case "Pano": // transalate( Insättning )
                     transaction.setType(TransactionTypes.TRANSFER);
                     break;
-            case "Korttiosto": // translate( Kortköp )
+                case "Korttiosto": // translate( Kortköp )
                     transaction.setType(TransactionTypes.CREDIT_CARD);
                     break;
-            case "Oma siirto": // translate( Min överföring )
+                case "Oma siirto": // translate( Min överföring )
                     transaction.setType(TransactionTypes.TRANSFER);
                     break;
-            case "Käteispano": // translate( Kontantbetalningar )
+                case "Käteispano": // translate( Kontantbetalningar )
                     transaction.setType(TransactionTypes.WITHDRAWAL);
                     break;
             }
@@ -714,10 +725,8 @@ public class NordeaAgentUtils {
     /**
      * Code from Nordea iOS app v. 2.2.1
      *
-     *  Did not understand mappings for values in app:
-     *  "SHYB"; Should probably be Stadshypotek Bank (part of Handelsbanken)
-     *  "OREF";
-     *  "OREG";
+     * <p>Did not understand mappings for values in app: "SHYB"; Should probably be Stadshypotek
+     * Bank (part of Handelsbanken) "OREF"; "OREG";
      */
     public static String lookupBeneficiaryBankId(AccountIdentifier accountIdentifier) {
         SwedishIdentifier swedishIdentifier = accountIdentifier.to(SwedishIdentifier.class);
@@ -756,102 +765,115 @@ public class NordeaAgentUtils {
     }
 
     public static Predicate<ProductEntity> getAccountIdFilter(final Set<String> accountIds) {
-        return productEntity -> productEntity != null && accountIds.contains(productEntity.getAccountId());
+        return productEntity ->
+                productEntity != null && accountIds.contains(productEntity.getAccountId());
     }
 
     public static Predicate<? super ProductEntity> getProductsOfType(final String... types) {
         final Set<String> setOfTypes = Sets.newHashSet(types);
 
-        return (Predicate<ProductEntity>) pe -> {
-            if (pe == null) {
-                return false;
-            }
+        return (Predicate<ProductEntity>)
+                pe -> {
+                    if (pe == null) {
+                        return false;
+                    }
 
-            return setOfTypes.contains(pe.getNordeaProductType());
-        };
+                    return setOfTypes.contains(pe.getNordeaProductType());
+                };
     }
 
     private static final class BeneficiaryBankId {
         private static final String DANSKE_OGB = "OGB";
         private static final String DANSKE_DDB = "DDB";
 
-        private static final ImmutableMap<Bank, String> beneficiaryBankIds = ImmutableMap
-                .<Bank, String>builder()
-                .put(Bank.NORDEA, "NB")
-                .put(Bank.NORDEA_PERSONKONTO, "NB")
-                .put(Bank.SWEDBANK, "FSPA")
-                .put(Bank.HANDELSBANKEN, "SHB")
-                .put(Bank.SEB, "SEB")
-                .put(Bank.AVANZA_BANK, "AVANZ")
-                .put(Bank.CITIBANK, "CITI")
-                .put(Bank.DEN_NORSKE_BANK_SVERIGE, "DNBSE")
-                .put(Bank.DEN_NORSKE_BANK, "DNBSE")
-                .put(Bank.ERIK_PENSER_BANKAKTIEBOLAG, "EPENS")
-                .put(Bank.FOREX_BANK, "FOREX")
-                .put(Bank.SANTANDER_CONSUMER_BANK, "SANTA")
-                .put(Bank.ICA_BANKEN, "ICA")
-                .put(Bank.IKANO_BANK, "IKANO")
-                .put(Bank.LANDSHYPOTEK, "LAHYP")
-                .put(Bank.LANSFORSAKRINGAR_BANK, "LFB")
-                .put(Bank.MARGINALEN_BANK, "SALAB")
-                .put(Bank.NORDNET_BANK, "NNSE")
-                .put(Bank.PLUSGIROT_BANK, "PGB")
-                .put(Bank.PLUSGIROT, "PGB")
-                .put(Bank.JAKBANKEN, "JAK")
-                .put(Bank.EKOBANKEN, "EB")
-                .put(Bank.RESURS_BANK, "RB")
-                .put(Bank.RIKSGALDEN, "RGK")
-                .put(Bank.ROYAL_BANK_OF_SCOTLAND, "RBS")
-                .put(Bank.SBAB, "SBAB")
-                .put(Bank.SKANDIABANKEN, "SKB")
-                .put(Bank.SPARBANKEN_SYD, "SYD")
-                .put(Bank.ALANDSBANKEN, "ALAB")
-                .put(Bank.AMFA_BANK, "AMFA")
-                .put(Bank.BLUESTEP_FINANS, "BSTP")
-                .put(Bank.BNP_PARIBAS_FORTIS, "BNPPF")
-                .put(Bank.LAN_O_SPAR_BANK, "LSBSE")
-                .put(Bank.NORDAX_BANK, "NDX")
-                .build();
+        private static final ImmutableMap<Bank, String> beneficiaryBankIds =
+                ImmutableMap.<Bank, String>builder()
+                        .put(Bank.NORDEA, "NB")
+                        .put(Bank.NORDEA_PERSONKONTO, "NB")
+                        .put(Bank.SWEDBANK, "FSPA")
+                        .put(Bank.HANDELSBANKEN, "SHB")
+                        .put(Bank.SEB, "SEB")
+                        .put(Bank.AVANZA_BANK, "AVANZ")
+                        .put(Bank.CITIBANK, "CITI")
+                        .put(Bank.DEN_NORSKE_BANK_SVERIGE, "DNBSE")
+                        .put(Bank.DEN_NORSKE_BANK, "DNBSE")
+                        .put(Bank.ERIK_PENSER_BANKAKTIEBOLAG, "EPENS")
+                        .put(Bank.FOREX_BANK, "FOREX")
+                        .put(Bank.SANTANDER_CONSUMER_BANK, "SANTA")
+                        .put(Bank.ICA_BANKEN, "ICA")
+                        .put(Bank.IKANO_BANK, "IKANO")
+                        .put(Bank.LANDSHYPOTEK, "LAHYP")
+                        .put(Bank.LANSFORSAKRINGAR_BANK, "LFB")
+                        .put(Bank.MARGINALEN_BANK, "SALAB")
+                        .put(Bank.NORDNET_BANK, "NNSE")
+                        .put(Bank.PLUSGIROT_BANK, "PGB")
+                        .put(Bank.PLUSGIROT, "PGB")
+                        .put(Bank.JAKBANKEN, "JAK")
+                        .put(Bank.EKOBANKEN, "EB")
+                        .put(Bank.RESURS_BANK, "RB")
+                        .put(Bank.RIKSGALDEN, "RGK")
+                        .put(Bank.ROYAL_BANK_OF_SCOTLAND, "RBS")
+                        .put(Bank.SBAB, "SBAB")
+                        .put(Bank.SKANDIABANKEN, "SKB")
+                        .put(Bank.SPARBANKEN_SYD, "SYD")
+                        .put(Bank.ALANDSBANKEN, "ALAB")
+                        .put(Bank.AMFA_BANK, "AMFA")
+                        .put(Bank.BLUESTEP_FINANS, "BSTP")
+                        .put(Bank.BNP_PARIBAS_FORTIS, "BNPPF")
+                        .put(Bank.LAN_O_SPAR_BANK, "LSBSE")
+                        .put(Bank.NORDAX_BANK, "NDX")
+                        .build();
 
-        private static final ImmutableMap<String, Bank> oldBeneficiaryBankIdsToBank = ImmutableMap
-                .<String, Bank>builder()
-                .put("ORES", Bank.SWEDBANK)
-                .put("OREF", Bank.SWEDBANK)
-                .put("OREG", Bank.SWEDBANK)
-                .build();
+        private static final ImmutableMap<String, Bank> oldBeneficiaryBankIdsToBank =
+                ImmutableMap.<String, Bank>builder()
+                        .put("ORES", Bank.SWEDBANK)
+                        .put("OREF", Bank.SWEDBANK)
+                        .put("OREG", Bank.SWEDBANK)
+                        .build();
 
         public static Optional<String> getId(SwedishIdentifier swedishIdentifier) {
             final Bank bank = swedishIdentifier.getBank();
 
             switch (bank) {
-            case DANSKE_BANK:
-            case DANSKE_BANK_SVERIGE:
-                // According to Nordea, account numbers for danske with length 11 belongs to Östgöta Bank, others to DDB
-                if (Objects.equal(swedishIdentifier.getIdentifier(new DefaultAccountIdentifierFormatter()).length(), 11)) {
-                    return Optional.of(DANSKE_OGB);
-                } else {
-                    return Optional.of(DANSKE_DDB);
-                }
-            default:
-                return Optional.ofNullable(beneficiaryBankIds.get(bank));
+                case DANSKE_BANK:
+                case DANSKE_BANK_SVERIGE:
+                    // According to Nordea, account numbers for danske with length 11 belongs to
+                    // Östgöta Bank, others to DDB
+                    if (Objects.equal(
+                            swedishIdentifier
+                                    .getIdentifier(new DefaultAccountIdentifierFormatter())
+                                    .length(),
+                            11)) {
+                        return Optional.of(DANSKE_OGB);
+                    } else {
+                        return Optional.of(DANSKE_DDB);
+                    }
+                default:
+                    return Optional.ofNullable(beneficiaryBankIds.get(bank));
             }
         }
 
         public static Optional<Bank> getBank(final String beneficiaryBankId) {
             switch (beneficiaryBankId) {
-            case DANSKE_OGB:
-            case DANSKE_DDB: // Don't know if there is a correct match between OGB/DDB and DANSKE_BANK/DANSKE_BANK_SVERIGE so using same for both here
-                return Optional.of(Bank.DANSKE_BANK);
-            default:
-                Optional<Map.Entry<Bank, String>> matchingBeneficiaryBankId = beneficiaryBankIds.entrySet()
-                        .stream().filter(b -> matchesId(beneficiaryBankId).apply(b)).findFirst();
+                case DANSKE_OGB:
+                case DANSKE_DDB: // Don't know if there is a correct match between OGB/DDB and
+                                 // DANSKE_BANK/DANSKE_BANK_SVERIGE so using same for both here
+                    return Optional.of(Bank.DANSKE_BANK);
+                default:
+                    Optional<Map.Entry<Bank, String>> matchingBeneficiaryBankId =
+                            beneficiaryBankIds.entrySet().stream()
+                                    .filter(b -> matchesId(beneficiaryBankId).apply(b))
+                                    .findFirst();
 
-                return matchingBeneficiaryBankId.isPresent() ?
-                        Optional.of(matchingBeneficiaryBankId.get().getKey()) : Optional.ofNullable(oldBeneficiaryBankIdsToBank.get(beneficiaryBankId));
+                    return matchingBeneficiaryBankId.isPresent()
+                            ? Optional.of(matchingBeneficiaryBankId.get().getKey())
+                            : Optional.ofNullable(
+                                    oldBeneficiaryBankIdsToBank.get(beneficiaryBankId));
             }
         }
 
-        private static Predicate<Map.Entry<Bank, String>> matchesId(final String beneficiaryBankId) {
+        private static Predicate<Map.Entry<Bank, String>> matchesId(
+                final String beneficiaryBankId) {
             return bankStringEntry -> Objects.equal(beneficiaryBankId, bankStringEntry.getValue());
         }
     }

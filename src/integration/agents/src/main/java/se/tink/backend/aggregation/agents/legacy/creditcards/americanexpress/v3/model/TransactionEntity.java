@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.util.List;
-
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 
 public class TransactionEntity {
     private static final Joiner DESCRIPTION_JOINER = Joiner.on(' ');
@@ -70,7 +68,8 @@ public class TransactionEntity {
         return extendedTransactionDetails;
     }
 
-    public void setExtendedTransactionDetails(ExtendedTransactionDetailsEntity extendedTransactionDetails) {
+    public void setExtendedTransactionDetails(
+            ExtendedTransactionDetailsEntity extendedTransactionDetails) {
         this.extendedTransactionDetails = extendedTransactionDetails;
     }
 
@@ -78,7 +77,8 @@ public class TransactionEntity {
         return foreignTransactionDetails;
     }
 
-    public void setForeignTransactionDetails(ForeignTransactionDetailsEntity foreignTransactionDetails) {
+    public void setForeignTransactionDetails(
+            ForeignTransactionDetailsEntity foreignTransactionDetails) {
         this.foreignTransactionDetails = foreignTransactionDetails;
     }
 
@@ -109,15 +109,18 @@ public class TransactionEntity {
     public Transaction toTransaction() throws ParseException {
         Transaction t = new Transaction();
 
-        if (extendedTransactionDetails != null && !Strings.isNullOrEmpty(extendedTransactionDetails.getMerchantName())) {
+        if (extendedTransactionDetails != null
+                && !Strings.isNullOrEmpty(extendedTransactionDetails.getMerchantName())) {
             t.setDescription(extendedTransactionDetails.getMerchantName());
         } else {
             t.setDescription(DESCRIPTION_JOINER.join(description));
         }
 
         t.setAmount(-amount.getRawValue());
-        t.setDate(DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(Long.toString(chargeDate
-                .getRawValue()))));
+        t.setDate(
+                DateUtils.flattenTime(
+                        ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(
+                                Long.toString(chargeDate.getRawValue()))));
 
         if (amount.getRawValue() > 0) {
             t.setType(TransactionTypes.CREDIT_CARD);

@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import com.google.common.base.Strings;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExternalAccount implements GeneralAccountEntity {
-    private static final SebAccountIdentifierFormatter FORMATTER = new SebAccountIdentifierFormatter();
+    private static final SebAccountIdentifierFormatter FORMATTER =
+            new SebAccountIdentifierFormatter();
 
     private Optional<? extends AccountIdentifier> parsedIdentifier;
 
@@ -58,7 +59,8 @@ public class ExternalAccount implements GeneralAccountEntity {
         Optional<? extends AccountIdentifier> parsedIdentifier = getParsedIdentifier();
 
         if (!parsedIdentifier.isPresent()) {
-            return new SwedishIdentifier((String)null); // Need to return identifier, but it should not be valid
+            return new SwedishIdentifier(
+                    (String) null); // Need to return identifier, but it should not be valid
         }
 
         return parsedIdentifier.get();

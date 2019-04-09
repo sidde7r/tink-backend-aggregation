@@ -18,22 +18,31 @@ public class UpcomingTransactionEntity extends TransactionEntity {
 
     @JsonProperty("FromAccountId")
     private String accountId;
+
     @JsonProperty("RecipientName")
     private String recipientName;
+
     @JsonProperty("DueDate")
     private String dueDate;
+
     @JsonProperty("RecipientAccountNumber")
     private String destinationAccountNumber;
+
     @JsonProperty("RecipientType")
     private String destinationType;
+
     @JsonProperty("Memo")
     private String memo;
+
     @JsonProperty("ReferenceType")
     private String refrenceType;
+
     @JsonProperty("Reference")
     private String transferMessage;
+
     @JsonProperty("EventId")
     private String eventId;
+
     @JsonProperty("FromAccountNumber")
     private String sourceAccountNumber;
 
@@ -136,25 +145,27 @@ public class UpcomingTransactionEntity extends TransactionEntity {
         AccountIdentifier source = getSource();
         AccountIdentifier destination = getDestination();
 
-        return String.valueOf(java.util.Objects.hash(
-                getTypeForHash(type).name(),
-                getAmountForHash(-amount),
-                destination != null ? destination.toURIWithoutName() : null,
-                transferMessage,
-                // if ignoreSource is true, set source to null, otherwise use it if it exists
-                (ignoreSource || source == null) ? null : source.toURIWithoutName(),
-                memo,
-                dueDate));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getTypeForHash(type).name(),
+                        getAmountForHash(-amount),
+                        destination != null ? destination.toURIWithoutName() : null,
+                        transferMessage,
+                        // if ignoreSource is true, set source to null, otherwise use it if it
+                        // exists
+                        (ignoreSource || source == null) ? null : source.toURIWithoutName(),
+                        memo,
+                        dueDate));
     }
 
     private static TransferType getTypeForHash(String type) {
         switch (type.toLowerCase()) {
-        case "payment":
-        case "paymentpg":
-        case "paymentbg":
-            return TransferType.PAYMENT;
-        default:
-            return TransferType.BANK_TRANSFER;
+            case "payment":
+            case "paymentpg":
+            case "paymentbg":
+                return TransferType.PAYMENT;
+            default:
+                return TransferType.BANK_TRANSFER;
         }
     }
 
@@ -164,7 +175,8 @@ public class UpcomingTransactionEntity extends TransactionEntity {
         }
 
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 

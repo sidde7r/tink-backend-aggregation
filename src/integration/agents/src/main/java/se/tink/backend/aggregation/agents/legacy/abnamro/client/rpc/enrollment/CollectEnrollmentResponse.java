@@ -15,9 +15,7 @@ public class CollectEnrollmentResponse {
         this.bcNumber = bcNumber;
     }
 
-    /**
-     * User has been enrolled if we get a bcNumber in the response.
-     */
+    /** User has been enrolled if we get a bcNumber in the response. */
     public boolean isCompleted() {
         return !Strings.isNullOrEmpty(bcNumber);
     }

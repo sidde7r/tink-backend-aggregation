@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getFavouritesResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getFavouritesResult"})
 @XmlRootElement(name = "GetFavouritesResponse")
 public class GetFavouritesResponse {
 
@@ -39,11 +35,8 @@ public class GetFavouritesResponse {
 
     /**
      * Gets the value of the getFavouritesResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfRestaurantInfo }
-     *     
+     *
+     * @return possible object is {@link ArrayOfRestaurantInfo }
      */
     public ArrayOfRestaurantInfo getGetFavouritesResult() {
         return getFavouritesResult;
@@ -51,14 +44,10 @@ public class GetFavouritesResponse {
 
     /**
      * Sets the value of the getFavouritesResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfRestaurantInfo }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfRestaurantInfo }
      */
     public void setGetFavouritesResult(ArrayOfRestaurantInfo value) {
         this.getFavouritesResult = value;
     }
-
 }

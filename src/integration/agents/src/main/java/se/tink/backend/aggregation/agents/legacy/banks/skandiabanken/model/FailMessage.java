@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FailMessage {
     @JsonProperty("Header")
     private String header;
+
     @JsonProperty("Text")
     private String text;
 

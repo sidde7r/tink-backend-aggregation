@@ -29,5 +29,4 @@ public class PaymentAccountWrapper implements GeneralAccountEntity {
     public String generalGetName() {
         return account.getAccountName();
     }
-
 }

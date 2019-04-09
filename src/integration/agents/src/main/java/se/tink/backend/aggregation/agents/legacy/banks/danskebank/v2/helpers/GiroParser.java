@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.giro.validation.LuhnCheck;
 import se.tink.libraries.account.AccountIdentifierPredicate;
+import se.tink.libraries.giro.validation.LuhnCheck;
 
 public class GiroParser {
     // 1-2, 12-3, 123-4 ... 1234567-8
@@ -19,22 +19,25 @@ public class GiroParser {
     private static final String BG_WITH_DASH_PATTERN = "^\\d{3,4}-\\d{4}$";
 
     // 1[-?]2, 12[-?]3, 123[-?]4 ... 1234567[-?]8 or 123[-?]4567 or 1234[-?]5678
-    private static final String BG_OR_PG_WITH_OPTIONAL_DASH_PATTERN = "^(\\d{1,8}-?\\d)|(\\d{3,4}-?\\d{4})$";
+    private static final String BG_OR_PG_WITH_OPTIONAL_DASH_PATTERN =
+            "^(\\d{1,8}-?\\d)|(\\d{3,4}-?\\d{4})$";
 
-    public static Map<AccountIdentifier.Type, AccountIdentifier> createPossibleIdentifiersFor(String accountNumber) {
+    public static Map<AccountIdentifier.Type, AccountIdentifier> createPossibleIdentifiersFor(
+            String accountNumber) {
         String cleanedAccountNumber = getCleanedAccountNumber(accountNumber);
 
         if (!isValidAccountNumber(cleanedAccountNumber)) {
             return ImmutableMap.of();
         }
 
-        ConcurrentMap<AccountIdentifier.Type, AccountIdentifier> validIdentifiers = Maps.newConcurrentMap();
+        ConcurrentMap<AccountIdentifier.Type, AccountIdentifier> validIdentifiers =
+                Maps.newConcurrentMap();
 
-        validIdentifiers.putAll(FluentIterable
-                .from(getPossibleTypes(cleanedAccountNumber))
-                .transform(toIdentifier(cleanedAccountNumber))
-                .filter(AccountIdentifierPredicate.IS_VALID)
-                .uniqueIndex(TO_TYPE));
+        validIdentifiers.putAll(
+                FluentIterable.from(getPossibleTypes(cleanedAccountNumber))
+                        .transform(toIdentifier(cleanedAccountNumber))
+                        .filter(AccountIdentifierPredicate.IS_VALID)
+                        .uniqueIndex(TO_TYPE));
 
         return validIdentifiers;
     }
@@ -44,7 +47,8 @@ public class GiroParser {
             return false;
         }
 
-        // Check that it's numeric (except for possible dash) and that we have valid luhn digit on the account number
+        // Check that it's numeric (except for possible dash) and that we have valid luhn digit on
+        // the account number
         String cleanedAccountNumberWithoutDashes = cleanedAccountNumber.replace("-", "");
 
         return LuhnCheck.isLastCharCorrectLuhnMod10Check(cleanedAccountNumberWithoutDashes);
@@ -68,7 +72,8 @@ public class GiroParser {
         }
     }
 
-    private static Function<AccountIdentifier.Type, AccountIdentifier> toIdentifier(final String accountNumber) {
+    private static Function<AccountIdentifier.Type, AccountIdentifier> toIdentifier(
+            final String accountNumber) {
         return type -> AccountIdentifier.create(type, accountNumber);
     }
 

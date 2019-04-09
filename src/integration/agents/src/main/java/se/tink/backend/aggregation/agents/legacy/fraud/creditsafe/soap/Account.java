@@ -5,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Account complex type.
- * 
+ * Java class for Account complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Account">
  *   &lt;complexContent>
@@ -25,34 +24,29 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Account", propOrder = {
-    "userName",
-    "password",
-    "transactionId",
-    "language"
-})
+@XmlType(
+        name = "Account",
+        propOrder = {"userName", "password", "transactionId", "language"})
 public class Account {
 
     @XmlElement(name = "UserName")
     protected String userName;
+
     @XmlElement(name = "Password")
     protected String password;
+
     @XmlElement(name = "TransactionId")
     protected String transactionId;
+
     @XmlElement(name = "Language", required = true)
     protected Language language;
 
     /**
      * Gets the value of the userName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getUserName() {
         return userName;
@@ -60,11 +54,8 @@ public class Account {
 
     /**
      * Sets the value of the userName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setUserName(String value) {
         this.userName = value;
@@ -72,11 +63,8 @@ public class Account {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPassword() {
         return password;
@@ -84,11 +72,8 @@ public class Account {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPassword(String value) {
         this.password = value;
@@ -96,11 +81,8 @@ public class Account {
 
     /**
      * Gets the value of the transactionId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getTransactionId() {
         return transactionId;
@@ -108,11 +90,8 @@ public class Account {
 
     /**
      * Sets the value of the transactionId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setTransactionId(String value) {
         this.transactionId = value;
@@ -120,11 +99,8 @@ public class Account {
 
     /**
      * Gets the value of the language property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Language }
-     *     
+     *
+     * @return possible object is {@link Language }
      */
     public Language getLanguage() {
         return language;
@@ -132,14 +108,10 @@ public class Account {
 
     /**
      * Sets the value of the language property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Language }
-     *     
+     *
+     * @param value allowed object is {@link Language }
      */
     public void setLanguage(Language value) {
         this.language = value;
     }
-
 }

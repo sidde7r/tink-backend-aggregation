@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
+import static com.google.common.base.Objects.equal;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -23,39 +25,44 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.date.DateUtils;
-import static com.google.common.base.Objects.equal;
 
 public class LFUtils {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
     private static final Pattern MONTHS_BOUND = Pattern.compile("(\\d+) MÅNADER");
     private static final Pattern YEARS_BOUND = Pattern.compile("(\\d+) ÅR");
 
     /**
-     * List of banks that should not have clearing included when doing transfers
-     * ...based on response from LFs API call that lists BankEntities
+     * List of banks that should not have clearing included when doing transfers ...based on
+     * response from LFs API call that lists BankEntities
      */
-    private static final ImmutableList<ClearingNumber.Bank> BANKS_THAT_SHOULD_NOT_HAVE_CLEARING = ImmutableList.of(
-            ClearingNumber.Bank.EKOBANKEN,
-            ClearingNumber.Bank.HANDELSBANKEN,
-            ClearingNumber.Bank.JAKBANKEN,
-            ClearingNumber.Bank.PLUSGIROT,
-            ClearingNumber.Bank.SPARBANKEN_SYD
-    );
+    private static final ImmutableList<ClearingNumber.Bank> BANKS_THAT_SHOULD_NOT_HAVE_CLEARING =
+            ImmutableList.of(
+                    ClearingNumber.Bank.EKOBANKEN,
+                    ClearingNumber.Bank.HANDELSBANKEN,
+                    ClearingNumber.Bank.JAKBANKEN,
+                    ClearingNumber.Bank.PLUSGIROT,
+                    ClearingNumber.Bank.SPARBANKEN_SYD);
 
-    public static Optional<AccountEntity> find(final AccountIdentifier identifier, List<AccountEntity> entities) {
-        return entities.stream().filter(
-                ae -> (equal(ae.getAccountNumber(), identifier.getIdentifier(DEFAULT_FORMATTER)))).findFirst();
+    public static Optional<AccountEntity> find(
+            final AccountIdentifier identifier, List<AccountEntity> entities) {
+        return entities.stream()
+                .filter(
+                        ae ->
+                                (equal(
+                                        ae.getAccountNumber(),
+                                        identifier.getIdentifier(DEFAULT_FORMATTER))))
+                .findFirst();
     }
 
     public static Predicate<EInvoice> findEInvoice(final String electronicInvoiceId) {
         return input -> Objects.equals(input.getElectronicInvoiceId(), electronicInvoiceId);
     }
 
-    /**
-     * Converts a map from supplemental information into a list of answer entities.
-     */
-    public static List<AnswerEntity> convertSupplementalInformationToAnswers(Map<String, Object> input) {
+    /** Converts a map from supplemental information into a list of answer entities. */
+    public static List<AnswerEntity> convertSupplementalInformationToAnswers(
+            Map<String, Object> input) {
         List<AnswerEntity> answers = Lists.newArrayList();
 
         if (input == null) {
@@ -70,7 +77,7 @@ public class LFUtils {
     }
 
     public static Integer parseNumMonthsBound(String bound) {
-        //"rateBindingPeriodLength": "3 MÅNADER"
+        // "rateBindingPeriodLength": "3 MÅNADER"
         // guessing it is "x ÅR" for years
 
         Matcher mMonths = MONTHS_BOUND.matcher(bound);
@@ -86,10 +93,12 @@ public class LFUtils {
     }
 
     /**
-     * LF requires that the account number is given without clearing number for some banks (e.g. Handelsbanken).
-     * Note: Nordea SSN accounts are special compared to the rest of Nordea according to LF list of banks
+     * LF requires that the account number is given without clearing number for some banks (e.g.
+     * Handelsbanken). Note: Nordea SSN accounts are special compared to the rest of Nordea
+     * according to LF list of banks
      *
-     * @return Either account identifier with or without clearing depending on bank according to LF requirements
+     * @return Either account identifier with or without clearing depending on bank according to LF
+     *     requirements
      */
     public static String getApiAdaptedToAccount(SwedishIdentifier destination) {
         ClearingNumber.Details clearingNumberDetails = getClearingNumberDetails(destination);
@@ -109,22 +118,28 @@ public class LFUtils {
         Optional<ClearingNumber.Details> clearingNumberDetails = ClearingNumber.get(clearingNumber);
 
         if (!clearingNumberDetails.isPresent()) {
-            String errorMessage = String.format("Unexpectedly no clearingnumber for destination: %s (%s, %s)",
-                    destination.getIdentifier(), destination.getClearingNumber(), destination.getIdentifier(new DisplayAccountIdentifierFormatter()));
+            String errorMessage =
+                    String.format(
+                            "Unexpectedly no clearingnumber for destination: %s (%s, %s)",
+                            destination.getIdentifier(),
+                            destination.getClearingNumber(),
+                            destination.getIdentifier(new DisplayAccountIdentifierFormatter()));
             throw new NullPointerException(errorMessage);
         }
         return clearingNumberDetails.get();
     }
 
-    /** Compare payment with LF entities
+    /**
+     * Compare payment with LF entities
      *
-     * If the original payments dueDate is null, we set paymentDate on the PaymentRequest to 0 in order for LF to
-     * chose the earliest possible payment date. However, if we need to remove the payment from LF we need to compare
-     * it to the PaymentEntity object which will contain the paymentDate LF selected ( NOT 0 ). So in order to match
-     * identify the PaymentEntity we need to ignore dates when matching a PaymentRequest with a PaymentEntity where
-     * the paymentDate on the PaymentRequest is 0.
+     * <p>If the original payments dueDate is null, we set paymentDate on the PaymentRequest to 0 in
+     * order for LF to chose the earliest possible payment date. However, if we need to remove the
+     * payment from LF we need to compare it to the PaymentEntity object which will contain the
+     * paymentDate LF selected ( NOT 0 ). So in order to match identify the PaymentEntity we need to
+     * ignore dates when matching a PaymentRequest with a PaymentEntity where the paymentDate on the
+     * PaymentRequest is 0.
      *
-     * Otherwise we won't match the payments and the payment won't be removed from the bank.
+     * <p>Otherwise we won't match the payments and the payment won't be removed from the bank.
      */
     public static boolean isSamePayment(PaymentRequest paymentRequest, Object obj) {
         long requestDate = flattenDate(paymentRequest.getPaymentDate());
@@ -134,8 +149,9 @@ public class LFUtils {
             PaymentEntity paymentEntity = (PaymentEntity) obj;
             long entityDate = flattenDate(paymentEntity.getDate());
 
-            return Objects.equals(requestHash, paymentEntity.calculateHash()) &&
-                    (paymentRequest.getPaymentDate() == 0 || Objects.equals(requestDate, entityDate));
+            return Objects.equals(requestHash, paymentEntity.calculateHash())
+                    && (paymentRequest.getPaymentDate() == 0
+                            || Objects.equals(requestDate, entityDate));
         } else if (obj instanceof UpcomingTransactionEntity) {
             UpcomingTransactionEntity transaction = (UpcomingTransactionEntity) obj;
 
@@ -145,22 +161,26 @@ public class LFUtils {
 
             long transactionDate = flattenDate(transaction.getDate().getTime());
 
-            return Objects.equals(requestHash, transaction.calculatePaymentHash(paymentRequest.getFromAccount())) &&
-                    paymentRequest.getPaymentDate() == 0 || Objects.equals(requestDate, transactionDate);
+            return Objects.equals(
+                                    requestHash,
+                                    transaction.calculatePaymentHash(
+                                            paymentRequest.getFromAccount()))
+                            && paymentRequest.getPaymentDate() == 0
+                    || Objects.equals(requestDate, transactionDate);
         }
 
         return false;
     }
 
-    public static boolean isSameTransfer(TransferRequest transferRequest,
-            UpcomingTransactionEntity upcomingTransactionEntity) {
-
+    public static boolean isSameTransfer(
+            TransferRequest transferRequest, UpcomingTransactionEntity upcomingTransactionEntity) {
 
         if (upcomingTransactionEntity.getTransferInfo() == null) {
             return false;
         }
 
-        return Objects.equals(transferRequest.calculateHash(),
+        return Objects.equals(
+                transferRequest.calculateHash(),
                 upcomingTransactionEntity.calculateTransferHash(transferRequest.getFromAccount()));
     }
 

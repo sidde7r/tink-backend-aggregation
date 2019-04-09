@@ -15,7 +15,8 @@ public class DeletePaymentsResponse {
     }
 
     public boolean isPaymentDeleted() {
-        return deletePaymentsOut != null && deletePaymentsOut.getPaymentDeleted() != null &&
-                Boolean.parseBoolean(deletePaymentsOut.getPaymentDeleted());
+        return deletePaymentsOut != null
+                && deletePaymentsOut.getPaymentDeleted() != null
+                && Boolean.parseBoolean(deletePaymentsOut.getPaymentDeleted());
     }
 }

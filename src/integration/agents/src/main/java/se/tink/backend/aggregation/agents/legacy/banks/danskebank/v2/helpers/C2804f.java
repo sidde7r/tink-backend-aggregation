@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
 import org.json.JSONException;
 
-
 /* renamed from: com.trifork.android.a.a.f */
 public class C2804f {
     private C2807b f10330a;
@@ -13,12 +12,17 @@ public class C2804f {
 
     public C2803e m12073a(C0575g c0575g, String str) {
         if (this.f10330a == null) {
-            throw new IllegalStateException("cannot add authentication header before logon has been made (i.e a kek has been generated)");
+            throw new IllegalStateException(
+                    "cannot add authentication header before logon has been made (i.e a kek has been generated)");
         }
         byte[] a = C2806a.m12092a(16);
         C2808a c2808a = new C2808a("A128KW", "A128CBC", a, null);
         C2807b c2807b = new C2807b();
-        C2803e c2803e = new C2803e(c2808a, C2806a.m12093a(c2807b, this.f10330a), C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12089d(), a));
+        C2803e c2803e =
+                new C2803e(
+                        c2808a,
+                        C2806a.m12093a(c2807b, this.f10330a),
+                        C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12089d(), a));
         m12071a(c0575g, c2808a, a, this.f10330a, c2807b);
         return c2803e;
     }
@@ -28,7 +32,11 @@ public class C2804f {
         byte[] a = C2806a.m12092a(16);
         C2808a c2808a = new C2808a("RSA1_5", "A128CBC", a, c0575g.m2107b()); // jweheader
         C2807b c2807b = new C2807b(); // symkey
-        C2803e c2803e = new C2803e(c2808a, C2806a.m12096a(c0575g.m2106a(), c2807b.m12097a()), C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12086b(this.f10330a), a));
+        C2803e c2803e =
+                new C2803e(
+                        c2808a,
+                        C2806a.m12096a(c0575g.m2106a(), c2807b.m12097a()),
+                        C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12086b(this.f10330a), a));
         m12071a(c0575g, c2808a, a, this.f10330a, c2807b);
         return c2803e;
     }
@@ -39,7 +47,9 @@ public class C2804f {
         C2808a c2808a = new C2808a("A128KW", "A128CBC", a, null);
         byte[] b = new C2805h(c0575g, str).m12087b(bArr);
         C2807b c2807b = new C2807b();
-        C2803e c2803e = new C2803e(c2808a, C2806a.m12093a(c2807b, this.f10330a), C2806a.m12094a(c2807b, b, a));
+        C2803e c2803e =
+                new C2803e(
+                        c2808a, C2806a.m12093a(c2807b, this.f10330a), C2806a.m12094a(c2807b, b, a));
         m12071a(c0575g, c2808a, a, this.f10330a, c2807b);
         return c2803e;
     }
@@ -49,7 +59,11 @@ public class C2804f {
         byte[] a = C2806a.m12092a(16);
         C2808a c2808a = new C2808a("A128KW", "A128CBC", a, null);
         C2807b c2807b = new C2807b();
-        return new C2803e(c2808a, C2806a.m12093a(c2807b, this.f10330a), C2806a.m12094a(c2807b, bArr, a)).m12068a();
+        return new C2803e(
+                        c2808a,
+                        C2806a.m12093a(c2807b, this.f10330a),
+                        C2806a.m12094a(c2807b, bArr, a))
+                .m12068a();
     }
 
     public String m12075a(String str) throws JSONException {
@@ -57,14 +71,24 @@ public class C2804f {
         if (split.length != 3) {
             return null;
         }
-        return C2809b.m12104a(C2806a.m12091a(this.f10330a, C2809b.m12111c(split[1])), C2809b.m12105a(C2809b.m12112d(split[0]), "iv"), split[2]);
+        return C2809b.m12104a(
+                C2806a.m12091a(this.f10330a, C2809b.m12111c(split[1])),
+                C2809b.m12105a(C2809b.m12112d(split[0]), "iv"),
+                split[2]);
     }
 
     public byte[] m12078b(String str) {
         if (this.f10330a == null) {
-            throw new IllegalStateException("cannot decrypt authentication header before kek has been made (i.e a kek has been generated)");
+            throw new IllegalStateException(
+                    "cannot decrypt authentication header before kek has been made (i.e a kek has been generated)");
         }
-        return C2806a.m12095a(this.f10330a.m12099c(), C2799a.m12060a(str, 0), new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0});
+        return C2806a.m12095a(
+                this.f10330a.m12099c(),
+                C2799a.m12060a(str, 0),
+                new byte[] {
+                    (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0,
+                    (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0, (byte) 0
+                });
     }
 
     private void m12070a() {
@@ -77,7 +101,11 @@ public class C2804f {
         byte[] a = C2806a.m12092a(16);
         C2808a c2808a = new C2808a("RSA1_5", "A128CBC", a, c0575g.m2107b());
         C2807b c2807b = new C2807b();
-        C2803e c2803e = new C2803e(c2808a, C2806a.m12096a(c0575g.m2106a(), c2807b.m12097a()), C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12085b(), a));
+        C2803e c2803e =
+                new C2803e(
+                        c2808a,
+                        C2806a.m12096a(c0575g.m2106a(), c2807b.m12097a()),
+                        C2806a.m12094a(c2807b, new C2805h(c0575g, str).m12085b(), a));
         m12071a(c0575g, c2808a, a, null, c2807b);
         return c2803e;
     }

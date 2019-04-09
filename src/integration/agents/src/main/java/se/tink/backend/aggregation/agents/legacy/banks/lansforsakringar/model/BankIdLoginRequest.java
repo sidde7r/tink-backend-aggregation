@@ -24,5 +24,4 @@ public class BankIdLoginRequest {
     public void setSsn(String ssn) {
         this.ssn = ssn;
     }
-
 }

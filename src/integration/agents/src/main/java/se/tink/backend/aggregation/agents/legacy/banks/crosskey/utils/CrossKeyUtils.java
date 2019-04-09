@@ -6,8 +6,8 @@ import com.google.common.collect.Range;
 import java.util.List;
 import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.libraries.strings.StringUtils;
 
 public class CrossKeyUtils {
@@ -22,7 +22,8 @@ public class CrossKeyUtils {
         challengeField.setDescription("Engångskod");
         challengeField.setValue(challenge);
         challengeField.setName("challenge");
-        challengeField.setHelpText("Ange koden från ditt kodhäfte, dubbelkolla så att koden du skriver in har rätt plats i kodhäftet");
+        challengeField.setHelpText(
+                "Ange koden från ditt kodhäfte, dubbelkolla så att koden du skriver in har rätt plats i kodhäftet");
 
         Field responseField = new Field();
 
@@ -37,11 +38,11 @@ public class CrossKeyUtils {
         return Lists.newArrayList(challengeField, responseField);
     }
 
-    /** The purpose of this function is to remove all spaces
-     *  As well as &nbsp (Non-breaking spaces)
+    /**
+     * The purpose of this function is to remove all spaces As well as &nbsp (Non-breaking spaces)
      */
     public static String removeSpaces(String string) {
-        return string.replaceAll("\\s+|\\u00A0","");
+        return string.replaceAll("\\s+|\\u00A0", "");
     }
 
     /**
@@ -49,7 +50,8 @@ public class CrossKeyUtils {
      * @return Next older range to page
      */
     public static Range<DateTime> getNextPage(DateTime previousLowerBound) {
-        Preconditions.checkArgument(previousLowerBound.getDayOfMonth() == 1,
+        Preconditions.checkArgument(
+                previousLowerBound.getDayOfMonth() == 1,
                 "Since this is called with previous lower bound we should always be on 1st of month");
 
         DateTime upper = previousLowerBound.minusDays(1); // 2017-05-01 --> 2017-04-30
@@ -58,14 +60,15 @@ public class CrossKeyUtils {
         return Range.closed(lower, upper);
     }
 
-    /**
-     * @param transactions non-empty list
-     */
+    /** @param transactions non-empty list */
     public static Range<DateTime> getDateRange(List<Transaction> transactions) {
-        Preconditions.checkArgument(!transactions.isEmpty(), "Not expecting call without elements in list");
+        Preconditions.checkArgument(
+                !transactions.isEmpty(), "Not expecting call without elements in list");
 
-        Transaction mostRecentTransaction = transactions.stream().max(TransactionOrdering.TRANSACTION_DATE_ORDERING).get();
-        Transaction oldestTransaction = transactions.stream().min(TransactionOrdering.TRANSACTION_DATE_ORDERING).get();
+        Transaction mostRecentTransaction =
+                transactions.stream().max(TransactionOrdering.TRANSACTION_DATE_ORDERING).get();
+        Transaction oldestTransaction =
+                transactions.stream().min(TransactionOrdering.TRANSACTION_DATE_ORDERING).get();
 
         return Range.closed(
                 new DateTime(oldestTransaction.getDate()),
@@ -73,9 +76,12 @@ public class CrossKeyUtils {
     }
 
     public static Range<DateTime> getFirstPage(DateTime mostRecentTransactionDate) {
-        DateTime lower = mostRecentTransactionDate
-                .minusMonths(2).dayOfMonth().withMaximumValue() // 2017-05-10 --> 2017-03-31
-                .plusDays(1);
+        DateTime lower =
+                mostRecentTransactionDate
+                        .minusMonths(2)
+                        .dayOfMonth()
+                        .withMaximumValue() // 2017-05-10 --> 2017-03-31
+                        .plusDays(1);
 
         return Range.closed(lower, mostRecentTransactionDate);
     }

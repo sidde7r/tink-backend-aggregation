@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardDetailsEntity {
     @JsonProperty("ATMWithdrawals")
     private Map<String, Object> atmWithdrawals = new HashMap<String, Object>();
+
     private Map<String, Object> authorityRole = new HashMap<String, Object>();
     private Map<String, Object> balance = new HashMap<String, Object>();
     private Map<String, Object> balanceDate = new HashMap<String, Object>();
@@ -135,8 +135,8 @@ public class CardDetailsEntity {
 
         // First priority is Balance = FundsAvailable - CreditLimit
         if (getFundsAvailable().containsKey("$") && getCreditLimit().containsKey("$")) {
-            return StringUtils.parseAmount(getFundsAvailable().get("$").toString()) - StringUtils
-                    .parseAmount(getCreditLimit().get("$").toString());
+            return StringUtils.parseAmount(getFundsAvailable().get("$").toString())
+                    - StringUtils.parseAmount(getCreditLimit().get("$").toString());
 
             // Fallback to using the creditUsed field if above isn't available
         } else if (getCreditUsed().containsKey("$")) {
@@ -145,5 +145,4 @@ public class CardDetailsEntity {
 
         return null;
     }
-
 }

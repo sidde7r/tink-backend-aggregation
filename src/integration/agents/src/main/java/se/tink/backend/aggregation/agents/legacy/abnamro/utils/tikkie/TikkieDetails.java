@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.abnamro.utils.tikkie;
 
-/**
- * Small utility class for storing name and message parsed out from a Tikkie transaction
- */
+/** Small utility class for storing name and message parsed out from a Tikkie transaction */
 public class TikkieDetails {
     private String name;
     private String message;

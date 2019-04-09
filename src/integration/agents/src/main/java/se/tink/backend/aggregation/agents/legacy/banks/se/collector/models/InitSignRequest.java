@@ -6,6 +6,7 @@ import com.google.common.base.MoreObjects;
 public class InitSignRequest extends InitBankIdRequest {
     @JsonProperty("user_visible_data")
     private final String message;
+
     @JsonProperty("user_nonvisible_data")
     private final String secretMessage = "string";
 

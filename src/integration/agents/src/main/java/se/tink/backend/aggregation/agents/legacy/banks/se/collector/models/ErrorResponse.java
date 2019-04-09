@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ErrorResponse {
     private String status;
+
     @JsonProperty("status_message")
     private String statusMessage;
+
     @JsonProperty("error_code")
     private String errorCode;
 
@@ -27,8 +29,9 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean isErrorDueToRepeatedRequests() {
-       return Optional.ofNullable(statusMessage).orElse("")
-               .toLowerCase()
-               .contains("repeated calls the authentication request has been cancelled");
+        return Optional.ofNullable(statusMessage)
+                .orElse("")
+                .toLowerCase()
+                .contains("repeated calls the authentication request has been cancelled");
     }
 }

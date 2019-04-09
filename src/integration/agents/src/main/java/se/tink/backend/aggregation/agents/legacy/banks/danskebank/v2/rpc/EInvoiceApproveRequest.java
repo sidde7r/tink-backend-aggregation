@@ -8,13 +8,8 @@ import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
- * {
- "amount": "1.00",
- "receipt": "false",
- "fromAccountId": "3419584517",
- "saveForLaterApproval": "true",
- "date": "\/Date(1464220800000+0200)\/"
- }
+ * { "amount": "1.00", "receipt": "false", "fromAccountId": "3419584517", "saveForLaterApproval":
+ * "true", "date": "\/Date(1464220800000+0200)\/" }
  */
 public class EInvoiceApproveRequest {
     private String amount;

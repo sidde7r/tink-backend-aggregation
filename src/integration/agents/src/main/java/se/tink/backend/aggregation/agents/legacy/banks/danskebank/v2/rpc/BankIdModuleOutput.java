@@ -7,10 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BankIdModuleOutput {
     @JsonProperty("AutoStartToken")
     private String autoStartToken;
+
     @JsonProperty("BankIDStatusCode")
     private String bankIDStatusCode;
+
     @JsonProperty("BankIDStatusText")
     private String bankIDStatusText;
+
     @JsonProperty("OrderReference")
     private String orderReference;
 
@@ -45,5 +48,4 @@ public class BankIdModuleOutput {
     public void setOrderReference(String orderReference) {
         this.orderReference = orderReference;
     }
-
 }

@@ -13,7 +13,7 @@ public class CardTransactionEntity {
     private Date date;
     private Date debitDate;
     private boolean definitive;
-    
+
     public double getAmountHolderCurrency() {
         return amountHolderCurrency;
     }
@@ -56,17 +56,16 @@ public class CardTransactionEntity {
 
     public Transaction toTransaction() {
         Transaction transaction = new Transaction();
-        
+
         transaction.setDescription(text);
         transaction.setAmount(-amountHolderCurrency);
         transaction.setDate(getDate());
         transaction.setPending(!definitive);
-        
+
         if (transaction.getAmount() < 0) {
             transaction.setType(TransactionTypes.CREDIT_CARD);
         }
 
         return transaction;
     }
-
 }

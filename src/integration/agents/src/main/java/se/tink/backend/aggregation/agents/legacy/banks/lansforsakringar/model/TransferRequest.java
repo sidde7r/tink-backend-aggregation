@@ -81,17 +81,15 @@ public class TransferRequest {
     }
 
     public String calculateHash() {
-        return String.valueOf(java.util.Objects.hash(
-                getAmountForHash(amount),
-                toText,
-                fromText,
-                bankName,
-                fromAccount));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getAmountForHash(amount), toText, fromText, bankName, fromAccount));
     }
 
     private String getAmountForHash(double amount) {
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 }

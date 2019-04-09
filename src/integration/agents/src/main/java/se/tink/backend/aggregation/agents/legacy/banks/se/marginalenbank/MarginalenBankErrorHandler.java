@@ -8,10 +8,11 @@ public class MarginalenBankErrorHandler extends AbstractCrossKeyErrorHandler {
     @Override
     public void handleError(String errorCode) throws Exception {
         switch (errorCode) {
-        case "UNEXPECTED_ERROR":
-            throw new UnexpectedErrorException("Encountered a technical error, please try again later");
-        default:
-            super.handleError(errorCode);
+            case "UNEXPECTED_ERROR":
+                throw new UnexpectedErrorException(
+                        "Encountered a technical error, please try again later");
+            default:
+                super.handleError(errorCode);
         }
     }
 }

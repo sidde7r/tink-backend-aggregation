@@ -7,14 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthenticateBasicLoginResponse {
     @JsonProperty("country")
     private String country;
+
     @JsonProperty("lang")
     private String lang;
+
     @JsonProperty("logged_in")
     private Boolean loggedIn;
+
     @JsonProperty("session_type")
     private String sessionType;
+
     @JsonProperty("code")
     private String code;
+
     @JsonProperty("message")
     private String message;
 

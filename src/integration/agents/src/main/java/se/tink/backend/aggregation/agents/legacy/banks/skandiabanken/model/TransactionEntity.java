@@ -1,162 +1,162 @@
 package se.tink.backend.aggregation.agents.banks.skandiabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
 
-	// Pattern is used to make description more readable. Will match strings that ends with "description\\city\"
-	private static Pattern merchantFormatPattern = Pattern.compile("(.*)\\\\\\\\(.*)\\\\$");
+    // Pattern is used to make description more readable. Will match strings that ends with
+    // "description\\city\"
+    private static Pattern merchantFormatPattern = Pattern.compile("(.*)\\\\\\\\(.*)\\\\$");
 
-	private int order;
-	private int page;
-	
-	public int getPage() {
-		return page;
-	}
+    private int order;
+    private int page;
 
-	public void setPage(int page) {
-		this.page = page;
-	}
+    public int getPage() {
+        return page;
+    }
 
-	public int getOrder() {
-		return order;
-	}
+    public void setPage(int page) {
+        this.page = page;
+    }
 
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    public int getOrder() {
+        return order;
+    }
 
-	private String id;
-	private String amount;
-	private boolean amountNegative;
-	private String balance;
-	private String caption;
-	private String converted;
-	private String currencyCode;
-	private String merchant;
-	private String reference;
-	private String settled;
-	private String time;
-	private String timestamp;
-	private int type;
-	private String uuid;
-	private String date;
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
-	public String getId() {
-		return id;
-	}
+    private String id;
+    private String amount;
+    private boolean amountNegative;
+    private String balance;
+    private String caption;
+    private String converted;
+    private String currencyCode;
+    private String merchant;
+    private String reference;
+    private String settled;
+    private String time;
+    private String timestamp;
+    private int type;
+    private String uuid;
+    private String date;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getAmount() {
-		return amount;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
+    public String getAmount() {
+        return amount;
+    }
 
-	public boolean isAmountNegative() {
-		return amountNegative;
-	}
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
-	public void setAmountNegative(boolean amountNegative) {
-		this.amountNegative = amountNegative;
-	}
+    public boolean isAmountNegative() {
+        return amountNegative;
+    }
 
-	public String getBalance() {
-		return balance;
-	}
+    public void setAmountNegative(boolean amountNegative) {
+        this.amountNegative = amountNegative;
+    }
 
-	public void setBalance(String balance) {
-		this.balance = balance;
-	}
+    public String getBalance() {
+        return balance;
+    }
 
-	public String getCaption() {
-		return caption;
-	}
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
 
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
+    public String getCaption() {
+        return caption;
+    }
 
-	public String getConverted() {
-		return converted;
-	}
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
 
-	public void setConverted(String converted) {
-		this.converted = converted;
-	}
+    public String getConverted() {
+        return converted;
+    }
 
-	public String getCurrencyCode() {
-		return currencyCode;
-	}
+    public void setConverted(String converted) {
+        this.converted = converted;
+    }
 
-	public void setCurrencyCode(String currencyCode) {
-		this.currencyCode = currencyCode;
-	}
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
 
-	public String getMerchant() {
-		return merchant;
-	}
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
 
-	public void setMerchant(String merchant) {
-		this.merchant = formatMerchantName(merchant);
-	}
+    public String getMerchant() {
+        return merchant;
+    }
 
-	public String getReference() {
-		return reference;
-	}
+    public void setMerchant(String merchant) {
+        this.merchant = formatMerchantName(merchant);
+    }
 
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
+    public String getReference() {
+        return reference;
+    }
 
-	public String getSettled() {
-		return settled;
-	}
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
-	public void setSettled(String settled) {
-		this.settled = settled;
-	}
+    public String getSettled() {
+        return settled;
+    }
 
-	public String getTime() {
-		return time;
-	}
+    public void setSettled(String settled) {
+        this.settled = settled;
+    }
 
-	public void setTime(String time) {
-		this.time = time;
-	}
+    public String getTime() {
+        return time;
+    }
 
-	public String getTimestamp() {
-		return timestamp;
-	}
+    public void setTime(String time) {
+        this.time = time;
+    }
 
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
+    public String getTimestamp() {
+        return timestamp;
+    }
 
-	public int getType() {
-		return type;
-	}
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public String getUuid() {
-		return uuid;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getDate() {
         return date;
@@ -183,54 +183,37 @@ public class TransactionEntity {
     // Generated by Eclipse.
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         TransactionEntity other = (TransactionEntity) obj;
         if (amount == null) {
-            if (other.amount != null)
-                return false;
-        } else if (!amount.equals(other.amount))
-            return false;
+            if (other.amount != null) return false;
+        } else if (!amount.equals(other.amount)) return false;
         if (date == null) {
-            if (other.date != null)
-                return false;
-        } else if (!date.equals(other.date))
-            return false;
+            if (other.date != null) return false;
+        } else if (!date.equals(other.date)) return false;
         if (merchant == null) {
-            if (other.merchant != null)
-                return false;
-        } else if (!merchant.equals(other.merchant))
-            return false;
+            if (other.merchant != null) return false;
+        } else if (!merchant.equals(other.merchant)) return false;
         if (settled == null) {
-            if (other.settled != null)
-                return false;
-        } else if (!settled.equals(other.settled))
-            return false;
+            if (other.settled != null) return false;
+        } else if (!settled.equals(other.settled)) return false;
         if (timestamp == null) {
-            if (other.timestamp != null)
-                return false;
-        } else if (!timestamp.equals(other.timestamp))
-            return false;
-        if (type != other.type)
-            return false;
+            if (other.timestamp != null) return false;
+        } else if (!timestamp.equals(other.timestamp)) return false;
+        if (type != other.type) return false;
         return true;
     }
 
-	/**
-	 * Will re-format merchants/descriptions from "name\\city\" to "name, city"
-	 */
-	private String formatMerchantName(String input) {
-		Matcher matcher = merchantFormatPattern.matcher(input);
+    /** Will re-format merchants/descriptions from "name\\city\" to "name, city" */
+    private String formatMerchantName(String input) {
+        Matcher matcher = merchantFormatPattern.matcher(input);
 
-		if (matcher.matches()) {
-			return matcher.group(1).trim() + ", " + matcher.group(2).trim();
-		}
+        if (matcher.matches()) {
+            return matcher.group(1).trim() + ", " + matcher.group(2).trim();
+        }
 
-		return input;
-	}
-
+        return input;
+    }
 }

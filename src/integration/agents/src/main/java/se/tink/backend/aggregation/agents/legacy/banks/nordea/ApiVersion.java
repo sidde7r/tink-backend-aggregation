@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.nordea;
 
 public enum ApiVersion {
-    V21("V2.1"), V23("V2.3");
+    V21("V2.1"),
+    V23("V2.3");
 
     private final String version;
 

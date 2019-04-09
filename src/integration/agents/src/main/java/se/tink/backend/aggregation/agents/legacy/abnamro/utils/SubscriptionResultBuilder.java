@@ -19,7 +19,8 @@ public class SubscriptionResultBuilder {
         return this;
     }
 
-    public SubscriptionResultBuilder withRejectedContracts(List<RejectedContractEntity> rejectedContracts) {
+    public SubscriptionResultBuilder withRejectedContracts(
+            List<RejectedContractEntity> rejectedContracts) {
         this.rejectedContracts = rejectedContracts;
         return this;
     }
@@ -29,9 +30,9 @@ public class SubscriptionResultBuilder {
         Preconditions.checkNotNull(rejectedContracts, "Rejected contracts is null");
         Preconditions.checkNotNull(accounts, "Accounts is null");
 
-        ImmutableMap<Long, RejectedContractEntity> rejectedAccountsByAccountNumber = FluentIterable
-                .from(rejectedContracts)
-                .uniqueIndex(AbnAmroUtils.Functions.REJECTED_CONTRACT_TO_CONTRACT_NUMBER);
+        ImmutableMap<Long, RejectedContractEntity> rejectedAccountsByAccountNumber =
+                FluentIterable.from(rejectedContracts)
+                        .uniqueIndex(AbnAmroUtils.Functions.REJECTED_CONTRACT_TO_CONTRACT_NUMBER);
 
         List<Account> subscribedAccounts = Lists.newArrayList();
         List<Account> rejectedAccounts = Lists.newArrayList();
@@ -41,7 +42,8 @@ public class SubscriptionResultBuilder {
             Long key = Long.valueOf(account.getBankId());
 
             if (rejectedAccountsByAccountNumber.containsKey(key)) {
-                int rejectedReasonCode = rejectedAccountsByAccountNumber.get(key).getRejectedReasonCode();
+                int rejectedReasonCode =
+                        rejectedAccountsByAccountNumber.get(key).getRejectedReasonCode();
                 AbnAmroUtils.markAccountAsRejected(account, rejectedReasonCode);
                 rejectedAccounts.add(account);
             } else {

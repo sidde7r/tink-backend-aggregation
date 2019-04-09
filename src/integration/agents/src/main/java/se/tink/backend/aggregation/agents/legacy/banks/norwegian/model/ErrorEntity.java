@@ -24,4 +24,3 @@ public class ErrorEntity {
         return "ALREADY_IN_PROGRESS".equalsIgnoreCase(code);
     }
 }
-

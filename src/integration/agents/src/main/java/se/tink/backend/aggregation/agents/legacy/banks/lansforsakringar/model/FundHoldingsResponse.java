@@ -10,10 +10,8 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FundHoldingsResponse {
     // The response does not contain any account number or similar
-    @JsonIgnore
-    private static final String IDENTIFIER = "funddepot";
-    @JsonIgnore
-    private static final String NAME = "Fonddepå";
+    @JsonIgnore private static final String IDENTIFIER = "funddepot";
+    @JsonIgnore private static final String NAME = "Fonddepå";
     private Double totalHoldingValue;
     private Double totalPurchaseValue;
     private Double totalDevelopment;

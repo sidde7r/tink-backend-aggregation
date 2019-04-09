@@ -7,13 +7,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.LoanDetails;
-
-import java.util.List;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

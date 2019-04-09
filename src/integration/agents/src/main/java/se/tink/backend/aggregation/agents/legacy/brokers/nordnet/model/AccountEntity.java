@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.brokers.nordnet.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -14,28 +14,36 @@ public class AccountEntity {
 
     @JsonProperty("accno")
     private String accountNumber;
+
     @JsonProperty("bank_account")
     private BankAccountEntity bankAccount;
+
     @JsonProperty("accid")
     private String accountId;
+
     @JsonProperty("bank_accno")
     private String bankAccountNumber;
+
     private String type;
     private String symbol;
+
     @JsonProperty("account_code")
     private String accountCode;
+
     private String role;
+
     @JsonProperty("is_blocked")
     private boolean blocked;
+
     @JsonProperty("blocked_reason")
     private String blockedReason;
 
     @JsonProperty("default")
     private boolean defaultAccount;
+
     private String alias;
 
-    @JsonIgnore
-    private AccountInfoEntity info;
+    @JsonIgnore private AccountInfoEntity info;
 
     public String getBankAccountNumber() {
         return bankAccountNumber;
@@ -66,9 +74,9 @@ public class AccountEntity {
     }
 
     /**
-     * The amount of cash in the account minus what is borrowed, but those numbers are not directly available.
-     * Had to guess a bit here. The exact meaning of 'pawn value', 'loan limit', 'collateral', 'account credit'
-     * and others is not known.
+     * The amount of cash in the account minus what is borrowed, but those numbers are not directly
+     * available. Had to guess a bit here. The exact meaning of 'pawn value', 'loan limit',
+     * 'collateral', 'account credit' and others is not known.
      */
     public double getCashBalance() {
 
@@ -81,7 +89,8 @@ public class AccountEntity {
         // This should be: 'available cash' - 'actually utilised credit'
         double balance = tradingPower - pawnValue;
 
-        // If this account/portfolio is used as collateral for some loan, and the market value of the investments don't
+        // If this account/portfolio is used as collateral for some loan, and the market value of
+        // the investments don't
         // cover the amount, then the trading power has been decreased by the remaining part.
         // (Not 100% sure about the logic here.)
         double cashCollateral = Math.max(info.getCollateral() - info.getFullMarketvalue(), 0.0);
@@ -103,7 +112,8 @@ public class AccountEntity {
 
         account.setBankId(this.getAccountNumber());
         account.setAccountNumber(this.getBankAccountNumber());
-        account.putIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, this.getBankAccountNumber()));
+        account.putIdentifier(
+                AccountIdentifier.create(AccountIdentifier.Type.SE, this.getBankAccountNumber()));
         account.setType(accountType);
         account.setName(this.getName());
         account.setBalance(this.getCashBalance() + this.getMarketValue());
@@ -126,16 +136,18 @@ public class AccountEntity {
 
     private Portfolio.Type getPortfolioType() {
         switch (Strings.nullToEmpty(getAccountCode()).toLowerCase()) {
-        case "dep":
-            return Portfolio.Type.DEPOT;
-        case "isk":
-            return Portfolio.Type.ISK;
-        case "kf":
-            return Portfolio.Type.KF;
-        case "tjf":
-            return Portfolio.Type.PENSION;
-        default:
-            return (isTypeOccupationalPension() ? Portfolio.Type.PENSION : Portfolio.Type.OTHER);
+            case "dep":
+                return Portfolio.Type.DEPOT;
+            case "isk":
+                return Portfolio.Type.ISK;
+            case "kf":
+                return Portfolio.Type.KF;
+            case "tjf":
+                return Portfolio.Type.PENSION;
+            default:
+                return (isTypeOccupationalPension()
+                        ? Portfolio.Type.PENSION
+                        : Portfolio.Type.OTHER);
         }
     }
 

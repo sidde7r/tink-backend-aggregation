@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntity {
@@ -29,7 +29,7 @@ public class CardEntity {
         tinkAccount.setBankId(agreementNumber);
         tinkAccount.setAvailableCredit(availableCredit);
         tinkAccount.setBalance(this.calculateBalance());
-        if(!Strings.isNullOrEmpty(cardNumber)) {
+        if (!Strings.isNullOrEmpty(cardNumber)) {
             tinkAccount.setAccountNumber(CreditCardUtils.maskCardNumber(cardNumber));
         }
 

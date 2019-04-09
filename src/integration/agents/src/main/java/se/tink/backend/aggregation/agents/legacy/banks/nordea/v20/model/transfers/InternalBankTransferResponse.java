@@ -1,20 +1,18 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v20.model.transfers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Optional;
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaErrorUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.BankingServiceResponse;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InternalBankTransferResponse
-{
+public class InternalBankTransferResponse {
     private CreateTransferOut createTransferOut;
     private BankingServiceResponse bankingServiceResponse;
 
-    public CreateTransferOut getCreateTransferOut ()
-    {
+    public CreateTransferOut getCreateTransferOut() {
         return createTransferOut;
     }
 
@@ -31,14 +29,14 @@ public class InternalBankTransferResponse
     }
 
     /**
-     * Accepted state for Version 2.3 of the API is StatusCode = "Paid"
-     * Accepted state for Version 2.0 of the API is StatusCode = "Empty"
+     * Accepted state for Version 2.3 of the API is StatusCode = "Paid" Accepted state for Version
+     * 2.0 of the API is StatusCode = "Empty"
      */
     public boolean isTransferAccepted() {
 
-        return createTransferOut != null && (Strings.nullToEmpty(createTransferOut.getStatusCode())
-                .equalsIgnoreCase("Paid") || Strings.isNullOrEmpty(createTransferOut.getStatusCode()));
-
+        return createTransferOut != null
+                && (Strings.nullToEmpty(createTransferOut.getStatusCode()).equalsIgnoreCase("Paid")
+                        || Strings.isNullOrEmpty(createTransferOut.getStatusCode()));
     }
 
     public Optional<String> getErrorMessage() {
@@ -50,7 +48,8 @@ public class InternalBankTransferResponse
         }
 
         if (bankingServiceResponse != null && bankingServiceResponse.getErrorCode().isPresent()) {
-            return Optional.of(NordeaErrorUtils.getErrorMessage(bankingServiceResponse.getErrorCode().get()));
+            return Optional.of(
+                    NordeaErrorUtils.getErrorMessage(bankingServiceResponse.getErrorCode().get()));
         }
 
         return Optional.empty();

@@ -4,9 +4,7 @@ public class SecurityEntity {
     private String security;
     private String typeOfSecurity;
 
-    public SecurityEntity() {
-
-    }
+    public SecurityEntity() {}
 
     public String getSecurity() {
         return security;

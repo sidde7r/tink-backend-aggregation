@@ -14,9 +14,7 @@ import se.tink.libraries.strings.StringUtils;
 
 public class CreditCardParsingUtils {
 
-    /**
-     * Parses the balance from Norwegian card balance page
-     */
+    /** Parses the balance from Norwegian card balance page */
     public static Double parseBalance(String htmlContent) {
         Document document = Jsoup.parse(htmlContent);
 
@@ -28,12 +26,12 @@ public class CreditCardParsingUtils {
     }
 
     private static String getUnescapedAmountString(Document document, int amountStringIndex) {
-        String escapedAmount = document
-                .select("div.grid")
-                .get(0)
-                .select("div.grid-u-1-2")
-                .get(amountStringIndex)
-                .text();
+        String escapedAmount =
+                document.select("div.grid")
+                        .get(0)
+                        .select("div.grid-u-1-2")
+                        .get(amountStringIndex)
+                        .text();
 
         return StringEscapeUtils.unescapeHtml4(escapedAmount);
     }
@@ -48,20 +46,17 @@ public class CreditCardParsingUtils {
 
     /**
      * Parses the account number from Norwegian account details page
-     * 
-     * @throws AccountNotFoundException
-     *             if no account could be extracted
+     *
+     * @throws AccountNotFoundException if no account could be extracted
      */
     public static String parseAccountNumber(String htmlContent) throws AccountNotFoundException {
-        Elements elements = Jsoup.parse(htmlContent)
-                .select("div.creditcard");
+        Elements elements = Jsoup.parse(htmlContent).select("div.creditcard");
 
         if (elements.size() == 0) {
             throw new AccountNotFoundException("Could not extract account number.");
         }
 
-        return elements
-                .get(0)
+        return elements.get(0)
                 .select("div.creditcard__number")
                 .first()
                 .text()
@@ -81,9 +76,7 @@ public class CreditCardParsingUtils {
         return Optional.of(matcher.group(1));
     }
 
-    /**
-     * Parses list of pages that could be collected
-     */
+    /** Parses list of pages that could be collected */
     public static List<Integer> parsePages(String htmlContent) {
 
         List<Integer> result = Lists.newArrayList();
@@ -96,5 +89,4 @@ public class CreditCardParsingUtils {
 
         return result;
     }
-
 }

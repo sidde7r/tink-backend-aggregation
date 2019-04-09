@@ -21,24 +21,25 @@ public class TransferResponse {
     public BankingServiceResponse getBankingServiceResponse() {
         return bankingServiceResponse;
     }
-    
+
     public void setBankingServiceResponse(BankingServiceResponse bankingServiceResponse) {
         this.bankingServiceResponse = bankingServiceResponse;
     }
-    
+
     public Optional<String> getError() {
         if (getBankingServiceResponse() != null) {
             if (getBankingServiceResponse().getErrorCode().isPresent()) {
 
-                return Optional.ofNullable(NordeaErrorUtils.getErrorMessage(getBankingServiceResponse()
-                        .getErrorCode().get()));
+                return Optional.ofNullable(
+                        NordeaErrorUtils.getErrorMessage(
+                                getBankingServiceResponse().getErrorCode().get()));
             }
         }
-        
+
         if (!createPaymentOut.getStatusCode().equalsIgnoreCase("Unconfirmed")) {
             return Optional.ofNullable("Something went wrong making transfer.");
         }
-        
+
         return Optional.empty();
     }
 }

@@ -17,26 +17,31 @@ import se.tink.libraries.transfer.enums.TransferType;
 public class VODB {
     @JsonProperty("DBZV160")
     public String[] DBZV160;
+
     @JsonProperty("DEVID01")
     public DEVID01 DEVID01 = new DEVID01();
+
     @JsonProperty("HWINFO01")
     public HWINFO01 HWINFO01;
+
     @JsonProperty("CBEW501")
     public String[] CBEW501;
+
     @JsonProperty("DBZV170")
     public String[] DBZV170;
+
     @JsonProperty("CBEW502")
     public String[] CBEW502;
 
-    //User info returned after activation, also sent as null now and then
+    // User info returned after activation, also sent as null now and then
     @JsonProperty("USRINF01")
     public USRINF01 USRINF01;
 
-    //Query for a single accounts transactions
+    // Query for a single accounts transactions
     @JsonProperty("PCBW4341")
     public PCBW4341 PCBW4341;
-    
-    //Query for a single accounts protected transactions
+
+    // Query for a single accounts protected transactions
     @JsonProperty("PCBW431Z")
     public PCBW431Z PCBW431Z;
 
@@ -61,19 +66,19 @@ public class VODB {
     public List<PCBW2582> PCBW2582;
 
     // Credit card
-    
+
     // This is probably credit card accounts
     @JsonProperty("PCBW3201")
     public List<SebCreditCardAccount> PCBW3201;
-    
+
     // Credit card transactions (not yet billed)
     @JsonProperty("PCBW3241")
     public List<SebCreditCardTransaction> PCBW3241;
-    
+
     // Credit cards
     @JsonProperty("PCBW3242")
     public List<SebCreditCard> PCBW3242;
-    
+
     // Credit card transactions (billed)
     @JsonProperty("PCBW3243")
     public List<SebBilledCreditCardTransaction> PCBW3243;
@@ -155,19 +160,13 @@ public class VODB {
             allTransfers.addAll(BankTransfers);
         }
 
-        return FluentIterable
-                .from(allTransfers)
-                .filter(Predicates.notNull())
-                .toList();
+        return FluentIterable.from(allTransfers).filter(Predicates.notNull()).toList();
     }
 
     @JsonIgnore
     public <T extends TransferListEntity> List<T> getTransfers(Class<T> ofType) {
         List<TransferListEntity> transfers = getTransfers();
-        return FluentIterable
-                .from(transfers)
-                .filter(ofType)
-                .toList();
+        return FluentIterable.from(transfers).filter(ofType).toList();
     }
 
     @JsonIgnore
@@ -176,9 +175,8 @@ public class VODB {
             return Lists.newArrayList();
         }
 
-        return Lists.newArrayList(FluentIterable
-                        .from(EInvoices)
-                        .filter(Predicates.not(EInvoiceListEntity.IS_EMPTY)));
+        return Lists.newArrayList(
+                FluentIterable.from(EInvoices).filter(Predicates.not(EInvoiceListEntity.IS_EMPTY)));
     }
 
     @JsonIgnore
@@ -212,12 +210,16 @@ public class VODB {
 
     @JsonIgnore
     public List<InsuranceAccountEntity> getInsuranceAccountEntities() {
-        return insuranceAccountEntities == null ? Collections.emptyList() : insuranceAccountEntities;
+        return insuranceAccountEntities == null
+                ? Collections.emptyList()
+                : insuranceAccountEntities;
     }
 
     @JsonIgnore
     public List<InsuranceHoldingEntity> getInsuranceHoldingEntities() {
-        return insuranceHoldingEntities == null ? Collections.emptyList() : insuranceHoldingEntities;
+        return insuranceHoldingEntities == null
+                ? Collections.emptyList()
+                : insuranceHoldingEntities;
     }
 
     @JsonIgnore

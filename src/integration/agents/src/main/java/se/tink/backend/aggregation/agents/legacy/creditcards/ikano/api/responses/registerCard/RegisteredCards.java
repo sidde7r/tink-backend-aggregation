@@ -6,11 +6,11 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class RegisteredCards extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(RegisteredCards.class);
@@ -36,12 +36,14 @@ public class RegisteredCards extends BaseResponse {
         }
     }
 
-    public void logRequestedAndRegisteredCardTypes(Credentials credentials, String requestedCardType) {
+    public void logRequestedAndRegisteredCardTypes(
+            Credentials credentials, String requestedCardType) {
         if (cardTypes != null && cardTypes.size() > 0) {
-            log.info(MoreObjects.toStringHelper(Card.class)
-                    .add("requestCardType", requestedCardType)
-                    .add("responseCardTypes", Joiner.on(", ").join(cardTypes))
-                    .toString());
+            log.info(
+                    MoreObjects.toStringHelper(Card.class)
+                            .add("requestCardType", requestedCardType)
+                            .add("responseCardTypes", Joiner.on(", ").join(cardTypes))
+                            .toString());
         } else {
             log.info("Failed to register card {requestedCardType=" + requestedCardType + "}");
         }

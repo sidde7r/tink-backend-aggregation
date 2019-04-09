@@ -19,4 +19,3 @@ public class CreateAccountRequest {
         this.answers = answers;
     }
 }
-

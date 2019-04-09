@@ -233,7 +233,7 @@ public class ChangePaymentIn {
     public void setBeneficiaryNickName(String beneficiaryNickName) {
         this.beneficiaryNickName = beneficiaryNickName;
     }
-/*
+    /*
     @JsonSerialize(using = NordeaHashMapSerializer.String.class)
     private String toBranchNumber;
 

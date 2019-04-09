@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import java.util.List;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
@@ -15,32 +15,46 @@ import se.tink.libraries.strings.StringUtils;
 public class AccountEntity implements GeneralAccountEntity {
     @JsonProperty("AccountId")
     protected String accountId;
+
     @JsonProperty("AccountNumber")
     protected String accountNumber;
+
     @JsonProperty("Address")
     protected String address;
+
     @JsonProperty("AvailableAmount")
     protected double availableAmount;
+
     @JsonProperty("BIC")
     protected String bic;
+
     @JsonProperty("CurrentAmount")
     protected double currentAmount;
+
     @JsonProperty("CreditLimit")
     protected Double creditLimit;
+
     @JsonProperty("Holder")
     protected String holder;
+
     @JsonProperty("IBAN")
     protected String iban;
+
     @JsonProperty("Name")
     protected String name;
+
     @JsonProperty("OutstandingAmount")
     protected double outstandingAmount;
+
     @JsonProperty("Services")
     protected List<String> services;
+
     @JsonProperty("Transactions")
     protected List<TransactionEntity> transactions;
+
     @JsonProperty("Type")
     protected String type;
+
     @JsonProperty("ValidFor")
     protected List<String> validFor;
 
@@ -178,7 +192,6 @@ public class AccountEntity implements GeneralAccountEntity {
 
         return account;
     }
-
 
     /*
      * The methods below are for general purposes

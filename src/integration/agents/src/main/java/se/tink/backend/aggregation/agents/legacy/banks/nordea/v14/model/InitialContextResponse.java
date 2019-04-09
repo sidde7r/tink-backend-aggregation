@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v14.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement
@@ -25,5 +24,4 @@ public class InitialContextResponse {
     public void setGetInitialContextOut(InitialContext getInitialContextOut) {
         this.getInitialContextOut = getInitialContextOut;
     }
-
 }

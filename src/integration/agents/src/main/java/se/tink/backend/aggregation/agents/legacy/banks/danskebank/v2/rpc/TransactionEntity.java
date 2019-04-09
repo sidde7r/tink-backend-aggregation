@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
@@ -18,7 +17,8 @@ public class TransactionEntity {
                     if (transactionEntity != null) {
                         String stateCode = transactionEntity.getStateCode();
 
-                        return Objects.equal(stateCode, STATE_DELETED) || Objects.equal(stateCode, STATE_REJECTED);
+                        return Objects.equal(stateCode, STATE_DELETED)
+                                || Objects.equal(stateCode, STATE_REJECTED);
                     }
 
                     return true;
@@ -30,32 +30,46 @@ public class TransactionEntity {
 
     @JsonProperty("Account")
     private String account;
+
     @JsonProperty("Amount")
     private double amount;
+
     @JsonProperty("AttachmentType")
     private String attachmentType;
+
     @JsonProperty("Balance")
     private double balance;
+
     @JsonProperty("Category")
     private String category;
+
     @JsonProperty("PaymentKey")
     private String paymentKey;
+
     @JsonProperty("PaymentType")
     private String paymentType;
+
     @JsonProperty("Reconciled")
     private boolean reconciled;
+
     @JsonProperty("ShowBalance")
     private boolean showBalance;
+
     @JsonProperty("ShowReconciliation")
     private boolean showReconciliation;
+
     @JsonProperty("StateCode")
     private String stateCode;
+
     @JsonProperty("StateText")
     private String stateText;
+
     @JsonProperty("Text")
     private String text;
+
     @JsonProperty("Time")
     private String time;
+
     @JsonProperty("TransactionId")
     private String transactionId;
 
@@ -186,7 +200,7 @@ public class TransactionEntity {
         transaction.setDescription(text);
         transaction.setDate(DanskeUtils.parseDanskeDate(time));
         transaction.setType(DanskeUtils.getTinkTransactionType(category));
-        
+
         if (Objects.equal(stateCode, STATE_WAITING)) {
             transaction.setPending(true);
         }

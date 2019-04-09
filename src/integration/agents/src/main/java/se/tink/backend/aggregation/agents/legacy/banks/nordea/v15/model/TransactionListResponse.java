@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TransactionListResponse {
     @JsonProperty("getAccountTransactionsOut")
     private AccountTransactionsEntity accountTransactions;
+
     @JsonProperty("getCreditCardTransactionsOut")
     private CreditCardTransactionsEntity creditCardTransactions;
 

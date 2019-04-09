@@ -8,6 +8,7 @@ import java.util.List;
 public class PortfoliosListResponse extends AbstractResponse {
     @JsonProperty("Portfolios")
     private List<PortfolioEntity> portfolios;
+
     @JsonProperty("TotalPortfolio")
     private TotalPortfolioEntity totalPortfolio;
 
@@ -15,8 +16,7 @@ public class PortfoliosListResponse extends AbstractResponse {
         return portfolios;
     }
 
-    public void setPortfolios(
-            List<PortfolioEntity> portfolios) {
+    public void setPortfolios(List<PortfolioEntity> portfolios) {
         this.portfolios = portfolios;
     }
 

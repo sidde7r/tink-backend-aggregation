@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanDetailsRequest {
-	protected String loanNumber;
+    protected String loanNumber;
 
-	public LoanDetailsRequest(String loanNumber) {
-		this.loanNumber = loanNumber;
-	}
+    public LoanDetailsRequest(String loanNumber) {
+        this.loanNumber = loanNumber;
+    }
 
-	public String getLoanNumber() {
-		return loanNumber;
-	}
+    public String getLoanNumber() {
+        return loanNumber;
+    }
 
-	public void setLoanNumber(String loanNumber) {
-		this.loanNumber = loanNumber;
-	}
+    public void setLoanNumber(String loanNumber) {
+        this.loanNumber = loanNumber;
+    }
 }

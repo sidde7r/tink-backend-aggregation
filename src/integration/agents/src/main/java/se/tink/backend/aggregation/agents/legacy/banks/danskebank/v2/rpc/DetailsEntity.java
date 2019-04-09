@@ -7,14 +7,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DetailsEntity {
     @JsonProperty("Id")
     private String id;
+
     @JsonProperty("Label")
     private String label;
+
     @JsonProperty("RowNo")
     private String rowNumber;
+
     @JsonProperty("SectionId")
     private String sectionId;
+
     @JsonProperty("Value")
     private String value;
+
     @JsonProperty("ValueContent")
     private String valueContent;
 

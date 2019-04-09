@@ -46,6 +46,7 @@ public abstract class TransferListEntity {
 
     @JsonIgnore(true)
     public Date getTransferDate() throws ParseException {
-        return DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_DAILY.parse(getTransferDateString()));
+        return DateUtils.flattenTime(
+                ThreadSafeDateFormat.FORMATTER_DAILY.parse(getTransferDateString()));
     }
 }

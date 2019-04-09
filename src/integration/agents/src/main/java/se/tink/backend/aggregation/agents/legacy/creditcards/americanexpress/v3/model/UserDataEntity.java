@@ -31,5 +31,4 @@ public class UserDataEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
 }

@@ -9,7 +9,9 @@ public class IcsException extends Exception {
     }
 
     public IcsException(String key, String message) {
-        super(String.format("Could not fetch transactions (Key = '%s', Message = '%s')", key, message));
+        super(
+                String.format(
+                        "Could not fetch transactions (Key = '%s', Message = '%s')", key, message));
         this.key = key;
     }
 
@@ -17,4 +19,3 @@ public class IcsException extends Exception {
         return key;
     }
 }
-

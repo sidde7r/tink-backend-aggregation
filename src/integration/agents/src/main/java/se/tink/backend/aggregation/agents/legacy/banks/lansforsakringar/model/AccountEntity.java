@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -145,51 +145,54 @@ public class AccountEntity implements GeneralAccountEntity {
         account.setName(accountName);
 
         switch (type.toUpperCase()) {
-        case "PENSION":
-            account.setType(AccountTypes.PENSION);
-            break;
-        case "LOAN":
-            account.setType(AccountTypes.LOAN);
-            break;
-        case "CREDIT_CARD":
-            account.setType(AccountTypes.CREDIT_CARD);
-            break;
-        case "MORTGAGE":
-            account.setType(AccountTypes.MORTGAGE);
-            break;
-        case "INVESTMENT":
-            account.setType(AccountTypes.INVESTMENT);
-            break;
-        case "SAVINGS":
-            account.setType(AccountTypes.SAVINGS);
-            break;
-        case "CHECKING":
-            account.setType(AccountTypes.CHECKING);
-            break;
-        default:
-            LOG.info(String.format("unknown_account_type %s", SerializationUtils.serializeToString(this)));
-            account.setType(AccountTypes.OTHER);
-            break;
+            case "PENSION":
+                account.setType(AccountTypes.PENSION);
+                break;
+            case "LOAN":
+                account.setType(AccountTypes.LOAN);
+                break;
+            case "CREDIT_CARD":
+                account.setType(AccountTypes.CREDIT_CARD);
+                break;
+            case "MORTGAGE":
+                account.setType(AccountTypes.MORTGAGE);
+                break;
+            case "INVESTMENT":
+                account.setType(AccountTypes.INVESTMENT);
+                break;
+            case "SAVINGS":
+                account.setType(AccountTypes.SAVINGS);
+                break;
+            case "CHECKING":
+                account.setType(AccountTypes.CHECKING);
+                break;
+            default:
+                LOG.info(
+                        String.format(
+                                "unknown_account_type %s",
+                                SerializationUtils.serializeToString(this)));
+                account.setType(AccountTypes.OTHER);
+                break;
         }
 
-        // It seems that LF returns accountNumber as clearingNumber+accountNumber for LF's own accounts
+        // It seems that LF returns accountNumber as clearingNumber+accountNumber for LF's own
+        // accounts
         account.putIdentifier(new SwedishIdentifier(accountNumber));
 
         if (type.equalsIgnoreCase("PENSION")) {
             Preconditions.checkState(
-                    Preconditions.checkNotNull(account.getBankId()).matches(
-                            "[0-9]{4}|[0-9]{11}"),
-                    "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                    Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{4}|[0-9]{11}"),
+                    "Unexpected account.bankid '%s'. Reformatted?",
+                    account.getBankId());
         } else {
             Preconditions.checkState(
-                    Preconditions.checkNotNull(account.getBankId()).matches(
-                            "[0-9]{11}"),
-                    "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                    Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{11}"),
+                    "Unexpected account.bankid '%s'. Reformatted?",
+                    account.getBankId());
         }
 
         return account;
     }
-
 
     /*
      * The methods below are for general purposes

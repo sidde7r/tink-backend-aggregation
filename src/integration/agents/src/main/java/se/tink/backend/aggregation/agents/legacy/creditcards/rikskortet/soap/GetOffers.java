@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,15 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "latitude",
-    "longitude",
-    "distance"
-})
+@XmlType(
+        name = "",
+        propOrder = {"latitude", "longitude", "distance"})
 @XmlRootElement(name = "GetOffers")
 public class GetOffers {
 
@@ -41,52 +35,33 @@ public class GetOffers {
     protected long longitude;
     protected long distance;
 
-    /**
-     * Gets the value of the latitude property.
-     * 
-     */
+    /** Gets the value of the latitude property. */
     public long getLatitude() {
         return latitude;
     }
 
-    /**
-     * Sets the value of the latitude property.
-     * 
-     */
+    /** Sets the value of the latitude property. */
     public void setLatitude(long value) {
         this.latitude = value;
     }
 
-    /**
-     * Gets the value of the longitude property.
-     * 
-     */
+    /** Gets the value of the longitude property. */
     public long getLongitude() {
         return longitude;
     }
 
-    /**
-     * Sets the value of the longitude property.
-     * 
-     */
+    /** Sets the value of the longitude property. */
     public void setLongitude(long value) {
         this.longitude = value;
     }
 
-    /**
-     * Gets the value of the distance property.
-     * 
-     */
+    /** Gets the value of the distance property. */
     public long getDistance() {
         return distance;
     }
 
-    /**
-     * Sets the value of the distance property.
-     * 
-     */
+    /** Sets the value of the distance property. */
     public void setDistance(long value) {
         this.distance = value;
     }
-
 }

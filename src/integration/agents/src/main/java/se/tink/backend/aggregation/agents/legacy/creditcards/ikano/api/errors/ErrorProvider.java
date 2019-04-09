@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.errors;
 
 import com.google.common.collect.Lists;
-
 import java.util.Arrays;
 import java.util.List;
 

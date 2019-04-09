@@ -38,8 +38,8 @@ public class GetLoanStatusResponse {
 
         GetLoanStatusResponse that = (GetLoanStatusResponse) o;
 
-        return Objects.equal(this.status, that.status) &&
-                Objects.equal(this.description, that.description);
+        return Objects.equal(this.status, that.status)
+                && Objects.equal(this.description, that.description);
     }
 
     @Override
@@ -54,6 +54,4 @@ public class GetLoanStatusResponse {
                 .add("description", description)
                 .toString();
     }
-
 }
-

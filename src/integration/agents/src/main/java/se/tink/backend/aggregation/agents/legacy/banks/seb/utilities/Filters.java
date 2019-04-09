@@ -11,12 +11,13 @@ public class Filters {
         return entity -> Objects.equal(entity.KONTO_NR, accountNumber);
     }
 
-    public static Predicate<ExternalAccount> externalAccountWithAccountNumber(final String accountNumber) {
+    public static Predicate<ExternalAccount> externalAccountWithAccountNumber(
+            final String accountNumber) {
         return entity -> {
             // Ignore bank and giro accounts since we don't support doing transfers to and from them
-            return !entity.isBankGiro() && !entity.isPostGiro() &&
-                    Objects.equal(entity.DestinationNumber, accountNumber);
+            return !entity.isBankGiro()
+                    && !entity.isPostGiro()
+                    && Objects.equal(entity.DestinationNumber, accountNumber);
         };
     }
-
 }

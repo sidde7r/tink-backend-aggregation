@@ -8,12 +8,16 @@ import java.util.List;
 public class UserSummaryEntity {
     @JsonProperty("Accounts")
     private List<AccountEntity> accounts;
+
     @JsonProperty("FirstName")
     private String firstName;
+
     @JsonProperty("LastName")
     private String lastName;
+
     @JsonProperty("HouseholdMembers")
     private List<String> houseHoldMembers;
+
     @JsonProperty("MemberAccountType")
     private int memberAccountType;
 

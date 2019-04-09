@@ -7,26 +7,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class IpsHoldingEntity {
     @JsonProperty("KONTO_NR")
     private String accountNumber;
+
     @JsonProperty("PLAC_TYP")
     private String type;
+
     @JsonProperty("VP_NAMN")
     private String name;
+
     @JsonProperty("VP_TYP")
     private String securityType;
+
     @JsonProperty("VP_FULLST_NAMN1")
     private String fullName;
+
     @JsonProperty("VALUTA_KOD_VP")
     private String currency;
+
     @JsonProperty("VP_KURS")
     private Double marketValue;
+
     @JsonProperty("BELOPP")
     private Double amount;
+
     @JsonProperty("ANDEL_ANT")
     private Double quantity;
+
     @JsonProperty("GAV")
     private Double averageAcqusitionPrice;
+
     @JsonProperty("TICKER_ID")
     private String tickerId;
+
     @JsonProperty("INB_TOT_BEL")
     private String totalAcquistionPrice;
 

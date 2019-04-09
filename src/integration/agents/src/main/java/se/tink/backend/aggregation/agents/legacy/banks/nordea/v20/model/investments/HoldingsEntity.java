@@ -10,14 +10,18 @@ import se.tink.libraries.strings.StringUtils;
 public class HoldingsEntity {
     private String marketValue;
     private String avgPurchasePrice;
+
     @JsonProperty("profitLoss")
     private String profit;
+
     private String quantity;
     private ExchangeRateEntity exchangeRate;
     private InstrumentEntity instrument;
 
     public Double getMarketValue() {
-        return marketValue == null || marketValue.isEmpty() ? null : StringUtils.parseAmount(marketValue);
+        return marketValue == null || marketValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(marketValue);
     }
 
     public void setMarketValue(String marketValue) {
@@ -25,7 +29,9 @@ public class HoldingsEntity {
     }
 
     public Double getAvgPurchasePrice() {
-        return avgPurchasePrice == null || avgPurchasePrice.isEmpty() ? null : StringUtils.parseAmount(avgPurchasePrice);
+        return avgPurchasePrice == null || avgPurchasePrice.isEmpty()
+                ? null
+                : StringUtils.parseAmount(avgPurchasePrice);
     }
 
     public void setAvgPurchasePrice(String avgPurchasePrice) {
@@ -52,8 +58,7 @@ public class HoldingsEntity {
         return exchangeRate;
     }
 
-    public void setExchangeRate(
-            ExchangeRateEntity exchangeRate) {
+    public void setExchangeRate(ExchangeRateEntity exchangeRate) {
         this.exchangeRate = exchangeRate;
     }
 
@@ -67,7 +72,6 @@ public class HoldingsEntity {
 
     public Optional<Instrument> toInstrument(String baseCurrency) {
         Instrument instrument = new Instrument();
-
 
         if (getQuantity() == null || getQuantity().doubleValue() == 0) {
             return Optional.empty();

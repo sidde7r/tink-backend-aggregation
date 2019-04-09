@@ -19,5 +19,4 @@ public class TransferChallengeRequest {
     public void setChallengeData(String challengeData) {
         this.challengeData = challengeData;
     }
-
 }

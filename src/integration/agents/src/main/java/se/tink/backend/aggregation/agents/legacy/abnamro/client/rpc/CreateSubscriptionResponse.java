@@ -13,20 +13,19 @@ public class CreateSubscriptionResponse extends ErrorResponse {
         public static final String UNDER_AGE_16 = "MESSAGE_BAI578_0016";
 
         /**
-         * Token isn't allowed at ABN AMRO. Either we are sending the wrong token or ABN AMRO has the wrong
-         * token configured.
+         * Token isn't allowed at ABN AMRO. Either we are sending the wrong token or ABN AMRO has
+         * the wrong token configured.
          */
         public static final String INVALID_AUTHORIZATION_TOKEN = "MESSAGE_BAI578_0013";
 
         /**
-         * User wasn't authorised to create a subscription. This would typically happen if an old pilot user is trying
-         * to sign-up and he/she isn't allowed any longer due to different logic after full market release.
+         * User wasn't authorised to create a subscription. This would typically happen if an old
+         * pilot user is trying to sign-up and he/she isn't allowed any longer due to different
+         * logic after full market release.
          */
         public static final String INVALID_USER_AUTHORIZATION = "MESSAGE_BAI578_0017";
 
-        /**
-         * Means that the it was a technical failure in the subscription process
-         */
+        /** Means that the it was a technical failure in the subscription process */
         public static final String TECHNICAL_FAILURE = "MESSAGE_BAI578_0007";
     }
 
@@ -62,20 +61,20 @@ public class CreateSubscriptionResponse extends ErrorResponse {
         }
 
         switch (getMessages().get(0).getMessageKey()) {
-        case ErrorCodes.ALREADY_ACTIVE_SUBSCRIPTION:
-            return Optional.of("A subscription is already active");
-        case ErrorCodes.NON_RETAIL_CUSTOMER:
-            return Optional.of("Customer is a non retail");
-        case ErrorCodes.UNDER_AGE_16:
-            return Optional.of("Customer is below 16 years old");
-        case ErrorCodes.INVALID_AUTHORIZATION_TOKEN:
-            return Optional.of("Invalid authorization token");
-        case ErrorCodes.INVALID_USER_AUTHORIZATION:
-            return Optional.of("Invalid user authorization");
-        case ErrorCodes.TECHNICAL_FAILURE:
-            return Optional.of("Technical failure in subscription process");
-        default:
-            return Optional.empty();
+            case ErrorCodes.ALREADY_ACTIVE_SUBSCRIPTION:
+                return Optional.of("A subscription is already active");
+            case ErrorCodes.NON_RETAIL_CUSTOMER:
+                return Optional.of("Customer is a non retail");
+            case ErrorCodes.UNDER_AGE_16:
+                return Optional.of("Customer is below 16 years old");
+            case ErrorCodes.INVALID_AUTHORIZATION_TOKEN:
+                return Optional.of("Invalid authorization token");
+            case ErrorCodes.INVALID_USER_AUTHORIZATION:
+                return Optional.of("Invalid user authorization");
+            case ErrorCodes.TECHNICAL_FAILURE:
+                return Optional.of("Technical failure in subscription process");
+            default:
+                return Optional.empty();
         }
     }
 }

@@ -12,12 +12,16 @@ public class EInvoiceListTransactionEntity {
     // Note that on the list entity, the Amount is negative. On the details entity it is positive.
     @JsonProperty("Amount")
     private Double amount;
+
     @JsonProperty("Invoice")
     private URI invoice;
+
     @JsonProperty("Receiver")
     private String receiver;
+
     @JsonProperty("Time")
     private String time;
+
     @JsonProperty("TransactionId")
     private String transactionId;
 

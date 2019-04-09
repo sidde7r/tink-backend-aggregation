@@ -15,5 +15,4 @@ public class AssignmentResponse {
     public void setUnsignedAssignmentList(AssignmentListEntity unsignedAssignmentList) {
         this.unsignedAssignmentList = unsignedAssignmentList;
     }
-
 }

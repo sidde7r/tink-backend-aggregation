@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getRandomRestaurantResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getRandomRestaurantResult"})
 @XmlRootElement(name = "GetRandomRestaurantResponse")
 public class GetRandomRestaurantResponse {
 
@@ -39,11 +35,8 @@ public class GetRandomRestaurantResponse {
 
     /**
      * Gets the value of the getRandomRestaurantResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RestaurantInfo }
-     *     
+     *
+     * @return possible object is {@link RestaurantInfo }
      */
     public RestaurantInfo getGetRandomRestaurantResult() {
         return getRandomRestaurantResult;
@@ -51,14 +44,10 @@ public class GetRandomRestaurantResponse {
 
     /**
      * Sets the value of the getRandomRestaurantResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RestaurantInfo }
-     *     
+     *
+     * @param value allowed object is {@link RestaurantInfo }
      */
     public void setGetRandomRestaurantResult(RestaurantInfo value) {
         this.getRandomRestaurantResult = value;
     }
-
 }

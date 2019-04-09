@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.utils;
 
-import se.tink.libraries.date.ThreadSafeDateFormat;
-
 import java.text.ParseException;
 import java.util.Date;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class IkanoParser {
 

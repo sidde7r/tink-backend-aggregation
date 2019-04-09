@@ -173,7 +173,8 @@ public class PaymentEntity {
         transaction.setDate(AgentParsingUtils.parseDate(getPaymentDate().substring(0, 10), true));
         transaction.setPending(true);
 
-        NordeaAgentUtils.parseTransactionDescription(CharMatcher.WHITESPACE.trimFrom(getBeneficiaryName()), transaction);
+        NordeaAgentUtils.parseTransactionDescription(
+                CharMatcher.WHITESPACE.trimFrom(getBeneficiaryName()), transaction);
 
         return transaction;
     }
@@ -195,7 +196,6 @@ public class PaymentEntity {
                 .add("statusCode", statusCode)
                 .add("toAccountId", maskString(toAccountId))
                 .toString();
-
     }
 
     private String maskString(String str) {

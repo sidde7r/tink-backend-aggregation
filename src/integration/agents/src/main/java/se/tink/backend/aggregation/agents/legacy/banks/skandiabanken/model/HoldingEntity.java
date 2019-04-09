@@ -37,7 +37,9 @@ public class HoldingEntity {
     }
 
     public Double getMarketValue() {
-        return marketValue == null || marketValue.isEmpty() ? null : StringUtils.parseAmount(marketValue);
+        return marketValue == null || marketValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(marketValue);
     }
 
     public void setMarketValue(String marketValue) {
@@ -45,7 +47,9 @@ public class HoldingEntity {
     }
 
     public Double getNetAssetValue() {
-        return netAssetValue == null || netAssetValue.isEmpty() ? null : StringUtils.parseAmount(netAssetValue);
+        return netAssetValue == null || netAssetValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(netAssetValue);
     }
 
     public void setNetAssetValue(String netAssetValue) {
@@ -61,7 +65,9 @@ public class HoldingEntity {
     }
 
     public double getProcurementValue() {
-        return procurementValue == null || procurementValue.isEmpty() ? 0 : StringUtils.parseAmount(procurementValue);
+        return procurementValue == null || procurementValue.isEmpty()
+                ? 0
+                : StringUtils.parseAmount(procurementValue);
     }
 
     public void setProcurementValue(String procurementValue) {

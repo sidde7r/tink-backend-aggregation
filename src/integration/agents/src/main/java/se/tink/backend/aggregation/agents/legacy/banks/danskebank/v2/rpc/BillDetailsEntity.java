@@ -5,18 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BillDetailsEntity {
     @JsonProperty("Amount")
     private double amount;
+
     @JsonProperty("Date")
     private String date;
+
     @JsonProperty("FromAccountId")
     private String fromAccountId;
+
     @JsonProperty("FromAccountName")
     private String fromAccountName;
+
     @JsonProperty("FromAccountText")
     private String fromAccountText;
+
     @JsonProperty("ReceiverName")
     private String receiverName;
+
     @JsonProperty("ReceiverText")
     private String receiverText;
+
     @JsonProperty("Reference")
     private String reference;
 

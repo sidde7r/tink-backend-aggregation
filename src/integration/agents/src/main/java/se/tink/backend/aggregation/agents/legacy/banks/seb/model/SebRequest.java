@@ -12,7 +12,8 @@ public class SebRequest {
     @JsonProperty("request")
     public Payload request = new Payload();
 
-    public static SebRequest createWithTransfer(TransferType transferType, SebTransferRequestEntity externalTransfer) {
+    public static SebRequest createWithTransfer(
+            TransferType transferType, SebTransferRequestEntity externalTransfer) {
         SebRequest createRequest = new SebRequest();
         createRequest.request.ServiceInput = null;
         createRequest.request.VODB = new VODB();

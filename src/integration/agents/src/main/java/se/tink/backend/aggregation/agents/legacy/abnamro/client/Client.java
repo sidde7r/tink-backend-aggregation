@@ -27,7 +27,10 @@ public abstract class Client {
     private final String hostname;
     private com.sun.jersey.api.client.Client client;
 
-    protected Client(Class<? extends Client> cls, TrustStoreConfiguration trustStoreConfiguration, String hostname) {
+    protected Client(
+            Class<? extends Client> cls,
+            TrustStoreConfiguration trustStoreConfiguration,
+            String hostname) {
         this.log = LoggerFactory.getLogger(cls);
         this.hostname = hostname;
 
@@ -41,24 +44,26 @@ public abstract class Client {
 
         X509HostnameVerifier hostnameVerifier = new CustomHostnameVerifier(hostname);
 
-        this.client = new BasicJerseyClientFactory().createCustomClient(sslContext, hostnameVerifier);
+        this.client =
+                new BasicJerseyClientFactory().createCustomClient(sslContext, hostnameVerifier);
     }
 
     protected Builder createClientRequest(String path) {
-        return client
-                .resource("https://" + hostname + path)
+        return client.resource("https://" + hostname + path)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("User-Agent", DEFAULT_USER_AGENT);
     }
 
-    protected static SSLContext createSslContext(TrustStoreConfiguration trustStoreConfiguration) throws Exception {
+    protected static SSLContext createSslContext(TrustStoreConfiguration trustStoreConfiguration)
+            throws Exception {
         return createSslContext(
                 trustStoreConfiguration.getPath(),
                 trustStoreConfiguration.getPassword().toCharArray());
     }
 
-    protected static SSLContext createSslContext(String trustStorePath, char[] trustStorePassword) throws Exception {
+    protected static SSLContext createSslContext(String trustStorePath, char[] trustStorePassword)
+            throws Exception {
 
         KeyStore trustStore = KeyStore.getInstance("jks");
         trustStore.load(new FileInputStream(trustStorePath), trustStorePassword);
@@ -69,16 +74,17 @@ public abstract class Client {
         return createSslContext(trustManagerFactory);
     }
 
-    private static SSLContext createSslContext(TrustManagerFactory trustManagerFactory) throws Exception {
+    private static SSLContext createSslContext(TrustManagerFactory trustManagerFactory)
+            throws Exception {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
         return sslContext;
     }
-    
+
     class CustomHostnameVerifier implements X509HostnameVerifier {
 
         private final String hostname;
-        
+
         public CustomHostnameVerifier(String hostname) {
             this.hostname = hostname;
         }
@@ -103,7 +109,8 @@ public abstract class Client {
         }
 
         @Override
-        public void verify(String hostname, String[] cns, String[] subjectAlts) throws SSLException {
+        public void verify(String hostname, String[] cns, String[] subjectAlts)
+                throws SSLException {
             if (!verify(hostname)) {
                 throw new SSLException("Invalid hostname.");
             }

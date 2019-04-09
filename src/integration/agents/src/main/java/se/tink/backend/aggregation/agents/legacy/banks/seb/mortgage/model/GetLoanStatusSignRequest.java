@@ -11,7 +11,8 @@ public class GetLoanStatusSignRequest implements ApiRequest {
     private final String applicationId;
 
     public GetLoanStatusSignRequest(String applicationId) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(applicationId), "Missing required applicationId");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(applicationId), "Missing required applicationId");
 
         this.applicationId = applicationId;
     }
@@ -19,8 +20,7 @@ public class GetLoanStatusSignRequest implements ApiRequest {
     @Override
     public String getUriPath() {
         return String.format(
-                "/loans/%s/status_sign",
-                UrlEscapers.urlPathSegmentEscaper().escape(applicationId));
+                "/loans/%s/status_sign", UrlEscapers.urlPathSegmentEscaper().escape(applicationId));
     }
 
     @Override
@@ -44,8 +44,6 @@ public class GetLoanStatusSignRequest implements ApiRequest {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("applicationId", applicationId)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("applicationId", applicationId).toString();
     }
 }

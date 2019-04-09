@@ -27,11 +27,15 @@ public class EnrollmentClient {
             MetricId.newId("abnamro_enrollment_collect_client_latency");
     private MetricRegistry metricRegistry;
 
-    public EnrollmentClient(Client client, AbnAmroEnrollmentConfiguration enrollmentConfiguration,
+    public EnrollmentClient(
+            Client client,
+            AbnAmroEnrollmentConfiguration enrollmentConfiguration,
             MetricRegistry metricRegistry) {
-        Preconditions.checkState(!Strings.isNullOrEmpty(enrollmentConfiguration.getUrl()),
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(enrollmentConfiguration.getUrl()),
                 "Url must not be null or empty.");
-        Preconditions.checkState(!Strings.isNullOrEmpty(enrollmentConfiguration.getApiKey()),
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(enrollmentConfiguration.getApiKey()),
                 "Api key must not be null or empty.");
         Preconditions.checkNotNull(client, "Client must not be null.");
 
@@ -40,17 +44,18 @@ public class EnrollmentClient {
         this.metricRegistry = metricRegistry;
     }
 
-    /**
-     * Initiate a new enrollment with the specified phone number.
-     */
+    /** Initiate a new enrollment with the specified phone number. */
     public InitiateEnrollmentResponse initiate(String phoneNumber) {
-        Preconditions.checkState(!Strings.isNullOrEmpty(phoneNumber), "Phone number must not be null or empty.");
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(phoneNumber), "Phone number must not be null or empty.");
 
         InitiateEnrollmentRequest request = new InitiateEnrollmentRequest();
         request.setPhoneNumber(phoneNumber);
 
-        Timer.Context responseTimer = metricRegistry.timer(ABNAMRO_ENROLLMENT_CREATE_CLIENT_LATENCY).time();
-        ClientResponse response = createClientRequest("/userenrolments").post(ClientResponse.class, request);
+        Timer.Context responseTimer =
+                metricRegistry.timer(ABNAMRO_ENROLLMENT_CREATE_CLIENT_LATENCY).time();
+        ClientResponse response =
+                createClientRequest("/userenrolments").post(ClientResponse.class, request);
         responseTimer.stop();
 
         validateResponse(response);
@@ -58,15 +63,14 @@ public class EnrollmentClient {
         return response.getEntity(InitiateEnrollmentResponse.class);
     }
 
-    /**
-     * Collect the current status of the enrollment.
-     */
+    /** Collect the current status of the enrollment. */
     public CollectEnrollmentResponse collect(String token) {
         Preconditions.checkState(!Strings.isNullOrEmpty(token), "Token must not be null or empty.");
 
         final String path = String.format("/userenrolments?uuid=%s", token);
 
-        Timer.Context responseTimer = metricRegistry.timer(ABNAMRO_ENROLLMENT_COLLECT_CLIENT_LATENCY).time();
+        Timer.Context responseTimer =
+                metricRegistry.timer(ABNAMRO_ENROLLMENT_COLLECT_CLIENT_LATENCY).time();
         ClientResponse response = createClientRequest(path).get(ClientResponse.class);
         responseTimer.stop();
 
@@ -86,13 +90,16 @@ public class EnrollmentClient {
             if (errorResponse.getMessages() != null && !errorResponse.getMessages().isEmpty()) {
                 ErrorEntity error = errorResponse.getMessages().get(0);
 
-                throw new RuntimeException(String.format("Enrollment service error (Key = '%s', Reason = '%s')",
-                        error.getMessageKey(), error.getReason()));
+                throw new RuntimeException(
+                        String.format(
+                                "Enrollment service error (Key = '%s', Reason = '%s')",
+                                error.getMessageKey(), error.getReason()));
             }
         }
 
         response.close();
-        throw new RuntimeException(String.format("Enrollment service error (Status = '%d')", response.getStatus()));
+        throw new RuntimeException(
+                String.format("Enrollment service error (Status = '%d')", response.getStatus()));
     }
 
     private WebResource.Builder createClientRequest(String queryString) {

@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BillResponse extends AbstractChallengeResponse {
     @JsonProperty("BillDetails")
     private BillDetailsEntity transferDetails;
+
     @JsonProperty("BillNotValid")
     private boolean billNotValid;
+
     @JsonProperty("Text")
     private String text;
 

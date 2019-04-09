@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 

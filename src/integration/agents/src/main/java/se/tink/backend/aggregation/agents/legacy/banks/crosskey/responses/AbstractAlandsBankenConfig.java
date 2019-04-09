@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.banks.crosskey.responses;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.banks.crosskey.PaginationTypes;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public abstract class AbstractAlandsBankenConfig implements CrossKeyConfig {

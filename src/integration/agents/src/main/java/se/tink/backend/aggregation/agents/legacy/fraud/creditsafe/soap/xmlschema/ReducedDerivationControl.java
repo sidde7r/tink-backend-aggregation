@@ -1,16 +1,16 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for reducedDerivationControl.
- * 
+ * Java class for reducedDerivationControl.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
+ *
  * <p>
+ *
  * <pre>
  * &lt;simpleType name="reducedDerivationControl">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}derivationControl">
@@ -19,12 +19,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "reducedDerivationControl")
 @XmlEnum(DerivationControl.class)
 public enum ReducedDerivationControl {
-
     @XmlEnumValue("extension")
     EXTENSION(DerivationControl.EXTENSION),
     @XmlEnumValue("restriction")
@@ -40,12 +38,11 @@ public enum ReducedDerivationControl {
     }
 
     public static ReducedDerivationControl fromValue(DerivationControl v) {
-        for (ReducedDerivationControl c: ReducedDerivationControl.values()) {
+        for (ReducedDerivationControl c : ReducedDerivationControl.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
         }
         throw new IllegalArgumentException(v.toString());
     }
-
 }

@@ -17,18 +17,19 @@ import se.tink.backend.aggregation.agents.abnamro.utils.paymentproviders.WorldPa
 
 public class AbnAmroPaymentProviderUtils {
 
-    private static final ImmutableList<PaymentProvider> PAYMENT_PROVIDERS = ImmutableList.<PaymentProvider>builder()
-            .add(new Adyen())
-            .add(new Buckaroo())
-            .add(new ClickAndBuy())
-            .add(new GlobalCollect())
-            .add(new Mollie())
-            .add(new MultisafePay())
-            .add(new Paydotnl())
-            .add(new Sisow())
-            .add(new WorldPay())
-            .add(new Ingenico())
-            .build();
+    private static final ImmutableList<PaymentProvider> PAYMENT_PROVIDERS =
+            ImmutableList.<PaymentProvider>builder()
+                    .add(new Adyen())
+                    .add(new Buckaroo())
+                    .add(new ClickAndBuy())
+                    .add(new GlobalCollect())
+                    .add(new Mollie())
+                    .add(new MultisafePay())
+                    .add(new Paydotnl())
+                    .add(new Sisow())
+                    .add(new WorldPay())
+                    .add(new Ingenico())
+                    .build();
 
     public static ImmutableList<PaymentProvider> getPaymentProviders() {
         return PAYMENT_PROVIDERS;
