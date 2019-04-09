@@ -126,7 +126,8 @@ public class StarlingApiClient {
             client.request(
                             StarlingConstants.Url.GET_PAYMENT_STATUS.parameter(
                                     StarlingConstants.UrlParams.PAYMENT_ORDER_UID, paymentOrderUid))
-                    .header(HttpHeaders.AUTHORIZATION, paymentToken)
+
+                    .addBearerToken(paymentToken)
                     .accept(MediaType.APPLICATION_JSON)
                     .get(HttpResponse.class);
 
@@ -152,7 +153,7 @@ public class StarlingApiClient {
 
     private RequestBuilder request(URL url) {
         return client.request(url)
-                .header(HttpHeaders.AUTHORIZATION, this.getOAuthToken().toAuthorizeHeader())
+                .addBearerToken(this.getOAuthToken())
                 .accept(MediaType.APPLICATION_JSON);
     }
 
