@@ -1,0 +1,45 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: provisioning-cronjob
+  namespace: aggregation
+spec:
+  schedule: "0 9 * * mon-fri"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 300
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 300
+      backoffLimit: 6
+      template:
+        metadata:
+          labels:
+            app: provisioning-cronjob
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: tink-containers
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            fsGroup: 65535
+          containers:
+          - name: tests
+            image: gcr.io/tink-containers/tink-backend-aggregation-provisioning-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-provisioning-cronjob.txt" | default "latest" }}
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+            command:
+            - "java"
+            - "-jar"
+            - "-Xmx{{ default "256m" .Values.heapSize }}"
+            - "-XX:-OmitStackTraceInFastThrow"
+            - "-Dnetworkaddress.cache.ttl=60"
+            - "-XX:+ExitOnOutOfMemoryError"
+            - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
+            - "add-client-configuration"
+            - "/etc/tink/config.yml"
