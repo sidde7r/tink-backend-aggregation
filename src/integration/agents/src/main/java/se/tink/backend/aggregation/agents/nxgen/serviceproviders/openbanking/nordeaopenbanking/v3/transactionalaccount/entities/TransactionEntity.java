@@ -7,34 +7,49 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionEntity {
     @JsonProperty("_type")
     private String type;
+
     @JsonProperty("transaction_id")
     private String transactionId;
+
     private String currency;
+
     @JsonProperty("booking_date")
     private String bookingDate;
+
     @JsonProperty("value_date")
     private String valueDate;
+
     @JsonProperty("type_description")
     private String typeDescription;
+
     private String narrative;
     private String message;
     private String status;
     private String reference;
+
     @JsonProperty("counterparty_name")
     private String counterpartyName;
+
     @JsonProperty("transaction_date")
     private String transactionDate;
+
     @JsonProperty("card_number")
     private String cardNumber;
+
     @JsonProperty("payment_date")
     private String paymentDate;
+
     private String amount;
+
     @JsonProperty("own_message")
     private String ownMessage;
+
     @JsonProperty("original_currency")
     private String originalCurrency;
+
     @JsonProperty("original_currency_amount")
     private String originalCurrencyAmount;
+
     @JsonProperty("currency_rate")
     private String currencyRate;
 

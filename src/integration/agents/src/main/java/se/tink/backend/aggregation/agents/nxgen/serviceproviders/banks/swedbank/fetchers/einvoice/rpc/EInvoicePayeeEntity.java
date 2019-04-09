@@ -14,12 +14,12 @@ public class EInvoicePayeeEntity extends AbstractPayeeEntity {
         }
 
         switch (this.type.toUpperCase()) {
-        case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
-            return Optional.of(AccountIdentifier.Type.SE_BG);
-        case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
-            return Optional.of(AccountIdentifier.Type.SE_PG);
-        default:
-            return Optional.empty();
+            case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
+                return Optional.of(AccountIdentifier.Type.SE_BG);
+            case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
+                return Optional.of(AccountIdentifier.Type.SE_PG);
+            default:
+                return Optional.empty();
         }
     }
 }

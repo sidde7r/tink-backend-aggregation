@@ -7,9 +7,15 @@ import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class CreditCardTransactionsRequest extends HttpRequestImpl {
-    public CreditCardTransactionsRequest(String cardNumber, String invoicePeriod, String continueKey) {
-        super(HttpMethod.GET, Url.TRANSACTIONS.queryParam(UrlParameter.CARD_NUMBER, cardNumber)
-                .queryParam(UrlParameter.CREDIT_CONTINUE_KEY, Strings.nullToEmpty(continueKey))
-                .queryParam(UrlParameter.INVOICE_PERIOD, Strings.nullToEmpty(invoicePeriod)));
+    public CreditCardTransactionsRequest(
+            String cardNumber, String invoicePeriod, String continueKey) {
+        super(
+                HttpMethod.GET,
+                Url.TRANSACTIONS
+                        .queryParam(UrlParameter.CARD_NUMBER, cardNumber)
+                        .queryParam(
+                                UrlParameter.CREDIT_CONTINUE_KEY, Strings.nullToEmpty(continueKey))
+                        .queryParam(
+                                UrlParameter.INVOICE_PERIOD, Strings.nullToEmpty(invoicePeriod)));
     }
 }

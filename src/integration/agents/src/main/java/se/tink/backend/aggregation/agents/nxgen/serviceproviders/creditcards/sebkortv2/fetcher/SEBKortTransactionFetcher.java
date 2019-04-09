@@ -20,30 +20,32 @@ public class SEBKortTransactionFetcher implements TransactionDatePaginator<Credi
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
         List<Transaction> tinkTransactions = new ArrayList<>();
 
-        List<Transaction> reservations = apiClient.fetchReservations(account.getApiIdentifier())
-                .getTinkTransactions();
+        List<Transaction> reservations =
+                apiClient.fetchReservations(account.getApiIdentifier()).getTinkTransactions();
+
+        tinkTransactions.addAll(handleReservations(fromDate, toDate, reservations));
 
         tinkTransactions.addAll(
-                handleReservations(fromDate, toDate, reservations));
-
-        tinkTransactions.addAll(
-                apiClient.fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
-                        .getTinkTranscations()
-        );
+                apiClient
+                        .fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
+                        .getTinkTranscations());
 
         return PaginatorResponseImpl.create(tinkTransactions);
     }
 
-    private static List<Transaction> handleReservations(Date fromDate, Date toDate, List<Transaction> reservations) {
+    private static List<Transaction> handleReservations(
+            Date fromDate, Date toDate, List<Transaction> reservations) {
         return reservations.stream()
                 .filter(transactionInDateInterval(fromDate, toDate))
                 .collect(Collectors.toList());
     }
 
     private static Predicate<Transaction> transactionInDateInterval(Date fromDate, Date toDate) {
-        return transaction -> transaction.getDate().after(fromDate) && transaction.getDate().before(toDate);
+        return transaction ->
+                transaction.getDate().after(fromDate) && transaction.getDate().before(toDate);
     }
 }

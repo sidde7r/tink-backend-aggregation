@@ -10,6 +10,7 @@ public class LoginProvidersResponse extends CrossKeyResponse {
 
     @JsonIgnore
     public boolean canUseBankId() {
-        return availableLoginProviders.contains(CrossKeyConstants.MultiFactorAuthentication.MOBILE_BANK_ID);
+        return availableLoginProviders.contains(
+                CrossKeyConstants.MultiFactorAuthentication.MOBILE_BANK_ID);
     }
 }

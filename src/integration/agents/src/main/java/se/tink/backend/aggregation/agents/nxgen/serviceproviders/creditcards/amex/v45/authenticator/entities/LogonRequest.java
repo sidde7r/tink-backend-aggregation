@@ -76,5 +76,4 @@ public class LogonRequest {
     public String getUserTimeStampInMilli() {
         return userTimeStampInMilli;
     }
-
 }

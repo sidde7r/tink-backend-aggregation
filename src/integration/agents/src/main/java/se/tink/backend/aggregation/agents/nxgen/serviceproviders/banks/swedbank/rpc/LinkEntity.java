@@ -26,7 +26,7 @@ public class LinkEntity {
     @JsonIgnore
     public boolean isValid() {
         return method != null
-                && getMethodValue() !=  SwedbankBaseConstants.LinkMethod.UNKNOWN
+                && getMethodValue() != SwedbankBaseConstants.LinkMethod.UNKNOWN
                 && !Strings.isNullOrEmpty(uri);
     }
 }

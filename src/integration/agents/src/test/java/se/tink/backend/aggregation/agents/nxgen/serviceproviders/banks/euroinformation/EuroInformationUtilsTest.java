@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationUtils;
 import se.tink.libraries.amount.Amount;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class EuroInformationUtilsTest {
 
@@ -44,12 +45,15 @@ public class EuroInformationUtilsTest {
 
     @Test
     public void isSuccess_whenLoginErrorCode() {
-        assertFalse(EuroInformationUtils.isSuccess(EuroInformationErrorCodes.LOGIN_ERROR.getCodeNumber()));
+        assertFalse(
+                EuroInformationUtils.isSuccess(
+                        EuroInformationErrorCodes.LOGIN_ERROR.getCodeNumber()));
     }
 
     @Test
     public void isSuccess_whenSuccessCode() {
-        assertTrue(EuroInformationUtils.isSuccess(EuroInformationErrorCodes.SUCCESS.getCodeNumber()));
+        assertTrue(
+                EuroInformationUtils.isSuccess(EuroInformationErrorCodes.SUCCESS.getCodeNumber()));
     }
 
     @Test

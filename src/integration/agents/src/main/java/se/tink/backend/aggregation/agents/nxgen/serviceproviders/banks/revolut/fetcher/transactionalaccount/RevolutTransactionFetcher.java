@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
@@ -8,10 +11,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class RevolutTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
@@ -38,8 +37,7 @@ public class RevolutTransactionFetcher
                     apiClient.fetchTransactions(count, toDateMillis);
 
             response.setTransactions(
-                    transactionEntities
-                            .stream()
+                    transactionEntities.stream()
                             .filter(TransactionEntity::isValid)
                             .filter(t -> t.hasCurrency(accountCurrency))
                             .filter(
@@ -51,8 +49,7 @@ public class RevolutTransactionFetcher
                             .collect(Collectors.toList()));
 
             response.setNext(
-                    transactionEntities
-                            .stream()
+                    transactionEntities.stream()
                             .map(TransactionEntity::getStartedDate)
                             .min(Comparator.comparing(t -> t))
                             .map(t -> Long.toString(t))
@@ -65,8 +62,7 @@ public class RevolutTransactionFetcher
                     apiClient.fetchTransactions(count, toDateMillis);
 
             response.setTransactions(
-                    transactionEntities
-                            .stream()
+                    transactionEntities.stream()
                             .filter(TransactionEntity::isValid)
                             .filter(t -> t.hasCurrency(accountCurrency))
                             .filter(t -> t.belongsToAccount(accountBankId))
@@ -74,8 +70,7 @@ public class RevolutTransactionFetcher
                             .collect(Collectors.toList()));
 
             response.setNext(
-                    transactionEntities
-                            .stream()
+                    transactionEntities.stream()
                             .map(TransactionEntity::getStartedDate)
                             .min(Comparator.comparing(t -> t))
                             .map(t -> Long.toString(t))

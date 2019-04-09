@@ -63,7 +63,8 @@ public class LoanData {
     public Date getInterestTermEnds() {
         try {
             if (!Strings.isNullOrEmpty(interestTermEnds) && interestTermEnds.length() >= 10) {
-                return ThreadSafeDateFormat.FORMATTER_DAILY.parse(interestTermEnds.substring(0, 10));
+                return ThreadSafeDateFormat.FORMATTER_DAILY.parse(
+                        interestTermEnds.substring(0, 10));
             }
         } catch (ParseException e) {
             log.warn("Failed to parse end date of interest terms");

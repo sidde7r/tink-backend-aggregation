@@ -22,8 +22,8 @@ public class OpenIdApiClientTest {
 
     private OpenIdApiClient apiClient;
 
-    private final UkOpenBankingConfiguration UKOB_TEST_CONFIG = SerializationUtils.deserializeFromString("{}",
-            UkOpenBankingConfiguration.class);
+    private final UkOpenBankingConfiguration UKOB_TEST_CONFIG =
+            SerializationUtils.deserializeFromString("{}", UkOpenBankingConfiguration.class);
 
     @Before
     public void setup() {
@@ -31,17 +31,23 @@ public class OpenIdApiClientTest {
 
         TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
-        httpClient.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(),
-                UKOB_TEST_CONFIG.getRootCAPassword());
+        httpClient.trustRootCaCertificate(
+                UKOB_TEST_CONFIG.getRootCAData(), UKOB_TEST_CONFIG.getRootCAPassword());
 
-        SoftwareStatement softwareStatement = UKOB_TEST_CONFIG.getSoftwareStatement("tink")
-                .orElseThrow(AssertionError::new);
+        SoftwareStatement softwareStatement =
+                UKOB_TEST_CONFIG.getSoftwareStatement("tink").orElseThrow(AssertionError::new);
 
-        ProviderConfiguration providerConfiguration = softwareStatement.getProviderConfiguration("modelo")
-                .orElseThrow(AssertionError::new);
+        ProviderConfiguration providerConfiguration =
+                softwareStatement
+                        .getProviderConfiguration("modelo")
+                        .orElseThrow(AssertionError::new);
 
-        apiClient = new OpenIdApiClient(httpClient, softwareStatement, providerConfiguration,
-                OpenIdConstants.ClientMode.ACCOUNTS);
+        apiClient =
+                new OpenIdApiClient(
+                        httpClient,
+                        softwareStatement,
+                        providerConfiguration,
+                        OpenIdConstants.ClientMode.ACCOUNTS);
     }
 
     @Test
@@ -49,9 +55,12 @@ public class OpenIdApiClientTest {
         WellKnownResponse conf = apiClient.getWellKnownConfiguration();
 
         Assert.assertNotNull(conf);
-        Assert.assertTrue(conf.verifyAndGetScopes(
-                Arrays.asList(OpenIdConstants.Scopes.OPEN_ID, OpenIdConstants.Scopes.ACCOUNTS))
-                .isPresent());
+        Assert.assertTrue(
+                conf.verifyAndGetScopes(
+                                Arrays.asList(
+                                        OpenIdConstants.Scopes.OPEN_ID,
+                                        OpenIdConstants.Scopes.ACCOUNTS))
+                        .isPresent());
     }
 
     @Test

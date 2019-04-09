@@ -19,23 +19,32 @@ public class OperationEntity {
 
     @XmlElement(name = "mnt")
     private String value;
+
     @XmlElement(name = "lib")
     private String transactionDescription;
+
     @XmlElement(name = "dat_ori")
     @XmlJavaTypeAdapter(EuroInformationDateDeserializer.class)
     private Date dateOriginal;
+
     @XmlElement(name = "webid")
     private String webId;
+
     @XmlElement(name = "cat")
     private String category;
+
     @XmlElement(name = "car_ori")
     private String originalCategory;
+
     @XmlElement(name = "typmvt")
     private String typeOfMovement;
+
     @XmlElement(name = "rop")
     private String rop;
+
     @XmlElement(name = "usr_new")
     private String userNewTransactions;
+
     @XmlElement(name = "usr_chk")
     private String userChkTransactions;
 
@@ -55,6 +64,7 @@ public class OperationEntity {
         return Transaction.builder()
                 .setDate(date)
                 .setAmount(EuroInformationUtils.parseAmount(value))
-                .setDescription(getTransactionDescription()).build();
+                .setDescription(getTransactionDescription())
+                .build();
     }
 }

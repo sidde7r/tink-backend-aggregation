@@ -38,14 +38,18 @@ public class SdcDevice {
         if (Strings.isNullOrEmpty(deviceId)) {
             String androidId = UUID.randomUUID().toString().toUpperCase();
             String serial = "UNKNOWN";
-            deviceId = Base64.encodeBase64String(
-                    (
-                            androidId + "|"
-                                    + serial + "|"
-                                    + SdcConstants.Session.MODEL + "|"
-                                    + SdcConstants.Session.MANUFACTURER + "|"
-                                    + SdcConstants.Session.DEVICE
-                    ).getBytes(Charset.forName("UTF-8")));
+            deviceId =
+                    Base64.encodeBase64String(
+                            (androidId
+                                            + "|"
+                                            + serial
+                                            + "|"
+                                            + SdcConstants.Session.MODEL
+                                            + "|"
+                                            + SdcConstants.Session.MANUFACTURER
+                                            + "|"
+                                            + SdcConstants.Session.DEVICE)
+                                    .getBytes(Charset.forName("UTF-8")));
 
             this.persistentStorage.putDeviceId(deviceId);
         }

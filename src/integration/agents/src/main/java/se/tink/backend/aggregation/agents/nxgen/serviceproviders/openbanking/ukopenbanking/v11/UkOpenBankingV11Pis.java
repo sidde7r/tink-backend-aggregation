@@ -13,10 +13,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSubmissionV11Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSubmissionV11Response;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class UkOpenBankingV11Pis implements UkOpenBankingPis {
     private final String internalTransferId;
@@ -43,25 +43,23 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
         }
 
         switch (accountIdentifier.getType()) {
-        case SORT_CODE:
-            return Optional.of(
-                    DebtorCreditorAccountEntity.createSortCodeAccount(
-                        accountIdentifier.getIdentifier(),
-                        accountIdentifier.getName().orElse(null)
-                    )
-            );
-        case IBAN:
-            IbanIdentifier ibanIdentifier = (IbanIdentifier) accountIdentifier;
-            return Optional.of(
-                    DebtorCreditorAccountEntity.createIbanAccount(
-                            ibanIdentifier.getIban(),
-                            accountIdentifier.getName().orElse(null)
-                    )
-            );
-        default:
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(String.format("Unknown identifier type: %s", accountIdentifier.getType()))
-                    .build();
+            case SORT_CODE:
+                return Optional.of(
+                        DebtorCreditorAccountEntity.createSortCodeAccount(
+                                accountIdentifier.getIdentifier(),
+                                accountIdentifier.getName().orElse(null)));
+            case IBAN:
+                IbanIdentifier ibanIdentifier = (IbanIdentifier) accountIdentifier;
+                return Optional.of(
+                        DebtorCreditorAccountEntity.createIbanAccount(
+                                ibanIdentifier.getIban(),
+                                accountIdentifier.getName().orElse(null)));
+            default:
+                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage(
+                                String.format(
+                                        "Unknown identifier type: %s", accountIdentifier.getType()))
+                        .build();
         }
     }
 
@@ -71,74 +69,80 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
     }
 
     @Override
-    public String getBankTransferIntentId(UkOpenBankingApiClient apiClient,
-            @Nullable AccountIdentifier sourceIdentifier, AccountIdentifier destinationIdentifier, Amount amount,
-            String referenceText) throws TransferExecutionException {
+    public String getBankTransferIntentId(
+            UkOpenBankingApiClient apiClient,
+            @Nullable AccountIdentifier sourceIdentifier,
+            AccountIdentifier destinationIdentifier,
+            Amount amount,
+            String referenceText)
+            throws TransferExecutionException {
 
         if (!UkOpenBankingV11Constants.PIS_CURRENCY.equalsIgnoreCase(amount.getCurrency())) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage(
                             String.format(
                                     "Invalid currency! Expected: '%s' but found: '%s'.",
-                                    UkOpenBankingV11Constants.PIS_CURRENCY,
-                                    amount.getCurrency()
-                            )
-                    )
+                                    UkOpenBankingV11Constants.PIS_CURRENCY, amount.getCurrency()))
                     .build();
         }
 
-        Optional<DebtorCreditorAccountEntity> ukOpenBankingSourceAccount = convertAccountIdentifierToUkOpenBanking(
-                sourceIdentifier);
+        Optional<DebtorCreditorAccountEntity> ukOpenBankingSourceAccount =
+                convertAccountIdentifierToUkOpenBanking(sourceIdentifier);
 
-        DebtorCreditorAccountEntity ukOpenBankingDestinationAccount = convertAccountIdentifierToUkOpenBanking(
-                destinationIdentifier)
-                .orElseThrow(() ->
-                        TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setMessage(
-                                        TransferExecutionException.EndUserMessage.INVALID_DESTINATION.getKey().get())
-                                .build()
-                );
+        DebtorCreditorAccountEntity ukOpenBankingDestinationAccount =
+                convertAccountIdentifierToUkOpenBanking(destinationIdentifier)
+                        .orElseThrow(
+                                () ->
+                                        TransferExecutionException.builder(
+                                                        SignableOperationStatuses.FAILED)
+                                                .setMessage(
+                                                        TransferExecutionException.EndUserMessage
+                                                                .INVALID_DESTINATION
+                                                                .getKey()
+                                                                .get())
+                                                .build());
 
-        PaymentSetupV11Request request = PaymentSetupV11Request.createPersonToPerson(
-                internalTransferId,
-                externalTransferId,
-                ukOpenBankingSourceAccount.orElse(null),
-                ukOpenBankingDestinationAccount,
-                amount,
-                referenceText
-        );
+        PaymentSetupV11Request request =
+                PaymentSetupV11Request.createPersonToPerson(
+                        internalTransferId,
+                        externalTransferId,
+                        ukOpenBankingSourceAccount.orElse(null),
+                        ukOpenBankingDestinationAccount,
+                        amount,
+                        referenceText);
 
-        PaymentSetupV11Response paymentSetupResponse = apiClient.createPaymentIntentId(request,
-                PaymentSetupV11Response.class);
+        PaymentSetupV11Response paymentSetupResponse =
+                apiClient.createPaymentIntentId(request, PaymentSetupV11Response.class);
 
-        UkOpenBankingConstants.TransactionIndividualStatus1Code receivedStatus = paymentSetupResponse.getStatus()
-                .orElseThrow(() ->
-                        TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setMessage("No setup status.")
-                                .build()
-                );
+        UkOpenBankingConstants.TransactionIndividualStatus1Code receivedStatus =
+                paymentSetupResponse
+                        .getStatus()
+                        .orElseThrow(
+                                () ->
+                                        TransferExecutionException.builder(
+                                                        SignableOperationStatuses.FAILED)
+                                                .setMessage("No setup status.")
+                                                .build());
 
         switch (receivedStatus) {
-        case PENDING:
-        case ACCEPTED_TECHNICAL_VALIDATION:
-            break;
-        default:
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            String.format(
-                                    "Invalid setup status: %s.",
-                                    receivedStatus.toValue()
-                            )
-                    )
-                    .build();
+            case PENDING:
+            case ACCEPTED_TECHNICAL_VALIDATION:
+                break;
+            default:
+                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage(
+                                String.format(
+                                        "Invalid setup status: %s.", receivedStatus.toValue()))
+                        .build();
         }
 
-        return paymentSetupResponse.getIntentId()
+        return paymentSetupResponse
+                .getIntentId()
                 .orElseThrow(
-                        () -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setMessage("No intentId.")
-                                .build()
-                );
+                        () ->
+                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                        .setMessage("No intentId.")
+                                        .build());
     }
 
     @Override
@@ -148,57 +152,59 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
             AccountIdentifier sourceIdentifier,
             AccountIdentifier destinationIdentifier,
             Amount amount,
-            String referenceText) throws TransferExecutionException {
+            String referenceText)
+            throws TransferExecutionException {
 
         Optional<DebtorCreditorAccountEntity> ukOpenBankingSourceAccount =
                 convertAccountIdentifierToUkOpenBanking(sourceIdentifier);
 
         DebtorCreditorAccountEntity ukOpenBankingDestinationAccount =
                 convertAccountIdentifierToUkOpenBanking(destinationIdentifier)
-                        .orElseThrow(() ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                TransferExecutionException.EndUserMessage.INVALID_DESTINATION
-                                                        .getKey()
-                                                        .get()
-                                        )
-                                        .build()
-                        );
+                        .orElseThrow(
+                                () ->
+                                        TransferExecutionException.builder(
+                                                        SignableOperationStatuses.FAILED)
+                                                .setMessage(
+                                                        TransferExecutionException.EndUserMessage
+                                                                .INVALID_DESTINATION
+                                                                .getKey()
+                                                                .get())
+                                                .build());
 
-        PaymentSubmissionV11Request paymentSubmissionRequest = PaymentSubmissionV11Request.createPersonToPerson(
-                intentId,
-                internalTransferId,
-                externalTransferId,
-                ukOpenBankingSourceAccount.orElse(null),
-                ukOpenBankingDestinationAccount,
-                amount,
-                referenceText
-        );
+        PaymentSubmissionV11Request paymentSubmissionRequest =
+                PaymentSubmissionV11Request.createPersonToPerson(
+                        intentId,
+                        internalTransferId,
+                        externalTransferId,
+                        ukOpenBankingSourceAccount.orElse(null),
+                        ukOpenBankingDestinationAccount,
+                        amount,
+                        referenceText);
 
-        PaymentSubmissionV11Response paymentSubmissionResponse = apiClient.submitPayment(
-                paymentSubmissionRequest, PaymentSubmissionV11Response.class);
+        PaymentSubmissionV11Response paymentSubmissionResponse =
+                apiClient.submitPayment(
+                        paymentSubmissionRequest, PaymentSubmissionV11Response.class);
 
         UkOpenBankingConstants.TransactionIndividualStatus1Code receivedStatus =
-                paymentSubmissionResponse.getStatus()
-                        .orElseThrow(() ->
-                            TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                    .setMessage("No submission status.")
-                                    .build()
-                        );
+                paymentSubmissionResponse
+                        .getStatus()
+                        .orElseThrow(
+                                () ->
+                                        TransferExecutionException.builder(
+                                                        SignableOperationStatuses.FAILED)
+                                                .setMessage("No submission status.")
+                                                .build());
 
         switch (receivedStatus) {
-        case ACCEPTED_SETTLEMENT_IN_PROCESS:
-        case ACCEPTED_SETTLEMENT_COMPLETED:
-            break;
-        default:
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            String.format(
-                                    "Invalid submission status: %s.",
-                                    receivedStatus.toValue()
-                            )
-                    )
-                    .build();
+            case ACCEPTED_SETTLEMENT_IN_PROCESS:
+            case ACCEPTED_SETTLEMENT_COMPLETED:
+                break;
+            default:
+                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage(
+                                String.format(
+                                        "Invalid submission status: %s.", receivedStatus.toValue()))
+                        .build();
         }
     }
 }

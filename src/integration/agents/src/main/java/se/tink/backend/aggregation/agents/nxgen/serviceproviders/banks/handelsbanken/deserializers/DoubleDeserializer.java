@@ -12,7 +12,8 @@ public class DoubleDeserializer extends StdDeserializer<Double> {
     }
 
     @Override
-    public Double deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+    public Double deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+            throws IOException {
         return StringUtils.parseAmount(jsonParser.getText());
     }
 }

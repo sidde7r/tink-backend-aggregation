@@ -16,24 +16,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntity {
     @JsonIgnore
     private static final Logger log = LoggerFactory.getLogger(ConfirmedTransactionEntity.class);
-    @JsonIgnore
-    private static final String EMPTY_STRING = "";
+
+    @JsonIgnore private static final String EMPTY_STRING = "";
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private Date bookedDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Stockholm")
     private Date date;
+
     private PaymentEntity payment;
     private String noteToSender;
     private List<String> scopes;
@@ -59,7 +61,8 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
     }
 
     @JsonIgnore
-    public Optional<UpcomingTransaction> toTinkUpcomingTransaction(AccountIdentifier sourceAccount) {
+    public Optional<UpcomingTransaction> toTinkUpcomingTransaction(
+            AccountIdentifier sourceAccount) {
         Amount amount = new Amount(currencyCode, StringUtils.parseAmountEU(this.amount));
 
         if (amount.isEmpty()) {
@@ -75,13 +78,15 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
             return Optional.empty();
         }
 
-        UpcomingTransaction.Builder upcomingTransactionBuilder = UpcomingTransaction.builder()
-                .setAmount(amount)
-                .setDate(date)
-                .setDescription(getSourceMessage());
+        UpcomingTransaction.Builder upcomingTransactionBuilder =
+                UpcomingTransaction.builder()
+                        .setAmount(amount)
+                        .setDate(date)
+                        .setDescription(getSourceMessage());
 
         Optional<Transfer> upcomingTransfer = getUpcomingTransfer(sourceAccount);
-        if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type) && upcomingTransfer.isPresent()) {
+        if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type)
+                && upcomingTransfer.isPresent()) {
             upcomingTransactionBuilder.setUpcomingTransfer(upcomingTransfer.get());
         }
 
@@ -91,10 +96,13 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
     // Skip if the transactions are already in the normal transaction list.
     private boolean shouldSkipPayment() {
         if (SwedbankBaseConstants.TransactionType.TRANSFER.equalsIgnoreCase(type)) {
-            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(transfer.getDateDependency());
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(
+                    transfer.getDateDependency());
         } else if (SwedbankBaseConstants.TransactionType.PAYMENT.equalsIgnoreCase(type)) {
-            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(payment.getDateDependency()) ||
-                    SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(payment.getStatus());
+            return SwedbankBaseConstants.PaymentDateDependency.DIRECT.equalsIgnoreCase(
+                            payment.getDateDependency())
+                    || SwedbankBaseConstants.PaymentStatus.UNDER_WAY.equalsIgnoreCase(
+                            payment.getStatus());
         }
 
         return false;
@@ -107,18 +115,18 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case SwedbankBaseConstants.TransactionType.TRANSFER:
-            return Optional.ofNullable(transfer)
-                    .map(TransferEntity::getNoteToRecipient)
-                    .orElse(EMPTY_STRING);
-        case SwedbankBaseConstants.TransactionType.PAYMENT:
-            return Optional.ofNullable(payment)
-                    .map(PaymentEntity::getReference)
-                    .map(ReferenceEntity::getValue)
-                    .orElse(EMPTY_STRING);
-        default:
-            log.warn("Unexpected transfer type: {}", type);
-            return null;
+            case SwedbankBaseConstants.TransactionType.TRANSFER:
+                return Optional.ofNullable(transfer)
+                        .map(TransferEntity::getNoteToRecipient)
+                        .orElse(EMPTY_STRING);
+            case SwedbankBaseConstants.TransactionType.PAYMENT:
+                return Optional.ofNullable(payment)
+                        .map(PaymentEntity::getReference)
+                        .map(ReferenceEntity::getValue)
+                        .orElse(EMPTY_STRING);
+            default:
+                log.warn("Unexpected transfer type: {}", type);
+                return null;
         }
     }
 
@@ -129,21 +137,22 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case SwedbankBaseConstants.TransactionType.TRANSFER:
-            return Optional.ofNullable(noteToSender)
-                    .filter(note -> !Strings.isNullOrEmpty(note))
-                    .orElse(Optional.ofNullable(transfer)
-                            .map(TransferEntity::getToAccount)
-                            .map(ToAccountEntity::getName)
-                            .orElse(EMPTY_STRING));
-        case SwedbankBaseConstants.TransactionType.PAYMENT:
-            return Optional.ofNullable(payment)
-                    .map(PaymentEntity::getPayee)
-                    .map(PayeeEntity::getName)
-                    .orElse(EMPTY_STRING);
-        default:
-            log.warn("Unexpected transfer type: {}", type);
-            return null;
+            case SwedbankBaseConstants.TransactionType.TRANSFER:
+                return Optional.ofNullable(noteToSender)
+                        .filter(note -> !Strings.isNullOrEmpty(note))
+                        .orElse(
+                                Optional.ofNullable(transfer)
+                                        .map(TransferEntity::getToAccount)
+                                        .map(ToAccountEntity::getName)
+                                        .orElse(EMPTY_STRING));
+            case SwedbankBaseConstants.TransactionType.PAYMENT:
+                return Optional.ofNullable(payment)
+                        .map(PaymentEntity::getPayee)
+                        .map(PayeeEntity::getName)
+                        .orElse(EMPTY_STRING);
+            default:
+                log.warn("Unexpected transfer type: {}", type);
+                return null;
         }
     }
 
@@ -154,18 +163,18 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case SwedbankBaseConstants.TransactionType.TRANSFER:
-            return Optional.ofNullable(transfer)
-                    .map(TransferEntity::getToAccount)
-                    .map(ToAccountEntity::getFullyFormattedNumber)
-                    .map(SwedishIdentifier::new);
-        case SwedbankBaseConstants.TransactionType.PAYMENT:
-            return Optional.ofNullable(payment)
-                    .map(PaymentEntity::getPayee)
-                    .map(PayeeEntity::generalGetAccountIdentifier);
-        default:
-            log.warn("Unexpected transfer type: {}", type);
-            return Optional.empty();
+            case SwedbankBaseConstants.TransactionType.TRANSFER:
+                return Optional.ofNullable(transfer)
+                        .map(TransferEntity::getToAccount)
+                        .map(ToAccountEntity::getFullyFormattedNumber)
+                        .map(SwedishIdentifier::new);
+            case SwedbankBaseConstants.TransactionType.PAYMENT:
+                return Optional.ofNullable(payment)
+                        .map(PaymentEntity::getPayee)
+                        .map(PayeeEntity::generalGetAccountIdentifier);
+            default:
+                log.warn("Unexpected transfer type: {}", type);
+                return Optional.empty();
         }
     }
 
@@ -176,13 +185,13 @@ public class ConfirmedTransactionEntity extends AbstractExecutorTransactionEntit
         }
 
         switch (type.toLowerCase()) {
-        case SwedbankBaseConstants.TransactionType.TRANSFER:
-            return TransferType.BANK_TRANSFER;
-        case SwedbankBaseConstants.TransactionType.PAYMENT:
-            return TransferType.PAYMENT;
-        default:
-            log.warn("Unexpected transfer type: {}", type);
-            return null;
+            case SwedbankBaseConstants.TransactionType.TRANSFER:
+                return TransferType.BANK_TRANSFER;
+            case SwedbankBaseConstants.TransactionType.PAYMENT:
+                return TransferType.PAYMENT;
+            default:
+                log.warn("Unexpected transfer type: {}", type);
+                return null;
         }
     }
 

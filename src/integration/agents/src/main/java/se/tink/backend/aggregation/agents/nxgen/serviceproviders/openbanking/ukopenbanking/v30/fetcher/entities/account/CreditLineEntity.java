@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditLineEntity {
     @JsonProperty("Included")
     private boolean included;
+
     @JsonProperty("Amount")
     private AmountEntity amount;
+
     @JsonProperty("Type")
     private UkOpenBankingConstants.ExternalLimitType type;
 

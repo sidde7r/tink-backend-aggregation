@@ -29,7 +29,8 @@ public class MenuItemLinkEntity extends LinkEntity {
 
     @JsonIgnore
     public boolean isRequiresChangeAuthMethod() {
-        return SwedbankBaseConstants.Authorization.REQUIRES_AUTH_METHOD_CHANGE == getAuthorizationValue();
+        return SwedbankBaseConstants.Authorization.REQUIRES_AUTH_METHOD_CHANGE
+                == getAuthorizationValue();
     }
 
     @JsonIgnore

@@ -7,11 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class SecurityAccountOverviewDetailsEntity {
     @XmlAttribute(name = "SecurityAccount")
     private String number;
+
     @XmlAttribute(name = "TotalValue")
     private String amount;
 
     @XmlAttribute(name = "CurrentPage")
     private String currentPage;
+
     @XmlAttribute(name = "NbElemMaxByPage")
     private String maxElementsByPage;
 

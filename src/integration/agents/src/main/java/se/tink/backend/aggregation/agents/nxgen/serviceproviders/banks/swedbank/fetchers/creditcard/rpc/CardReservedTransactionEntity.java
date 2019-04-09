@@ -7,23 +7,25 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
-public class CardReservedTransactionEntity extends  CardTransactionEntity {
+public class CardReservedTransactionEntity extends CardTransactionEntity {
 
-    public Optional<CreditCardTransaction> toTinkCreditCardTransaction(CreditCardAccount creditCardAccount,
-            String defaultCurrency) {
-        Preconditions.checkArgument(creditCardAccount != null, "Credit card account cannot be null.");
+    public Optional<CreditCardTransaction> toTinkCreditCardTransaction(
+            CreditCardAccount creditCardAccount, String defaultCurrency) {
+        Preconditions.checkArgument(
+                creditCardAccount != null, "Credit card account cannot be null.");
         Preconditions.checkArgument(defaultCurrency != null, "Default currency cannot be null.");
 
         if (getLocalAmount() == null) {
             return Optional.empty();
         }
 
-        return Optional.of(CreditCardTransaction.builder()
-                .setAmount(getLocalAmount().toTinkAmount(defaultCurrency))
-                .setCreditAccount(creditCardAccount)
-                .setDate(getDate())
-                .setDescription(getDescription())
-                .setPending(true)
-                .build());
+        return Optional.of(
+                CreditCardTransaction.builder()
+                        .setAmount(getLocalAmount().toTinkAmount(defaultCurrency))
+                        .setCreditAccount(creditCardAccount)
+                        .setDate(getDate())
+                        .setDescription(getDescription())
+                        .setPending(true)
+                        .build());
     }
 }

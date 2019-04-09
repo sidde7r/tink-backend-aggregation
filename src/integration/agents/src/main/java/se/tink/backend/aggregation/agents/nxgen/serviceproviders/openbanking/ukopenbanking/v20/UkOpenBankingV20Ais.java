@@ -18,11 +18,11 @@ public class UkOpenBankingV20Ais implements UkOpenBankingAis {
     @Override
     public UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient) {
-        return new UkOpenBankingAccountFetcher<>(apiClient,
+        return new UkOpenBankingAccountFetcher<>(
+                apiClient,
                 AccountsV20Response.class,
                 AccountBalanceV20Response.class,
-                AccountsV20Response::toTransactionalAccount
-        );
+                AccountsV20Response::toTransactionalAccount);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class UkOpenBankingV20Ais implements UkOpenBankingAis {
     public Optional<UkOpenBankingUpcomingTransactionFetcher<?>> makeUpcomingTransactionFetcher(
             UkOpenBankingApiClient apiClient) {
         return Optional.empty();
-        //TODO: Enable when this feature is mandatory for the banks to implement
+        // TODO: Enable when this feature is mandatory for the banks to implement
         //        return Optional.of(new UkOpenBankingUpcomingTransactionFetcher<>(apiClient,
         //                UpcomingTransactionsV20Response.class,
         //                UpcomingTransactionsV20Response::toUpcomingTransactions));
@@ -48,7 +48,8 @@ public class UkOpenBankingV20Ais implements UkOpenBankingAis {
     @Override
     public UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient) {
-        return new UkOpenBankingAccountFetcher<>(apiClient,
+        return new UkOpenBankingAccountFetcher<>(
+                apiClient,
                 AccountsV20Response.class,
                 AccountBalanceV20Response.class,
                 AccountsV20Response::toCreditCardAccount);

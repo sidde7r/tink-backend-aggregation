@@ -30,14 +30,28 @@ public class LoginResponse {
 
     @JsonIgnore
     public String toDebugString() {
-        return "LoginResponse{" +
-            "action='" + action + '\'' +
-            ", target='" + target + '\'' +
-            ", uid.length='" + uid.length() + '\'' +
-            ", type='" + type + '\'' +
-            ", sebAuthMechanism='" + sebAuthMechanism + '\'' +
-            ", sebReferer='" + sebReferer + '\'' +
-            ", secret.length='" + secret.length() + '\'' +
-            '}';
+        return "LoginResponse{"
+                + "action='"
+                + action
+                + '\''
+                + ", target='"
+                + target
+                + '\''
+                + ", uid.length='"
+                + uid.length()
+                + '\''
+                + ", type='"
+                + type
+                + '\''
+                + ", sebAuthMechanism='"
+                + sebAuthMechanism
+                + '\''
+                + ", sebReferer='"
+                + sebReferer
+                + '\''
+                + ", secret.length='"
+                + secret.length()
+                + '\''
+                + '}';
     }
 }

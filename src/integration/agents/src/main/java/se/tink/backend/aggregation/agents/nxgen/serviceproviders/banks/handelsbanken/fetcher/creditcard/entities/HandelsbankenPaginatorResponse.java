@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities;
 
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page
-        .TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -14,13 +12,14 @@ public class HandelsbankenPaginatorResponse implements TransactionKeyPaginatorRe
     private Collection<Transaction> transactions;
     private Optional<URL> key;
 
-    public HandelsbankenPaginatorResponse(Collection<? extends Transaction> transactions, Optional<URL> key){
+    public HandelsbankenPaginatorResponse(
+            Collection<? extends Transaction> transactions, Optional<URL> key) {
 
         this.transactions = new ArrayList<>(transactions);
         this.key = key;
     }
 
-    public void addAll(Collection<? extends Transaction> transactions){
+    public void addAll(Collection<? extends Transaction> transactions) {
         this.transactions.addAll(transactions);
     }
 

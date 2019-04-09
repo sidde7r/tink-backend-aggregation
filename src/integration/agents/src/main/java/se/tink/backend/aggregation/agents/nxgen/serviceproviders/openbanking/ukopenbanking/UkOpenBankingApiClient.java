@@ -19,8 +19,11 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     private final URL apiBaseUrl;
 
-    public UkOpenBankingApiClient(TinkHttpClient httpClient, SoftwareStatement softwareStatement,
-            ProviderConfiguration providerConfiguration, OpenIdConstants.ClientMode clientMode) {
+    public UkOpenBankingApiClient(
+            TinkHttpClient httpClient,
+            SoftwareStatement softwareStatement,
+            ProviderConfiguration providerConfiguration,
+            OpenIdConstants.ClientMode clientMode) {
         super(httpClient, softwareStatement, providerConfiguration, clientMode);
         apiBaseUrl = providerConfiguration.getApiBaseURL();
     }
@@ -28,7 +31,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public <T> T createPaymentIntentId(Object request, Class<T> responseType) {
         return createRequest(providerConfiguration.getPaymentsURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                .header(
+                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
                         RandomUtils.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
@@ -37,7 +41,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public <T> T submitPayment(Object request, Class<T> responseType) {
         return createRequest(providerConfiguration.getPaymentSubmissionsURL())
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .header(UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                .header(
+                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
                         RandomUtils.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
@@ -52,13 +57,14 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public <T> T fetchAccounts(Class<T> responseType) {
         return createRequest(
-                UkOpenBankingConstants.ApiServices.getBulkAccountRequestURL(apiBaseUrl))
+                        UkOpenBankingConstants.ApiServices.getBulkAccountRequestURL(apiBaseUrl))
                 .get(responseType);
     }
 
     public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {
         return createRequest(
-                UkOpenBankingConstants.ApiServices.getAccountBalanceRequestURL(apiBaseUrl, accountId))
+                        UkOpenBankingConstants.ApiServices.getAccountBalanceRequestURL(
+                                apiBaseUrl, accountId))
                 .get(responseType);
     }
 
@@ -66,28 +72,28 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
         // Check if the key provided is a complete url or if it should be appended on the apiBase
         URL url = new URL(paginationKey);
-        if (url.getScheme() == null)
-            url = apiBaseUrl.concat(paginationKey);
+        if (url.getScheme() == null) url = apiBaseUrl.concat(paginationKey);
 
-        return createRequest(url)
-                .get(responseType);
+        return createRequest(url).get(responseType);
     }
 
     public <T> T fetchUpcomingTransactions(String accountId, Class<T> responseType) {
         try {
 
             return createRequest(
-                    UkOpenBankingConstants.ApiServices.getUpcomingTransactionRequestURL(apiBaseUrl, accountId))
+                            UkOpenBankingConstants.ApiServices.getUpcomingTransactionRequestURL(
+                                    apiBaseUrl, accountId))
                     .get(responseType);
         } catch (Exception e) {
-            // TODO: Ukob testdata has an error in it which makes some transactions impossible to parse.
-            // TODO: This combined with the null check in UpcomingTransactionFetcher discards those transactions to prevents crash.
+            // TODO: Ukob testdata has an error in it which makes some transactions impossible to
+            // parse.
+            // TODO: This combined with the null check in UpcomingTransactionFetcher discards those
+            // transactions to prevents crash.
             return null;
         }
     }
 
     private RequestBuilder createRequest(URL url) {
-        return httpClient.request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        return httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
     }
 }

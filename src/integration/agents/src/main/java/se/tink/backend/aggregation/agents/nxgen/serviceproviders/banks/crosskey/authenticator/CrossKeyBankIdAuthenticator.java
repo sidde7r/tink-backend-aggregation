@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.MultiFactorAuthentication.AUTOSTART_TOKEN;
+
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.MultiFactorAuthentication.AUTOSTART_TOKEN;
 
 public class CrossKeyBankIdAuthenticator
         implements BankIdAuthenticator<BankIdAutostartTokenResponse> {
@@ -79,15 +80,12 @@ public class CrossKeyBankIdAuthenticator
         }
 
         Optional<BankIdStatus> bankIdStatus =
-                bankiIdResponse
-                        .getStatus()
-                        .getErrors()
-                        .stream()
+                bankiIdResponse.getStatus().getErrors().stream()
                         .map(
                                 s ->
                                         CrossKeyConstants.MultiFactorAuthentication
-                                                .BANKID_ERROR_MAPPING.getOrDefault(
-                                                s, BankIdStatus.FAILED_UNKNOWN))
+                                                .BANKID_ERROR_MAPPING
+                                                .getOrDefault(s, BankIdStatus.FAILED_UNKNOWN))
                         .findAny();
 
         bankIdStatus

@@ -59,14 +59,15 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankDefaultApiClient {
     private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultApiClient.class);
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final DefaultAccountIdentifierFormatter DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
-            new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter
+            DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
+                    new DefaultAccountIdentifierFormatter();
     protected final TinkHttpClient client;
     private final SwedbankConfiguration configuration;
     private final String username;
@@ -75,7 +76,10 @@ public class SwedbankDefaultApiClient {
     protected BankProfileHandler bankProfileHandler;
     private Map<String, MenuItemLinkEntity> menuItems;
 
-    protected SwedbankDefaultApiClient(TinkHttpClient client, SwedbankConfiguration configuration, String username,
+    protected SwedbankDefaultApiClient(
+            TinkHttpClient client,
+            SwedbankConfiguration configuration,
+            String username,
             SessionStorage sessionStorage) {
         this.client = client;
         this.configuration = configuration;
@@ -115,32 +119,43 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, requestObject, responseClass, Collections.emptyMap());
     }
 
-    private <T> T makeRequest(LinkEntity linkEntity, Object requestObject, Class<T> responseClass,
+    private <T> T makeRequest(
+            LinkEntity linkEntity,
+            Object requestObject,
+            Class<T> responseClass,
             Map<String, String> parameters) {
         SwedbankBaseConstants.LinkMethod method = linkEntity.getMethodValue();
-        Preconditions.checkState(linkEntity.isValid(),
+        Preconditions.checkState(
+                linkEntity.isValid(),
                 "Create dynamic request failed - Cannot proceed without valid link entity - Method:[{}], Uri:[{}]",
-                method, linkEntity.getUri());
+                method,
+                linkEntity.getUri());
 
         switch (method) {
-        case POST:
-            return makePostRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
-                    responseClass);
-        case GET:
-            return makeGetRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), responseClass);
-        case PUT:
-            return makePutRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
-                    responseClass);
-        case DELETE:
-            return makeDeleteRequest(
-                    SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters), requestObject,
-                    responseClass);
-        default:
-            log.warn("Create dynamic request failed - Not implemented method - Method:[{}]", method);
-            throw new IllegalStateException();
+            case POST:
+                return makePostRequest(
+                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
+                        requestObject,
+                        responseClass);
+            case GET:
+                return makeGetRequest(
+                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
+                        responseClass);
+            case PUT:
+                return makePutRequest(
+                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
+                        requestObject,
+                        responseClass);
+            case DELETE:
+                return makeDeleteRequest(
+                        SwedbankBaseConstants.Url.createDynamicUrl(linkEntity.getUri(), parameters),
+                        requestObject,
+                        responseClass);
+            default:
+                log.warn(
+                        "Create dynamic request failed - Not implemented method - Method:[{}]",
+                        method);
+                throw new IllegalStateException();
         }
     }
 
@@ -148,7 +163,8 @@ public class SwedbankDefaultApiClient {
         String dsid = generateDSID();
 
         return client.request(url)
-                .header(SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
+                .header(
+                        SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
                         SwedbankBaseConstants.generateAuthorization(configuration, username))
                 .queryParam(SwedbankBaseConstants.Url.DSID_KEY, dsid)
                 .cookie(new Cookie(SwedbankBaseConstants.Url.DSID_KEY, dsid));
@@ -169,8 +185,6 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, PaymentBaseinfoResponse.class);
     }
 
-
-
     // this is where we handle the profiles, fetch all and store store in session storage
     // never assume anything in session storage is usable when authenticating, it is setup
     // after login
@@ -188,9 +202,11 @@ public class SwedbankDefaultApiClient {
         if (!hasValidProfile(profileResponse)) {
             if (modeAndProfileMismatch(profileResponse)) {
                 if (!configuration.isSavingsBank()) {
-                    throw LoginError.NOT_CUSTOMER.exception(SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
+                    throw LoginError.NOT_CUSTOMER.exception(
+                            SwedbankBaseConstants.UserMessage.WRONG_BANK_SWEDBANK);
                 } else {
-                    throw LoginError.NOT_CUSTOMER.exception(SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
+                    throw LoginError.NOT_CUSTOMER.exception(
+                            SwedbankBaseConstants.UserMessage.WRONG_BANK_SAVINGSBANK);
                 }
             }
 
@@ -211,7 +227,8 @@ public class SwedbankDefaultApiClient {
     }
 
     public LoanOverviewResponse loanOverview() {
-        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.LOANS, LoanOverviewResponse.class);
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.LOANS, LoanOverviewResponse.class);
     }
 
     public String loanOverviewAsString() {
@@ -247,13 +264,18 @@ public class SwedbankDefaultApiClient {
     }
 
     public FundMarketInfoResponse fundMarketInfo(String fundCode) {
-        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.FUND_MARKET_INFO, null,
-                FundMarketInfoResponse.class, ImmutableMap.of(SwedbankBaseConstants.ParameterKey.FUND_CODE, fundCode));
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.FUND_MARKET_INFO,
+                null,
+                FundMarketInfoResponse.class,
+                ImmutableMap.of(SwedbankBaseConstants.ParameterKey.FUND_CODE, fundCode));
     }
 
     public List<EInvoiceEntity> incomingEInvoices() {
-        IncomingEinvoicesResponse incomingEinvoicesResponse = makeMenuItemRequest(
-                SwedbankBaseConstants.MenuItemKey.EINVOICES, IncomingEinvoicesResponse.class);
+        IncomingEinvoicesResponse incomingEinvoicesResponse =
+                makeMenuItemRequest(
+                        SwedbankBaseConstants.MenuItemKey.EINVOICES,
+                        IncomingEinvoicesResponse.class);
 
         return incomingEinvoicesResponse.getEinvoices();
     }
@@ -277,10 +299,11 @@ public class SwedbankDefaultApiClient {
                 RegisterRecipientResponse.class);
     }
 
-    public RegisterTransferRecipientResponse registerTransferRecipient(RegisterTransferRecipientRequest request) throws
-            TransferExecutionException {
+    public RegisterTransferRecipientResponse registerTransferRecipient(
+            RegisterTransferRecipientRequest request) throws TransferExecutionException {
 
-        throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
+        throwIfNotAuthorizedForRegisterAction(
+                SwedbankBaseConstants.MenuItemKey.REGISTER_EXTERNAL_TRANSFER_RECIPIENT);
 
         try {
             return makeMenuItemRequest(
@@ -290,8 +313,10 @@ public class SwedbankDefaultApiClient {
         } catch (HttpResponseException hre) {
             if (isAccountNumberInvalid(hre)) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+                        .setEndUserMessage(
+                                TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                        .build();
             }
 
             // unknown error: rethrow
@@ -299,40 +324,62 @@ public class SwedbankDefaultApiClient {
         }
     }
 
-    private void throwIfNotAuthorizedForRegisterAction(SwedbankBaseConstants.MenuItemKey menuItemKey)
-            throws TransferExecutionException {
+    private void throwIfNotAuthorizedForRegisterAction(
+            SwedbankBaseConstants.MenuItemKey menuItemKey) throws TransferExecutionException {
         if (!isAuthorizedForAction(menuItemKey)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(SwedbankBaseConstants.UserMessage.STRONGER_AUTHENTICATION_NEEDED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE).build();
+                    .setEndUserMessage(
+                            SwedbankBaseConstants.UserMessage.STRONGER_AUTHENTICATION_NEEDED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.NEEDS_EXTENDED_USE)
+                    .build();
         }
     }
 
-    public RegisterTransferResponse registerTransfer(double amount, String destinationAccountId,
-            String sourceAccountId) {
+    public RegisterTransferResponse registerTransfer(
+            double amount, String destinationAccountId, String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_TRANSFER,
                 RegisterTransferRequest.create(amount, destinationAccountId, sourceAccountId),
                 RegisterTransferResponse.class);
     }
 
-    public RegisterTransferResponse registerPayment(double amount, String message,
-            SwedbankBaseConstants.ReferenceType referenceType, Date date, String destinationAccountId,
+    public RegisterTransferResponse registerPayment(
+            double amount,
+            String message,
+            SwedbankBaseConstants.ReferenceType referenceType,
+            Date date,
+            String destinationAccountId,
             String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
-                RegisterPaymentRequest.createPayment(amount, message, referenceType, date, destinationAccountId,
+                RegisterPaymentRequest.createPayment(
+                        amount,
+                        message,
+                        referenceType,
+                        date,
+                        destinationAccountId,
                         sourceAccountId),
                 RegisterTransferResponse.class);
     }
 
-    public RegisterTransferResponse registerEInvoice(double amount, String message,
-            SwedbankBaseConstants.ReferenceType referenceType, Date date, String eInvoiceId,
-            String destinationAccountId, String sourceAccountId) {
+    public RegisterTransferResponse registerEInvoice(
+            double amount,
+            String message,
+            SwedbankBaseConstants.ReferenceType referenceType,
+            Date date,
+            String eInvoiceId,
+            String destinationAccountId,
+            String sourceAccountId) {
         return makeMenuItemRequest(
                 SwedbankBaseConstants.MenuItemKey.REGISTER_PAYMENT,
-                RegisterPaymentRequest.createEinvoicePayment(amount, message, referenceType, date, destinationAccountId,
-                        sourceAccountId, eInvoiceId),
+                RegisterPaymentRequest.createEinvoicePayment(
+                        amount,
+                        message,
+                        referenceType,
+                        date,
+                        destinationAccountId,
+                        sourceAccountId,
+                        eInvoiceId),
                 RegisterTransferResponse.class);
     }
 
@@ -364,15 +411,26 @@ public class SwedbankDefaultApiClient {
         return makeRequest(linkEntity, PaymentDetailsResponse.class);
     }
 
-    public RegisterTransferResponse updatePayment(LinkEntity linkEntity, double amount, String message,
-            SwedbankBaseConstants.ReferenceType referenceType, Date date, String recipientId, String fromAccountId) {
-        return makeRequest(linkEntity,
-                RegisterPaymentRequest.createPayment(amount, message, referenceType, date, recipientId, fromAccountId),
+    public RegisterTransferResponse updatePayment(
+            LinkEntity linkEntity,
+            double amount,
+            String message,
+            SwedbankBaseConstants.ReferenceType referenceType,
+            Date date,
+            String recipientId,
+            String fromAccountId) {
+        return makeRequest(
+                linkEntity,
+                RegisterPaymentRequest.createPayment(
+                        amount, message, referenceType, date, recipientId, fromAccountId),
                 RegisterTransferResponse.class);
     }
 
     public InitiateSignTransferResponse signExternalTransfer(LinkEntity linkEntity) {
-        return makeRequest(linkEntity, InitiateSignTransferRequest.create(), InitiateSignTransferResponse.class);
+        return makeRequest(
+                linkEntity,
+                InitiateSignTransferRequest.create(),
+                InitiateSignTransferResponse.class);
     }
 
     public CollectBankIdSignResponse collectSignBankId(LinkEntity linkEntity) {
@@ -380,45 +438,53 @@ public class SwedbankDefaultApiClient {
     }
 
     public TouchResponse touch() {
-        return makeGetRequest(
-                SwedbankBaseConstants.Url.TOUCH.get(),
-                TouchResponse.class);
+        return makeGetRequest(SwedbankBaseConstants.Url.TOUCH.get(), TouchResponse.class);
     }
 
     public boolean logout() {
         try {
-            HttpResponse response = makePutRequest(
-                    SwedbankBaseConstants.Url.LOGOUT.get(),
-                    null,
-                    HttpResponse.class);
+            HttpResponse response =
+                    makePutRequest(
+                            SwedbankBaseConstants.Url.LOGOUT.get(), null, HttpResponse.class);
             return response.getStatus() == HttpStatus.SC_OK;
         } catch (Exception e) {
             return false;
         }
     }
 
-    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Class<T> responseClass) {
+    private <T> T makeMenuItemRequest(
+            SwedbankBaseConstants.MenuItemKey menuItemKey, Class<T> responseClass) {
         return makeMenuItemRequest(menuItemKey, null, responseClass);
     }
 
-    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
+    private <T> T makeMenuItemRequest(
+            SwedbankBaseConstants.MenuItemKey menuItemKey,
+            Object requestObject,
             Class<T> responseClass) {
-        return makeMenuItemRequest(menuItemKey, requestObject, responseClass, Collections.emptyMap());
+        return makeMenuItemRequest(
+                menuItemKey, requestObject, responseClass, Collections.emptyMap());
     }
 
-    private <T> T makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey menuItemKey, Object requestObject,
-            Class<T> responseClass, Map<String, String> parameters) {
+    private <T> T makeMenuItemRequest(
+            SwedbankBaseConstants.MenuItemKey menuItemKey,
+            Object requestObject,
+            Class<T> responseClass,
+            Map<String, String> parameters) {
 
         Map<String, MenuItemLinkEntity> menuItems = getMenuItems();
 
         if (!isAuthorizedForAction(menuItemKey)) {
             MenuItemLinkEntity menuItem = menuItems.get(menuItemKey.getKey());
-            log.warn("User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
-                    menuItemKey, menuItem.getName(), menuItem.getAuthorization());
+            log.warn(
+                    "User not authorized to perform request with key: [{}], name: [{}], authorization: [{}]",
+                    menuItemKey,
+                    menuItem.getName(),
+                    menuItem.getAuthorization());
             throw new IllegalStateException();
         }
 
-        return makeRequest(menuItems.get(menuItemKey.getKey()), requestObject, responseClass, parameters);
+        return makeRequest(
+                menuItems.get(menuItemKey.getKey()), requestObject, responseClass, parameters);
     }
 
     private boolean isAuthorizedForAction(SwedbankBaseConstants.MenuItemKey menuItemKey) {
@@ -432,7 +498,7 @@ public class SwedbankDefaultApiClient {
     }
 
     private Map<String, MenuItemLinkEntity> getMenuItems() {
-//        bankProfileHandler = getBankProfileHandler();
+        //        bankProfileHandler = getBankProfileHandler();
         if (bankProfileHandler != null && bankProfileHandler.getActiveBankProfile() != null) {
             return bankProfileHandler.getActiveBankProfile().getMenuItems();
         }
@@ -446,7 +512,8 @@ public class SwedbankDefaultApiClient {
             return;
         }
 
-        client.addPersistentHeader(SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
+        client.addPersistentHeader(
+                SwedbankBaseConstants.Headers.AUTHORIZATION_KEY,
                 SwedbankBaseConstants.generateAuthorization(configuration, username));
     }
 
@@ -457,8 +524,11 @@ public class SwedbankDefaultApiClient {
     public BankProfile selectProfile(BankProfile requestedBankProfile) {
         BankProfile activeBankProfile = getBankProfileHandler().getActiveBankProfile();
         // check if we are active
-        if (activeBankProfile != null &&
-                requestedBankProfile.getBank().getBankId().equalsIgnoreCase(activeBankProfile.getBank().getBankId())) {
+        if (activeBankProfile != null
+                && requestedBankProfile
+                        .getBank()
+                        .getBankId()
+                        .equalsIgnoreCase(activeBankProfile.getBank().getBankId())) {
             return activeBankProfile;
         }
 
@@ -494,21 +564,26 @@ public class SwedbankDefaultApiClient {
             EngagementOverviewResponse engagementOverViewResponse = fetchEngagementOverview();
             PaymentBaseinfoResponse paymentBaseinfoResponse = fetchPaymentBaseinfo();
             // create and add profile
-            BankProfile bankProfile = new BankProfile(bank, menuItems, engagementOverViewResponse,
-                    paymentBaseinfoResponse);
+            BankProfile bankProfile =
+                    new BankProfile(
+                            bank, menuItems, engagementOverViewResponse, paymentBaseinfoResponse);
             bankProfileHandler.addBankProfile(bankProfile);
             // profile is already activated
             bankProfileHandler.setActiveBankProfile(bankProfile);
         }
 
-        sessionStorage.put(SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER, bankProfileHandler);
+        sessionStorage.put(
+                SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER, bankProfileHandler);
     }
 
     private BankProfileHandler getBankProfileHandler() {
         if (bankProfileHandler == null) {
-            bankProfileHandler = sessionStorage.get(SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
-                    BankProfileHandler.class)
-                    .orElseThrow(IllegalStateException::new);
+            bankProfileHandler =
+                    sessionStorage
+                            .get(
+                                    SwedbankBaseConstants.StorageKey.BANK_PROFILE_HANDLER,
+                                    BankProfileHandler.class)
+                            .orElseThrow(IllegalStateException::new);
             bankProfileHandler.setActiveBankProfile(bankProfileHandler.findTransferProfile());
         }
 
@@ -516,8 +591,8 @@ public class SwedbankDefaultApiClient {
     }
 
     private Map<String, MenuItemLinkEntity> fetchProfile(LinkEntity linkEntity) {
-        SelectedProfileResponse selectedProfileResponse = makeRequest(linkEntity,
-                SelectedProfileResponse.class);
+        SelectedProfileResponse selectedProfileResponse =
+                makeRequest(linkEntity, SelectedProfileResponse.class);
 
         Map<String, MenuItemLinkEntity> menuItemsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         menuItemsMap.putAll(
@@ -533,8 +608,8 @@ public class SwedbankDefaultApiClient {
     }
 
     private PaymentBaseinfoResponse fetchPaymentBaseinfo() {
-        return makeMenuItemRequest(SwedbankBaseConstants.MenuItemKey.PAYMENT_BASEINFO,
-                PaymentBaseinfoResponse.class);
+        return makeMenuItemRequest(
+                SwedbankBaseConstants.MenuItemKey.PAYMENT_BASEINFO, PaymentBaseinfoResponse.class);
     }
 
     private boolean isUserNotACustomer(HttpResponseException hre) {
@@ -566,17 +641,21 @@ public class SwedbankDefaultApiClient {
     }
 
     private boolean hasValidProfile(ProfileResponse profileResponse) {
-        boolean hasValidBank = configuration.isSavingsBank() ? profileResponse.isHasSavingbankProfile() :
-                profileResponse.isHasSwedbankProfile();
+        boolean hasValidBank =
+                configuration.isSavingsBank()
+                        ? profileResponse.isHasSavingbankProfile()
+                        : profileResponse.isHasSwedbankProfile();
 
         return hasValidBank && profileResponse.getBanks().size() > 0;
     }
 
     private boolean modeAndProfileMismatch(ProfileResponse profileResponse) {
         if (!configuration.isSavingsBank()) {
-            return !profileResponse.isHasSwedbankProfile() && profileResponse.isHasSavingbankProfile();
+            return !profileResponse.isHasSwedbankProfile()
+                    && profileResponse.isHasSavingbankProfile();
         } else {
-            return !profileResponse.isHasSavingbankProfile() && profileResponse.isHasSwedbankProfile();
+            return !profileResponse.isHasSavingbankProfile()
+                    && profileResponse.isHasSwedbankProfile();
         }
     }
 }

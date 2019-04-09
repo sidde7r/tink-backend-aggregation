@@ -28,10 +28,13 @@ public class SdcSessionStorage {
     }
 
     public Optional<SdcAgreementServiceConfigurationResponse> getCurrentServiceConfiguration() {
-        return sessionStorage.get(SdcConstants.Session.CURRENT_AGREEMENT, SdcAgreementServiceConfigurationResponse.class);
+        return sessionStorage.get(
+                SdcConstants.Session.CURRENT_AGREEMENT,
+                SdcAgreementServiceConfigurationResponse.class);
     }
 
-    public void putCurrentServiceConfiguration(SdcAgreementServiceConfigurationResponse agreementServiceConfiguration) {
+    public void putCurrentServiceConfiguration(
+            SdcAgreementServiceConfigurationResponse agreementServiceConfiguration) {
         Preconditions.checkNotNull(agreementServiceConfiguration);
 
         sessionStorage.put(SdcConstants.Session.CURRENT_AGREEMENT, agreementServiceConfiguration);

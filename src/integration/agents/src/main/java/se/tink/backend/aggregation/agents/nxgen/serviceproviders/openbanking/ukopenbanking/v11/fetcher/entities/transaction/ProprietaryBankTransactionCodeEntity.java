@@ -8,7 +8,7 @@ public class ProprietaryBankTransactionCodeEntity {
 
     @JsonProperty("Code")
     private String code;
+
     @JsonProperty("Issuer")
     private String issuer;
-
 }

@@ -14,15 +14,18 @@ public class CrossKeyTransactionFetcher implements TransactionDatePaginator<Tran
     private final CrossKeyApiClient client;
     private final CrossKeyConfiguration agentConfiguration;
 
-    public CrossKeyTransactionFetcher(CrossKeyApiClient client, CrossKeyConfiguration agentConfiguration) {
+    public CrossKeyTransactionFetcher(
+            CrossKeyApiClient client, CrossKeyConfiguration agentConfiguration) {
         this.client = client;
         this.agentConfiguration = agentConfiguration;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        Collection<? extends Transaction> transactions = client.fetchTransactions(account, fromDate, toDate)
-                .getTinkTransactions(agentConfiguration);
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                client.fetchTransactions(account, fromDate, toDate)
+                        .getTinkTransactions(agentConfiguration);
 
         return PaginatorResponseImpl.create(transactions);
     }

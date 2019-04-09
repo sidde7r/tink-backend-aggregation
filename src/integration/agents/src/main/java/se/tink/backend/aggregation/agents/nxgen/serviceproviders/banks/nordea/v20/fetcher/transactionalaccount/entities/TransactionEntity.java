@@ -13,20 +13,26 @@ public class TransactionEntity {
     @JsonProperty("isCoverReservationTransaction")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Boolean.class)
     private Boolean reservation;
+
     @JsonProperty("transactionAmount")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double amount;
+
     @JsonProperty("transactionCounterpartyName")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String counterPartyName;
+
     @JsonProperty("transactionCurrency")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
+
     @JsonProperty("transactionDate")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date date;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionKey;
+
     @JsonProperty("transactionText")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String text;
@@ -52,8 +58,8 @@ public class TransactionEntity {
     }
 
     public String getTransactionKey() {
-        return Optional.ofNullable(transactionKey).orElse(StringUtils.hashAsStringMD5(
-                text + date.toString() + amount.toString()));
+        return Optional.ofNullable(transactionKey)
+                .orElse(StringUtils.hashAsStringMD5(text + date.toString() + amount.toString()));
     }
 
     public String getText() {

@@ -10,7 +10,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
-public class TransferDestinationAccountEntity extends AbstractAccountEntity implements GeneralAccountEntity {
+public class TransferDestinationAccountEntity extends AbstractAccountEntity
+        implements GeneralAccountEntity {
     private List<String> scopes;
     private String currencyCode;
     private String amount;

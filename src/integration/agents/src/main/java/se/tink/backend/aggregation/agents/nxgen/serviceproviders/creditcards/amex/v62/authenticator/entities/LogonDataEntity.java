@@ -60,8 +60,7 @@ public class LogonDataEntity {
     }
 
     public boolean isIncorrect() {
-        return StatusCode.INCORRECT.equalsIgnoreCase(statusCode) ||
-                StatusCode.SECOND_ATTEMPT.equalsIgnoreCase(statusCode);
+        return StatusCode.INCORRECT.equalsIgnoreCase(statusCode)
+                || StatusCode.SECOND_ATTEMPT.equalsIgnoreCase(statusCode);
     }
-
 }

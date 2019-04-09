@@ -31,11 +31,12 @@ public abstract class SdcAgreementFetcher {
         sessionStorage.setAgreements(agreements);
     }
 
-    protected Optional<SdcServiceConfigurationEntity> selectAgreement(SessionStorageAgreement currentAgreement,
-            SessionStorageAgreements agreements) {
-        Optional<SdcServiceConfigurationEntity> configurationEntity = sessionStorage
-                .getCurrentServiceConfiguration()
-                .map(SdcAgreementServiceConfigurationResponse::getServiceConfiguration);
+    protected Optional<SdcServiceConfigurationEntity> selectAgreement(
+            SessionStorageAgreement currentAgreement, SessionStorageAgreements agreements) {
+        Optional<SdcServiceConfigurationEntity> configurationEntity =
+                sessionStorage
+                        .getCurrentServiceConfiguration()
+                        .map(SdcAgreementServiceConfigurationResponse::getServiceConfiguration);
 
         if (configurationEntity.isPresent() && agreements.size() == 1) {
             return configurationEntity;
@@ -47,21 +48,23 @@ public abstract class SdcAgreementFetcher {
             sessionStorage.putCurrentServiceConfiguration(serviceConfiguration);
             return Optional.of(serviceConfiguration.getServiceConfiguration());
         } catch (HttpResponseException e) {
-            // SDC seems to return 500 with no explanation for some agreements. Since we've seen that we're able
-            // to select other agreements sucessfully for the same credential we don't want this to break the refresh.
+            // SDC seems to return 500 with no explanation for some agreements. Since we've seen
+            // that we're able
+            // to select other agreements sucessfully for the same credential we don't want this to
+            // break the refresh.
             log.warn("Unable to select agreement.", e);
             return Optional.empty();
         }
     }
 
     /*
-        Bankend needs to know which agreement is currently in use or otherwise will not accept ANY operations.
-     */
-    private SdcAgreementServiceConfigurationResponse updateServerWithAgreementInUse (
-        SessionStorageAgreement currentAgreement) {
-        return bankClient.selectAgreement(new SelectAgreementRequest()
-                .setUserNumber(currentAgreement.getUserNumber())
-                .setAgreementNumber(currentAgreement.getAgreementId())
-        );
+       Bankend needs to know which agreement is currently in use or otherwise will not accept ANY operations.
+    */
+    private SdcAgreementServiceConfigurationResponse updateServerWithAgreementInUse(
+            SessionStorageAgreement currentAgreement) {
+        return bankClient.selectAgreement(
+                new SelectAgreementRequest()
+                        .setUserNumber(currentAgreement.getUserNumber())
+                        .setAgreementNumber(currentAgreement.getAgreementId()));
     }
 }

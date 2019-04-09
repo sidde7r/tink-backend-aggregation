@@ -8,17 +8,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class EncryptedUserCredentialsRequest {
     private String encUserCredentials;
 
-    private EncryptedUserCredentialsRequest() {
-    }
+    private EncryptedUserCredentialsRequest() {}
 
-    public static EncryptedUserCredentialsRequest create(InitNewProfileResponse initNewProfile,
+    public static EncryptedUserCredentialsRequest create(
+            InitNewProfileResponse initNewProfile,
             UserCredentialsRequest userCredentials,
             LibTFA tfa) {
         return new EncryptedUserCredentialsRequest()
                 .setEncUserCredentials(
-                        tfa.generateEncUserCredentials(initNewProfile,
-                                userCredentials)
-                );
+                        tfa.generateEncUserCredentials(initNewProfile, userCredentials));
     }
 
     private EncryptedUserCredentialsRequest setEncUserCredentials(String encUserCredentials) {

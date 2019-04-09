@@ -72,16 +72,25 @@ public class NordeaV20ApiClient {
     public boolean canViewTransactions(Account account) {
         return fetchInitialContext().getData().getProducts().stream()
                 .filter(ProductEntity::canView)
-                .anyMatch(pe -> Objects.equals(account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
+                .anyMatch(
+                        pe ->
+                                Objects.equals(
+                                        account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
     }
 
     public TransactionsResponse fetchTransactions(String accountId, String continueKey) {
-        return request(new TransactionsRequest(accountId, continueKey), TransactionsResponse.class, LOG_RESPONSE);
+        return request(
+                new TransactionsRequest(accountId, continueKey),
+                TransactionsResponse.class,
+                LOG_RESPONSE);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String continueKey) {
-        return request(new CreditCardTransactionsRequest(cardNumber, continueKey),
-                CreditCardTransactionsResponse.class, LOG_RESPONSE);
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            String cardNumber, String continueKey) {
+        return request(
+                new CreditCardTransactionsRequest(cardNumber, continueKey),
+                CreditCardTransactionsResponse.class,
+                LOG_RESPONSE);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String accountId) {
@@ -92,12 +101,14 @@ public class NordeaV20ApiClient {
         return request(new CardDetailsRequest(accountId), CardDetailsResponse.class, LOG_RESPONSE);
     }
 
-    public LightLoginResponse passwordLogin(String username, String password) throws AuthenticationException,
-            AuthorizationException {
-        return authRequest(new PasswordLoginRequest(username, password, marketCode), LightLoginResponse.class);
+    public LightLoginResponse passwordLogin(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        return authRequest(
+                new PasswordLoginRequest(username, password, marketCode), LightLoginResponse.class);
     }
 
-    protected <T extends NordeaResponse> T request(HttpRequest request, Class<T> responseModel, boolean logResponse) {
+    protected <T extends NordeaResponse> T request(
+            HttpRequest request, Class<T> responseModel, boolean logResponse) {
         if (!logResponse) {
             return validate(client.request(responseModel, request));
         }
@@ -124,7 +135,8 @@ public class NordeaV20ApiClient {
         if (errorCode.isPresent()) {
             if (NordeaV20Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
                 throw NordeaV20Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
-            } else if (NordeaV20Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
+            } else if (NordeaV20Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(
+                    errorCode.get())) {
                 throw NordeaV20Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
             }
 
@@ -142,8 +154,9 @@ public class NordeaV20ApiClient {
         Optional<String> errorCode = response.getErrorCode();
 
         if (errorCode.isPresent()) {
-            throw new IllegalStateException(NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE
-                    .getOrDefault(errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
+            throw new IllegalStateException(
+                    NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
+                            errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
         }
 
         return response;
@@ -154,11 +167,15 @@ public class NordeaV20ApiClient {
         PaymentsResponse response;
 
         if (status == Payment.StatusCode.CONFIRMED) {
-            response = client.request(ConfirmedPaymentsResponse.class,
-                    new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            ConfirmedPaymentsResponse.class,
+                            new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else if (status == Payment.StatusCode.UNCONFIRMED) {
-            response = client.request(UnconfirmedPaymentsResponse.class,
-                    new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            UnconfirmedPaymentsResponse.class,
+                            new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else {
             return null;
         }
@@ -166,12 +183,18 @@ public class NordeaV20ApiClient {
         List<PaymentEntity> payments = response.getPayments();
 
         return payments.stream()
-                .filter(pe -> pe.getFromAccountId() != null && Objects.equals(productEntity.getInternalId(), pe.getFromAccountId()))
+                .filter(
+                        pe ->
+                                pe.getFromAccountId() != null
+                                        && Objects.equals(
+                                                productEntity.getInternalId(),
+                                                pe.getFromAccountId()))
                 .collect(Collectors.toList());
     }
 
     public List<CustodyAccount> fetchCustodyAccounts() {
-        CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class, LOG_RESPONSE);
+        CustodyAccountsResponse response =
+                request(new CustodyAccountsRequest(), CustodyAccountsResponse.class, LOG_RESPONSE);
         return response != null ? response.getCustodyAccounts() : Collections.emptyList();
     }
 }

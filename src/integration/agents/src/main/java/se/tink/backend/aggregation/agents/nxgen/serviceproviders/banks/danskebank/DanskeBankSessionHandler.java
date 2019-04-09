@@ -9,7 +9,8 @@ public class DanskeBankSessionHandler implements SessionHandler {
     private DanskeBankApiClient apiClient;
     private DanskeBankConfiguration configuration;
 
-    public DanskeBankSessionHandler(DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
+    public DanskeBankSessionHandler(
+            DanskeBankApiClient apiClient, DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.configuration = configuration;
     }
@@ -22,7 +23,8 @@ public class DanskeBankSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            apiClient.listAccounts(ListAccountsRequest.createFromLanguageCode(configuration.getLanguageCode()));
+            apiClient.listAccounts(
+                    ListAccountsRequest.createFromLanguageCode(configuration.getLanguageCode()));
         } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

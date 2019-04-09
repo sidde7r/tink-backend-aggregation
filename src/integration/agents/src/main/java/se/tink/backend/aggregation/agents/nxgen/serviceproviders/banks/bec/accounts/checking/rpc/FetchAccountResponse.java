@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchAccountResponse extends ArrayList<AccountEntity> {
-
-}
+public class FetchAccountResponse extends ArrayList<AccountEntity> {}

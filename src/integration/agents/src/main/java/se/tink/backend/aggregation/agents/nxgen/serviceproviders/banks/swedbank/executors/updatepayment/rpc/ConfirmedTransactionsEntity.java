@@ -33,7 +33,10 @@ public class ConfirmedTransactionsEntity {
 
     public List<UpcomingTransaction> toTinkUpcomingTransactions() {
         return Optional.ofNullable(transactions).orElseGet(Collections::emptyList).stream()
-                .map(transaction -> transaction.toTinkUpcomingTransaction(fromAccount.generalGetAccountIdentifier()))
+                .map(
+                        transaction ->
+                                transaction.toTinkUpcomingTransaction(
+                                        fromAccount.generalGetAccountIdentifier()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

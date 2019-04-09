@@ -31,12 +31,13 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         List<CardEntity> cardEntities =
-            sessionStorage
-                .get(AmericanExpressV62Constants.Tags.CARD_LIST, new TypeReference<List<CardEntity>>() {})
-                .orElse(Collections.emptyList());
+                sessionStorage
+                        .get(
+                                AmericanExpressV62Constants.Tags.CARD_LIST,
+                                new TypeReference<List<CardEntity>>() {})
+                        .orElse(Collections.emptyList());
 
-        return cardEntities
-                .stream()
+        return cardEntities.stream()
                 .map(card -> card.toCreditCardAccount(configuration))
                 .collect(Collectors.toList());
     }

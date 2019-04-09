@@ -14,14 +14,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.AccountIdentifier;
 
-public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor implements UpdatePaymentExecutor {
+public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor
+        implements UpdatePaymentExecutor {
 
-    public SwedbankDefaultUpdatePaymentExecutor(SwedbankDefaultApiClient apiClient,
-            SwedbankTransferHelper transferHelper) {
+    public SwedbankDefaultUpdatePaymentExecutor(
+            SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
         super(apiClient, transferHelper);
     }
 
@@ -37,15 +38,16 @@ public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor i
 
         if (!originalTransfer.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.PAYMENT_UPDATE_FAILED)
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.PAYMENT_UPDATE_FAILED)
                     .setMessage("The original transfer was not available.")
                     .build();
         }
 
         PaymentsConfirmedResponse paymentsConfirmedResponse = apiClient.paymentsConfirmed();
 
-        Optional<ConfirmedTransactionEntity> confirmedPayment = paymentsConfirmedResponse
-                .getConfirmedPayment(originalTransfer.get());
+        Optional<ConfirmedTransactionEntity> confirmedPayment =
+                paymentsConfirmedResponse.getConfirmedPayment(originalTransfer.get());
 
         if (!confirmedPayment.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -69,45 +71,57 @@ public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor i
         if (!sourceAccountId.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                    .build();
         }
 
-        AccountIdentifier destinationAccount = SwedbankTransferHelper.getDestinationAccount(transfer);
-        Optional<String> destinationAccountId = paymentDetailsResponse.getPaymentDestinationAccountId(destinationAccount);
+        AccountIdentifier destinationAccount =
+                SwedbankTransferHelper.getDestinationAccount(transfer);
+        Optional<String> destinationAccountId =
+                paymentDetailsResponse.getPaymentDestinationAccountId(destinationAccount);
         if (!destinationAccountId.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .build();
         }
 
-        Optional<LinkEntity> editLink = Optional.ofNullable(paymentDetailsResponse.getTransaction())
-                .map(ConfirmedTransactionEntity::getLinks)
-                .map(LinksEntity::getEdit);
+        Optional<LinkEntity> editLink =
+                Optional.ofNullable(paymentDetailsResponse.getTransaction())
+                        .map(ConfirmedTransactionEntity::getLinks)
+                        .map(LinksEntity::getEdit);
 
         if (!editLink.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .build();
         }
 
-        RegisterTransferResponse registerTransferResponse = apiClient.updatePayment(editLink.get(),
-                transfer.getAmount().getValue(),
-                transfer.getDestinationMessage(),
-                SwedbankTransferHelper.getReferenceTypeFor(transfer),
-                transfer.getDueDate(),
-                destinationAccountId.get(),
-                sourceAccountId.get());
+        RegisterTransferResponse registerTransferResponse =
+                apiClient.updatePayment(
+                        editLink.get(),
+                        transfer.getAmount().getValue(),
+                        transfer.getDestinationMessage(),
+                        SwedbankTransferHelper.getReferenceTypeFor(transfer),
+                        transfer.getDueDate(),
+                        destinationAccountId.get(),
+                        sourceAccountId.get());
 
-        RegisteredTransfersResponse registeredTransfersResponse = apiClient.registeredTransfers(
-                registerTransferResponse.getLinks().getNextOrThrow());
+        RegisteredTransfersResponse registeredTransfersResponse =
+                apiClient.registeredTransfers(registerTransferResponse.getLinks().getNextOrThrow());
 
         registeredTransfersResponse.oneUnsignedTransferOrThrow();
 
         Optional<String> idToConfirm = registeredTransfersResponse.getIdToConfirm();
         if (!idToConfirm.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                    .build();
         }
 
         signAndConfirmTransfer(registeredTransfersResponse);

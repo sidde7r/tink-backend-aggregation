@@ -28,13 +28,13 @@ public class EuroInformationUtils {
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Cannot parse amount: " + input);
-
         }
         Double amountInDouble = Double.parseDouble(matcher.group(1));
         return new Amount(currencyOptional.orElse(matcher.group(2)), amountInDouble);
     }
 
     public static boolean isSuccess(String responseReturnCode) {
-        return EuroInformationErrorCodes.SUCCESS.equals(EuroInformationErrorCodes.getByCodeNumber(responseReturnCode));
+        return EuroInformationErrorCodes.SUCCESS.equals(
+                EuroInformationErrorCodes.getByCodeNumber(responseReturnCode));
     }
 }

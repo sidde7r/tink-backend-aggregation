@@ -4,8 +4,6 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
@@ -22,7 +20,8 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
     private final AmericanExpressConfiguration config;
     private final AmericanExpressApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private static final AggregationLogger LOGGER = new AggregationLogger(AmericanExpressPasswordAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(AmericanExpressPasswordAuthenticator.class);
 
     public AmericanExpressPasswordAuthenticator(
             AmericanExpressApiClient apiClient,
@@ -51,8 +50,10 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
             handleAuthenticationFail(logonData);
         } else {
             Integer status = logonData.getStatus();
-            LOGGER.warn(String.format("unknown authentication status: (%d) with message: %s",
-                    status, logonData.toString()));
+            LOGGER.warn(
+                    String.format(
+                            "unknown authentication status: (%d) with message: %s",
+                            status, logonData.toString()));
         }
     }
 
@@ -61,8 +62,10 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
 
         // Please note!!!
         // Code below is deliberately (and hopefully temporarely) removed.
-        // In principal the commented out code is correct, but we often get wrong error messages from amex.
-        // This is to avoid throwing INCORRECT_CREDENTIALS when there is actually some problem with amex.
+        // In principal the commented out code is correct, but we often get wrong error messages
+        // from amex.
+        // This is to avoid throwing INCORRECT_CREDENTIALS when there is actually some problem with
+        // amex.
         // In short, we can't trust amex error messages.
 
         //        if (logonData.isRevoked()) {
@@ -75,10 +78,12 @@ public class AmericanExpressPasswordAuthenticator implements PasswordAuthenticat
         //        } else {
         throw new IllegalStateException(
                 String.format(
-                        "#login-refactoring - AMEX " + config.getFace() + " - Login failed with message : "
-                                + "(%s) %s", logonData.getStatusCode(), logonData.getMessage()
-                )
-        );
+                        "#login-refactoring - AMEX "
+                                + config.getFace()
+                                + " - Login failed with message : "
+                                + "(%s) %s",
+                        logonData.getStatusCode(),
+                        logonData.getMessage()));
         //        }
     }
 

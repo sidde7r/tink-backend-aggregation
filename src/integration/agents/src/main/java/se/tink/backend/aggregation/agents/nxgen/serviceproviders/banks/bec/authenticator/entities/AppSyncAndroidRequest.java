@@ -47,8 +47,7 @@ public class AppSyncAndroidRequest {
         return payload;
     }
 
-    public void setPayload(
-            PayloadAndroidEntity payload) {
+    public void setPayload(PayloadAndroidEntity payload) {
         this.payload = payload;
     }
 }

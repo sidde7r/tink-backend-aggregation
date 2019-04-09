@@ -23,10 +23,10 @@ public class SebKortAccountFetcher implements AccountFetcher<CreditCardAccount> 
         final CardsResponse cardsResponse = apiClient.fetchCards();
 
         final List<CardContractEntity> cardContracts = cardsResponse.getCardContracts();
-        final Map<String, CardAccountEntity> accountsHashMap = cardsResponse.getCardAccountsHashMap();
+        final Map<String, CardAccountEntity> accountsHashMap =
+                cardsResponse.getCardAccountsHashMap();
 
-        return cardContracts
-                .stream()
+        return cardContracts.stream()
                 .flatMap(contract -> contract.toTinkCreditCardAccounts(accountsHashMap).stream())
                 .collect(Collectors.toList());
     }

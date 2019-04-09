@@ -10,8 +10,6 @@ public class LinkListEntity extends ArrayList<LinkEntity> {
 
     @JsonIgnore
     public Optional<LinkEntity> findLinkByName(String name) {
-        return this.stream()
-                .filter(link -> link.relMatches(name))
-                .findFirst();
+        return this.stream().filter(link -> link.relMatches(name)).findFirst();
     }
 }

@@ -6,12 +6,12 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Optional;
 import org.eclipse.jetty.http.HttpStatus;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SdcConstants {
 
@@ -43,6 +43,7 @@ public class SdcConstants {
         public static boolean isNotCustomer(String msg) {
             return msg.toLowerCase().contains(NO_AGREEMENT.message);
         }
+
         public boolean isLoginError(String msg) {
             return msg.toLowerCase().contains(this.message);
         }
@@ -75,14 +76,17 @@ public class SdcConstants {
         public static final String FILTER_ACCOUNTS_PATH = "accounts/list/filter";
         public static final String SEARCH_TRANSACTIONS_PATH = "accounts/transactions/search";
         // investment fetcher services
-        public static final String INVESTMENT_DEPOSITS_OVERVIEW_PATH = "investment/deposits/overview";
+        public static final String INVESTMENT_DEPOSITS_OVERVIEW_PATH =
+                "investment/deposits/overview";
         public static final String INVESTMENT_DEPOSITS_CONTENT_PATH = "investment/deposits/";
         // loans
         public static final String LOAN_LIST_PATH = "loans/all/list";
         // credit cards
         public static final String CREDIT_CARD_LIST_PATH = "creditcard/list";
-        public static final String CREDIT_CARD_TRANSACTIONS_PATH = "creditcardprovider/transactions/search";
-        public static final String CREDIT_CARD_PROVIDER_ACCOUNTS_LIST_PATH = "creditcardprovider/account/list";
+        public static final String CREDIT_CARD_TRANSACTIONS_PATH =
+                "creditcardprovider/transactions/search";
+        public static final String CREDIT_CARD_PROVIDER_ACCOUNTS_LIST_PATH =
+                "creditcardprovider/account/list";
     }
 
     public static class Session {
@@ -94,10 +98,12 @@ public class SdcConstants {
         public static final String SCALE = "1";
 
         // fields for device id
-        public static final String MODEL = "Galaxy S7"; // The end-user-visible name for the end product.
-        public static final String MANUFACTURER = "Samsung"; // The manufacturer of the product/hardware.
-        public static final String DEVICE = "Samsung Galaxy S7";  // The name of the industrial design.
-
+        public static final String MODEL =
+                "Galaxy S7"; // The end-user-visible name for the end product.
+        public static final String MANUFACTURER =
+                "Samsung"; // The manufacturer of the product/hardware.
+        public static final String DEVICE =
+                "Samsung Galaxy S7"; // The name of the industrial design.
 
         // session storage name for agreements during refresh
         public static final String AGREEMENTS = "AGREEMENTS";
@@ -105,14 +111,14 @@ public class SdcConstants {
         public static final String CURRENT_AGREEMENT = "CURRENT_AGREEMENT";
 
         public static final LogTag LOGIN = LogTag.from("#sdc_session_login");
-        public static final String INVALID_LOGIN_MESSAGE = "Your bank has responded with the following message '%s'";
+        public static final String INVALID_LOGIN_MESSAGE =
+                "Your bank has responded with the following message '%s'";
     }
 
     public static class Fetcher {
 
-        public static final ImmutableList<String> CREDIT_CARD_NAME_TOKENS = ImmutableList
-                .of("kredittkort", "kreditkort");
-
+        public static final ImmutableList<String> CREDIT_CARD_NAME_TOKENS =
+                ImmutableList.of("kredittkort", "kreditkort");
 
         public static class Investment {
             public static final LogTag INSTRUMENTS = LogTag.from("#sdc_investment_instrument");
@@ -120,8 +126,7 @@ public class SdcConstants {
 
             public enum PortfolioTypes {
                 PENSION(Portfolio.Type.PENSION),
-                DEPOT(Portfolio.Type.DEPOT)
-                ;
+                DEPOT(Portfolio.Type.DEPOT);
 
                 private final Portfolio.Type type;
 
@@ -130,8 +135,7 @@ public class SdcConstants {
                 }
 
                 public static Optional<Portfolio.Type> parse(String rawType) {
-                    return Optional.ofNullable(rawType)
-                            .flatMap(PortfolioTypes::asPortfolioType);
+                    return Optional.ofNullable(rawType).flatMap(PortfolioTypes::asPortfolioType);
                 }
 
                 private static Optional<Portfolio.Type> asPortfolioType(String rawType) {
@@ -233,17 +237,22 @@ public class SdcConstants {
         // enable app required
         public static final String DEVICE_TOKEN_NEEDED = "DEVICE_TOKEN_NEEDED";
         public static final String DEVICE_TOKEN_RENEWAL_NEEDED = "DEVICE_TOKEN_RENEWAL_NEEDED";
-        public static final ImmutableList<String> ACTION_CODE_TOKEN_NEEDED = ImmutableList.of(DEVICE_TOKEN_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
+        public static final ImmutableList<String> ACTION_CODE_TOKEN_NEEDED =
+                ImmutableList.of(DEVICE_TOKEN_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
         // signing OTP
         public static final String SIGNING_NEEDED = "SIGNING_NEEDED";
-        public static final ImmutableList<String> ACTION_CODE_SIGNING_NEEDED = ImmutableList.of(SIGNING_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
+        public static final ImmutableList<String> ACTION_CODE_SIGNING_NEEDED =
+                ImmutableList.of(SIGNING_NEEDED, DEVICE_TOKEN_RENEWAL_NEEDED);
         public static final String SIGNING_TYPE = "PIN_OTP";
 
         // Error handling headers, mostly documentation
         // boolean value e.g. true
-        public static final String X_SDC_IS_DEFAULT_ERROR_MESSAGE = "X-SDC-IS-DEFAULT-ERROR-MESSAGE";
-        // String value e.g. Ett fel har uppstått. Prova igen senare eller kontakta banken och ange felkod: -.
-        // Ange vänligen användarnummer, datum och tid samt den handling du försökte utföra när felet uppstod.
+        public static final String X_SDC_IS_DEFAULT_ERROR_MESSAGE =
+                "X-SDC-IS-DEFAULT-ERROR-MESSAGE";
+        // String value e.g. Ett fel har uppstått. Prova igen senare eller kontakta banken och ange
+        // felkod: -.
+        // Ange vänligen användarnummer, datum och tid samt den handling du försökte utföra när
+        // felet uppstod.
         public static final String X_SDC_ERROR_MESSAGE = "X-SDC-ERROR-MESSAGE";
         // boolean value e.g. false
         public static final String X_SDC_ERROR_IS_RETRY = "X-SDC-ERROR-IS-RETRY";

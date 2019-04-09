@@ -25,9 +25,11 @@ public class CardBalancesEntity {
         }
 
         if (obj instanceof Map) {
-            cardBalances = Collections.singletonList(MAPPER.convertValue(obj, CardBalanceEntity.class));
+            cardBalances =
+                    Collections.singletonList(MAPPER.convertValue(obj, CardBalanceEntity.class));
         } else {
-            cardBalances = MAPPER.convertValue(obj, new TypeReference<List<CardBalanceEntity>>() {});
+            cardBalances =
+                    MAPPER.convertValue(obj, new TypeReference<List<CardBalanceEntity>>() {});
         }
     }
 }

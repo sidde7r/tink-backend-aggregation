@@ -60,7 +60,8 @@ public class MastercardAgreementEntity {
 
     private String constructUniqueIdentifier() {
         String accountId = regNo + ":" + accountNo;
-        Preconditions.checkState(StringUtils.trimToNull(accountId) != null, "No account number present");
+        Preconditions.checkState(
+                StringUtils.trimToNull(accountId) != null, "No account number present");
 
         return accountId;
     }
@@ -69,12 +70,16 @@ public class MastercardAgreementEntity {
         // Get the card that belongs to the account owner, is active, and in the market's currency
         Optional<MastercardEntity> cardDetails = getAccountOwnerCardDetails();
 
-        return cardDetails.map(mastercardEntity -> CreditCardAccount.builder(
-                constructUniqueIdentifier(), Amount.inDKK(balance), Amount.inDKK(maxBalance))
-                .setAccountNumber(mastercardEntity.getCardNo())
-                .setName(mastercardEntity.getCardName())
-                .setBankIdentifier(constructUniqueIdentifier())
-                .build());
+        return cardDetails.map(
+                mastercardEntity ->
+                        CreditCardAccount.builder(
+                                        constructUniqueIdentifier(),
+                                        Amount.inDKK(balance),
+                                        Amount.inDKK(maxBalance))
+                                .setAccountNumber(mastercardEntity.getCardNo())
+                                .setName(mastercardEntity.getCardName())
+                                .setBankIdentifier(constructUniqueIdentifier())
+                                .build());
     }
 
     private Optional<MastercardEntity> getAccountOwnerCardDetails() {
@@ -82,20 +87,18 @@ public class MastercardAgreementEntity {
             return Optional.empty();
         }
 
-        return mastercardCards.stream()
-                .filter(this::isValidCard)
-                .findFirst();
+        return mastercardCards.stream().filter(this::isValidCard).findFirst();
     }
 
     private boolean isValidCard(MastercardEntity mastercardEntity) {
         String agreementAccountOwner = mastercardEntity.getAgreementAccountOwner();
         String cardUser = mastercardEntity.getCardUser();
 
-        return !Objects.isNull(agreementAccountOwner) &&
-                !Objects.isNull(cardUser) &&
-                agreementAccountOwner.equalsIgnoreCase(cardUser) &&
-                !mastercardEntity.getStopped() &&
-                isMarketCurrency(mastercardEntity.getBalanceCurrency());
+        return !Objects.isNull(agreementAccountOwner)
+                && !Objects.isNull(cardUser)
+                && agreementAccountOwner.equalsIgnoreCase(cardUser)
+                && !mastercardEntity.getStopped()
+                && isMarketCurrency(mastercardEntity.getBalanceCurrency());
     }
 
     private boolean isMarketCurrency(String currency) {

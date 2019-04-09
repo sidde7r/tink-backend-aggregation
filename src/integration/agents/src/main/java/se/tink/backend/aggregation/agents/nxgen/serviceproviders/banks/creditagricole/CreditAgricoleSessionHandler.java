@@ -8,15 +8,12 @@ public class CreditAgricoleSessionHandler implements SessionHandler {
 
     private final CreditAgricoleApiClient apiClient;
 
-    public CreditAgricoleSessionHandler(
-            CreditAgricoleApiClient apiClient) {
+    public CreditAgricoleSessionHandler(CreditAgricoleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
-    public void logout() {
-
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {

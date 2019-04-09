@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -14,6 +14,7 @@ public class InstrumentEntity {
     private String price;
     private String priceTime;
     private String todaysChange;
+
     @JsonProperty("todaysChangePct")
     private String todaysChangePercentage;
 
@@ -47,14 +48,14 @@ public class InstrumentEntity {
 
     public Instrument.Type getTinkInstrumentType() {
         switch (getInstrumentType().toLowerCase()) {
-        case NordeaV21Constants.Investments.InstrumentTypes.EQUITY:
-            return Instrument.Type.STOCK;
-        case NordeaV21Constants.Investments.InstrumentTypes.FUND:
-            return Instrument.Type.FUND;
-        case NordeaV21Constants.Investments.InstrumentTypes.DERIVATIVE:
-            // Intentional fall through
-        default:
-            return Instrument.Type.OTHER;
+            case NordeaV21Constants.Investments.InstrumentTypes.EQUITY:
+                return Instrument.Type.STOCK;
+            case NordeaV21Constants.Investments.InstrumentTypes.FUND:
+                return Instrument.Type.FUND;
+            case NordeaV21Constants.Investments.InstrumentTypes.DERIVATIVE:
+                // Intentional fall through
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 }

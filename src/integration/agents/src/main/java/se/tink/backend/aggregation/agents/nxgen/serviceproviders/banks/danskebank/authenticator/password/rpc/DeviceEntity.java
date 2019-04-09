@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DeviceEntity {
     @JsonProperty("DeviceType")
     private String deviceType;
+
     @JsonProperty("DeviceSerialNo")
     private String deviceSerialNumber;
+
     @JsonProperty("FriendlyName")
     private String friendlyName;
+
     @JsonProperty("PreferredDevice")
     private boolean preferredDevice;
+
     @JsonProperty("IsDeviceExpired")
     private boolean deviceExpired;
 

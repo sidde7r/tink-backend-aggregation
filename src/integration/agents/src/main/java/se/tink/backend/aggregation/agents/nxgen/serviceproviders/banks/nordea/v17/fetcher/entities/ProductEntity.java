@@ -17,22 +17,31 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class ProductEntity {
     private static final String personalAccountClearingNumber = "3300";
-    private static final Set<String> personalAccountCodes = Sets.newHashSet("SE0000", "SE0200", "SE0300");
+    private static final Set<String> personalAccountCodes =
+            Sets.newHashSet("SE0000", "SE0200", "SE0300");
 
     private Map<String, Object> accountType = new HashMap<String, Object>();
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double balance;
+
     private Map<String, Object> branchId = new HashMap<String, Object>();
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String cardGroup;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
+
     private Map<String, Object> fundsAvailable = new HashMap<String, Object>();
     private Map<String, Object> isMainCard = new HashMap<String, Object>();
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String nickName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productName;
+
     private Map<String, Object> productCode = new HashMap<String, Object>();
     private Map<String, Object> productId = new HashMap<String, Object>();
     private Map<String, Object> productNumber = new HashMap<String, Object>();
@@ -172,7 +181,8 @@ public class ProductEntity {
 
             String accountTypeCode = productTypeExtension.get("$").toString();
 
-            if (!Strings.isNullOrEmpty(accountTypeCode) && personalAccountCodes.contains(accountTypeCode.toUpperCase())
+            if (!Strings.isNullOrEmpty(accountTypeCode)
+                    && personalAccountCodes.contains(accountTypeCode.toUpperCase())
                     && accountNumber.length() == 10) {
                 return personalAccountClearingNumber + accountNumber;
             }

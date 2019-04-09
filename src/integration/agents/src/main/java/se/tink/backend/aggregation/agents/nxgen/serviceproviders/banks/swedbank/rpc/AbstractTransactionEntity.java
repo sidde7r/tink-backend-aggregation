@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public abstract class AbstractTransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date date;
+
     protected String description;
     protected String currency;
     protected String amount;

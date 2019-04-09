@@ -19,7 +19,8 @@ public class DebtorCreditorAccountEntity {
     private String name; // Max70Text
 
     private DebtorCreditorAccountEntity(
-            @JsonProperty("SchemeName") UkOpenBankingConstants.ExternalAccountIdentification2Code schemeName,
+            @JsonProperty("SchemeName")
+                    UkOpenBankingConstants.ExternalAccountIdentification2Code schemeName,
             @JsonProperty("Identification") String identification,
             @JsonProperty("Name") String name) {
         this.schemeName = schemeName;
@@ -33,20 +34,20 @@ public class DebtorCreditorAccountEntity {
     }
 
     @JsonIgnore
-    public static DebtorCreditorAccountEntity createSortCodeAccount(String identification, String name) {
+    public static DebtorCreditorAccountEntity createSortCodeAccount(
+            String identification, String name) {
         return new DebtorCreditorAccountEntity(
                 UkOpenBankingConstants.ExternalAccountIdentification2Code.SORT_CODE_ACCOUNT_NUMBER,
                 cleanAccountNumber(identification),
-                name
-        );
+                name);
     }
 
     @JsonIgnore
-    public static DebtorCreditorAccountEntity createIbanAccount(String identification, String name) {
+    public static DebtorCreditorAccountEntity createIbanAccount(
+            String identification, String name) {
         return new DebtorCreditorAccountEntity(
                 UkOpenBankingConstants.ExternalAccountIdentification2Code.IBAN,
                 cleanAccountNumber(identification),
-                name
-        );
+                name);
     }
 }

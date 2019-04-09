@@ -16,8 +16,10 @@ public class TransactionEntity extends AbstractTransactionEntity {
     private String expenseControlIncluded;
     private LabelingsEntity labelings;
     private CategorizationsEntity categorizations;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date accountingDate;
+
     private AmountEntity accountingBalance;
 
     public String getId() {
@@ -71,10 +73,11 @@ public class TransactionEntity extends AbstractTransactionEntity {
             return Optional.empty();
         }
 
-        Transaction.Builder transactionBuilder = Transaction.builder()
-                .setAmount(amount)
-                .setDate(this.date)
-                .setDescription(SwedbankBaseConstants.Description.clean(this.description));
+        Transaction.Builder transactionBuilder =
+                Transaction.builder()
+                        .setAmount(amount)
+                        .setDate(this.date)
+                        .setDescription(SwedbankBaseConstants.Description.clean(this.description));
 
         if (SwedbankBaseConstants.Description.PENDING_TRANSACTIONS.contains(this.description)) {
             transactionBuilder.setPending(true);
@@ -87,7 +90,10 @@ public class TransactionEntity extends AbstractTransactionEntity {
     // create a kind of key to use to identify duplicate transactions
     public String getPseudoKey() {
         String key = date != null ? DateUtils.toJavaTimeLocalDate(date).toString() : "";
-        key += accountingDate != null ? DateUtils.toJavaTimeLocalDate(accountingDate).toString() : "";
+        key +=
+                accountingDate != null
+                        ? DateUtils.toJavaTimeLocalDate(accountingDate).toString()
+                        : "";
         key += getAmount();
         key += getCurrency();
         key += getDescription();

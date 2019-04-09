@@ -13,10 +13,13 @@ public class AccountIdentifierEntity {
 
     @JsonProperty("SchemeName")
     private UkOpenBankingV20Constants.AccountIdentifier identifierType;
+
     @JsonProperty("Identification")
     private String identification;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("SecondaryIdentification")
     private String secondaryIdentification;
 
@@ -34,20 +37,19 @@ public class AccountIdentifierEntity {
 
     public Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
         switch (identifierType) {
-        case IBAN:
-            IbanIdentifier ibanIdentifier = new IbanIdentifier(null, identification);
-            ibanIdentifier.setName(accountName);
-            return Optional.of(ibanIdentifier);
-        case SORT_CODE_ACCOUNT_NUMBER:
-            SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
-            sortCodeIdentifier.setName(accountName);
-            return Optional.of(sortCodeIdentifier);
-        case PAN:
-            return Optional.empty();
-        default:
-            throw new IllegalStateException(
-                    String.format("Unknown identifier type: %s", identifierType)
-            );
+            case IBAN:
+                IbanIdentifier ibanIdentifier = new IbanIdentifier(null, identification);
+                ibanIdentifier.setName(accountName);
+                return Optional.of(ibanIdentifier);
+            case SORT_CODE_ACCOUNT_NUMBER:
+                SortCodeIdentifier sortCodeIdentifier = new SortCodeIdentifier(identification);
+                sortCodeIdentifier.setName(accountName);
+                return Optional.of(sortCodeIdentifier);
+            case PAN:
+                return Optional.empty();
+            default:
+                throw new IllegalStateException(
+                        String.format("Unknown identifier type: %s", identifierType));
         }
     }
 }

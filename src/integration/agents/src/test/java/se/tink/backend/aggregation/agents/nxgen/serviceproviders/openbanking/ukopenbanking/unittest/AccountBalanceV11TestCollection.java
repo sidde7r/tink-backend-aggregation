@@ -2,5 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.util.ArrayList;
 
-public class AccountBalanceV11TestCollection extends ArrayList<AccountBalanceV11TestEntity> {
-}
+public class AccountBalanceV11TestCollection extends ArrayList<AccountBalanceV11TestEntity> {}

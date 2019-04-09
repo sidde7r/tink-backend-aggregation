@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CheckDeviceResponse extends AbstractDeviceBindResponse {
     @JsonProperty("Status")
     private int status;
+
     @JsonProperty("Error")
     private Object error;
 

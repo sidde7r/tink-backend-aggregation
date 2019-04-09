@@ -17,6 +17,8 @@ public class NordeaResponse {
 
     @JsonIgnore
     public Optional<String> getErrorCode() {
-        return bankingServiceEntity != null ? bankingServiceEntity.getErrorCode() : Optional.empty();
+        return bankingServiceEntity != null
+                ? bankingServiceEntity.getErrorCode()
+                : Optional.empty();
     }
 }

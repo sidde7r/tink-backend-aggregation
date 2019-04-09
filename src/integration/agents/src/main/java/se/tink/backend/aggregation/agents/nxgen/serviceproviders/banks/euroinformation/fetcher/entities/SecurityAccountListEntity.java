@@ -8,6 +8,7 @@ public class SecurityAccountListEntity {
 
     @XmlAttribute(name = "number")
     private String number;
+
     @XmlAttribute(name = "AccountDisplayed")
     private String accountDisplayed;
 

@@ -72,19 +72,25 @@ public class NordeaV17ApiClient {
     public boolean canViewTransactions(Account account) {
         return fetchInitialContext().getData().getProducts().stream()
                 .filter(ProductEntity::canView)
-                .anyMatch(pe -> Objects.equals(account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
+                .anyMatch(
+                        pe ->
+                                Objects.equals(
+                                        account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
     }
 
     public TransactionsResponse fetchTransactions(String accountId, String continueKey) {
         return request(new TransactionsRequest(accountId, continueKey), TransactionsResponse.class);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String invoicePeriod) {
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            String cardNumber, String invoicePeriod) {
         return fetchCreditCardTransactions(cardNumber, invoicePeriod, null);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String invoicePeriod, String continueKey) {
-        return request(new CreditCardTransactionsRequest(cardNumber, invoicePeriod, continueKey),
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            String cardNumber, String invoicePeriod, String continueKey) {
+        return request(
+                new CreditCardTransactionsRequest(cardNumber, invoicePeriod, continueKey),
                 CreditCardTransactionsResponse.class);
     }
 
@@ -96,17 +102,20 @@ public class NordeaV17ApiClient {
         return request(new CardBalancesRequest(accountId), CardBalancesResponse.class);
     }
 
-    public LightLoginResponse passwordLogin(String username, String password) throws AuthenticationException,
-            AuthorizationException {
-        return authRequest(new PasswordLoginRequest(username, password, marketCode), LightLoginResponse.class);
+    public LightLoginResponse passwordLogin(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        return authRequest(
+                new PasswordLoginRequest(username, password, marketCode), LightLoginResponse.class);
     }
 
-    protected <T extends NordeaResponse> T request(HttpRequest request, Class<T> responseModel, boolean logResponse) {
+    protected <T extends NordeaResponse> T request(
+            HttpRequest request, Class<T> responseModel, boolean logResponse) {
         if (!logResponse) {
             return validate(client.request(responseModel, request));
         }
 
-        NordeaV17LogResponseFilter logResponseFilter = new NordeaV17LogResponseFilter(responseModel);
+        NordeaV17LogResponseFilter logResponseFilter =
+                new NordeaV17LogResponseFilter(responseModel);
 
         try {
             client.addFilter(logResponseFilter);
@@ -128,13 +137,15 @@ public class NordeaV17ApiClient {
         if (errorCode.isPresent()) {
             if (NordeaV17Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
                 throw NordeaV17Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
-            } else if (NordeaV17Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
+            } else if (NordeaV17Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(
+                    errorCode.get())) {
                 throw NordeaV17Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
-            } else if (NordeaV17Constants.BANKSERVICE_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
+            } else if (NordeaV17Constants.BANKSERVICE_EXCEPTIONS_BY_CODE.containsKey(
+                    errorCode.get())) {
                 throw NordeaV17Constants.BANKSERVICE_EXCEPTIONS_BY_CODE.get(errorCode.get());
             }
 
-                return validate(response);
+            return validate(response);
         }
 
         return response;
@@ -144,8 +155,9 @@ public class NordeaV17ApiClient {
         Optional<String> errorCode = response.getErrorCode();
 
         if (errorCode.isPresent()) {
-            throw new IllegalStateException(NordeaV17Constants.GENERAL_ERROR_MESSAGES_BY_CODE
-                    .getOrDefault(errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
+            throw new IllegalStateException(
+                    NordeaV17Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
+                            errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
         }
 
         return response;
@@ -156,11 +168,15 @@ public class NordeaV17ApiClient {
         PaymentsResponse response;
 
         if (status == Payment.StatusCode.CONFIRMED) {
-            response = client.request(ConfirmedPaymentsResponse.class,
-                    new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            ConfirmedPaymentsResponse.class,
+                            new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else if (status == Payment.StatusCode.UNCONFIRMED) {
-            response = client.request(UnconfirmedPaymentsResponse.class,
-                    new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            UnconfirmedPaymentsResponse.class,
+                            new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else {
             return null;
         }
@@ -168,12 +184,18 @@ public class NordeaV17ApiClient {
         List<PaymentEntity> payments = response.getPayments();
 
         return payments.stream()
-                .filter(pe -> pe.getFromAccountId() != null && Objects.equals(productEntity.getInternalId(), pe.getFromAccountId()))
+                .filter(
+                        pe ->
+                                pe.getFromAccountId() != null
+                                        && Objects.equals(
+                                                productEntity.getInternalId(),
+                                                pe.getFromAccountId()))
                 .collect(Collectors.toList());
     }
 
     public List<CustodyAccount> fetchCustodyAccounts() {
-        CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class);
+        CustodyAccountsResponse response =
+                request(new CustodyAccountsRequest(), CustodyAccountsResponse.class);
         return response.getCustodyAccounts();
     }
 }

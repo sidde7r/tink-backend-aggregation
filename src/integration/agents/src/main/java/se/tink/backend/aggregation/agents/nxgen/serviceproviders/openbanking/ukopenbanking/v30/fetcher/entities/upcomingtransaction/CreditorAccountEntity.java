@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditorAccountEntity {
     @JsonProperty("SchemeName")
     private String schemeName;
+
     @JsonProperty("Identification")
     private String identification;
+
     @JsonProperty("Name")
     private String name;
 }

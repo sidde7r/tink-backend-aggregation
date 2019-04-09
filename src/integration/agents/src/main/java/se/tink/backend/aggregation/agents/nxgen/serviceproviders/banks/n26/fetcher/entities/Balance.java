@@ -8,7 +8,6 @@ public class Balance {
     private int availableBalance;
     private String currency;
 
-
     public Amount getAvailableBalance() {
         return new Amount(currency, availableBalance);
     }

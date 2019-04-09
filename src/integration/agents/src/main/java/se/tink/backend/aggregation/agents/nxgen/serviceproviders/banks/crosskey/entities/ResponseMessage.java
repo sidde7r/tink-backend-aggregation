@@ -13,11 +13,14 @@ public class ResponseMessage {
     private String jSessionId;
 
     public boolean hasAnyErrors(String... errorMessages) {
-        return errors.stream().anyMatch(
-                Arrays.stream(errorMessages).<Predicate<String>>map(
-                        errorMessage ->
-                                error -> errorMessage.equalsIgnoreCase(error)
-                ).reduce(Predicate::or).orElse(t -> false));
+        return errors.stream()
+                .anyMatch(
+                        Arrays.stream(errorMessages)
+                                .<Predicate<String>>map(
+                                        errorMessage ->
+                                                error -> errorMessage.equalsIgnoreCase(error))
+                                .reduce(Predicate::or)
+                                .orElse(t -> false));
     }
 
     public boolean isSuccess() {

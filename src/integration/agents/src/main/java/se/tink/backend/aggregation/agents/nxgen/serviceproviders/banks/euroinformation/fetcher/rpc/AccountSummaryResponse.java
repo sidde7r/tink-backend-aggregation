@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationMsgDateDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.entities.CategoryEntities;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.utils.EuroInformationMsgDateDeserializer;
 
 @XmlRootElement(name = "root")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,6 +24,7 @@ public class AccountSummaryResponse {
 
     @XmlElement(name = "category_list")
     private CategoryEntities categoryList;
+
     @XmlElementWrapper(name = "liste_compte")
     @XmlElement(name = "compte")
     private List<AccountDetailsEntity> accountDetailsList;

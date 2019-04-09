@@ -17,10 +17,11 @@ public class AgreementsResponse extends ArrayList<SdcAgreement> {
     public SessionStorageAgreements toSessionStorageAgreements() {
 
         SessionStorageAgreements agreements = new SessionStorageAgreements();
-        agreements.addAll(stream()
-                .map(SdcAgreement::getEntityKey)
-                .map(SessionStorageAgreement::new)
-                .collect(Collectors.toList()));
+        agreements.addAll(
+                stream()
+                        .map(SdcAgreement::getEntityKey)
+                        .map(SessionStorageAgreement::new)
+                        .collect(Collectors.toList()));
 
         return agreements;
     }

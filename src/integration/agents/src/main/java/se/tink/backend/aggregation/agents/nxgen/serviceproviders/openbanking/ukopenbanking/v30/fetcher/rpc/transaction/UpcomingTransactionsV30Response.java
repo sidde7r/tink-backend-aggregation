@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 @JsonObject
 public class UpcomingTransactionsV30Response extends BaseResponse<List<ScheduledPaymentEntity>> {
-    public static List<UpcomingTransaction> toUpcomingTransactions(UpcomingTransactionsV30Response response) {
+    public static List<UpcomingTransaction> toUpcomingTransactions(
+            UpcomingTransactionsV30Response response) {
 
         return response.getData().stream()
                 .map(ScheduledPaymentEntity::toTinkUpcomingTransaction)

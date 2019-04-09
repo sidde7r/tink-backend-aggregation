@@ -119,12 +119,15 @@ public class SebKortApiClient {
     }
 
     public CardsResponse fetchCards() {
-        HttpResponse response = createRequestInSession(SebKortConstants.Urls.SEBKORT_CARDS)
-            .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
-            .get(HttpResponse.class);
+        HttpResponse response =
+                createRequestInSession(SebKortConstants.Urls.SEBKORT_CARDS)
+                        .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
+                        .get(HttpResponse.class);
 
-        if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType()) &&
-            response.getType().getSubtype().equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
+        if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType())
+                && response.getType()
+                        .getSubtype()
+                        .equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
             return response.getBody(CardsResponse.class);
         } else {
             throw new SebKortUnexpectedMediaTypeException(response.getBody(String.class));

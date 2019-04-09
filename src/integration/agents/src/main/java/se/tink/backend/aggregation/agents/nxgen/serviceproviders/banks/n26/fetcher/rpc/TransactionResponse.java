@@ -7,15 +7,13 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class TransactionResponse extends ArrayList<TransactionEntity> implements
-        TransactionKeyPaginatorResponse<String> {
+public class TransactionResponse extends ArrayList<TransactionEntity>
+        implements TransactionKeyPaginatorResponse<String> {
     private String previousTransactionId = "";
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return this.stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        return this.stream().map(TransactionEntity::toTinkTransaction).collect(Collectors.toList());
     }
 
     public void setPreviousTransactionId(String previousTransactionId) {

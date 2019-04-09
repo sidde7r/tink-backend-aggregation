@@ -16,8 +16,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class EuroInformationTransactionsFetcher implements TransactionFetcher<TransactionalAccount> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationTransactionsFetcher.class);
+public class EuroInformationTransactionsFetcher
+        implements TransactionFetcher<TransactionalAccount> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationTransactionsFetcher.class);
     private final EuroInformationApiClient apiClient;
 
     private EuroInformationTransactionsFetcher(EuroInformationApiClient apiClient) {
@@ -33,12 +35,13 @@ public class EuroInformationTransactionsFetcher implements TransactionFetcher<Tr
         String webId = account.getFromTemporaryStorage(EuroInformationConstants.Tags.WEB_ID);
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
-        Optional<TransactionSummaryResponse> transactionsForAccount = getTransactionsForAccount(webId);
-        transactionsForAccount.ifPresent(transactionList ->
-                transactionList.getTransactions().stream()
-                        .map(TransactionEntity::toTransaction)
-                        .forEach(transactions::add)
-        );
+        Optional<TransactionSummaryResponse> transactionsForAccount =
+                getTransactionsForAccount(webId);
+        transactionsForAccount.ifPresent(
+                transactionList ->
+                        transactionList.getTransactions().stream()
+                                .map(TransactionEntity::toTransaction)
+                                .forEach(transactions::add));
 
         return transactions;
     }
@@ -47,7 +50,9 @@ public class EuroInformationTransactionsFetcher implements TransactionFetcher<Tr
         TransactionSummaryResponse details = apiClient.getTransactionsWhenNoPfm(webId);
         String returnCode = details.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {
-            LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() + SerializationUtils.serializeToString(details));
+            LOGGER.info(
+                    EuroInformationErrorCodes.getByCodeNumber(returnCode).toString()
+                            + SerializationUtils.serializeToString(details));
             return Optional.empty();
         }
         return Optional.of(details);

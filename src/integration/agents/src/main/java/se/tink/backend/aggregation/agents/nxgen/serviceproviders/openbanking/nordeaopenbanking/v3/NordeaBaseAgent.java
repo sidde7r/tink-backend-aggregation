@@ -34,7 +34,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     private final NordeaPersistentStorage nordeaPersistentStorage;
     private final String clientName;
 
-    public NordeaBaseAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NordeaBaseAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         nordeaSessionStorage = new NordeaSessionStorage(sessionStorage);
         nordeaPersistentStorage = new NordeaPersistentStorage(persistentStorage);
@@ -47,8 +48,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -57,7 +57,10 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
         NordeaConfiguration nordeaConfiguration =
                 configuration
                         .getIntegrations()
-                        .getClientConfiguration(NordeaBaseConstants.INTEGRATION_NAME, clientName, NordeaConfiguration.class)
+                        .getClientConfiguration(
+                                NordeaBaseConstants.INTEGRATION_NAME,
+                                clientName,
+                                NordeaConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -78,19 +81,21 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected abstract Authenticator constructAuthenticator(NordeaBaseApiClient apiClient);
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        NordeaBaseAccountFetcher accountFetcher = new NordeaBaseAccountFetcher(apiClient, createAccountParser());
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        NordeaBaseAccountFetcher accountFetcher =
+                new NordeaBaseAccountFetcher(apiClient, createAccountParser());
         TransactionKeyPaginator<TransactionalAccount, LinkEntity> transactionFetcher =
                 new NordeaBaseTransactionFetcher(apiClient, createTransactionParser());
 
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
                         updateController,
                         accountFetcher,
-                        new TransactionFetcherController<>(transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        transactionFetcher))
-                ));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(transactionFetcher))));
     }
 
     @Override
@@ -114,7 +119,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -134,6 +140,5 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
 
     protected NordeaTransactionParser createTransactionParser() {
         return new NordeaTransactionParser();
-
     }
 }

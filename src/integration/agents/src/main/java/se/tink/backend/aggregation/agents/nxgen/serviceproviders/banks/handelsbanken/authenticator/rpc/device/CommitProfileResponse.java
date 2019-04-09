@@ -9,5 +9,4 @@ public class CommitProfileResponse extends BaseResponse {
     public URL toCheckAgreement() {
         return findLink(HandelsbankenConstants.URLS.Links.CHECK_AGREEMENT);
     }
-
 }

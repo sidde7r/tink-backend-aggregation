@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BaseResponse<T> {
 
     private T data;
+
     @JsonProperty("Links")
     private Map<String, String> links;
+
     @JsonProperty("Meta")
     private Map<String, String> meta;
 
@@ -28,9 +30,8 @@ public class BaseResponse<T> {
     }
 
     protected String getLink(String linkId) {
-        return searchLink(linkId).orElseThrow(
-                () -> new IllegalStateException("No link with id: " + linkId)
-        );
+        return searchLink(linkId)
+                .orElseThrow(() -> new IllegalStateException("No link with id: " + linkId));
     }
 
     protected Optional<String> searchLink(String linkId) {

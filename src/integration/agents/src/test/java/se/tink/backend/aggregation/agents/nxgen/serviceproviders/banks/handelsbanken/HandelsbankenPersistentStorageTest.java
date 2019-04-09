@@ -1,25 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
-import java.util.Collections;
-import java.util.Optional;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links.APPLICATION_ENTRY_POINT;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.StorageTestHelper.createLinks;
 
+import java.util.Collections;
+import java.util.Optional;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
 public class HandelsbankenPersistentStorageTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    @Rule public ExpectedException exception = ExpectedException.none();
 
     private HandelsbankenPersistentStorage persistentStorage;
     private PersistentStorage persistentMap;
@@ -28,8 +28,8 @@ public class HandelsbankenPersistentStorageTest {
     @Before
     public void setUp() throws Exception {
         persistentMap = new PersistentStorage();
-        persistentStorage = new HandelsbankenPersistentStorage(
-                persistentMap, Collections.emptyMap());
+        persistentStorage =
+                new HandelsbankenPersistentStorage(persistentMap, Collections.emptyMap());
         credentials = new Credentials();
     }
 
@@ -51,13 +51,24 @@ public class HandelsbankenPersistentStorageTest {
 
         LibTFA loadedTfa = persistentStorage.getTfa(credentials);
 
-        assertThat("Device Security context id is expected to be different.", loadedTfa, not(is(originalTfa)));
-        String deviceSecurityContextId = persistentMap.get(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID);
-        assertThat("A new device security context id was not persisted", deviceSecurityContextId, not(is("")));
-        assertThat("The persisted device security context id is not used by the loaded TFA",
-                deviceSecurityContextId, is(loadedTfa.getDeviceSecurityContextId()));
-        assertThat("The persisted RSA Key has not been used.", originalTfa.getDeviceRsaPrivateKey(), is(loadedTfa
-                .getDeviceRsaPrivateKey()));
+        assertThat(
+                "Device Security context id is expected to be different.",
+                loadedTfa,
+                not(is(originalTfa)));
+        String deviceSecurityContextId =
+                persistentMap.get(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID);
+        assertThat(
+                "A new device security context id was not persisted",
+                deviceSecurityContextId,
+                not(is("")));
+        assertThat(
+                "The persisted device security context id is not used by the loaded TFA",
+                deviceSecurityContextId,
+                is(loadedTfa.getDeviceSecurityContextId()));
+        assertThat(
+                "The persisted RSA Key has not been used.",
+                originalTfa.getDeviceRsaPrivateKey(),
+                is(loadedTfa.getDeviceRsaPrivateKey()));
     }
 
     @Test
@@ -89,7 +100,8 @@ public class HandelsbankenPersistentStorageTest {
 
     private static AuthorizeResponse createAuthorizeResponse() {
         AuthorizeResponse authorizeResponse = new AuthorizeResponse();
-        authorizeResponse.setLinks(createLinks(APPLICATION_ENTRY_POINT, "https:://authorized.url.com"));
+        authorizeResponse.setLinks(
+                createLinks(APPLICATION_ENTRY_POINT, "https:://authorized.url.com"));
         return authorizeResponse;
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
 
@@ -24,8 +24,11 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
     private final CrossKeyPersistentStorage persistentStorage;
     private final Credentials credentials;
 
-    public CrossKeyKeyCardAuthenticator(CrossKeyApiClient apiClient, CrossKeyConfiguration agentConfiguration,
-            CrossKeyPersistentStorage persistentStorage, Credentials credentials) {
+    public CrossKeyKeyCardAuthenticator(
+            CrossKeyApiClient apiClient,
+            CrossKeyConfiguration agentConfiguration,
+            CrossKeyPersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.agentConfiguration = agentConfiguration;
         this.persistentStorage = persistentStorage;
@@ -37,11 +40,9 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
             throws AuthenticationException, AuthorizationException {
 
         apiClient.initSession();
-        LoginWithoutTokenResponse challenge = apiClient.loginUsernamePassword(
-                new LoginWithoutTokenRequest()
-                        .setUsername(username)
-                        .setPassword(password)
-        );
+        LoginWithoutTokenResponse challenge =
+                apiClient.loginUsernamePassword(
+                        new LoginWithoutTokenRequest().setUsername(username).setPassword(password));
 
         challenge.validate(() -> new UnexpectedFailureException(challenge, "Failure on login"));
 
@@ -50,19 +51,21 @@ public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
-        ConfirmTanCodeResponse confirmation = apiClient.confirmTanCode(
-                new ConfirmTanCodeRequest()
-                        .setTan(code)
-        );
+        ConfirmTanCodeResponse confirmation =
+                apiClient.confirmTanCode(new ConfirmTanCodeRequest().setTan(code));
 
-        confirmation.validate(() -> new UnexpectedFailureException(confirmation, "Failure on confirming tan code"));
+        confirmation.validate(
+                () ->
+                        new UnexpectedFailureException(
+                                confirmation, "Failure on confirming tan code"));
 
-        AddDeviceResponse addDevice = apiClient.addDevice(
-                new AddDeviceRequest()
-                        .setUdId(CrossKeyUtils.generateUdIdFor(credentials.getUserId()))
-        );
+        AddDeviceResponse addDevice =
+                apiClient.addDevice(
+                        new AddDeviceRequest()
+                                .setUdId(CrossKeyUtils.generateUdIdFor(credentials.getUserId())));
 
-        addDevice.validate(() -> new UnexpectedFailureException(addDevice, "Failure on adding of new device"));
+        addDevice.validate(
+                () -> new UnexpectedFailureException(addDevice, "Failure on adding of new device"));
 
         persistentStorage.persistDeviceIdAndToken(addDevice);
     }

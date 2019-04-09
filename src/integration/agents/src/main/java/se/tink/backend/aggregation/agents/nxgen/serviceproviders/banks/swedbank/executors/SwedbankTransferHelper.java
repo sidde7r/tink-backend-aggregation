@@ -72,8 +72,7 @@ public class SwedbankTransferHelper {
                 case TIMEOUT:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                             .setEndUserMessage(
-                                    TransferExecutionException.EndUserMessage
-                                            .BANKID_NO_RESPONSE)
+                                    TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_TIMEOUT)
                             .build();
                 default:

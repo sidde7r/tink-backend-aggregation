@@ -6,12 +6,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.se
 public class LightLoginRequestEntity {
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String userId;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String password;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String type;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String deviceRegistrationToken;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String deviceId;
 

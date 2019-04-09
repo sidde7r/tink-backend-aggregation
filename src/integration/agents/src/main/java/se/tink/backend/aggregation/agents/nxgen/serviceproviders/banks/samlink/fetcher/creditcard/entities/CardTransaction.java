@@ -13,10 +13,10 @@ public class CardTransaction {
     private AmountEntity amount;
     private String details;
 
-//    Other possible fields:
-//    private String merchant;
-//    private String info;
-//    private String location;
+    //    Other possible fields:
+    //    private String merchant;
+    //    private String info;
+    //    private String location;
 
     @JsonFormat(pattern = "y-M-d")
     private Date date;
@@ -27,7 +27,6 @@ public class CardTransaction {
                 .setDescription(details)
                 .setDate(date)
                 .setCreditAccount(account)
-                .build()
-                ;
+                .build();
     }
 }

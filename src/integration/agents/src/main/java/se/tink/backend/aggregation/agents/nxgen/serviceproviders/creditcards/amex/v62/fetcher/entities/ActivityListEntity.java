@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ActivityListEntity {
     private List<TransactionEntity> transactionList;
     private String billingIndex;
-//    private boolean flexEnrolled;
+    //    private boolean flexEnrolled;
 
     public List<TransactionEntity> getTransactionList() {
         return transactionList;
@@ -17,8 +17,7 @@ public class ActivityListEntity {
         return billingIndex;
     }
 
-
-//    public boolean isFlexEnrolled() {
-//        return flexEnrolled;
-//    }
+    //    public boolean isFlexEnrolled() {
+    //        return flexEnrolled;
+    //    }
 }

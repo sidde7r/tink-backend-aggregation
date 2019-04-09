@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,18 +18,11 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 public class SebKortSanitizeUniqueIdentifierMgrationTest {
 
     private static final String PROVIDER_NAME = "saseurobonusmastercard-bankid";
-    private static final String NEW_AGENT_NAME = "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent";
+    private static final String NEW_AGENT_NAME =
+            "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent";
     private static final String OLD_AGENT_NAME = "creditcards.sebkort.SEBKortAgent";
 
     private static final String SASEB_PAYLOAD = "sase:0102";
@@ -159,7 +159,6 @@ public class SebKortSanitizeUniqueIdentifierMgrationTest {
 
         assertEquals(1, request.getAccounts().size());
         assertEquals(this.newFormat.getBankId(), request.getAccounts().get(0).getBankId());
-
     }
 
     @Test

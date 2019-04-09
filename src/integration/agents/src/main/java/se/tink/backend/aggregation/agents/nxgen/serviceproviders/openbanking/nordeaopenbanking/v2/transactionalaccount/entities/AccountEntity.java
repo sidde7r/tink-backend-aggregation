@@ -14,6 +14,7 @@ import se.tink.libraries.amount.Amount;
 public class AccountEntity {
     @JsonProperty("_id")
     private String id;
+
     private String country;
     private List<AccountNumbersEntity> accountNumbers;
     private String currency;
@@ -27,6 +28,7 @@ public class AccountEntity {
     private String status;
     private String creditLimit;
     private String latestTransactionBookingDate;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 

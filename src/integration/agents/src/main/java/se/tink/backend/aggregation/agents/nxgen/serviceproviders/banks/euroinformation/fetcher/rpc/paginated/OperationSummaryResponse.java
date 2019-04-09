@@ -56,8 +56,7 @@ public class OperationSummaryResponse implements TransactionKeyPaginatorResponse
         List<Transaction> transactions = Lists.newArrayList();
 
         Optional.ofNullable(operations).map(o -> o.getTransactions())
-                .orElse(Collections.emptyList())
-                .stream()
+                .orElse(Collections.emptyList()).stream()
                 .map(OperationEntity::toTransaction)
                 .forEach(transactions::add);
 
@@ -67,10 +66,6 @@ public class OperationSummaryResponse implements TransactionKeyPaginatorResponse
     @Override
     public Optional<Boolean> canFetchMore() {
         return Optional.of(
-                Optional.ofNullable(operations)
-                        .map(o -> o.getRecoveryKey())
-                        .orElse(null)
-                        != null
-        );
+                Optional.ofNullable(operations).map(o -> o.getRecoveryKey()).orElse(null) != null);
     }
 }

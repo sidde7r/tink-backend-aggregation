@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class SecurityEntity {
@@ -14,8 +14,10 @@ public class SecurityEntity {
     private String name;
     private String currency;
     private double value;
+
     @JsonProperty("noOfSecurities")
     private double quantity;
+
     private double portfolioAllocation;
     private double latestChangePercentage;
     private double price;
@@ -107,9 +109,12 @@ public class SecurityEntity {
                 return Instrument.Type.OTHER;
 
             default:
-                log.info(String.format(
-                        "danske bank - instrument info - security type name [%s] type [%d] securitySubTypeName [%s]",
-                        securityTypeName, securityType, securityDetails.getSecuritySubTypeName()));
+                log.info(
+                        String.format(
+                                "danske bank - instrument info - security type name [%s] type [%d] securitySubTypeName [%s]",
+                                securityTypeName,
+                                securityType,
+                                securityDetails.getSecuritySubTypeName()));
                 return Instrument.Type.OTHER;
         }
     }

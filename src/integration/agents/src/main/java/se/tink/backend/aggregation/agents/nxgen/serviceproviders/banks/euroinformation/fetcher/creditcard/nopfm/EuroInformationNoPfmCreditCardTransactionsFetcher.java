@@ -16,44 +16,48 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class EuroInformationNoPfmCreditCardTransactionsFetcher implements TransactionFetcher<CreditCardAccount> {
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(EuroInformationNoPfmCreditCardTransactionsFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
-            EuroInformationNoPfmCreditCardTransactionsFetcher.class);
+public class EuroInformationNoPfmCreditCardTransactionsFetcher
+        implements TransactionFetcher<CreditCardAccount> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationNoPfmCreditCardTransactionsFetcher.class);
+    private static final AggregationLogger AGGREGATION_LOGGER =
+            new AggregationLogger(EuroInformationNoPfmCreditCardTransactionsFetcher.class);
     private final EuroInformationApiClient apiClient;
 
     private EuroInformationNoPfmCreditCardTransactionsFetcher(EuroInformationApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    public static EuroInformationNoPfmCreditCardTransactionsFetcher create(EuroInformationApiClient apiClient) {
+    public static EuroInformationNoPfmCreditCardTransactionsFetcher create(
+            EuroInformationApiClient apiClient) {
         return new EuroInformationNoPfmCreditCardTransactionsFetcher(apiClient);
     }
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
         String webId = account.getFromTemporaryStorage(EuroInformationConstants.Tags.WEB_ID);
-        Optional<TransactionSummaryResponse> transactionsForAccount = getTransactionsForAccount(webId);
+        Optional<TransactionSummaryResponse> transactionsForAccount =
+                getTransactionsForAccount(webId);
 
         List<AggregationTransaction> transactions = Lists.newArrayList();
-        transactionsForAccount.ifPresent(transactionList ->
-                transactionList.getTransactions().stream()
-                        .map(TransactionEntity::toTransaction)
-                        .forEach(transactions::add)
-        );
+        transactionsForAccount.ifPresent(
+                transactionList ->
+                        transactionList.getTransactions().stream()
+                                .map(TransactionEntity::toTransaction)
+                                .forEach(transactions::add));
         return transactions;
     }
 
     private Optional<TransactionSummaryResponse> getTransactionsForAccount(String webId) {
         TransactionSummaryResponse details = apiClient.getTransactionsWhenNoPfm(webId);
         if (!EuroInformationUtils.isSuccess(details.getReturnCode())) {
-            //TODO: We do not know if creditcard uses same endpoint for transactions, so we try to use it and log error
-            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(details),
+            // TODO: We do not know if creditcard uses same endpoint for transactions, so we try to
+            // use it and log error
+            AGGREGATION_LOGGER.infoExtraLong(
+                    SerializationUtils.serializeToString(details),
                     EuroInformationConstants.LoggingTags.creditcardTransactionsTag);
             return Optional.empty();
         }
         return Optional.of(details);
     }
-
 }

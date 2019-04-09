@@ -17,12 +17,15 @@ public class RegisterTransferRecipientRequest {
     }
 
     private static String getCleanRecipientNumber(SwedishIdentifier destination) {
-        String cleanRecipientNumber = destination.getClearingNumber() + destination.getAccountNumber();
+        String cleanRecipientNumber =
+                destination.getClearingNumber() + destination.getAccountNumber();
         return cleanRecipientNumber.replaceAll("[^0-9]", "");
     }
 
-    public static RegisterTransferRecipientRequest create(SwedishIdentifier destination, String recipientName) {
-        return new RegisterTransferRecipientRequest(recipientName,
+    public static RegisterTransferRecipientRequest create(
+            SwedishIdentifier destination, String recipientName) {
+        return new RegisterTransferRecipientRequest(
+                recipientName,
                 SwedbankBaseConstants.TransferRecipientType.BANKACCOUNT,
                 getCleanRecipientNumber(destination));
     }

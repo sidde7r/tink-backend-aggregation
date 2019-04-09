@@ -40,6 +40,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setDate(getDate())
                 .setAmount(EuroInformationUtils.parseAmount(value))
-                .setDescription(getTransactionDescription()).build();
+                .setDescription(getTransactionDescription())
+                .build();
     }
 }

@@ -39,8 +39,10 @@ public class AmericanExpressV62DateDeserializer extends JsonDeserializer<Date> {
         }
         Date date;
         try {
-            date = DateUtils
-                    .flattenTime(DateUtils.flattenTime(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(dateString)));
+            date =
+                    DateUtils.flattenTime(
+                            DateUtils.flattenTime(
+                                    ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(dateString)));
         } catch (ParseException e) {
             String errorMessage = "Cannot parse date: " + dateString;
             LOGGER.error(errorMessage);

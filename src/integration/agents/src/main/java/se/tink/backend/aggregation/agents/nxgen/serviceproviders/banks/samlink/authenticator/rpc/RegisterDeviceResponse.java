@@ -7,9 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.r
 public class RegisterDeviceResponse extends LinksResponse {
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("token_type")
     private String tokenType;
+
     private SecurityKeyIndexEntity securityKeyIndex;
+
     @JsonProperty("device_token")
     private String deviceToken;
 

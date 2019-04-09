@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class BankdataPoolAccountEntity {
@@ -61,7 +61,8 @@ public class BankdataPoolAccountEntity {
     }
 
     private Portfolio.Type toTinkPortfolioType() {
-        return BankdataConstants.POOLACCOUNT_TYPES.getOrDefault(type.toLowerCase(), Portfolio.Type.OTHER);
+        return BankdataConstants.POOLACCOUNT_TYPES.getOrDefault(
+                type.toLowerCase(), Portfolio.Type.OTHER);
     }
 
     public InvestmentAccount toTinkInvestment() {

@@ -20,8 +20,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
-public class NordeaV21CreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, String> {
+public class NordeaV21CreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
     private final NordeaV21ApiClient client;
     private final NordeaV21Parser parser;
     private final HashSet<String> fetchedTransactionKeys = Sets.newHashSet();
@@ -34,49 +35,62 @@ public class NordeaV21CreditCardFetcher implements AccountFetcher<CreditCardAcco
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return client.getAccountProductsOfTypes(NordeaV21Constants.ProductType.CARD).stream()
-                .map(pe -> {
-                    List<CardBalanceEntity> cardBalances = client.fetchCardBalances(pe.getNordeaAccountIdV2())
-                            .getCardBalances();
+                .map(
+                        pe -> {
+                            List<CardBalanceEntity> cardBalances =
+                                    client.fetchCardBalances(pe.getNordeaAccountIdV2())
+                                            .getCardBalances();
 
-                    // We ask for one credit card, we should only get one credit card in the response
-                    Preconditions.checkState(cardBalances.size() == 1,
-                            "%s: Received != 1 number of credit cards (%d)",
-                            NordeaV21Constants.CREDIT_CARD_LOG_TAG,
-                            cardBalances.size());
+                            // We ask for one credit card, we should only get one credit card in the
+                            // response
+                            Preconditions.checkState(
+                                    cardBalances.size() == 1,
+                                    "%s: Received != 1 number of credit cards (%d)",
+                                    NordeaV21Constants.CREDIT_CARD_LOG_TAG,
+                                    cardBalances.size());
 
-                    CardBalanceEntity cardBalance = cardBalances.get(0);
-                    // Sometimes if the user isn't owner of the credit card it doesn't have access to the credit limit
-                    if (cardBalance.getCreditLimit() == null) {
-                        return null;
-                    }
+                            CardBalanceEntity cardBalance = cardBalances.get(0);
+                            // Sometimes if the user isn't owner of the credit card it doesn't have
+                            // access to the credit limit
+                            if (cardBalance.getCreditLimit() == null) {
+                                return null;
+                            }
 
-                    return parser.parseCreditCardAccount(pe, cardBalance);
-                }).filter(Objects::nonNull)
+                            return parser.parseCreditCardAccount(pe, cardBalance);
+                        })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(CreditCardAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            CreditCardAccount account, String key) {
         if (!client.canViewTransactions(account)) {
             return new TransactionKeyPaginatorResponseImpl<>();
         }
 
-        CreditCardTransactionsResponse transactionsResponse = client.fetchCreditCardTransactions(
-                account.getBankIdentifier(), key);
+        CreditCardTransactionsResponse transactionsResponse =
+                client.fetchCreditCardTransactions(account.getBankIdentifier(), key);
 
-        Collection<CreditCardTransaction> transactions = transactionsResponse.getTransactions().stream()
-                .filter(te -> !fetchedTransactionKeys.contains(te.getTransactionKey()))
-                .map(te -> {
-                    CreditCardTransaction.Builder builder = parser.parseTransaction(te);
-                    builder.setCreditAccount(account);
-                    return builder.build();
-                }).collect(Collectors.toList());
+        Collection<CreditCardTransaction> transactions =
+                transactionsResponse.getTransactions().stream()
+                        .filter(te -> !fetchedTransactionKeys.contains(te.getTransactionKey()))
+                        .map(
+                                te -> {
+                                    CreditCardTransaction.Builder builder =
+                                            parser.parseTransaction(te);
+                                    builder.setCreditAccount(account);
+                                    return builder.build();
+                                })
+                        .collect(Collectors.toList());
 
-        this.fetchedTransactionKeys.addAll(transactionsResponse.getTransactions().stream()
-                .map(CreditCardTransactionEntity::getTransactionKey)
-                .collect(Collectors.toSet()));
+        this.fetchedTransactionKeys.addAll(
+                transactionsResponse.getTransactions().stream()
+                        .map(CreditCardTransactionEntity::getTransactionKey)
+                        .collect(Collectors.toSet()));
 
-        TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
+        TransactionKeyPaginatorResponseImpl<String> response =
+                new TransactionKeyPaginatorResponseImpl<>();
         response.setTransactions(transactions);
         response.setNext(transactionsResponse.getContinuationKey());
 

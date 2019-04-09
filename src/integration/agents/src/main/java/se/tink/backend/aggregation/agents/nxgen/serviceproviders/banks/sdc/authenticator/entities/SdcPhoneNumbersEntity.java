@@ -21,5 +21,4 @@ public class SdcPhoneNumbersEntity {
 
         return countryCode + this.phoneNumber;
     }
-
 }

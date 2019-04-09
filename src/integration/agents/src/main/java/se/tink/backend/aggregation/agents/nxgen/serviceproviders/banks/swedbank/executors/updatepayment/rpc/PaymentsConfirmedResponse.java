@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBasePredicates;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class PaymentsConfirmedResponse {
@@ -37,8 +37,13 @@ public class PaymentsConfirmedResponse {
         Preconditions.checkNotNull(accountNumber, "Account number cannot be null.");
 
         return Optional.ofNullable(confirmedTransactions).orElseGet(Collections::emptyList).stream()
-                .filter(cte -> Objects.equals(new SwedishIdentifier(accountNumber).getIdentifier(),
-                        cte.getFromAccount().generalGetAccountIdentifier().getIdentifier()))
+                .filter(
+                        cte ->
+                                Objects.equals(
+                                        new SwedishIdentifier(accountNumber).getIdentifier(),
+                                        cte.getFromAccount()
+                                                .generalGetAccountIdentifier()
+                                                .getIdentifier()))
                 .map(ConfirmedTransactionsEntity::toTinkUpcomingTransactions)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

@@ -8,18 +8,14 @@ public class UserCredentialsRequest {
 
     private UserCredentials userCredentials;
 
-    private UserCredentialsRequest() {
-    }
+    private UserCredentialsRequest() {}
 
     public static UserCredentialsRequest create(String userId, String code) {
         return new UserCredentialsRequest()
-                .setUserCredentials(
-                        UserCredentials.create(userId, code)
-                );
+                .setUserCredentials(UserCredentials.create(userId, code));
     }
 
-    private UserCredentialsRequest setUserCredentials(
-            UserCredentials userCredentials) {
+    private UserCredentialsRequest setUserCredentials(UserCredentials userCredentials) {
         this.userCredentials = userCredentials;
         return this;
     }

@@ -22,7 +22,8 @@ public abstract class UkOpenBankingConstants {
         private static final String ACCOUNT_BULK_REQUEST = "/accounts";
         private static final String ACCOUNT_BALANCE_REQUEST = "/accounts/%s/balances";
         private static final String ACCOUNT_TRANSACTIONS_REQUEST = "/accounts/%s/transactions";
-        private static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST = "/accounts/%s/scheduled-payments";
+        private static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST =
+                "/accounts/%s/scheduled-payments";
 
         public static URL getBulkAccountRequestURL(URL apiBaseUrl) {
             return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
@@ -37,7 +38,8 @@ public abstract class UkOpenBankingConstants {
         }
 
         public static URL getUpcomingTransactionRequestURL(URL apiBaseUrl, String accountId) {
-            return apiBaseUrl.concat(String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
+            return apiBaseUrl.concat(
+                    String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
         }
     }
 
@@ -47,9 +49,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         public static ExternalAccountIdentification2Code fromString(String key) {
-            return (key != null) ?
-                    ExternalAccountIdentification2Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? ExternalAccountIdentification2Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
 
         @JsonValue
@@ -65,9 +68,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static ExternalAccountIdentification3Code fromString(String key) {
-            return (key != null) ?
-                    ExternalAccountIdentification3Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? ExternalAccountIdentification3Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
 
         @JsonValue
@@ -85,9 +89,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static ExternalPaymentContext1Code fromString(String key) {
-            return (key != null) ?
-                    ExternalPaymentContext1Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? ExternalPaymentContext1Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
 
         @JsonValue
@@ -106,9 +111,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static TransactionIndividualStatus1Code fromString(String key) {
-            return (key != null) ?
-                    TransactionIndividualStatus1Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? TransactionIndividualStatus1Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
 
         @JsonValue
@@ -118,33 +124,32 @@ public abstract class UkOpenBankingConstants {
     }
 
     public enum CreditDebitIndicator {
-
         DEBIT,
         CREDIT;
 
         @JsonCreator
         private static CreditDebitIndicator fromString(String key) {
-            return (key != null) ?
-                    CreditDebitIndicator.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? CreditDebitIndicator.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
     }
 
     public enum EntryStatusCode {
-
         BOOKED,
         PENDING;
 
         @JsonCreator
         private static EntryStatusCode fromString(String key) {
-            return (key != null) ?
-                    EntryStatusCode.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? EntryStatusCode.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
     }
 
     public enum ExternalLimitType {
-
         AVAILABLE,
         CREDIT,
         EMERGENCY,
@@ -153,18 +158,17 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static ExternalLimitType fromString(String key) {
-            return (key != null) ?
-                    ExternalLimitType.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE,
-                                    StringUtils.removeNonAlphaNumeric(key))) : null;
+            return (key != null)
+                    ? ExternalLimitType.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(
+                                    CaseFormat.UPPER_UNDERSCORE,
+                                    StringUtils.removeNonAlphaNumeric(key)))
+                    : null;
         }
     }
 
-    /**
-     * Enums are specified as long form of ISO 20022
-     */
+    /** Enums are specified as long form of ISO 20022 */
     public enum BankTransactionCode {
-
         ISSUED_CREDIT_TRANSFERS,
         ISSUED_CASH_CONCENTRATION,
         ISSUED_DIRECT_DEBITS,
@@ -205,9 +209,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static BankTransactionCode fromString(String key) {
-            return (key != null) ?
-                    BankTransactionCode.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? BankTransactionCode.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
     }
 
@@ -234,7 +239,8 @@ public abstract class UkOpenBankingConstants {
                         .add(CLOSING_BOOKED)
                         .build();
 
-        public static <T> Optional<T> getPreferredBalanceEntity(Map<AccountBalanceType, T> typeMap) {
+        public static <T> Optional<T> getPreferredBalanceEntity(
+                Map<AccountBalanceType, T> typeMap) {
             for (AccountBalanceType id : PREFERRED_TYPE_LIST) {
                 if (typeMap.containsKey(id)) {
                     return Optional.of(typeMap.get(id));
@@ -245,9 +251,10 @@ public abstract class UkOpenBankingConstants {
 
         @JsonCreator
         private static AccountBalanceType fromString(String key) {
-            return (key != null) ?
-                    AccountBalanceType.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key)) : null;
+            return (key != null)
+                    ? AccountBalanceType.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
         }
     }
 }

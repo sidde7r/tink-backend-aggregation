@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditCardTransactionEntity extends TransactionEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionTypeName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Boolean.class)
     private Boolean billedTransaction;
 

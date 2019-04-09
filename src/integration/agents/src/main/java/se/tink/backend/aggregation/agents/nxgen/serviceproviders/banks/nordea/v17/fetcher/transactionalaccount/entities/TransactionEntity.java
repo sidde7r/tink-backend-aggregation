@@ -11,16 +11,22 @@ import se.tink.libraries.strings.StringUtils;
 public class TransactionEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date transactionDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionText;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionTypeCode;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionCurrency;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String transactionAmount;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Boolean.class)
     private Boolean isCoverReservationTransaction;
 
@@ -53,6 +59,7 @@ public class TransactionEntity {
     }
 
     public String getTransactionKey() {
-        return StringUtils.hashAsStringMD5(transactionText + transactionDate.toString() + transactionAmount);
+        return StringUtils.hashAsStringMD5(
+                transactionText + transactionDate.toString() + transactionAmount);
     }
 }

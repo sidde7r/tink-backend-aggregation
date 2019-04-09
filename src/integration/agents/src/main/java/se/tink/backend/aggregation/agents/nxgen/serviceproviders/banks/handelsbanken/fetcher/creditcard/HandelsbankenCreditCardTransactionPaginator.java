@@ -16,79 +16,85 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public abstract class HandelsbankenCreditCardTransactionPaginator<API extends HandelsbankenApiClient>
-        implements
-        TransactionKeyPaginator<CreditCardAccount, URL> {
+public abstract class HandelsbankenCreditCardTransactionPaginator<
+                API extends HandelsbankenApiClient>
+        implements TransactionKeyPaginator<CreditCardAccount, URL> {
 
     protected API client;
     protected HandelsbankenSessionStorage sessionStorage;
 
     public HandelsbankenCreditCardTransactionPaginator(
-            API client,
-            HandelsbankenSessionStorage sessionStorage) {
+            API client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(CreditCardAccount account,
-            URL key) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            CreditCardAccount account, URL key) {
 
         if (key != null) {
-            CreditCardTransactionsResponse<HandelsbankenSECreditCard> response = client
-                    .creditCardTransactions(key);
+            CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
+                    client.creditCardTransactions(key);
             return new HandelsbankenPaginatorResponse(
-                    response.tinkTransactions(account),
-                    response.getPaginationKey());
+                    response.tinkTransactions(account), response.getPaginationKey());
         }
 
         return getCreditAccountTransactions(account)
-                .orElse(getCreditCardTransactions(account)
-                        .orElse(null));
+                .orElse(getCreditCardTransactions(account).orElse(null));
     }
 
     private Optional<HandelsbankenPaginatorResponse> getCreditAccountTransactions(
             CreditCardAccount account) {
 
-        return sessionStorage.accountList()
+        return sessionStorage
+                .accountList()
                 .flatMap(accountList -> accountList.find(account))
                 .filter(HandelsbankenAccount::isCreditCard)
-                .map(handelsbankenAccount -> {
-                    // Fetch the account transactions and filter out the summary transactions.
-                    List<Transaction> subTransactions = removeSummaryTransactions(
-                            fetchAccountTransactions(handelsbankenAccount));
+                .map(
+                        handelsbankenAccount -> {
+                            // Fetch the account transactions and filter out the summary
+                            // transactions.
+                            List<Transaction> subTransactions =
+                                    removeSummaryTransactions(
+                                            fetchAccountTransactions(handelsbankenAccount));
 
-                    CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
-                            client.creditCardTransactions(
-                                    handelsbankenAccount.getCardTransactionsUrl());
+                            CreditCardTransactionsResponse<HandelsbankenSECreditCard> response =
+                                    client.creditCardTransactions(
+                                            handelsbankenAccount.getCardTransactionsUrl());
 
-                    HandelsbankenPaginatorResponse paginatorResponse =
-                            new HandelsbankenPaginatorResponse(
-                                    response.tinkTransactions(account),
-                                    response.getPaginationKey());
-                    paginatorResponse.addAll(subTransactions);
+                            HandelsbankenPaginatorResponse paginatorResponse =
+                                    new HandelsbankenPaginatorResponse(
+                                            response.tinkTransactions(account),
+                                            response.getPaginationKey());
+                            paginatorResponse.addAll(subTransactions);
 
-                    return paginatorResponse;
-                });
+                            return paginatorResponse;
+                        });
     }
 
     private Optional<HandelsbankenPaginatorResponse> getCreditCardTransactions(
             CreditCardAccount account) {
 
-        return sessionStorage.creditCards()
+        return sessionStorage
+                .creditCards()
                 .flatMap(creditCards -> creditCards.find(account))
-                .map(card -> {
-                    CreditCardTransactionsResponse response = client.creditCardTransactions(card);
-                    return new HandelsbankenPaginatorResponse(
-                            response.tinkTransactions(card, account),
-                            response.getPaginationKey());
-                });
+                .map(
+                        card -> {
+                            CreditCardTransactionsResponse response =
+                                    client.creditCardTransactions(card);
+                            return new HandelsbankenPaginatorResponse(
+                                    response.tinkTransactions(card, account),
+                                    response.getPaginationKey());
+                        });
     }
 
     private List<Transaction> removeSummaryTransactions(List<Transaction> transactions) {
         return transactions.stream()
-                .filter(transaction -> !HandelsbankenConstants.TransactionFiltering.CREDIT_CARD_SUMMARY
-                        .equalsIgnoreCase(transaction.getDescription()))
+                .filter(
+                        transaction ->
+                                !HandelsbankenConstants.TransactionFiltering.CREDIT_CARD_SUMMARY
+                                        .equalsIgnoreCase(transaction.getDescription()))
                 .collect(Collectors.toList());
     }
 

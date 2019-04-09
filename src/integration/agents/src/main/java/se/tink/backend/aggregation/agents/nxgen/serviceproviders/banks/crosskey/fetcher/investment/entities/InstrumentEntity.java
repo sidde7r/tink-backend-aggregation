@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.entities;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InstrumentEntity {
@@ -70,7 +70,8 @@ public class InstrumentEntity {
         return toTinkInstrument(typeOfInstrument, type, null);
     }
 
-    public Instrument toTinkInstrument(int typeOfInstrument, InstrumentDetailsEntity instrumentDetailsEntity) {
+    public Instrument toTinkInstrument(
+            int typeOfInstrument, InstrumentDetailsEntity instrumentDetailsEntity) {
         return toTinkInstrument(typeOfInstrument, null, instrumentDetailsEntity);
     }
 
@@ -100,12 +101,17 @@ public class InstrumentEntity {
         return isinCode + ":" + marketPlace;
     }
 
-    private Instrument.Type resolveType(Instrument.Type type, InstrumentDetailsEntity instrumentDetails) {
-        return type != null ? type : instrumentDetails != null ? instrumentDetails.getType() : Instrument.Type.OTHER;
+    private Instrument.Type resolveType(
+            Instrument.Type type, InstrumentDetailsEntity instrumentDetails) {
+        return type != null
+                ? type
+                : instrumentDetails != null ? instrumentDetails.getType() : Instrument.Type.OTHER;
     }
 
-    private String resolveRawType(int typeOfInstrument, Instrument.Type type, InstrumentDetailsEntity instrumentDetails) {
-        String instrumentGroup = instrumentDetails != null ? instrumentDetails.getInstrumentGroup() : "";
+    private String resolveRawType(
+            int typeOfInstrument, Instrument.Type type, InstrumentDetailsEntity instrumentDetails) {
+        String instrumentGroup =
+                instrumentDetails != null ? instrumentDetails.getInstrumentGroup() : "";
         String stringType = type != null ? type.toString() : "";
         return String.format("%s:%s:%s", typeOfInstrument, stringType, instrumentGroup);
     }

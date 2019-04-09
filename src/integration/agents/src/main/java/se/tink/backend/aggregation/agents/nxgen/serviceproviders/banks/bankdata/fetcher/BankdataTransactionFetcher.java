@@ -10,8 +10,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-public class BankdataTransactionFetcher implements TransactionPagePaginator<TransactionalAccount>,
-        UpcomingTransactionFetcher<TransactionalAccount> {
+public class BankdataTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final BankdataApiClient bankClient;
 
@@ -21,19 +22,21 @@ public class BankdataTransactionFetcher implements TransactionPagePaginator<Tran
 
     @Override
     public GetTransactionsResponse getTransactionsFor(TransactionalAccount account, int page) {
-        GetTransactionsRequest getTransactionsRequest = new GetTransactionsRequest()
-                .addAccount(account.getBankIdentifier())
-                .setPage(page);
+        GetTransactionsRequest getTransactionsRequest =
+                new GetTransactionsRequest().addAccount(account.getBankIdentifier()).setPage(page);
 
         return this.bankClient.getTransactions(getTransactionsRequest);
     }
 
     @Override
     public List<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
-        GetTransactionsRequest getTransactionsRequest = new GetTransactionsRequest()
-                .addAccount(account.getBankIdentifier())
-                .setPage(BankdataConstants.Fetcher.START_PAGE);
+        GetTransactionsRequest getTransactionsRequest =
+                new GetTransactionsRequest()
+                        .addAccount(account.getBankIdentifier())
+                        .setPage(BankdataConstants.Fetcher.START_PAGE);
 
-        return this.bankClient.getFutureTransactions(getTransactionsRequest).getTinkUpcomingTransactions();
+        return this.bankClient
+                .getFutureTransactions(getTransactionsRequest)
+                .getTinkUpcomingTransactions();
     }
 }

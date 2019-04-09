@@ -8,7 +8,8 @@ public class DanskeBankDeserializer {
         T deserialized = SerializationUtils.deserializeFromString(responseString, clazz);
         if (deserialized == null) {
             throw new IllegalStateException(
-                    String.format("Could not deserialize String [%s] to Class [%s]",
+                    String.format(
+                            "Could not deserialize String [%s] to Class [%s]",
                             responseString, clazz.getName()));
         }
         return deserialized;

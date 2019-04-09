@@ -3,31 +3,39 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.serializer.NordeaHashMapDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class HoldingsEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String marketValue;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String avgPurchasePrice;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     @JsonProperty("profitLoss")
     private String profit;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String quantity;
+
     private ExchangeRateEntity exchangeRate;
     private InstrumentEntity instrument;
 
     public Double getMarketValue() {
-        return marketValue == null || marketValue.isEmpty() ? null : StringUtils.parseAmount(marketValue);
+        return marketValue == null || marketValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(marketValue);
     }
 
     public Double getAvgPurchasePrice() {
-        return avgPurchasePrice == null || avgPurchasePrice.isEmpty() ? null : StringUtils.parseAmount(avgPurchasePrice);
+        return avgPurchasePrice == null || avgPurchasePrice.isEmpty()
+                ? null
+                : StringUtils.parseAmount(avgPurchasePrice);
     }
 
     public Double getProfit() {

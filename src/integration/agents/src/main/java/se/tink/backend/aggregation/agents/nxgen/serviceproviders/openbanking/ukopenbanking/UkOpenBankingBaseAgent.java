@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
@@ -29,10 +32,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
@@ -53,12 +52,17 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     private UkOpenBankingAis aisSupport;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
 
-    public UkOpenBankingBaseAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public UkOpenBankingBaseAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.paymentsHttpClient = new TinkHttpClient(context.getAggregatorInfo(), metricContext.getMetricRegistry(),
-                context.getLogOutputStream(), signatureKeyPair, request.getProvider());
+        this.paymentsHttpClient =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        metricContext.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        signatureKeyPair,
+                        request.getProvider());
         tinkProvider = request.getProvider();
     }
 
@@ -83,7 +87,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                 configuration
                         .getIntegrations()
                         .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, String.class)
-                        .map(s -> SerializationUtils.deserializeFromString(s, UkOpenBankingConfiguration.class))
+                        .map(
+                                s ->
+                                        SerializationUtils.deserializeFromString(
+                                                s, UkOpenBankingConfiguration.class))
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -93,29 +100,48 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         String softwareStatementName = getSoftwareStatementName();
         String providerName = getProviderName();
 
-        softwareStatement = ukOpenBankingConfiguration.getSoftwareStatement(softwareStatementName)
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("Could not find softwareStatement: %s", softwareStatementName)));
+        softwareStatement =
+                ukOpenBankingConfiguration
+                        .getSoftwareStatement(softwareStatementName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "Could not find softwareStatement: %s",
+                                                        softwareStatementName)));
 
-        providerConfiguration = softwareStatement.getProviderConfiguration(providerName)
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("Could not find provider conf: %s", providerName)));
+        providerConfiguration =
+                softwareStatement
+                        .getProviderConfiguration(providerName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "Could not find provider conf: %s",
+                                                        providerName)));
 
-        client.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
+        client.trustRootCaCertificate(
+                ukOpenBankingConfiguration.getRootCAData(),
                 ukOpenBankingConfiguration.getRootCAPassword());
 
-        paymentsHttpClient.trustRootCaCertificate(ukOpenBankingConfiguration.getRootCAData(),
+        paymentsHttpClient.trustRootCaCertificate(
+                ukOpenBankingConfiguration.getRootCAData(),
                 ukOpenBankingConfiguration.getRootCAPassword());
 
-        apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
-                OpenIdConstants.ClientMode.ACCOUNTS);
+        apiClient =
+                new UkOpenBankingApiClient(
+                        client,
+                        softwareStatement,
+                        providerConfiguration,
+                        OpenIdConstants.ClientMode.ACCOUNTS);
 
         callbackJWTSignatureKeyPair = configuration.getCallbackJwtSignatureKeyPair();
 
-
-        // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it will be null
+        // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it
+        // will be null
         //      at that stage.
-        // -    Some banks are extremely slow at PIS operations (esp. the payment submission step), increase the the
+        // -    Some banks are extremely slow at PIS operations (esp. the payment submission step),
+        // increase the the
         //      timeout on that http client.
         int timeoutInMilliseconds = (int) TimeUnit.SECONDS.toMillis(120);
         paymentsHttpClient.setTimeout(timeoutInMilliseconds);
@@ -132,45 +158,44 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
             UkOpenBankingAuthenticator authenticator) {
-         return OpenIdAuthenticationFlow.create(
+        return OpenIdAuthenticationFlow.create(
                 request,
                 context,
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
                 apiClient,
-                callbackJWTSignatureKeyPair
-        );
+                callbackJWTSignatureKeyPair);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         UkOpenBankingAis ais = getAisSupport();
 
-        return Optional.of(new TransactionalAccountRefreshController(
+        return Optional.of(
+                new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         getTransactionalAccountFetcher(),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 ais.makeAccountTransactionPaginatorController(apiClient),
-                                ais.makeUpcomingTransactionFetcher(apiClient)
-                                        .orElse(null))
-                )
-        );
+                                ais.makeUpcomingTransactionFetcher(apiClient).orElse(null))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         UkOpenBankingAis ais = getAisSupport();
 
-        return Optional.of(new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                ais.makeCreditCardAccountFetcher(apiClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        ais.makeCreditCardTransactionPaginatorController(apiClient)))
-        );
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        ais.makeCreditCardAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                ais.makeCreditCardTransactionPaginatorController(apiClient))));
     }
 
     @Override
@@ -189,13 +214,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.of(
                 new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new UkOpenBankingTransferDestinationFetcher()
-                )
-        );
+                        metricRefreshController, new UkOpenBankingTransferDestinationFetcher()));
     }
 
     @Override
@@ -225,15 +248,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                                 getTransactionalAccountFetcher(),
                                 pis,
                                 callbackJWTSignatureKeyPair,
-                                request.getCallbackRedirectUriId()
-                        ),
+                                request.getCallbackRedirectUriId()),
                         null,
-                        null
-                )
-        );
+                        null));
     }
 
-    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> getTransactionalAccountFetcher() {
+    private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>
+            getTransactionalAccountFetcher() {
         if (Objects.nonNull(transactionalAccountFetcher)) {
             return transactionalAccountFetcher;
         }
@@ -251,7 +272,10 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     }
 
     protected abstract UkOpenBankingAis makeAis();
+
     protected abstract Optional<UkOpenBankingPis> makePis();
+
     protected abstract void configureAisHttpClient(TinkHttpClient httpClient);
+
     protected abstract void configurePisHttpClient(TinkHttpClient httpClient);
 }

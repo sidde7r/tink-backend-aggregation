@@ -19,25 +19,37 @@ public class CrossKeyMessageBodyReader extends JacksonJsonProvider {
     }
 
     @Override
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    public boolean isReadable(
+            Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return type.getPackage().getName().startsWith(readablePackage.getName());
     }
 
     @Override
-    public Object readFrom(Class<Object> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+    public Object readFrom(
+            Class<Object> type,
+            Type genericType,
+            Annotation[] annotations,
+            MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders,
+            InputStream entityStream)
             throws IOException, WebApplicationException {
-        return super.readFrom(type, genericType, annotations, mediaType, httpHeaders,
+        return super.readFrom(
+                type,
+                genericType,
+                annotations,
+                mediaType,
+                httpHeaders,
                 removeUnwantedCharacters(entityStream));
     }
 
     @VisibleForTesting
-    // Usually Cross Key backend responses start with ")]}'," on the first line and the json object on the second.
+    // Usually Cross Key backend responses start with ")]}'," on the first line and the json object
+    // on the second.
     // This implementation doesn't care about the exact characters used before the line break.
     public InputStream removeUnwantedCharacters(InputStream entityStream) throws IOException {
         if (entityStream != null) {
             int currentChar;
-            while ( (currentChar = entityStream.read()) != -1) {
+            while ((currentChar = entityStream.read()) != -1) {
                 if (currentChar == '\n') {
                     return entityStream;
                 }
@@ -46,5 +58,4 @@ public class CrossKeyMessageBodyReader extends JacksonJsonProvider {
         }
         return entityStream;
     }
-
 }

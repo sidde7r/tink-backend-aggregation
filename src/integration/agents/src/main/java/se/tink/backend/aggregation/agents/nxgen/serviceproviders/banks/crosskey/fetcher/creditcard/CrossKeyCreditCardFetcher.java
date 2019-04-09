@@ -22,13 +22,13 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
-    private static final Logger LOG = LoggerFactory.getLogger(
-            CrossKeyCreditCardFetcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CrossKeyCreditCardFetcher.class);
 
     private final CrossKeyApiClient client;
     private final CrossKeyPersistentStorage persistentStorage;
 
-    public CrossKeyCreditCardFetcher(CrossKeyApiClient client, CrossKeyPersistentStorage persistentStorage) {
+    public CrossKeyCreditCardFetcher(
+            CrossKeyApiClient client, CrossKeyPersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
     }
@@ -53,17 +53,20 @@ public class CrossKeyCreditCardFetcher
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
-        Collection<? extends Transaction> transactions = this.client.fetchCreditCardTransactions(
-                account.getBankIdentifier(), fromDate, toDate).stream()
-                .map(CreditCardTransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                this.client
+                        .fetchCreditCardTransactions(account.getBankIdentifier(), fromDate, toDate)
+                        .stream()
+                        .map(CreditCardTransactionEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
     }
 
     private boolean hasCreditCardData(CardsResponse cardsResponse) {
-        return cardsResponse != null &&
-                (cardsResponse.getCards().size() > 0 || cardsResponse.hasData());
+        return cardsResponse != null
+                && (cardsResponse.getCards().size() > 0 || cardsResponse.hasData());
     }
 }

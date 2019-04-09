@@ -11,10 +11,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class SamlinkCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, SamlinkCreditCardFetcher.TransactionKey> {
+public class SamlinkCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<
+                        CreditCardAccount, SamlinkCreditCardFetcher.TransactionKey> {
 
-    private static final AggregationLogger log = new AggregationLogger(SamlinkCreditCardFetcher.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(SamlinkCreditCardFetcher.class);
 
     private final SamlinkApiClient apiClient;
 
@@ -24,9 +27,11 @@ public class SamlinkCreditCardFetcher implements AccountFetcher<CreditCardAccoun
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.getCreditCards().toCreditCardAccounts(
-                apiClient::getCardDetails, message ->
-                        log.infoExtraLong(message, SamlinkConstants.LogTags.CREDITCARD));
+        return apiClient
+                .getCreditCards()
+                .toCreditCardAccounts(
+                        apiClient::getCardDetails,
+                        message -> log.infoExtraLong(message, SamlinkConstants.LogTags.CREDITCARD));
     }
 
     @Override
@@ -38,24 +43,35 @@ public class SamlinkCreditCardFetcher implements AccountFetcher<CreditCardAccoun
         return fetchNextTransactions(account, key);
     }
 
-    private TransactionKeyPaginatorResponseImpl<TransactionKey> fetchInitialTransactions(CreditCardAccount account) {
-        return apiClient.getTransactions(account)
-                .map(creditCardTransactions ->
-                        createResponse(account, creditCardTransactions, new TransactionKey(creditCardTransactions))
-                )
+    private TransactionKeyPaginatorResponseImpl<TransactionKey> fetchInitialTransactions(
+            CreditCardAccount account) {
+        return apiClient
+                .getTransactions(account)
+                .map(
+                        creditCardTransactions ->
+                                createResponse(
+                                        account,
+                                        creditCardTransactions,
+                                        new TransactionKey(creditCardTransactions)))
                 .orElseGet(TransactionKeyPaginatorResponseImpl::new);
     }
 
     private TransactionKeyPaginatorResponseImpl<TransactionKey> fetchNextTransactions(
             CreditCardAccount account, TransactionKey key) {
-        return apiClient.getTransactions(key.creditCardTransactions, key.offset)
-                .map(creditCardTransactions ->
-                        createResponse(account, creditCardTransactions, new TransactionKey(creditCardTransactions, key))
-                ).orElseGet(TransactionKeyPaginatorResponseImpl::new);
+        return apiClient
+                .getTransactions(key.creditCardTransactions, key.offset)
+                .map(
+                        creditCardTransactions ->
+                                createResponse(
+                                        account,
+                                        creditCardTransactions,
+                                        new TransactionKey(creditCardTransactions, key)))
+                .orElseGet(TransactionKeyPaginatorResponseImpl::new);
     }
 
     private TransactionKeyPaginatorResponseImpl<TransactionKey> createResponse(
-            CreditCardAccount account, CreditCardTransactionsResponse creditCardTransactions,
+            CreditCardAccount account,
+            CreditCardTransactionsResponse creditCardTransactions,
             TransactionKey key) {
         TransactionKeyPaginatorResponseImpl<TransactionKey> response =
                 new TransactionKeyPaginatorResponseImpl<>();
@@ -73,7 +89,8 @@ public class SamlinkCreditCardFetcher implements AccountFetcher<CreditCardAccoun
             this.offset = creditCardTransactions.size();
         }
 
-        TransactionKey(CreditCardTransactionsResponse creditCardTransactions, TransactionKey previousKey) {
+        TransactionKey(
+                CreditCardTransactionsResponse creditCardTransactions, TransactionKey previousKey) {
             this.creditCardTransactions = creditCardTransactions;
             this.offset = previousKey.offset + creditCardTransactions.size();
         }

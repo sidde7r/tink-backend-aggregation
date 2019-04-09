@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class TransactionDetailsResponse extends LinksResponse {
     private String transactionId;
+
     @JsonFormat(pattern = "y-M-d")
     private Date date;
+
     private AccountIdEntity creditorAccountId;
     private String creditorName;
     private String debtorName;

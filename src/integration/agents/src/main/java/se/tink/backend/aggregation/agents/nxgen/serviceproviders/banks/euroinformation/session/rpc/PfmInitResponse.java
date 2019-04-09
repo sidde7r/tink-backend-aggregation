@@ -16,9 +16,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PfmInitResponse {
     @XmlElement(name = "code_retour")
     private String returnCode;
+
     @XmlElement(name = "date_msg")
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     private Date date;
+
     @XmlElement(name = "initialization")
     private InitializationEntity initialization;
 

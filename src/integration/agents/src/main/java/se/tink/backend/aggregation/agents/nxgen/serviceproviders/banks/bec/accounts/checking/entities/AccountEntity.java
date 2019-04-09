@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -71,8 +71,9 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkTransactionalAccount(AccountDetailsResponse details) {
         // Should not be able to throw an exception here.
-        AccountTypes accountType = details.getTinkAccountType()
-                .orElseThrow(() -> new IllegalStateException("Unknown account type"));
+        AccountTypes accountType =
+                details.getTinkAccountType()
+                        .orElseThrow(() -> new IllegalStateException("Unknown account type"));
 
         return TransactionalAccount.builder(accountType, accountId, getTinkBalance())
                 .setAccountNumber(accountId)

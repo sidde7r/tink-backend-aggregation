@@ -12,19 +12,21 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.ErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 
 @JsonObject
 public abstract class BaseResponse {
 
     @JsonProperty("_links")
     private Map<String, Link> links;
+
     @JsonProperty("links")
     private List<Link> linksList;
+
     private String code;
     private String message;
     private List<ErrorResponse> errors;
@@ -48,13 +50,17 @@ public abstract class BaseResponse {
             return Collections.emptyMap();
         }
         Map<String, Link> linkMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        linkMap.putAll(linksList.stream().collect(Collectors.toMap(Link::getRel, Function.identity())));
+        linkMap.putAll(
+                linksList.stream().collect(Collectors.toMap(Link::getRel, Function.identity())));
         return linkMap;
     }
 
     protected URL findLink(Linkable linkable) {
         return searchLink(linkable)
-                .orElseThrow(() -> new IllegalStateException(getLinks() + " does not contain expected url"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        getLinks() + " does not contain expected url"));
     }
 
     protected Optional<URL> searchLink(Linkable linkable) {
@@ -67,11 +73,14 @@ public abstract class BaseResponse {
     }
 
     public Optional<String> getFirstErrorMessage() {
-        return getErrors().stream().filter(
-                error -> error != null && !Strings.isNullOrEmpty(error.getDetail()))
+        return getErrors().stream()
+                .filter(error -> error != null && !Strings.isNullOrEmpty(error.getDetail()))
                 .findFirst()
                 .map(input -> Optional.of(input.getDetail().trim()))
-                .orElse(!Strings.isNullOrEmpty(detail) ? Optional.ofNullable(detail) : Optional.empty());
+                .orElse(
+                        !Strings.isNullOrEmpty(detail)
+                                ? Optional.ofNullable(detail)
+                                : Optional.empty());
     }
 
     public String getCode() {
@@ -119,5 +128,4 @@ public abstract class BaseResponse {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-
 }

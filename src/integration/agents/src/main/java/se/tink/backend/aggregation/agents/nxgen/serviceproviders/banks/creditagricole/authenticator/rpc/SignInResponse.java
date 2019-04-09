@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SignInResponse extends DefaultResponse {
     @JsonProperty("emailPART")
     private String emailPart;
+
     private List<ActiveUsersListEntity> activeUsersList;
 
     public String getEmailPart() {

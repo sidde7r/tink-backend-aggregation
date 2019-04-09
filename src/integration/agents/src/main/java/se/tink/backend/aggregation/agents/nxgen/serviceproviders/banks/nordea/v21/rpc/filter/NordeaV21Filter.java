@@ -22,16 +22,21 @@ public abstract class NordeaV21Filter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         httpRequest.getHeaders().add(HeaderKey.REQUEST_ID, requestId++);
-        httpRequest.getHeaders().add(Header.PLATFORM_VERSION.getKey(), Header.PLATFORM_VERSION.getValue());
+        httpRequest
+                .getHeaders()
+                .add(Header.PLATFORM_VERSION.getKey(), Header.PLATFORM_VERSION.getValue());
         httpRequest.getHeaders().add(HeaderKey.APP_COUNTRY, marketCode);
         httpRequest.getHeaders().add(HeaderKey.APP_VERSION, marketCode);
         httpRequest.getHeaders().add(Header.APP_LANGUAGE.getKey(), Header.APP_LANGUAGE.getValue());
         httpRequest.getHeaders().add(Header.APP_NAME.getKey(), Header.APP_NAME.getValue());
         httpRequest.getHeaders().add(Header.DEVICE_MAKE.getKey(), Header.DEVICE_MAKE.getValue());
         httpRequest.getHeaders().add(Header.DEVICE_MODEL.getKey(), Header.DEVICE_MODEL.getValue());
-        httpRequest.getHeaders().add(Header.PLATFORM_TYPE.getKey(), Header.PLATFORM_TYPE.getValue());
+        httpRequest
+                .getHeaders()
+                .add(Header.PLATFORM_TYPE.getKey(), Header.PLATFORM_TYPE.getValue());
         httpRequest.getHeaders().add("Accept", MediaType.WILDCARD);
 
         if (Objects.equals(httpRequest.getMethod(), HttpMethod.POST)) {
@@ -39,8 +44,13 @@ public abstract class NordeaV21Filter extends Filter {
             httpRequest.getHeaders().add("Accept", MediaType.APPLICATION_JSON);
         }
 
-        URL url = httpRequest.getUrl().parameter(NordeaV21Constants.UrlParameter.MARKET_CODE, marketCode)
-                .parameter(NordeaV21Constants.UrlParameter.LOWER_CASE_MARKET_CODE, marketCode.toLowerCase());
+        URL url =
+                httpRequest
+                        .getUrl()
+                        .parameter(NordeaV21Constants.UrlParameter.MARKET_CODE, marketCode)
+                        .parameter(
+                                NordeaV21Constants.UrlParameter.LOWER_CASE_MARKET_CODE,
+                                marketCode.toLowerCase());
         httpRequest.setUrl(url);
 
         return nextFilter(httpRequest);

@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TokenRequest {
     @JsonProperty("grant_type")
     private String grantType = NordeaBaseConstants.Authorization.GRANT_TYPE_AUTH_CODE;
+
     @JsonProperty("redirect_uri")
     private String redirectUri;
+
     private String code;
 
     public TokenRequest(String code, String redirectUri) {

@@ -17,15 +17,16 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NordeaOauthAuthenticator implements OAuth2Authenticator {
-    private static final Logger LOG = LoggerFactory.getLogger(
-            NordeaOauthAuthenticator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NordeaOauthAuthenticator.class);
 
     private final NordeaBaseApiClient apiClient;
     private final NordeaSessionStorage sessionStorage;
     private final NordeaPersistentStorage persistentStorage;
 
-    public NordeaOauthAuthenticator(NordeaBaseApiClient apiClient,
-            NordeaSessionStorage sessionStorage, NordeaPersistentStorage persistentStorage) {
+    public NordeaOauthAuthenticator(
+            NordeaBaseApiClient apiClient,
+            NordeaSessionStorage sessionStorage,
+            NordeaPersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
@@ -46,7 +47,8 @@ public class NordeaOauthAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
         LOG.info("Refresh token, not implemented for Nordea Open banking");
         throw SessionError.SESSION_EXPIRED.exception();
     }
@@ -59,21 +61,19 @@ public class NordeaOauthAuthenticator implements OAuth2Authenticator {
 
     private Map<String, String> setupAuthorizationQuery(String state) {
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(NordeaBaseConstants.Query.STATE,
-                state);
-        queryParams.put(NordeaBaseConstants.Query.CLIENT_ID,
-                persistentStorage.getClientId());
-        queryParams.put(NordeaBaseConstants.Query.CODE,
-                persistentStorage.getRedirectUrl());
-        queryParams.put(NordeaBaseConstants.Query.REDIRECT_URI,
-                persistentStorage.getRedirectUrl());
-        queryParams.put(NordeaBaseConstants.Query.SCOPE,
+        queryParams.put(NordeaBaseConstants.Query.STATE, state);
+        queryParams.put(NordeaBaseConstants.Query.CLIENT_ID, persistentStorage.getClientId());
+        queryParams.put(NordeaBaseConstants.Query.CODE, persistentStorage.getRedirectUrl());
+        queryParams.put(NordeaBaseConstants.Query.REDIRECT_URI, persistentStorage.getRedirectUrl());
+        queryParams.put(
+                NordeaBaseConstants.Query.SCOPE,
                 NordeaBaseConstants.Authorization.SCOPES.stream().collect(Collectors.joining(",")));
-        queryParams.put(NordeaBaseConstants.Query.DURATION,
+        queryParams.put(
+                NordeaBaseConstants.Query.DURATION,
                 String.valueOf(NordeaBaseConstants.Authorization.TOKEN_DURATION));
         queryParams.put(NordeaBaseConstants.Query.COUNTRY, persistentStorage.getCountry());
-        queryParams.put(NordeaBaseConstants.Query.LANGUAGE,
-                NordeaBaseConstants.Authorization.LANGUAGE);
+        queryParams.put(
+                NordeaBaseConstants.Query.LANGUAGE, NordeaBaseConstants.Authorization.LANGUAGE);
 
         return queryParams;
     }

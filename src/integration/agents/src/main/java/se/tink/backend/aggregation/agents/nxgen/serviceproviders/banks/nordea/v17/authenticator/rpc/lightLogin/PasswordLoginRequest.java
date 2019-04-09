@@ -7,7 +7,9 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class PasswordLoginRequest extends HttpRequestImpl {
     public PasswordLoginRequest(String username, String password, String marketCode) {
-        super(HttpMethod.POST, NordeaV17Constants.Url.LIGHT_LOGIN.get(),
+        super(
+                HttpMethod.POST,
+                NordeaV17Constants.Url.LIGHT_LOGIN.get(),
                 LightLoginBody.passwordLogin(username, password, marketCode));
     }
 }

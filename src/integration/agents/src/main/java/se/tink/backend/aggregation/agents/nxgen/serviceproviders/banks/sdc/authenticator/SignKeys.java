@@ -19,6 +19,7 @@ public class SignKeys {
             generateKeys();
         }
     }
+
     private void generateKeys() {
         KeyPair keyPair = RSA.generateKeyPair();
 

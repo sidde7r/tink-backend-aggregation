@@ -9,17 +9,24 @@ public final class ListTransactionsRequest {
     private final long minNumberToReturn = 9999;
     private String repositionKey = "";
 
-    private ListTransactionsRequest(String languageCode, String accountNoInt, String bookingDateFrom,
-                                    String bookingDateTo) {
+    private ListTransactionsRequest(
+            String languageCode,
+            String accountNoInt,
+            String bookingDateFrom,
+            String bookingDateTo) {
         this.languageCode = languageCode;
         this.accountNoInt = accountNoInt;
         this.bookingDateFrom = bookingDateFrom;
         this.bookingDateTo = bookingDateTo;
     }
 
-    public static ListTransactionsRequest create(String languageCode, String accountNoInt, String bookingDateFrom,
-                                                 String bookingDateTo) {
-        return new ListTransactionsRequest(languageCode, accountNoInt, bookingDateFrom, bookingDateTo);
+    public static ListTransactionsRequest create(
+            String languageCode,
+            String accountNoInt,
+            String bookingDateFrom,
+            String bookingDateTo) {
+        return new ListTransactionsRequest(
+                languageCode, accountNoInt, bookingDateFrom, bookingDateTo);
     }
 
     public String getLanguageCode() {

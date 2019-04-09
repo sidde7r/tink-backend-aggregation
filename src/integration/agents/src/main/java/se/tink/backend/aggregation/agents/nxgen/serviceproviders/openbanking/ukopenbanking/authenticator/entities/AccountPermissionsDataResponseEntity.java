@@ -8,10 +8,13 @@ public class AccountPermissionsDataResponseEntity extends AccountPermissionDataE
 
     @JsonProperty("AccountRequestId")
     private String accountRequestId;
+
     @JsonProperty("CreationDateTime")
     private String creationDateTime;
+
     @JsonProperty("Status")
     private String status;
+
     @JsonProperty("StatusUpdateDateTime")
     private String statusUpdateDateTime;
 

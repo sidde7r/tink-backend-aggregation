@@ -14,7 +14,8 @@ public class LightLoginBody {
     }
 
     @JsonIgnore
-    public static LightLoginBody passwordLogin(String username, String password, String marketCode) {
+    public static LightLoginBody passwordLogin(
+            String username, String password, String marketCode) {
         LightLoginRequestEntity loginEntity = new LightLoginRequestEntity();
 
         loginEntity.setUserId(username);

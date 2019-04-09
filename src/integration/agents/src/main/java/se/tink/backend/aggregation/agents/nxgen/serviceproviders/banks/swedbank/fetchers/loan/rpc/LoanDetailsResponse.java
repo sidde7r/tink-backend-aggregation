@@ -18,12 +18,10 @@ public class LoanDetailsResponse {
     }
 
     public Optional<String> getInterest() {
-        return Optional.ofNullable(loanAccount)
-                .map(LoanDetailsAccountEntity::getInterest);
+        return Optional.ofNullable(loanAccount).map(LoanDetailsAccountEntity::getInterest);
     }
 
     public Optional<Date> getDueDate() {
-        return Optional.ofNullable(loanPayment)
-                .map(LoanPaymentEntity::getDueDay);
+        return Optional.ofNullable(loanPayment).map(LoanPaymentEntity::getDueDay);
     }
 }

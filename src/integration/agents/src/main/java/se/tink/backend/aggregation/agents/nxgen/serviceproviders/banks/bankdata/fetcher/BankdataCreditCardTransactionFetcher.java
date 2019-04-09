@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class BankdataCreditCardTransactionFetcher implements TransactionPagePaginator<CreditCardAccount> {
+public class BankdataCreditCardTransactionFetcher
+        implements TransactionPagePaginator<CreditCardAccount> {
     private final BankdataApiClient bankClient;
 
     public BankdataCreditCardTransactionFetcher(BankdataApiClient bankClient) {
@@ -15,9 +16,8 @@ public class BankdataCreditCardTransactionFetcher implements TransactionPagePagi
 
     @Override
     public GetTransactionsResponse getTransactionsFor(CreditCardAccount account, int page) {
-        GetTransactionsRequest getTransactionsRequest = new GetTransactionsRequest()
-                .addAccount(account.getBankIdentifier())
-                .setPage(page);
+        GetTransactionsRequest getTransactionsRequest =
+                new GetTransactionsRequest().addAccount(account.getBankIdentifier()).setPage(page);
 
         return bankClient.getTransactions(getTransactionsRequest);
     }

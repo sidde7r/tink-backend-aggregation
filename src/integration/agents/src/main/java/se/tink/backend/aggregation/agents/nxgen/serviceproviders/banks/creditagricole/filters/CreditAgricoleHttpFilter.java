@@ -16,7 +16,8 @@ public class CreditAgricoleHttpFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         addHeaderIfNotPresent(httpRequest, ConstantHeader.USER_AGENT);
         return nextFilter(httpRequest);
     }

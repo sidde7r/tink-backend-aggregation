@@ -16,7 +16,8 @@ public class SdcPersistentStorage {
     }
 
     public boolean hasSignerKeys() {
-        return this.storage.containsKey(PRIVATE_KEY_NAME) && this.storage.containsKey(PUBLIC_KEY_NAME);
+        return this.storage.containsKey(PRIVATE_KEY_NAME)
+                && this.storage.containsKey(PUBLIC_KEY_NAME);
     }
 
     public void putPrivateKey(byte[] key) {

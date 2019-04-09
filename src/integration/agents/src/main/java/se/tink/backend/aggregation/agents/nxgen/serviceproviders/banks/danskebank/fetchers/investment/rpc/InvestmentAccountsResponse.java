@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InvestmentAccountsResponse {
     @JsonProperty("package")
     private long pack;
+
     private CustodyAccountsEntity custodyAccounts;
     private CustomerProfileEntity customerProfile;
     private boolean disableInvestment;

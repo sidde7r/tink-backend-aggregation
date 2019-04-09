@@ -8,18 +8,20 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class EInvoicePaymentEntity {
     private ReferenceEntity reference;
     private String amount;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
+
     private EInvoicePayeeEntity payee;
     private String einvoiceReference;
 
@@ -49,14 +51,15 @@ public class EInvoicePaymentEntity {
             return Optional.empty();
         }
 
-        return Optional.of(
-                new Amount(currency, AgentParsingUtils.parseAmount(amount)));
+        return Optional.of(new Amount(currency, AgentParsingUtils.parseAmount(amount)));
     }
 
     public Optional<Transfer> toTinkTransfer(String currency, String providerUniqueId) {
         Optional<Amount> tinkAmount = getTinkAmount(currency);
-        Optional<AccountIdentifier.Type> tinkType = Optional.ofNullable(this.payee).flatMap(EInvoicePayeeEntity::getTinkType);
-        Optional<String> referenceValue = Optional.ofNullable(this.reference).map(ReferenceEntity::getValue);
+        Optional<AccountIdentifier.Type> tinkType =
+                Optional.ofNullable(this.payee).flatMap(EInvoicePayeeEntity::getTinkType);
+        Optional<String> referenceValue =
+                Optional.ofNullable(this.reference).map(ReferenceEntity::getValue);
 
         if (!tinkAmount.isPresent() || !tinkType.isPresent() || !referenceValue.isPresent()) {
             return Optional.empty();
@@ -65,12 +68,14 @@ public class EInvoicePaymentEntity {
         Transfer transfer = new Transfer();
         transfer.setAmount(tinkAmount.get());
         transfer.setType(TransferType.EINVOICE);
-        transfer.setDestination(AccountIdentifier.create(tinkType.get(), this.payee.getAccountNumber(),
-                this.payee.getName()));
+        transfer.setDestination(
+                AccountIdentifier.create(
+                        tinkType.get(), this.payee.getAccountNumber(), this.payee.getName()));
         transfer.setDueDate(dueDate);
         transfer.setDestinationMessage(referenceValue.get());
         transfer.setSourceMessage(this.payee.getName());
-        transfer.setPayload(ImmutableMap.of(TransferPayloadType.PROVIDER_UNIQUE_ID, providerUniqueId));
+        transfer.setPayload(
+                ImmutableMap.of(TransferPayloadType.PROVIDER_UNIQUE_ID, providerUniqueId));
 
         return transfer.getDestination().isValid() ? Optional.of(transfer) : Optional.empty();
     }

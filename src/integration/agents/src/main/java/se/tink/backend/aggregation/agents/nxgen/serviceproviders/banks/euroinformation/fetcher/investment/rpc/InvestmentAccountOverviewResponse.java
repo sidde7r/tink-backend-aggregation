@@ -14,6 +14,7 @@ public class InvestmentAccountOverviewResponse {
 
     @XmlElement(name = "code_retour")
     private String returnCode;
+
     @XmlElement(name = "date_msg")
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     private Date date;

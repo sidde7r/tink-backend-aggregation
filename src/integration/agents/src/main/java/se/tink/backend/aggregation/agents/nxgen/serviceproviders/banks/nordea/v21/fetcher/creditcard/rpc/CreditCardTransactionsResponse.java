@@ -23,7 +23,8 @@ public class CreditCardTransactionsResponse extends NordeaResponse {
             return Collections.emptyList();
         }
 
-        // Apparently some transactions don't have either amount or date, but since Nordea doesn't display those
+        // Apparently some transactions don't have either amount or date, but since Nordea doesn't
+        // display those
         // transactions in their app, we ill just filter them out
         return transactionsEntity.getTransactions().stream()
                 .filter(tx -> tx.getDate() != null || tx.getAmount() != null)

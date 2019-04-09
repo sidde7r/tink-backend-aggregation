@@ -7,8 +7,9 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 
 @JsonObject
 public class RegisterPayeeRequest {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
-            new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter
+            DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER =
+                    new DefaultAccountIdentifierFormatter();
 
     private String type;
     private String accountNumber;
@@ -21,9 +22,12 @@ public class RegisterPayeeRequest {
     }
 
     public static RegisterPayeeRequest create(AccountIdentifier accountIdentifier, String name) {
-        String type = accountIdentifier.is(AccountIdentifier.Type.SE_BG) ?
-                SwedbankBaseConstants.PaymentAccountType.BGACCOUNT : SwedbankBaseConstants.PaymentAccountType.PGACCOUNT;
-        String accountNumber = accountIdentifier.getIdentifier(DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER);
+        String type =
+                accountIdentifier.is(AccountIdentifier.Type.SE_BG)
+                        ? SwedbankBaseConstants.PaymentAccountType.BGACCOUNT
+                        : SwedbankBaseConstants.PaymentAccountType.PGACCOUNT;
+        String accountNumber =
+                accountIdentifier.getIdentifier(DEFAULT_ACCOUNT_IDENTIFIER_FORMATTER_FORMATTER);
 
         return new RegisterPayeeRequest(type, accountNumber, name);
     }

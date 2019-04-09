@@ -11,9 +11,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitAuthResponseEntity {
     @JsonProperty("order_ref")
     private String orderRef;
+
     private String status;
+
     @JsonProperty("tpp_token")
     private String tppToken;
+
     private LinkListEntity links;
 
     public String getOrderRef() {

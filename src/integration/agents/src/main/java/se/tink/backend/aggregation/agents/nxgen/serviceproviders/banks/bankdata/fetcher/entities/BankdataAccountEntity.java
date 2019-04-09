@@ -39,7 +39,8 @@ public class BankdataAccountEntity {
     private long accountOwnerRefNo;
 
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder(constructUniqueIdentifier(), new Amount(currencyCode, balance))
+        return CheckingAccount.builder(
+                        constructUniqueIdentifier(), new Amount(currencyCode, balance))
                 .setAccountNumber(iban)
                 .setName(name)
                 .setBankIdentifier(constructUniqueIdentifier())
@@ -54,7 +55,8 @@ public class BankdataAccountEntity {
 
     private String constructUniqueIdentifier() {
         String accountId = regNo + ":" + accountNo;
-        Preconditions.checkState(StringUtils.trimToNull(accountId) != null, "No account number present");
+        Preconditions.checkState(
+                StringUtils.trimToNull(accountId) != null, "No account number present");
 
         return accountId;
     }

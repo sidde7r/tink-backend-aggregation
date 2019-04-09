@@ -11,14 +11,19 @@ public class AuthenticationResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("token_type")
     private String tokenType;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
+
     @JsonProperty("expires_in")
     private long expiresIn;
+
     private String scope;
     private String error;
+
     @JsonProperty("error_description")
     private String errorDescription;
 
@@ -46,8 +51,7 @@ public class AuthenticationResponse {
         return errorDescription;
     }
 
-    public TokenEntity getToken(){
+    public TokenEntity getToken() {
         return new TokenEntity(accessToken, refreshToken, getExpiresAt());
     }
-
 }

@@ -111,12 +111,12 @@ public class BillingUnitEntity {
 
     public CreditCardAccount createCreditCardAccount() {
         return CreditCardAccount.builder(arrangementNumber)
-                .setAvailableCredit(Amount.inSEK(AgentParsingUtils.parseAmountTrimCurrency(disposableAmount)))
+                .setAvailableCredit(
+                        Amount.inSEK(AgentParsingUtils.parseAmountTrimCurrency(disposableAmount)))
                 .setAccountNumber(arrangementNumber)
                 .setBankIdentifier(billingUnitIdClear)
                 .setBalance(Amount.inSEK(-AgentParsingUtils.parseAmountTrimCurrency(balance)))
                 .setName(billingUnitName)
                 .build();
-
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
 import com.google.common.base.Strings;
+import java.util.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,12 +41,11 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
-import java.util.Base64;
+public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator
+        implements KeyCardAuthenticator, AutoAuthenticator {
 
-public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator implements KeyCardAuthenticator,
-        AutoAuthenticator {
-
-    private static final AggregationLogger log = new AggregationLogger(DanskeBankPasswordAuthenticator.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(DanskeBankPasswordAuthenticator.class);
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
     private final DanskeBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -56,9 +56,12 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private String finalizePackage;
     private WebDriver driver;
 
-    public DanskeBankChallengeAuthenticator(DanskeBankApiClient apiClient, PersistentStorage persistentStorage,
-                                            Credentials credentials, String deviceId,
-                                            DanskeBankConfiguration configuration) {
+    public DanskeBankChallengeAuthenticator(
+            DanskeBankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            String deviceId,
+            DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
@@ -67,15 +70,18 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     @Override
-    public KeyCardInitValues init(String username, String password) throws AuthenticationException, AuthorizationException {
+    public KeyCardInitValues init(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         // Do normal service code login
         logonStepOne(username, password);
 
         // Bind device
         BindDeviceResponse bindDeviceResponse;
         try {
-            bindDeviceResponse = this.apiClient.bindDevice(null,
-                    BindDeviceRequest.create(DanskeBankConstants.Session.FRIENDLY_NAME));
+            bindDeviceResponse =
+                    this.apiClient.bindDevice(
+                            null,
+                            BindDeviceRequest.create(DanskeBankConstants.Session.FRIENDLY_NAME));
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
@@ -85,30 +91,44 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             bindDeviceResponse = response.getBody(BindDeviceResponse.class);
         }
 
-        String moreInformation = StringEscapeUtils.unescapeJava(bindDeviceResponse.getMoreInformation());
-        MoreInformationEntity moreInformationEntity = DanskeBankDeserializer
-                .convertStringToObject(moreInformation, MoreInformationEntity.class);
+        String moreInformation =
+                StringEscapeUtils.unescapeJava(bindDeviceResponse.getMoreInformation());
+        MoreInformationEntity moreInformationEntity =
+                DanskeBankDeserializer.convertStringToObject(
+                        moreInformation, MoreInformationEntity.class);
 
         HttpResponse challengeResponse = this.apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript = DanskeBankConstants.Javascript.getDeviceInfo(this.deviceId, this.configuration.getMarketCode(),
-                this.configuration.getAppName(), this.configuration.getAppVersion());
-        this.bindChallengeResponseBody = deviceInfoJavascript + challengeResponse.getBody(String.class);
+        String deviceInfoJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                        this.deviceId,
+                        this.configuration.getMarketCode(),
+                        this.configuration.getAppName(),
+                        this.configuration.getAppVersion());
+        this.bindChallengeResponseBody =
+                deviceInfoJavascript + challengeResponse.getBody(String.class);
 
         try {
             this.driver = constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) this.driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
-                            this.bindChallengeResponseBody, username, moreInformationEntity.getOtpChallenge()));
+                            this.bindChallengeResponseBody,
+                            username,
+                            moreInformationEntity.getOtpChallenge()));
 
-            KeyCardEntity keyCardEntity = DanskeBankDeserializer
-                    .convertStringToObject(this.driver.findElement(By.tagName("body")).getAttribute("challengeInfo"),
+            KeyCardEntity keyCardEntity =
+                    DanskeBankDeserializer.convertStringToObject(
+                            this.driver
+                                    .findElement(By.tagName("body"))
+                                    .getAttribute("challengeInfo"),
                             KeyCardEntity.class);
-            ListOtpResponse listOtpResponse = this.apiClient.listOtpInformation(ListOtpRequest.create(null));
+            ListOtpResponse listOtpResponse =
+                    this.apiClient.listOtpInformation(ListOtpRequest.create(null));
 
-            return new KeyCardInitValues(keyCardEntity.getSerialNumber(), keyCardEntity.getChallenge());
+            return new KeyCardInitValues(
+                    keyCardEntity.getSerialNumber(), keyCardEntity.getChallenge());
         } catch (Exception e) {
             if (this.driver != null) {
                 this.driver.quit();
@@ -123,15 +143,20 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         try {
             JavascriptExecutor js = (JavascriptExecutor) this.driver;
             js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(this.bindChallengeResponseBody, code));
+                    DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
+                            this.bindChallengeResponseBody, code));
 
             // Get step up token header
-            String stepUpToken = this.driver.findElement(By.tagName("body")).getAttribute("bindStepUpToken");
+            String stepUpToken =
+                    this.driver.findElement(By.tagName("body")).getAttribute("bindStepUpToken");
 
             BindDeviceResponse bindDeviceResponse;
             try {
-                bindDeviceResponse = this.apiClient.bindDevice(stepUpToken,
-                        BindDeviceRequest.create(DanskeBankConstants.Session.FRIENDLY_NAME));
+                bindDeviceResponse =
+                        this.apiClient.bindDevice(
+                                stepUpToken,
+                                BindDeviceRequest.create(
+                                        DanskeBankConstants.Session.FRIENDLY_NAME));
             } catch (HttpResponseException hre) {
                 HttpResponse response = hre.getResponse();
                 if (response.getStatus() == 401) {
@@ -147,11 +172,16 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                             this.bindChallengeResponseBody, bindDeviceResponse.getSharedSecret()));
 
             // Persist decrypted device secret - necessary for login after device has been bounded
-            String decryptedDeviceSecret = this.driver.findElement(By.tagName("body")).getAttribute("decryptedDeviceSecret");
-            this.persistentStorage.put(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
+            String decryptedDeviceSecret =
+                    this.driver
+                            .findElement(By.tagName("body"))
+                            .getAttribute("decryptedDeviceSecret");
+            this.persistentStorage.put(
+                    DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER,
                     bindDeviceResponse.getDeviceSerialNumber());
-            this.persistentStorage
-                    .put(DanskeBankConstants.Persist.DEVICE_SECRET, decryptedDeviceSecret.replaceAll("\"", ""));
+            this.persistentStorage.put(
+                    DanskeBankConstants.Persist.DEVICE_SECRET,
+                    decryptedDeviceSecret.replaceAll("\"", ""));
         } finally {
             if (this.driver != null) {
                 this.driver.quit();
@@ -163,7 +193,9 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     public void autoAuthenticate() throws SessionException {
         // Login
         try {
-            logonStepOne(this.credentials.getField(Field.Key.USERNAME), this.credentials.getField(Field.Key.PASSWORD));
+            logonStepOne(
+                    this.credentials.getField(Field.Key.USERNAME),
+                    this.credentials.getField(Field.Key.PASSWORD));
         } catch (AuthenticationException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -171,13 +203,18 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         // Check device
         CheckDeviceResponse checkDeviceResponse;
         try {
-            checkDeviceResponse = this.apiClient.checkDevice(
-                    this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER), null);
+            checkDeviceResponse =
+                    this.apiClient.checkDevice(
+                            this.persistentStorage.get(
+                                    DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER),
+                            null);
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             if (response.getStatus() != 401) {
-                log.warnExtraLong("Could not auto authenticate user: " + response.getBody(String.class),
-                        DanskeBankConstants.LogTags.AUTHENTICATION_AUTO, e);
+                log.warnExtraLong(
+                        "Could not auto authenticate user: " + response.getBody(String.class),
+                        DanskeBankConstants.LogTags.AUTHENTICATION_AUTO,
+                        e);
                 throw e;
             }
 
@@ -185,9 +222,11 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         }
 
         // Extract string of more information containing OtpChallenge
-        String moreInformation = StringEscapeUtils.unescapeJava(checkDeviceResponse.getMoreInformation());
-        MoreInformationEntity moreInformationEntity = DanskeBankDeserializer
-                .convertStringToObject(moreInformation, MoreInformationEntity.class);
+        String moreInformation =
+                StringEscapeUtils.unescapeJava(checkDeviceResponse.getMoreInformation());
+        MoreInformationEntity moreInformationEntity =
+                DanskeBankDeserializer.convertStringToObject(
+                        moreInformation, MoreInformationEntity.class);
 
         // If another device has been pinned we can no longer sign in as trusted device.
         if (moreInformationEntity.isChallengeInvalid()) {
@@ -197,11 +236,16 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript = DanskeBankConstants.Javascript.getDeviceInfo(this.deviceId, this.configuration.getMarketCode(),
-                this.configuration.getAppName(), this.configuration.getAppVersion());
+        String deviceInfoJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                        this.deviceId,
+                        this.configuration.getMarketCode(),
+                        this.configuration.getAppName(),
+                        this.configuration.getAppVersion());
 
         // Add device info Js to Danske Bank's inject Js
-        String checkChallengeWithDeviceInfo = deviceInfoJavascript + injectJsCheckStep.getBody(String.class);
+        String checkChallengeWithDeviceInfo =
+                deviceInfoJavascript + injectJsCheckStep.getBody(String.class);
 
         // Execute Js to build step up token
         WebDriver driver = null;
@@ -212,45 +256,59 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createInitStepUpTrustedDeviceJavascript(
                             checkChallengeWithDeviceInfo,
-                            this.credentials.getField(Field.Key.USERNAME), moreInformationEntity.getOtpChallenge()));
+                            this.credentials.getField(Field.Key.USERNAME),
+                            moreInformationEntity.getOtpChallenge()));
 
             // Extract key card entity to get challenge for next Js execution
-            String challengeInfo = driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
+            String challengeInfo =
+                    driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
             // if no challengeInfo available, force a new device pinning
             if (Strings.isNullOrEmpty(challengeInfo)) {
                 log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-            KeyCardEntity keyCardEntity = DanskeBankDeserializer
-                    .convertStringToObject(challengeInfo, KeyCardEntity.class);
+            KeyCardEntity keyCardEntity =
+                    DanskeBankDeserializer.convertStringToObject(
+                            challengeInfo, KeyCardEntity.class);
 
             // Generate a JSON-object with device secret and challenge and encode it with base64
-            String generateResponseInput = BASE64_ENCODER.encodeToString(
-                    getGenerateResponseJson(keyCardEntity.getChallenge()).getBytes());
+            String generateResponseInput =
+                    BASE64_ENCODER.encodeToString(
+                            getGenerateResponseJson(keyCardEntity.getChallenge()).getBytes());
 
             // Inject the base64-string as input to generate response string
             js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(checkChallengeWithDeviceInfo,
-                            this.credentials.getField(Field.Key.USERNAME), moreInformationEntity.getOtpChallenge(),
+                    DanskeBankJavascriptStringFormatter.createGenerateResponseJavascript(
+                            checkChallengeWithDeviceInfo,
+                            this.credentials.getField(Field.Key.USERNAME),
+                            moreInformationEntity.getOtpChallenge(),
                             generateResponseInput));
-            String responseData = driver.findElement(By.tagName("body")).getAttribute("trustedChallengeResponse");
+            String responseData =
+                    driver.findElement(By.tagName("body")).getAttribute("trustedChallengeResponse");
 
             // Generate a JSON with response and device serial number and encode with base64
-            String validateStepUpTrustedDeviceInput = BASE64_ENCODER.encodeToString(
-                    getValidateStepUpTrustedDeviceJson(responseData.replaceAll("\"", "")).getBytes());
+            String validateStepUpTrustedDeviceInput =
+                    BASE64_ENCODER.encodeToString(
+                            getValidateStepUpTrustedDeviceJson(responseData.replaceAll("\"", ""))
+                                    .getBytes());
 
             // Execute a final Js to get the step up token
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createValidateStepUpTrustedDeviceJavascript(
-                            checkChallengeWithDeviceInfo, this.credentials.getField(Field.Key.USERNAME),
-                            moreInformationEntity.getOtpChallenge(), generateResponseInput,
+                            checkChallengeWithDeviceInfo,
+                            this.credentials.getField(Field.Key.USERNAME),
+                            moreInformationEntity.getOtpChallenge(),
+                            generateResponseInput,
                             validateStepUpTrustedDeviceInput));
 
             try {
                 // Make final check to confirm with step up token
-                checkDeviceResponse = this.apiClient.checkDevice(
-                        this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER),
-                        driver.findElement(By.tagName("body")).getAttribute("trustedStepUpToken"));
+                checkDeviceResponse =
+                        this.apiClient.checkDevice(
+                                this.persistentStorage.get(
+                                        DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER),
+                                driver.findElement(By.tagName("body"))
+                                        .getAttribute("trustedStepUpToken"));
 
                 if (checkDeviceResponse.getError() != null) {
                     throw SessionError.SESSION_EXPIRED.exception();
@@ -265,17 +323,24 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         }
     }
 
-    private void logonStepOne(String username, String password) throws AuthenticationException, AuthorizationException {
+    private void logonStepOne(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         // Get the dynamic logon javascript
-        HttpResponse getResponse = this.apiClient.collectDynamicLogonJavascript(
-                this.configuration.getSecuritySystem(), this.configuration.getBrand());
+        HttpResponse getResponse =
+                this.apiClient.collectDynamicLogonJavascript(
+                        this.configuration.getSecuritySystem(), this.configuration.getBrand());
 
         // Add the authorization header from the response
-        this.apiClient.addPersistentHeader("Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+        this.apiClient.addPersistentHeader(
+                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
 
         // Create Javascript that will return device information
-        String deviceInfoJavascript = DanskeBankConstants.Javascript.getDeviceInfo(this.deviceId, this.configuration.getMarketCode(),
-                this.configuration.getAppName(), this.configuration.getAppVersion());
+        String deviceInfoJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                        this.deviceId,
+                        this.configuration.getMarketCode(),
+                        this.configuration.getAppName(),
+                        this.configuration.getAppVersion());
 
         // Add device information Javascript to dynamic logon Javascript
         String dynamicLogonJavascript = deviceInfoJavascript + getResponse.getBody(String.class);
@@ -286,9 +351,11 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             driver = constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createLoginJavascript(dynamicLogonJavascript, username, password));
+                    DanskeBankJavascriptStringFormatter.createLoginJavascript(
+                            dynamicLogonJavascript, username, password));
 
-            this.finalizePackage = driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
+            this.finalizePackage =
+                    driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
 
             // Finalize authentication
             try {
@@ -312,13 +379,14 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
 
         return this.apiClient.finalizeAuthentication(
                 FinalizeAuthenticationRequest.createForServiceCode(this.finalizePackage));
-
     }
 
     private String getGenerateResponseJson(String challenge) {
         JSONObject generateResponseJson = new JSONObject();
         try {
-            generateResponseJson.put("devSecret", this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
+            generateResponseJson.put(
+                    "devSecret",
+                    this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SECRET));
             generateResponseJson.put("challenge", challenge);
         } catch (JSONException e) {
             throw new IllegalStateException();
@@ -331,8 +399,9 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         JSONObject validateStepUpTrustedDeviceJson = new JSONObject();
         try {
             validateStepUpTrustedDeviceJson.put("responseData", responseData);
-            validateStepUpTrustedDeviceJson.put("devSerialNo", this.persistentStorage.get(
-                    DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
+            validateStepUpTrustedDeviceJson.put(
+                    "devSerialNo",
+                    this.persistentStorage.get(DanskeBankConstants.Persist.DEVICE_SERIAL_NUMBER));
         } catch (JSONException e) {
             throw new IllegalStateException();
         }
@@ -341,13 +410,15 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     private enum UserMessage implements LocalizableEnum {
-        CREDENTIALS_VERIFICATION_ERROR(new LocalizableKey("Wrong challenge response input - Will retry login."));
+        CREDENTIALS_VERIFICATION_ERROR(
+                new LocalizableKey("Wrong challenge response input - Will retry login."));
 
         private final LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return this.userMessage;

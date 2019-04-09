@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.entities;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.AddressEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.Optional;
 
 @JsonObject
 public class AccountEntity {

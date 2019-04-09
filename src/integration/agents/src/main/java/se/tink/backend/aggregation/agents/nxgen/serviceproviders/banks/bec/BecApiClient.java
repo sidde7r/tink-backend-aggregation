@@ -65,7 +65,8 @@ public class BecApiClient {
 
     public void logonChallenge(String username, String password) {
         try {
-            EncryptedPayloadAndroidEntity payloadAndroidEntity = new EncryptedPayloadAndroidEntity();
+            EncryptedPayloadAndroidEntity payloadAndroidEntity =
+                    new EncryptedPayloadAndroidEntity();
             payloadAndroidEntity.setAppType(BecConstants.Meta.APP_TYPE);
             payloadAndroidEntity.setAppVersion(BecConstants.Meta.APP_VERSION);
             payloadAndroidEntity.setLocale(BecConstants.Meta.LOCALE);
@@ -83,7 +84,8 @@ public class BecApiClient {
             request.setLabel(BecConstants.Meta.LABEL);
             request.setKey(BecSecurityHelper.getKey());
             request.setEncryptedPayload(
-                    BecSecurityHelper.encrypt(mapper.writeValueAsString(payloadAndroidEntity).getBytes()));
+                    BecSecurityHelper.encrypt(
+                            mapper.writeValueAsString(payloadAndroidEntity).getBytes()));
             request.setCipher(BecConstants.Meta.CIPHER);
 
             createRequest(this.agentUrl.getLoginChallenge())
@@ -109,16 +111,21 @@ public class BecApiClient {
                 .get(AccountDetailsResponse.class);
     }
 
-    public FetchAccountTransactionsResponse fetchAccountTransactions(Account account, Date fromDate, Date toDate) {
+    public FetchAccountTransactionsResponse fetchAccountTransactions(
+            Account account, Date fromDate, Date toDate) {
 
-        FetchAccountTransactionRequest fetchAccountTransactionRequest = new FetchAccountTransactionRequest();
+        FetchAccountTransactionRequest fetchAccountTransactionRequest =
+                new FetchAccountTransactionRequest();
 
         fetchAccountTransactionRequest.setAccountId(account.getAccountNumber());
         fetchAccountTransactionRequest.setBrowseId("");
-        // NOTE: do not have enough records to test out page paginator. set records to 9999 and use date paginator.
+        // NOTE: do not have enough records to test out page paginator. set records to 9999 and use
+        // date paginator.
         fetchAccountTransactionRequest.setNoOfRecords(9999);
-        fetchAccountTransactionRequest.setSearchFromDate(ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate));
-        fetchAccountTransactionRequest.setSearchToDate(ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
+        fetchAccountTransactionRequest.setSearchFromDate(
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate));
+        fetchAccountTransactionRequest.setSearchToDate(
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate));
         fetchAccountTransactionRequest.setSkipMatched(false);
         fetchAccountTransactionRequest.setSearchText("");
 
@@ -131,7 +138,8 @@ public class BecApiClient {
     public FetchUpcomingPaymentsResponse fetchAccountUpcomingTransactions(Account account) {
 
         return createRequest(this.agentUrl.getFetchAccountUpcomingTransactions())
-                .queryParam(BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, account.getAccountNumber())
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, account.getAccountNumber())
                 .queryParam(BecConstants.Header.QUERY_PARAM_BROWSE_ID_KEY, "")
                 .queryParam(BecConstants.Header.QUERY_PARAM_NO_DAYS_AHEAD_KEY, "")
                 .queryParam(BecConstants.Header.QUERY_PARAM_NO_OF_RECORDS_KEY, "20")
@@ -145,9 +153,11 @@ public class BecApiClient {
 
     public List<CardEntity> fetchCards() {
         return createRequest(this.agentUrl.getFetchCard())
-                .queryParam(BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_ICONTYPE_KEY,
                         BecConstants.Header.QUERY_PARAM_ICONTYPE_VALUE)
-                .get(FetchCardResponse.class).getCardArray();
+                .get(FetchCardResponse.class)
+                .getCardArray();
     }
 
     public CardDetailsResponse fetchCardDetails(String urlDetails) {
@@ -157,7 +167,8 @@ public class BecApiClient {
 
     public List<MortgageLoanEntity> fetchLoans() {
         return createRequest(this.agentUrl.getFetchLoan())
-                .get(FetchLoanResponse.class).getMortgageLoanList();
+                .get(FetchLoanResponse.class)
+                .getMortgageLoanList();
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanNumber) {
@@ -169,33 +180,35 @@ public class BecApiClient {
 
     public FetchInvestmentResponse fetchInvestment() {
         return createRequest(this.agentUrl.getFetchDepot())
-                .queryParam(BecConstants.Header.QUERY_PARAM_VERSION_KEY,
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
                 .get(FetchInvestmentResponse.class);
     }
 
     public DepositDetailsResponse fetchDepositDetail(String urlDetails) {
         return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
-                .queryParam(BecConstants.Header.QUERY_PARAM_VERSION_KEY,
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
                 .get(DepositDetailsResponse.class);
     }
 
     public InstrumentDetailsEntity fetchInstrumentDetails(String urlDetails) {
         return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
-                .queryParam(BecConstants.Header.QUERY_PARAM_VERSION_KEY,
+                .queryParam(
+                        BecConstants.Header.QUERY_PARAM_VERSION_KEY,
                         BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
                 .get(InstrumentDetailsEntity.class);
     }
 
     public void logout() {
-        createRequest(this.agentUrl.getLogout())
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post();
+        createRequest(this.agentUrl.getLogout()).type(MediaType.APPLICATION_JSON_TYPE).post();
     }
 
     private RequestBuilder createRequest(String url) {
-        return this.apiClient.request(url)
+        return this.apiClient
+                .request(url)
                 .header(BecConstants.Header.PRAGMA_KEY, BecConstants.Header.PRAGMA_VALUE);
     }
 }

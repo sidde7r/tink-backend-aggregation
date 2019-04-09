@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class KbcCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(KbcCreditCardFetcher.class);
+public class KbcCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(KbcCreditCardFetcher.class);
 
     private final KbcApiClient apiClient;
 

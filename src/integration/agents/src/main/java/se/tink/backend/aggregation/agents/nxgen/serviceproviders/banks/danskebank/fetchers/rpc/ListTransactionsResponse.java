@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public class ListTransactionsResponse extends AbstractResponse {

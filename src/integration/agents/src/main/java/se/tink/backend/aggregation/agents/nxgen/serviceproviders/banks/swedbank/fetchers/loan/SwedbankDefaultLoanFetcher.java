@@ -21,7 +21,8 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SwedbankDefaultLoanFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SwedbankDefaultLoanFetcher.class);
     protected final SwedbankDefaultApiClient apiClient;
 
     public SwedbankDefaultLoanFetcher(SwedbankDefaultApiClient apiClient) {
@@ -37,7 +38,8 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             apiClient.selectProfile(bankProfile);
             EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
 
-            List<LoanAccountEntity> loanAccountEntities = engagementOverviewResponse.getLoanAccounts();
+            List<LoanAccountEntity> loanAccountEntities =
+                    engagementOverviewResponse.getLoanAccounts();
 
             // check if user has loans, if not, continue
             if (loanAccountEntities == null || loanAccountEntities.size() < 1) {
@@ -45,7 +47,8 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             }
 
             for (LoanAccountEntity loanAccountEntity : loanAccountEntities) {
-                if (loanAccountEntity.getLinks() == null || loanAccountEntity.getLinks().getNext() == null) {
+                if (loanAccountEntity.getLinks() == null
+                        || loanAccountEntity.getLinks().getNext() == null) {
                     continue;
                 }
 
@@ -53,10 +56,13 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                 // log to check if only error for 0 balance loans
                 LoanDetailsResponse loanDetailsResponse = null;
                 try {
-                    loanDetailsResponse = apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
+                    loanDetailsResponse =
+                            apiClient.loanDetails(loanAccountEntity.getLinks().getNext());
                 } catch (Exception e) {
-                    LOGGER.warnExtraLong(SerializationUtils.serializeToString(loanAccountEntity),
-                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_ERROR, e);
+                    LOGGER.warnExtraLong(
+                            SerializationUtils.serializeToString(loanAccountEntity),
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_ERROR,
+                            e);
                     continue;
                 }
 
@@ -66,7 +72,9 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                     continue;
                 }
 
-                loanAccountEntity.toLoanAccount(interest.get(), loanDetailsResponse.getDueDate().orElse(null))
+                loanAccountEntity
+                        .toLoanAccount(
+                                interest.get(), loanDetailsResponse.getDueDate().orElse(null))
                         .ifPresent(loanAccounts::add);
             }
 
@@ -86,11 +94,13 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
             if (!Strings.isNullOrEmpty(loanResponse)) {
                 LOGGER.infoExtraLong(loanResponse, SwedbankBaseConstants.LogTags.LOAN_RESPONSE);
 
-                LoanOverviewResponse loanOverviewResponse = SerializationUtils
-                        .deserializeFromString(loanResponse, LoanOverviewResponse.class);
+                LoanOverviewResponse loanOverviewResponse =
+                        SerializationUtils.deserializeFromString(
+                                loanResponse, LoanOverviewResponse.class);
                 LinksEntity links = loanOverviewResponse.getLinks();
                 if (links != null && links.getNext() != null) {
-                    LOGGER.infoExtraLong(apiClient.optionalRequest(links.getNext()),
+                    LOGGER.infoExtraLong(
+                            apiClient.optionalRequest(links.getNext()),
                             SwedbankBaseConstants.LogTags.MORTGAGE_OVERVIEW_RESPONSE);
                 }
 
@@ -103,11 +113,16 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                 logLoanDetails(loanOverviewResponse.getCarLoans(), "CarLoans");
                 logLoanDetails(loanOverviewResponse.getConsumptionLoans(), "ConsumptionLoans");
                 logLoanDetails(loanOverviewResponse.getOngoingLoans(), "OngoingLoans");
-                logLoanDetails(loanOverviewResponse.getMortgageLoanCommitments(), "MortgageLoanCommitments");
+                logLoanDetails(
+                        loanOverviewResponse.getMortgageLoanCommitments(),
+                        "MortgageLoanCommitments");
             }
         } catch (Exception e) {
-            LOGGER.warn(String.format("%s Failed to fetch loan information",
-                    SwedbankBaseConstants.LogTags.LOAN_DETAILS_RESPONSE.toString()), e);
+            LOGGER.warn(
+                    String.format(
+                            "%s Failed to fetch loan information",
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_RESPONSE.toString()),
+                    e);
         }
     }
 
@@ -120,15 +135,19 @@ public class SwedbankDefaultLoanFetcher implements AccountFetcher<LoanAccount> {
                         .filter(linksEntity -> linksEntity.getNext() != null)
                         .map(LinksEntity::getNext)
                         .map(apiClient::optionalRequest)
-                        .forEach(response ->
-                                LOGGER.infoExtraLong(String.format("%s %s",
-                                        loanType,
-                                        response), SwedbankBaseConstants.LogTags.LOAN_DETAILS_RESPONSE));
+                        .forEach(
+                                response ->
+                                        LOGGER.infoExtraLong(
+                                                String.format("%s %s", loanType, response),
+                                                SwedbankBaseConstants.LogTags
+                                                        .LOAN_DETAILS_RESPONSE));
             }
         } catch (Exception e) {
-            LOGGER.warn(String.format("%s Failed to fetch loan [%s] information",
-                    SwedbankBaseConstants.LogTags.LOAN_DETAILS_RESPONSE.toString(),
-                    loanType),
+            LOGGER.warn(
+                    String.format(
+                            "%s Failed to fetch loan [%s] information",
+                            SwedbankBaseConstants.LogTags.LOAN_DETAILS_RESPONSE.toString(),
+                            loanType),
                     e);
         }
     }

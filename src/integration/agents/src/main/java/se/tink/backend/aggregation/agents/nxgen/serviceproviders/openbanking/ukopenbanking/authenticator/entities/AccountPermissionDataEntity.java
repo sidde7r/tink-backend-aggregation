@@ -15,12 +15,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountPermissionDataEntity {
     @JsonProperty("Permissions")
     private List<String> permissions;
+
     @JsonProperty("ExpirationDateTime")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String expirationDateTime;
 
-    protected AccountPermissionDataEntity() {
-    }
+    protected AccountPermissionDataEntity() {}
 
     @JsonIgnore
     protected AccountPermissionDataEntity(List<String> permissions, String expirationDateTime) {
@@ -30,16 +30,14 @@ public class AccountPermissionDataEntity {
 
     public static AccountPermissionDataEntity create() {
         return new AccountPermissionDataEntity(
-                UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS,
-                null
-        );
+                UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS, null);
     }
 
     public static AccountPermissionDataEntity create(long expiresInDays) {
-        ZonedDateTime expireAt = ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofDays(expiresInDays));
+        ZonedDateTime expireAt =
+                ZonedDateTime.now(ZoneOffset.UTC).plus(Duration.ofDays(expiresInDays));
         return new AccountPermissionDataEntity(
                 UkOpenBankingAuthenticatorConstants.ACCOUNT_PERMISSIONS,
-                expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-        );
+                expireAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
     }
 }

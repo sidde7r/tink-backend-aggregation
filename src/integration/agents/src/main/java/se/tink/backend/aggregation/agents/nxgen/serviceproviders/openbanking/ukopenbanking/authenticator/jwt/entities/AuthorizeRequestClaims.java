@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AuthorizeRequestClaims {
     private UserinfoEntity userinfo;
+
     @JsonProperty("id_token")
     private IdTokenEntity idToken;
 

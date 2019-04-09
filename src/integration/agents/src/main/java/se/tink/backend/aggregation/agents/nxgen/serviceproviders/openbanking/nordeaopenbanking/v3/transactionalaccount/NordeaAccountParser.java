@@ -22,25 +22,32 @@ public class NordeaAccountParser {
                 .setBalance(accountEntity.getAccountBalance())
                 .setBankIdentifier(accountEntity.getId())
                 .addIdentifiers(getAccountIdentifiers(accountEntity))
-                .putInTemporaryStorage(NordeaBaseConstants.Storage.TRANSACTIONS, getTransactionsLink(accountEntity))
+                .putInTemporaryStorage(
+                        NordeaBaseConstants.Storage.TRANSACTIONS,
+                        getTransactionsLink(accountEntity))
                 .build();
     }
 
     // defaults to IBAN
     protected String getAccountNumber(AccountEntity accountEntity) {
-        return findAccountNumberByType(accountEntity, NordeaBaseConstants.Account.ACCOUNT_NUMBER_IBAN)
+        return findAccountNumberByType(
+                        accountEntity, NordeaBaseConstants.Account.ACCOUNT_NUMBER_IBAN)
                 .orElseThrow(() -> new IllegalStateException("No account number found"));
     }
 
     protected String getTransactionsLink(AccountEntity accountEntity) {
-        return accountEntity.getLinks()
+        return accountEntity
+                .getLinks()
                 .findLinkByName(NordeaBaseConstants.Link.TRANSACTIONS_LINK)
                 .map(LinkEntity::getHref)
-                .orElse(NordeaBaseConstants.Url.getTransactionPathForAccount(accountEntity.getId()));
+                .orElse(
+                        NordeaBaseConstants.Url.getTransactionPathForAccount(
+                                accountEntity.getId()));
     }
 
     protected Collection<AccountIdentifier> getAccountIdentifiers(AccountEntity accountEntity) {
-        return Optional.ofNullable(accountEntity.getAccountNumbers()).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accountEntity.getAccountNumbers())
+                .orElse(Collections.emptyList()).stream()
                 .map(AccountNumbersEntity::toTinkIdentifier)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -48,8 +55,9 @@ public class NordeaAccountParser {
     }
 
     protected String getName(AccountEntity accountEntity) {
-        return noContent(accountEntity.getAccountName()) ?
-                accountEntity.getProduct() : accountEntity.getAccountName();
+        return noContent(accountEntity.getAccountName())
+                ? accountEntity.getProduct()
+                : accountEntity.getAccountName();
     }
 
     protected boolean noContent(String s) {
@@ -60,12 +68,15 @@ public class NordeaAccountParser {
         return !noContent(s);
     }
 
-    protected Optional<String> findAccountNumberByType(AccountEntity accountEntity, final String accountNumberType) {
+    protected Optional<String> findAccountNumberByType(
+            AccountEntity accountEntity, final String accountNumberType) {
 
-        return Optional.ofNullable(accountEntity.getAccountNumbers()).orElse(Collections.emptyList()).stream()
-                .filter(accountNumberEntity ->
-                        accountNumberType.equalsIgnoreCase(accountNumberEntity.getType())
-                                && hasContent(accountNumberEntity.getValue()))
+        return Optional.ofNullable(accountEntity.getAccountNumbers())
+                .orElse(Collections.emptyList()).stream()
+                .filter(
+                        accountNumberEntity ->
+                                accountNumberType.equalsIgnoreCase(accountNumberEntity.getType())
+                                        && hasContent(accountNumberEntity.getValue()))
                 .map(AccountNumbersEntity::getValue)
                 .findFirst();
     }

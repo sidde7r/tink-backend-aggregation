@@ -28,7 +28,8 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
-        return authorizeUrl.queryParam(UkOpenBankingAuthenticatorConstants.Params.REQUEST,
+        return authorizeUrl.queryParam(
+                UkOpenBankingAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withAccountsScope()
                         .withClientInfo(providerConfiguration.getClientInfo())
@@ -37,7 +38,6 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
                         .withNonce(nonce)
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
-                        .build()
-        );
+                        .build());
     }
 }

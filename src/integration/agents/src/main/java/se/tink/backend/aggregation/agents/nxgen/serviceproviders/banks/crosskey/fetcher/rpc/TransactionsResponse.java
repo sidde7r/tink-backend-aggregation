@@ -26,8 +26,7 @@ public class TransactionsResponse extends CrossKeyResponse {
         return transactions;
     }
 
-    public void setTransactions(
-            List<CrossKeyTransaction> transactions) {
+    public void setTransactions(List<CrossKeyTransaction> transactions) {
         this.transactions = transactions;
     }
 }

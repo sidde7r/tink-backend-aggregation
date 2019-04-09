@@ -23,8 +23,8 @@ public class AuthorizeRequest {
         private String intentId;
         private String state;
         private String nonce;
-        private ImmutableList.Builder<String> scopes = ImmutableList.<String>builder()
-                .add(OpenIdConstants.Scopes.OPEN_ID);
+        private ImmutableList.Builder<String> scopes =
+                ImmutableList.<String>builder().add(OpenIdConstants.Scopes.OPEN_ID);
 
         public Builder withAccountsScope() {
             this.scopes.add(OpenIdConstants.Scopes.ACCOUNTS);
@@ -67,8 +67,8 @@ public class AuthorizeRequest {
         }
 
         public String build() {
-            Preconditions.checkNotNull(wellknownConfiguration,
-                    "WellknownConfiguration must be specified.");
+            Preconditions.checkNotNull(
+                    wellknownConfiguration, "WellknownConfiguration must be specified.");
             Preconditions.checkNotNull(softwareStatement, "SoftwareStatement must be specified.");
             Preconditions.checkNotNull(clientInfo, "ClientInfo must be specified.");
 
@@ -85,19 +85,22 @@ public class AuthorizeRequest {
             }
 
             String keyId = softwareStatement.getSigningKeyId();
-            Algorithm algorithm = OpenIdSignUtils
-                    .getSignatureAlgorithm(softwareStatement.getSigningKey());
+            Algorithm algorithm =
+                    OpenIdSignUtils.getSignatureAlgorithm(softwareStatement.getSigningKey());
 
             String issuer = wellknownConfiguration.getIssuer();
             String clientId = clientInfo.getClientId();
             String redirectUri = softwareStatement.getRedirectUri();
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
 
-            String responseTypes = OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
-                    .collect(Collectors.joining(" "));
+            String responseTypes =
+                    OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
+                            .collect(Collectors.joining(" "));
 
-            AuthorizeRequestClaims authorizeRequestClaims = new AuthorizeRequestClaims(intentId,
-                    UkOpenBankingAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
+            AuthorizeRequestClaims authorizeRequestClaims =
+                    new AuthorizeRequestClaims(
+                            intentId,
+                            UkOpenBankingAuthenticatorConstants.ACR_SECURE_AUTHENTICATION_RTS);
 
             return TinkJwtCreator.create()
                     .withKeyId(keyId)
@@ -109,9 +112,12 @@ public class AuthorizeRequest {
                     .withClaim(OpenIdConstants.Params.SCOPE, scope)
                     .withClaim(OpenIdConstants.Params.STATE, state)
                     .withClaim(OpenIdConstants.Params.NONCE, nonce)
-                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.MAX_AGE,
+                    .withClaim(
+                            UkOpenBankingAuthenticatorConstants.Params.MAX_AGE,
                             UkOpenBankingAuthenticatorConstants.MAX_AGE)
-                    .withClaim(UkOpenBankingAuthenticatorConstants.Params.CLAIMS, authorizeRequestClaims)
+                    .withClaim(
+                            UkOpenBankingAuthenticatorConstants.Params.CLAIMS,
+                            authorizeRequestClaims)
                     .sign(algorithm);
         }
     }

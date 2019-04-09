@@ -25,10 +25,11 @@ public class SdcSessionHandler implements SessionHandler {
         // use filter request to check if the session is still alive
         // any error is deemed session expired
         try {
-            FilterAccountsRequest request = new FilterAccountsRequest()
-                    .setIncludeDebitAccounts(true)
-                    .setOnlyFavorites(true)
-                    .setOnlyQueryable(true);
+            FilterAccountsRequest request =
+                    new FilterAccountsRequest()
+                            .setIncludeDebitAccounts(true)
+                            .setOnlyFavorites(true)
+                            .setOnlyQueryable(true);
 
             bankClient.filterAccounts(request);
         } catch (Exception e) {

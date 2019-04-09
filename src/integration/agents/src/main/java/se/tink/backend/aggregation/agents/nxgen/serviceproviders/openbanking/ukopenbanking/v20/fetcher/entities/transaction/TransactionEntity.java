@@ -17,28 +17,39 @@ public class TransactionEntity {
 
     @JsonProperty("AccountId")
     private String accountId;
+
     @JsonProperty("TransactionId")
     private String transactionId;
+
     @JsonProperty("TransactionReference")
     private String transactionReference;
+
     @JsonProperty("Amount")
     private AmountEntity amount;
+
     @JsonProperty("CreditDebitIndicator")
     private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
+
     @JsonProperty("Status")
     private EntryStatusCode status;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("BookingDateTime")
     private Date bookingDateTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("ValueDateTime")
     private Date valueDateTime;
+
     @JsonProperty("TransactionInformation")
     private String transactionInformation;
+
     @JsonProperty("BankTransactionCode")
     private BankTransactionCodeEntity bankTransactionCode;
+
     @JsonProperty("ProprietaryBankTransactionCode")
     private ProprietaryBankTransactionCodeEntity proprietaryBankTransactionCode;
+
     @JsonProperty("Balance")
     private BalanceEntity balance;
 

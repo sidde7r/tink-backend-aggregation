@@ -24,8 +24,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
 
-public class DanskeBankMultiTransactionsFetcher<A extends Account> implements TransactionDatePaginator<A>,
-        UpcomingTransactionFetcher<A> {
+public class DanskeBankMultiTransactionsFetcher<A extends Account>
+        implements TransactionDatePaginator<A>, UpcomingTransactionFetcher<A> {
     private static final ZoneId TIMEZONE = TimeZone.getTimeZone("Europe/Stockholm").toZoneId();
 
     private final DanskeBankApiClient apiClient;
@@ -39,19 +39,30 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
 
     @Override
     public PaginatorResponse getTransactionsFor(A account, Date fromDate, Date toDate) {
-        String from = fromDate.toInstant().atZone(TIMEZONE).toLocalDate().format(DateTimeFormatter.BASIC_ISO_DATE);
-        String to = toDate.toInstant().atZone(TIMEZONE).toLocalDate().format(DateTimeFormatter.BASIC_ISO_DATE);
+        String from =
+                fromDate.toInstant()
+                        .atZone(TIMEZONE)
+                        .toLocalDate()
+                        .format(DateTimeFormatter.BASIC_ISO_DATE);
+        String to =
+                toDate.toInstant()
+                        .atZone(TIMEZONE)
+                        .toLocalDate()
+                        .format(DateTimeFormatter.BASIC_ISO_DATE);
 
-        ListTransactionsRequest listTransactionsRequest = ListTransactionsRequest.create(this.languageCode,
-                account.getBankIdentifier(), from, to);
+        ListTransactionsRequest listTransactionsRequest =
+                ListTransactionsRequest.create(
+                        this.languageCode, account.getBankIdentifier(), from, to);
         ListTransactionsResponse listTransactionsResponse;
 
         // Danske Bank has a limit of how far back in time we can fetch transactions.
-        // If we fetch further then they allow they will respond with a Http status in the range >=400.
+        // If we fetch further then they allow they will respond with a Http status in the range
+        // >=400.
         try {
             listTransactionsResponse = this.apiClient.listTransactions(listTransactionsRequest);
         } catch (HttpResponseException e) {
-            // If we are able to deserialize the response we can be certain that we have made a successful
+            // If we are able to deserialize the response we can be certain that we have made a
+            // successful
             // request but Danske Bank limits how far back we can fetch.
             e.getResponse().getBody(ListTransactionsResponse.class);
             return PaginatorResponseImpl.createEmpty();
@@ -75,15 +86,20 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
                             .collect(Collectors.toList()));
         }
 
-        // TODO: Removing `toDate.after(DateUtils.addYears(new Date(), -2))` will cause paginator to sometimes get
-        // TODO: stuck looping the last transactions forever. -2 is based on transaction range in app. Find better fix.
-        return PaginatorResponseImpl.create(transactions, toDate.after(DateUtils.addYears(new Date(), -2)));
+        // TODO: Removing `toDate.after(DateUtils.addYears(new Date(), -2))` will cause paginator to
+        // sometimes get
+        // TODO: stuck looping the last transactions forever. -2 is based on transaction range in
+        // app. Find better fix.
+        return PaginatorResponseImpl.create(
+                transactions, toDate.after(DateUtils.addYears(new Date(), -2)));
     }
 
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(A account) {
-        FutureTransactionsResponse futureTransactionsResponse = this.apiClient.listUpcomingTransactions(
-                FutureTransactionsRequest.create(this.languageCode, account.getBankIdentifier()));
+        FutureTransactionsResponse futureTransactionsResponse =
+                this.apiClient.listUpcomingTransactions(
+                        FutureTransactionsRequest.create(
+                                this.languageCode, account.getBankIdentifier()));
 
         return futureTransactionsResponse.getTransactions().stream()
                 .map(TransactionEntity::toTinkUpcomingTransaction)

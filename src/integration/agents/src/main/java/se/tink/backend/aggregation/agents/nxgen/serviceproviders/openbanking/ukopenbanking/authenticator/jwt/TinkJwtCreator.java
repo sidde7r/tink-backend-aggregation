@@ -16,7 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 
-// This is a copy of auth0.JWTCreator with the addition of `Builder.withClaim(String name, Object value)`.
+// This is a copy of auth0.JWTCreator with the addition of `Builder.withClaim(String name, Object
+// value)`.
 // It depends on auth0.jwt for, among other things, the Algorithm class.
 final class TinkJwtCreator {
 
@@ -24,7 +25,9 @@ final class TinkJwtCreator {
     private final String headerJson;
     private final String payloadJson;
 
-    private TinkJwtCreator(Algorithm algorithm, Map<String, Object> headerClaims,
+    private TinkJwtCreator(
+            Algorithm algorithm,
+            Map<String, Object> headerClaims,
             Map<String, Object> payloadClaims)
             throws JWTCreationException {
         this.algorithm = algorithm;
@@ -63,9 +66,9 @@ final class TinkJwtCreator {
         }
 
         /**
-         * Add a specific Key Id ("kid") claim to the Header.
-         * If the {@link Algorithm} used to sign this token was instantiated with a KeyProvider, the 'kid' value will
-         * be taken from that provider and this one will be ignored.
+         * Add a specific Key Id ("kid") claim to the Header. If the {@link Algorithm} used to sign
+         * this token was instantiated with a KeyProvider, the 'kid' value will be taken from that
+         * provider and this one will be ignored.
          *
          * @param keyId the Key Id value.
          * @return this same Builder instance.
@@ -155,7 +158,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -169,7 +172,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -183,7 +186,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -197,7 +200,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -211,7 +214,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -225,7 +228,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -239,7 +242,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Claim value.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param value the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -253,7 +256,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Array Claim with the given items.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param items the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -267,7 +270,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Array Claim with the given items.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param items the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -282,7 +285,7 @@ final class TinkJwtCreator {
         /**
          * Add a custom Array Claim with the given items.
          *
-         * @param name  the Claim's name.
+         * @param name the Claim's name.
          * @param items the Claim's value.
          * @return this same Builder instance.
          * @throws IllegalArgumentException if the name is null.
@@ -299,7 +302,8 @@ final class TinkJwtCreator {
          * @param algorithm used to sign the JWT
          * @return a new JWT token
          * @throws IllegalArgumentException if the provided algorithm is null.
-         * @throws JWTCreationException     if the claims could not be converted to a valid JSON or there was a problem with the signing key.
+         * @throws JWTCreationException if the claims could not be converted to a valid JSON or
+         *     there was a problem with the signing key.
          */
         public String sign(Algorithm algorithm)
                 throws IllegalArgumentException, JWTCreationException {
@@ -335,10 +339,10 @@ final class TinkJwtCreator {
     }
 
     private String sign() throws SignatureGenerationException {
-        String header = Base64
-                .encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
-        String payload = Base64
-                .encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
+        String header =
+                Base64.encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
+        String payload =
+                Base64.encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
         String content = String.format("%s.%s", header, payload);
 
         byte[] signatureBytes = algorithm.sign(content.getBytes(StandardCharsets.UTF_8));

@@ -12,8 +12,10 @@ public class LoanDetailsEntity extends LoanEntity {
     private static final AggregationLogger log = new AggregationLogger(LoanDetailsEntity.class);
 
     private Boolean financingLimitProduct;
+
     @JsonProperty("loanNextPayment")
     private NextLoanPayment nextPayment;
+
     @JsonProperty("loanBasicInfo")
     private BasicLoanInfo basicInfo;
 
@@ -21,22 +23,23 @@ public class LoanDetailsEntity extends LoanEntity {
         return LoanAccount.builder(getLoanNumber(), getBalance().toTinkAmount().negate())
                 .setAccountNumber(getLoanNumber())
                 .setInterestRate(basicInfo.getInterestRateTotal() / 100)
-                .setDetails(LoanDetails.builder(getType())
-                        .setLoanNumber(getLoanNumber())
-                        .build())
+                .setDetails(LoanDetails.builder(getType()).setLoanNumber(getLoanNumber()).build())
                 .build();
     }
 
     private LoanDetails.Type getType() {
         switch (getLoanPurpose().toUpperCase()) {
-        case SamlinkConstants.LoanType.MORTGAGE:
-            return LoanDetails.Type.MORTGAGE;
-        case SamlinkConstants.LoanType.STUDENT:
-            return LoanDetails.Type.STUDENT;
-        case SamlinkConstants.LoanType.OTHER:
-            break;
-        default:
-            log.info(SamlinkConstants.LogTags.UNKNOWN_LOAN_TYPE.toString() + " RawType: " + getLoanPurpose());
+            case SamlinkConstants.LoanType.MORTGAGE:
+                return LoanDetails.Type.MORTGAGE;
+            case SamlinkConstants.LoanType.STUDENT:
+                return LoanDetails.Type.STUDENT;
+            case SamlinkConstants.LoanType.OTHER:
+                break;
+            default:
+                log.info(
+                        SamlinkConstants.LogTags.UNKNOWN_LOAN_TYPE.toString()
+                                + " RawType: "
+                                + getLoanPurpose());
         }
 
         return LoanDetails.Type.OTHER;

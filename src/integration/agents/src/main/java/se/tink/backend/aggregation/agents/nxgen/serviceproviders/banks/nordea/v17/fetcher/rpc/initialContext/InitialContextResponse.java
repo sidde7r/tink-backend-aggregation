@@ -7,7 +7,6 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.entities.BankingServiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.InitialContextData;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.ProductEntity;
@@ -17,6 +16,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class InitialContextResponse extends NordeaResponse {
     private BankingServiceEntity bankingServiceResponse;
+
     @JsonProperty("getInitialContextOut")
     private InitialContextData data;
 

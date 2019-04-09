@@ -8,12 +8,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CardsEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double balance;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String cardId;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double creditLimit;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double fundsAvailable;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String ownerName;
 

@@ -27,6 +27,8 @@ public class LoanDetailsResponse extends NordeaResponse {
 
     @JsonIgnore
     public LoanPaymentDetails getFollowingPayment() {
-        return Optional.ofNullable(loanDetails).map(LoanDetailsEntity::getFollowingPayment).orElse(null);
+        return Optional.ofNullable(loanDetails)
+                .map(LoanDetailsEntity::getFollowingPayment)
+                .orElse(null);
     }
 }

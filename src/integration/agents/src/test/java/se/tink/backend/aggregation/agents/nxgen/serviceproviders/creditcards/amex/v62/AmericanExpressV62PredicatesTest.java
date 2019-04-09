@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collections;
@@ -12,10 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubcardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AmericanExpressV62PredicatesTest {
 
@@ -179,17 +180,21 @@ public class AmericanExpressV62PredicatesTest {
 
     @Test
     public void checkIfSubcardIsParterCard_IsPartnerCard() throws IOException {
-        SubcardEntity subcardEntity = mapper.readValue(
-                AmericanExpressV62PredicatesTestData.PARTNER_SUBCARD, SubcardEntity.class);
-        assertTrue(AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
+        SubcardEntity subcardEntity =
+                mapper.readValue(
+                        AmericanExpressV62PredicatesTestData.PARTNER_SUBCARD, SubcardEntity.class);
+        assertTrue(
+                AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
                         subcardEntity, Lists.newArrayList(partnerCardEntity)));
     }
 
     @Test
     public void checkIfSubcardIsParterCard_NotPartnerCard() throws IOException {
-        SubcardEntity subcardEntity = mapper.readValue(
-                AmericanExpressV62PredicatesTestData.REGULAR_SUBCARD, SubcardEntity.class);
-        assertFalse(AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
-                       subcardEntity,  Lists.newArrayList(partnerCardEntity)));
+        SubcardEntity subcardEntity =
+                mapper.readValue(
+                        AmericanExpressV62PredicatesTestData.REGULAR_SUBCARD, SubcardEntity.class);
+        assertFalse(
+                AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
+                        subcardEntity, Lists.newArrayList(partnerCardEntity)));
     }
 }

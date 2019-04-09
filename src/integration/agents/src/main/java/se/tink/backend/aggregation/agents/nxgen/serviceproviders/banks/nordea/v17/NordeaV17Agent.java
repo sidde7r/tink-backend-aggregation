@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.transactionalaccount.NordeaV17TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers.NordeaV17Parser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.session.NordeaV17SessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -17,14 +18,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public abstract class NordeaV17Agent extends NextGenerationAgent {
 
     protected final NordeaV17ApiClient nordeaClient;
     protected final NordeaV17Parser parser;
 
-    protected NordeaV17Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    protected NordeaV17Agent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             NordeaV17Parser parser) {
         super(request, context, signatureKeyPair);
 
@@ -35,34 +38,52 @@ public abstract class NordeaV17Agent extends NextGenerationAgent {
     protected abstract NordeaV17ApiClient constructNordeaClient();
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        NordeaV17TransactionalAccountFetcher transactionalAccountFetcher = new NordeaV17TransactionalAccountFetcher(
-                nordeaClient, parser);
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                transactionalAccountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionalAccountFetcher),
-                        transactionalAccountFetcher)));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        NordeaV17TransactionalAccountFetcher transactionalAccountFetcher =
+                new NordeaV17TransactionalAccountFetcher(nordeaClient, parser);
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        transactionalAccountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        transactionalAccountFetcher),
+                                transactionalAccountFetcher)));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        NordeaV17CreditCardFetcher creditCardFetcher = new NordeaV17CreditCardFetcher(nordeaClient, parser);
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController, creditCardFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(creditCardFetcher))));
+        NordeaV17CreditCardFetcher creditCardFetcher =
+                new NordeaV17CreditCardFetcher(nordeaClient, parser);
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(creditCardFetcher))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new NordeaV17InvestmentFetcher(nordeaClient, parser)));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaV17InvestmentFetcher(nordeaClient, parser)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController,
-                new NordeaV17LoanFetcher(nordeaClient, parser)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaV17LoanFetcher(nordeaClient, parser)));
     }
 
     @Override

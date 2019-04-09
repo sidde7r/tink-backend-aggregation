@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public interface EuroInformationApiClientFactory {
-    <T extends EuroInformationApiClient> T getApiClient(TinkHttpClient client,
+    <T extends EuroInformationApiClient> T getApiClient(
+            TinkHttpClient client,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config);
 }

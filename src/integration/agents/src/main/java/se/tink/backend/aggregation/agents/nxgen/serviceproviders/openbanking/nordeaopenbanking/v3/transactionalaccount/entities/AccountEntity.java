@@ -14,26 +14,38 @@ import se.tink.libraries.amount.Amount;
 public class AccountEntity {
     private String id;
     private String country;
+
     @JsonProperty("account_numbers")
     private List<AccountNumbersEntity> accountNumbers;
+
     private String currency;
+
     @JsonProperty("account_name")
     private String accountName;
+
     private String product;
+
     @JsonProperty("account_type")
     private String accountType;
+
     @JsonProperty("available_balance")
     private String availableBalance;
+
     @JsonProperty("booked_balance")
     private String bookedBalance;
+
     @JsonProperty("value_dated_balance")
     private String valueDatedBalance;
+
     private BankEntity bank;
     private String status;
+
     @JsonProperty("credit_limit")
     private String creditLimit;
+
     @JsonProperty("latest_transaction_booking_date")
     private String latestTransactionBookingDate;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 

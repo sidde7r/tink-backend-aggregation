@@ -7,16 +7,13 @@ public class LoginCredentials {
 
     private UserIdLogin userIdLogin;
 
-    public LoginCredentials setUserIdLogin(
-            UserIdLogin userIdLogin) {
+    public LoginCredentials setUserIdLogin(UserIdLogin userIdLogin) {
         this.userIdLogin = userIdLogin;
         return this;
     }
 
     public void setUsernameAndPassword(String username, String password) {
         this.userIdLogin = new UserIdLogin();
-        this.userIdLogin.setUserId(username)
-                .setPassword(password)
-                .setRememberMeFlag(true);
+        this.userIdLogin.setUserId(username).setPassword(password).setRememberMeFlag(true);
     }
 }

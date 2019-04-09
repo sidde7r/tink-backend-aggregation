@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class StrongAuthenticationResponse  extends DefaultResponse {
+public class StrongAuthenticationResponse extends DefaultResponse {
     private String partnerId;
     private String slToken;
     private String llToken;

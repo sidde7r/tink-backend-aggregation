@@ -25,7 +25,9 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
     private final DanskeBankConfiguration configuration;
     private final String languageCode;
 
-    public DanskeBankLoanFetcher(Credentials credentials, DanskeBankApiClient apiClient,
+    public DanskeBankLoanFetcher(
+            Credentials credentials,
+            DanskeBankApiClient apiClient,
             DanskeBankConfiguration configuration) {
         this.credentials = credentials;
         this.apiClient = apiClient;
@@ -41,22 +43,28 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
         // TODO: remove try/catch once we see it works
         try {
             // this is only mortgages (real estate)
-            ListLoansResponse loansResponse = apiClient.listLoans(ListLoansRequest.createFromLanguageCode(languageCode));
+            ListLoansResponse loansResponse =
+                    apiClient.listLoans(ListLoansRequest.createFromLanguageCode(languageCode));
 
             return Optional.ofNullable(loansResponse.getLoans()).orElse(Collections.emptyList())
                     .stream()
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            LOG.warn(DanskeBankConstants.LogTags.LOAN_ACCOUNT + " - Failed to fetch loans " + e.getMessage());
+            LOG.warn(
+                    DanskeBankConstants.LogTags.LOAN_ACCOUNT
+                            + " - Failed to fetch loans "
+                            + e.getMessage());
 
             return Collections.emptyList();
         }
     }
 
     private LoanAccount toLoanAccount(LoanEntity loan) {
-        LoanDetailsResponse loanDetailsResponse = apiClient.loanDetails(
-                new LoanDetailsRequest(languageCode, loan.getRealEstateNumber(), loan.getLoanNumber()));
+        LoanDetailsResponse loanDetailsResponse =
+                apiClient.loanDetails(
+                        new LoanDetailsRequest(
+                                languageCode, loan.getRealEstateNumber(), loan.getLoanNumber()));
 
         return loan.toTinkLoan(loanDetailsResponse);
     }

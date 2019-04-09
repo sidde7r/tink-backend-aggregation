@@ -12,18 +12,24 @@ import se.tink.libraries.amount.Amount;
 public class NordeaTransactionParser {
 
     public Optional<Transaction> toTinkTransaction(TransactionEntity transactionEntity) {
-        if (noContent(transactionEntity.getAmount()) ||
-                (noContent(transactionEntity.getTransactionDate()) && noContent(transactionEntity.getBookingDate()))) {
+        if (noContent(transactionEntity.getAmount())
+                || (noContent(transactionEntity.getTransactionDate())
+                        && noContent(transactionEntity.getBookingDate()))) {
             return Optional.empty();
-
         }
-        return Optional.of(Transaction.builder()
-                .setDate(getDate(transactionEntity))
-                .setDescription(getDescription(transactionEntity))
-                .setAmount(new Amount(transactionEntity.getCurrency(), new BigDecimal(transactionEntity.getAmount())))
-                .setExternalId(transactionEntity.getTransactionId())
-                .setPending(NordeaBaseConstants.Transaction.RESERVED.equalsIgnoreCase(transactionEntity.getStatus()))
-                .build());
+        return Optional.of(
+                Transaction.builder()
+                        .setDate(getDate(transactionEntity))
+                        .setDescription(getDescription(transactionEntity))
+                        .setAmount(
+                                new Amount(
+                                        transactionEntity.getCurrency(),
+                                        new BigDecimal(transactionEntity.getAmount())))
+                        .setExternalId(transactionEntity.getTransactionId())
+                        .setPending(
+                                NordeaBaseConstants.Transaction.RESERVED.equalsIgnoreCase(
+                                        transactionEntity.getStatus()))
+                        .build());
     }
 
     protected String getDescription(TransactionEntity transactionEntity) {

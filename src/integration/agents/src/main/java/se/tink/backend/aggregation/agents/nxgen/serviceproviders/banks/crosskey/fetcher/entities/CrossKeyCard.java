@@ -26,7 +26,8 @@ public class CrossKeyCard {
     }
 
     public CreditCardAccount toCreditCardAccount() {
-        return CreditCardAccount.builder(id, Amount.inEUR(-currentTotalDebt), Amount.inEUR(usageLimit))
+        return CreditCardAccount.builder(
+                        id, Amount.inEUR(-currentTotalDebt), Amount.inEUR(usageLimit))
                 .setAccountNumber(maskedCardNumber)
                 .setName(maskedCardNumber)
                 .setBankIdentifier(id)

@@ -25,7 +25,9 @@ public class NordeaBaseApiClient {
     private final NordeaSessionStorage sessionStorage;
     private final NordeaPersistentStorage persistentStorage;
 
-    public NordeaBaseApiClient(TinkHttpClient client, NordeaSessionStorage sessionStorage,
+    public NordeaBaseApiClient(
+            TinkHttpClient client,
+            NordeaSessionStorage sessionStorage,
             NordeaPersistentStorage persistentStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
@@ -39,9 +41,10 @@ public class NordeaBaseApiClient {
 
     public PollAuthResponse pollAuthCode(String collectPath, String tppTokenHeaderValue) {
 
-        HttpResponse response = createAuthRequest(NordeaBaseConstants.Url.getUrlForLink(collectPath))
-                .header(HttpHeaders.AUTHORIZATION, tppTokenHeaderValue)
-                .get(HttpResponse.class);
+        HttpResponse response =
+                createAuthRequest(NordeaBaseConstants.Url.getUrlForLink(collectPath))
+                        .header(HttpHeaders.AUTHORIZATION, tppTokenHeaderValue)
+                        .get(HttpResponse.class);
 
         if (response.getStatus() == HttpStatus.SC_OK) {
             return response.getBody(PollAuthResponse.class);
@@ -50,35 +53,45 @@ public class NordeaBaseApiClient {
         throw new HttpResponseException(response.getRequest(), response);
     }
 
-    public TokenResponse getAccessToken(String tokenPath, String tppTokenHeaderValue, TokenRequest request) {
+    public TokenResponse getAccessToken(
+            String tokenPath, String tppTokenHeaderValue, TokenRequest request) {
         return createAuthRequest(NordeaBaseConstants.Url.getUrlForLink(tokenPath))
                 .header(HttpHeaders.AUTHORIZATION, tppTokenHeaderValue)
                 .post(TokenResponse.class, request);
     }
 
     public OauthTokenResponse oauthExchangeCodeForAccessToken(String code) {
-        Form request = Form.builder()
-                .put(NordeaBaseConstants.Query.CODE, code)
-                .put(NordeaBaseConstants.Query.REDIRECT_URI, persistentStorage.getRedirectUrl())
-                .build();
+        Form request =
+                Form.builder()
+                        .put(NordeaBaseConstants.Query.CODE, code)
+                        .put(
+                                NordeaBaseConstants.Query.REDIRECT_URI,
+                                persistentStorage.getRedirectUrl())
+                        .build();
 
-        return createAuthRequest(NordeaBaseConstants.Url.ACCESS_TOKEN, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+        return createAuthRequest(
+                        NordeaBaseConstants.Url.ACCESS_TOKEN,
+                        MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(OauthTokenResponse.class, request.serialize());
     }
 
     public TokenResponse exchangeCodeForAccessToken(String code) {
-        Form request = Form.builder()
-                .put(NordeaBaseConstants.Query.CODE, code)
-                .put(NordeaBaseConstants.Query.REDIRECT_URI, persistentStorage.getRedirectUrl())
-                .build();
+        Form request =
+                Form.builder()
+                        .put(NordeaBaseConstants.Query.CODE, code)
+                        .put(
+                                NordeaBaseConstants.Query.REDIRECT_URI,
+                                persistentStorage.getRedirectUrl())
+                        .build();
 
-        return createAuthRequest(NordeaBaseConstants.Url.ACCESS_TOKEN, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+        return createAuthRequest(
+                        NordeaBaseConstants.Url.ACCESS_TOKEN,
+                        MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class, request.serialize());
     }
 
     public AccountsResponse fetchAccounts() {
-        return createApiRequest(NordeaBaseConstants.Url.ACCOUNTS)
-                .get(AccountsResponse.class);
+        return createApiRequest(NordeaBaseConstants.Url.ACCOUNTS).get(AccountsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(String path) {
@@ -89,7 +102,9 @@ public class NordeaBaseApiClient {
     private RequestBuilder createAuthRequest(URL url, MediaType contentType) {
         return client.request(url)
                 .header(NordeaBaseConstants.Header.CLIENT_ID, persistentStorage.getClientId())
-                .header(NordeaBaseConstants.Header.CLIENT_SECRET, persistentStorage.getClientsecret())
+                .header(
+                        NordeaBaseConstants.Header.CLIENT_SECRET,
+                        persistentStorage.getClientsecret())
                 .type(contentType);
     }
 
@@ -98,8 +113,10 @@ public class NordeaBaseApiClient {
     }
 
     private RequestBuilder createApiRequest(URL url) {
-        OAuth2Token accessToken = sessionStorage.getAccessToken()
-                .orElseThrow(() -> new IllegalStateException("No access token found"));
+        OAuth2Token accessToken =
+                sessionStorage
+                        .getAccessToken()
+                        .orElseThrow(() -> new IllegalStateException("No access token found"));
         return createAuthRequest(url)
                 .header(HttpHeaders.AUTHORIZATION, accessToken.toAuthorizeHeader());
     }

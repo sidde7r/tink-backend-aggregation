@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountsResponseEntity {
     private List<AccountEntity> accounts;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 

@@ -21,7 +21,10 @@ public class AccountsResponse extends NordeaResponseBase {
         }
         return response.getAccounts().stream()
                 .filter(AccountEntity::isOpen)
-                .filter(account -> NordeaBaseConstants.ACCOUNT_TYPE.isTransactionalAccount(account.tinkAccountType()))
+                .filter(
+                        account ->
+                                NordeaBaseConstants.ACCOUNT_TYPE.isTransactionalAccount(
+                                        account.tinkAccountType()))
                 .map(accountParser::toTinkAccount)
                 .collect(Collectors.toList());
     }

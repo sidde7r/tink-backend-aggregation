@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.entities.CardsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.entities.CreditCardTransactionEntity;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public abstract class NordeaV17Parser {
     private final TransactionParser transactionParser;
@@ -50,9 +50,14 @@ public abstract class NordeaV17Parser {
     }
 
     public abstract AccountTypes getTinkAccountType(ProductEntity pe);
+
     public abstract TransactionalAccount parseTransactionalAccount(ProductEntity pe);
-    public abstract LoanAccount parseLoanAccount(ProductEntity pe, LoanDetailsEntity loanDetailsResponse);
-    public abstract CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardsEntity cardsEntity);
+
+    public abstract LoanAccount parseLoanAccount(
+            ProductEntity pe, LoanDetailsEntity loanDetailsResponse);
+
+    public abstract CreditCardAccount parseCreditCardAccount(
+            ProductEntity pe, CardsEntity cardsEntity);
 
     public abstract InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount);
 

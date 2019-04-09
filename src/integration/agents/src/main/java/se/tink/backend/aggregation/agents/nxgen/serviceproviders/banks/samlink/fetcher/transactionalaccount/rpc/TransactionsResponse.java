@@ -16,14 +16,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionsResponse extends LinksResponse {
     private List<TransactionEntity> transactions;
 
-    public List<Transaction> toTinkTransactions(Function<Links, TransactionDetailsResponse>
-            detailsSupplier) {
+    public List<Transaction> toTinkTransactions(
+            Function<Links, TransactionDetailsResponse> detailsSupplier) {
         return Optional.ofNullable(transactions)
                 .map(Collection::stream)
-                .map(trans -> trans
-                        .map(transaction -> detailsSupplier.apply(transaction.getLinks()))
-                        .map(TransactionDetailsResponse::toTinkTransaction)
-                        .collect(Collectors.toList()))
+                .map(
+                        trans ->
+                                trans.map(
+                                                transaction ->
+                                                        detailsSupplier.apply(
+                                                                transaction.getLinks()))
+                                        .map(TransactionDetailsResponse::toTinkTransaction)
+                                        .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 

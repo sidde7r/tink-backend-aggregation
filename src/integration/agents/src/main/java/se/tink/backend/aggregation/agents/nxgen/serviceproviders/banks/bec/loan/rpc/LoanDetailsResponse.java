@@ -17,17 +17,22 @@ public class LoanDetailsResponse {
     }
 
     public Optional<Double> getInterestRate() {
-        Optional<String> interestRate = mortgageLoanDetails.stream()
-                .map(MortgageLoanDetailsEntity::getDetailsInGroup)
-                .flatMap(List::stream)
-                .filter(details -> BecConstants.Loan.INTEREST_DETAILS_KEY.equalsIgnoreCase(details.getDetailName()))
-                .map(DetailsInGroupEntity::getDetailValue)
-                .findFirst();
+        Optional<String> interestRate =
+                mortgageLoanDetails.stream()
+                        .map(MortgageLoanDetailsEntity::getDetailsInGroup)
+                        .flatMap(List::stream)
+                        .filter(
+                                details ->
+                                        BecConstants.Loan.INTEREST_DETAILS_KEY.equalsIgnoreCase(
+                                                details.getDetailName()))
+                        .map(DetailsInGroupEntity::getDetailValue)
+                        .findFirst();
 
         if (!interestRate.isPresent()) {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(AgentParsingUtils.parsePercentageFormInterest(interestRate.get()));
+        return Optional.ofNullable(
+                AgentParsingUtils.parsePercentageFormInterest(interestRate.get()));
     }
 }

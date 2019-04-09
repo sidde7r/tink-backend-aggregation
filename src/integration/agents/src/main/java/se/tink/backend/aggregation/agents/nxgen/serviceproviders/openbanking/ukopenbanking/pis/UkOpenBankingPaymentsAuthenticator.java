@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.rpc.WellKnownResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 public class UkOpenBankingPaymentsAuthenticator implements OpenIdAuthenticator {
     private final UkOpenBankingApiClient apiClient;
@@ -52,16 +52,14 @@ public class UkOpenBankingPaymentsAuthenticator implements OpenIdAuthenticator {
     @Override
     public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
 
-        intentId = ukOpenBankingPis.getBankTransferIntentId(
-                apiClient,
-                sourceIdentifier,
-                destinationIdentifier,
-                amount,
-                referenceText);
+        intentId =
+                ukOpenBankingPis.getBankTransferIntentId(
+                        apiClient, sourceIdentifier, destinationIdentifier, amount, referenceText);
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 
-        return authorizeUrl.queryParam(UkOpenBankingAuthenticatorConstants.Params.REQUEST,
+        return authorizeUrl.queryParam(
+                UkOpenBankingAuthenticatorConstants.Params.REQUEST,
                 AuthorizeRequest.create()
                         .withClientInfo(providerConfiguration.getClientInfo())
                         .withPaymentsScope()
@@ -70,7 +68,6 @@ public class UkOpenBankingPaymentsAuthenticator implements OpenIdAuthenticator {
                         .withNonce(nonce)
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
-                        .build()
-        );
+                        .build());
     }
 }

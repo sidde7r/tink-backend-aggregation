@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankSeSerializationUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -69,21 +69,26 @@ public abstract class AccountEntity extends AbstractAccountEntity {
         return balance == null || balance.replaceAll("[^0-9]", "").isEmpty();
     }
 
-    protected Optional<TransactionalAccount> toTransactionalAccount(BankProfile bankProfile, @Nonnull AccountTypes type) {
+    protected Optional<TransactionalAccount> toTransactionalAccount(
+            BankProfile bankProfile, @Nonnull AccountTypes type) {
         if (fullyFormattedNumber == null || currency == null || isBalanceUndefined()) {
             return Optional.empty();
         }
 
         return Optional.of(
-                TransactionalAccount.builder(type, fullyFormattedNumber,
-                        new Amount(currency, StringUtils.parseAmount(balance)))
+                TransactionalAccount.builder(
+                                type,
+                                fullyFormattedNumber,
+                                new Amount(currency, StringUtils.parseAmount(balance)))
                         .setAccountNumber(fullyFormattedNumber)
                         .setName(name)
                         .setBankIdentifier(id)
                         .addIdentifier(new SwedishIdentifier(fullyFormattedNumber))
-                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK,
+                        .putInTemporaryStorage(
+                                SwedbankBaseConstants.StorageKey.NEXT_LINK,
                                 links != null ? links.getNext() : null)
-                        .putInTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
+                        .putInTemporaryStorage(
+                                SwedbankBaseConstants.StorageKey.PROFILE, bankProfile)
                         .build());
     }
 }

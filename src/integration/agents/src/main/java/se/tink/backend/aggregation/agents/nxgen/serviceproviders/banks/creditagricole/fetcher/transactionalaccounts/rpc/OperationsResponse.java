@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class OperationsResponse extends DefaultResponse {
     private List<MissEntity> miss;
+
     @JsonProperty("operation")
     private List<OperationEntity> operations;
 

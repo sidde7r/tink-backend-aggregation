@@ -5,12 +5,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @Ignore
 public class ModeloAgentTest {
@@ -34,29 +34,29 @@ public class ModeloAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        getAgentBuilder()
-                .build()
-                .testRefresh();
+        getAgentBuilder().build().testRefresh();
     }
 
     @Test
     public void testBanktransfer() throws Exception {
 
-        Transfer transfer = createTransfer(
-                sourceAccount,
-                destinationAccount,
-                null,
-                "Test transfer",
-                Amount.valueOf("GBP", 100, 2)
-        );
+        Transfer transfer =
+                createTransfer(
+                        sourceAccount,
+                        destinationAccount,
+                        null,
+                        "Test transfer",
+                        Amount.valueOf("GBP", 100, 2));
 
-        getAgentBuilder()
-                .build()
-                .testBankTransfer(transfer);
+        getAgentBuilder().build().testBankTransfer(transfer);
     }
 
-    private Transfer createTransfer(AccountIdentifier sourceAccount, AccountIdentifier destinationAccount,
-            Date dueDate, String destinationMessage, Amount amount) {
+    private Transfer createTransfer(
+            AccountIdentifier sourceAccount,
+            AccountIdentifier destinationAccount,
+            Date dueDate,
+            String destinationMessage,
+            Amount amount) {
         Transfer transfer = new Transfer();
 
         transfer.setSource(sourceAccount);

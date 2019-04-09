@@ -15,6 +15,7 @@ public class CreditCardTransactionEntities {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private List<CreditCardTransactionEntity> transactions;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String continuationKey;
 
@@ -27,8 +28,9 @@ public class CreditCardTransactionEntities {
     }
 
     /**
-     * Nordea API is a bit weird and send items on different formats depending on the number of items. Multiple
-     * rows means that we will get an List of items and one row will not be typed as an array.
+     * Nordea API is a bit weird and send items on different formats depending on the number of
+     * items. Multiple rows means that we will get an List of items and one row will not be typed as
+     * an array.
      */
     public void setTransactions(Object input) {
         if (input == null) {
@@ -36,9 +38,13 @@ public class CreditCardTransactionEntities {
         }
 
         if (input instanceof Map) {
-            transactions = Lists.newArrayList(MAPPER.convertValue(input, CreditCardTransactionEntity.class));
+            transactions =
+                    Lists.newArrayList(
+                            MAPPER.convertValue(input, CreditCardTransactionEntity.class));
         } else {
-            transactions = MAPPER.convertValue(input, new TypeReference<List<CreditCardTransactionEntity>>() {});
+            transactions =
+                    MAPPER.convertValue(
+                            input, new TypeReference<List<CreditCardTransactionEntity>>() {});
         }
     }
 }

@@ -35,10 +35,8 @@ public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {
                                 "Unknown type: %s\nAccount: %s\nDetails: %s",
                                 details.getAccountType(),
                                 SerializationUtils.serializeToString(account),
-                                SerializationUtils.serializeToString(details)
-                        ),
-                        BecConstants.Log.UNKOWN_ACCOUNT_TYPE
-                );
+                                SerializationUtils.serializeToString(details)),
+                        BecConstants.Log.UNKOWN_ACCOUNT_TYPE);
             }
 
             // Filter out non-transactional accounts

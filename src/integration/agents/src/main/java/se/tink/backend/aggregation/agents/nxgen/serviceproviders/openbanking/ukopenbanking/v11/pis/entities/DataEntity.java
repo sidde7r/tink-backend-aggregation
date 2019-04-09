@@ -73,9 +73,7 @@ public class DataEntity {
                         sourceAccount,
                         destinationAccount,
                         amount,
-                        bankTransferMessage
-                )
-        );
+                        bankTransferMessage));
     }
 
     @JsonIgnore
@@ -96,8 +94,6 @@ public class DataEntity {
                         sourceAccount,
                         destinationAccount,
                         amount,
-                        bankTransferMessage
-                )
-        );
+                        bankTransferMessage));
     }
 }

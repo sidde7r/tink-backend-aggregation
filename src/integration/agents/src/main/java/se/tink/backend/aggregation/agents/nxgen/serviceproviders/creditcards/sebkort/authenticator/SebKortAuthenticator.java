@@ -53,7 +53,8 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
     public BankIdStatus collect(BankIdInitResponse reference)
             throws AuthenticationException, AuthorizationException {
         try {
-            final BankIdCollectRequest collectRequest = new BankIdCollectRequest(reference.getOrderRef());
+            final BankIdCollectRequest collectRequest =
+                    new BankIdCollectRequest(reference.getOrderRef());
             final BankIdCollectResponse collectResponse =
                     apiClient.collectBankId(reference.getCollectUrl(), collectRequest);
 
@@ -74,12 +75,16 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 final AuthResponse authResponse = apiClient.auth(authRequest);
 
                 if (authResponse.isSuccess()) {
-                    LOGGER.info("BankID Login successful " + SerializationUtils.serializeToString(authResponse));
+                    LOGGER.info(
+                            "BankID Login successful "
+                                    + SerializationUtils.serializeToString(authResponse));
                     sessionStorage.put(
                             SebKortConstants.StorageKey.AUTHORIZATION,
                             "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
                 } else {
-                    LOGGER.info("BankID Login Failed " + SerializationUtils.serializeToString(authResponse));
+                    LOGGER.info(
+                            "BankID Login Failed "
+                                    + SerializationUtils.serializeToString(authResponse));
                 }
             }
             return bankIdStatus;

@@ -5,6 +5,9 @@ import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConstants;
@@ -17,16 +20,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(
-            SebKortAuthenticator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SebKortAuthenticator.class);
 
     private final SebKortApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -53,7 +52,8 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
     public BankIdStatus collect(BankIdInitResponse reference)
             throws AuthenticationException, AuthorizationException {
         try {
-            final BankIdCollectRequest collectRequest = new BankIdCollectRequest(reference.getOrderRef());
+            final BankIdCollectRequest collectRequest =
+                    new BankIdCollectRequest(reference.getOrderRef());
             final BankIdCollectResponse collectResponse =
                     apiClient.collectBankId(reference.getCollectUrl(), collectRequest);
 

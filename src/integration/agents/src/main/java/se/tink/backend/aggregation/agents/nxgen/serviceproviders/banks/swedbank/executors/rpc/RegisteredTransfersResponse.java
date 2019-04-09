@@ -13,8 +13,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 public class RegisteredTransfersResponse {
-    @JsonIgnore
-    private static final String EMPTY_STRING = "";
+    @JsonIgnore private static final String EMPTY_STRING = "";
     private LinksEntity links;
     private String amount;
     private CountEntity remainingEinvoices;
@@ -37,33 +36,39 @@ public class RegisteredTransfersResponse {
     }
 
     public void oneUnsignedTransferOrThrow() {
-        List<TransferTransactionEntity> registeredTransactionEntities = Optional.ofNullable(registeredTransactions)
-                .orElseGet(Collections::emptyList);
+        List<TransferTransactionEntity> registeredTransactionEntities =
+                Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList);
 
         if (registeredTransactionEntities.size() != 1) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS.getKey().get())
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.NOT_EXACTLY_ONE_UNSIGNED_TRANSFER)
+                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS
+                                    .getKey()
+                                    .get())
+                    .setMessage(
+                            SwedbankBaseConstants.ErrorMessage.NOT_EXACTLY_ONE_UNSIGNED_TRANSFER)
                     .build();
         }
     }
 
     public void noUnsignedTransfersOrThrow() {
-        List<TransferTransactionEntity> registeredTransactionEntities = Optional.ofNullable(registeredTransactions)
-                .orElseGet(Collections::emptyList);
+        List<TransferTransactionEntity> registeredTransactionEntities =
+                Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList);
 
         if (!registeredTransactionEntities.isEmpty()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS.getKey().get())
+                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS
+                                    .getKey()
+                                    .get())
                     .setMessage(SwedbankBaseConstants.ErrorMessage.UNSIGNED_TRANFERS)
                     .build();
         }
     }
 
     public Optional<String> getIdToConfirm() {
-        return Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList).stream()
+        return Optional.ofNullable(registeredTransactions).orElseGet(Collections::emptyList)
+                .stream()
                 .map(TransferTransactionEntity::getTransactions)
                 .flatMap(Collection::stream)
                 .map(TransactionEntity::getId)

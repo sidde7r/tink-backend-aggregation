@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -29,14 +29,11 @@ public class SavingsAccountEntity {
     }
 
     public boolean isValid() {
-        return !Strings.isNullOrEmpty(id) &&
-                !Strings.isNullOrEmpty(name) &&
-                balance > 0;
+        return !Strings.isNullOrEmpty(id) && !Strings.isNullOrEmpty(name) && balance > 0;
     }
 
     public TransactionalAccount toSavingsAccount() {
-        return SavingsAccount
-                .builder(getId(), getAmount())
+        return SavingsAccount.builder(getId(), getAmount())
                 .setAccountNumber(getId())
                 .setName(getName())
                 .setBankIdentifier(getId())

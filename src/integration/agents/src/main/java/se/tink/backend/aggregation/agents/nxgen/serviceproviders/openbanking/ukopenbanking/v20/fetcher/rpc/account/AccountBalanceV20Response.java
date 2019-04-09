@@ -15,15 +15,18 @@ public class AccountBalanceV20Response extends BaseResponse<List<AccountBalanceE
     public AccountBalanceEntity getBalance() {
 
         // Convert list of AccountBalanceEntity to map, using type as key.
-        Map<UkOpenBankingConstants.AccountBalanceType, AccountBalanceEntity> balanceTypeMap = toMap();
+        Map<UkOpenBankingConstants.AccountBalanceType, AccountBalanceEntity> balanceTypeMap =
+                toMap();
 
-        return UkOpenBankingConstants.AccountBalanceType
-                .getPreferredBalanceEntity(balanceTypeMap)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Account does not have any balance type that we recognize as useful."));
+        return UkOpenBankingConstants.AccountBalanceType.getPreferredBalanceEntity(balanceTypeMap)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Account does not have any balance type that we recognize as useful."));
     }
 
     private Map<UkOpenBankingConstants.AccountBalanceType, AccountBalanceEntity> toMap() {
-        return getData().stream().collect(Collectors.toMap(AccountBalanceEntity::getType, Function.identity()));
+        return getData().stream()
+                .collect(Collectors.toMap(AccountBalanceEntity::getType, Function.identity()));
     }
 }

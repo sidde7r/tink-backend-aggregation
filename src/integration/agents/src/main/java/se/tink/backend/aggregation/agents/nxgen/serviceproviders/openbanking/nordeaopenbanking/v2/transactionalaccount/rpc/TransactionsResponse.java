@@ -19,16 +19,18 @@ public class TransactionsResponse extends NordeaResponseBase {
 
     private NordeaTransactionParser transactionParser;
 
-    public TransactionKeyPaginatorResponse<LinkEntity> getPaginatorResponse(NordeaTransactionParser transactionParser) {
+    public TransactionKeyPaginatorResponse<LinkEntity> getPaginatorResponse(
+            NordeaTransactionParser transactionParser) {
         return new NordeaTransactionPaginatorResponse(transactionParser, response);
     }
 
-    public static class NordeaTransactionPaginatorResponse implements TransactionKeyPaginatorResponse<LinkEntity> {
+    public static class NordeaTransactionPaginatorResponse
+            implements TransactionKeyPaginatorResponse<LinkEntity> {
         private TransactionsResponseEntity response;
         private NordeaTransactionParser transactionParser;
 
-        private NordeaTransactionPaginatorResponse(NordeaTransactionParser transactionParser,
-                TransactionsResponseEntity response) {
+        private NordeaTransactionPaginatorResponse(
+                NordeaTransactionParser transactionParser, TransactionsResponseEntity response) {
             this.transactionParser = transactionParser;
             this.response = response;
         }
@@ -39,17 +41,17 @@ public class TransactionsResponse extends NordeaResponseBase {
                 return null;
             }
 
-            return response.findLinkByName(NordeaBaseConstants.Link.NEXT_LINK)
-                    .orElse(null);
+            return response.findLinkByName(NordeaBaseConstants.Link.NEXT_LINK).orElse(null);
         }
 
         @Override
         public Collection<? extends Transaction> getTinkTransactions() {
             if (response == null) {
-                return  Collections.emptyList();
+                return Collections.emptyList();
             }
 
-            return Optional.ofNullable(response.getTransactions()).orElse(Collections.emptyList()).stream()
+            return Optional.ofNullable(response.getTransactions()).orElse(Collections.emptyList())
+                    .stream()
                     .map(this.transactionParser::toTinkTransaction)
                     .filter(Optional::isPresent)
                     .map(Optional::get)

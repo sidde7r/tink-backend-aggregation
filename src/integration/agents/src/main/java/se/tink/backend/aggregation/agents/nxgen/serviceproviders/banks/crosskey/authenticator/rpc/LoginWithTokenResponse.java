@@ -15,8 +15,8 @@ public class LoginWithTokenResponse extends CrossKeyResponse {
 
     @JsonIgnore
     public boolean incorrectPassword() {
-        return isFailure() && hasAnyErrors(
-                CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_NOT_VALID);
+        return isFailure()
+                && hasAnyErrors(CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_NOT_VALID);
     }
 
     @JsonIgnore
@@ -27,10 +27,10 @@ public class LoginWithTokenResponse extends CrossKeyResponse {
 
     @JsonIgnore
     public boolean isIncorrectDevice() {
-        return isFailure() &&
-                hasAnyErrors(CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_TOKEN_LOGIN_FAILED
-                        , CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_MISSING
-                );
+        return isFailure()
+                && hasAnyErrors(
+                        CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_TOKEN_LOGIN_FAILED,
+                        CrossKeyConstants.AutoAuthentication.ERR_PASSWORD_MISSING);
     }
 
     public Date getLastLoginDate() {

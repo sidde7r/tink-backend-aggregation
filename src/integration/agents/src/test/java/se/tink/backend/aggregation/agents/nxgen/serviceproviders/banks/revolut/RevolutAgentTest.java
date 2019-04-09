@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 @Ignore
 public class RevolutAgentTest {
 
-    private final String USERNAME = ""; // phone number +{country code}{phone number}, eg. +46701234567
+    private final String USERNAME =
+            ""; // phone number +{country code}{phone number}, eg. +46701234567
     private final String PASSWORD = ""; // four digits, eg. 1234
 
     @Test

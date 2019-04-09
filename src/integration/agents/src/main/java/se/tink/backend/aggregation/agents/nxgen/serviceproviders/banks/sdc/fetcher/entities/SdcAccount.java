@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class SdcAccount {
     @JsonIgnore
@@ -26,8 +26,7 @@ public class SdcAccount {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(SdcConfiguration agentConfiguration) {
-        return TransactionalAccount.builder(convertAccountType(), id,
-                amount.toTinkAmount())
+        return TransactionalAccount.builder(convertAccountType(), id, amount.toTinkAmount())
                 .setAccountNumber(id)
                 .setName(name)
                 .setBankIdentifier(normalizedBankId())
@@ -48,7 +47,8 @@ public class SdcAccount {
         if (isLoanAccount()) {
             return AccountTypes.LOAN;
         }
-        SdcConstants.AccountType type = SdcConstants.AccountType.fromProductType(productElementType);
+        SdcConstants.AccountType type =
+                SdcConstants.AccountType.fromProductType(productElementType);
         if (type != SdcConstants.AccountType.UNKNOWN) {
             return type.getTinkAccountType();
         }
@@ -58,7 +58,7 @@ public class SdcAccount {
 
     @JsonIgnore
     private String normalizedBankId() {
-        return id.replace(".","");
+        return id.replace(".", "");
     }
 
     @JsonIgnore
@@ -84,7 +84,8 @@ public class SdcAccount {
     @JsonIgnore
     private boolean isAccountType(SdcConstants.AccountType type) {
         if (productElementType != null) {
-            SdcConstants.AccountType accountType = SdcConstants.AccountType.fromProductType(productElementType);
+            SdcConstants.AccountType accountType =
+                    SdcConstants.AccountType.fromProductType(productElementType);
             return type == accountType;
         }
 

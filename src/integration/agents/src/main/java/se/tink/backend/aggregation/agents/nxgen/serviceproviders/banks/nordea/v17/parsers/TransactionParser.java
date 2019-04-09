@@ -7,11 +7,16 @@ import se.tink.libraries.amount.Amount;
 
 public interface TransactionParser {
     Amount getAmount(TransactionEntity te);
+
     Date getDate(TransactionEntity te);
+
     String getDescription(TransactionEntity te);
+
     boolean isPending(TransactionEntity te);
 
     Amount getAmount(PaymentEntity pe);
+
     Date getDate(PaymentEntity pe);
+
     String getDescription(PaymentEntity pe);
 }

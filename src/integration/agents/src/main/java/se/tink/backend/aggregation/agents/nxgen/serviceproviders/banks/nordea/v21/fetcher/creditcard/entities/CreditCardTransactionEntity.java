@@ -11,9 +11,11 @@ public class CreditCardTransactionEntity extends TransactionEntity {
     @JsonProperty("coverReservationTransaction")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Boolean.class)
     private Boolean reservation;
+
     @JsonProperty("billedTransaction")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Boolean.class)
     private Boolean billed;
+
     @JsonProperty("transactionEntryType")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String entryType;

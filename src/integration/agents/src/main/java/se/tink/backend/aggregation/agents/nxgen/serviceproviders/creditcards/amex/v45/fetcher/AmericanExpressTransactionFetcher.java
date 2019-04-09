@@ -29,8 +29,7 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
     protected final AmericanExpressConfiguration config;
 
     public AmericanExpressTransactionFetcher(
-            AmericanExpressApiClient apiClient,
-            AmericanExpressConfiguration config) {
+            AmericanExpressApiClient apiClient, AmericanExpressConfiguration config) {
         this.apiClient = apiClient;
         this.config = config;
         LOGGER = new AggregationLogger(AmericanExpressTransactionFetcher.class);
@@ -48,8 +47,10 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         return transactions;
     }
 
-    private boolean getPendingTransactionsWithoutError(Integer cardIndex, List<AggregationTransaction> transactions) {
-        TimelineResponse response = apiClient.requestTimeline(this.config.createTimelineRequest(cardIndex));
+    private boolean getPendingTransactionsWithoutError(
+            Integer cardIndex, List<AggregationTransaction> transactions) {
+        TimelineResponse response =
+                apiClient.requestTimeline(this.config.createTimelineRequest(cardIndex));
         /*
             it is possible that amex has the expired card in the traffic.
             the card could not be identified as invalid until we require the card detail.
@@ -58,60 +59,75 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
             return false;
         }
 
-        List<Transaction> pendingTransactions = getPendingTransaction(cardIndex, response.getTimeline(), this
-                .config);
+        List<Transaction> pendingTransactions =
+                getPendingTransaction(cardIndex, response.getTimeline(), this.config);
 
         transactions.addAll(pendingTransactions);
         return true;
     }
 
-    private void getTransactions(CreditCardAccount card, List<AggregationTransaction> transactions) {
+    private void getTransactions(
+            CreditCardAccount card, List<AggregationTransaction> transactions) {
 
         Integer cardIndex = Integer.valueOf(card.getBankIdentifier());
-        TransactionResponse response = apiClient.requestTransaction(createTransactionRequest(cardIndex, 0));
+        TransactionResponse response =
+                apiClient.requestTransaction(createTransactionRequest(cardIndex, 0));
 
         if (isResponseError(response.getTransactionDetails())) {
             return;
         }
-        Integer cartSupOnCurrentPage = response.getTransactionDetails().getCardList().stream()
-                // Comparing 4 last digits of card
-                // Temporary hack solution - agent needs rewrite for a proper one
-                .filter(c -> getLast4DigitsOfTheAccountFromName(c.getCardProductName())
-                        .equals(getLast4DigitsOfTheAccountFromName(card.getName())))
-                .findFirst()
-                .map(c -> c.getSortedIndex()).orElseGet(() -> -1);
+        Integer cartSupOnCurrentPage =
+                response.getTransactionDetails().getCardList().stream()
+                        // Comparing 4 last digits of card
+                        // Temporary hack solution - agent needs rewrite for a proper one
+                        .filter(
+                                c ->
+                                        getLast4DigitsOfTheAccountFromName(c.getCardProductName())
+                                                .equals(
+                                                        getLast4DigitsOfTheAccountFromName(
+                                                                card.getName())))
+                        .findFirst()
+                        .map(c -> c.getSortedIndex())
+                        .orElseGet(() -> -1);
 
         List<BillingInfoDetailsEntity> availableBilling;
         try {
             availableBilling =
                     response.getTransactionDetails().getBillingInfo().getBillingInfoDetails();
         } catch (NullPointerException e) {
-            LOGGER.error("Can not fetch transaction for account: " + SerializationUtils.serializeToString(card));
+            LOGGER.error(
+                    "Can not fetch transaction for account: "
+                            + SerializationUtils.serializeToString(card));
             return;
         }
 
         for (int billingIndex = 0; billingIndex < availableBilling.size(); billingIndex++) {
 
-            response = apiClient.requestTransaction(createTransactionRequest(cardIndex, billingIndex));
+            response =
+                    apiClient.requestTransaction(createTransactionRequest(cardIndex, billingIndex));
             if (isResponseError(response.getTransactionDetails())) {
                 continue;
             }
 
-            for (ActivityListEntity activityListEntity : response.getTransactionDetails().getActivityList()) {
+            for (ActivityListEntity activityListEntity :
+                    response.getTransactionDetails().getActivityList()) {
                 if (activityListEntity.getTransactionList() != null) {
                     List<Transaction> transactionsFromActivity =
                             activityListEntity.getTransactionList().stream()
-                                    .filter(transaction -> {
+                                    .filter(
+                                            transaction -> {
                                                 try {
-                                                    return Integer.valueOf(transaction.getSuppIndex())
+                                                    return Integer.valueOf(
+                                                                    transaction.getSuppIndex())
                                                             .equals(cartSupOnCurrentPage);
                                                 } catch (IllegalStateException e) {
                                                     LOGGER.warn(e.toString());
                                                     return false;
                                                 }
-                                            }
-                                    )
-                                    .map(transaction -> transaction.toTransaction(this.config, false))
+                                            })
+                                    .map(
+                                            transaction ->
+                                                    transaction.toTransaction(this.config, false))
                                     .collect(Collectors.toList());
                     transactions.addAll(transactionsFromActivity);
                 }
@@ -119,15 +135,15 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         }
     }
 
-    private List<Transaction> getPendingTransaction(Integer cardIndex, TimelineEntity timeline,
-            AmericanExpressConfiguration config) {
+    private List<Transaction> getPendingTransaction(
+            Integer cardIndex, TimelineEntity timeline, AmericanExpressConfiguration config) {
 
-        List<SubItemsEntity> subItemsList = Optional.ofNullable(timeline.getTimelineItems())
-                .orElseGet(Collections::emptyList)
-                .stream()
-                .map(item -> item.getSubItems().stream())
-                .flatMap(Function.identity())
-                .collect(Collectors.toList());
+        List<SubItemsEntity> subItemsList =
+                Optional.ofNullable(timeline.getTimelineItems()).orElseGet(Collections::emptyList)
+                        .stream()
+                        .map(item -> item.getSubItems().stream())
+                        .flatMap(Function.identity())
+                        .collect(Collectors.toList());
 
         List<String> pendingIdList =
                 subItemsList.stream()
@@ -161,11 +177,14 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
 
             if (statusCode != null || !message.equalsIgnoreCase("Card is cancelled")) {
                 if (messageType.equalsIgnoreCase("ERROR")) {
-                    LOGGER.error(String.format("Error occurred when fetching transaction: (%s) %s : %s", statusCode,
-                            messageType, message));
+                    LOGGER.error(
+                            String.format(
+                                    "Error occurred when fetching transaction: (%s) %s : %s",
+                                    statusCode, messageType, message));
                 } else {
                     LOGGER.warn(
-                            String.format("Something wrong when fetching transaction: (%s) %s : %s",
+                            String.format(
+                                    "Something wrong when fetching transaction: (%s) %s : %s",
                                     statusCode, messageType, message));
                 }
             }
@@ -176,7 +195,8 @@ public class AmericanExpressTransactionFetcher implements TransactionFetcher<Cre
         return false;
     }
 
-    // Names of account may not be identical because of white spaces, so we use only last 4 digits from the card number to compare them
+    // Names of account may not be identical because of white spaces, so we use only last 4 digits
+    // from the card number to compare them
     // ex. <name> - <number>, <name>-<number>
     private String getLast4DigitsOfTheAccountFromName(String name) {
         return name.split("-")[1].trim();

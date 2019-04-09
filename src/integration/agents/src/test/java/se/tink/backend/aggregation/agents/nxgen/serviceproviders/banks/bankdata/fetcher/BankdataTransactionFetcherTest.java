@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher;
 
+import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -13,8 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-
-import java.util.Collection;
 
 public class BankdataTransactionFetcherTest {
     private boolean debugOutput;
@@ -32,8 +31,13 @@ public class BankdataTransactionFetcherTest {
 
         Credentials credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
-                context.getLogOutputStream(), null, null);
+        TinkHttpClient client =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        context.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        null,
+                        null);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);
@@ -43,7 +47,8 @@ public class BankdataTransactionFetcherTest {
     @Test
     public void fetchTransactions() throws Exception {
         BankdataPinAuthenticator authenticator = new BankdataPinAuthenticator(bankClient);
-        BankdataTransactionalAccountFetcher accountFetcher = new BankdataTransactionalAccountFetcher(bankClient);
+        BankdataTransactionalAccountFetcher accountFetcher =
+                new BankdataTransactionalAccountFetcher(bankClient);
         BankdataTransactionFetcher transactionFetcher = new BankdataTransactionFetcher(bankClient);
         authenticator.authenticate(username, password);
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
@@ -53,13 +58,13 @@ public class BankdataTransactionFetcherTest {
             boolean fetchmore = false;
             do {
                 System.out.println("Account: " + account.getName());
-                PaginatorResponse response = transactionFetcher.getTransactionsFor(account, startPage);
+                PaginatorResponse response =
+                        transactionFetcher.getTransactionsFor(account, startPage);
                 for (Transaction transaction : response.getTinkTransactions()) {
                     System.out.println("Transaction: " + transaction.getDescription());
                 }
                 fetchmore = response.canFetchMore().get();
             } while (fetchmore);
-
         }
     }
 }

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BindDeviceResponse extends AbstractDeviceBindResponse {
     @JsonProperty("DeviceSerialNo")
     private String deviceSerialNumber;
+
     @JsonProperty("SharedSecret")
     private String sharedSecret;
 

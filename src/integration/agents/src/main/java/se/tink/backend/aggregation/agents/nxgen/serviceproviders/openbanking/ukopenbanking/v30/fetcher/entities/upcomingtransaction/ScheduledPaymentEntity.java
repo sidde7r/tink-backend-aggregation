@@ -11,16 +11,20 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 public class ScheduledPaymentEntity {
     @JsonProperty("AccountId")
     private String accountId;
+
     @JsonProperty("ScheduledPaymentId")
     private String scheduledPaymentId;
+
     private ZonedDateTime scheduledPaymentDateTime;
+
     @JsonProperty("ScheduledType")
     private String scheduledType;
+
     @JsonProperty("InstructedAmount")
     private AmountEntity instructedAmount;
+
     @JsonProperty("CreditorAccount")
     private CreditorAccountEntity creditorAccount;
-
 
     public UpcomingTransaction toTinkUpcomingTransaction() {
         return UpcomingTransaction.builder()

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.AmericanExpressV62SessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -23,17 +24,20 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent {
 
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
 
-    protected AmericanExpressV62Agent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair, AmericanExpressV62Configuration config) {
+    protected AmericanExpressV62Agent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            AmericanExpressV62Configuration config) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
+        this.apiClient =
+                new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
     }
 
@@ -47,40 +51,38 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new AmericanExpressV62PasswordAuthenticator(apiClient, persistentStorage, sessionStorage));
+                new AmericanExpressV62PasswordAuthenticator(
+                        apiClient, persistentStorage, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         return Optional.empty();
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        AmericanExpressV62CreditCardFetcher americanExpressV62CreditCardFetcher = AmericanExpressV62CreditCardFetcher
-                .create(sessionStorage, config);
+        AmericanExpressV62CreditCardFetcher americanExpressV62CreditCardFetcher =
+                AmericanExpressV62CreditCardFetcher.create(sessionStorage, config);
 
-        AmericanExpressV62TransactionFetcher americanExpressV62TransactionFetcher = AmericanExpressV62TransactionFetcher
-                .create(apiClient, config, sessionStorage);
+        AmericanExpressV62TransactionFetcher americanExpressV62TransactionFetcher =
+                AmericanExpressV62TransactionFetcher.create(apiClient, config, sessionStorage);
 
-        TransactionPagePaginationController<CreditCardAccount> amexV66TransactionPagePaginationController =
-                new TransactionPagePaginationController<>(
-                        americanExpressV62TransactionFetcher,
-                        AmericanExpressV62Constants.Fetcher.START_PAGE
-                );
+        TransactionPagePaginationController<CreditCardAccount>
+                amexV66TransactionPagePaginationController =
+                        new TransactionPagePaginationController<>(
+                                americanExpressV62TransactionFetcher,
+                                AmericanExpressV62Constants.Fetcher.START_PAGE);
 
         TransactionFetcherController<CreditCardAccount> amexV62TransactionFetcherController =
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        amexV66TransactionPagePaginationController
-                );
+                        transactionPaginationHelper, amexV66TransactionPagePaginationController);
 
         return Optional.of(
                 new CreditCardRefreshController(
@@ -107,7 +109,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

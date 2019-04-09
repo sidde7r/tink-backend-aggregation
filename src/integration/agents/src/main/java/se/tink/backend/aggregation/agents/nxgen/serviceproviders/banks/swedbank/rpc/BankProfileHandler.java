@@ -10,8 +10,7 @@ public class BankProfileHandler {
     private List<BankProfile> bankProfiles = new ArrayList<>();
     private BankProfile activeBankProfile;
 
-    public BankProfileHandler setActiveBankProfile(
-            BankProfile activeBankProfile) {
+    public BankProfileHandler setActiveBankProfile(BankProfile activeBankProfile) {
         this.activeBankProfile = activeBankProfile;
         return this;
     }
@@ -25,22 +24,26 @@ public class BankProfileHandler {
         return bankProfiles;
     }
 
-    public BankProfileHandler addBankProfile(
-            BankProfile bankProfile) {
+    public BankProfileHandler addBankProfile(BankProfile bankProfile) {
         this.bankProfiles.add(bankProfile);
         return this;
     }
 
     public BankProfile findProfile(BankProfile requestedBankProfile) {
         return bankProfiles.stream()
-                .filter(profile -> profile.getBank().getBankId().equalsIgnoreCase(requestedBankProfile.getBank().getBankId()))
+                .filter(
+                        profile ->
+                                profile.getBank()
+                                        .getBankId()
+                                        .equalsIgnoreCase(
+                                                requestedBankProfile.getBank().getBankId()))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
     }
 
     // currently we are always using the last added bank profile for transfers
     public BankProfile findTransferProfile() {
-        int transferProfileIndex = bankProfiles.size() -1;
+        int transferProfileIndex = bankProfiles.size() - 1;
 
         return bankProfiles.get(transferProfileIndex);
     }

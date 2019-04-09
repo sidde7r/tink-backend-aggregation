@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class OauthTokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("expires_in")
     private int expiresIn;
+
     @JsonProperty("token_type")
     private String tokenType;
 

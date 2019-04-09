@@ -14,9 +14,11 @@ public class NordeaBaseConstants {
         private static final String API_VERSION = "/v2/";
 
         public static final URL ACCOUNTS = new URL(API_BASE_URL + API_VERSION + "accounts");
-        public static final URL AUTHORIZE_DECOUPLED = new URL(API_BASE_URL + API_VERSION + "authorize-decoupled");
+        public static final URL AUTHORIZE_DECOUPLED =
+                new URL(API_BASE_URL + API_VERSION + "authorize-decoupled");
         public static final URL AUTHORIZE = new URL(API_BASE_URL + API_VERSION + "authorize");
-        public static final URL ACCESS_TOKEN = new URL(API_BASE_URL + API_VERSION + "authorize/access_token");
+        public static final URL ACCESS_TOKEN =
+                new URL(API_BASE_URL + API_VERSION + "authorize/access_token");
 
         public static URL getUrlForLink(String path) {
             return new URL(API_BASE_URL + path);
@@ -75,8 +77,12 @@ public class NordeaBaseConstants {
         public static final String LANGUAGE = "en";
 
         public static final List<String> SCOPES =
-                ImmutableList.of("ACCOUNTS_BASIC","ACCOUNTS_BALANCES","ACCOUNTS_DETAILS",
-                        "ACCOUNTS_TRANSACTIONS","PAYMENTS_MULTIPLE");
+                ImmutableList.of(
+                        "ACCOUNTS_BASIC",
+                        "ACCOUNTS_BALANCES",
+                        "ACCOUNTS_DETAILS",
+                        "ACCOUNTS_TRANSACTIONS",
+                        "PAYMENTS_MULTIPLE");
 
         public static String tokenToAuthorizationValue(String token) {
             return String.format("%s %s", DEFAULT_TOKEN_TYPE, token);
@@ -90,8 +96,8 @@ public class NordeaBaseConstants {
         public static final String ACCOUNT_NUMBER_IBAN = "IBAN";
     }
 
-    public static final AccountTypeMapper ACCOUNT_TYPE = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, "Current").build();
+    public static final AccountTypeMapper ACCOUNT_TYPE =
+            AccountTypeMapper.builder().put(AccountTypes.CHECKING, "Current").build();
 
     public static class Transaction {
         public static final String RESERVED = "reserved";

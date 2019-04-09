@@ -28,14 +28,17 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationApiClient {
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(EuroInformationApiClient.class);
+    private static final AggregationLogger AGGREGATION_LOGGER =
+            new AggregationLogger(EuroInformationApiClient.class);
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected final EuroInformationConfiguration config;
     protected final Logger LOGGER = LoggerFactory.getLogger(EuroInformationApiClient.class);
 
-    public EuroInformationApiClient(TinkHttpClient client,
-            SessionStorage sessionStorage, EuroInformationConfiguration config) {
+    public EuroInformationApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            EuroInformationConfiguration config) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.config = config;
@@ -44,47 +47,62 @@ public class EuroInformationApiClient {
     protected RequestBuilder buildRequestHeaders(String urlString) {
         URL url = new URL(config.getUrl() + urlString);
         return client.request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE,
+                .accept(
+                        MediaType.APPLICATION_JSON_TYPE,
+                        MediaType.APPLICATION_XML_TYPE,
                         MediaType.TEXT_HTML_TYPE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
     }
 
     public LoginResponse logon(String username, String password) {
         return buildRequestHeaders(config.getLoginSubpage())
-                .body(new LoginRequest(username, password, config.getAppVersionKey(), config.getAppVersion(),
-                        config.getTarget()))
+                .body(
+                        new LoginRequest(
+                                username,
+                                password,
+                                config.getAppVersionKey(),
+                                config.getAppVersion(),
+                                config.getTarget()))
                 .post(LoginResponse.class);
     }
 
     public LogoutResponse logout() {
-        return buildRequestHeaders(EuroInformationConstants.Url.LOGOUT)
-                .post(LogoutResponse.class);
+        return buildRequestHeaders(EuroInformationConstants.Url.LOGOUT).post(LogoutResponse.class);
     }
 
     public InvestmentAccountsListResponse requestInvestmentAccounts() {
-        InvestmentAccountsListResponse details = buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNTS)
-                .post(InvestmentAccountsListResponse.class, new InvestmentAccountsListRequest(1));
+        InvestmentAccountsListResponse details =
+                buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNTS)
+                        .post(
+                                InvestmentAccountsListResponse.class,
+                                new InvestmentAccountsListRequest(1));
         this.sessionStorage.put(EuroInformationConstants.Tags.INVESTMENT_ACCOUNTS, details);
         return details;
     }
 
     public InvestmentAccountOverviewResponse requestAccountDetails(String accountNumber, int page) {
         return buildRequestHeaders(EuroInformationConstants.Url.INVESTMENT_ACCOUNT)
-                .post(InvestmentAccountOverviewResponse.class,
+                .post(
+                        InvestmentAccountOverviewResponse.class,
                         new InvestmentAccountOverviewRequest(page, accountNumber));
     }
 
     public AccountSummaryResponse requestAccounts() {
-        AccountSummaryResponse details = buildRequestHeaders(EuroInformationConstants.Url.ACCOUNTS)
-                .post(AccountSummaryResponse.class, new AccountSummaryRequest());
+        AccountSummaryResponse details =
+                buildRequestHeaders(EuroInformationConstants.Url.ACCOUNTS)
+                        .post(AccountSummaryResponse.class, new AccountSummaryRequest());
         this.sessionStorage.put(EuroInformationConstants.Tags.ACCOUNT_LIST, details);
 
         // Print unknown account types
-        Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList).stream()
+        Optional.ofNullable(details.getAccountDetailsList()).orElseGet(Collections::emptyList)
+                .stream()
                 .filter(a -> a.getTinkTypeByTypeNumber() == AccountTypeEnum.UNKNOWN)
-                .forEach(acc -> AGGREGATION_LOGGER
-                        .infoExtraLong(SerializationUtils.serializeToString(acc),
-                                EuroInformationConstants.LoggingTags.unknownAccountTypesTag));
+                .forEach(
+                        acc ->
+                                AGGREGATION_LOGGER.infoExtraLong(
+                                        SerializationUtils.serializeToString(acc),
+                                        EuroInformationConstants.LoggingTags
+                                                .unknownAccountTypesTag));
         return details;
     }
 
@@ -95,11 +113,12 @@ public class EuroInformationApiClient {
 
     public OperationSummaryResponse getTransactionsWithPfm(String webId, String recoveryKey) {
         return buildRequestHeaders(EuroInformationConstants.Url.TRANSACTIONS_PAGINATED)
-                .post(OperationSummaryResponse.class, new TransactionSummaryRequest(webId, recoveryKey));
+                .post(
+                        OperationSummaryResponse.class,
+                        new TransactionSummaryRequest(webId, recoveryKey));
     }
 
     public PfmInitResponse actionInit(String endpoint) {
-        return buildRequestHeaders(endpoint)
-                .post(PfmInitResponse.class, new PfmInitRequest());
+        return buildRequestHeaders(endpoint).post(PfmInitResponse.class, new PfmInitRequest());
     }
 }

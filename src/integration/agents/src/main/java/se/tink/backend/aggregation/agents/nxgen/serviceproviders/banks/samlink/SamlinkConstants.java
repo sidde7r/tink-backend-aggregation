@@ -44,56 +44,94 @@ public class SamlinkConstants {
     }
 
     public static final class ErrorMessage {
-        private static final LocalizableKey INVALID_USERNAME_PASSWORD = new LocalizableKey("Invalid username or password");
-        private static final LocalizableKey CONTRACT_MISSING = new LocalizableKey("Contract is missing.");
-        private static final LocalizableKey CONTRACT_TRANSFERRED = new LocalizableKey("Contract has been transferred "
-                + "to other bank.");
-        private static final LocalizableKey USER_LOCKED = new LocalizableKey("User account is locked. Please contact "
-                + "your bank.");
-        private static final LocalizableKey USER_BLOCKED = new LocalizableKey("User account is blocked. Please "
-                + "contact your bank.");
-        public static final LocalizableKey DEVICE_PINNING_FAILED = new LocalizableKey("Too many devices registered. "
-                + "Please contact your bank.");
+        private static final LocalizableKey INVALID_USERNAME_PASSWORD =
+                new LocalizableKey("Invalid username or password");
+        private static final LocalizableKey CONTRACT_MISSING =
+                new LocalizableKey("Contract is missing.");
+        private static final LocalizableKey CONTRACT_TRANSFERRED =
+                new LocalizableKey("Contract has been transferred " + "to other bank.");
+        private static final LocalizableKey USER_LOCKED =
+                new LocalizableKey("User account is locked. Please contact " + "your bank.");
+        private static final LocalizableKey USER_BLOCKED =
+                new LocalizableKey("User account is blocked. Please " + "contact your bank.");
+        public static final LocalizableKey DEVICE_PINNING_FAILED =
+                new LocalizableKey("Too many devices registered. " + "Please contact your bank.");
     }
 
     public enum ServerError {
-        WRONG_ORGANIZATION("SecurityException.WRONG_ORGANIZATION", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        WRONG_ORGANIZATION(
+                "SecurityException.WRONG_ORGANIZATION",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        BANK_LOGIN_FORBIDDEN("SecurityException.BANK_LOGIN_FORBIDDEN", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        BANK_LOGIN_FORBIDDEN(
+                "SecurityException.BANK_LOGIN_FORBIDDEN",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        LOGIN_FAILED("LoginServiceException.LOGIN_FAILED", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        LOGIN_FAILED(
+                "LoginServiceException.LOGIN_FAILED",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        PASSWORD_IS_INVALID("LoginServiceException.PASSWORD_IS_INVALID", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        PASSWORD_IS_INVALID(
+                "LoginServiceException.PASSWORD_IS_INVALID",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        ACCOUNT_NOT_FOUND("AccountServiceException.ACCOUNT_NOT_FOUND", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        ACCOUNT_NOT_FOUND(
+                "AccountServiceException.ACCOUNT_NOT_FOUND",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        INVALID_PASSWORD("AccessManagementServiceException.INVALID_PASSWORD", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        INVALID_PASSWORD(
+                "AccessManagementServiceException.INVALID_PASSWORD",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        LOGIN_CONTRACT_IS_MISSING("LoginServiceException.CONTRACT_IS_MISSING", ErrorMessage.CONTRACT_MISSING,
+        LOGIN_CONTRACT_IS_MISSING(
+                "LoginServiceException.CONTRACT_IS_MISSING",
+                ErrorMessage.CONTRACT_MISSING,
                 LoginError.INCORRECT_CREDENTIALS),
-        LOGIN_CONTRACT_TRANSFERRED("LoginServiceException.CONTRACTS_BEEN_TRANSFERRED",
-                ErrorMessage.CONTRACT_TRANSFERRED, LoginError.INCORRECT_CREDENTIALS),
-        INVALID_KEY("SecurityKeyServiceException.INVALID_KEY", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        LOGIN_CONTRACT_TRANSFERRED(
+                "LoginServiceException.CONTRACTS_BEEN_TRANSFERRED",
+                ErrorMessage.CONTRACT_TRANSFERRED,
                 LoginError.INCORRECT_CREDENTIALS),
-        WRONG_SECURITY_KEY("LoginServiceException.WRONG_SECURITY_KEY", ErrorMessage.INVALID_USERNAME_PASSWORD,
+        INVALID_KEY(
+                "SecurityKeyServiceException.INVALID_KEY",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
                 LoginError.INCORRECT_CREDENTIALS),
-        INVALID_CARD_CODE("SecurityKeyServiceException.WRONG_SECURITY_KEY", LoginError.INCORRECT_CHALLENGE_RESPONSE),
+        WRONG_SECURITY_KEY(
+                "LoginServiceException.WRONG_SECURITY_KEY",
+                ErrorMessage.INVALID_USERNAME_PASSWORD,
+                LoginError.INCORRECT_CREDENTIALS),
+        INVALID_CARD_CODE(
+                "SecurityKeyServiceException.WRONG_SECURITY_KEY",
+                LoginError.INCORRECT_CHALLENGE_RESPONSE),
 
-        ACCESS_CONTRACT_IS_MISSING("AccessManagementServiceException.CONTRACT_IS_MISSING", ErrorMessage.CONTRACT_MISSING,
+        ACCESS_CONTRACT_IS_MISSING(
+                "AccessManagementServiceException.CONTRACT_IS_MISSING",
+                ErrorMessage.CONTRACT_MISSING,
                 LoginError.INCORRECT_CREDENTIALS),
-        SECURITY_CONTRACT_IS_MISSING("SecurityKeyServiceException.CONTRACT_IS_MISSING", ErrorMessage.CONTRACT_MISSING,
+        SECURITY_CONTRACT_IS_MISSING(
+                "SecurityKeyServiceException.CONTRACT_IS_MISSING",
+                ErrorMessage.CONTRACT_MISSING,
                 LoginError.INCORRECT_CREDENTIALS),
 
-        USER_ID_IS_BLOCKED("LoginServiceException.USER_ID_IS_BLOCKED", ErrorMessage.USER_BLOCKED,
+        USER_ID_IS_BLOCKED(
+                "LoginServiceException.USER_ID_IS_BLOCKED",
+                ErrorMessage.USER_BLOCKED,
                 LoginError.INCORRECT_CREDENTIALS),
 
-        ACCESS_USER_ID_IS_LOCKED("AccessManagementServiceException.USER_ID_IS_LOCKED", ErrorMessage.USER_LOCKED,
+        ACCESS_USER_ID_IS_LOCKED(
+                "AccessManagementServiceException.USER_ID_IS_LOCKED",
+                ErrorMessage.USER_LOCKED,
                 LoginError.INCORRECT_CREDENTIALS),
-        SECURITY_USER_ID_IS_LOCKED("SecurityKeyServiceException.USER_ID_IS_LOCKED", ErrorMessage.USER_LOCKED,
+        SECURITY_USER_ID_IS_LOCKED(
+                "SecurityKeyServiceException.USER_ID_IS_LOCKED",
+                ErrorMessage.USER_LOCKED,
                 LoginError.INCORRECT_CREDENTIALS),
-        LOGIN_USER_LOCKED("LoginServiceException.USER_ID_IS_LOCKED", ErrorMessage.USER_LOCKED,
+        LOGIN_USER_LOCKED(
+                "LoginServiceException.USER_ID_IS_LOCKED",
+                ErrorMessage.USER_LOCKED,
                 LoginError.INCORRECT_CREDENTIALS),
-        MAX_DEVICE_LIMIT_REACHED("SettingsServiceException.MAX_DEVICE_LIMIT_REACHED", ErrorMessage.DEVICE_PINNING_FAILED,
+        MAX_DEVICE_LIMIT_REACHED(
+                "SettingsServiceException.MAX_DEVICE_LIMIT_REACHED",
+                ErrorMessage.DEVICE_PINNING_FAILED,
                 AuthorizationError.ACCOUNT_BLOCKED);
 
         private final String errorCode;

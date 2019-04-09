@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.encryption.LibTFA;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.ActivateProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class HandelsbankenPersistentStorage {
 
@@ -16,18 +16,20 @@ public class HandelsbankenPersistentStorage {
 
     // Legacy storage
     private final Map<String, String> legacySensitivePayload;
-    private final static String LEGACY_PAYLOAD_PROFILE_ID = "profileId";
-    private final static String LEGACY_PAYLOAD_PRIVATE_KEY = "privateKey";
-    private final static String LEGACY_PAYLOAD_DEVICE_SECURITY_CONTEXT_ID = "deviceSecurityContextId";
+    private static final String LEGACY_PAYLOAD_PROFILE_ID = "profileId";
+    private static final String LEGACY_PAYLOAD_PRIVATE_KEY = "privateKey";
+    private static final String LEGACY_PAYLOAD_DEVICE_SECURITY_CONTEXT_ID =
+            "deviceSecurityContextId";
 
-    public HandelsbankenPersistentStorage(PersistentStorage persistentStorage,
-            Map<String, String> legacySensitivePayload) {
+    public HandelsbankenPersistentStorage(
+            PersistentStorage persistentStorage, Map<String, String> legacySensitivePayload) {
         this.persistentStorage = persistentStorage;
         this.legacySensitivePayload = legacySensitivePayload;
     }
 
     public void persist(ActivateProfileResponse activateProfile) {
-        this.persistentStorage.put(HandelsbankenConstants.Storage.PROFILE_ID, activateProfile.getProfileId());
+        this.persistentStorage.put(
+                HandelsbankenConstants.Storage.PROFILE_ID, activateProfile.getProfileId());
 
         // Remove legacy, if present.
         legacySensitivePayload.remove(LEGACY_PAYLOAD_PROFILE_ID);
@@ -49,8 +51,11 @@ public class HandelsbankenPersistentStorage {
     }
 
     public void persist(LibTFA tfa) {
-        this.persistentStorage.put(HandelsbankenConstants.Storage.PRIVATE_KEY, tfa.getDeviceRsaPrivateKey());
-        this.persistentStorage.put(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID, tfa.getDeviceSecurityContextId());
+        this.persistentStorage.put(
+                HandelsbankenConstants.Storage.PRIVATE_KEY, tfa.getDeviceRsaPrivateKey());
+        this.persistentStorage.put(
+                HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID,
+                tfa.getDeviceSecurityContextId());
 
         // Remove legacy, if present.
         legacySensitivePayload.remove(LEGACY_PAYLOAD_PRIVATE_KEY);
@@ -58,14 +63,16 @@ public class HandelsbankenPersistentStorage {
     }
 
     private Optional<String> getSerializedRsaPrivateKey() {
-        String serializedRsaPrivateKey = this.persistentStorage.get(HandelsbankenConstants.Storage.PRIVATE_KEY);
+        String serializedRsaPrivateKey =
+                this.persistentStorage.get(HandelsbankenConstants.Storage.PRIVATE_KEY);
         if (!Strings.isNullOrEmpty(serializedRsaPrivateKey)) {
             return Optional.of(serializedRsaPrivateKey);
         }
 
         serializedRsaPrivateKey = legacySensitivePayload.get(LEGACY_PAYLOAD_PRIVATE_KEY);
         if (!Strings.isNullOrEmpty(serializedRsaPrivateKey)) {
-            this.persistentStorage.put(HandelsbankenConstants.Storage.PRIVATE_KEY, serializedRsaPrivateKey);
+            this.persistentStorage.put(
+                    HandelsbankenConstants.Storage.PRIVATE_KEY, serializedRsaPrivateKey);
             return Optional.of(serializedRsaPrivateKey);
         }
 
@@ -73,14 +80,18 @@ public class HandelsbankenPersistentStorage {
     }
 
     private Optional<String> getStorageSecurityContextId() {
-        String storageSecurityContextId = this.persistentStorage.get(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID);
+        String storageSecurityContextId =
+                this.persistentStorage.get(
+                        HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID);
         if (!Strings.isNullOrEmpty(storageSecurityContextId)) {
             return Optional.of(storageSecurityContextId);
         }
 
-        storageSecurityContextId = legacySensitivePayload.get(LEGACY_PAYLOAD_DEVICE_SECURITY_CONTEXT_ID);
+        storageSecurityContextId =
+                legacySensitivePayload.get(LEGACY_PAYLOAD_DEVICE_SECURITY_CONTEXT_ID);
         if (!Strings.isNullOrEmpty(storageSecurityContextId)) {
-            this.persistentStorage.put(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID,
+            this.persistentStorage.put(
+                    HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID,
                     storageSecurityContextId);
             return Optional.of(storageSecurityContextId);
         }
@@ -89,19 +100,29 @@ public class HandelsbankenPersistentStorage {
     }
 
     public LibTFA getTfa(Credentials credentials) {
-        String serializedRsaPrivateKey = getSerializedRsaPrivateKey()
-                .orElseThrow(() -> new IllegalStateException("User has no persisted TFA state, therefore cannot load."));
+        String serializedRsaPrivateKey =
+                getSerializedRsaPrivateKey()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "User has no persisted TFA state, therefore cannot load."));
 
-        String storageSecurityContextId = getStorageSecurityContextId().orElseGet(() ->
-                {
-                    // The key `DEVICE_SECURITY_CONTEXT_ID` is a new addition and is not present for all credentials.
-                    // In the case where it's not present a new value will be generated.
-                    String newSecurityContextId = LibTFA.createDeviceSecurityContextId(credentials);
-                    this.persistentStorage.put(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID,
-                            newSecurityContextId);
-                    return newSecurityContextId;
-                }
-        );
+        String storageSecurityContextId =
+                getStorageSecurityContextId()
+                        .orElseGet(
+                                () -> {
+                                    // The key `DEVICE_SECURITY_CONTEXT_ID` is a new addition and is
+                                    // not present for all credentials.
+                                    // In the case where it's not present a new value will be
+                                    // generated.
+                                    String newSecurityContextId =
+                                            LibTFA.createDeviceSecurityContextId(credentials);
+                                    this.persistentStorage.put(
+                                            HandelsbankenConstants.Storage
+                                                    .DEVICE_SECURITY_CONTEXT_ID,
+                                            newSecurityContextId);
+                                    return newSecurityContextId;
+                                });
 
         return new LibTFA(serializedRsaPrivateKey, storageSecurityContextId);
     }
@@ -115,7 +136,8 @@ public class HandelsbankenPersistentStorage {
     }
 
     public Optional<AuthorizeResponse> getAuthorizeResponse() {
-        return deserialize(HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, AuthorizeResponse.class);
+        return deserialize(
+                HandelsbankenConstants.Storage.AUTHORIZE_END_POINT, AuthorizeResponse.class);
     }
 
     public void removeAuthorizeResponse() {

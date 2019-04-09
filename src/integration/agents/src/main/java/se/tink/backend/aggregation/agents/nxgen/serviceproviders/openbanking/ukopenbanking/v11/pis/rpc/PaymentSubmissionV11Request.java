@@ -12,6 +12,7 @@ import se.tink.libraries.amount.Amount;
 public class PaymentSubmissionV11Request {
     @JsonProperty("Data")
     private DataEntity data;
+
     @JsonProperty("Risk")
     private RiskEntity risk;
 
@@ -31,15 +32,15 @@ public class PaymentSubmissionV11Request {
             Amount amount,
             String transferReference) {
 
-        DataEntity dataEntity = DataEntity.createPersonToPerson(
-                paymentId,
-                internalTransferId,
-                externalTransferId,
-                source,
-                destination,
-                amount,
-                transferReference
-        );
+        DataEntity dataEntity =
+                DataEntity.createPersonToPerson(
+                        paymentId,
+                        internalTransferId,
+                        externalTransferId,
+                        source,
+                        destination,
+                        amount,
+                        transferReference);
 
         return new PaymentSubmissionV11Request(dataEntity, RiskEntity.createPersonToPerson());
     }

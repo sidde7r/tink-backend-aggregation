@@ -19,8 +19,9 @@ public class DanskeBankCreditCardFetcher implements AccountFetcher<CreditCardAcc
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        ListAccountsResponse listAccountsResponse = this.apiClient.listAccounts(
-                ListAccountsRequest.createFromLanguageCode(this.languageCode));
+        ListAccountsResponse listAccountsResponse =
+                this.apiClient.listAccounts(
+                        ListAccountsRequest.createFromLanguageCode(this.languageCode));
 
         return listAccountsResponse.toTinkCreditCardAccounts();
     }

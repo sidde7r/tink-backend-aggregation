@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.r
 
 public class TransactionEntity extends LinksResponse {
     private String transactionId;
+
     @JsonFormat(pattern = "y-M-d")
     private Date date;
+
     private String creditorName;
     private AmountEntity amount;
 

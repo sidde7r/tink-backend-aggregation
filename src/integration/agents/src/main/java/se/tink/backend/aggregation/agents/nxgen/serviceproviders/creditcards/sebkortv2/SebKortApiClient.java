@@ -95,8 +95,7 @@ public class SebKortApiClient {
     }
 
     public BillingUnitsResponse fetchBillingUnits() {
-        return createRequest(SebKortConstants.Urls.BILLING_UNITS)
-                .get(BillingUnitsResponse.class);
+        return createRequest(SebKortConstants.Urls.BILLING_UNITS).get(BillingUnitsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
@@ -112,8 +111,7 @@ public class SebKortApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    public ReservationsResponse fetchReservations(
-            String cardAccountId) {
+    public ReservationsResponse fetchReservations(String cardAccountId) {
         return createRequestInSession(SebKortConstants.Urls.SEBKORT_RESERVATIONS)
                 .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
                 .get(ReservationsResponse.class);

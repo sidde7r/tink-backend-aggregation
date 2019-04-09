@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v2
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentList {
-    private final static TypeReference<List<PaymentEntity>> LIST_TYPE_REFERENCE =
+    private static final TypeReference<List<PaymentEntity>> LIST_TYPE_REFERENCE =
             new TypeReference<List<PaymentEntity>>() {};
-    private final static ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @JsonProperty("payment")
     private List<PaymentEntity> payments;
@@ -25,9 +25,7 @@ public class PaymentList {
             return Lists.newArrayList();
         }
 
-        return this.payments.stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return this.payments.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public List<PaymentEntity> getPayments(NordeaV21Constants.Payment.StatusCode statusCode) {
@@ -37,14 +35,13 @@ public class PaymentList {
             return payments;
         }
 
-        return payments.stream()
-                .filter(statusCode.predicateForType())
-                .collect(Collectors.toList());
+        return payments.stream().filter(statusCode.predicateForType()).collect(Collectors.toList());
     }
 
     /**
-     * Nordea API is a bit weird and send items on different formats depending on the number of items. Multiple
-     * rows means that we will get an List of items and one row will not be typed as an array.
+     * Nordea API is a bit weird and send items on different formats depending on the number of
+     * items. Multiple rows means that we will get an List of items and one row will not be typed as
+     * an array.
      */
     public void setPayments(Object input) {
         if (input instanceof Map) {

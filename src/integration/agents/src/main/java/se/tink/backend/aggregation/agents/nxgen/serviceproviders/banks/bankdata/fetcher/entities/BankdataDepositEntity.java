@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities;
 
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class BankdataDepositEntity {
@@ -76,5 +76,4 @@ public class BankdataDepositEntity {
         portfolio.setType(Portfolio.Type.DEPOT);
         return portfolio;
     }
-
 }

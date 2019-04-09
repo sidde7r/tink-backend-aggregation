@@ -13,12 +13,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PaymentSetupV11Response {
     @JsonProperty("Data")
     private DataEntity data;
+
     @JsonProperty("Risk")
     private RiskEntity risk;
 
     private PaymentSetupV11Response(
-            @JsonProperty("Data") DataEntity data,
-            @JsonProperty("Risk") RiskEntity risk) {
+            @JsonProperty("Data") DataEntity data, @JsonProperty("Risk") RiskEntity risk) {
         this.data = data;
         this.risk = risk;
     }

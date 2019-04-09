@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc;
 
 import java.util.Collections;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CustodyAccountsEntity {

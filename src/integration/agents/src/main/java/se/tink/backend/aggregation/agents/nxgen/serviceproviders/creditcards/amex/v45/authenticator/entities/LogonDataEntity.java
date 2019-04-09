@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants.StatusCode;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LogonDataEntity {
@@ -46,21 +46,20 @@ public class LogonDataEntity {
         return message;
     }
 
-    public boolean loginSucceed(){
+    public boolean loginSucceed() {
         return this.getStatus() == 0;
     }
 
-    public boolean loginFailed(){
+    public boolean loginFailed() {
         return this.getStatus() == -1;
     }
 
-    public boolean isRevoked(){
+    public boolean isRevoked() {
         return StatusCode.REVOKED.equalsIgnoreCase(statusCode);
     }
 
-    public boolean isIncorrect(){
-        return StatusCode.INCORRECT.equalsIgnoreCase(statusCode)||
-                StatusCode.SECOND_ATTEMPT.equalsIgnoreCase(statusCode);
+    public boolean isIncorrect() {
+        return StatusCode.INCORRECT.equalsIgnoreCase(statusCode)
+                || StatusCode.SECOND_ATTEMPT.equalsIgnoreCase(statusCode);
     }
-
 }

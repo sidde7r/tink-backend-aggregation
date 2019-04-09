@@ -7,4 +7,3 @@ public class CardArtRequest {
     private final String minimumWidth = "1260";
     private final String tag = "big-image";
 }
-
