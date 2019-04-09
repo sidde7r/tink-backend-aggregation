@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import java.util.Optional;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
@@ -56,14 +55,14 @@ public class MonzoApiClient {
 
     public AccountsResponse fetchAccounts() {
         return client.request(Urls.AIS_ACCOUNTS)
-                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
+                .addBearerToken(getOauth2Token())
                 .accept(MediaType.APPLICATION_JSON)
                 .get(AccountsResponse.class);
     }
 
     public BalanceResponse fetchBalance(String accountId) {
         return client.request(Urls.AIS_BALANCE)
-                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
+                .addBearerToken(getOauth2Token())
                 .queryParam(RequestKey.ACCOUNT_ID, accountId)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(BalanceResponse.class);
@@ -73,7 +72,7 @@ public class MonzoApiClient {
             String accountId, Object since, Object before, int limit) {
         final RequestBuilder builder =
                 client.request(Urls.AIS_TRANSACTIONS)
-                        .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
+                        .addBearerToken(getOauth2Token())
                         .queryParam(RequestKey.ACCOUNT_ID, accountId)
                         .queryParam(RequestKey.LIMIT, Integer.toString(limit))
                         .accept(MediaType.APPLICATION_JSON);
@@ -88,15 +87,10 @@ public class MonzoApiClient {
         return builder.get(TransactionsResponse.class);
     }
 
-    private String getBearerHeaderValue() {
-        final OAuth2Token token =
-                persistentStorage
-                        .get(StorageKey.OAUTH_TOKEN, OAuth2Token.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SessionError.SESSION_EXPIRED.exception()));
-
-        return "Bearer " + token.getAccessToken();
+    private OAuth2Token getOauth2Token() {
+        return persistentStorage
+                .get(StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 }
