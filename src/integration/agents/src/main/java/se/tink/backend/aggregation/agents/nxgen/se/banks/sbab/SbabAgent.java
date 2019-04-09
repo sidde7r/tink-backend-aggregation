@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabSandboxAuthenticator;
@@ -37,7 +38,7 @@ public class SbabAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new SbabApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new SbabApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -48,54 +49,40 @@ public class SbabAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final SbabConfiguration config =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                SbabConstants.INTEGRATION_NAME, clientName, SbabConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No SBAB client configured for name: %s",
-                                                        clientName)));
+        final SbabConfiguration config = getClientConfiguration();
 
-        persistentStorage.put(StorageKeys.ENVIRONMENT, config.getEnvironment());
-        persistentStorage.put(StorageKeys.BASIC_AUTH_USERNAME, config.getBasicAuthUsername());
-        persistentStorage.put(StorageKeys.BASIC_AUTH_PASSWORD, config.getBasicAuthPassword());
-        persistentStorage.put(StorageKeys.CLIENT_ID, config.getClientId());
-        persistentStorage.put(StorageKeys.REDIRECT_URI, config.getRedirectUri());
+        apiClient.setConfiguration(config);
         sessionStorage.put(StorageKeys.ACCESS_TOKEN, config.getAccessToken());
+    }
+
+    public SbabConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        SbabConstants.INTEGRATION_NAME, clientName, SbabConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final Environment environment =
-                persistentStorage
-                        .get(StorageKeys.ENVIRONMENT, Environment.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "No SBAB environment is set in persistent storage."));
+        final Environment environment = getClientConfiguration().getEnvironment();
 
         if (environment == Environment.SANDBOX) {
             return new SbabSandboxAuthenticator();
         }
 
         return new ThirdPartyAppAuthenticationController<>(
-            new OAuth2AuthenticationController(
-                persistentStorage,
-                supplementalInformationHelper,
-                new SbabAuthenticator(
-                    apiClient, sessionStorage, persistentStorage)),
-            supplementalInformationHelper);
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new SbabAuthenticator(apiClient, sessionStorage)),
+                supplementalInformationHelper);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final SbabSavingsAccountFetcher fetcher =
-                new SbabSavingsAccountFetcher(apiClient, persistentStorage);
+        final SbabSavingsAccountFetcher fetcher = new SbabSavingsAccountFetcher(apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

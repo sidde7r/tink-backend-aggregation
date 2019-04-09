@@ -1,14 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import java.util.Date;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Uris;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthGrantTypeEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthMethodEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthResponseTypeEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthScopeEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.PendingAuthCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.rpc.AccountResponse;
@@ -22,35 +30,30 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class SbabApiClient {
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
+    private SbabConfiguration configuration;
 
-    public SbabApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public SbabApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
     }
 
-    private Environment getEnvironment() {
-        return persistentStorage
-                .get(StorageKeys.ENVIRONMENT, Environment.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "No SBAB environment is set in persistent storage."));
+    public SbabConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(SbabConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(String uri) {
-        final Environment environment = getEnvironment();
+        final Environment environment = getConfiguration().getEnvironment();
         final String url = Uris.GET_BASE_URL(environment) + uri;
 
         return client.request(url)
@@ -59,7 +62,7 @@ public final class SbabApiClient {
     }
 
     private RequestBuilder createRequestInSession(String uri) {
-        final Environment environment = getEnvironment();
+        final Environment environment = getConfiguration().getEnvironment();
         final OAuth2Token token;
 
         switch (environment) {
@@ -69,8 +72,8 @@ public final class SbabApiClient {
 
                 return createRequest(uri).addBearerToken(token);
             default:
-                final String username = persistentStorage.get(StorageKeys.BASIC_AUTH_USERNAME);
-                final String password = persistentStorage.get(StorageKeys.BASIC_AUTH_PASSWORD);
+                final String username = getConfiguration().getBasicAuthUsername();
+                final String password = getConfiguration().getBasicAuthPassword();
 
                 token =
                         sessionStorage
@@ -84,14 +87,38 @@ public final class SbabApiClient {
         }
     }
 
+    public URL buildAuthorizeUrl(String state) {
+        final String clientId = getConfiguration().getClientId();
+        final String redirectUri = getConfiguration().getRedirectUri();
+
+        final PendingAuthCodeRequest request =
+                new PendingAuthCodeRequest()
+                        .withClientId(clientId)
+                        .withResponseType(AuthResponseTypeEntity.PENDING_CODE)
+                        .withRedirectUri(redirectUri)
+                        .withScope(AuthScopeEntity.ACCOUNT_LOAN_READ)
+                        .withState(state)
+                        .withAuthMethod(AuthMethodEntity.MOBILE_BANKID)
+                        .withUserId(sessionStorage.get(StorageKeys.USER_ID));
+
+        return new URL(Uris.GET_PENDING_AUTH_CODE()).queryParams(request);
+    }
+
     public String getAuthorizationStatus(String pendingAuthCode) {
         final String uri = SbabConstants.Uris.GET_AUTH_STATUS(pendingAuthCode);
 
         return createRequest(uri).get(String.class);
     }
 
-    public AccessTokenResponse getAccessToken(AccessTokenRequest accessTokenRequest) {
+    public AccessTokenResponse getAccessToken(String pendingCode) {
+        final String redirectUri = getConfiguration().getRedirectUri();
         final String uri = Uris.GET_ACCESS_TOKEN();
+
+        final AccessTokenRequest accessTokenRequest =
+                new AccessTokenRequest()
+                        .withGrantType(AuthGrantTypeEntity.PENDING_AUTHORIZATION_CODE)
+                        .withPendingCode(pendingCode)
+                        .withRedirectUri(redirectUri);
 
         return createRequest(uri).body(accessTokenRequest).post(AccessTokenResponse.class);
     }

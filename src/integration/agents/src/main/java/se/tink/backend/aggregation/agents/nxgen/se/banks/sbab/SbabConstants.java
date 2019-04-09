@@ -125,7 +125,14 @@ public abstract class SbabConstants {
         }
     }
 
-    public static class ErrorCodes {}
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_SANDBOX_ACCESS_TOKEN =
+                String.format(
+                        INVALID_CONFIGURATION + " when running in Sandbox", "Sandbox Access Token");
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
 
     public static class LogTags {}
 
