@@ -43,4 +43,15 @@ public abstract class NordnetConstants {
     public static class FormValues {
         public static final String SERVICE = "NEXTAPI";
     }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
+    public class Market {
+        public static final String INTEGRATION_NAME = "nordnet";
+        public static final String CLIENT_NAME = "tink";
+    }
 }
