@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for MonitoredObject complex type.
- * 
+ * Java class for MonitoredObject complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="MonitoredObject">
  *   &lt;complexContent>
@@ -28,40 +26,35 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MonitoredObject", propOrder = {
-    "pnr",
-    "consumerName",
-    "customerNo",
-    "freeText",
-    "portfolioName",
-    "changes"
-})
+@XmlType(
+        name = "MonitoredObject",
+        propOrder = {"pnr", "consumerName", "customerNo", "freeText", "portfolioName", "changes"})
 public class MonitoredObject {
 
     @XmlElement(name = "Pnr")
     protected String pnr;
+
     @XmlElement(name = "ConsumerName")
     protected String consumerName;
+
     @XmlElement(name = "CustomerNo")
     protected String customerNo;
+
     @XmlElement(name = "FreeText")
     protected String freeText;
+
     @XmlElement(name = "PortfolioName")
     protected String portfolioName;
+
     @XmlElement(name = "Changes")
     protected ArrayOfAnyType changes;
 
     /**
      * Gets the value of the pnr property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPnr() {
         return pnr;
@@ -69,11 +62,8 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the pnr property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPnr(String value) {
         this.pnr = value;
@@ -81,11 +71,8 @@ public class MonitoredObject {
 
     /**
      * Gets the value of the consumerName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getConsumerName() {
         return consumerName;
@@ -93,11 +80,8 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the consumerName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setConsumerName(String value) {
         this.consumerName = value;
@@ -105,11 +89,8 @@ public class MonitoredObject {
 
     /**
      * Gets the value of the customerNo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getCustomerNo() {
         return customerNo;
@@ -117,11 +98,8 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the customerNo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setCustomerNo(String value) {
         this.customerNo = value;
@@ -129,11 +107,8 @@ public class MonitoredObject {
 
     /**
      * Gets the value of the freeText property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getFreeText() {
         return freeText;
@@ -141,11 +116,8 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the freeText property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setFreeText(String value) {
         this.freeText = value;
@@ -153,11 +125,8 @@ public class MonitoredObject {
 
     /**
      * Gets the value of the portfolioName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPortfolioName() {
         return portfolioName;
@@ -165,11 +134,8 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the portfolioName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPortfolioName(String value) {
         this.portfolioName = value;
@@ -177,11 +143,8 @@ public class MonitoredObject {
 
     /**
      * Gets the value of the changes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfAnyType }
-     *     
+     *
+     * @return possible object is {@link ArrayOfAnyType }
      */
     public ArrayOfAnyType getChanges() {
         return changes;
@@ -189,14 +152,10 @@ public class MonitoredObject {
 
     /**
      * Sets the value of the changes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfAnyType }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfAnyType }
      */
     public void setChanges(ArrayOfAnyType value) {
         this.changes = value;
     }
-
 }

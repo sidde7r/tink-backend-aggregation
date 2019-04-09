@@ -1,5 +1,7 @@
 package se.tink.libraries.account.identifiers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,7 +9,6 @@ import java.net.URLEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountIdentifierTest {
 
@@ -33,7 +34,8 @@ public class AccountIdentifierTest {
     }
 
     @Test
-    public void testUrlWithHostPathAndName() throws UnsupportedEncodingException, URISyntaxException {
+    public void testUrlWithHostPathAndName()
+            throws UnsupportedEncodingException, URISyntaxException {
         String encodedName = URLEncoder.encode("Åland Name", "UTF8");
         String accountUrl = "iban://DEUTDEFF500/AT611904300234573201?name=" + encodedName;
         AccountIdentifier identifier = AccountIdentifier.create(new URI(accountUrl));
@@ -46,14 +48,16 @@ public class AccountIdentifierTest {
 
     @Test
     public void testWitouthNameFromCreate() {
-        AccountIdentifier identifier = AccountIdentifier.create(AccountIdentifier.Type.SE, "1200112233");
+        AccountIdentifier identifier =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, "1200112233");
 
         assertThat(identifier.getName().isPresent()).isFalse();
     }
 
     @Test
     public void testWithEmptyNameFromCreate() {
-        AccountIdentifier identifier = AccountIdentifier.create(AccountIdentifier.Type.SE, "1200112233", "");
+        AccountIdentifier identifier =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, "1200112233", "");
 
         assertThat(identifier.getName().isPresent()).isFalse();
     }
@@ -71,7 +75,8 @@ public class AccountIdentifierTest {
     @Test
     public void testToUrlWithHostAndPath() {
         AccountIdentifier identifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, "DEUTDEFF500/AT611904300234573201");
+                AccountIdentifier.create(
+                        AccountIdentifier.Type.IBAN, "DEUTDEFF500/AT611904300234573201");
 
         URI toUri = identifier.toURI();
         assertThat(toUri).isNotNull();
@@ -95,7 +100,10 @@ public class AccountIdentifierTest {
     @Test
     public void testToUrlWithHostPathAndName() {
         AccountIdentifier identifier =
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, "DEUTDEFF500/AT611904300234573201", "Åland Name");
+                AccountIdentifier.create(
+                        AccountIdentifier.Type.IBAN,
+                        "DEUTDEFF500/AT611904300234573201",
+                        "Åland Name");
 
         URI toUri = identifier.toURI();
         assertThat(toUri).isNotNull();
@@ -106,7 +114,8 @@ public class AccountIdentifierTest {
 
     @Test
     public void validSortCodeIdentifierShouldBeParsable() throws URISyntaxException {
-        AccountIdentifier accountIdentifier = AccountIdentifier.create(new URI("sort-code://12345612345678"));
+        AccountIdentifier accountIdentifier =
+                AccountIdentifier.create(new URI("sort-code://12345612345678"));
 
         assertThat(accountIdentifier).isNotNull();
         assertThat(accountIdentifier.isValid()).isTrue();
@@ -118,9 +127,9 @@ public class AccountIdentifierTest {
 
         AccountIdentifier identifier = new TestAccountIdentifierImplementation();
 
-        Assert.assertFalse("An implementation of AccountIdentifier should not be considered a GiroIdentifier",
-                           identifier.isGiroIdentifier());
-
+        Assert.assertFalse(
+                "An implementation of AccountIdentifier should not be considered a GiroIdentifier",
+                identifier.isGiroIdentifier());
     }
 
     private static class TestAccountIdentifierImplementation extends AccountIdentifier {

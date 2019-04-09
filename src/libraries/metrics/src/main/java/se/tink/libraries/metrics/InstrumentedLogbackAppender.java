@@ -12,10 +12,12 @@ public class InstrumentedLogbackAppender extends UnsynchronizedAppenderBase<ILog
     private final Counter counter;
 
     InstrumentedLogbackAppender(CollectorRegistry registry) {
-        counter = Counter.build().name("logback_appender_total")
-                .help("Logback log statements at various log levels")
-                .labelNames("level", "exception", "at")
-                .register(registry);
+        counter =
+                Counter.build()
+                        .name("logback_appender_total")
+                        .help("Logback log statements at various log levels")
+                        .labelNames("level", "exception", "at")
+                        .register(registry);
     }
 
     @Override

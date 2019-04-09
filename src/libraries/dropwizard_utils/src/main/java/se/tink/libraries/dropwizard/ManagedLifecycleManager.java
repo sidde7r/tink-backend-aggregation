@@ -5,6 +5,7 @@ import io.dropwizard.lifecycle.Managed;
 
 public class ManagedLifecycleManager implements Managed {
     private final LifecycleManager lifecycleManager;
+
     ManagedLifecycleManager(LifecycleManager lifecycleManager) {
         this.lifecycleManager = lifecycleManager;
     }

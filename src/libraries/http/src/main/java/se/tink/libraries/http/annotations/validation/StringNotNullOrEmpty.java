@@ -24,7 +24,8 @@ public @interface StringNotNullOrEmpty {
         public void initialize(StringNotNullOrEmpty stringNotNullOrEmpty) {}
 
         @Override
-        public boolean isValid(String string, ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(
+                String string, ConstraintValidatorContext constraintValidatorContext) {
             return !Strings.isNullOrEmpty(string);
         }
     }

@@ -8,8 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 public class OcrValidator {
     private final OcrValidationLevel ocrValidationLevel;
     private final Integer ocrLength;
-    @Nullable
-    private final Integer ocrLengthAlt;
+    @Nullable private final Integer ocrLengthAlt;
 
     public OcrValidator(OcrValidationConfiguration configuration) {
         this.ocrValidationLevel = configuration.getOcrValidationLevel();
@@ -41,21 +40,22 @@ public class OcrValidator {
         boolean isValidCheck = isValidLuhnCheck(ocrWithoutSpaces);
 
         switch (ocrValidationLevel) {
-        case OCR_3_HARD: // OCR has length check built into the OCR number
-            isValidCheck = isValidCheck && isValidLengthCheck(ocrWithoutSpaces);
-            break;
-        case OCR_4_HARD: // OCR required to be one of two possible fixed lengths
-            Preconditions.checkArgument(ocrLength != null,
-                    "For hard fixed length validation at least one length is required.");
-            isValidCheck = isValidCheck && isOneOfFixedLengths(ocrWithoutSpaces);
-            break;
-        case OCR_1_SOFT:
-        case OCR_2_HARD:
-            // only Luhn check
-            break;
-        case NO_OCR:
-            // should never happen
-            return false;
+            case OCR_3_HARD: // OCR has length check built into the OCR number
+                isValidCheck = isValidCheck && isValidLengthCheck(ocrWithoutSpaces);
+                break;
+            case OCR_4_HARD: // OCR required to be one of two possible fixed lengths
+                Preconditions.checkArgument(
+                        ocrLength != null,
+                        "For hard fixed length validation at least one length is required.");
+                isValidCheck = isValidCheck && isOneOfFixedLengths(ocrWithoutSpaces);
+                break;
+            case OCR_1_SOFT:
+            case OCR_2_HARD:
+                // only Luhn check
+                break;
+            case NO_OCR:
+                // should never happen
+                return false;
         }
 
         return isValidCheck;
@@ -70,7 +70,6 @@ public class OcrValidator {
     }
 
     private boolean isOneOfFixedLengths(String ocr) {
-        return Objects.equal(ocr.length(), ocrLength) ||
-                Objects.equal(ocr.length(), ocrLengthAlt);
+        return Objects.equal(ocr.length(), ocrLength) || Objects.equal(ocr.length(), ocrLengthAlt);
     }
 }

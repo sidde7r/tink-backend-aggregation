@@ -13,23 +13,27 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.dropwizard.logging.AbstractAppenderFactory;
 
 /**
- * Custom Console appender JSON factory to support json logging, inspired by: https://gist.github.com/ajmath/e9f90c29cd224653c218
+ * Custom Console appender JSON factory to support json logging, inspired by:
+ * https://gist.github.com/ajmath/e9f90c29cd224653c218
  *
- * In the configuration, appenders.type needs to comply with {@link #APPENDER_TYPE_NAME} (see example below).
+ * <p>In the configuration, appenders.type needs to comply with {@link #APPENDER_TYPE_NAME} (see
+ * example below).
  *
- * Note: It is equally important that the resource file: src/libraries/console_json_logger/src/main/resources/META-INF/services/io.dropwizard.logging.AppenderFactory
+ * <p>Note: It is equally important that the resource file:
+ * src/libraries/console_json_logger/src/main/resources/META-INF/services/io.dropwizard.logging.AppenderFactory
  * has the fully qualified class name of this class.
  *
- * Configuration example to use JSON logging.
+ * <p>Configuration example to use JSON logging.
+ *
  * <pre>
- logging:
- level: INFO
- loggers:
- org.hibernate: WARN
- ...
- appenders:
- - type: console-json
- ...
+ * logging:
+ * level: INFO
+ * loggers:
+ * org.hibernate: WARN
+ * ...
+ * appenders:
+ * - type: console-json
+ * ...
  * </pre>
  */
 @JsonTypeName(ConsoleJsonAppenderFactory.APPENDER_TYPE_NAME)
@@ -61,7 +65,8 @@ public class ConsoleJsonAppenderFactory extends AbstractAppenderFactory {
     }
 
     @Override
-    public Appender<ILoggingEvent> build(LoggerContext loggerContext, String s, Layout<ILoggingEvent> providedLayout) {
+    public Appender<ILoggingEvent> build(
+            LoggerContext loggerContext, String s, Layout<ILoggingEvent> providedLayout) {
         JsonLayout layout = createJsonLayout();
 
         LayoutWrappingEncoder<ILoggingEvent> layoutEncoder = new LayoutWrappingEncoder<>();
@@ -78,14 +83,15 @@ public class ConsoleJsonAppenderFactory extends AbstractAppenderFactory {
         layout.setAppendLineSeparator(true);
         layout.setIncludeException(true);
         layout.setIncludeContextName(includeContextName);
-        // Need to start the layout otherwise it will default to not include the full stacktrace (hidden bug).
+        // Need to start the layout otherwise it will default to not include the full stacktrace
+        // (hidden bug).
         layout.start();
 
         return layout;
     }
 
-    private ConsoleAppender<ILoggingEvent> createAppender(LoggerContext loggerContext,
-            LayoutWrappingEncoder<ILoggingEvent> layoutEncoder) {
+    private ConsoleAppender<ILoggingEvent> createAppender(
+            LoggerContext loggerContext, LayoutWrappingEncoder<ILoggingEvent> layoutEncoder) {
         ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<>();
         appender.setName(appenderName);
         appender.setContext(loggerContext);
@@ -95,5 +101,4 @@ public class ConsoleJsonAppenderFactory extends AbstractAppenderFactory {
 
         return appender;
     }
-
 }

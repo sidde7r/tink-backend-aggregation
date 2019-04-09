@@ -5,5 +5,4 @@ public interface QueueProducer {
     void send(Object t);
 
     boolean isAvailable();
-
 }

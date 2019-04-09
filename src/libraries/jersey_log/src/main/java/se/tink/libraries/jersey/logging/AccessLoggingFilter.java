@@ -22,15 +22,14 @@ import javax.ws.rs.core.Context;
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.api.headers.TinkHttpHeaders;
 import se.tink.libraries.accesslogging.AccessLoggingRequestDetails;
 import se.tink.libraries.accesslogging.AccessLoggingUtils;
+import se.tink.libraries.api.headers.TinkHttpHeaders;
 import se.tink.libraries.auth.HttpAuthenticationMethod;
 
 public class AccessLoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
-    @Context
-    private HttpServletRequest servletRequest;
+    @Context private HttpServletRequest servletRequest;
 
     private static final Logger log = LoggerFactory.getLogger(AccessLoggingFilter.class);
     private static final Splitter SPLITTER_SPACE = Splitter.on(CharMatcher.WHITESPACE);
@@ -61,9 +60,11 @@ public class AccessLoggingFilter implements ContainerRequestFilter, ContainerRes
             remoteHost = this.servletRequest.getRemoteAddr();
         }
 
-        String requestString = String.format("\"%s %s\"",
-                StringUtils.defaultString(httpMethod),
-                StringUtils.defaultString(request.getRequestUri()));
+        String requestString =
+                String.format(
+                        "\"%s %s\"",
+                        StringUtils.defaultString(httpMethod),
+                        StringUtils.defaultString(request.getRequestUri()));
 
         String responseTimeString = "-";
         Object maybeStopwatch = request.getProperties().get(requestStopwatchKey);
@@ -76,17 +77,23 @@ public class AccessLoggingFilter implements ContainerRequestFilter, ContainerRes
             }
         }
 
-        List<String> oauthClients = request.getRequestHeader(TinkHttpHeaders.OAUTH_CLIENT_ID_HEADER_NAME);
+        List<String> oauthClients =
+                request.getRequestHeader(TinkHttpHeaders.OAUTH_CLIENT_ID_HEADER_NAME);
 
-        AccessLoggingRequestDetails.AccessLoggingCommandBuilder accessLoggingCommandBuilder = AccessLoggingRequestDetails
-                .builder()
-                .setRemoteHost(remoteHost)
-                .setRequestString(requestString)
-                .setResponseStatus(Integer.toString(response.getStatus()))
-                .setUserAgent(StringUtils.defaultString(request.getHeaderValue(ContainerRequest.USER_AGENT)))
-                .setResponseTimeString(responseTimeString)
-                .setUserId(Objects.toString(request.getProperties().get("userId"), null))
-                .setOauthClientId(oauthClients == null ? null : oauthClients.stream().collect(Collectors.joining(",")));
+        AccessLoggingRequestDetails.AccessLoggingCommandBuilder accessLoggingCommandBuilder =
+                AccessLoggingRequestDetails.builder()
+                        .setRemoteHost(remoteHost)
+                        .setRequestString(requestString)
+                        .setResponseStatus(Integer.toString(response.getStatus()))
+                        .setUserAgent(
+                                StringUtils.defaultString(
+                                        request.getHeaderValue(ContainerRequest.USER_AGENT)))
+                        .setResponseTimeString(responseTimeString)
+                        .setUserId(Objects.toString(request.getProperties().get("userId"), null))
+                        .setOauthClientId(
+                                oauthClients == null
+                                        ? null
+                                        : oauthClients.stream().collect(Collectors.joining(",")));
 
         if (request.getRequestHeaders().containsKey("Authorization")) {
             List<String> authHeaders = request.getRequestHeader("Authorization");
@@ -95,7 +102,8 @@ public class AccessLoggingFilter implements ContainerRequestFilter, ContainerRes
                 Iterable<String> headerParts = SPLITTER_SPACE.split(authHeader);
 
                 if (Iterables.size(headerParts) > 1) {
-                    HttpAuthenticationMethod method = HttpAuthenticationMethod.fromMethod(Iterables.get(headerParts, 0));
+                    HttpAuthenticationMethod method =
+                            HttpAuthenticationMethod.fromMethod(Iterables.get(headerParts, 0));
 
                     accessLoggingCommandBuilder.setHttpAuthenticationMethod(method);
                     if (method == HttpAuthenticationMethod.SESSION) {
@@ -116,14 +124,15 @@ public class AccessLoggingFilter implements ContainerRequestFilter, ContainerRes
             boolean isPostOrPut = ("POST".equals(httpMethod) || "PUT".equals(httpMethod));
 
             // Special case for applications where we only want the submit form to be logged
-            boolean shouldLogEntity = PATHS_TO_LOG_ENTITY.contains(Iterables.get(urlParts, 0)) ||
-                    (path.startsWith("applications") && path.endsWith("form"));
+            boolean shouldLogEntity =
+                    PATHS_TO_LOG_ENTITY.contains(Iterables.get(urlParts, 0))
+                            || (path.startsWith("applications") && path.endsWith("form"));
 
             if (shouldLogEntity && isPostOrPut) {
                 ContainerRequest cachedEntityContainerRequest =
                         new CachedEntityContainerRequest(response.getContainerRequest());
-                accessLoggingCommandBuilder
-                        .setBody(writeValueAsString(cachedEntityContainerRequest.getEntity(Object.class)));
+                accessLoggingCommandBuilder.setBody(
+                        writeValueAsString(cachedEntityContainerRequest.getEntity(Object.class)));
             }
         }
 

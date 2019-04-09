@@ -13,8 +13,11 @@ public class InstrumentedRunnable implements Runnable {
 
     private final Runnable delegate;
 
-    public InstrumentedRunnable(MetricRegistry registry, String name,
-            MetricId.MetricLabels metricLabels, Runnable delegate) {
+    public InstrumentedRunnable(
+            MetricRegistry registry,
+            String name,
+            MetricId.MetricLabels metricLabels,
+            Runnable delegate) {
 
         MetricId serviceBaseName = METRIC_ID_BASE.label("name", name).label(metricLabels);
 

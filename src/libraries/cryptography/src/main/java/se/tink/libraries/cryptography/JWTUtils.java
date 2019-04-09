@@ -16,19 +16,15 @@ public class JWTUtils {
     public static String create(String challenge, ECPrivateKey privateKey) {
         Algorithm algorithm = Algorithm.ECDSA512(null, privateKey);
 
-        return JWT.create()
-                .withIssuedAt(new Date())
-                .withJWTId(challenge)
-                .sign(algorithm);
+        return JWT.create().withIssuedAt(new Date()).withJWTId(challenge).sign(algorithm);
     }
 
-    public static VerificationStatus verify(String challenge, String jwtToken, ECPublicKey publicKey) {
+    public static VerificationStatus verify(
+            String challenge, String jwtToken, ECPublicKey publicKey) {
         Algorithm algorithm = Algorithm.ECDSA512(publicKey, null);
 
-        JWTVerifier verifier = JWT.require(algorithm)
-                .withJWTId(challenge)
-                .acceptLeeway(JWT_SECONDS_VALID)
-                .build();
+        JWTVerifier verifier =
+                JWT.require(algorithm).withJWTId(challenge).acceptLeeway(JWT_SECONDS_VALID).build();
 
         try {
             verifier.verify(jwtToken);

@@ -1,11 +1,12 @@
 package se.tink.libraries.account.identifiers.formatters;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import static org.junit.Assert.*;
 
 public class DisplayAccountIdentifierFormatterTest {
 
@@ -66,5 +67,4 @@ public class DisplayAccountIdentifierFormatterTest {
         AccountIdentifier identifier = new PlusGiroIdentifier("8844235");
         assertEquals("884423-5", identifier.getIdentifier(formatter));
     }
-
 }

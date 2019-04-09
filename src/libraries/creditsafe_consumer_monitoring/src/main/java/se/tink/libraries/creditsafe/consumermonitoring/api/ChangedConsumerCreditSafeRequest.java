@@ -7,7 +7,8 @@ public class ChangedConsumerCreditSafeRequest extends PageableConsumerCreditSafe
         super();
     }
 
-    public ChangedConsumerCreditSafeRequest(String portfolio, int size, int start, int changedDays) {
+    public ChangedConsumerCreditSafeRequest(
+            String portfolio, int size, int start, int changedDays) {
         super(portfolio, size, start);
         this.changedDays = changedDays;
     }

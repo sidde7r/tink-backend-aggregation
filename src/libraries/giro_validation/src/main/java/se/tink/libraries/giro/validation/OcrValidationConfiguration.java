@@ -7,8 +7,7 @@ import javax.annotation.Nullable;
 public class OcrValidationConfiguration {
     private final OcrValidationLevel ocrValidationLevel;
     private final Integer ocrLength;
-    @Nullable
-    private final Integer ocrLengthAlt;
+    @Nullable private final Integer ocrLengthAlt;
 
     public static OcrValidationConfiguration noOcr() {
         return new OcrValidationConfiguration(OcrValidationLevel.NO_OCR, null, null);
@@ -30,11 +29,15 @@ public class OcrValidationConfiguration {
         return hardOcrFixedLength(ocrLength, null);
     }
 
-    public static OcrValidationConfiguration hardOcrFixedLength(Integer ocrLength, Integer ocrLengthAlt) {
-        return new OcrValidationConfiguration(OcrValidationLevel.OCR_4_HARD, ocrLength, ocrLengthAlt);
+    public static OcrValidationConfiguration hardOcrFixedLength(
+            Integer ocrLength, Integer ocrLengthAlt) {
+        return new OcrValidationConfiguration(
+                OcrValidationLevel.OCR_4_HARD, ocrLength, ocrLengthAlt);
     }
 
-    private OcrValidationConfiguration(OcrValidationLevel ocrValidationLevel, Integer ocrLength,
+    private OcrValidationConfiguration(
+            OcrValidationLevel ocrValidationLevel,
+            Integer ocrLength,
             @Nullable Integer ocrLengthAlt) {
         this.ocrValidationLevel = ocrValidationLevel;
         this.ocrLength = ocrLength;
@@ -62,9 +65,9 @@ public class OcrValidationConfiguration {
             return false;
         }
         OcrValidationConfiguration that = (OcrValidationConfiguration) o;
-        return ocrValidationLevel == that.ocrValidationLevel &&
-                Objects.equal(ocrLength, that.ocrLength) &&
-                Objects.equal(ocrLengthAlt, that.ocrLengthAlt);
+        return ocrValidationLevel == that.ocrValidationLevel
+                && Objects.equal(ocrLength, that.ocrLength)
+                && Objects.equal(ocrLengthAlt, that.ocrLengthAlt);
     }
 
     @Override

@@ -11,7 +11,7 @@ import se.tink.libraries.repository.guice.annotations.Centralized;
 import se.tink.libraries.repository.source.RepositorySource;
 
 public class SpringIntegrationProvider<T> implements Provider<T> {
-    private final static Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);
     private AnnotationConfigApplicationContext applicationContext;
     private AnnotationConfigApplicationContext distributedApplicationContext;
     private final Class<T> cls;
@@ -23,8 +23,7 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
     }
 
     @Inject
-    void initialize(
-            @Nullable @Centralized AnnotationConfigApplicationContext applicationContext) {
+    void initialize(@Nullable @Centralized AnnotationConfigApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

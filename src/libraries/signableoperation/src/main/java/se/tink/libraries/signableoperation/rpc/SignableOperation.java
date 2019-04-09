@@ -6,19 +6,20 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class SignableOperation {
-    private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES = ImmutableSet.of(
-            SignableOperationStatuses.EXECUTING, SignableOperationStatuses.AWAITING_CREDENTIALS,
-            SignableOperationStatuses.CREATED
-    );
+    private static final ImmutableSet<SignableOperationStatuses> IN_PROGRESS_STATUSES =
+            ImmutableSet.of(
+                    SignableOperationStatuses.EXECUTING,
+                    SignableOperationStatuses.AWAITING_CREDENTIALS,
+                    SignableOperationStatuses.CREATED);
 
     private Date created;
     private UUID id;
@@ -32,9 +33,7 @@ public class SignableOperation {
     private UUID credentialsId;
     private String signableObject;
 
-    public SignableOperation() {
-
-    }
+    public SignableOperation() {}
 
     public SignableOperation(Transfer transfer) {
         this.underlyingId = transfer.getId();
@@ -81,14 +80,14 @@ public class SignableOperation {
         }
 
         switch (statusDetailsKey) {
-        case TECHNICAL_ERROR:
-            return "Ett tekniskt fel uppstod, vänligen försök igen senare";
-        case INVALID_INPUT:
-            return "Ett eller flera felaktigt ifyllda fält, vänligen kontakta Tinks support: support@tink.se";
-        case BANKID_FAILED:
-            return "BankID signeringen misslyckades, vänligen försök igen";
-        default:
-            return null;
+            case TECHNICAL_ERROR:
+                return "Ett tekniskt fel uppstod, vänligen försök igen senare";
+            case INVALID_INPUT:
+                return "Ett eller flera felaktigt ifyllda fält, vänligen kontakta Tinks support: support@tink.se";
+            case BANKID_FAILED:
+                return "BankID signeringen misslyckades, vänligen försök igen";
+            default:
+                return null;
         }
     }
 
@@ -178,8 +177,8 @@ public class SignableOperation {
     }
 
     public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
-        SignableOperation signableOperation = transfer != null ?
-                new SignableOperation(transfer) : new SignableOperation();
+        SignableOperation signableOperation =
+                transfer != null ? new SignableOperation(transfer) : new SignableOperation();
 
         Date now = new Date();
         signableOperation.setStatus(status);
@@ -204,9 +203,10 @@ public class SignableOperation {
         return signableOperation;
     }
 
-    public static SignableOperation create(GenericApplication application, SignableOperationStatuses status) {
-        SignableOperation signableOperation = application != null ?
-                new SignableOperation(application) : new SignableOperation();
+    public static SignableOperation create(
+            GenericApplication application, SignableOperationStatuses status) {
+        SignableOperation signableOperation =
+                application != null ? new SignableOperation(application) : new SignableOperation();
 
         Date now = new Date();
         signableOperation.setStatus(status);
@@ -223,6 +223,9 @@ public class SignableOperation {
     }
 
     public enum StatusDetailsKey {
-        BANKID_FAILED, INVALID_INPUT, TECHNICAL_ERROR, USER_VALIDATION_ERROR
+        BANKID_FAILED,
+        INVALID_INPUT,
+        TECHNICAL_ERROR,
+        USER_VALIDATION_ERROR
     }
 }

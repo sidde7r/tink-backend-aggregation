@@ -11,14 +11,16 @@ import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 
 public class CacheReplicator implements CacheClient {
-    private static final ThreadFactory THREAD_FACTORY = new ThreadFactoryBuilder().setNameFormat("cache-replicator-%d")
-            .build();
-    private static final TypedThreadPoolBuilder THREAD_POOL_BUILDER = new TypedThreadPoolBuilder
-            (1, THREAD_FACTORY).withMaximumPoolSize(50, 1L, TimeUnit.MINUTES);
+    private static final ThreadFactory THREAD_FACTORY =
+            new ThreadFactoryBuilder().setNameFormat("cache-replicator-%d").build();
+    private static final TypedThreadPoolBuilder THREAD_POOL_BUILDER =
+            new TypedThreadPoolBuilder(1, THREAD_FACTORY)
+                    .withMaximumPoolSize(50, 1L, TimeUnit.MINUTES);
 
-    private final ListenableThreadPoolExecutor<Runnable> asyncExecutor = ListenableThreadPoolExecutor.builder(
-            Queues.newArrayBlockingQueue(1000),
-            THREAD_POOL_BUILDER).build();
+    private final ListenableThreadPoolExecutor<Runnable> asyncExecutor =
+            ListenableThreadPoolExecutor.builder(
+                            Queues.newArrayBlockingQueue(1000), THREAD_POOL_BUILDER)
+                    .build();
 
     private final CacheClient primaryClient;
     private final List<CacheClient> asyncMirrorClients;
@@ -29,7 +31,8 @@ public class CacheReplicator implements CacheClient {
     }
 
     @Override
-    public void set(final CacheScope scope, final String key, final int expiredTime, final Object object) {
+    public void set(
+            final CacheScope scope, final String key, final int expiredTime, final Object object) {
         primaryClient.set(scope, key, expiredTime, object);
         for (final CacheClient asyncMirrorClient : asyncMirrorClients) {
             try {
@@ -59,6 +62,7 @@ public class CacheReplicator implements CacheClient {
 
     @Override
     public void shutdown() {
-        ExecutorServiceUtils.shutdownExecutor("cacheReplicator", asyncExecutor, 10, TimeUnit.SECONDS);
+        ExecutorServiceUtils.shutdownExecutor(
+                "cacheReplicator", asyncExecutor, 10, TimeUnit.SECONDS);
     }
 }

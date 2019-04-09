@@ -1,7 +1,12 @@
 package se.tink.libraries.auth;
 
 public enum HttpAuthenticationMethod {
-    SESSION("Session"), BASIC("Basic"), BEARER("Bearer"), FACEBOOK("Facebook"), NON_VALID(null), TOKEN("Token");
+    SESSION("Session"),
+    BASIC("Basic"),
+    BEARER("Bearer"),
+    FACEBOOK("Facebook"),
+    NON_VALID(null),
+    TOKEN("Token");
 
     private String method;
 

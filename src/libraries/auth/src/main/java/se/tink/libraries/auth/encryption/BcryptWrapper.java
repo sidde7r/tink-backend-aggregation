@@ -3,7 +3,7 @@ package se.tink.libraries.auth.encryption;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BcryptWrapper implements HashingAlgorithmWrapper {
-    final private static int COMPLEXITY_FACTOR = 13; // Half a second
+    private static final int COMPLEXITY_FACTOR = 13; // Half a second
 
     @Override
     public boolean check(String cleartext, String hash) {

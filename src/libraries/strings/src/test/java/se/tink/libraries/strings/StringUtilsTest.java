@@ -1,10 +1,11 @@
 package se.tink.libraries.strings;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import java.nio.charset.Charset;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class StringUtilsTest {
 
@@ -15,21 +16,27 @@ public class StringUtilsTest {
         Assert.assertEquals("Green Bean", StringUtils.formatHuman("Green Bean"));
         Assert.assertEquals("www.aptit.se", StringUtils.formatHuman("www.aptit.se"));
         Assert.assertEquals("www.aptit.se", StringUtils.formatHuman("WWW.APTIT.SE"));
-        Assert.assertEquals("WAY2SAVE CHECKING", StringUtils.stripExtendedAsciiCharacters("WAY2SAVE® CHECKING"));
-        Assert.assertEquals("$account&savings", StringUtils.stripExtendedAsciiCharacters("$account&savings"));
+        Assert.assertEquals(
+                "WAY2SAVE CHECKING",
+                StringUtils.stripExtendedAsciiCharacters("WAY2SAVE® CHECKING"));
+        Assert.assertEquals(
+                "$account&savings", StringUtils.stripExtendedAsciiCharacters("$account&savings"));
         Assert.assertEquals("Shiro Sushi", StringUtils.formatHuman("Shiro Sushi HB"));
         Assert.assertEquals("Shiro Sushi", StringUtils.formatHuman("HB Shiro Sushi"));
 
-        Assert.assertEquals("Lucky #749.san Carlos San Carlosca Xx9077",
+        Assert.assertEquals(
+                "Lucky #749.san Carlos San Carlosca Xx9077",
                 StringUtils.formatHuman("LUCKY #749.SAN CARLOS SAN CARLOSCA xx9077"));
-        Assert.assertEquals("Columbus Data 02/19 #xxxxx7524 Withdrwl 511 Ocena Front W Venice Ca",
-                StringUtils.formatHuman("COLUMBUS DATA 02/19 #xxxxx7524 WITHDRWL 511 OCENA FRONT W VENICE CA"));
-        Assert.assertEquals("The Procter & Gamble Company, NYC",
+        Assert.assertEquals(
+                "Columbus Data 02/19 #xxxxx7524 Withdrwl 511 Ocena Front W Venice Ca",
+                StringUtils.formatHuman(
+                        "COLUMBUS DATA 02/19 #xxxxx7524 WITHDRWL 511 OCENA FRONT W VENICE CA"));
+        Assert.assertEquals(
+                "The Procter & Gamble Company, NYC",
                 StringUtils.formatHuman("The Procter & Gamble Company, NYC"));
 
         byte[] weirdSalary = {
-                0x00,
-                (byte) 0x9D,
+            0x00, (byte) 0x9D,
         };
         String weirdSalaryString = new String(weirdSalary, Charset.forName("utf16"));
         Assert.assertEquals(weirdSalaryString, StringUtils.formatHuman(weirdSalaryString));
@@ -38,8 +45,7 @@ public class StringUtilsTest {
     @Test
     public void testUpperWeirdSalaryDescription() {
         byte[] weirdSalary = {
-                0x00,
-                (byte) 0x9D,
+            0x00, (byte) 0x9D,
         };
         String weirdSalaryString = new String(weirdSalary, Charset.forName("utf16"));
         Assert.assertEquals(weirdSalaryString, weirdSalaryString.toUpperCase());
@@ -48,10 +54,7 @@ public class StringUtilsTest {
     @Test
     public void testUpperWeirdSalaryAsUTF8() {
         byte[] weirdSalary = {
-                (byte) 0xFE,
-                (byte) 0xFF,
-                0x00,
-                (byte) 0x9D,
+            (byte) 0xFE, (byte) 0xFF, 0x00, (byte) 0x9D,
         };
         System.out.println("Originalbytes: ");
         printByteArray(weirdSalary);
@@ -65,8 +68,10 @@ public class StringUtilsTest {
         System.out.println("utf16 bytes:");
         printByteArray(weirdSalaryString.getBytes(Charset.forName("utf16")));
 
-        String utf8WeirdSalary = new String(weirdSalaryString.getBytes(Charset.forName("utf8")),
-                Charset.forName("utf8"));
+        String utf8WeirdSalary =
+                new String(
+                        weirdSalaryString.getBytes(Charset.forName("utf8")),
+                        Charset.forName("utf8"));
         System.out.println("UTF8: " + utf8WeirdSalary);
 
         Assert.assertEquals(weirdSalaryString, utf8WeirdSalary);
@@ -77,12 +82,12 @@ public class StringUtilsTest {
             System.out.println(" - " + String.format("%02X", b));
         }
     }
-    
+
     @Test
     public void testTrim() {
         Assert.assertEquals("abc", StringUtils.trim("      abc      "));
     }
-    
+
     @Test
     public void testTrimToNull() {
         Assert.assertNull(StringUtils.trimToNull(null));
@@ -91,7 +96,7 @@ public class StringUtilsTest {
         Assert.assertEquals("abc", StringUtils.trimToNull("abc"));
         Assert.assertEquals("abc", StringUtils.trimToNull("      abc      "));
     }
-    
+
     @Test
     public void testTrimTrailingNumbers() {
         Assert.assertEquals("HS ", StringUtils.trimTrailingDigits("HS 1234567"));
@@ -119,12 +124,15 @@ public class StringUtilsTest {
         String comma = ", ";
         String and = " and ";
 
-        assertThat(StringUtils.join(ImmutableList.of("bench press"), comma, and)).isEqualTo("bench press");
+        assertThat(StringUtils.join(ImmutableList.of("bench press"), comma, and))
+                .isEqualTo("bench press");
 
         assertThat(StringUtils.join(ImmutableList.of("bench press", "dead lift"), comma, and))
                 .isEqualTo("bench press and dead lift");
 
-        assertThat(StringUtils.join(ImmutableList.of("bench press", "dead lift", "squats"), comma, and))
+        assertThat(
+                        StringUtils.join(
+                                ImmutableList.of("bench press", "dead lift", "squats"), comma, and))
                 .isEqualTo("bench press, dead lift and squats");
     }
 }

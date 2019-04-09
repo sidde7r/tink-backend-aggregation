@@ -7,11 +7,13 @@ import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
 
 public class PhoneNumberUtils {
     private static final PhoneNumberUtil PHONE_NUMBER_UTIL = PhoneNumberUtil.getInstance();
-    private static final PhoneNumberUtil.PhoneNumberFormat NORMALIZE_FORMAT = PhoneNumberUtil.PhoneNumberFormat.E164;
+    private static final PhoneNumberUtil.PhoneNumberFormat NORMALIZE_FORMAT =
+            PhoneNumberUtil.PhoneNumberFormat.E164;
     private static final String DEFAULT_COUNTRY = "";
 
     /**
-     * Returns true or false if the phone number is valid. The number needs to include country information.
+     * Returns true or false if the phone number is valid. The number needs to include country
+     * information.
      */
     public static boolean isValid(String phoneNumber) {
         try {
@@ -23,7 +25,8 @@ public class PhoneNumberUtils {
     }
 
     /**
-     * Returns the string representation of a phone number on E164 format (the format that is recommended for storage).
+     * Returns the string representation of a phone number on E164 format (the format that is
+     * recommended for storage).
      */
     public static String normalize(String phoneNumber) throws InvalidPhoneNumberException {
         try {

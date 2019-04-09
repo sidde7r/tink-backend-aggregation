@@ -21,7 +21,7 @@ public class SqsConsumer implements Managed, QueueConsumer {
     private QueueMessageAction queueMessageAction;
     private final int WAIT_TIME_SECONDS = 1;
     private final int MAX_NUMBER_OF_MESSAGES = 1;
-    private final int VISIBILITY_TIMEOUT_SECONDS = 300; //5 minutes
+    private final int VISIBILITY_TIMEOUT_SECONDS = 300; // 5 minutes
     private static final Logger log = LoggerFactory.getLogger(SqsConsumer.class);
     private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -29,25 +29,28 @@ public class SqsConsumer implements Managed, QueueConsumer {
     public SqsConsumer(SqsQueue sqsQueue, QueueMessageAction queueMessageAction) {
         this.sqsQueue = sqsQueue;
         this.queueMessageAction = queueMessageAction;
-        this.service = new AbstractExecutionThreadService() {
+        this.service =
+                new AbstractExecutionThreadService() {
 
-            @Override
-            protected void run() {
-                try {
-                    while (running.get()) {
-                        ReceiveMessageRequest request = createReceiveMessagesRequest();
-                        List<Message> messages = readMessagesFromQueue(request);
+                    @Override
+                    protected void run() {
+                        try {
+                            while (running.get()) {
+                                ReceiveMessageRequest request = createReceiveMessagesRequest();
+                                List<Message> messages = readMessagesFromQueue(request);
 
-                        for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
-                            delete(message);
-                            tryConsumeUntilNotRejected(message);
+                                for (Message message : messages) { // MAX_NUMBER_OF_MESSAGES is 1
+                                    delete(message);
+                                    tryConsumeUntilNotRejected(message);
+                                }
+                            }
+                        } catch (Exception e) {
+                            log.error(
+                                    "Could not query, delete or consume for queue items: {}",
+                                    e.getMessage());
                         }
                     }
-                } catch (Exception e) {
-                    log.error("Could not query, delete or consume for queue items: {}", e.getMessage());
-                }
-            }
-        };
+                };
 
         // TODO introduce metrics
     }
@@ -71,15 +74,16 @@ public class SqsConsumer implements Managed, QueueConsumer {
             log.warn("MessageID: {} rejected by executor-queue.", sqsMessage.getMessageId());
             sqsQueue.rejected();
         }
-
     }
 
     public void consume(String message) throws Exception {
         queueMessageAction.handle(message);
     }
 
-    public void delete(Message message){
-        sqsQueue.getSqs().deleteMessage(new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
+    public void delete(Message message) {
+        sqsQueue.getSqs()
+                .deleteMessage(
+                        new DeleteMessageRequest(sqsQueue.getUrl(), message.getReceiptHandle()));
     }
 
     @Override
@@ -95,5 +99,3 @@ public class SqsConsumer implements Managed, QueueConsumer {
         running.set(false);
     }
 }
-
-

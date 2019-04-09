@@ -2,7 +2,6 @@ package se.tink.libraries.concurrency;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import se.tink.libraries.concurrency.ListenableExecutor;
 
 public class ImmediateListenableExecutor<T extends Runnable> implements ListenableExecutor<T> {
     @Override

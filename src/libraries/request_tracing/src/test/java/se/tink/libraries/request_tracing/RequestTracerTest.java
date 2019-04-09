@@ -1,16 +1,17 @@
 package se.tink.libraries.request_tracing;
 
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import org.junit.Test;
-import org.slf4j.MDC;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static se.tink.libraries.request_tracing.RequestTracer.REQUEST_ID_LENGTH;
 import static se.tink.libraries.request_tracing.RequestTracer.REQUEST_ID_MDC_KEY;
+
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import org.junit.Test;
+import org.slf4j.MDC;
 
 public class RequestTracerTest {
     @Test
@@ -44,12 +45,16 @@ public class RequestTracerTest {
     }
 
     @Test
-    public void mdcNotPropagatedToDifferentThread() throws ExecutionException, InterruptedException {
+    public void mdcNotPropagatedToDifferentThread()
+            throws ExecutionException, InterruptedException {
         RequestTracer.startTracing(Optional.empty());
-        Future<Void> result = newSingleThreadExecutor().submit(() -> {
-            assertNull(MDC.get(REQUEST_ID_MDC_KEY));
-            return null;
-        });
+        Future<Void> result =
+                newSingleThreadExecutor()
+                        .submit(
+                                () -> {
+                                    assertNull(MDC.get(REQUEST_ID_MDC_KEY));
+                                    return null;
+                                });
         result.get();
     }
 }

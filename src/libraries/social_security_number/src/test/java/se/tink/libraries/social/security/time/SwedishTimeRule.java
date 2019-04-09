@@ -18,7 +18,7 @@ public class SwedishTimeRule extends TestWatcher {
     }
 
     @Override
-    protected void finished( Description description ) {
+    protected void finished(Description description) {
         TimeZone.setDefault(jvmDefault);
         DateTimeZone.setDefault(jodaDefault);
     }

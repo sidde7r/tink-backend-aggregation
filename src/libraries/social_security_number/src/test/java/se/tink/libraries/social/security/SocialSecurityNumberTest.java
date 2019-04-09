@@ -1,5 +1,9 @@
 package se.tink.libraries.social.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import org.junit.Assert;
@@ -7,14 +11,10 @@ import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.libraries.social.security.time.SwedishTimeRule;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 public class SocialSecurityNumberTest {
 
-    @Rule
-    public SwedishTimeRule timeRule = new SwedishTimeRule();
+    @Rule public SwedishTimeRule timeRule = new SwedishTimeRule();
 
     private static final String pnrInvalid1 = "1999091";
     private static final String pnrInvalid2 = "19991";
@@ -68,13 +68,16 @@ public class SocialSecurityNumberTest {
     public void doesNotValidateCheckSumForDemoUser() {
         String demoUserWithInvalidSSN = "201212121213";
 
-        SocialSecurityNumber.Sweden swedishSSN = new SocialSecurityNumber.Sweden(demoUserWithInvalidSSN);
+        SocialSecurityNumber.Sweden swedishSSN =
+                new SocialSecurityNumber.Sweden(demoUserWithInvalidSSN);
 
         try {
             assertThat(swedishSSN.isValid()).isTrue();
         } catch (ComparisonFailure comparisonFailure) {
-            throw new ComparisonFailure("Is this not a demo user any more in DemoUser.java? " + demoUserWithInvalidSSN,
-                    comparisonFailure.getExpected(), comparisonFailure.getActual());
+            throw new ComparisonFailure(
+                    "Is this not a demo user any more in DemoUser.java? " + demoUserWithInvalidSSN,
+                    comparisonFailure.getExpected(),
+                    comparisonFailure.getActual());
         }
     }
 
@@ -244,7 +247,8 @@ public class SocialSecurityNumberTest {
     public void testGetBirthDate() {
         SocialSecurityNumber.Sweden personNumber = new SocialSecurityNumber.Sweden("201212121212");
 
-        LocalDate birthDate = personNumber.getBirthDate().toInstant().atZone(ZoneId.of("CET")).toLocalDate();
+        LocalDate birthDate =
+                personNumber.getBirthDate().toInstant().atZone(ZoneId.of("CET")).toLocalDate();
         assertThat(birthDate.getYear()).isEqualTo(2012);
         assertThat(birthDate.getMonthValue()).isEqualTo(12);
         assertThat(birthDate.getDayOfMonth()).isEqualTo(12);
@@ -285,8 +289,6 @@ public class SocialSecurityNumberTest {
         assertThat(first.asStringWithDash())
                 .isEqualTo(second.asStringWithDash())
                 .isEqualTo("19860701-5537");
-        assertThat(first.asString())
-                .isEqualTo(second.asString())
-                .isEqualTo("198607015537");
+        assertThat(first.asString()).isEqualTo(second.asString()).isEqualTo("198607015537");
     }
 }

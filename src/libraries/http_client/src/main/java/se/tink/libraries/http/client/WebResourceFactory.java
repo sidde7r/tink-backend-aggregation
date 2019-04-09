@@ -81,12 +81,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import se.tink.libraries.request_tracing.RequestTracer;
 
 /**
- * Factory for client-side representation of a resource. See the <a href="package-summary.html">package overview</a> for
- * an example on how to use this class.
- * 
+ * Factory for client-side representation of a resource. See the <a
+ * href="package-summary.html">package overview</a> for an example on how to use this class.
+ *
  * @author Martin Matula (martin.matula at oracle.com)
- * 
- *         Adapted for JAX-RS 1 by @author mkalam-alami
+ *     <p>Adapted for JAX-RS 1 by @author mkalam-alami
  */
 public final class WebResourceFactory implements InvocationHandler {
 
@@ -98,64 +97,68 @@ public final class WebResourceFactory implements InvocationHandler {
     private static final Form EMPTY_FORM = new Form();
 
     /**
-     * Creates a new client-side representation of a resource described by the interface passed in the first argument.
-     * 
-     * Calling this method has the same effect as calling
-     * {@code WebResourceFactory.newResource(resourceInterface, rootTarget, false)} .
+     * Creates a new client-side representation of a resource described by the interface passed in
+     * the first argument.
      *
-     * @param <T>
-     *            Type of the resource to be created.
-     * @param resourceInterface
-     *            Interface describing the resource to be created.
-     * @param target
-     *            WebResource pointing to the resource or the parent of the resource.
-     * @return Instance of a class implementing the resource interface that can be used for making requests to the
-     *         server.
+     * <p>Calling this method has the same effect as calling {@code
+     * WebResourceFactory.newResource(resourceInterface, rootTarget, false)} .
+     *
+     * @param <T> Type of the resource to be created.
+     * @param resourceInterface Interface describing the resource to be created.
+     * @param target WebResource pointing to the resource or the parent of the resource.
+     * @return Instance of a class implementing the resource interface that can be used for making
+     *     requests to the server.
      */
     public static <T> T newResource(Class<T> resourceInterface, WebResource target) {
         return newResource(resourceInterface, target, false, Collections.emptyList(), EMPTY_FORM);
     }
 
     /**
-     * Creates a new client-side representation of a resource described by the interface passed in the first argument.
-     * 
-     * @param <C>
-     *            Type of the resource to be created.
-     * @param resourceInterface
-     *            Interface describing the resource to be created.
-     * @param target
-     *            WebResource pointing to the resource or the parent of the resource.
-     * @param ignoreResourcePath
-     *            If set to true, ignores path annotation on the resource interface (this is used when creating
-     *            sub-resources)
-     * @param cookies
-     *            Cookie params collected from parent resources (used when creating a sub-resource)
-     * @param form
-     *            Form params collected from parent resources (used when creating a sub-resource)
-     * @return Instance of a class implementing the resource interface that can be used for making requests to the
-     *         server.
+     * Creates a new client-side representation of a resource described by the interface passed in
+     * the first argument.
+     *
+     * @param <C> Type of the resource to be created.
+     * @param resourceInterface Interface describing the resource to be created.
+     * @param target WebResource pointing to the resource or the parent of the resource.
+     * @param ignoreResourcePath If set to true, ignores path annotation on the resource interface
+     *     (this is used when creating sub-resources)
+     * @param cookies Cookie params collected from parent resources (used when creating a
+     *     sub-resource)
+     * @param form Form params collected from parent resources (used when creating a sub-resource)
+     * @return Instance of a class implementing the resource interface that can be used for making
+     *     requests to the server.
      */
     @SuppressWarnings("unchecked")
-    private static <C> C newResource(Class<C> resourceInterface, WebResource target, boolean ignoreResourcePath,
-                                     List<Cookie> cookies, Form form) {
-        return (C) Proxy.newProxyInstance(resourceInterface.getClassLoader(), new Class[] {
-            resourceInterface
-        }, new WebResourceFactory(ignoreResourcePath ? target : addPathFromAnnotation(resourceInterface, target),
-                cookies, form));
+    private static <C> C newResource(
+            Class<C> resourceInterface,
+            WebResource target,
+            boolean ignoreResourcePath,
+            List<Cookie> cookies,
+            Form form) {
+        return (C)
+                Proxy.newProxyInstance(
+                        resourceInterface.getClassLoader(),
+                        new Class[] {resourceInterface},
+                        new WebResourceFactory(
+                                ignoreResourcePath
+                                        ? target
+                                        : addPathFromAnnotation(resourceInterface, target),
+                                cookies,
+                                form));
     }
 
     private MultivaluedMap<String, String> requestIdHeaders() {
         return Optional.ofNullable(RequestTracer.getRequestId())
-                .map(id -> {
-                    MultivaluedMap<String, String> newHeaders = new MultivaluedMapImpl();
-                    newHeaders.putSingle(RequestTracingFilter.REQUEST_ID_HEADER, id);
-                    return newHeaders;
-                })
+                .map(
+                        id -> {
+                            MultivaluedMap<String, String> newHeaders = new MultivaluedMapImpl();
+                            newHeaders.putSingle(RequestTracingFilter.REQUEST_ID_HEADER, id);
+                            return newHeaders;
+                        })
                 .orElse(new MultivaluedMapImpl());
     }
 
-    private WebResourceFactory(WebResource target, List<Cookie> cookies,
-                               Form form) {
+    private WebResourceFactory(WebResource target, List<Cookie> cookies, Form form) {
         this.target = target;
         this.cookies = cookies;
         this.form = form;
@@ -233,12 +236,15 @@ public final class WebResourceFactory implements InvocationHandler {
                         // TODO: HACK!
                         String uri = URLDecoder.decode(newTarget.getURI().getPath());
 
-                        String newUri = uri.replace("{" + ((PathParam) ann).value() + "}", value.toString());
+                        String newUri =
+                                uri.replace(
+                                        "{" + ((PathParam) ann).value() + "}", value.toString());
                         newTarget = newTarget.uri(new URI(newUri));
                         // newTarget = newTarget.pathParam(((PathParam)
                         // ann).value(), (String) value);
                     } else if ((ann = anns.get((QueryParam.class))) != null) {
-                        newTarget = newTarget.queryParam(((QueryParam) ann).value(), (String) value);
+                        newTarget =
+                                newTarget.queryParam(((QueryParam) ann).value(), (String) value);
                     } else if ((ann = anns.get((HeaderParam.class))) != null) {
                         headers.add(((HeaderParam) ann).value(), (String) value);
                     } else if ((ann = anns.get((CookieParam.class))) != null) {
@@ -251,7 +257,13 @@ public final class WebResourceFactory implements InvocationHandler {
                             if (!name.equals(((Cookie) value).getName())) {
                                 // is this the right thing to do? or should I
                                 // fail? or ignore the difference?
-                                c = new Cookie(name, c.getValue(), c.getPath(), c.getDomain(), c.getVersion());
+                                c =
+                                        new Cookie(
+                                                name,
+                                                c.getValue(),
+                                                c.getPath(),
+                                                c.getDomain(),
+                                                c.getVersion());
                             }
                         }
                         cookies.add(c);

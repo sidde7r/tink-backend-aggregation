@@ -35,7 +35,8 @@ public class StringUtils {
     public static final char NON_BREAKING_WHITESPACE = (char) 160;
     private static final Splitter SPLITTER = Splitter.on(" ").trimResults().omitEmptyStrings();
     private static final Splitter TAB_SPLITTER = Splitter.on('\t').trimResults();
-    private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
+    private static final Splitter COMMA_SPLITTER =
+            Splitter.on(',').trimResults().omitEmptyStrings();
     private static final Splitter CSV_SPLITTER = Splitter.on(",").trimResults(CharMatcher.is('"'));
 
     public static String generateUUID() {
@@ -43,7 +44,7 @@ public class StringUtils {
     }
 
     public static String insertPeriodically(String text, char insert, int period) {
-        return text.replaceAll("(.{" + period + "})","$1" + insert);
+        return text.replaceAll("(.{" + period + "})", "$1" + insert);
     }
 
     public static String firstLetterUppercaseFormatting(String cleanDescription) {
@@ -74,8 +75,7 @@ public class StringUtils {
         StringBuilder result2 = new StringBuilder();
 
         for (int i = 0; i < words2.length; i++) {
-            if (i > 0)
-                result2.append("-");
+            if (i > 0) result2.append("-");
             result2.append(formatCityWord(words2[i]));
         }
 
@@ -83,28 +83,33 @@ public class StringUtils {
     }
 
     public static String formatCode(String input) {
-        return stripNonAsciiCharacters(input.toLowerCase().replace(" ", "-").replace("&", "-").replace(",", ""));
+        return stripNonAsciiCharacters(
+                input.toLowerCase().replace(" ", "-").replace("&", "-").replace(",", ""));
     }
 
     private static String formatCityWord(String description) {
-        if (description.length() <= 1)
-            return description.toUpperCase();
+        if (description.length() <= 1) return description.toUpperCase();
 
         return description.substring(0, 1).toUpperCase() + description.substring(1).toLowerCase();
     }
 
     public static String formatHuman(String description) {
 
-        if (Strings.isNullOrEmpty(description))
-            return description;
+        if (Strings.isNullOrEmpty(description)) return description;
 
-        String cleanDescription = description.replace("(", "").replace(")", "").replace("\"", "").replace("!", "")
-                .replace("¤", "").replace("", "");
+        String cleanDescription =
+                description
+                        .replace("(", "")
+                        .replace(")", "")
+                        .replace("\"", "")
+                        .replace("!", "")
+                        .replace("¤", "")
+                        .replace("", "");
 
-        cleanDescription = JOINER.join(SPLITTER.split(CharMatcher.WHITESPACE.trimFrom(cleanDescription)));
+        cleanDescription =
+                JOINER.join(SPLITTER.split(CharMatcher.WHITESPACE.trimFrom(cleanDescription)));
 
-        if (cleanDescription.toUpperCase().startsWith("WWW"))
-            return cleanDescription.toLowerCase();
+        if (cleanDescription.toUpperCase().startsWith("WWW")) return cleanDescription.toLowerCase();
 
         String result = null;
 
@@ -114,16 +119,11 @@ public class StringUtils {
             result = cleanDescription;
         }
 
-        if (result.toUpperCase().startsWith("AB "))
-            result = result.substring(3);
-        if (result.toUpperCase().endsWith(" AB"))
-            result = result.substring(0, result.length() - 3);
-        if (result.toUpperCase().startsWith("HB "))
-            result = result.substring(3);
-        if (result.toUpperCase().endsWith(" HB"))
-            result = result.substring(0, result.length() - 3);
-        if (result.toUpperCase().endsWith(" -"))
-            result = result.substring(0, result.length() - 2);
+        if (result.toUpperCase().startsWith("AB ")) result = result.substring(3);
+        if (result.toUpperCase().endsWith(" AB")) result = result.substring(0, result.length() - 3);
+        if (result.toUpperCase().startsWith("HB ")) result = result.substring(3);
+        if (result.toUpperCase().endsWith(" HB")) result = result.substring(0, result.length() - 3);
+        if (result.toUpperCase().endsWith(" -")) result = result.substring(0, result.length() - 2);
         if (result.toUpperCase().endsWith(" AKTIEBOLAG"))
             result = result.substring(0, result.length() - 11);
         if (result.toUpperCase().startsWith("AKTIEBOLAGET ")) {
@@ -134,8 +134,7 @@ public class StringUtils {
     }
 
     protected static String formatHumanWord(String description) {
-        if (description.length() == 0)
-            return "";
+        if (description.length() == 0) return "";
 
         return description.substring(0, 1).toUpperCase() + description.substring(1).toLowerCase();
     }
@@ -146,7 +145,8 @@ public class StringUtils {
 
             SHA256_HMAC.init(new SecretKeySpec(Charsets.UTF_8.encode(key).array(), "HmacSHA256"));
 
-            return new String(Hex.encodeHex(SHA256_HMAC.doFinal(Charsets.UTF_8.encode(data).array())));
+            return new String(
+                    Hex.encodeHex(SHA256_HMAC.doFinal(Charsets.UTF_8.encode(data).array())));
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -188,16 +188,25 @@ public class StringUtils {
      *
      * @param string the input on which the UUID should be based on.
      * @return UUID string look-alike based off of string.
-     * @note This method does _not_ generate fully proper UUIDs. For that, it must set correct UUID type bit(s). See
-     * http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_3_.28MD5_hash_.26_namespace.29 for
-     * description on how to do this properly.
+     * @note This method does _not_ generate fully proper UUIDs. For that, it must set correct UUID
+     *     type bit(s). See
+     *     http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_3_.28MD5_hash_.26_namespace.29
+     *     for description on how to do this properly.
      */
     public static String hashAsUUID(String string) {
         try {
             String result = hashAsStringMD5(string);
 
-            return (result.substring(0, 8) + "-" + result.substring(8, 12) + "-" + result.substring(12, 16) + "-"
-                    + result.substring(16, 20) + "-" + result.substring(20)).toUpperCase();
+            return (result.substring(0, 8)
+                            + "-"
+                            + result.substring(8, 12)
+                            + "-"
+                            + result.substring(12, 16)
+                            + "-"
+                            + result.substring(16, 20)
+                            + "-"
+                            + result.substring(20))
+                    .toUpperCase();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -243,8 +252,7 @@ public class StringUtils {
      * @return
      */
     public static double parseAmount(String input) {
-        if (input == null)
-            return 0;
+        if (input == null) return 0;
 
         String text = CharMatcher.WHITESPACE.removeFrom(input);
 
@@ -264,12 +272,9 @@ public class StringUtils {
         }
 
         // Remove all non-decimal separator separators
-        if (decimalSeparator != '.')
-            text = text.replace(".", "");
-        if (decimalSeparator != ',')
-            text = text.replace(",", "");
-        if (decimalSeparator != '\'')
-            text = text.replace("'", "");
+        if (decimalSeparator != '.') text = text.replace(".", "");
+        if (decimalSeparator != ',') text = text.replace(",", "");
+        if (decimalSeparator != '\'') text = text.replace("'", "");
 
         // Make the decimal separator a dot
         text = text.replace(decimalSeparator, '.');
@@ -283,34 +288,30 @@ public class StringUtils {
     }
 
     /**
-     * Helper function to parse an arbitrary string into an amout using US standard
-     * US standard uses '.' as decimal separator.
-     * this function checks for the last decimal separator '.'
-     * and remove the rest of all none numeric values
+     * Helper function to parse an arbitrary string into an amout using US standard US standard uses
+     * '.' as decimal separator. this function checks for the last decimal separator '.' and remove
+     * the rest of all none numeric values
      *
      * @param input US standard amount string
      * @return amount as double
      */
-
     public static double parseAmountUS(String input) {
         return parseAmountWithDecimalSeparator(input, '.');
     }
 
     /**
-     * Helper function to parse an arbitrary string into an amout using EU standard
-     * Eu standard uses ',' as decimal separator.
-     * this function checks for the last decimal separator ','
-     * and remove the rest of all none numeric values
+     * Helper function to parse an arbitrary string into an amout using EU standard Eu standard uses
+     * ',' as decimal separator. this function checks for the last decimal separator ',' and remove
+     * the rest of all none numeric values
      *
      * @param input EU standard amount string
      * @return amount as double
      */
-
     public static double parseAmountEU(String input) {
         return parseAmountWithDecimalSeparator(input, ',');
     }
 
-    public static double parseAmountWithDecimalSeparator(String input, char separator){
+    public static double parseAmountWithDecimalSeparator(String input, char separator) {
         if (Strings.isNullOrEmpty(input)) {
             return 0;
         }
@@ -325,27 +326,26 @@ public class StringUtils {
             amount = input.replaceAll("[^\\d]", "");
         } else {
             String integerDigit = extractNumeric(input.substring(0, separatorIndex));
-            String decimalDigit = input.substring(separatorIndex + 1, input.length()).replaceAll("[^\\d]", "");
+            String decimalDigit =
+                    input.substring(separatorIndex + 1, input.length()).replaceAll("[^\\d]", "");
             amount = integerDigit.concat(".").concat(decimalDigit);
         }
 
         try {
             if (negative) {
                 return -Double.parseDouble(amount);
-            } else
-                return Double.parseDouble(amount);
+            } else return Double.parseDouble(amount);
         } catch (Exception e) {
             log.warn("Cannot parse amount: " + input, e);
             return 0;
         }
-
     }
 
-    private static String extractNumericWithSign(String input){
+    private static String extractNumericWithSign(String input) {
         return input.replaceAll("[^\\d-]", "");
     }
 
-    private static String extractNumeric(String input){
+    private static String extractNumeric(String input) {
         return input.replaceAll("[^\\d]", "");
     }
     /**
@@ -364,15 +364,13 @@ public class StringUtils {
     }
 
     public static String trimTrailingDigits(String str) {
-        if (str == null || str.length() == 0)
-            return str;
+        if (str == null || str.length() == 0) return str;
 
         char c = str.charAt(str.length() - 1);
         while (Character.isDigit(c)) {
             str = str.substring(0, str.length() - 1);
 
-            if (str.length() == 0)
-                break;
+            if (str.length() == 0) break;
 
             c = str.charAt(str.length() - 1);
         }
@@ -386,11 +384,14 @@ public class StringUtils {
     public static List<List<String>> readLines(File file, Charset charset) throws IOException {
         List<String> descriptions = Files.readLines(file, charset);
 
-        return Lists.newArrayList(Iterables.transform(descriptions, s -> {
-            List<String> data = Lists.newArrayList(TAB_SPLITTER.split(s));
+        return Lists.newArrayList(
+                Iterables.transform(
+                        descriptions,
+                        s -> {
+                            List<String> data = Lists.newArrayList(TAB_SPLITTER.split(s));
 
-            return data;
-        }));
+                            return data;
+                        }));
     }
 
     /**
@@ -404,8 +405,8 @@ public class StringUtils {
     }
 
     /**
-     * Parse a string of comma separated key-value pairs (i.e. "foo=A,bar=B") into an key-value entry collection
-     * (i.e. [{k:"foo",v:"A"},{k:"bar",v:"B"}])
+     * Parse a string of comma separated key-value pairs (i.e. "foo=A,bar=B") into an key-value
+     * entry collection (i.e. [{k:"foo",v:"A"},{k:"bar",v:"B"}])
      *
      * @param s
      * @return
@@ -416,8 +417,7 @@ public class StringUtils {
         for (String pair : parseCSV(s)) {
             String[] parts = pair.split("=");
 
-            if (parts.length != 2)
-                continue;
+            if (parts.length != 2) continue;
 
             pairs.add(new AbstractMap.SimpleEntry<String, String>(parts[0], parts[1]));
         }
@@ -434,14 +434,13 @@ public class StringUtils {
         int numberOfLetters = 0;
 
         for (char c : description.toCharArray()) {
-            if (Character.isLetter(c))
-                numberOfLetters++;
+            if (Character.isLetter(c)) numberOfLetters++;
 
-            if (Character.isUpperCase(c))
-                numberOfUppercaseLetters++;
+            if (Character.isUpperCase(c)) numberOfUppercaseLetters++;
         }
 
-        return ((double) numberOfUppercaseLetters / (double) numberOfLetters > HUMAN_FORMATTING_UPPERCASE_THRESHOLD);
+        return ((double) numberOfUppercaseLetters / (double) numberOfLetters
+                > HUMAN_FORMATTING_UPPERCASE_THRESHOLD);
     }
 
     /**
@@ -461,8 +460,8 @@ public class StringUtils {
      * @return
      */
     public static String stripNonAsciiCharacters(String s) {
-        return Normalizer.normalize(s, java.text.Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+",
-                "");
+        return Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     public static String trim(String string) {
@@ -470,15 +469,17 @@ public class StringUtils {
     }
 
     /**
+     * Removes whitespace characters from both ends of this String returning (using {@link
+     * #trim(String)}) <code>null</code> if the String is empty ("") after the trim or if it is
+     * <code>null</code>.
+     *
      * <p>
-     * Removes whitespace characters from both ends of this String returning (using {@link #trim(String)})
-     * <code>null</code> if the String is empty ("") after the trim or if it is <code>null</code>.
+     *
+     * <p>The String is trimmed using {@link String#trim()}. Trim removes start and end characters
+     * &lt;= 32. To strip whitespace use {@link #stripToNull(String)}.
+     *
      * <p>
-     * <p>
-     * The String is trimmed using {@link String#trim()}. Trim removes start and end characters &lt;= 32. To strip
-     * whitespace use {@link #stripToNull(String)}.
-     * </p>
-     * <p>
+     *
      * <pre>
      * StringUtils.trimToNull(null)          = null
      * StringUtils.trimToNull("")            = null
@@ -488,21 +489,21 @@ public class StringUtils {
      * </pre>
      *
      * @param string the String to be trimmed, may be null
-     * @return the trimmed String, <code>null</code> if only chars are whitespace, empty or null String input
-     * @note This description was mostly ripped from {@link org.apache.commons.lang.StringUtils#trimToNull(String)}
+     * @return the trimmed String, <code>null</code> if only chars are whitespace, empty or null
+     *     String input
+     * @note This description was mostly ripped from {@link
+     *     org.apache.commons.lang.StringUtils#trimToNull(String)}
      */
     public static String trimToNull(String string) {
-        if (string == null)
-            return null;
+        if (string == null) return null;
         final String trimmedString = trim(string);
-        if (trimmedString.isEmpty())
-            return null;
-        else
-            return trimmedString;
+        if (trimmedString.isEmpty()) return null;
+        else return trimmedString;
     }
 
     /**
      * Removes all non-alphanumeric [A-Za-z0-9]
+     *
      * @param s The string to operate on
      * @return The input string without non-alphanumerics
      */
@@ -515,31 +516,31 @@ public class StringUtils {
     }
 
     public static String toUtf8FromIso(String passwordConfirmation) {
-        return new String(passwordConfirmation.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        return new String(
+                passwordConfirmation.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
     }
 
-    /**
-     * Helper function to join strings together with a different last separator
-     */
+    /** Helper function to join strings together with a different last separator */
     public static String join(List<String> strings, String separator, String lastSeparator) {
         if (strings == null) {
             return null;
         }
 
         switch (strings.size()) {
-        case 0:
-            return "";
-        case 1:
-            return strings.get(0);
-        default:
-            return Joiner.on(separator).join(strings.subList(0, strings.size() - 1))
-                    + lastSeparator + strings.get(strings.size() - 1);
+            case 0:
+                return "";
+            case 1:
+                return strings.get(0);
+            default:
+                return Joiner.on(separator).join(strings.subList(0, strings.size() - 1))
+                        + lastSeparator
+                        + strings.get(strings.size() - 1);
         }
     }
 
     /**
-     * JaroWinkler returns 0 as comparison score when comparing two empty strings
-     * We wan't two empty strings or nulls to be interpreted as exact matches (1)
+     * JaroWinkler returns 0 as comparison score when comparing two empty strings We wan't two empty
+     * strings or nulls to be interpreted as exact matches (1)
      */
     public static double getJaroWinklerDistance(CharSequence var0, CharSequence var1) {
         if (var0 == null && var1 == null) {

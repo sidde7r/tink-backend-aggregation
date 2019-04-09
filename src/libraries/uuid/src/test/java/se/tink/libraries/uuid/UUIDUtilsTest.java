@@ -1,9 +1,10 @@
 package se.tink.libraries.uuid;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class UUIDUtilsTest {
     @Test

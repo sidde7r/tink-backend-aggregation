@@ -1,8 +1,9 @@
 package se.tink.libraries.validation.validators;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.libraries.validation.exceptions.InvalidLocaleException;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocaleValidatorTest {
 

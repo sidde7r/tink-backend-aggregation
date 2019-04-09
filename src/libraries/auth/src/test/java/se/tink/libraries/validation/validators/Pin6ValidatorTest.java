@@ -1,8 +1,9 @@
 package se.tink.libraries.validation.validators;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.Test;
 import se.tink.libraries.validation.exceptions.InvalidPin6Exception;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class Pin6ValidatorTest {
     @Test(expected = InvalidPin6Exception.class)
@@ -47,16 +48,26 @@ public class Pin6ValidatorTest {
 
     @Test
     public void testSequentialNumbers() throws Exception {
-        assertThatThrownBy(() -> Pin6Validator.validate("012345")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("123456")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("234567")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("345678")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("456789")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("987654")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("876543")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("765432")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("654321")).isInstanceOf(InvalidPin6Exception.class);
-        assertThatThrownBy(() -> Pin6Validator.validate("543210")).isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("012345"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("123456"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("234567"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("345678"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("456789"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("987654"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("876543"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("765432"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("654321"))
+                .isInstanceOf(InvalidPin6Exception.class);
+        assertThatThrownBy(() -> Pin6Validator.validate("543210"))
+                .isInstanceOf(InvalidPin6Exception.class);
     }
 
     @Test(expected = InvalidPin6Exception.class)

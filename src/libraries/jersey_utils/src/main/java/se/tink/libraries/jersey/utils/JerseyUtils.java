@@ -9,20 +9,24 @@ import java.util.Objects;
 
 public class JerseyUtils {
     public static Client getClient(List<String> pinnedCertificates) {
-        return new InterContainerJerseyClientFactory(getPinnedCertificates(pinnedCertificates)).build();
+        return new InterContainerJerseyClientFactory(getPinnedCertificates(pinnedCertificates))
+                .build();
     }
 
-    public static Client getClusterClient(byte[] clientCertificate, String clientCertificatePassword,
+    public static Client getClusterClient(
+            byte[] clientCertificate,
+            String clientCertificatePassword,
             boolean disableRequestCompression) {
-        InterClusterJerseyClientFactory interClusterJerseyClientFactory = new InterClusterJerseyClientFactory();
+        InterClusterJerseyClientFactory interClusterJerseyClientFactory =
+                new InterClusterJerseyClientFactory();
 
         if (disableRequestCompression) {
             interClusterJerseyClientFactory.disableRequestCompression();
         }
 
         if (Objects.nonNull(clientCertificate) && clientCertificate.length != 0) {
-            interClusterJerseyClientFactory
-                    .withClientCertificate(clientCertificate, clientCertificatePassword);
+            interClusterJerseyClientFactory.withClientCertificate(
+                    clientCertificate, clientCertificatePassword);
         }
 
         return interClusterJerseyClientFactory.build();

@@ -6,8 +6,8 @@ import com.google.common.base.MoreObjects;
 import java.net.URI;
 
 /**
- * Fields used for creating TransferDestination: uri, name
- * Other fields for returning responses to clients.
+ * Fields used for creating TransferDestination: uri, name Other fields for returning responses to
+ * clients.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

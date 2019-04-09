@@ -1,11 +1,11 @@
 package se.tink.libraries.date;
 
-import java.util.Calendar;
-import java.util.function.Consumer;
-import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
+import java.util.function.Consumer;
+import org.junit.Test;
 
 public class CountryDateUtilsTest {
 
@@ -28,54 +28,57 @@ public class CountryDateUtilsTest {
     }
 
     @Test
-    public void swedishIndependenceDayTest (){
-        testDayBoundaries(c -> {
-            c.set(Calendar.MONTH, 5);
-            c.set(Calendar.DATE, 6);
-            assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
-            assertTrue(c.toString(), belgianUtils.isBusinessDay(c));
-        });
+    public void swedishIndependenceDayTest() {
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 5);
+                    c.set(Calendar.DATE, 6);
+                    assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
+                    assertTrue(c.toString(), belgianUtils.isBusinessDay(c));
+                });
     }
 
     @Test
-    public void christmasDayTest(){
-        testDayBoundaries(c -> {
-            c.set(Calendar.MONTH, 11);
-            c.set(Calendar.DATE, 25);
-            assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
-            assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
-        });
+    public void christmasDayTest() {
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 11);
+                    c.set(Calendar.DATE, 25);
+                    assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
+                    assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
+                });
     }
 
     @Test
-    public void christmasEveTest(){
-        testDayBoundaries(c -> {
-            c.set(Calendar.MONTH, 11);
-            c.set(Calendar.DATE, 24);
-            assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
-            assertTrue(c.toString(), belgianUtils.isBusinessDay(c));
-        });
+    public void christmasEveTest() {
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 11);
+                    c.set(Calendar.DATE, 24);
+                    assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
+                    assertTrue(c.toString(), belgianUtils.isBusinessDay(c));
+                });
     }
 
     @Test
-    public void saintsDayTest(){
-        testDayBoundaries(c -> {
-            c.set(Calendar.MONTH, 10);
-            c.set(Calendar.DATE, 1);
-            assertTrue(c.toString(), swedishUtils.isBusinessDay(c));
-            assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
-        });
+    public void saintsDayTest() {
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 10);
+                    c.set(Calendar.DATE, 1);
+                    assertTrue(c.toString(), swedishUtils.isBusinessDay(c));
+                    assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
+                });
     }
 
     @Test
     public void kingsDay() {
-        testDayBoundaries(c -> {
-            c.set(Calendar.MONTH, 3);
-            c.set(Calendar.DATE, 2);
-            assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
-            assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
-        });
+        testDayBoundaries(
+                c -> {
+                    c.set(Calendar.MONTH, 3);
+                    c.set(Calendar.DATE, 2);
+                    assertFalse(c.toString(), swedishUtils.isBusinessDay(c));
+                    assertFalse(c.toString(), belgianUtils.isBusinessDay(c));
+                });
     }
-
 }
-

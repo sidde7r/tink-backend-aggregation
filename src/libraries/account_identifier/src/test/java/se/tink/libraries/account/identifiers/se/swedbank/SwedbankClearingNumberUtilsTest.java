@@ -1,26 +1,28 @@
 package se.tink.libraries.account.identifiers.se.swedbank;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class SwedbankClearingNumberUtilsTest {
     public static class AppendFifthClearingDigit {
         @Test
         public void appendsLuhnCheckToClearing() {
-            String fiveDigitClearingDigit = SwedbankClearingNumberUtils.appendFifthClearingDigit("8327");
+            String fiveDigitClearingDigit =
+                    SwedbankClearingNumberUtils.appendFifthClearingDigit("8327");
             assertThat(fiveDigitClearingDigit).isEqualTo("83279");
         }
 
         @Test
         public void appendsLuhnCheckToAnotherClearing() {
-            String fiveDigitClearingDigit = SwedbankClearingNumberUtils.appendFifthClearingDigit("8422");
+            String fiveDigitClearingDigit =
+                    SwedbankClearingNumberUtils.appendFifthClearingDigit("8422");
             assertThat(fiveDigitClearingDigit).isEqualTo("84228");
         }
     }
@@ -80,7 +82,8 @@ public class SwedbankClearingNumberUtilsTest {
 
             String result = SwedbankClearingNumberUtils.insertFifthClearingDigit(withoutFifthDigit);
 
-            assertThat(result).isEqualTo(fourDigitClearing + fifthClearingDigit + accountNumberPart);
+            assertThat(result)
+                    .isEqualTo(fourDigitClearing + fifthClearingDigit + accountNumberPart);
         }
     }
 
@@ -89,7 +92,9 @@ public class SwedbankClearingNumberUtilsTest {
         public void padsWhenZerosAreMissing() {
             String identifier = "8422831270465"; // Complete, non-padded account identifier
 
-            String padded = SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(identifier);
+            String padded =
+                    SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(
+                            identifier);
             assertThat(padded).isEqualTo("842280031270465");
         }
 
@@ -97,15 +102,21 @@ public class SwedbankClearingNumberUtilsTest {
         public void doesNotPadForCompleteAccountNumber() {
             String identifier = "821499246657853"; // Already complete 15 digit account identifier
 
-            String padded = SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(identifier);
+            String padded =
+                    SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(
+                            identifier);
             assertThat(padded).isEqualTo(identifier);
         }
 
         @Test
         public void padsIdentifier() {
-            SwedishIdentifier identifier = new SwedishIdentifier("8422831270465"); // Complete, non-padded account identifier
+            SwedishIdentifier identifier =
+                    new SwedishIdentifier(
+                            "8422831270465"); // Complete, non-padded account identifier
 
-            String padded = SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(identifier);
+            String padded =
+                    SwedbankClearingNumberUtils.padWithZerosBetweenClearingAndAccountNumber(
+                            identifier);
             assertThat(padded).isEqualTo("842280031270465");
         }
 
@@ -132,7 +143,8 @@ public class SwedbankClearingNumberUtilsTest {
         public void falseForSwedbankClearingStartingWith7() {
             SwedishIdentifier swedbank7xxx = new SwedishIdentifier("7123112233");
 
-            assertThat(SwedbankClearingNumberUtils.isSwedbank8xxxAccountNumber(swedbank7xxx)).isFalse();
+            assertThat(SwedbankClearingNumberUtils.isSwedbank8xxxAccountNumber(swedbank7xxx))
+                    .isFalse();
         }
 
         @Test
@@ -147,22 +159,29 @@ public class SwedbankClearingNumberUtilsTest {
         @Test
         public void createsANewIdentifierObject() {
             SwedishIdentifier notPadded = new SwedishIdentifier("8422831270465");
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(notPadded);
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                            notPadded);
             assertThat(zerosRemoved).isNotSameAs(notPadded);
         }
 
         @Test
         public void accountNumberNotStartingWith0IsUnchanged() {
             SwedishIdentifier notPadded = new SwedishIdentifier("8422831270465");
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(notPadded);
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                            notPadded);
 
             assertThat(zerosRemoved).isEqualTo(new SwedishIdentifier("8422831270465"));
         }
 
         @Test
         public void accountNumberNeedsAtLeast6Digits() {
-            SwedishIdentifier accountNumberThatNeedsInitialZeros = new SwedishIdentifier("842280000000123");
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(accountNumberThatNeedsInitialZeros);
+            SwedishIdentifier accountNumberThatNeedsInitialZeros =
+                    new SwedishIdentifier("842280000000123");
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                            accountNumberThatNeedsInitialZeros);
 
             assertThat(zerosRemoved).isEqualTo(new SwedishIdentifier("84228000123"));
         }
@@ -170,7 +189,8 @@ public class SwedbankClearingNumberUtilsTest {
         @Test
         public void removesZerosForAccountNumberStartingWithZeros() {
             SwedishIdentifier padded = new SwedishIdentifier("842280031270465");
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(padded);
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(padded);
 
             assertThat(zerosRemoved).isEqualTo(new SwedishIdentifier("8422831270465"));
         }
@@ -178,7 +198,9 @@ public class SwedbankClearingNumberUtilsTest {
         @Test
         public void doesNotRemoveZerosInEndOrMiddleOfAccountNumber() {
             SwedishIdentifier withZerosInOtherPlaces = new SwedishIdentifier("842281270046500");
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(withZerosInOtherPlaces);
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                            withZerosInOtherPlaces);
 
             assertThat(zerosRemoved).isEqualTo(withZerosInOtherPlaces);
         }
@@ -186,7 +208,8 @@ public class SwedbankClearingNumberUtilsTest {
         @Test(expected = IllegalArgumentException.class)
         public void throwsIllegalArgumentForNon8xxxSwedbankAccountNumber() {
             SwedishIdentifier non8xxxIdentifier = new SwedishIdentifier("712300112233");
-            SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(non8xxxIdentifier);
+            SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                    non8xxxIdentifier);
         }
 
         @Test
@@ -194,7 +217,8 @@ public class SwedbankClearingNumberUtilsTest {
             SwedishIdentifier padded = new SwedishIdentifier("842280031270465");
             padded.setName("The name");
 
-            SwedishIdentifier zerosRemoved = SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(padded);
+            SwedishIdentifier zerosRemoved =
+                    SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(padded);
 
             assertThat(zerosRemoved.getName().orElse(null)).isEqualTo("The name");
         }
@@ -215,13 +239,17 @@ public class SwedbankClearingNumberUtilsTest {
 
         @Test(expected = IllegalStateException.class)
         public void throwsWhenInvalid8xxxClearingCheck() {
-            SwedishIdentifier invalidClearing = new SwedishIdentifier("842200031270465"); // The clearing 8422-0 is not valid Luhn
+            SwedishIdentifier invalidClearing =
+                    new SwedishIdentifier(
+                            "842200031270465"); // The clearing 8422-0 is not valid Luhn
             SwedbankClearingNumberUtils.validateIfSwedbank8xxxIdentifier(invalidClearing);
         }
 
         @Test(expected = IllegalStateException.class)
         public void throwsWhenInvalid8xxxAccountNumberCheck() {
-            SwedishIdentifier invalidAccountNumber = new SwedishIdentifier("842280031270460"); // The account check digit 0 is not valid Luhn
+            SwedishIdentifier invalidAccountNumber =
+                    new SwedishIdentifier(
+                            "842280031270460"); // The account check digit 0 is not valid Luhn
             SwedbankClearingNumberUtils.validateIfSwedbank8xxxIdentifier(invalidAccountNumber);
         }
     }

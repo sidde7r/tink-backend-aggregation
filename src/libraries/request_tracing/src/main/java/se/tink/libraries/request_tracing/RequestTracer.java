@@ -8,10 +8,8 @@ import org.apache.commons.codec.binary.Hex;
 import org.slf4j.MDC;
 
 public class RequestTracer {
-    @VisibleForTesting
-    static final int REQUEST_ID_LENGTH = 32;
-    @VisibleForTesting
-    static final String REQUEST_ID_MDC_KEY = "requestId";
+    @VisibleForTesting static final int REQUEST_ID_LENGTH = 32;
+    @VisibleForTesting static final String REQUEST_ID_MDC_KEY = "requestId";
     private static final Random random = new Random(new SecureRandom().nextLong());
 
     public static String startTracing(Optional<String> requestId) {

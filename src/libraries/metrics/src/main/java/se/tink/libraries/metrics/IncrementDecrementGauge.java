@@ -7,12 +7,14 @@ public class IncrementDecrementGauge implements Metric {
 
     @Override
     public void register(MetricCollector exporter, MetricId id) {
-        exporter.register(id, new Gauge() {
-            @Override
-            public double getValue() {
-                return value.doubleValue();
-            }
-        });
+        exporter.register(
+                id,
+                new Gauge() {
+                    @Override
+                    public double getValue() {
+                        return value.doubleValue();
+                    }
+                });
     }
 
     public void increment() {

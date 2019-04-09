@@ -1,8 +1,9 @@
 package se.tink.libraries.auth;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.base.Predicate;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuthorizationHeaderPredicateTest {
 
@@ -31,7 +32,8 @@ public class AuthorizationHeaderPredicateTest {
     @Test
     public void testShouldMatchTwoParts() {
 
-        AuthorizationHeaderPredicate predicate = new AuthorizationHeaderPredicate("my-method", trueForAllPredicate);
+        AuthorizationHeaderPredicate predicate =
+                new AuthorizationHeaderPredicate("my-method", trueForAllPredicate);
 
         assertThat(predicate.apply("my-method")).isFalse();
         assertThat(predicate.apply("my-method abc")).isTrue();
@@ -43,7 +45,8 @@ public class AuthorizationHeaderPredicateTest {
     @Test
     public void testShouldMatchMethod() {
 
-        AuthorizationHeaderPredicate predicate = new AuthorizationHeaderPredicate("my-method", trueForAllPredicate);
+        AuthorizationHeaderPredicate predicate =
+                new AuthorizationHeaderPredicate("my-method", trueForAllPredicate);
 
         assertThat(predicate.apply("my-method abc")).isTrue();
         assertThat(predicate.apply("another-method abc")).isFalse();
@@ -52,10 +55,10 @@ public class AuthorizationHeaderPredicateTest {
     @Test
     public void testShouldIgnoreCaseOnMethod() {
 
-        AuthorizationHeaderPredicate predicate = new AuthorizationHeaderPredicate("token", trueForAllPredicate);
+        AuthorizationHeaderPredicate predicate =
+                new AuthorizationHeaderPredicate("token", trueForAllPredicate);
 
         assertThat(predicate.apply("token abc")).isTrue();
         assertThat(predicate.apply("TOKEN abc")).isTrue();
     }
-
 }

@@ -44,9 +44,11 @@ public abstract class AccountIdentifier {
         SORT_CODE("sort-code");
 
         private String scheme;
+
         Type(String scheme) {
             this.scheme = scheme;
         }
+
         @Override
         public String toString() {
             return scheme;
@@ -63,20 +65,19 @@ public abstract class AccountIdentifier {
             return null;
         }
 
-        /**
-         * String construction to be used by Jersey deserialization
-         */
+        /** String construction to be used by Jersey deserialization */
         public static Type fromString(String s) {
             return fromScheme(s);
         }
     }
 
     /**
-     * The identifier should be the identifier without the type. To get the serialized AccountIdentifier (e.g.
-     * se://1242149719742) use AccountIdentifier#toUriAsString.
-     * <p/>
-     * The following should be true: new XIdentifier(xIdentifier.getIdentifier()).getIdentifier() ==
-     * xIdentifier.getIdentifier() where XIdentifier extends AccountIdentifier and xIdentifier is an XIdentifier.
+     * The identifier should be the identifier without the type. To get the serialized
+     * AccountIdentifier (e.g. se://1242149719742) use AccountIdentifier#toUriAsString.
+     *
+     * <p>The following should be true: new XIdentifier(xIdentifier.getIdentifier()).getIdentifier()
+     * == xIdentifier.getIdentifier() where XIdentifier extends AccountIdentifier and xIdentifier is
+     * an XIdentifier.
      *
      * @return an identifier
      */
@@ -87,6 +88,7 @@ public abstract class AccountIdentifier {
     }
 
     public abstract boolean isValid();
+
     public abstract Type getType();
 
     public <T extends AccountIdentifier> T to(Class<T> cls) {
@@ -157,7 +159,7 @@ public abstract class AccountIdentifier {
             return false;
         }
 
-        AccountIdentifier id = (AccountIdentifier)obj;
+        AccountIdentifier id = (AccountIdentifier) obj;
 
         if (getType() != id.getType()) {
             return false;
@@ -220,7 +222,9 @@ public abstract class AccountIdentifier {
     private static Optional<String> getNameFromUri(URI uri) {
         List<NameValuePair> params = URLEncodedUtils.parse(uri, "UTF-8");
 
-        return params.stream().filter(AccountIdentifierPredicate.NAMEVALUEPAIR_NAME_PARAMETER::apply).findFirst()
+        return params.stream()
+                .filter(AccountIdentifierPredicate.NAMEVALUEPAIR_NAME_PARAMETER::apply)
+                .findFirst()
                 .map(NameValuePair::getValue);
     }
 
@@ -229,27 +233,27 @@ public abstract class AccountIdentifier {
             return null;
         }
 
-        switch(type) {
-        case BE:
-            return new BelgianIdentifier(id);
-        case SE:
-            return new SwedishIdentifier(id);
-        case SE_SHB_INTERNAL:
-            return new SwedishSHBInternalIdentifier(id);
-        case FI:
-            return new FinnishIdentifier(id);
-        case TINK:
-            return new TinkIdentifier(id);
-        case IBAN:
-            return new IbanIdentifier(id);
-        case SE_BG:
-            return new BankGiroIdentifier(id);
-        case SE_PG:
-            return new PlusGiroIdentifier(id);
-        case SEPA_EUR:
-            return new SepaEurIdentifier(id);
-        case SORT_CODE:
-            return new SortCodeIdentifier(id);
+        switch (type) {
+            case BE:
+                return new BelgianIdentifier(id);
+            case SE:
+                return new SwedishIdentifier(id);
+            case SE_SHB_INTERNAL:
+                return new SwedishSHBInternalIdentifier(id);
+            case FI:
+                return new FinnishIdentifier(id);
+            case TINK:
+                return new TinkIdentifier(id);
+            case IBAN:
+                return new IbanIdentifier(id);
+            case SE_BG:
+                return new BankGiroIdentifier(id);
+            case SE_PG:
+                return new PlusGiroIdentifier(id);
+            case SEPA_EUR:
+                return new SepaEurIdentifier(id);
+            case SORT_CODE:
+                return new SortCodeIdentifier(id);
         }
         return null;
     }

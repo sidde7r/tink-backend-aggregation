@@ -16,18 +16,18 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
-    private final static String LOCAL_REGION = "local";
-    private final static MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
+    private static final String LOCAL_REGION = "local";
+    private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final Counter produced;
     private final Counter consumed;
     private final Counter rejected;
@@ -38,9 +38,9 @@ public class SqsQueue {
         this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
         this.rejected = metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected"));
 
-        if (!configuration.isEnabled() ||
-                Objects.isNull(configuration.getUrl()) ||
-                Objects.isNull(configuration.getRegion())) {
+        if (!configuration.isEnabled()
+                || Objects.isNull(configuration.getUrl())
+                || Objects.isNull(configuration.getRegion())) {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
@@ -48,20 +48,26 @@ public class SqsQueue {
         }
 
         // Enable long polling when creating a queue
-        CreateQueueRequest createRequest = new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+        CreateQueueRequest createRequest =
+                new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
-        AmazonSQSClientBuilder amazonSQSClientBuilder = AmazonSQSClientBuilder.standard()
-                .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration(configuration.getUrl(), configuration.getRegion()));
+        AmazonSQSClientBuilder amazonSQSClientBuilder =
+                AmazonSQSClientBuilder.standard()
+                        .withEndpointConfiguration(
+                                new AwsClientBuilder.EndpointConfiguration(
+                                        configuration.getUrl(), configuration.getRegion()));
 
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
-            sqs = amazonSQSClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(
-                    configuration.getAwsAccessKeyId(),
-                    configuration.getAwsSecretKey()
-            )))
-                    .build();
+            sqs =
+                    amazonSQSClientBuilder
+                            .withCredentials(
+                                    new AWSStaticCredentialsProvider(
+                                            new BasicAWSCredentials(
+                                                    configuration.getAwsAccessKeyId(),
+                                                    configuration.getAwsSecretKey())))
+                            .build();
 
             this.isAvailable = isQueueCreated(createRequest);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
@@ -99,7 +105,8 @@ public class SqsQueue {
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
-                logger.warn("No SQS with the current configurations is available, sleeping 1 second and then retrying.");
+                logger.warn(
+                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.");
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 retries++;
             }
@@ -109,18 +116,18 @@ public class SqsQueue {
     }
 
     private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
-        return Objects.nonNull(configuration) &&
-                Objects.nonNull(configuration.getQueueName()) &&
-                Objects.nonNull(configuration.getAwsAccessKeyId()) &&
-                Objects.nonNull(configuration.getAwsSecretKey()) &&
-                configuration.getRegion().equals(LOCAL_REGION);
+        return Objects.nonNull(configuration)
+                && Objects.nonNull(configuration.getQueueName())
+                && Objects.nonNull(configuration.getAwsAccessKeyId())
+                && Objects.nonNull(configuration.getAwsSecretKey())
+                && configuration.getRegion().equals(LOCAL_REGION);
     }
 
     public void consumed() {
         this.consumed.inc();
     }
 
-    public void produced(){
+    public void produced() {
         this.produced.inc();
     }
 

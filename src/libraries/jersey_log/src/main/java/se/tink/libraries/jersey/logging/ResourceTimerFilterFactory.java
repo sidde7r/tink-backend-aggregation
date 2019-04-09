@@ -31,16 +31,22 @@ public class ResourceTimerFilterFactory implements ResourceFilterFactory {
             methodPath = path.value();
         }
         String templatePath =
-                StringUtils.stripEnd(resourcePath, "/") + "/" + StringUtils.stripStart(methodPath, "/");
+                StringUtils.stripEnd(resourcePath, "/")
+                        + "/"
+                        + StringUtils.stripStart(methodPath, "/");
 
         Optional<TeamOwnership> teamOwnership = Optional.empty();
         if (am.getResource().getResourceClass().getPackage().getName().startsWith("se.tink.")) {
-            teamOwnership = Optional.of(Preconditions.checkNotNull(
-                    am.getMethod().getAnnotation(TeamOwnership.class),
-                    String.format("API method '%s' must be decorated with @TeamOwnership annotation.", am)
-            ));
+            teamOwnership =
+                    Optional.of(
+                            Preconditions.checkNotNull(
+                                    am.getMethod().getAnnotation(TeamOwnership.class),
+                                    String.format(
+                                            "API method '%s' must be decorated with @TeamOwnership annotation.",
+                                            am)));
         }
 
-        return ImmutableList.of(new ResponseTimerFilter(metricRegistry, templatePath, teamOwnership));
+        return ImmutableList.of(
+                new ResponseTimerFilter(metricRegistry, templatePath, teamOwnership));
     }
 }

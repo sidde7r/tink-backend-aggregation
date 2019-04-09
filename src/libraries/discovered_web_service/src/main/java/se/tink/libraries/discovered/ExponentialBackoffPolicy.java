@@ -22,6 +22,5 @@ public class ExponentialBackoffPolicy {
             nextSleepDuration *= 2;
             return result;
         }
-
     }
 }

@@ -11,24 +11,29 @@ public class Period implements Serializable {
     @Tag(1)
     @ApiModelProperty(hidden = true)
     private boolean clean;
+
     @Tag(2)
     @ApiModelProperty(value = "Timestamp at the end of the period", example = "1464739199000")
     private Date endDate;
+
     @Tag(3)
     @ApiModelProperty(example = "2016-05")
     private String name;
+
     @Tag(4)
-    @ApiModelProperty(value = "Resolution for the statistics. ", allowableValues = ResolutionTypes.PERIOD_MODE_DOCUMENTED, example = "MONTHLY")
+    @ApiModelProperty(
+            value = "Resolution for the statistics. ",
+            allowableValues = ResolutionTypes.PERIOD_MODE_DOCUMENTED,
+            example = "MONTHLY")
     private ResolutionTypes resolution;
+
     @Tag(5)
     @ApiModelProperty(value = "Timestamp at the start of the period", example = "1462060800000")
     private Date startDate;
 
     public static final Predicate<Period> PERIOD_IS_CLEAN = Period::isClean;
 
-    public Period() {
-
-    }
+    public Period() {}
 
     public Period(Date startDate, Date endDate) {
         this.startDate = startDate;
@@ -74,22 +79,26 @@ public class Period implements Serializable {
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
-    
+
     @Override
     public String toString() {
-        return String.format("{name: %s, resolution: %s, startDate: %s, endDate: %s, clean: %s}", name, resolution,
-                startDate, endDate, clean);
+        return String.format(
+                "{name: %s, resolution: %s, startDate: %s, endDate: %s, clean: %s}",
+                name, resolution, startDate, endDate, clean);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Period)) {
             return false;
         }
-        
+
         Period p = (Period) obj;
-        return name.equals(p.getName()) && resolution.toString().equals(p.getResolution().toString())
-                && startDate.equals(p.getStartDate()) && endDate.equals(p.getEndDate()) && clean == p.isClean();
+        return name.equals(p.getName())
+                && resolution.toString().equals(p.getResolution().toString())
+                && startDate.equals(p.getStartDate())
+                && endDate.equals(p.getEndDate())
+                && clean == p.isClean();
     }
 
     @Override
@@ -111,6 +120,7 @@ public class Period implements Serializable {
     }
 
     public boolean isPeriodWithinInclusive(Period period) {
-        return this.isDateWithinInclusive(period.getStartDate()) && this.isDateWithinInclusive(period.getEndDate());
+        return this.isDateWithinInclusive(period.getStartDate())
+                && this.isDateWithinInclusive(period.getEndDate());
     }
 }

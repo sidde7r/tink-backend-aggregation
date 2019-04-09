@@ -7,12 +7,14 @@ public class LastUpdateGauge implements Metric {
 
     @Override
     public void register(MetricCollector exporter, MetricId id) {
-        exporter.register(id, new Gauge() {
-            @Override
-            public double getValue() {
-                return value.get().doubleValue();
-            }
-        });
+        exporter.register(
+                id,
+                new Gauge() {
+                    @Override
+                    public double getValue() {
+                        return value.get().doubleValue();
+                    }
+                });
     }
 
     public void update(Number value) {

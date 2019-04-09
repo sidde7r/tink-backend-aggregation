@@ -26,19 +26,16 @@ public class AccessLoggingUtils {
                 .append(" ")
                 // Add user data.
                 .append("[")
-                .append(command.getUserId() != null
-                        ? "userId:" + command.getUserId()
-                        : "")
+                .append(command.getUserId() != null ? "userId:" + command.getUserId() : "")
                 .append(" ")
-                .append(command.getOauthClientId() != null
-                        ? "clientId:" + command.getOauthClientId()
-                        : "")
+                .append(
+                        command.getOauthClientId() != null
+                                ? "clientId:" + command.getOauthClientId()
+                                : "")
                 .append(" ");
 
         if (command.getHttpAuthenticationMethod() != null) {
-            stringBuilder
-                    .append("Authorization:")
-                    .append(command.getHttpAuthenticationMethod());
+            stringBuilder.append("Authorization:").append(command.getHttpAuthenticationMethod());
             if (!Strings.isNullOrEmpty(command.getSessionId())) {
                 stringBuilder
                         .append(" ")
@@ -49,9 +46,7 @@ public class AccessLoggingUtils {
         stringBuilder.append("]");
 
         if (command.getBody() != null) {
-            stringBuilder
-                    .append(" - ")
-                    .append(command.getBody());
+            stringBuilder.append(" - ").append(command.getBody());
         }
 
         return stringBuilder.toString();

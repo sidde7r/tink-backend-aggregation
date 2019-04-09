@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.util.UUID;
-import se.tink.libraries.uuid.UUIDSerializer;
 import se.tink.libraries.uuid.UUIDDeserializer;
+import se.tink.libraries.uuid.UUIDSerializer;
 
 public class ObjectMapperFactory {
 

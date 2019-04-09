@@ -11,15 +11,17 @@ public class ApiTokenAuthorizationHeaderPredicate implements Predicate<String> {
     private AuthorizationHeaderPredicate delegate;
 
     public ApiTokenAuthorizationHeaderPredicate(Collection<String> tokens) {
-        Preconditions
-                .checkArgument(!tokens.isEmpty(), "It doesn't make sense to have an empty list of allowed tokens.");
+        Preconditions.checkArgument(
+                !tokens.isEmpty(),
+                "It doesn't make sense to have an empty list of allowed tokens.");
 
-        delegate = new AuthorizationHeaderPredicate("token", Predicates.in(ImmutableSet.copyOf(tokens)));
+        delegate =
+                new AuthorizationHeaderPredicate(
+                        "token", Predicates.in(ImmutableSet.copyOf(tokens)));
     }
 
     @Override
     public boolean apply(String authorizationHeader) {
         return delegate.apply(authorizationHeader);
     }
-
 }

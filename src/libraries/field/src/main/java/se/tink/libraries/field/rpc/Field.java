@@ -43,12 +43,18 @@ public class Field {
         return children;
     }
 
-    @ApiModelProperty(name = "helpText", value = "Text displayed next to the input field", example = "Enter your username")
+    @ApiModelProperty(
+            name = "helpText",
+            value = "Text displayed next to the input field",
+            example = "Enter your username")
     public String getHelpText() {
         return helpText;
     }
 
-    @ApiModelProperty(name = "hint", value = "Gray text in the input view (Similar to a placeholder)", example = "YYYYMMDD-NNNN")
+    @ApiModelProperty(
+            name = "hint",
+            value = "Gray text in the input view (Similar to a placeholder)",
+            example = "YYYYMMDD-NNNN")
     public String getHint() {
         return hint;
     }
@@ -65,7 +71,9 @@ public class Field {
         return name;
     }
 
-    @ApiModelProperty(name = "options", value = "A list of options where the user should select one")
+    @ApiModelProperty(
+            name = "options",
+            value = "A list of options where the user should select one")
     public List<String> getOptions() {
         return options;
     }
@@ -96,7 +104,10 @@ public class Field {
         return immutable;
     }
 
-    @ApiModelProperty(name = "masked", value = "Controls whether or not the field should be shown masked, like a password field")
+    @ApiModelProperty(
+            name = "masked",
+            value =
+                    "Controls whether or not the field should be shown masked, like a password field")
     public boolean isMasked() {
         return masked;
     }
@@ -202,7 +213,9 @@ public class Field {
         this.checkbox = checkbox;
     }
 
-    @ApiModelProperty(name = "additionalInfo", value = "A serialized JSON containing additional information that could be useful")
+    @ApiModelProperty(
+            name = "additionalInfo",
+            value = "A serialized JSON containing additional information that could be useful")
     public String getAdditionalInfo() {
         return additionalInfo;
     }
@@ -212,8 +225,8 @@ public class Field {
     }
 
     /**
-     * Keys for fields that are used in many providers, so that we don't need to do static string coding in all
-     * implementations.
+     * Keys for fields that are used in many providers, so that we don't need to do static string
+     * coding in all implementations.
      */
     public enum Key {
         HTTP_CLIENT("http-client"),

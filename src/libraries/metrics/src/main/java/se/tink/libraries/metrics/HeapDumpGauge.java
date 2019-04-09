@@ -9,9 +9,7 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Note that this class must not be created with the same metricRegistry.
- */
+/** Note that this class must not be created with the same metricRegistry. */
 public class HeapDumpGauge {
     private static final MetricId HEAP_DUMPS_METRIC_NAME = MetricId.newId("heap_dumps");
     private static final Logger log = LoggerFactory.getLogger(HeapDumpGauge.class);
@@ -29,9 +27,14 @@ public class HeapDumpGauge {
         log.info(String.format("Identified heap dump path: %s", heapDumpPath));
 
         // Register the gauge that keeps track if any of them have been stored.
-        metricRegistry.registerSingleton(HEAP_DUMPS_METRIC_NAME, new DirectoryCountingGauge(heapDumpPath,
-                pathname -> pathname.getName().endsWith(".hprof") || pathname.getName().endsWith(".hprof.gz")
-                        || pathname.getName().endsWith(".hprof.bz2")));
+        metricRegistry.registerSingleton(
+                HEAP_DUMPS_METRIC_NAME,
+                new DirectoryCountingGauge(
+                        heapDumpPath,
+                        pathname ->
+                                pathname.getName().endsWith(".hprof")
+                                        || pathname.getName().endsWith(".hprof.gz")
+                                        || pathname.getName().endsWith(".hprof.bz2")));
     }
 
     private String extractHeapDumpPath() {

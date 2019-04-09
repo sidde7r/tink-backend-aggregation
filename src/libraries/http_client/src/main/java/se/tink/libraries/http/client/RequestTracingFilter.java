@@ -29,5 +29,4 @@ public class RequestTracingFilter implements ContainerRequestFilter, ContainerRe
                 .map(Collection::stream)
                 .flatMap(Stream::findFirst);
     }
-
 }

@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for MonitoringResponse complex type.
- * 
+ * Java class for MonitoringResponse complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="MonitoringResponse">
  *   &lt;complexContent>
@@ -26,34 +24,29 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MonitoringResponse", propOrder = {
-    "objectList",
-    "status",
-    "error",
-    "resultCounters"
-})
+@XmlType(
+        name = "MonitoringResponse",
+        propOrder = {"objectList", "status", "error", "resultCounters"})
 public class MonitoringResponse {
 
     @XmlElement(name = "ObjectList")
     protected ArrayOfAnyType objectList;
+
     @XmlElement(name = "Status", required = true)
     protected STATUS status;
+
     @XmlElement(name = "Error")
     protected Error error;
+
     @XmlElement(name = "ResultCounters")
     protected ResultCountersRespObject resultCounters;
 
     /**
      * Gets the value of the objectList property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfAnyType }
-     *     
+     *
+     * @return possible object is {@link ArrayOfAnyType }
      */
     public ArrayOfAnyType getObjectList() {
         return objectList;
@@ -61,11 +54,8 @@ public class MonitoringResponse {
 
     /**
      * Sets the value of the objectList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfAnyType }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfAnyType }
      */
     public void setObjectList(ArrayOfAnyType value) {
         this.objectList = value;
@@ -73,11 +63,8 @@ public class MonitoringResponse {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link STATUS }
-     *     
+     *
+     * @return possible object is {@link STATUS }
      */
     public STATUS getStatus() {
         return status;
@@ -85,11 +72,8 @@ public class MonitoringResponse {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link STATUS }
-     *     
+     *
+     * @param value allowed object is {@link STATUS }
      */
     public void setStatus(STATUS value) {
         this.status = value;
@@ -97,11 +81,8 @@ public class MonitoringResponse {
 
     /**
      * Gets the value of the error property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Error }
-     *     
+     *
+     * @return possible object is {@link Error }
      */
     public Error getError() {
         return error;
@@ -109,11 +90,8 @@ public class MonitoringResponse {
 
     /**
      * Sets the value of the error property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Error }
-     *     
+     *
+     * @param value allowed object is {@link Error }
      */
     public void setError(Error value) {
         this.error = value;
@@ -121,11 +99,8 @@ public class MonitoringResponse {
 
     /**
      * Gets the value of the resultCounters property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ResultCountersRespObject }
-     *     
+     *
+     * @return possible object is {@link ResultCountersRespObject }
      */
     public ResultCountersRespObject getResultCounters() {
         return resultCounters;
@@ -133,14 +108,10 @@ public class MonitoringResponse {
 
     /**
      * Sets the value of the resultCounters property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ResultCountersRespObject }
-     *     
+     *
+     * @param value allowed object is {@link ResultCountersRespObject }
      */
     public void setResultCounters(ResultCountersRespObject value) {
         this.resultCounters = value;
     }
-
 }

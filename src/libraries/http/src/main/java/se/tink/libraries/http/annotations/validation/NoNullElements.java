@@ -23,7 +23,8 @@ public @interface NoNullElements {
         public void initialize(final NoNullElements hasId) {}
 
         @Override
-        public boolean isValid(List objects, ConstraintValidatorContext constraintValidatorContext) {
+        public boolean isValid(
+                List objects, ConstraintValidatorContext constraintValidatorContext) {
             return objects == null || !objects.contains(null);
         }
     }

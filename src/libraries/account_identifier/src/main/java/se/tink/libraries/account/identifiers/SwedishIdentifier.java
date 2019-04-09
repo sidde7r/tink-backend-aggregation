@@ -32,7 +32,12 @@ public class SwedishIdentifier extends AccountIdentifier {
         // TODO Understand if an accountnumber can start with zeroes ?
         // TODO If so, handle removal of those
 
-        String clean = fullAccountNumber.replace("-", "").replace(" ", "").replace(",", "").replace(".", "");
+        String clean =
+                fullAccountNumber
+                        .replace("-", "")
+                        .replace(" ", "")
+                        .replace(",", "")
+                        .replace(".", "");
         Matcher m = PATTERN_ACCOUNT_NUMBER.matcher(clean);
         if (m.matches()) {
             Optional<ClearingNumber.Details> details = ClearingNumber.get(m.group(1));

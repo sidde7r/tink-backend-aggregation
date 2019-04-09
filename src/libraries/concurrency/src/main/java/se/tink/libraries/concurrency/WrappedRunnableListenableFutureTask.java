@@ -9,7 +9,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.Nullable;
 
-public class WrappedRunnableListenableFutureTask<T extends Runnable, V> implements Runnable, ListenableFuture<V> {
+public class WrappedRunnableListenableFutureTask<T extends Runnable, V>
+        implements Runnable, ListenableFuture<V> {
 
     public static class DelegateExtractor<T extends Runnable>
             implements Function<WrappedRunnableListenableFutureTask<T, ?>, T> {
@@ -19,7 +20,6 @@ public class WrappedRunnableListenableFutureTask<T extends Runnable, V> implemen
         public T apply(WrappedRunnableListenableFutureTask<T, ?> comparableListenableFutureTask) {
             return comparableListenableFutureTask.getDelegate();
         }
-
     }
 
     private final ListenableFutureTask<V> delegateListenableFuture;
@@ -65,7 +65,8 @@ public class WrappedRunnableListenableFutureTask<T extends Runnable, V> implemen
     }
 
     @Override
-    public V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public V get(long timeout, TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
         return delegateListenableFuture.get(timeout, unit);
     }
 }

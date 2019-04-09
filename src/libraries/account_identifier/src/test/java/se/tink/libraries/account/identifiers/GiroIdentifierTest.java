@@ -1,16 +1,18 @@
 package se.tink.libraries.account.identifiers;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
+
 import java.net.URI;
+import java.util.Optional;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 
 public class GiroIdentifierTest {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
     @Test
     public void testIdentifierIsntValid() {
@@ -34,9 +36,12 @@ public class GiroIdentifierTest {
 
     @Test
     public void testIdentifierReturnsCleanIdentifier() {
-        assertEquals("1234567", new BankGiroIdentifier("123-4567").getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("12345678", new BankGiroIdentifier("1234-5678").getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("1234567", new PlusGiroIdentifier("123456-7").getIdentifier(DEFAULT_FORMATTER));
+        assertEquals(
+                "1234567", new BankGiroIdentifier("123-4567").getIdentifier(DEFAULT_FORMATTER));
+        assertEquals(
+                "12345678", new BankGiroIdentifier("1234-5678").getIdentifier(DEFAULT_FORMATTER));
+        assertEquals(
+                "1234567", new PlusGiroIdentifier("123456-7").getIdentifier(DEFAULT_FORMATTER));
         assertEquals("42", new PlusGiroIdentifier("4-2").getIdentifier(DEFAULT_FORMATTER));
     }
 
@@ -47,11 +52,13 @@ public class GiroIdentifierTest {
 
         assertEquals("9020900/1212121212", bankGiroWithOcr.getIdentifier());
         assertEquals("9020900", bankGiroWithOcr.getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("902-0900", bankGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
+        assertEquals(
+                "902-0900", bankGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
 
         assertEquals("9020900/1212121212", plusGiroWithOcr.getIdentifier());
         assertEquals("9020900", plusGiroWithOcr.getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("902090-0", plusGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
+        assertEquals(
+                "902090-0", plusGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
     }
 
     @Test
@@ -84,10 +91,12 @@ public class GiroIdentifierTest {
     public void testCreateIdentifierWithOcrFromUri() {
         BankGiroIdentifier bankGiroWithOcr = new BankGiroIdentifier("9020900", "1212121212");
         bankGiroWithOcr.setName("bgName");
-        bankGiroWithOcr = AccountIdentifier.create(bankGiroWithOcr.toURI()).to(BankGiroIdentifier.class);
+        bankGiroWithOcr =
+                AccountIdentifier.create(bankGiroWithOcr.toURI()).to(BankGiroIdentifier.class);
         assertEquals("9020900/1212121212", bankGiroWithOcr.getIdentifier());
         assertEquals("9020900", bankGiroWithOcr.getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("902-0900", bankGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
+        assertEquals(
+                "902-0900", bankGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
         assertEquals(Optional.of("bgName"), bankGiroWithOcr.getName());
         assertEquals("se-bg://9020900/1212121212?name=bgName", bankGiroWithOcr.toURI().toString());
 
@@ -95,7 +104,8 @@ public class GiroIdentifierTest {
         plusGiroWithOcr.setName("pgName");
         assertEquals("9020900/1212121212", plusGiroWithOcr.getIdentifier());
         assertEquals("9020900", plusGiroWithOcr.getIdentifier(DEFAULT_FORMATTER));
-        assertEquals("902090-0", plusGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
+        assertEquals(
+                "902090-0", plusGiroWithOcr.getIdentifier(new DisplayAccountIdentifierFormatter()));
         assertEquals(Optional.of("pgName"), plusGiroWithOcr.getName());
         assertEquals("se-pg://9020900/1212121212?name=pgName", plusGiroWithOcr.toURI().toString());
     }
@@ -108,7 +118,8 @@ public class GiroIdentifierTest {
 
     @Test
     public void testIdentifierNameIsCorrect() {
-        AccountIdentifier identifier = AccountIdentifier.create(URI.create("se-bg://1234567?name=test"));
+        AccountIdentifier identifier =
+                AccountIdentifier.create(URI.create("se-bg://1234567?name=test"));
 
         assertEquals(AccountIdentifier.Type.SE_BG, identifier.getType());
         assertEquals("1234567", identifier.getIdentifier(DEFAULT_FORMATTER));

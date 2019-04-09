@@ -16,7 +16,8 @@ public class SocialSecurityNumber {
 
     public static class Sweden {
 
-        private static final Pattern PATTERN_SWEDISH = Pattern.compile("(19|20)?\\d{2}(0|1)\\d(0|1|2|3)\\d\\d{4}");
+        private static final Pattern PATTERN_SWEDISH =
+                Pattern.compile("(19|20)?\\d{2}(0|1)\\d(0|1|2|3)\\d\\d{4}");
         private String parsedSocialSecurityNumber = null; // yyyyMMddnnnn
         private String birth = null;
 
@@ -41,7 +42,8 @@ public class SocialSecurityNumber {
 
             boolean isValid = false;
             try {
-                String datePart = DateUtils.turnPastSixDigitsDateIntoEightDigits(text.substring(0, len - 4));
+                String datePart =
+                        DateUtils.turnPastSixDigitsDateIntoEightDigits(text.substring(0, len - 4));
 
                 parsedSocialSecurityNumber = datePart + fourLast;
                 birth = calculateBirth();
@@ -52,7 +54,7 @@ public class SocialSecurityNumber {
                 } else {
                     isValid = hasCorrectCheckDigit(parsedSocialSecurityNumber);
                 }
-            } catch(ParseException ignored) {
+            } catch (ParseException ignored) {
             }
 
             this.isValid = isValid;
@@ -77,7 +79,7 @@ public class SocialSecurityNumber {
 
             int calculatedCheckDigit = 0;
             for (int i = 0; i < stringExceptCheckDigit.length(); i++) {
-                int digit = Integer.parseInt(stringExceptCheckDigit.substring(i, i+1));
+                int digit = Integer.parseInt(stringExceptCheckDigit.substring(i, i + 1));
 
                 if ((i % 2) == 0) {
                     digit = (digit * 2);
@@ -97,48 +99,38 @@ public class SocialSecurityNumber {
             return isValid;
         }
 
-        /**
-         * @return YYYYMMDDNNNN
-         */
+        /** @return YYYYMMDDNNNN */
         public String asString() {
             checkValidity();
             return parsedSocialSecurityNumber;
         }
 
-        /**
-         * @return YYYYMMDDNNNN
-         */
+        /** @return YYYYMMDDNNNN */
         public String asStringWithoutValidityCheck() {
             return parsedSocialSecurityNumber;
         }
 
-        /**
-         * @return YYYYMMDD-NNNN
-         */
+        /** @return YYYYMMDD-NNNN */
         public String asStringWithDash() {
             checkValidity();
-            return parsedSocialSecurityNumber.substring(0, 8) + "-" + parsedSocialSecurityNumber.substring(8, 12);
+            return parsedSocialSecurityNumber.substring(0, 8)
+                    + "-"
+                    + parsedSocialSecurityNumber.substring(8, 12);
         }
 
-        /**
-         * @return Birth year if valid social security number
-         */
+        /** @return Birth year if valid social security number */
         public int getBirthYear() {
             checkValidity();
             return Integer.parseInt(birth.substring(0, 4));
         }
 
-        /**
-         * @return Birth on format yyyy-MM-dd if valid social security number
-         */
+        /** @return Birth on format yyyy-MM-dd if valid social security number */
         public String getBirth() {
             checkValidity();
             return birth;
         }
 
-        /**
-         * @return Birth as a date if valid social security number
-         */
+        /** @return Birth as a date if valid social security number */
         public Date getBirthDate() {
             String birth = getBirth();
 
@@ -150,9 +142,7 @@ public class SocialSecurityNumber {
             }
         }
 
-        /**
-         * @return Age based on the Date sent to the method
-         */
+        /** @return Age based on the Date sent to the method */
         public int getAge(LocalDate currentDate) {
             LocalDate birthDate = getBirthDate().toInstant().atZone(ZoneId.of("CET")).toLocalDate();
             return (int) ChronoUnit.YEARS.between(birthDate, currentDate);
@@ -160,16 +150,20 @@ public class SocialSecurityNumber {
 
         private void checkValidity() {
             if (!isValid()) {
-                throw new IllegalStateException("Personnumber is not valid. Caller should make sure to call isValid.");
+                throw new IllegalStateException(
+                        "Personnumber is not valid. Caller should make sure to call isValid.");
             }
         }
 
         private String calculateBirth() {
 
-            return new StringBuilder().append(parsedSocialSecurityNumber.substring(0, 4)).append("-")
-                    .append(parsedSocialSecurityNumber.substring(4, 6)).append("-")
-                    .append(parsedSocialSecurityNumber.substring(6, 8)).toString();
+            return new StringBuilder()
+                    .append(parsedSocialSecurityNumber.substring(0, 4))
+                    .append("-")
+                    .append(parsedSocialSecurityNumber.substring(4, 6))
+                    .append("-")
+                    .append(parsedSocialSecurityNumber.substring(6, 8))
+                    .toString();
         }
-
     }
 }

@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for PortfolioObject complex type.
- * 
+ * Java class for PortfolioObject complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="PortfolioObject">
  *   &lt;complexContent>
@@ -24,28 +22,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PortfolioObject", propOrder = {
-    "portfolioName",
-    "isStandard"
-})
+@XmlType(
+        name = "PortfolioObject",
+        propOrder = {"portfolioName", "isStandard"})
 public class PortfolioObject {
 
     @XmlElement(name = "PortfolioName")
     protected String portfolioName;
+
     @XmlElement(name = "IsStandard")
     protected boolean isStandard;
 
     /**
      * Gets the value of the portfolioName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPortfolioName() {
         return portfolioName;
@@ -53,30 +46,20 @@ public class PortfolioObject {
 
     /**
      * Sets the value of the portfolioName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPortfolioName(String value) {
         this.portfolioName = value;
     }
 
-    /**
-     * Gets the value of the isStandard property.
-     * 
-     */
+    /** Gets the value of the isStandard property. */
     public boolean isIsStandard() {
         return isStandard;
     }
 
-    /**
-     * Sets the value of the isStandard property.
-     * 
-     */
+    /** Sets the value of the isStandard property. */
     public void setIsStandard(boolean value) {
         this.isStandard = value;
     }
-
 }

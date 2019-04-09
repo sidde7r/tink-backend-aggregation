@@ -15,7 +15,9 @@ public class DrainModeTask extends Task {
     }
 
     @Override
-    public void execute(ImmutableMultimap<String, String> immutableMultimap, PrintWriter printWriter) throws Exception {
+    public void execute(
+            ImmutableMultimap<String, String> immutableMultimap, PrintWriter printWriter)
+            throws Exception {
         if (immutableMultimap.size() == 1) {
             if (immutableMultimap.containsKey("enable")) {
                 applicationDrainMode.enable();

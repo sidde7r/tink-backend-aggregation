@@ -17,7 +17,10 @@ public enum DemoCredentials {
     USER10("201212121216"),
     USER11("201212121217"),
     USER12("201212121218"), // 2 accounts, 10 transactions
-    USER13("201212121219", DemoUserFeature.GENERATE_TRANSACTIONS), // 1 account, transactions that will generate fraud/identity events
+    USER13(
+            "201212121219",
+            DemoUserFeature.GENERATE_TRANSACTIONS), // 1 account, transactions that will generate
+    // fraud/identity events
     GROWTH_USER("demoUser"),
     USER14("201212121220"), // Credentials with good test data for split transactions
     USER15("201212121221"), // Credentials with good test data for unsecured loans
@@ -48,9 +51,8 @@ public enum DemoCredentials {
 
     /**
      * Get a demo user by username.
-     * 
-     * @param username
-     *            a username to be checked.
+     *
+     * @param username a username to be checked.
      * @return a demo user, or null if not a demo user username.
      */
     public static DemoCredentials byUsername(String username) {
@@ -73,5 +75,4 @@ public enum DemoCredentials {
     public boolean hasFeature(DemoUserFeature feature) {
         return features.contains(feature);
     }
-
 }

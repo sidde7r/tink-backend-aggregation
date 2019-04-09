@@ -1,8 +1,9 @@
 package se.tink.libraries.phonenumbers.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PhoneNumberUtilsTest {
 
@@ -19,7 +20,6 @@ public class PhoneNumberUtilsTest {
         assertThat(PhoneNumberUtils.normalize("+31 6 22 57 42 60")).isEqualTo("+31622574260");
         assertThat(PhoneNumberUtils.normalize("+31 (0) 6 22 57 42 60")).isEqualTo("+31622574260");
         assertThat(PhoneNumberUtils.normalize("+31(0)622574260")).isEqualTo("+31622574260");
-
     }
 
     @Test(expected = InvalidPhoneNumberException.class)
@@ -34,7 +34,8 @@ public class PhoneNumberUtilsTest {
         assertThat(PhoneNumberUtils.isValid("+460709202541")).isTrue();
 
         // Incorrect swedish numbers
-        assertThat(PhoneNumberUtils.isValid("0709202541")).isFalse(); // Correct but must be with country prefix
+        assertThat(PhoneNumberUtils.isValid("0709202541"))
+                .isFalse(); // Correct but must be with country prefix
         assertThat(PhoneNumberUtils.isValid("90000")).isFalse();
 
         // Correct dutch numbers
@@ -44,7 +45,5 @@ public class PhoneNumberUtilsTest {
         // Incorrect dutch numbers
         assertThat(PhoneNumberUtils.isValid("+310622574260111")).isFalse();
         assertThat(PhoneNumberUtils.isValid("+31622574")).isFalse();
-
     }
-
 }

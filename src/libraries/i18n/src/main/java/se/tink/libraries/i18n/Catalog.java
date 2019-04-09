@@ -2,7 +2,6 @@ package se.tink.libraries.i18n;
 
 import com.google.common.collect.Maps;
 import java.text.MessageFormat;
-import java.util.IllegalFormatException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -66,9 +65,11 @@ public class Catalog {
             if (!catalogs.containsKey(locale)) {
                 try {
                     catalog.i18n = I18nFactory.getI18n(Catalog.class, I18N_MESSAGES_BUNDLE, locale);
-                    if (catalog.i18n != null && catalog.i18n.getResources() != null &&
-                            catalog.i18n.getResources().getLocale() != null &&
-                            Objects.equals(catalog.i18n.getResources().getLocale().getLanguage(),
+                    if (catalog.i18n != null
+                            && catalog.i18n.getResources() != null
+                            && catalog.i18n.getResources().getLocale() != null
+                            && Objects.equals(
+                                    catalog.i18n.getResources().getLocale().getLanguage(),
                                     locale.getLanguage())) {
                         catalogs.put(locale, catalog);
                     }
@@ -112,12 +113,14 @@ public class Catalog {
     }
 
     public String getString(LocalizableParametrizedKey localizableParametrizedKey) {
-        return Catalog
-                .format(getString(localizableParametrizedKey.get()), localizableParametrizedKey.getParameters());
+        return Catalog.format(
+                getString(localizableParametrizedKey.get()),
+                localizableParametrizedKey.getParameters());
     }
 
     public String getPluralString(LocalizablePluralKey localizablePluralKey, long n) {
-        return getPluralString(localizablePluralKey.getSingular(), localizablePluralKey.getPlural(), n);
+        return getPluralString(
+                localizablePluralKey.getSingular(), localizablePluralKey.getPlural(), n);
     }
 
     public String getString(LocalizableEnum localizableEnum) {
@@ -126,6 +129,8 @@ public class Catalog {
 
     public String getPluralString(LocalizablePluralEnum localizablePluralEnum, long n) {
         return getPluralString(
-                localizablePluralEnum.getKey().getSingular(), localizablePluralEnum.getKey().getPlural(), n);
+                localizablePluralEnum.getKey().getSingular(),
+                localizablePluralEnum.getKey().getPlural(),
+                n);
     }
 }

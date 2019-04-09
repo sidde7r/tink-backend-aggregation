@@ -1,12 +1,13 @@
 package se.tink.libraries.i18n;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 public class CatalogTest {
 
@@ -43,16 +44,20 @@ public class CatalogTest {
         ArgumentCaptor<Long> countCaptor = ArgumentCaptor.forClass(Long.class);
 
         Catalog catalog = mock(Catalog.class);
-        when(catalog.getPluralString(singularCaptor.capture(), pluralCaptor.capture(), countCaptor.capture()))
-                .thenAnswer(invocationOnMock -> {
-                    Object first = invocationOnMock.getArguments()[0];
-                    Object second = invocationOnMock.getArguments()[1];
-                    Object third = invocationOnMock.getArguments()[2];
-                    return "Localized with: " + first + ", " + second + ", " + third;
-                });
-        when(catalog.getPluralString(any(LocalizablePluralKey.class), any(Long.class))).thenCallRealMethod();
+        when(catalog.getPluralString(
+                        singularCaptor.capture(), pluralCaptor.capture(), countCaptor.capture()))
+                .thenAnswer(
+                        invocationOnMock -> {
+                            Object first = invocationOnMock.getArguments()[0];
+                            Object second = invocationOnMock.getArguments()[1];
+                            Object third = invocationOnMock.getArguments()[2];
+                            return "Localized with: " + first + ", " + second + ", " + third;
+                        });
+        when(catalog.getPluralString(any(LocalizablePluralKey.class), any(Long.class)))
+                .thenCallRealMethod();
 
-        LocalizablePluralKey localizableKey = new LocalizablePluralKey("Singular key", "Plural key");
+        LocalizablePluralKey localizableKey =
+                new LocalizablePluralKey("Singular key", "Plural key");
 
         String localizedValue = catalog.getPluralString(localizableKey, 5);
 
@@ -69,11 +74,11 @@ public class CatalogTest {
 
         Catalog catalog = mock(Catalog.class);
         when(catalog.getString(keyCaptor.capture())).thenReturn("Localized {1} {0}!");
-        when(catalog.getString(any(LocalizableParametrizedKey.class)))
-                .thenCallRealMethod();
+        when(catalog.getString(any(LocalizableParametrizedKey.class))).thenCallRealMethod();
 
-        LocalizableParametrizedKey localizableKey = new LocalizableParametrizedKey("{0} {1} Non-localized")
-                .cloneWith("FirstArgument", "SecondArgument");
+        LocalizableParametrizedKey localizableKey =
+                new LocalizableParametrizedKey("{0} {1} Non-localized")
+                        .cloneWith("FirstArgument", "SecondArgument");
 
         String localizedValue = catalog.getString(localizableKey);
 
@@ -86,7 +91,8 @@ public class CatalogTest {
     public void testCloneWith_storeInVariable() {
         Catalog catalog = Catalog.getCatalog("en-US");
 
-        LocalizableParametrizedKey key = new LocalizableParametrizedKey("Test string: 1, 2, {0}, 4, {1}, 6");
+        LocalizableParametrizedKey key =
+                new LocalizableParametrizedKey("Test string: 1, 2, {0}, 4, {1}, 6");
         String expectedMessage = "Test string: 1, 2, 3, 4, 5, 6";
 
         LocalizableParametrizedKey clonedKeyWithParameters = key.cloneWith(3, 5);
@@ -102,7 +108,8 @@ public class CatalogTest {
         LocalizableParametrizedKey clonedKeyWithParameters = Message.MSG1.cloneWith(2, 5);
 
         Assert.assertNotEquals(Message.MSG1.getKey(), clonedKeyWithParameters);
-        Assert.assertEquals("Enum test: 1, 2, 3, 4, 5, 6", catalog.getString(clonedKeyWithParameters));
+        Assert.assertEquals(
+                "Enum test: 1, 2, 3, 4, 5, 6", catalog.getString(clonedKeyWithParameters));
     }
 
     private enum Message implements LocalizableParametrizedEnum {

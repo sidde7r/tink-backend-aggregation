@@ -64,23 +64,26 @@ public class IbanIdentifier extends AccountIdentifier {
         return isValidIban && (Strings.isNullOrEmpty(bic) || validateBic(bic));
     }
 
-    private boolean validateBicAndIbanWithCountryCodeRestriction(String bic, String iban, Collection<String> countryCodeRestrictions) {
+    private boolean validateBicAndIbanWithCountryCodeRestriction(
+            String bic, String iban, Collection<String> countryCodeRestrictions) {
         boolean isValidBicAndIban = validateBicAndIban(bic, iban);
         String countryCode = IbanUtil.getCountryCode(iban);
 
         return isValidBicAndIban && isValidCountry(countryCode, countryCodeRestrictions);
     }
 
-
     private boolean isValidCountry(String countryCode, Collection<String> countryCodeRestrictions) {
-        return countryCodeRestrictions.stream().anyMatch(country -> country.equalsIgnoreCase(countryCode));
+        return countryCodeRestrictions.stream()
+                .anyMatch(country -> country.equalsIgnoreCase(countryCode));
     }
 
     private boolean validateIban(String iban) {
         try {
             IbanUtil.validate(iban);
             return true;
-        } catch (IbanFormatException | InvalidCheckDigitException | UnsupportedCountryException ignored) {
+        } catch (IbanFormatException
+                | InvalidCheckDigitException
+                | UnsupportedCountryException ignored) {
             return false;
         }
     }
@@ -132,5 +135,4 @@ public class IbanIdentifier extends AccountIdentifier {
     public boolean isValidBic() {
         return isValidBic;
     }
-
 }

@@ -1,13 +1,11 @@
 package se.tink.libraries.cryptography;
 
-import java.io.IOException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.security.Signature;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class RSAUtilsTest {
     private static final String PRIVATE_KEY_PATH = "data/test/cryptography/private_rsa_key.pem";

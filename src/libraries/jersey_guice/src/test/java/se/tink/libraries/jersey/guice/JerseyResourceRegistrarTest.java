@@ -1,5 +1,11 @@
 package se.tink.libraries.jersey.guice;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Stage;
@@ -20,33 +26,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JerseyResourceRegistrarTest {
 
-    static class JerseyResource {
-    }
+    static class JerseyResource {}
 
     static class FilterFactory implements ResourceFilterFactory {
-        @Override public List<ResourceFilter> create(AbstractMethod abstractMethod) {
+        @Override
+        public List<ResourceFilter> create(AbstractMethod abstractMethod) {
             return null;
         }
     }
 
     static class RequestFilter implements ContainerRequestFilter {
-        @Override public ContainerRequest filter(ContainerRequest containerRequest) {
+        @Override
+        public ContainerRequest filter(ContainerRequest containerRequest) {
             return null;
         }
     }
 
     static class ResponseFilter implements ContainerResponseFilter {
-        @Override public ContainerResponse filter(ContainerRequest containerRequest,
-                ContainerResponse containerResponse) {
+        @Override
+        public ContainerResponse filter(
+                ContainerRequest containerRequest, ContainerResponse containerResponse) {
             return null;
         }
     }
@@ -83,7 +86,8 @@ public class JerseyResourceRegistrarTest {
         LifecycleInjector.builder()
                 .inStage(Stage.PRODUCTION)
                 .withModules(new Module())
-                .build().createInjector();
+                .build()
+                .createInjector();
 
         verify(jersey).register(any(JerseyResource.class));
         assertTrue(filterFactories.get(0) instanceof FilterFactory);
@@ -106,7 +110,8 @@ public class JerseyResourceRegistrarTest {
         LifecycleInjector.builder()
                 .inStage(Stage.PRODUCTION)
                 .withModules(new Module())
-                .build().createInjector();
+                .build()
+                .createInjector();
 
         verify(jersey).register(any(JerseyResource.class));
         assertTrue(filterFactories.isEmpty());
@@ -114,8 +119,7 @@ public class JerseyResourceRegistrarTest {
         assertTrue(responseFilters.isEmpty());
     }
 
-    static class SecondJerseyResource {
-    }
+    static class SecondJerseyResource {}
 
     @Test
     public void subsequentCallsShouldAddResources() {
@@ -133,17 +137,15 @@ public class JerseyResourceRegistrarTest {
         LifecycleInjector.builder()
                 .inStage(Stage.PRODUCTION)
                 .withModules(new Module())
-                .build().createInjector();
+                .build()
+                .createInjector();
         verify(jersey).register(any(JerseyResource.class));
         verify(jersey).register(any(SecondJerseyResource.class));
     }
 
     @Test(expected = NullPointerException.class)
     public void requireBinder() {
-        JerseyResourceRegistrar.build()
-                .jersey(jersey)
-                .addResources(JerseyResource.class)
-                .bind();
+        JerseyResourceRegistrar.build().jersey(jersey).addResources(JerseyResource.class).bind();
     }
 
     @Test(expected = NullPointerException.class)
@@ -153,5 +155,4 @@ public class JerseyResourceRegistrarTest {
                 .addResources(JerseyResource.class)
                 .bind();
     }
-
 }

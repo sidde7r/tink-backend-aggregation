@@ -44,19 +44,21 @@ public class VersionInformation {
 
     @Inject
     public VersionInformation(MetricRegistry registry) throws IOException {
-        version = SerializationUtils.deserializeFromString(
-                Files.toString(new File("data/version.json"), Charsets.UTF_8), Version.class);
+        version =
+                SerializationUtils.deserializeFromString(
+                        Files.toString(new File("data/version.json"), Charsets.UTF_8),
+                        Version.class);
 
         // Create a counter that is always 1 with the labels we want to export
-        MetricId metric = MetricId.newId("version")
-                .label("version", version.getVersion());
+        MetricId metric = MetricId.newId("version").label("version", version.getVersion());
         if (version.getCommit() != null) {
             metric = metric.label("commit", version.getCommit());
         }
         if (version.getDate() != null) {
             // A common standard format with TZ is RFC3339. That's the format
             // used below.
-            String date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(version.getDate());
+            String date =
+                    new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX").format(version.getDate());
             metric = metric.label("date", date);
         }
         registry.meter(metric).inc();

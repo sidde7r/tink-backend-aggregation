@@ -6,14 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * A container Jersey resource that doesn't require authentication to be accessed.
- */
+/** A container Jersey resource that doesn't require authentication to be accessed. */
 @Inherited
-@Target({
-        ElementType.TYPE, ElementType.METHOD
-})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AllowAnonymous {
-
-}
+public @interface AllowAnonymous {}

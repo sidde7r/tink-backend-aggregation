@@ -3,9 +3,7 @@ package se.tink.libraries.account.identifiers.iban;
 import com.google.common.collect.Maps;
 import java.util.Map;
 
-/**
- * Stores bic numbers for different banks
- */
+/** Stores bic numbers for different banks */
 public class Bic {
 
     private static Map<String, String> map;
@@ -20,5 +18,4 @@ public class Bic {
     public static String getBicByProviderName(String name) {
         return map.get(name);
     }
-
 }

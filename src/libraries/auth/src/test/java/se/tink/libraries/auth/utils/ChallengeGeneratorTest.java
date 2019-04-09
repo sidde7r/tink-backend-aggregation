@@ -1,7 +1,8 @@
 package se.tink.libraries.auth.utils;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class ChallengeGeneratorTest {
     // Number of bits / 64 rounded up to nearest multiple of 4.

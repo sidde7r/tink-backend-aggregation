@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import java.awt.Point;
-import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.awt.Point;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
+@JsonAutoDetect(
+        fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class GenericApplicationFieldGroup {
@@ -60,8 +61,9 @@ public class GenericApplicationFieldGroup {
             return Optional.empty();
         }
 
-        return Optional.of(Objects.equal(value.get(), ApplicationFieldOptionValues.TRUE)
-                || Objects.equal(value.get(), ApplicationFieldOptionValues.YES));
+        return Optional.of(
+                Objects.equal(value.get(), ApplicationFieldOptionValues.TRUE)
+                        || Objects.equal(value.get(), ApplicationFieldOptionValues.YES));
     }
 
     public Double getFieldAsDouble(String name) {
@@ -98,7 +100,8 @@ public class GenericApplicationFieldGroup {
         try {
             return Optional.of(Integer.valueOf(value.get()));
         } catch (NumberFormatException e1) {
-            // As fallback, try to parse the value as a double and get the integer from that instead.
+            // As fallback, try to parse the value as a double and get the integer from that
+            // instead.
             try {
                 return Optional.of(Double.valueOf(value.get().replace(",", ".")).intValue());
             } catch (NumberFormatException e2) {
@@ -107,15 +110,15 @@ public class GenericApplicationFieldGroup {
         }
     }
 
-    public static final TypeReference<List<String>> LIST_OF_STRINGS = new TypeReference<List<String>>() {
-    };
+    public static final TypeReference<List<String>> LIST_OF_STRINGS =
+            new TypeReference<List<String>>() {};
 
     public List<String> getFieldAsListOfStrings(String name) {
         return SerializationUtils.deserializeFromString(getField(name), LIST_OF_STRINGS);
     }
 
-    public static final TypeReference<List<List<Point>>> LIST_OF_LIST_OF_POINTS = new TypeReference<List<List<Point>>>() {
-    };
+    public static final TypeReference<List<List<Point>>> LIST_OF_LIST_OF_POINTS =
+            new TypeReference<List<List<Point>>>() {};
 
     public List<List<Point>> getFieldAsListOfListOfPoints(String name) {
         return SerializationUtils.deserializeFromString(getField(name), LIST_OF_LIST_OF_POINTS);

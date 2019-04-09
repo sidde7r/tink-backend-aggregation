@@ -23,8 +23,7 @@ public class SOAPLogHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     @Override
-    public void close(MessageContext context) {
-    }
+    public void close(MessageContext context) {}
 
     @Override
     public boolean handleFault(SOAPMessageContext context) {
@@ -52,7 +51,7 @@ public class SOAPLogHandler implements SOAPHandler<SOAPMessageContext> {
             log.info("Headers: ");
             while (allHeaders.hasNext()) {
                 Object o = allHeaders.next();
-                MimeHeader header = (MimeHeader)o;
+                MimeHeader header = (MimeHeader) o;
 
                 log.info("\t" + header.getName() + ": " + header.getValue());
             }

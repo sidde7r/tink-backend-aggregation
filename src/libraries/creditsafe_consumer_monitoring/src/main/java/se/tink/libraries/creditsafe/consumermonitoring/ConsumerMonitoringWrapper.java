@@ -13,7 +13,12 @@ import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.libraries.creditsafe.consumermonitoring.api.PortfolioListResponse;
+import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.Account;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.LANGUAGE;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.MonitoredObject;
@@ -24,11 +29,6 @@ import se.tink.libraries.creditsafe.consumermonitoring.soap.MonitoringSoap;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.PortfolioObject;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.ResultCountersReqObject;
 import se.tink.libraries.creditsafe.consumermonitoring.soap.STATUS;
-import se.tink.libraries.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.libraries.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
-import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
-import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
-import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 
 public class ConsumerMonitoringWrapper {
 
@@ -86,8 +86,12 @@ public class ConsumerMonitoringWrapper {
 
     private void logIfRequestFailed(String request, MonitoringResponse response) {
         if (response.getStatus() == STATUS.NOTOK && response.getError() != null) {
-            log.error(request + " to CreditSafe failed with code: " +
-                    response.getError().getRejectCode() + " and message: " + response.getError().getRejectText());
+            log.error(
+                    request
+                            + " to CreditSafe failed with code: "
+                            + response.getError().getRejectCode()
+                            + " and message: "
+                            + response.getError().getRejectText());
         }
     }
 
@@ -97,10 +101,12 @@ public class ConsumerMonitoringWrapper {
             try {
                 String requestAsString = XML_MAPPER.writeValueAsString(request);
                 if (request.getAccount().getPassword() != null) {
-                    requestAsString = requestAsString.replace(request.getAccount().getPassword(), "***");
+                    requestAsString =
+                            requestAsString.replace(request.getAccount().getPassword(), "***");
                 }
                 if (request.getAccount().getUserID() != null) {
-                    requestAsString = requestAsString.replace(request.getAccount().getUserID(), "***");
+                    requestAsString =
+                            requestAsString.replace(request.getAccount().getUserID(), "***");
                 }
                 if (request.getPnr() != null) {
                     requestAsString = requestAsString.replace(request.getPnr(), "***");
@@ -108,7 +114,7 @@ public class ConsumerMonitoringWrapper {
 
                 log.debug("Traffic with CreditSafe > " + name + " > " + requestAsString);
 
-                //Create shallow copy without the "senstive" data
+                // Create shallow copy without the "senstive" data
                 MonitoringResponse responseToPrint = new MonitoringResponse();
                 responseToPrint.setError(response.getError());
                 responseToPrint.setResultCounters(response.getResultCounters());
@@ -154,10 +160,11 @@ public class ConsumerMonitoringWrapper {
     public PageableConsumerCreditSafeResponse listMonitoredConsumers(
             PageableConsumerCreditSafeRequest creditSafeRequest) {
 
-        MonitoringRequest request = createRequest(
-                creditSafeRequest.getPageSize(),
-                creditSafeRequest.getPageStart(),
-                creditSafeRequest.getPortfolio());
+        MonitoringRequest request =
+                createRequest(
+                        creditSafeRequest.getPageSize(),
+                        creditSafeRequest.getPageStart(),
+                        creditSafeRequest.getPortfolio());
 
         MonitoringResponse response = client.getMonitoredConsumers(request);
         log("GetMonitoredConsumers", request, response);
@@ -165,12 +172,14 @@ public class ConsumerMonitoringWrapper {
         return buildPageableCreditSafeResponse(response);
     }
 
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest creditSafeRequest) {
+    public PageableConsumerCreditSafeResponse listChangedConsumers(
+            ChangedConsumerCreditSafeRequest creditSafeRequest) {
 
-        MonitoringRequest request = createRequest(
-                creditSafeRequest.getPageSize(),
-                creditSafeRequest.getPageStart(),
-                creditSafeRequest.getPortfolio());
+        MonitoringRequest request =
+                createRequest(
+                        creditSafeRequest.getPageSize(),
+                        creditSafeRequest.getPageStart(),
+                        creditSafeRequest.getPortfolio());
         request.setNumberOfDays(creditSafeRequest.getChangedDays());
 
         MonitoringResponse response = client.getChangedConsumers(request);
@@ -179,9 +188,11 @@ public class ConsumerMonitoringWrapper {
         return buildPageableCreditSafeResponse(response);
     }
 
-    private PageableConsumerCreditSafeResponse buildPageableCreditSafeResponse(MonitoringResponse response) {
+    private PageableConsumerCreditSafeResponse buildPageableCreditSafeResponse(
+            MonitoringResponse response) {
 
-        PageableConsumerCreditSafeResponse creditSafeResponse = new PageableConsumerCreditSafeResponse();
+        PageableConsumerCreditSafeResponse creditSafeResponse =
+                new PageableConsumerCreditSafeResponse();
         List<MonitoredObject> consumers = Lists.newArrayList();
 
         if (response.getStatus() == STATUS.OK) {
@@ -199,8 +210,10 @@ public class ConsumerMonitoringWrapper {
             creditSafeResponse.setTotalPortfolioSize(response.getResultCounters().getTotalCount());
         }
 
-        creditSafeResponse.setErrorCode(response.getError() != null ? response.getError().getRejectCode() : null);
-        creditSafeResponse.setErrorMessage(response.getError() != null ? response.getError().getRejectText() : null);
+        creditSafeResponse.setErrorCode(
+                response.getError() != null ? response.getError().getRejectCode() : null);
+        creditSafeResponse.setErrorMessage(
+                response.getError() != null ? response.getError().getRejectText() : null);
         creditSafeResponse.setStatus(response.getStatus().name());
 
         return creditSafeResponse;
@@ -211,13 +224,17 @@ public class ConsumerMonitoringWrapper {
             return null;
         }
 
-        List<String> pnrs = Lists.newArrayList(Iterables.transform(consumers, new Function<MonitoredObject, String>() {
-            @Nullable
-            @Override
-            public String apply(MonitoredObject o) {
-                return o.getPnr();
-            }
-        }));
+        List<String> pnrs =
+                Lists.newArrayList(
+                        Iterables.transform(
+                                consumers,
+                                new Function<MonitoredObject, String>() {
+                                    @Nullable
+                                    @Override
+                                    public String apply(MonitoredObject o) {
+                                        return o.getPnr();
+                                    }
+                                }));
         return pnrs;
     }
 
@@ -226,13 +243,16 @@ public class ConsumerMonitoringWrapper {
             return null;
         }
 
-        return Lists.newArrayList(Iterables.transform(portfolios, new Function<PortfolioObject, String>() {
-            @Nullable
-            @Override
-            public String apply(PortfolioObject o) {
-                return o.getPortfolioName();
-            }
-        }));
+        return Lists.newArrayList(
+                Iterables.transform(
+                        portfolios,
+                        new Function<PortfolioObject, String>() {
+                            @Nullable
+                            @Override
+                            public String apply(PortfolioObject o) {
+                                return o.getPortfolioName();
+                            }
+                        }));
     }
 
     public void addMonitoring(AddMonitoredConsumerCreditSafeRequest addMonitoredRequest) {

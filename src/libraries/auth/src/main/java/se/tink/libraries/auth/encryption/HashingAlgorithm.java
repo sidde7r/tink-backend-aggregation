@@ -8,12 +8,12 @@ public enum HashingAlgorithm {
 
     public HashingAlgorithmWrapper toAlgorithmWrapper() {
         switch (this) {
-        case SCRYPT:
-            return new ScryptWrapper();
-        case BCRYPT:
-            return new BcryptWrapper();
-        default:
-            throw new RuntimeException("Unknown hashing algorithm specified");
+            case SCRYPT:
+                return new ScryptWrapper();
+            case BCRYPT:
+                return new BcryptWrapper();
+            default:
+                throw new RuntimeException("Unknown hashing algorithm specified");
         }
     }
 

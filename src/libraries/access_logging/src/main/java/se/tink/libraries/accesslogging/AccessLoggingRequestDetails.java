@@ -14,9 +14,17 @@ public class AccessLoggingRequestDetails {
     private String body;
     private String oauthClientId;
 
-    private AccessLoggingRequestDetails(String remoteHost, String requestString, String responseStatus,
-            String userAgent, String responseTimeString, String userId,
-            HttpAuthenticationMethod httpAuthenticationMethod, String sessionId, String body, String oauthClientId) {
+    private AccessLoggingRequestDetails(
+            String remoteHost,
+            String requestString,
+            String responseStatus,
+            String userAgent,
+            String responseTimeString,
+            String userId,
+            HttpAuthenticationMethod httpAuthenticationMethod,
+            String sessionId,
+            String body,
+            String oauthClientId) {
         this.remoteHost = remoteHost;
         this.requestString = requestString;
         this.responseStatus = responseStatus;
@@ -115,7 +123,8 @@ public class AccessLoggingRequestDetails {
             return this;
         }
 
-        public AccessLoggingCommandBuilder setHttpAuthenticationMethod(HttpAuthenticationMethod httpAuthenticationMethod) {
+        public AccessLoggingCommandBuilder setHttpAuthenticationMethod(
+                HttpAuthenticationMethod httpAuthenticationMethod) {
             this.httpAuthenticationMethod = httpAuthenticationMethod;
             return this;
         }
@@ -136,8 +145,17 @@ public class AccessLoggingRequestDetails {
         }
 
         public AccessLoggingRequestDetails build() {
-            return new AccessLoggingRequestDetails(remoteHost, requestString, responseStatus, userAgent,
-                    responseTimeString, userId, httpAuthenticationMethod, sessionId, body, oauthClientId);
+            return new AccessLoggingRequestDetails(
+                    remoteHost,
+                    requestString,
+                    responseStatus,
+                    userAgent,
+                    responseTimeString,
+                    userId,
+                    httpAuthenticationMethod,
+                    sessionId,
+                    body,
+                    oauthClientId);
         }
     }
 }

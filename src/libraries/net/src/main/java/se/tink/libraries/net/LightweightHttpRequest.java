@@ -1,11 +1,9 @@
 package se.tink.libraries.net;
 
-import javax.ws.rs.core.MediaType;
-
-import org.json.JSONObject;
-
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
+import javax.ws.rs.core.MediaType;
+import org.json.JSONObject;
 
 public class LightweightHttpRequest {
 
@@ -27,14 +25,14 @@ public class LightweightHttpRequest {
         }
         return null;
     }
-    
+
     public ClientResponse get() {
         if (consumed) {
             throw new IllegalStateException("This Http Request has already been consumed");
         }
-        
+
         consumed = true;
-        
+
         ClientResponse response = builder.get(ClientResponse.class);
         return response;
     }
@@ -43,9 +41,9 @@ public class LightweightHttpRequest {
         if (consumed) {
             throw new IllegalStateException("This Http Request has already been consumed");
         }
-        
+
         consumed = true;
-        
+
         builder = builder.type(MediaType.APPLICATION_JSON_TYPE);
         ClientResponse response = null;
         try {
