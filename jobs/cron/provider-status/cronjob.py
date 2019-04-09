@@ -24,7 +24,8 @@ GROUP_IDS = {
     "fi": "rkknf5992fpg",
     "uk": "cbvwtp1bxzhm",
     "dk": "f1bctj61c0bv",
-    "no": "t99h0j1xfrj0"
+    "no": "t99h0j1xfrj0",
+    "de": "zflg1lrtvhpp"
 }
 
 # PROMETHEUS
