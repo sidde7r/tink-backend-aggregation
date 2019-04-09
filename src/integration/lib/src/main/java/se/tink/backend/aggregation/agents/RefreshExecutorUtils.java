@@ -9,7 +9,10 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class RefreshExecutorUtils {
+public final class RefreshExecutorUtils {
+    private RefreshExecutorUtils() {
+        throw new AssertionError();
+    }
 
     private static final Map<RefreshableItem, Class> REFRESHABLEITEM_EXECUTOR_MAP =
             ImmutableMap.<RefreshableItem, Class>builder()
