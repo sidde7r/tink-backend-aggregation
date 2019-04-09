@@ -18,13 +18,13 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class MonzoTransactionalAccountFetcher
-        implements AccountFetcher<TransactionalAccount>, TransactionPaginator<TransactionalAccount> {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPaginator<TransactionalAccount> {
 
     private static final int NO_HIT_LIMIT = 12;
-    /**
-     * Monzo documentation states that 100 is the max allowed
-     */
+    /** Monzo documentation states that 100 is the max allowed */
     private static final int FETCH_LIMIT = 100;
+
     private static final long DAYS_PER_PAGE = 92L;
 
     private final MonzoApiClient apiClient;
@@ -38,10 +38,11 @@ public class MonzoTransactionalAccountFetcher
 
     @Override
     public List<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts()
-                .getAccounts()
-                .stream()
-                .filter(entity -> MonzoConstants.ACCOUNT_TYPE.isTransactionalAccount(entity.getType()))
+        return apiClient.fetchAccounts().getAccounts().stream()
+                .filter(
+                        entity ->
+                                MonzoConstants.ACCOUNT_TYPE.isTransactionalAccount(
+                                        entity.getType()))
                 .peek(entity -> entity.setBalance(apiClient.fetchBalance(entity.getId())))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
@@ -69,20 +70,24 @@ public class MonzoTransactionalAccountFetcher
 
             Object since = lastKnownTransactionInPage != null ? lastKnownTransactionInPage : from;
 
-            fetchTransactions = apiClient.fetchTransactions(account.getBankIdentifier(), since, to, FETCH_LIMIT)
-                    .getTransactions();
+            fetchTransactions =
+                    apiClient
+                            .fetchTransactions(account.getBankIdentifier(), since, to, FETCH_LIMIT)
+                            .getTransactions();
 
-            lastKnownTransactionInPage = fetchTransactions.stream()
-                    .max(Comparator.comparing(TransactionEntity::getCreated, Instant::compareTo))
-                    .map(TransactionEntity::getId).orElse(null);
+            lastKnownTransactionInPage =
+                    fetchTransactions.stream()
+                            .max(
+                                    Comparator.comparing(
+                                            TransactionEntity::getCreated, Instant::compareTo))
+                            .map(TransactionEntity::getId)
+                            .orElse(null);
 
             allTransactions.addAll(
-                    fetchTransactions
-                            .stream()
+                    fetchTransactions.stream()
                             .filter(TransactionEntity::isNotDeclinedOrCardActivityCheck)
                             .map(TransactionEntity::toTinkTransaction)
-                            .collect(Collectors.toList())
-            );
+                            .collect(Collectors.toList()));
 
         } while (fetchTransactions.size() == FETCH_LIMIT);
 

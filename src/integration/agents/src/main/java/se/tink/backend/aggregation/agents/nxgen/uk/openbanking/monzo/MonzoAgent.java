@@ -38,9 +38,7 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -75,19 +73,17 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        MonzoTransactionalAccountFetcher fetcher = new MonzoTransactionalAccountFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        final MonzoTransactionalAccountFetcher fetcher =
+                new MonzoTransactionalAccountFetcher(apiClient);
+
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         fetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                fetcher
-                        )
-                )
-        );
+                        new TransactionFetcherController<>(transactionPaginationHelper, fetcher)));
     }
 
     @Override
@@ -111,7 +107,8 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -124,5 +121,4 @@ public class MonzoAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
-
 }

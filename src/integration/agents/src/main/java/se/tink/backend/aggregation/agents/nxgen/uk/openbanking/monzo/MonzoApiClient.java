@@ -23,8 +23,7 @@ public class MonzoApiClient {
     private final PersistentStorage persistentStorage;
     private MonzoConfiguration configuration;
 
-    public MonzoApiClient(
-            TinkHttpClient client, PersistentStorage storage) {
+    public MonzoApiClient(TinkHttpClient client, PersistentStorage storage) {
         this.client = client;
         this.persistentStorage = storage;
     }
