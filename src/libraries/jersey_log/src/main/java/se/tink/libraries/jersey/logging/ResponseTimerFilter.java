@@ -13,7 +13,8 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 
-class ResponseTimerFilter implements ContainerRequestFilter, ContainerResponseFilter, ResourceFilter {
+class ResponseTimerFilter
+        implements ContainerRequestFilter, ContainerResponseFilter, ResourceFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ResponseTimerFilter.class);
     private static final String timerContextKey = "timerContext";
@@ -21,8 +22,8 @@ class ResponseTimerFilter implements ContainerRequestFilter, ContainerResponseFi
     private final String path;
     private final Optional<TeamOwnership> teamOwnership;
 
-    ResponseTimerFilter(MetricRegistry metricRegistry, String path,
-            Optional<TeamOwnership> teamOwnership) {
+    ResponseTimerFilter(
+            MetricRegistry metricRegistry, String path, Optional<TeamOwnership> teamOwnership) {
         this.metricRegistry = metricRegistry;
         this.path = path;
         this.teamOwnership = teamOwnership;
@@ -44,11 +45,17 @@ class ResponseTimerFilter implements ContainerRequestFilter, ContainerResponseFi
         Object maybeTimerContext = request.getProperties().get(timerContextKey);
         if (maybeTimerContext instanceof Timer.Context) {
             Timer.Context timerContext = (Timer.Context) maybeTimerContext;
-            MetricId metricId = MetricId.newId("api_response_duration")
-                    .label("method", request.getMethod())
-                    .label("path", this.path)
-                    .label("status", Integer.toString(response.getStatus()))
-                    .label("team_owner", teamOwnership.map(TeamOwnership::value).map(Enum::name).orElse(""));
+            MetricId metricId =
+                    MetricId.newId("api_response_duration")
+                            .label("method", request.getMethod())
+                            .label("path", this.path)
+                            .label("status", Integer.toString(response.getStatus()))
+                            .label(
+                                    "team_owner",
+                                    teamOwnership
+                                            .map(TeamOwnership::value)
+                                            .map(Enum::name)
+                                            .orElse(""));
             this.metricRegistry.timer(metricId).time(timerContext).stop();
         }
         return response;

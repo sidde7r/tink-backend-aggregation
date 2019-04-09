@@ -56,6 +56,5 @@ public class ClearingNumberTest {
         assertEquals(4, ClearingNumber.get("9180").get().getClearingNumberLength());
         assertEquals(4, ClearingNumber.get("9269").get().getClearingNumberLength());
         assertEquals(4, ClearingNumber.get("9579").get().getClearingNumberLength());
-
     }
 }

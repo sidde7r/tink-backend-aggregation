@@ -19,8 +19,11 @@ public class Histogram implements Metric {
     }
 
     public void update(Number value) {
-        // Since this method isn't synchronized, count, sum and buckets could be inconsistent, but that's also the
-        // case in https://github.com/prometheus/client_golang/blob/master/prometheus/histogram.go#L240 so probably
+        // Since this method isn't synchronized, count, sum and buckets could be inconsistent, but
+        // that's also the
+        // case in
+        // https://github.com/prometheus/client_golang/blob/master/prometheus/histogram.go#L240 so
+        // probably
         // okay.
 
         this.count.increment();

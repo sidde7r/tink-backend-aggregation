@@ -6,8 +6,10 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class SortCodeIdentifier extends AccountIdentifier {
 
-    // The first 6 digits in the pattern below are branch sort code while the remaining 7-8 digits are account number.
-    private static final Pattern SORT_CODE_AND_ACCOUNT_NUMBER = Pattern.compile("(\\d{6})([\\d]{7,8})");
+    // The first 6 digits in the pattern below are branch sort code while the remaining 7-8 digits
+    // are account number.
+    private static final Pattern SORT_CODE_AND_ACCOUNT_NUMBER =
+            Pattern.compile("(\\d{6})([\\d]{7,8})");
     private static final int SORT_CODE_LENGTH = 6;
 
     private final String sortCode;
@@ -20,7 +22,8 @@ public class SortCodeIdentifier extends AccountIdentifier {
         String numericSortCodeAccountNumber = getNumericNumber(identifier);
         isValid = SORT_CODE_AND_ACCOUNT_NUMBER.matcher(numericSortCodeAccountNumber).matches();
         if (!isValid) {
-            throw new IllegalArgumentException(String.format("%s is not a valid account identifier", identifier));
+            throw new IllegalArgumentException(
+                    String.format("%s is not a valid account identifier", identifier));
         }
         sortCode = numericSortCodeAccountNumber.substring(0, SORT_CODE_LENGTH);
         accountNumber = numericSortCodeAccountNumber.substring(SORT_CODE_LENGTH);
@@ -31,8 +34,8 @@ public class SortCodeIdentifier extends AccountIdentifier {
     }
 
     /**
-     * Pad 7 digit account numbers with 0 so that all identifiers have lenght 14. (6 digit sort code and 8 digit
-     * account number).
+     * Pad 7 digit account numbers with 0 so that all identifiers have lenght 14. (6 digit sort code
+     * and 8 digit account number).
      */
     @Override
     public String getIdentifier() {

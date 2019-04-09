@@ -1,14 +1,14 @@
 package se.tink.libraries.account.identifiers;
 
 import com.google.common.base.MoreObjects;
-import java.util.Optional;
 import com.google.common.base.Strings;
 import java.net.URI;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.giro.validation.OcrValidator;
-import se.tink.libraries.account.AccountIdentifier;
 
 public abstract class GiroIdentifier extends AccountIdentifier {
     protected final String giroNumber;
@@ -44,7 +44,7 @@ public abstract class GiroIdentifier extends AccountIdentifier {
             return null;
         }
 
-        return StringUtils.stripStart(giroNumber, "0").replace("-","").replace(" ","");
+        return StringUtils.stripStart(giroNumber, "0").replace("-", "").replace(" ", "");
     }
 
     @Override
@@ -77,13 +77,15 @@ public abstract class GiroIdentifier extends AccountIdentifier {
     @Override
     public boolean isValid() {
         // Ensure correct giro number format
-        if (Strings.isNullOrEmpty(giroNumber) || !getGiroNumberPattern().matcher(giroNumber).matches()) {
+        if (Strings.isNullOrEmpty(giroNumber)
+                || !getGiroNumberPattern().matcher(giroNumber).matches()) {
             return false;
         }
 
         // Ensure any non-null ocr is a correct OCR
         if (hasOcr()) {
-            OcrValidator ocrValidator = new OcrValidator(OcrValidationConfiguration.hardOcrVariableLength());
+            OcrValidator ocrValidator =
+                    new OcrValidator(OcrValidationConfiguration.hardOcrVariableLength());
             return ocrValidator.isValid(ocr);
         }
 
@@ -98,9 +100,10 @@ public abstract class GiroIdentifier extends AccountIdentifier {
 
         if (uri == null) {
             Optional<String> ocr = getOcr();
-            MoreObjects.ToStringHelper builder = MoreObjects.toStringHelper(this)
-                    .add("type", getType())
-                    .add("identifier", getIdentifier());
+            MoreObjects.ToStringHelper builder =
+                    MoreObjects.toStringHelper(this)
+                            .add("type", getType())
+                            .add("identifier", getIdentifier());
 
             if (ocr.isPresent()) {
                 builder.add("ocr", ocr);

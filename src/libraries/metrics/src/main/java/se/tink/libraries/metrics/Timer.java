@@ -50,9 +50,10 @@ public class Timer implements Metric {
 
     public void update(long duration, TimeUnit unit) {
         // Count, sum and buckets could be inconsistent, but that's also the
-        // case in https://github.com/prometheus/client_golang/blob/master/prometheus/histogram.go#L240.
+        // case in
+        // https://github.com/prometheus/client_golang/blob/master/prometheus/histogram.go#L240.
 
-        double inc = (double)unit.toMicros(duration) / 1000000L;
+        double inc = (double) unit.toMicros(duration) / 1000000L;
         count.increment();
         sumSeconds.add(inc);
         buckets.update(inc);

@@ -7,14 +7,16 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
 public class AuthorizationHeaderPredicate implements Predicate<String> {
-    private static final Splitter SPLITTER = Splitter.on(" ").limit(2).omitEmptyStrings().trimResults();
+    private static final Splitter SPLITTER =
+            Splitter.on(" ").limit(2).omitEmptyStrings().trimResults();
 
     private String method;
     private Predicate<String> payloadPredicate;
 
     public AuthorizationHeaderPredicate(String method, Predicate<String> payloadPredicate) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(method), "Authorization method needs to be specified");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(method), "Authorization method needs to be specified");
 
         this.method = method;
         this.payloadPredicate = payloadPredicate;
@@ -27,7 +29,7 @@ public class AuthorizationHeaderPredicate implements Predicate<String> {
         if (pieces.size() != 2) {
             return false;
         }
-        
+
         String authMethod = pieces.get(0);
         String authPayload = pieces.get(1);
 

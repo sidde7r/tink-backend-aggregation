@@ -7,9 +7,8 @@ public class AccountDetails {
     private Integer numMonthsBound;
     private String type;
     private Date nextDayOfTermsChange;
-    
-    public AccountDetails() {
-    }
+
+    public AccountDetails() {}
 
     public Double getInterest() {
         return interest;

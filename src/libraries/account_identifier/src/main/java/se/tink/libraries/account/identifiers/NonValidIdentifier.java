@@ -14,7 +14,7 @@ public class NonValidIdentifier extends AccountIdentifier {
     public String getIdentifier() {
         return this.identifier;
     }
-    
+
     @Override
     public boolean isValid() {
         return false;

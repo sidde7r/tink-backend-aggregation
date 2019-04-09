@@ -15,5 +15,4 @@ public class ExponentialBackoffPolicyTest {
         Assert.assertEquals(4000, backoff.getSleepDuration());
         Assert.assertEquals(8000, backoff.getSleepDuration());
     }
-
 }

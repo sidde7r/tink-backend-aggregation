@@ -1,8 +1,8 @@
 package se.tink.libraries.giro.validation;
 
-import com.google.common.collect.Lists;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +34,8 @@ public class LuhnCheck {
     }
 
     /**
-     * Inspired directly from Hibernate validation {@link org.hibernate.validator.internal.util.ModUtil}
+     * Inspired directly from Hibernate validation {@link
+     * org.hibernate.validator.internal.util.ModUtil}
      */
     public static int calculateLuhnMod10Check(List<Integer> digits) {
         int sum = 0;
@@ -54,7 +55,8 @@ public class LuhnCheck {
             even = !even;
         }
 
-        // Without doing an additional `% 10` on the statement, we would get value `10` back when `sum % 10 == 0`
+        // Without doing an additional `% 10` on the statement, we would get value `10` back when
+        // `sum % 10 == 0`
         return (10 - sum % 10) % 10;
     }
 }

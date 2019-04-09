@@ -19,12 +19,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 /**
- * Binds in Guice context and registers Jersey resources/filters/filter factories.
- * Relies on Governator to do so, so LifecycleInjector is required for this class
- * to work. Because it handles binding as well, there's no need to bind the resources
- * manually.
+ * Binds in Guice context and registers Jersey resources/filters/filter factories. Relies on
+ * Governator to do so, so LifecycleInjector is required for this class to work. Because it handles
+ * binding as well, there's no need to bind the resources manually.
  *
- * Example of usage in a Guice module:
+ * <p>Example of usage in a Guice module:
+ *
  * <pre>
  * JerseyResourceRegistrar.build()
  *     .binder(binder())  // the binder() is available in modules
@@ -49,13 +49,15 @@ public class JerseyResourceRegistrar {
     public static class Builder {
         private Binder binder;
         private List<Class<?>> resourceClasses = new ArrayList<>();
-        private List<Class<? extends ResourceFilterFactory>> filterFactoryClasses = new ArrayList<>();
-        private List<Class<? extends ContainerRequestFilter>> requestFilterClasses = new ArrayList<>();
-        private List<Class<? extends ContainerResponseFilter>> responseFilterClasses = new ArrayList<>();
+        private List<Class<? extends ResourceFilterFactory>> filterFactoryClasses =
+                new ArrayList<>();
+        private List<Class<? extends ContainerRequestFilter>> requestFilterClasses =
+                new ArrayList<>();
+        private List<Class<? extends ContainerResponseFilter>> responseFilterClasses =
+                new ArrayList<>();
         private JerseyEnvironment jersey;
 
-        private Builder() {
-        }
+        private Builder() {}
 
         public Builder binder(Binder binder) {
             this.binder = binder;
@@ -75,28 +77,33 @@ public class JerseyResourceRegistrar {
 
         @CheckReturnValue
         @SafeVarargs
-        public final Builder addFilterFactories(Class<? extends ResourceFilterFactory>... filterFactoryClasses) {
+        public final Builder addFilterFactories(
+                Class<? extends ResourceFilterFactory>... filterFactoryClasses) {
             this.filterFactoryClasses.addAll(Arrays.asList(filterFactoryClasses));
             return this;
         }
 
         @CheckReturnValue
         @SafeVarargs
-        public final Builder addRequestFilters(Class<? extends ContainerRequestFilter>... requestFilterClasses) {
+        public final Builder addRequestFilters(
+                Class<? extends ContainerRequestFilter>... requestFilterClasses) {
             this.requestFilterClasses.addAll(Arrays.asList(requestFilterClasses));
             return this;
         }
 
         @CheckReturnValue
         @SafeVarargs
-        public final Builder addResponseFilters(Class<? extends ContainerResponseFilter>... responseFilterClasses) {
+        public final Builder addResponseFilters(
+                Class<? extends ContainerResponseFilter>... responseFilterClasses) {
             this.responseFilterClasses.addAll(Arrays.asList(responseFilterClasses));
             return this;
         }
 
         public void bind() {
-            Preconditions.checkNotNull(binder, "binder can't be null. Set it with binder() method.");
-            Preconditions.checkNotNull(jersey, "jersey can't be null. Set it with jersey() method.");
+            Preconditions.checkNotNull(
+                    binder, "binder can't be null. Set it with binder() method.");
+            Preconditions.checkNotNull(
+                    jersey, "jersey can't be null. Set it with jersey() method.");
             binder.bind(JerseyEnvironment.class).toInstance(jersey);
             binder.bind(JerseyResourceRegistrar.class).in(Scopes.SINGLETON);
             bindResources(binder, resourceClasses);
@@ -114,28 +121,43 @@ public class JerseyResourceRegistrar {
         bindSet(binder, RESOURCES_BINDING, Object.class, resourceClasses);
     }
 
-    private static void bindFilterFactories(Binder binder,
-            List<Class<? extends ResourceFilterFactory>> filterFactoryClasses) {
-        bindSet(binder, FILTER_FACTORIES_BINDING, ResourceFilterFactory.class, filterFactoryClasses);
+    private static void bindFilterFactories(
+            Binder binder, List<Class<? extends ResourceFilterFactory>> filterFactoryClasses) {
+        bindSet(
+                binder,
+                FILTER_FACTORIES_BINDING,
+                ResourceFilterFactory.class,
+                filterFactoryClasses);
     }
 
-    private static void bindRequestFilters(Binder binder,
-            List<Class<? extends ContainerRequestFilter>> requestFilterClasses) {
-        bindSet(binder, REQUEST_FILTERS_BINDING, ContainerRequestFilter.class, requestFilterClasses);
+    private static void bindRequestFilters(
+            Binder binder, List<Class<? extends ContainerRequestFilter>> requestFilterClasses) {
+        bindSet(
+                binder,
+                REQUEST_FILTERS_BINDING,
+                ContainerRequestFilter.class,
+                requestFilterClasses);
     }
 
-    private static void bindResponseFilters(Binder binder,
-            List<Class<? extends ContainerResponseFilter>> responseFilterClasses) {
-        bindSet(binder, RESPONSE_FILTERS_BINDING, ContainerResponseFilter.class, responseFilterClasses);
+    private static void bindResponseFilters(
+            Binder binder, List<Class<? extends ContainerResponseFilter>> responseFilterClasses) {
+        bindSet(
+                binder,
+                RESPONSE_FILTERS_BINDING,
+                ContainerResponseFilter.class,
+                responseFilterClasses);
     }
 
-    private static <T>void bindSet(Binder binder, String bindingName, Class<T> type, List<Class<? extends T>> classes) {
-        Multibinder<T> resourceMultibinder = Multibinder.newSetBinder(binder, type, Names.named(bindingName));
+    private static <T> void bindSet(
+            Binder binder, String bindingName, Class<T> type, List<Class<? extends T>> classes) {
+        Multibinder<T> resourceMultibinder =
+                Multibinder.newSetBinder(binder, type, Names.named(bindingName));
         classes.forEach(c -> resourceMultibinder.addBinding().to(c).in(Scopes.SINGLETON));
     }
 
     @Inject
-    private JerseyResourceRegistrar(JerseyEnvironment jersey,
+    private JerseyResourceRegistrar(
+            JerseyEnvironment jersey,
             @Named(RESOURCES_BINDING) Set<Object> resources,
             @Named(FILTER_FACTORIES_BINDING) Set<ResourceFilterFactory> filterFactories,
             @Named(REQUEST_FILTERS_BINDING) Set<ContainerRequestFilter> requestFilters,
@@ -148,12 +170,11 @@ public class JerseyResourceRegistrar {
     }
 
     @PostConstruct
-    @SuppressWarnings({ "unchecked", "unused" })
+    @SuppressWarnings({"unchecked", "unused"})
     private void register() {
         resources.forEach(jersey::register);
         filterFactories.forEach(jersey.getResourceConfig().getResourceFilterFactories()::add);
         requestFilters.forEach(jersey.getResourceConfig().getContainerRequestFilters()::add);
         responseFilters.forEach(jersey.getResourceConfig().getContainerResponseFilters()::add);
     }
-
 }

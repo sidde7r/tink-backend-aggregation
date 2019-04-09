@@ -1,7 +1,8 @@
 package se.tink.libraries.metrics.utils;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class MetricsUtilsTest {
 

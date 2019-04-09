@@ -21,7 +21,7 @@ public class FinnishIdentifier extends AccountIdentifier {
     public String getIdentifier() {
         return accountNumber;
     }
-    
+
     @Override
     public Type getType() {
         return Type.FI;

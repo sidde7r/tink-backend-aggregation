@@ -1,9 +1,9 @@
 package se.tink.libraries.account.identifiers;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-
-import static org.junit.Assert.*;
 
 public class SwedishIdentifierTest {
 
@@ -12,7 +12,7 @@ public class SwedishIdentifierTest {
 
         SwedishIdentifier id1 = new SwedishIdentifier("5192");
         SwedishIdentifier id2 = new SwedishIdentifier("a241g151243");
-        SwedishIdentifier id3 = new SwedishIdentifier((String)null);
+        SwedishIdentifier id3 = new SwedishIdentifier((String) null);
         SwedishIdentifier id4 = new SwedishIdentifier("");
         SwedishIdentifier id5 = new SwedishIdentifier("1245    --- -  ");
 
@@ -75,7 +75,8 @@ public class SwedishIdentifierTest {
         SwedishIdentifier id1 = new SwedishIdentifier("8214-9,24 662 785-8");
         SwedishIdentifier id2 = new SwedishIdentifier("7321-52-64235");
 
-        assertEquals("8214-9,246627858", id1.getIdentifier(new DisplayAccountIdentifierFormatter()));
+        assertEquals(
+                "8214-9,246627858", id1.getIdentifier(new DisplayAccountIdentifierFormatter()));
         assertEquals("7321-5264235", id2.getIdentifier(new DisplayAccountIdentifierFormatter()));
     }
 
@@ -85,5 +86,4 @@ public class SwedishIdentifierTest {
         SwedishIdentifier identifier = new SwedishIdentifier("7321-52-64235");
         assertFalse("SwedishIdentifier is not a GiroIdentifier", identifier.isGiroIdentifier());
     }
-
 }

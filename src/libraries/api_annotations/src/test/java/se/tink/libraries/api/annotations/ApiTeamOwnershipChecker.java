@@ -31,33 +31,38 @@ public class ApiTeamOwnershipChecker {
     }
 
     public void check() {
-        Reflections reflections = new Reflections(
-                new ConfigurationBuilder()
-                        .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packagePrefix)))
-                        .setUrls(ClasspathHelper.forPackage("se.tink"))
-                        .setScanners(new MethodAnnotationsScanner()));
+        Reflections reflections =
+                new Reflections(
+                        new ConfigurationBuilder()
+                                .filterInputsBy(
+                                        new FilterBuilder()
+                                                .include(FilterBuilder.prefix(packagePrefix)))
+                                .setUrls(ClasspathHelper.forPackage("se.tink"))
+                                .setScanners(new MethodAnnotationsScanner()));
 
-        Set<Method> pathMethods = ImmutableSet.<Method>builder()
-                .addAll(reflections.getMethodsAnnotatedWith(GET.class))
-                .addAll(reflections.getMethodsAnnotatedWith(POST.class))
-                .addAll(reflections.getMethodsAnnotatedWith(DELETE.class))
-                .addAll(reflections.getMethodsAnnotatedWith(HEAD.class))
-                .addAll(reflections.getMethodsAnnotatedWith(OPTIONS.class))
-                .addAll(reflections.getMethodsAnnotatedWith(PUT.class))
-                .build();
+        Set<Method> pathMethods =
+                ImmutableSet.<Method>builder()
+                        .addAll(reflections.getMethodsAnnotatedWith(GET.class))
+                        .addAll(reflections.getMethodsAnnotatedWith(POST.class))
+                        .addAll(reflections.getMethodsAnnotatedWith(DELETE.class))
+                        .addAll(reflections.getMethodsAnnotatedWith(HEAD.class))
+                        .addAll(reflections.getMethodsAnnotatedWith(OPTIONS.class))
+                        .addAll(reflections.getMethodsAnnotatedWith(PUT.class))
+                        .build();
 
-        Assert.assertFalse("Could not find any method annotated with HTTP verb. Please update test.",
+        Assert.assertFalse(
+                "Could not find any method annotated with HTTP verb. Please update test.",
                 pathMethods.isEmpty());
 
-        Set<Method> unannotatedResources = pathMethods
-                .stream()
-                .filter(type -> !hasTeamOwnershipAnnotation(type))
-                .collect(Collectors.toSet());
+        Set<Method> unannotatedResources =
+                pathMethods.stream()
+                        .filter(type -> !hasTeamOwnershipAnnotation(type))
+                        .collect(Collectors.toSet());
 
         if (!unannotatedResources.isEmpty()) {
             log.error("There were API methods incorrectly annotated:");
-            unannotatedResources
-                    .forEach(m -> log.error(" * {}#{}", m.getDeclaringClass().getName(), m.getName()));
+            unannotatedResources.forEach(
+                    m -> log.error(" * {}#{}", m.getDeclaringClass().getName(), m.getName()));
             Assert.fail("There were API methods incorrectly annotated. See logged list.");
         }
     }
@@ -66,5 +71,4 @@ public class ApiTeamOwnershipChecker {
     static boolean hasTeamOwnershipAnnotation(Method type) {
         return type.getDeclaredAnnotation(TeamOwnership.class) != null;
     }
-
 }

@@ -16,20 +16,27 @@ public class ExecutorServiceUtils {
      * Shut down a non-monitored executor.
      *
      * @param executorServiceIdentifier identifier used for logging.
-     * @param executor                  the {@link ExecutorService} to shut down.
-     * @param waitingTime               the amount of patience we have to wait for it to shut down gracefully before we interrupt the running
-     *                                  threads and empty the {@link ExecutorService}'s queue of stuff to do.
-     * @param waitingTimeUnit                  the {@link TimeUnit} for waitingTime.
+     * @param executor the {@link ExecutorService} to shut down.
+     * @param waitingTime the amount of patience we have to wait for it to shut down gracefully
+     *     before we interrupt the running threads and empty the {@link ExecutorService}'s queue of
+     *     stuff to do.
+     * @param waitingTimeUnit the {@link TimeUnit} for waitingTime.
      * @return true if shutdown was graceful, false if non-graceful.
      */
-    public static boolean shutdownExecutor(String executorServiceIdentifier, TerminatableExecutor executor,
-            long waitingTime, TimeUnit waitingTimeUnit) {
+    public static boolean shutdownExecutor(
+            String executorServiceIdentifier,
+            TerminatableExecutor executor,
+            long waitingTime,
+            TimeUnit waitingTimeUnit) {
 
         Preconditions.checkNotNull(executor, "executor must not be null.").shutdown();
 
         Stopwatch timer = Stopwatch.createStarted();
 
-        log.info("Initiated shutdown of thread pool '" + executorServiceIdentifier + "'. Waiting for it to drain...");
+        log.info(
+                "Initiated shutdown of thread pool '"
+                        + executorServiceIdentifier
+                        + "'. Waiting for it to drain...");
 
         boolean wasGracefulShutdown;
         try {
@@ -40,16 +47,26 @@ public class ExecutorServiceUtils {
         }
 
         if (!wasGracefulShutdown) {
-            log.warn("ExecutorService '" + executorServiceIdentifier
-                    + "' did not drain in the specified time. Forcing shutdown...");
+            log.warn(
+                    "ExecutorService '"
+                            + executorServiceIdentifier
+                            + "' did not drain in the specified time. Forcing shutdown...");
             List<Runnable> droppedTasks = executor.shutdownNow();
-            log.warn("ExecutorService '" + executorServiceIdentifier + "' was abruptly shut down. "
-                    + droppedTasks.size() + " tasks will not be executed.");
+            log.warn(
+                    "ExecutorService '"
+                            + executorServiceIdentifier
+                            + "' was abruptly shut down. "
+                            + droppedTasks.size()
+                            + " tasks will not be executed.");
         }
 
         timer.stop();
-        log.info("Shutting down '" + executorServiceIdentifier + "' took " + timer.elapsed(TimeUnit.MILLISECONDS)
-                + " ms.");
+        log.info(
+                "Shutting down '"
+                        + executorServiceIdentifier
+                        + "' took "
+                        + timer.elapsed(TimeUnit.MILLISECONDS)
+                        + " ms.");
 
         return wasGracefulShutdown;
     }

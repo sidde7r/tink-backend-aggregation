@@ -10,16 +10,16 @@ import io.prometheus.client.hotspot.GarbageCollectorExports;
 import io.prometheus.client.hotspot.MemoryPoolsExports;
 import io.prometheus.client.hotspot.StandardExports;
 import io.prometheus.client.hotspot.ThreadExports;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 public class PrometheusExportServer {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PrometheusExportServer.class);
+    private static final org.slf4j.Logger log =
+            LoggerFactory.getLogger(PrometheusExportServer.class);
     private final Server server;
     private final CollectorRegistry registry = new CollectorRegistry(true);
     private final MetricCollector collector;
@@ -30,7 +30,8 @@ public class PrometheusExportServer {
         this.server = new Server(config.getPort());
     }
 
-    public static void start(PrometheusConfiguration config, MetricCollector collector) throws Exception {
+    public static void start(PrometheusConfiguration config, MetricCollector collector)
+            throws Exception {
         PrometheusExportServer server = new PrometheusExportServer(config, collector);
         server.start();
     }
@@ -51,8 +52,8 @@ public class PrometheusExportServer {
     }
 
     /**
-     * Stop the HTTP server to free up the consumed port
-     * This enables the services run multiple times without restarting the JVM
+     * Stop the HTTP server to free up the consumed port This enables the services run multiple
+     * times without restarting the JVM
      */
     @PreDestroy
     public void stop() throws Exception {
@@ -64,7 +65,8 @@ public class PrometheusExportServer {
         final LoggerContext factory = (LoggerContext) LoggerFactory.getILoggerFactory();
         final Logger root = factory.getLogger(Logger.ROOT_LOGGER_NAME);
 
-        final InstrumentedLogbackAppender metricsAppender = new InstrumentedLogbackAppender(registry);
+        final InstrumentedLogbackAppender metricsAppender =
+                new InstrumentedLogbackAppender(registry);
         metricsAppender.setContext(root.getLoggerContext());
         metricsAppender.start();
         root.addAppender(metricsAppender);
@@ -77,5 +79,4 @@ public class PrometheusExportServer {
         new ThreadExports().register(registry);
         new ClassLoadingExports().register(registry);
     }
-
 }

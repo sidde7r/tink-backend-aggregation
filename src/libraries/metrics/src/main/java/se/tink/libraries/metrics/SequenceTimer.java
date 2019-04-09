@@ -7,30 +7,26 @@ import com.google.common.cache.LoadingCache;
 import org.springframework.util.StopWatch;
 
 /**
- * 
- * Convenience class to time a sequence according to the MECE principle (mutually exclusive, collectively exhaustive);
- * no overlaps and no gaps.
- * 
- * To not have to stack the parts of the sequence to monitor the whole sequence, the sequence is timed as a whole as
- * well (in addition to its parts).
- * 
- * The sequence timer can be warmed up by supplying a set of timer names in the constructor. This registers the timers
- * before the sequence has been started. This is optional.
- * 
- * Example:
- * 
- * <pre>
- * {@code
+ * Convenience class to time a sequence according to the MECE principle (mutually exclusive,
+ * collectively exhaustive); no overlaps and no gaps.
+ *
+ * <p>To not have to stack the parts of the sequence to monitor the whole sequence, the sequence is
+ * timed as a whole as well (in addition to its parts).
+ *
+ * <p>The sequence timer can be warmed up by supplying a set of timer names in the constructor. This
+ * registers the timers before the sequence has been started. This is optional.
+ *
+ * <p>Example:
+ *
+ * <pre>{@code
  * SequenceTimer sequence = new SequenceTimer(registry, class, SequenceTimers.MY_SEQUENCE);
  * SequenceTimer.Context sequenceContext = sequence.time();
  * sequenceContext.mark("step-1"); // Start the timer of "step-1" and the sequence timer as a whole.
- * // Execute step 1. 
+ * // Execute step 1.
  * sequenceContext.mark("step-2"); // Stop the "step-1" timer and start the "step-2" timer.
  * // Execute step 2.
  * sequenceContext.stop(); // Stop the "step-2" timer and the sequence timer.
- * }
- * </pre>
- *
+ * }</pre>
  */
 public class SequenceTimer {
     private final Timer sequenceTimer;
@@ -86,18 +82,23 @@ public class SequenceTimer {
         }
     }
 
-    public SequenceTimer(final Class<?> metricClass, final MetricRegistry metricRegistry, String sequenceName) {
+    public SequenceTimer(
+            final Class<?> metricClass, final MetricRegistry metricRegistry, String sequenceName) {
         this.metricClass = metricClass;
         this.sequenceName = sequenceName;
 
-        timerCache = CacheBuilder.newBuilder()
-                .concurrencyLevel(40) // Arbitrary choice, but we need to manage sequences with high concurrency.
-                .maximumSize(100)
-                .build(new CacheLoader<MetricId, Timer>() {
-                        public Timer load(MetricId key) {
-                            return metricRegistry.timer(key);
-                        }
-                });
+        timerCache =
+                CacheBuilder.newBuilder()
+                        .concurrencyLevel(
+                                40) // Arbitrary choice, but we need to manage sequences with high
+                        // concurrency.
+                        .maximumSize(100)
+                        .build(
+                                new CacheLoader<MetricId, Timer>() {
+                                    public Timer load(MetricId key) {
+                                        return metricRegistry.timer(key);
+                                    }
+                                });
 
         sequenceTimer = timerCache.getUnchecked(constructName(null));
     }

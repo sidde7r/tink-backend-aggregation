@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Error complex type.
- * 
+ * Java class for Error complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Error">
  *   &lt;complexContent>
@@ -24,28 +22,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Error", propOrder = {
-    "rejectCode",
-    "rejectText"
-})
+@XmlType(
+        name = "Error",
+        propOrder = {"rejectCode", "rejectText"})
 public class Error {
 
     @XmlElement(name = "Reject_Code")
     protected String rejectCode;
+
     @XmlElement(name = "Reject_Text")
     protected String rejectText;
 
     /**
      * Gets the value of the rejectCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getRejectCode() {
         return rejectCode;
@@ -53,11 +46,8 @@ public class Error {
 
     /**
      * Sets the value of the rejectCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setRejectCode(String value) {
         this.rejectCode = value;
@@ -65,11 +55,8 @@ public class Error {
 
     /**
      * Gets the value of the rejectText property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getRejectText() {
         return rejectText;
@@ -77,14 +64,10 @@ public class Error {
 
     /**
      * Sets the value of the rejectText property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setRejectText(String value) {
         this.rejectText = value;
     }
-
 }

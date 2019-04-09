@@ -7,16 +7,18 @@ import java.util.stream.Collectors;
 import se.tink.libraries.validation.exceptions.InvalidPin6Exception;
 
 /**
- * This validator validates that the PIN6 code is of correct format and meet the complexity requirements.
- * - We do not allow sequential number series
- * - We do not allow repeating a number more than 3 times.
+ * This validator validates that the PIN6 code is of correct format and meet the complexity
+ * requirements. - We do not allow sequential number series - We do not allow repeating a number
+ * more than 3 times.
  */
 public class Pin6Validator {
-    private static final Pattern LENGHT_PATTERN = Pattern.compile("(\\d){6}", Pattern.CASE_INSENSITIVE);
+    private static final Pattern LENGHT_PATTERN =
+            Pattern.compile("(\\d){6}", Pattern.CASE_INSENSITIVE);
     private static final Integer MAX_OCCURRING_DIGIT_COUNT = 3;
-    private static final ImmutableSet<String> SEQUENTIAL_NUMBER_SERIES = ImmutableSet
-            .of("012345", "123456", "234567", "345678", "456789",
-                    "987654", "876543", "765432", "654321", "543210");
+    private static final ImmutableSet<String> SEQUENTIAL_NUMBER_SERIES =
+            ImmutableSet.of(
+                    "012345", "123456", "234567", "345678", "456789", "987654", "876543", "765432",
+                    "654321", "543210");
 
     public static void validate(String pin6) throws InvalidPin6Exception {
         if (Strings.isNullOrEmpty(pin6)) {
@@ -32,7 +34,8 @@ public class Pin6Validator {
         }
 
         if (countMaxOccurrences(pin6) > MAX_OCCURRING_DIGIT_COUNT) {
-            throw new InvalidPin6Exception("Pin code must not contain the same digit more than three times.");
+            throw new InvalidPin6Exception(
+                    "Pin code must not contain the same digit more than three times.");
         }
     }
 
@@ -41,12 +44,15 @@ public class Pin6Validator {
         validate(newPin6);
         if (oldPin6.equals(newPin6)) {
             throw new InvalidPin6Exception("Old and new pin6 must not be the same.");
-        };
+        }
+        ;
     }
 
     private static Long countMaxOccurrences(String input) {
         return input.chars().boxed()
                 .collect(Collectors.groupingBy(i -> ((char) i.intValue()), Collectors.counting()))
-                .values().stream().max(Long::compareTo).orElse(0L);
+                .values().stream()
+                .max(Long::compareTo)
+                .orElse(0L);
     }
 }

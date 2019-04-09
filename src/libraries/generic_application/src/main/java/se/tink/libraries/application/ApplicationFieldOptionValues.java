@@ -90,14 +90,18 @@ public class ApplicationFieldOptionValues {
     public static final String PERSONS_SAVING_OTHER = "persons-saving-other";
     public static final String PURPOSE_FINANCIAL_BUFFER = "purpose-financial-buffer";
     public static final String PURPOSE_FUTURE_TAX_PAYMENTS = "purpose-future-tax-payments";
-    public static final String PURPOSE_INVESTMENT_OF_SURPLUS_LIQUIDITY = "purpose-investment-of-surplus-liquidity";
+    public static final String PURPOSE_INVESTMENT_OF_SURPLUS_LIQUIDITY =
+            "purpose-investment-of-surplus-liquidity";
     public static final String PURPOSE_LONG_TERM_INVESTMENT = "purpose-long-term-investment";
     public static final String PURPOSE_ONGOING_EXPENSES = "purpose-ongoing-expenses";
-    public static final String PURPOSE_OPERATING_COSTS_OF_MY_RESIDENCE = "purpose-operating-costs-of-my-residence";
-    public static final String PURPOSE_PAYMENTS_OF_LOAN_AT_SBAB = "purpose-payments-of-loan-at-sbab";
+    public static final String PURPOSE_OPERATING_COSTS_OF_MY_RESIDENCE =
+            "purpose-operating-costs-of-my-residence";
+    public static final String PURPOSE_PAYMENTS_OF_LOAN_AT_SBAB =
+            "purpose-payments-of-loan-at-sbab";
     public static final String PURPOSE_PENSION = "purpose-pension";
     public static final String PURPOSE_PRIVATE_CONSUMPTION = "purpose-private-consumption";
-    public static final String PURPOSE_SAVING_FOR_RELATED_PARTIES = "purpose-saving-for-related-parties";
+    public static final String PURPOSE_SAVING_FOR_RELATED_PARTIES =
+            "purpose-saving-for-related-parties";
     public static final String SALARY_OR_PENSION = "salary-or-pension";
     public static final String SALE_OF_ASSETS = "sale-of-assets";
     public static final String SALE_OF_CAPITAL_GOODS = "sale-of-capital-goods";

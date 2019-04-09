@@ -14,7 +14,8 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 
 public class CacheInstrumentationDecorator implements CacheClient {
-    private static final Logger logger = LoggerFactory.getLogger(CacheInstrumentationDecorator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(CacheInstrumentationDecorator.class);
 
     private final CacheClient delegate;
 
@@ -52,20 +53,26 @@ public class CacheInstrumentationDecorator implements CacheClient {
         }
     }
 
-    public CacheInstrumentationDecorator(CacheClient delegate, final MetricRegistry registry,
-            final MetricId metricName) {
+    public CacheInstrumentationDecorator(
+            CacheClient delegate, final MetricRegistry registry, final MetricId metricName) {
         this.metricName = metricName;
         this.delegate = delegate;
-        this.cache = CacheBuilder.newBuilder()
-                .build(new CacheLoader<TimerKey, Timer>() {
+        this.cache =
+                CacheBuilder.newBuilder()
+                        .build(
+                                new CacheLoader<TimerKey, Timer>() {
 
-                    @Override
-                    public Timer load(TimerKey key) throws Exception {
-                        // Using the same labels are the memcached Prometheus exporter.
-                        return registry.timer(metricName.label("command", key.command).label("status",
-                                key.status).label("scope", key.scope));
-                    }
-                });
+                                    @Override
+                                    public Timer load(TimerKey key) throws Exception {
+                                        // Using the same labels are the memcached Prometheus
+                                        // exporter.
+                                        return registry.timer(
+                                                metricName
+                                                        .label("command", key.command)
+                                                        .label("status", key.status)
+                                                        .label("scope", key.scope));
+                                    }
+                                });
     }
 
     @Override
@@ -83,7 +90,8 @@ public class CacheInstrumentationDecorator implements CacheClient {
         final Stopwatch watch = Stopwatch.createStarted();
         final Object result = delegate.get(scope, key);
 
-        final Timer timer = cache.getUnchecked(new TimerKey("get", result != null ? "hit" : "miss", scope));
+        final Timer timer =
+                cache.getUnchecked(new TimerKey("get", result != null ? "hit" : "miss", scope));
         timer.update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
 
         return result;
@@ -91,8 +99,10 @@ public class CacheInstrumentationDecorator implements CacheClient {
 
     @Override
     public void delete(CacheScope scope, String key) {
-        // This is called a "hit", but that doesn't mean that the command was actually deleting anything.
-        final Timer.Context context = cache.getUnchecked(new TimerKey("delete", "hit", scope)).time();
+        // This is called a "hit", but that doesn't mean that the command was actually deleting
+        // anything.
+        final Timer.Context context =
+                cache.getUnchecked(new TimerKey("delete", "hit", scope)).time();
         delegate.delete(scope, key);
         context.stop();
     }

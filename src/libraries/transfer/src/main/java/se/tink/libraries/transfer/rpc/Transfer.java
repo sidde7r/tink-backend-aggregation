@@ -21,17 +21,18 @@ import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.transfer.enums.MessageType;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.uuid.UUIDUtils;
 
 @SuppressWarnings("serial")
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
+@JsonAutoDetect(
+        fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Transfer implements Serializable, Cloneable {
@@ -42,24 +43,24 @@ public class Transfer implements Serializable, Cloneable {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final TypeReference<Map<TransferPayloadType, String>> PAYLOAD_TYPE_REFERENCE =
-            new TypeReference<Map<TransferPayloadType, String>>() {
-            };
+            new TypeReference<Map<TransferPayloadType, String>>() {};
 
     private BigDecimal amount;
-    @JsonIgnore
-    private Double oldAmount;
+    @JsonIgnore private Double oldAmount;
     private UUID credentialsId;
     private String currency;
+
     @JsonProperty("destinationUri")
     private String destination;
-    @JsonIgnore
-    private String originalDestination;
+
+    @JsonIgnore private String originalDestination;
     private String destinationMessage;
     private UUID id;
+
     @JsonProperty("sourceUri")
     private String source;
-    @JsonIgnore
-    private String originalSource;
+
+    @JsonIgnore private String originalSource;
     private String sourceMessage;
     private UUID userId;
     private String type;
@@ -86,20 +87,24 @@ public class Transfer implements Serializable, Cloneable {
         AccountIdentifier source = getSource();
         AccountIdentifier destination = getDestination();
 
-        return String.valueOf(java.util.Objects.hash(
-                type,
-                getAmountForHash(amount),
-                destination != null ? destination.toURIWithoutName() : null,
-                destinationMessage,
-                // if ignoreSource is true, set source to null, otherwise use it if it exists
-                (ignoreSource || source == null) ? null : source.toURIWithoutName(),
-                sourceMessage,
-                dueDate == null ? null : ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate)));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        type,
+                        getAmountForHash(amount),
+                        destination != null ? destination.toURIWithoutName() : null,
+                        destinationMessage,
+                        // if ignoreSource is true, set source to null, otherwise use it if it
+                        // exists
+                        (ignoreSource || source == null) ? null : source.toURIWithoutName(),
+                        sourceMessage,
+                        dueDate == null
+                                ? null
+                                : ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate)));
     }
 
     /**
-     * Doubles are not safe to do direct hashing on,
-     * so we convert it to a String first with defined precision good enough for our purposes
+     * Doubles are not safe to do direct hashing on, so we convert it to a String first with defined
+     * precision good enough for our purposes
      *
      * @return Four point precision of amount, or null if amount == null
      */
@@ -109,7 +114,8 @@ public class Transfer implements Serializable, Cloneable {
         }
 
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 
@@ -120,10 +126,15 @@ public class Transfer implements Serializable, Cloneable {
             return new Amount(currency, oldAmount);
         }
 
-
-        log.error("[userId:" + UUIDUtils.toTinkUUID(userId) +
-                " credentialsId:" + UUIDUtils.toTinkUUID(credentialsId) +
-                " transferId:" + UUIDUtils.toTinkUUID(id) + "] " + " Transfer amount is null");
+        log.error(
+                "[userId:"
+                        + UUIDUtils.toTinkUUID(userId)
+                        + " credentialsId:"
+                        + UUIDUtils.toTinkUUID(credentialsId)
+                        + " transferId:"
+                        + UUIDUtils.toTinkUUID(id)
+                        + "] "
+                        + " Transfer amount is null");
         return new Amount(currency, null);
     }
 
@@ -170,8 +181,9 @@ public class Transfer implements Serializable, Cloneable {
     }
 
     /**
-     * @return Non-formatted destination message of transfer. For e.g. bank transfers message might need
-     * formatting and default values (use TransferMessageFormatter for this) to confirm to the specific agent.
+     * @return Non-formatted destination message of transfer. For e.g. bank transfers message might
+     *     need formatting and default values (use TransferMessageFormatter for this) to confirm to
+     *     the specific agent.
      */
     public String getDestinationMessage() {
         return trimGeneratedText(destinationMessage);
@@ -188,7 +200,8 @@ public class Transfer implements Serializable, Cloneable {
 
     /**
      * @return Non-formatted source message of transfer. For e.g. bank transfers message might need
-     * formatting and default values (use TransferMessageFormatter for this) to confirm to the specific agent.
+     *     formatting and default values (use TransferMessageFormatter for this) to confirm to the
+     *     specific agent.
      */
     public String getSourceMessage() {
         return trimGeneratedText(sourceMessage);
@@ -231,13 +244,20 @@ public class Transfer implements Serializable, Cloneable {
     public String toString() {
         AccountIdentifier destination = getDestination();
         AccountIdentifier source = getSource();
-        String dateForHash = dueDate != null ? ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate) : null;
+        String dateForHash =
+                dueDate != null ? ThreadSafeDateFormat.FORMATTER_DAILY.format(dueDate) : null;
 
-        return MoreObjects.toStringHelper(this.getClass()).add("amount", amount)
-                .add("sourceAccount", source).add("sourceMessage", sourceMessage)
-                .add("destinationAccount", destination).add("destinationMessage", destinationMessage)
-                .add("dueDate", dueDate).add("type", type).add("hash", getHash())
-                .add("amountForHash", getAmountForHash(amount)).add("dueDateForHash", dateForHash)
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("amount", amount)
+                .add("sourceAccount", source)
+                .add("sourceMessage", sourceMessage)
+                .add("destinationAccount", destination)
+                .add("destinationMessage", destinationMessage)
+                .add("dueDate", dueDate)
+                .add("type", type)
+                .add("hash", getHash())
+                .add("amountForHash", getAmountForHash(amount))
+                .add("dueDateForHash", dateForHash)
                 .toString();
     }
 
@@ -317,7 +337,8 @@ public class Transfer implements Serializable, Cloneable {
         }
     }
 
-    // Note! Have to be added to the grpc converter for transfers in order to work with the Tink app.
+    // Note! Have to be added to the grpc converter for transfers in order to work with the Tink
+    // app.
     public MessageType getMessageType() {
         if (messageType != null) {
             return MessageType.valueOf(messageType);
@@ -337,7 +358,8 @@ public class Transfer implements Serializable, Cloneable {
 
         if (!Strings.isNullOrEmpty(originalTransferSerialized)) {
             return Optional.ofNullable(
-                    SerializationUtils.deserializeFromString(originalTransferSerialized, Transfer.class));
+                    SerializationUtils.deserializeFromString(
+                            originalTransferSerialized, Transfer.class));
         }
 
         return Optional.empty();

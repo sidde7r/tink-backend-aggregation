@@ -23,7 +23,8 @@ class PinServerCertificateTrustStrategy implements TrustStrategy {
     }
 
     @Override
-    public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+    public boolean isTrusted(X509Certificate[] x509Certificates, String s)
+            throws CertificateException {
         Preconditions.checkArgument(x509Certificates.length > 0, "No server certificates.");
         final X509Certificate leafCertificate = x509Certificates[0];
         if (!isPinned(leafCertificate)) {
@@ -32,9 +33,11 @@ class PinServerCertificateTrustStrategy implements TrustStrategy {
             // no use and most other software UIs show the "public key" without
             // colons (and using lowercase letters).
             final String pinHexString = encodeAsHexString(leafCertificate.getEncoded());
-            throw new CertificateException("Certificate not pinned. Use 'CERTPLAIN:" + pinHexString
-                    + "' to pin this certificate. But only pin the certificate if you are sure this "
-                    + "is the correct certificate!");
+            throw new CertificateException(
+                    "Certificate not pinned. Use 'CERTPLAIN:"
+                            + pinHexString
+                            + "' to pin this certificate. But only pin the certificate if you are sure this "
+                            + "is the correct certificate!");
         }
         return true;
     }
@@ -48,4 +51,3 @@ class PinServerCertificateTrustStrategy implements TrustStrategy {
         return false;
     }
 }
-

@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ResultCountersReqObject complex type.
- * 
+ * Java class for ResultCountersReqObject complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ResultCountersReqObject">
  *   &lt;complexContent>
@@ -24,51 +22,36 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ResultCountersReqObject", propOrder = {
-    "startPosition",
-    "pageSize"
-})
+@XmlType(
+        name = "ResultCountersReqObject",
+        propOrder = {"startPosition", "pageSize"})
 public class ResultCountersReqObject {
 
     @XmlElement(name = "StartPosition")
     protected int startPosition;
+
     @XmlElement(name = "PageSize")
     protected int pageSize;
 
-    /**
-     * Gets the value of the startPosition property.
-     * 
-     */
+    /** Gets the value of the startPosition property. */
     public int getStartPosition() {
         return startPosition;
     }
 
-    /**
-     * Sets the value of the startPosition property.
-     * 
-     */
+    /** Sets the value of the startPosition property. */
     public void setStartPosition(int value) {
         this.startPosition = value;
     }
 
-    /**
-     * Gets the value of the pageSize property.
-     * 
-     */
+    /** Gets the value of the pageSize property. */
     public int getPageSize() {
         return pageSize;
     }
 
-    /**
-     * Sets the value of the pageSize property.
-     * 
-     */
+    /** Sets the value of the pageSize property. */
     public void setPageSize(int value) {
         this.pageSize = value;
     }
-
 }

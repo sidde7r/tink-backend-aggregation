@@ -9,18 +9,22 @@ public class MetricBucketsTest {
 
     @Test
     public void testBucketer() {
-        MetricBuckets buckets = new MetricBuckets(
-                ImmutableList.of(0, .005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10));
+        MetricBuckets buckets =
+                new MetricBuckets(
+                        ImmutableList.of(0, .005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10));
         buckets.update(0.05);
 
         // Expect that buckets le=0.05 and above have been marked (last one is +Inf)
-        ImmutableList<Long> expected = ImmutableList.of(0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L);
-        Assert.assertEquals(ImmutableList.copyOf(expected), ImmutableList.copyOf(getBuckets(buckets)));
+        ImmutableList<Long> expected =
+                ImmutableList.of(0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L);
+        Assert.assertEquals(
+                ImmutableList.copyOf(expected), ImmutableList.copyOf(getBuckets(buckets)));
 
         buckets.update(100.0);
 
         expected = ImmutableList.of(0L, 0L, 0L, 0L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L);
-        Assert.assertEquals(ImmutableList.copyOf(expected), ImmutableList.copyOf(getBuckets(buckets)));
+        Assert.assertEquals(
+                ImmutableList.copyOf(expected), ImmutableList.copyOf(getBuckets(buckets)));
     }
 
     private ImmutableList<Long> getBuckets(MetricBuckets buckets) {

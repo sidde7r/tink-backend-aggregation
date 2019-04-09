@@ -51,9 +51,8 @@ public class InterClusterJerseyClientFactory {
     public InterClusterJerseyClientFactory() {
         this.internalHttpClientBuilder = HttpClientBuilder.create();
 
-        this.internalSslContextBuilder = new SSLContextBuilder()
-                .useProtocol("TLSv1.2")
-                .setSecureRandom(new SecureRandom());
+        this.internalSslContextBuilder =
+                new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.internalRequestConfigBuilder = RequestConfig.custom();
 
@@ -61,26 +60,36 @@ public class InterClusterJerseyClientFactory {
 
         // `0` == Default chunk size
         // `null` == Don't use chunked encoding
-        this.internalClientConfig.getProperties().put(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
+        this.internalClientConfig
+                .getProperties()
+                .put(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
     }
 
-    public InterClusterJerseyClientFactory withClientCertificate(byte[] clientCertificateBytes, String password) {
-        ByteArrayInputStream clientCertificateStream = new ByteArrayInputStream(clientCertificateBytes);
+    public InterClusterJerseyClientFactory withClientCertificate(
+            byte[] clientCertificateBytes, String password) {
+        ByteArrayInputStream clientCertificateStream =
+                new ByteArrayInputStream(clientCertificateBytes);
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
             keyStore.load(clientCertificateStream, password.toCharArray());
 
-            internalSslContextBuilder.loadKeyMaterial(keyStore, null); // the keyStore doesn't have a PW.
+            internalSslContextBuilder.loadKeyMaterial(
+                    keyStore, null); // the keyStore doesn't have a PW.
             return this;
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
-                CertificateException | UnrecoverableKeyException e) {
+        } catch (KeyStoreException
+                | NoSuchProviderException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException
+                | UnrecoverableKeyException e) {
             throw new IllegalStateException(e);
         }
     }
 
     public InterClusterJerseyClientFactory withServerCertificatePinning(Collection<Pin> pins) {
         try {
-            internalSslContextBuilder.loadTrustMaterial(null, new PinServerCertificateTrustStrategy(pins));
+            internalSslContextBuilder.loadTrustMaterial(
+                    null, new PinServerCertificateTrustStrategy(pins));
             return this;
         } catch (NoSuchAlgorithmException | KeyStoreException e) {
             throw new IllegalStateException(e);
@@ -93,7 +102,8 @@ public class InterClusterJerseyClientFactory {
     }
 
     public InterClusterJerseyClientFactory disableHostNameVerification() {
-        internalHttpClientBuilder.setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        internalHttpClientBuilder.setHostnameVerifier(
+                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         return this;
     }
 
@@ -117,13 +127,14 @@ public class InterClusterJerseyClientFactory {
 
         RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
 
-        CloseableHttpClient httpClient = internalHttpClientBuilder
-                .setSslcontext(sslContext)
-                .setDefaultRequestConfig(reguestConfig)
-                .build();
+        CloseableHttpClient httpClient =
+                internalHttpClientBuilder
+                        .setSslcontext(sslContext)
+                        .setDefaultRequestConfig(reguestConfig)
+                        .build();
 
-        TinkApacheHttpClient4Handler httpHandler = new TinkApacheHttpClient4Handler(httpClient, new BasicCookieStore(),
-                false);
+        TinkApacheHttpClient4Handler httpHandler =
+                new TinkApacheHttpClient4Handler(httpClient, new BasicCookieStore(), false);
 
         Client client = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
         client.setReadTimeout(readTimeoutMs);

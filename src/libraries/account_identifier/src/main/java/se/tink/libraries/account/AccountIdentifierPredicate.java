@@ -24,7 +24,8 @@ public class AccountIdentifierPredicate {
             new Predicate<AccountIdentifier>() {
                 @Override
                 public boolean apply(AccountIdentifier accountIdentifier) {
-                    return IS_VALID.apply(accountIdentifier) && accountIdentifier.is(AccountIdentifier.Type.SE);
+                    return IS_VALID.apply(accountIdentifier)
+                            && accountIdentifier.is(AccountIdentifier.Type.SE);
                 }
             };
 

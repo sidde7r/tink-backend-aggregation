@@ -13,43 +13,62 @@ import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Immutable thread safe date format.
- * <p>
- * Uses the Memento design pattern to easily clone preexisting static thread safe date formatters.
+ *
+ * <p>Uses the Memento design pattern to easily clone preexisting static thread safe date
+ * formatters.
  */
 public class ThreadSafeDateFormat {
 
     private static final CharMatcher TRIMMER = CharMatcher.WHITESPACE;
 
     public static final ThreadSafeDateFormat FORMATTER_YEARLY = new ThreadSafeDateFormat("yyyy");
-    public static final ThreadSafeDateFormat FORMATTER_WEEK_YEARLY = new ThreadSafeDateFormat("xxxx");
-    public static final ThreadSafeDateFormat FORMATTER_MONTHLY = new ThreadSafeDateFormat("yyyy-MM");
-    public static final ThreadSafeDateFormat FORMATTER_INTEGER_DATE = new ThreadSafeDateFormat("yyyyMMdd");
-    public static final ThreadSafeDateFormat FORMATTER_INTEGER_DATE_COMPACT = new ThreadSafeDateFormat("yyMMdd");
-    public static final ThreadSafeDateFormat FORMATTER_MONTHLY_ONLY = new ThreadSafeDateFormat("MM");
-    public static final ThreadSafeDateFormat FORMATTER_MONTH_NAME = new ThreadSafeDateFormat("MMMMM");
-    public static final ThreadSafeDateFormat FORMATTER_WEEKLY = new ThreadSafeDateFormat("xxxx:ww"); // weekyear
-    public static final ThreadSafeDateFormat FORMATTER_DAILY = new ThreadSafeDateFormat("yyyy-MM-dd");
-    public static final ThreadSafeDateFormat FORMATTER_DOTTED_DAILY = new ThreadSafeDateFormat("dd.MM.yyyy");
-    public static final ThreadSafeDateFormat FORMATTER_DAILY_COMPACT = new ThreadSafeDateFormat("yy-MM-dd");
-    public static final ThreadSafeDateFormat FORMATTER_DAILY_PRETTY = new ThreadSafeDateFormat("MMM d");
-    public static final ThreadSafeDateFormat FORMATTER_MINUTES = new ThreadSafeDateFormat("yyyy-MM-dd HH:mm");
-    public static final ThreadSafeDateFormat FORMATTER_SECONDS = new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss");
-    public static final ThreadSafeDateFormat FORMATTER_SECONDS_DASHES = new ThreadSafeDateFormat("yyyy-MM-dd--HH:mm:ss");
-    public static final ThreadSafeDateFormat FORMATTER_SECONDS_T = new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    public static final ThreadSafeDateFormat FORMATTER_SECONDS_WITH_TIMEZONE = new ThreadSafeDateFormat(
-            "yyyy-MM-dd HH:mm:ssZ");
-    public static final ThreadSafeDateFormat FORMATTER_MINS_WITH_TIMEZONE = new ThreadSafeDateFormat(
-            "yyyy-MM-dd HH:mmZ");
-    public static final ThreadSafeDateFormat FORMATTER_MILLISECONDS_WITH_TIMEZONE = new ThreadSafeDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-    public static final ThreadSafeDateFormat FORMATTER_TIME_MILLIS = new ThreadSafeDateFormat("HH:mm:ss,SSS");
-    public static final ThreadSafeDateFormat FORMATTER_FILENAME_SAFE = new ThreadSafeDateFormat(
-            "yyyy-MM-dd--HH:mm:ss.SSS");
-    public static final ThreadSafeDateFormat FORMATTER_LOGGING = new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+    public static final ThreadSafeDateFormat FORMATTER_WEEK_YEARLY =
+            new ThreadSafeDateFormat("xxxx");
+    public static final ThreadSafeDateFormat FORMATTER_MONTHLY =
+            new ThreadSafeDateFormat("yyyy-MM");
+    public static final ThreadSafeDateFormat FORMATTER_INTEGER_DATE =
+            new ThreadSafeDateFormat("yyyyMMdd");
+    public static final ThreadSafeDateFormat FORMATTER_INTEGER_DATE_COMPACT =
+            new ThreadSafeDateFormat("yyMMdd");
+    public static final ThreadSafeDateFormat FORMATTER_MONTHLY_ONLY =
+            new ThreadSafeDateFormat("MM");
+    public static final ThreadSafeDateFormat FORMATTER_MONTH_NAME =
+            new ThreadSafeDateFormat("MMMMM");
+    public static final ThreadSafeDateFormat FORMATTER_WEEKLY =
+            new ThreadSafeDateFormat("xxxx:ww"); // weekyear
+    public static final ThreadSafeDateFormat FORMATTER_DAILY =
+            new ThreadSafeDateFormat("yyyy-MM-dd");
+    public static final ThreadSafeDateFormat FORMATTER_DOTTED_DAILY =
+            new ThreadSafeDateFormat("dd.MM.yyyy");
+    public static final ThreadSafeDateFormat FORMATTER_DAILY_COMPACT =
+            new ThreadSafeDateFormat("yy-MM-dd");
+    public static final ThreadSafeDateFormat FORMATTER_DAILY_PRETTY =
+            new ThreadSafeDateFormat("MMM d");
+    public static final ThreadSafeDateFormat FORMATTER_MINUTES =
+            new ThreadSafeDateFormat("yyyy-MM-dd HH:mm");
+    public static final ThreadSafeDateFormat FORMATTER_SECONDS =
+            new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final ThreadSafeDateFormat FORMATTER_SECONDS_DASHES =
+            new ThreadSafeDateFormat("yyyy-MM-dd--HH:mm:ss");
+    public static final ThreadSafeDateFormat FORMATTER_SECONDS_T =
+            new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static final ThreadSafeDateFormat FORMATTER_SECONDS_WITH_TIMEZONE =
+            new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ssZ");
+    public static final ThreadSafeDateFormat FORMATTER_MINS_WITH_TIMEZONE =
+            new ThreadSafeDateFormat("yyyy-MM-dd HH:mmZ");
+    public static final ThreadSafeDateFormat FORMATTER_MILLISECONDS_WITH_TIMEZONE =
+            new ThreadSafeDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    public static final ThreadSafeDateFormat FORMATTER_TIME_MILLIS =
+            new ThreadSafeDateFormat("HH:mm:ss,SSS");
+    public static final ThreadSafeDateFormat FORMATTER_FILENAME_SAFE =
+            new ThreadSafeDateFormat("yyyy-MM-dd--HH:mm:ss.SSS");
+    public static final ThreadSafeDateFormat FORMATTER_LOGGING =
+            new ThreadSafeDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
 
     /**
-     * A builder used to construct {@link ThreadSafeDateFormat}s. Mostly used to create variations of a preexisting
-     * {@link ThreadSafeDateFormat} by calling {@link ThreadSafeDateFormat#toBuilder()}.
+     * A builder used to construct {@link ThreadSafeDateFormat}s. Mostly used to create variations
+     * of a preexisting {@link ThreadSafeDateFormat} by calling {@link
+     * ThreadSafeDateFormat#toBuilder()}.
      */
     public static class ThreadSafeDateFormatBuilder implements Cloneable {
 
@@ -110,7 +129,9 @@ public class ThreadSafeDateFormat {
     private ThreadSafeDateFormatBuilder builder;
 
     public ThreadSafeDateFormat(String pattern) {
-        this(new ThreadSafeDateFormatBuilder(pattern, DateUtils.DEFAULT_LOCALE, DateUtils.DEFAULT_TIMEZONE));
+        this(
+                new ThreadSafeDateFormatBuilder(
+                        pattern, DateUtils.DEFAULT_LOCALE, DateUtils.DEFAULT_TIMEZONE));
     }
 
     public ThreadSafeDateFormat(String pattern, Locale locale) {
@@ -123,8 +144,10 @@ public class ThreadSafeDateFormat {
 
     private ThreadSafeDateFormat(ThreadSafeDateFormatBuilder builder) {
         this.builder = builder;
-        this.dateFormat = DateTimeFormat.forPattern(builder.getPattern())
-                .withZone(DateTimeZone.forTimeZone(builder.getTimezone())).withLocale(builder.getLocale());
+        this.dateFormat =
+                DateTimeFormat.forPattern(builder.getPattern())
+                        .withZone(DateTimeZone.forTimeZone(builder.getTimezone()))
+                        .withLocale(builder.getLocale());
     }
 
     public String format(Date date) {
@@ -141,8 +164,12 @@ public class ThreadSafeDateFormat {
         try {
             date = dateFormat.parseDateTime(TRIMMER.trimFrom(string)).toDate();
         } catch (Exception e) {
-            throw new ParseException("could not parse date: " + string + " (with pattern: " + builder.getPattern()
-                    + ")",
+            throw new ParseException(
+                    "could not parse date: "
+                            + string
+                            + " (with pattern: "
+                            + builder.getPattern()
+                            + ")",
                     0);
         }
 
@@ -162,5 +189,4 @@ public class ThreadSafeDateFormat {
         // Cloning since we don't allow internal builder to be mutable.
         return builder.clone();
     }
-
 }

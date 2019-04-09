@@ -35,7 +35,7 @@ public class SwedishSHBInternalIdentifier extends AccountIdentifier {
     public String getIdentifier() {
         return accountNumber;
     }
-    
+
     @Override
     public Type getType() {
         return Type.SE_SHB_INTERNAL;

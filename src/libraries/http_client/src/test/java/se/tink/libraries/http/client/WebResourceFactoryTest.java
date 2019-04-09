@@ -1,5 +1,13 @@
 package se.tink.libraries.http.client;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.sun.jersey.api.client.Client;
@@ -16,20 +24,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.libraries.request_tracing.RequestTracer;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class WebResourceFactoryTest {
 
     @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ApiParam {
-    }
+    public @interface ApiParam {}
 
     private interface ResourceWithConsumes {
         @POST
@@ -44,7 +44,9 @@ public class WebResourceFactoryTest {
         void endpoint(@ApiParam String body);
     }
 
-    @Rule public WireMockRule server = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    @Rule
+    public WireMockRule server = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+
     WebResource resource;
 
     @Before
@@ -55,61 +57,71 @@ public class WebResourceFactoryTest {
 
     @Test
     public void testUnknownAnnotation() {
-        ResourceWithConsumes client = WebResourceFactory.newResource(ResourceWithConsumes.class, resource);
+        ResourceWithConsumes client =
+                WebResourceFactory.newResource(ResourceWithConsumes.class, resource);
 
         assertEquals("body", client.endpoint("body"));
 
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-            .withRequestBody(equalTo("body")));
+        server.verify(postRequestedFor(urlEqualTo("/resource")).withRequestBody(equalTo("body")));
     }
 
     @Test
     public void setsJsonWhenContentTypeNotSpecified() {
-        ResourceWithoutConsumes client = WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource);
+        ResourceWithoutConsumes client =
+                WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource);
 
         client.endpoint("body");
 
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-                .withHeader("content-type", equalTo("application/json")));
+        server.verify(
+                postRequestedFor(urlEqualTo("/resource"))
+                        .withHeader("content-type", equalTo("application/json")));
     }
 
     @Test
     public void setsConsumesDeclarationWhenContentTypeSpecified() {
-        ResourceWithConsumes client = WebResourceFactory.newResource(ResourceWithConsumes.class, resource);
+        ResourceWithConsumes client =
+                WebResourceFactory.newResource(ResourceWithConsumes.class, resource);
 
         client.endpoint("body");
 
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-                .withHeader("content-type", equalTo("application/json")));
+        server.verify(
+                postRequestedFor(urlEqualTo("/resource"))
+                        .withHeader("content-type", equalTo("application/json")));
     }
 
     @Test
     public void addRequestIdHeader() {
         RequestTracer.startTracing(Optional.of("requestId"));
-        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource).endpoint("requestBody");
+        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
+                .endpoint("requestBody");
 
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-                .withHeader(RequestTracingFilter.REQUEST_ID_HEADER, equalTo("requestId")));
+        server.verify(
+                postRequestedFor(urlEqualTo("/resource"))
+                        .withHeader(RequestTracingFilter.REQUEST_ID_HEADER, equalTo("requestId")));
     }
 
     @Test
     public void noHeaderWhenRequestIdNotPresent() {
         assertNull(RequestTracer.getRequestId());
-        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource).endpoint("requestBody");
+        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
+                .endpoint("requestBody");
 
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-                .withoutHeader(RequestTracingFilter.REQUEST_ID_HEADER));
+        server.verify(
+                postRequestedFor(urlEqualTo("/resource"))
+                        .withoutHeader(RequestTracingFilter.REQUEST_ID_HEADER));
     }
 
     @Test
     public void cleanHeadersAfterEachRequest() {
         RequestTracer.startTracing(Optional.of("requestId"));
-        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource).endpoint("requestBody");
+        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
+                .endpoint("requestBody");
         RequestTracer.stopTracing();
 
-        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource).endpoint("requestBody");
-        server.verify(postRequestedFor(urlEqualTo("/resource"))
-                .withoutHeader(RequestTracingFilter.REQUEST_ID_HEADER));
+        WebResourceFactory.newResource(ResourceWithoutConsumes.class, resource)
+                .endpoint("requestBody");
+        server.verify(
+                postRequestedFor(urlEqualTo("/resource"))
+                        .withoutHeader(RequestTracingFilter.REQUEST_ID_HEADER));
     }
-
 }

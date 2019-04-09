@@ -15,8 +15,10 @@ public class User {
     private List<String> flags;
     private String flagsSerialized;
     private String id;
+
     @JsonInclude(Include.NON_NULL)
     private UserProfile profile;
+
     private String username;
     private Date debugUntil;
 
@@ -84,5 +86,4 @@ public class User {
     public boolean isDebug() {
         return debugUntil != null && debugUntil.after(new Date());
     }
-
 }

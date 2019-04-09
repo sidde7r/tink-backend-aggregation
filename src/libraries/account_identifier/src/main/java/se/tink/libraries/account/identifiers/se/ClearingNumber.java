@@ -1,10 +1,10 @@
 package se.tink.libraries.account.identifiers.se;
 
-import java.util.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

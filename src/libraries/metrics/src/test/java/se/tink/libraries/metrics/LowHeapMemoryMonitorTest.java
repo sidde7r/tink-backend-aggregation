@@ -1,12 +1,5 @@
 package se.tink.libraries.metrics;
 
-import org.junit.Test;
-
-import javax.management.Notification;
-import java.lang.management.MemoryNotificationInfo;
-import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.MemoryUsage;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -14,12 +7,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.management.MemoryNotificationInfo;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryUsage;
+import javax.management.Notification;
+import org.junit.Test;
+
 public class LowHeapMemoryMonitorTest {
-    @Test public void ableToFindTenuredGenerationMemoryPool() {
+    @Test
+    public void ableToFindTenuredGenerationMemoryPool() {
         assertNotNull(LowHeapMemoryMonitor.findTenuredGenerationMemoryPool());
     }
 
-    @Test public void updateMemoryPoolThresholds() {
+    @Test
+    public void updateMemoryPoolThresholds() {
         MemoryUsage memoryUsage = mock(MemoryUsage.class);
         when(memoryUsage.getMax()).thenReturn(4L);
 
@@ -33,20 +34,26 @@ public class LowHeapMemoryMonitorTest {
         verify(memoryPoolMxBean).setUsageThreshold(2);
     }
 
-    @Test public void handleCollectionThresholdExceededNotification() {
+    @Test
+    public void handleCollectionThresholdExceededNotification() {
         Notification notification = mock(Notification.class);
-        when(notification.getType()).thenReturn(MemoryNotificationInfo.MEMORY_COLLECTION_THRESHOLD_EXCEEDED);
+        when(notification.getType())
+                .thenReturn(MemoryNotificationInfo.MEMORY_COLLECTION_THRESHOLD_EXCEEDED);
         MemoryPoolMXBean memoryPoolMxBean = mock(MemoryPoolMXBean.class, RETURNS_DEEP_STUBS);
         Counter counter = new Counter();
         double threshold = 0.5;
 
-        LowHeapMemoryMonitor.onThresholdExceeded(notification, memoryPoolMxBean, threshold, counter);
+        LowHeapMemoryMonitor.onThresholdExceeded(
+                notification, memoryPoolMxBean, threshold, counter);
 
-        assertEquals("Collection threshold notification should update the metric",
-                1, (int) counter.getValue());
+        assertEquals(
+                "Collection threshold notification should update the metric",
+                1,
+                (int) counter.getValue());
     }
 
-    @Test public void handleUsageThresholdExceededNotification() {
+    @Test
+    public void handleUsageThresholdExceededNotification() {
         Notification notification = mock(Notification.class);
         when(notification.getType()).thenReturn(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED);
         MemoryUsage usage = mock(MemoryUsage.class);
@@ -57,12 +64,14 @@ public class LowHeapMemoryMonitorTest {
         Counter counter = new Counter();
         double threshold = 0.5;
 
-        LowHeapMemoryMonitor.onThresholdExceeded(notification, memoryPoolMxBean, threshold, counter);
+        LowHeapMemoryMonitor.onThresholdExceeded(
+                notification, memoryPoolMxBean, threshold, counter);
 
-        assertEquals("Usage threshold notification should not update the metric",
-                0, (int) counter.getValue());
+        assertEquals(
+                "Usage threshold notification should not update the metric",
+                0,
+                (int) counter.getValue());
         verify(memoryPoolMxBean).setCollectionUsageThreshold(5);
         verify(memoryPoolMxBean).setUsageThreshold(5);
     }
-
 }

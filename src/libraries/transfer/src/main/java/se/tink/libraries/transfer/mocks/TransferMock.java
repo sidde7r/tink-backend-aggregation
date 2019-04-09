@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferMock {
@@ -31,7 +31,9 @@ public class TransferMock {
 
         public EInvoiceBuilder withOriginalTransfer(Transfer originalTransfer) {
             try {
-                transfer.addPayload(TransferPayloadType.ORIGINAL_TRANSFER, MAPPER.writeValueAsString(originalTransfer));
+                transfer.addPayload(
+                        TransferPayloadType.ORIGINAL_TRANSFER,
+                        MAPPER.writeValueAsString(originalTransfer));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -74,54 +76,56 @@ public class TransferMock {
 
         public T from(AccountIdentifier sourceIdentifier) {
             transfer.setSource(sourceIdentifier);
-            return (T)this;
+            return (T) this;
         }
 
         public T to(AccountIdentifier sourceIdentifier) {
             transfer.setDestination(sourceIdentifier);
-            return (T)this;
+            return (T) this;
         }
 
         public T withAmountInSEK(double value) {
             transfer.setAmount(Amount.inSEK(value));
-            return (T)this;
+            return (T) this;
         }
 
         public T withAmount(Amount amount) {
             transfer.setAmount(amount);
-            return (T)this;
+            return (T) this;
         }
 
         public T withSourceMessage(String sourceMessage) {
             transfer.setSourceMessage(sourceMessage);
-            return (T)this;
+            return (T) this;
         }
 
         public T withDestinationMessage(String destinationMessage) {
             transfer.setDestinationMessage(destinationMessage);
-            return (T)this;
+            return (T) this;
         }
 
         public T withMessage(String message) {
             withSourceMessage(message);
             withDestinationMessage(message);
-            return (T)this;
+            return (T) this;
         }
 
         public T withNoMessage() {
             withMessage(null);
-            return (T)this;
+            return (T) this;
         }
 
         public T withTooLongMessage() {
-            withDestinationMessage("DstMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
-            withSourceMessage("SrcMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
-            return (T)this;
+            withDestinationMessage(
+                    "DstMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
+            withSourceMessage(
+                    "SrcMsgLong Too long message I want to have since it is way too long for to read on the transaction list that hopefully either throws or gets cut off by the agent using some transfer message formatting");
+            return (T) this;
         }
 
         public T withDueDate(Date dueDate) {
             transfer.setDueDate(dueDate);
-            return (T)this;
+            return (T) this;
         }
 
         public Transfer build() {

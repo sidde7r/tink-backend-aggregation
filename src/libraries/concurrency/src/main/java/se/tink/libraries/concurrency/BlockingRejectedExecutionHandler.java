@@ -10,5 +10,4 @@ public class BlockingRejectedExecutionHandler implements RejectedExecutionHandle
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         Uninterruptibles.putUninterruptibly(executor.getQueue(), r);
     }
-
 }

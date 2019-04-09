@@ -1,11 +1,10 @@
 package se.tink.libraries.concurrency;
 
+import com.google.common.base.Ticker;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.google.common.base.Ticker;
-
 public class FakeTicker extends Ticker {
-    
+
     public AtomicLong now = new AtomicLong();
 
     public FakeTicker(long i) {
@@ -20,5 +19,4 @@ public class FakeTicker extends Ticker {
     public long read() {
         return now.get();
     }
-
 }

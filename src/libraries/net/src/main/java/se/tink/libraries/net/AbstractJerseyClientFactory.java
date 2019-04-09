@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractJerseyClientFactory {
-    
+
     private static final int READ_TIMEOUT_MS = 30000;
     private static final int CONNECT_TIMEOUT_MS = 10000;
 
@@ -46,7 +46,7 @@ public abstract class AbstractJerseyClientFactory {
     protected AbstractJerseyClientFactory(Class<? extends AbstractJerseyClientFactory> cls) {
         log = LoggerFactory.getLogger(cls);
     }
-    
+
     public Client createBasicClient() {
         return createBasicClient(null);
     }
@@ -71,26 +71,29 @@ public abstract class AbstractJerseyClientFactory {
         client.setReadTimeout(READ_TIMEOUT_MS);
         client.setConnectTimeout(CONNECT_TIMEOUT_MS);
     }
-    
+
     public TinkApacheHttpClient4 createCustomClient() {
         return createCustomClient(new DefaultApacheHttpClient4Config());
     }
-    
-    public TinkApacheHttpClient4 createCustomClient(SSLContext sslContext, X509HostnameVerifier hostnameVerifier) {
-        
+
+    public TinkApacheHttpClient4 createCustomClient(
+            SSLContext sslContext, X509HostnameVerifier hostnameVerifier) {
+
         BasicCookieStore cookieStore = new BasicCookieStore();
 
-        CloseableHttpClient apacheClient = HttpClientBuilder.create()
-                .setDefaultRequestConfig(RequestConfig.DEFAULT)
-                .setDefaultCookieStore(cookieStore)
-                .setSslcontext(sslContext)
-                .setHostnameVerifier(hostnameVerifier)
-                .build();
+        CloseableHttpClient apacheClient =
+                HttpClientBuilder.create()
+                        .setDefaultRequestConfig(RequestConfig.DEFAULT)
+                        .setDefaultCookieStore(cookieStore)
+                        .setSslcontext(sslContext)
+                        .setHostnameVerifier(hostnameVerifier)
+                        .build();
 
-        TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler = new TinkApacheHttpClient4Handler(
-                apacheClient, cookieStore, false);
-        
-        TinkApacheHttpClient4 client = new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
+        TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler =
+                new TinkApacheHttpClient4Handler(apacheClient, cookieStore, false);
+
+        TinkApacheHttpClient4 client =
+                new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
         client.setChunkedEncodingSize(null);
         setTimeouts(client);
 
@@ -112,8 +115,11 @@ public abstract class AbstractJerseyClientFactory {
     public ApacheHttpClient4 createThreadSafeCookieClient() {
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
 
-        clientConfig.getProperties()
-                .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, new ThreadSafeClientConnManager());
+        clientConfig
+                .getProperties()
+                .put(
+                        ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER,
+                        new ThreadSafeClientConnManager());
 
         return createCookieClient(clientConfig);
     }
@@ -141,7 +147,8 @@ public abstract class AbstractJerseyClientFactory {
     public Client createCookieClientWithoutSSL(ApacheHttpClient4Config clientConfig) {
         SSLContext sslContext;
         try {
-            sslContext = SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
+            sslContext =
+                    SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
         } catch (KeyManagementException e) {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
@@ -150,18 +157,26 @@ public abstract class AbstractJerseyClientFactory {
             throw new RuntimeException(e);
         }
 
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        SSLConnectionSocketFactory sslsf =
+                new SSLConnectionSocketFactory(
+                        sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-        Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory> create()
-                .register("https", sslsf).build();
+        Registry<ConnectionSocketFactory> r =
+                RegistryBuilder.<ConnectionSocketFactory>create().register("https", sslsf).build();
 
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.getSchemeRegistry().register(new Scheme("https", 443,
-                new SSLSocketFactory(sslContext,
-                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
+        connectionManager
+                .getSchemeRegistry()
+                .register(
+                        new Scheme(
+                                "https",
+                                443,
+                                new SSLSocketFactory(
+                                        sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
 
-        clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
+        clientConfig
+                .getProperties()
+                .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
 
         ApacheHttpClient4 client = ApacheHttpClient4.create(clientConfig);
         client.setChunkedEncodingSize(null);
@@ -173,11 +188,10 @@ public abstract class AbstractJerseyClientFactory {
     }
 
     /**
-     * An HTTP client that uses a local proxy. Usually used with Charles web debugging proxy. The client constructed
-     * here is _not_ for production use.
-     * <p>
-     * TODO: Make this reuse {@link #createProxyClient(AgentContext, ApacheHttpClient4Config)}.
-     * </p>
+     * An HTTP client that uses a local proxy. Usually used with Charles web debugging proxy. The
+     * client constructed here is _not_ for production use.
+     *
+     * <p>TODO: Make this reuse {@link #createProxyClient(AgentContext, ApacheHttpClient4Config)}.
      *
      * @param context
      * @return
@@ -196,7 +210,8 @@ public abstract class AbstractJerseyClientFactory {
     public ApacheHttpClient4Config createProxyClientConfig() {
         SSLContext sslContext;
         try {
-            sslContext = SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
+            sslContext =
+                    SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
         } catch (KeyManagementException e) {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
@@ -205,27 +220,37 @@ public abstract class AbstractJerseyClientFactory {
             throw new RuntimeException(e);
         }
 
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        SSLConnectionSocketFactory sslsf =
+                new SSLConnectionSocketFactory(
+                        sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-        Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory> create()
-                .register("https", sslsf).build();
+        Registry<ConnectionSocketFactory> r =
+                RegistryBuilder.<ConnectionSocketFactory>create().register("https", sslsf).build();
 
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.getSchemeRegistry().register(new Scheme("https", 443,
-                new SSLSocketFactory(sslContext,
-                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
+        connectionManager
+                .getSchemeRegistry()
+                .register(
+                        new Scheme(
+                                "https",
+                                443,
+                                new SSLSocketFactory(
+                                        sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
 
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
-        clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_PROXY_URI, "http://127.0.0.1:8888/");
-        clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
+        clientConfig
+                .getProperties()
+                .put(ApacheHttpClient4Config.PROPERTY_PROXY_URI, "http://127.0.0.1:8888/");
+        clientConfig
+                .getProperties()
+                .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
 
         return clientConfig;
     }
 
     /**
-     * An HTTP client that uses a local proxy. Usually used with Charles web debugging proxy. The client constructed
-     * here is _not_ for production use.
+     * An HTTP client that uses a local proxy. Usually used with Charles web debugging proxy. The
+     * client constructed here is _not_ for production use.
      *
      * @param context
      * @param clientConfig
@@ -234,7 +259,8 @@ public abstract class AbstractJerseyClientFactory {
     public Client createProxyClient(ApacheHttpClient4Config clientConfig) {
         SSLContext sslContext;
         try {
-            sslContext = SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
+            sslContext =
+                    SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
         } catch (KeyManagementException e) {
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
@@ -243,19 +269,29 @@ public abstract class AbstractJerseyClientFactory {
             throw new RuntimeException(e);
         }
 
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-                SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        SSLConnectionSocketFactory sslsf =
+                new SSLConnectionSocketFactory(
+                        sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-        Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory> create()
-                .register("https", sslsf).build();
+        Registry<ConnectionSocketFactory> r =
+                RegistryBuilder.<ConnectionSocketFactory>create().register("https", sslsf).build();
 
         PoolingClientConnectionManager connectionManager = new PoolingClientConnectionManager();
-        connectionManager.getSchemeRegistry().register(new Scheme("https", 443,
-                new SSLSocketFactory(sslContext,
-                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
+        connectionManager
+                .getSchemeRegistry()
+                .register(
+                        new Scheme(
+                                "https",
+                                443,
+                                new SSLSocketFactory(
+                                        sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)));
 
-        clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_PROXY_URI, "http://127.0.0.1:8888/");
-        clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
+        clientConfig
+                .getProperties()
+                .put(ApacheHttpClient4Config.PROPERTY_PROXY_URI, "http://127.0.0.1:8888/");
+        clientConfig
+                .getProperties()
+                .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, connectionManager);
 
         ApacheHttpClient4 client = ApacheHttpClient4.create(clientConfig);
         client.setChunkedEncodingSize(null);
@@ -270,20 +306,21 @@ public abstract class AbstractJerseyClientFactory {
         // System.setProperty("javax.net.debug", "all");
 
         // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
+        TrustManager[] trustAllCerts =
+                new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {}
 
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {}
 
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        } };
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                    }
+                };
 
         // Install the all-trusting trust manager
         SSLContext sc = SSLContext.getInstance("TLS");
@@ -292,8 +329,10 @@ public abstract class AbstractJerseyClientFactory {
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
         ClientConfig config = new DefaultClientConfig();
-        config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
-                new HTTPSProperties((s, sslSession) -> true, sc));
+        config.getProperties()
+                .put(
+                        HTTPSProperties.PROPERTY_HTTPS_PROPERTIES,
+                        new HTTPSProperties((s, sslSession) -> true, sc));
 
         Client client = Client.create(config);
         setTimeouts(client);

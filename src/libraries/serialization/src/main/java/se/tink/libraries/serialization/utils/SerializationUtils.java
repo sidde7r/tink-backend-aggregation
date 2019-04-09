@@ -27,11 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SerializationUtils {
-    private static final ObjectMapper BINARY_MAPPER = new ObjectMapper(new SmileFactory()).configure(
-            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectMapper BINARY_MAPPER =
+            new ObjectMapper(new SmileFactory())
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private static final Logger log = LoggerFactory.getLogger(SerializationUtils.class);
-    private static final ObjectMapper STRING_MAPPER = new ObjectMapper().configure(
-            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final ObjectMapper STRING_MAPPER =
+            new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public static <T> T deserializeFromBinary(byte[] data, Class<T> cls) {
         if (data == null) {
@@ -113,11 +114,12 @@ public class SerializationUtils {
 
     public static <T> Optional<T> deserializeForLogging(String data, Class<T> cls) {
         return Optional.ofNullable(
-                deserializeFromString(data, cls, e -> log.info("Undeserializable object found", e))
-        );
+                deserializeFromString(
+                        data, cls, e -> log.info("Undeserializable object found", e)));
     }
 
-    private static <T> T deserializeFromString(String data, Class<T> cls, Consumer<Exception> logger) {
+    private static <T> T deserializeFromString(
+            String data, Class<T> cls, Consumer<Exception> logger) {
         if (data == null) {
             return null;
         }
@@ -190,7 +192,7 @@ public class SerializationUtils {
         PublicKey pubKey = kp.getPublic();
         PrivateKey privKey = kp.getPrivate();
 
-        Map<String,String> m = new HashMap<String,String>();
+        Map<String, String> m = new HashMap<String, String>();
         m.put("alg", privKey.getAlgorithm());
         m.put("pubKey", Hex.encodeHexString(pubKey.getEncoded()));
         m.put("privKey", Hex.encodeHexString(privKey.getEncoded()));
@@ -199,9 +201,9 @@ public class SerializationUtils {
 
     public static KeyPair deserializeKeyPair(String data) {
         try {
-            HashMap<String, String> m = SerializationUtils.deserializeFromString(
-                    data,
-                    new TypeReference<HashMap<String, String>>() { });
+            HashMap<String, String> m =
+                    SerializationUtils.deserializeFromString(
+                            data, new TypeReference<HashMap<String, String>>() {});
             byte[] pubKeyBytes = Hex.decodeHex(m.get("pubKey").toCharArray());
             byte[] privKeyBytes = Hex.decodeHex(m.get("privKey").toCharArray());
 

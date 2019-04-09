@@ -12,7 +12,8 @@ public class ContainerApiTokenClientFilter extends ClientFilter {
     private final String authorizationHeaderValue;
 
     private ContainerApiTokenClientFilter(String token) {
-        // TODO: Make "token" a shared constant between this class and ContainerAuthorizationResourceFilterFactory. Where?
+        // TODO: Make "token" a shared constant between this class and
+        // ContainerAuthorizationResourceFilterFactory. Where?
         this.authorizationHeaderValue = "token " + token;
     }
 
@@ -25,5 +26,4 @@ public class ContainerApiTokenClientFilter extends ClientFilter {
     public static void decorate(Filterable jerseyResource, String token) {
         jerseyResource.addFilter(new ContainerApiTokenClientFilter(token));
     }
-
 }

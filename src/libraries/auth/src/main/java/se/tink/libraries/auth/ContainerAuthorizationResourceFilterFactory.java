@@ -15,15 +15,17 @@ import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
 public class ContainerAuthorizationResourceFilterFactory implements ResourceFilterFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(ContainerAuthorizationResourceFilterFactory.class);
-    
-    @Context
-    private HttpServletRequest request;
+    private static final Logger log =
+            LoggerFactory.getLogger(ContainerAuthorizationResourceFilterFactory.class);
+
+    @Context private HttpServletRequest request;
 
     private Predicate<String> authenticationHeaderPredicate;
 
-    public ContainerAuthorizationResourceFilterFactory(Predicate<String> authenticationHeaderPredicate) {
-        this.authenticationHeaderPredicate = Preconditions.checkNotNull(authenticationHeaderPredicate);
+    public ContainerAuthorizationResourceFilterFactory(
+            Predicate<String> authenticationHeaderPredicate) {
+        this.authenticationHeaderPredicate =
+                Preconditions.checkNotNull(authenticationHeaderPredicate);
     }
 
     private static boolean isWhitelisted(AbstractMethod abstractMethod) {
@@ -40,7 +42,4 @@ public class ContainerAuthorizationResourceFilterFactory implements ResourceFilt
                     new AuthorizationResourceFilter(log, authenticationHeaderPredicate, request));
         }
     }
-
 }
-
-

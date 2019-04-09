@@ -90,7 +90,9 @@ public abstract class CustomerInfo {
 
         int elementCount = 1;
         for (NameElement nameElement : nameElements) {
-            map.put("name_" + (elementCount++) + "_" + nameElement.getType(), nameElement.getValue());
+            map.put(
+                    "name_" + (elementCount++) + "_" + nameElement.getType(),
+                    nameElement.getValue());
         }
 
         map.put("dateOfBirth", dateOfBirth.toString());
@@ -102,9 +104,9 @@ public abstract class CustomerInfo {
     public String getFullName() {
         StringBuilder fullName = new StringBuilder();
         nameElements.stream()
-            .map(NameElement::getValue)
-            .filter(s -> s.trim().length() > 0)
-            .forEach(s -> fullName.append(" " + s.trim()));
+                .map(NameElement::getValue)
+                .filter(s -> s.trim().length() > 0)
+                .forEach(s -> fullName.append(" " + s.trim()));
 
         return fullName.toString().trim();
     }

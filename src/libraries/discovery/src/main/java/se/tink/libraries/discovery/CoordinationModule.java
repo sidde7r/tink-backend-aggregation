@@ -17,11 +17,12 @@ public class CoordinationModule extends AbstractModule {
     @Provides
     @Singleton
     public CuratorFramework buildAndStartCuratorFramework(CoordinationConfiguration configuration) {
-        RetryPolicy retryPolicy = new ExponentialBackoffRetry(configuration.getBaseSleepTimeMs(),
-                configuration.getMaxRetries());
-        CuratorFramework client = CuratorFrameworkFactory.newClient(configuration.getHosts(), retryPolicy);
+        RetryPolicy retryPolicy =
+                new ExponentialBackoffRetry(
+                        configuration.getBaseSleepTimeMs(), configuration.getMaxRetries());
+        CuratorFramework client =
+                CuratorFrameworkFactory.newClient(configuration.getHosts(), retryPolicy);
         client.start();
         return client;
     }
-
 }

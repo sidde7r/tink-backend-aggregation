@@ -20,7 +20,8 @@ public abstract class RepositoryModule extends AbstractModule {
         // Initialize Spring applicationContext
         if (databaseConfiguration.isEnabled()) {
             AnnotationConfigApplicationContext applicationContext = centralizedApplicationContext();
-            bind(AnnotationConfigApplicationContext.class).annotatedWith(Centralized.class)
+            bind(AnnotationConfigApplicationContext.class)
+                    .annotatedWith(Centralized.class)
                     .toInstance(applicationContext);
         }
 
@@ -31,18 +32,16 @@ public abstract class RepositoryModule extends AbstractModule {
         bindRepositories();
     }
 
-    protected void bindCentralizedDaos() {
-    }
+    protected void bindCentralizedDaos() {}
 
-    protected void bindRepositories() {
-    }
+    protected void bindRepositories() {}
 
-    protected void bindCaches() {
-    }
+    protected void bindCaches() {}
 
     private AnnotationConfigApplicationContext centralizedApplicationContext() {
         SingletonRepositoryConfiguration.setConfiguration(databaseConfiguration);
-        PersistenceUnit persistenceUnit = PersistenceUnit.fromName(databaseConfiguration.getPersistenceUnitName());
+        PersistenceUnit persistenceUnit =
+                PersistenceUnit.fromName(databaseConfiguration.getPersistenceUnitName());
         return new AnnotationConfigApplicationContext(persistenceUnit.getConfiguratorKlass());
     }
 

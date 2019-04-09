@@ -5,9 +5,7 @@ public class PageableConsumerCreditSafeRequest {
     private int pageStart;
     private int pageSize;
 
-    public PageableConsumerCreditSafeRequest() {
-
-    }
+    public PageableConsumerCreditSafeRequest() {}
 
     public PageableConsumerCreditSafeRequest(String portfolio, int size, int start) {
         this.portfolio = portfolio;

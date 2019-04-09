@@ -1,5 +1,13 @@
 package se.tink.libraries.date;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.text.DateFormat;
@@ -24,13 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pojava.datetime.DateTimeConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnitParamsRunner.class)
 public class DateUtilsTest {
@@ -46,9 +47,12 @@ public class DateUtilsTest {
     public void setup() {
         TimeZone.setDefault(TimeZone.getTimeZone(TZ));
         DateTimeZone.setDefault(DateTimeZone.forID(TZ));
-        DateTimeConfig.setGlobalDefault(new DateTimeConfig() {{
-            setInputTimeZone(TimeZone.getTimeZone(TZ));
-        }});
+        DateTimeConfig.setGlobalDefault(
+                new DateTimeConfig() {
+                    {
+                        setInputTimeZone(TimeZone.getTimeZone(TZ));
+                    }
+                });
     }
 
     @After
@@ -68,7 +72,11 @@ public class DateUtilsTest {
 
         int counter = 0;
         while ((System.currentTimeMillis() - startTime) < maxTestTime) {
-            Date date = new Date(2005 - 1900 + random.nextInt(10), random.nextInt(12), 1 + random.nextInt(27));
+            Date date =
+                    new Date(
+                            2005 - 1900 + random.nextInt(10),
+                            random.nextInt(12),
+                            1 + random.nextInt(27));
             DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25);
             counter++;
         }
@@ -92,8 +100,11 @@ public class DateUtilsTest {
 
     @Test
     public void testGetFirstDateFromPeriods() throws ParseException {
-        Date isDate = DateUtils.getFirstDateFromPeriods(Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                ResolutionTypes.MONTHLY, 25);
+        Date isDate =
+                DateUtils.getFirstDateFromPeriods(
+                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
+                        ResolutionTypes.MONTHLY,
+                        25);
         Date shouldDate = DateUtils.parseDate("2012-11-01");
 
         System.out.println(isDate.toString());
@@ -107,13 +118,17 @@ public class DateUtilsTest {
         Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse("2016-05-27");
         assertEquals("2016-05", DateUtils.getMonthPeriod(date));
         assertEquals("2016-05", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY, 25));
-        assertEquals("2016-06", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25));
+        assertEquals(
+                "2016-06", DateUtils.getMonthPeriod(date, ResolutionTypes.MONTHLY_ADJUSTED, 25));
     }
 
     @Test
     public void testGetFirstDateFromPeriodsAdjusted() {
-        Date isDate = DateUtils.getFirstDateFromPeriods(Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        Date isDate =
+                DateUtils.getFirstDateFromPeriods(
+                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
+                        ResolutionTypes.MONTHLY_ADJUSTED,
+                        25);
         Date shouldDate = DateUtils.parseDate("2012-10-25");
 
         System.out.println(isDate.toString());
@@ -130,7 +145,8 @@ public class DateUtilsTest {
 
         assertNotEquals(progress, 0);
 
-        double progressAdjusted = DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        double progressAdjusted =
+                DateUtils.getCurrentMonthPeriodProgress(ResolutionTypes.MONTHLY_ADJUSTED, 25);
 
         System.out.println("MONTHLY_ADJUSTED: " + progressAdjusted);
 
@@ -139,8 +155,11 @@ public class DateUtilsTest {
 
     @Test
     public void testGetLastDateFromPeriods() {
-        Date isDate = DateUtils.getLastDateFromPeriods(Lists.newArrayList("2012-12", "2013-01", "2012-11"),
-                ResolutionTypes.MONTHLY, 25);
+        Date isDate =
+                DateUtils.getLastDateFromPeriods(
+                        Lists.newArrayList("2012-12", "2013-01", "2012-11"),
+                        ResolutionTypes.MONTHLY,
+                        25);
 
         Calendar shouldCalendar = DateUtils.getCalendar();
         shouldCalendar.setTime(DateUtils.parseDate("2013-01-31"));
@@ -194,7 +213,8 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void testTurnPastSixDigitsDateIntoEightDigitsWithDaysAroundMilleniumShift() throws Exception {
+    public void testTurnPastSixDigitsDateIntoEightDigitsWithDaysAroundMilleniumShift()
+            throws Exception {
         String date8 = "19991231";
         String date6 = "991231";
         String parsedDate8 = DateUtils.turnPastSixDigitsDateIntoEightDigits(date8);
@@ -287,46 +307,59 @@ public class DateUtilsTest {
     public void testDaysBetween() {
 
         assertEquals(0, DateUtils.daysBetween(new Date(), new Date()));
-        assertEquals(0, DateUtils.daysBetween(
-                DateUtils.parseDate("2011-11-11 11:11:11"),
-                DateUtils.parseDate("2011-11-11 17:17:17")));
+        assertEquals(
+                0,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2011-11-11 11:11:11"),
+                        DateUtils.parseDate("2011-11-11 17:17:17")));
 
-        assertEquals(1, DateUtils.daysBetween(
-                DateUtils.parseDate("2011-11-11"),
-                DateUtils.parseDate("2011-11-12")));
-        assertEquals(1, DateUtils.daysBetween(
-                DateUtils.parseDate("2011-11-11 23:59:59"),
-                DateUtils.parseDate("2011-11-12 00:00:00")));
-        assertEquals(1, DateUtils.daysBetween(
-                DateUtils.parseDate("2014-12-31"),
-                DateUtils.parseDate("2015-01-01")));
+        assertEquals(
+                1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2011-11-11"), DateUtils.parseDate("2011-11-12")));
+        assertEquals(
+                1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2011-11-11 23:59:59"),
+                        DateUtils.parseDate("2011-11-12 00:00:00")));
+        assertEquals(
+                1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2014-12-31"), DateUtils.parseDate("2015-01-01")));
 
-        assertEquals(-1, DateUtils.daysBetween(
-                DateUtils.parseDate("2011-11-12"),
-                DateUtils.parseDate("2011-11-11")));
-        assertEquals(-1, DateUtils.daysBetween(
-                DateUtils.parseDate("2011-11-12 00:00:00"),
-                DateUtils.parseDate("2011-11-11 23:59:59")));
-        assertEquals(-1, DateUtils.daysBetween(
-                DateUtils.parseDate("2015-01-01"),
-                DateUtils.parseDate("2014-12-31")));
+        assertEquals(
+                -1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-11")));
+        assertEquals(
+                -1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2011-11-12 00:00:00"),
+                        DateUtils.parseDate("2011-11-11 23:59:59")));
+        assertEquals(
+                -1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2015-01-01"), DateUtils.parseDate("2014-12-31")));
     }
 
     @Test
     public void testDaysBetweenForDaylightSavings() {
         // Morning 2015-03-29 Sweden went from winter time to summer time.
-        assertEquals(1, DateUtils.daysBetween(
-                DateUtils.parseDate("2015-03-29"),
-                DateUtils.parseDate("2015-03-30")));
+        assertEquals(
+                1,
+                DateUtils.daysBetween(
+                        DateUtils.parseDate("2015-03-29"), DateUtils.parseDate("2015-03-30")));
     }
 
     @Test
     @Parameters({
-            "2011-11-11 00:00:00, 2011-11-11 23:59:59, true",
-            "2011-11-10 23:59:59, 2011-11-11 00:00:00, false"
+        "2011-11-11 00:00:00, 2011-11-11 23:59:59, true",
+        "2011-11-10 23:59:59, 2011-11-11 00:00:00, false"
     })
     public void isSameDay(String date1, String date2, boolean isSameDay) {
-        assertEquals(isSameDay, DateUtils.isSameDay(DateUtils.parseDate(date1), DateUtils.parseDate(date2)));
+        assertEquals(
+                isSameDay,
+                DateUtils.isSameDay(DateUtils.parseDate(date1), DateUtils.parseDate(date2)));
     }
 
     @Test
@@ -334,61 +367,45 @@ public class DateUtilsTest {
         assertEquals(
                 DateUtils.parseDate("2011-11-12"),
                 DateUtils.min(
-                        DateUtils.parseDate("2011-11-12"),
-                        DateUtils.parseDate("2011-11-12")));
+                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
 
         assertEquals(
                 DateUtils.parseDate("2013-11-12"),
                 DateUtils.min(
-                        DateUtils.parseDate("2013-11-12"),
-                        DateUtils.parseDate("2014-11-12")));
+                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
 
         assertEquals(
                 DateUtils.parseDate("2013-11-12"),
                 DateUtils.min(
-                        DateUtils.parseDate("2014-11-12"),
-                        DateUtils.parseDate("2013-11-12")));
+                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
 
-        assertNull(DateUtils.min(
-                null,
-                DateUtils.parseDate("2013-11-12")));
+        assertNull(DateUtils.min(null, DateUtils.parseDate("2013-11-12")));
 
-        assertNull(DateUtils.min(
-                null,
-                null));
+        assertNull(DateUtils.min(null, null));
 
         assertEquals(
                 DateUtils.parseDate("2011-11-12"),
                 DateUtils.max(
-                        DateUtils.parseDate("2011-11-12"),
-                        DateUtils.parseDate("2011-11-12")));
+                        DateUtils.parseDate("2011-11-12"), DateUtils.parseDate("2011-11-12")));
 
         assertEquals(
                 DateUtils.parseDate("2014-11-12"),
                 DateUtils.max(
-                        DateUtils.parseDate("2013-11-12"),
-                        DateUtils.parseDate("2014-11-12")));
+                        DateUtils.parseDate("2013-11-12"), DateUtils.parseDate("2014-11-12")));
 
         assertEquals(
                 DateUtils.parseDate("2014-11-12"),
                 DateUtils.max(
-                        DateUtils.parseDate("2014-11-12"),
-                        DateUtils.parseDate("2013-11-12")));
+                        DateUtils.parseDate("2014-11-12"), DateUtils.parseDate("2013-11-12")));
 
         assertEquals(
                 DateUtils.parseDate("2013-11-12"),
-                DateUtils.max(
-                        null,
-                        DateUtils.parseDate("2013-11-12")));
+                DateUtils.max(null, DateUtils.parseDate("2013-11-12")));
 
-        assertNull(DateUtils.max(
-                null,
-                null));
+        assertNull(DateUtils.max(null, null));
     }
 
-    /**
-     * Verifies that we can calculate the month period for all dates
-     */
+    /** Verifies that we can calculate the month period for all dates */
     @Test
     public void monthPeriodsShouldBePossibleToCalculate() {
         DateTime startDate = new DateTime(2000, 1, 1, 0, 0); // Jan 1 2000
@@ -400,7 +417,9 @@ public class DateUtilsTest {
 
             while (dt.isBefore(endDate)) {
 
-                String period = DateUtils.getMonthPeriod(dt.toDate(), ResolutionTypes.MONTHLY_ADJUSTED, breakDate);
+                String period =
+                        DateUtils.getMonthPeriod(
+                                dt.toDate(), ResolutionTypes.MONTHLY_ADJUSTED, breakDate);
 
                 assertNotNull("Could not calculate month period", period);
 
@@ -411,30 +430,41 @@ public class DateUtilsTest {
     }
 
     /**
-     * Verifies that month period calculations are correct by, 1) Extracting the first and last date of a period 2)
-     * Verifies that each date that is between the first and last date gets the same period
+     * Verifies that month period calculations are correct by, 1) Extracting the first and last date
+     * of a period 2) Verifies that each date that is between the first and last date gets the same
+     * period
      */
     @Test
     public void verifyAllMonthlyBreakDates() {
 
         ResolutionTypes resolution = ResolutionTypes.MONTHLY_ADJUSTED;
-        int fiveYearsAhead = new DateTime().plusYears(5)
-                .get(DateTimeFieldType.year());  // Leap year guaranteed to be included
+        int fiveYearsAhead =
+                new DateTime()
+                        .plusYears(5)
+                        .get(DateTimeFieldType.year()); // Leap year guaranteed to be included
 
         for (int year = 2000; year <= fiveYearsAhead; year++) {
             for (int month = 1; month <= 12; month++) {
                 String period = String.format("%d-%02d", year, month);
 
                 for (Integer breakDate : getPeriodBreakDateList()) {
-                    DateTime startDate = new DateTime(DateUtils.getFirstDateFromPeriod(period, resolution, breakDate));
-                    DateTime endDate = new DateTime(DateUtils.getLastDateFromPeriod(period, resolution, breakDate));
+                    DateTime startDate =
+                            new DateTime(
+                                    DateUtils.getFirstDateFromPeriod(
+                                            period, resolution, breakDate));
+                    DateTime endDate =
+                            new DateTime(
+                                    DateUtils.getLastDateFromPeriod(period, resolution, breakDate));
 
                     DateTime dt = startDate;
 
                     while (dt.isBefore(endDate)) {
 
-                        // Verify that a date that is in between the start and end date of a period has the same period
-                        assertEquals(period, DateUtils.getMonthPeriod(dt.toDate(), resolution, breakDate));
+                        // Verify that a date that is in between the start and end date of a period
+                        // has the same period
+                        assertEquals(
+                                period,
+                                DateUtils.getMonthPeriod(dt.toDate(), resolution, breakDate));
 
                         dt = dt.plusDays(1);
                     }
@@ -443,9 +473,7 @@ public class DateUtilsTest {
         }
     }
 
-    /**
-     * Get a list of the valid monthly break dates in Tink
-     */
+    /** Get a list of the valid monthly break dates in Tink */
     private List<Integer> getPeriodBreakDateList() {
         List<Integer> periodBreakDateList = Lists.newArrayList();
 
@@ -468,18 +496,15 @@ public class DateUtilsTest {
     }
 
     /**
-     * Months after 1899-11 was returned correctly before, so make sure we cover below that
-     * since 1899-11 was broken
+     * Months after 1899-11 was returned correctly before, so make sure we cover below that since
+     * 1899-11 was broken
      */
     @Test
     public void edgeCaseNovemberYear1899_HasNextDecember1899() {
         assertThat(DateUtils.getNextMonthPeriod("1899-11")).isEqualTo("1899-12");
     }
 
-    /**
-     * Test that ensures our month periods are correctly calculated
-     * for year 0 -> 3000
-     */
+    /** Test that ensures our month periods are correctly calculated for year 0 -> 3000 */
     @Test
     public void ensureNextMonthPeriodForAllPeriods() {
         // Loop from year 0 up to year 3000 (12 months * 3000 years = 36000 iteratinos)
@@ -493,9 +518,8 @@ public class DateUtilsTest {
     }
 
     /**
-     * E.g.
-     * nthMonth = 10 -> the 10th month in year 0 --> November year 0
-     * nthMonth = 20 -> the 20th month since year 0 --> 8th month in year 1 --> September year 1
+     * E.g. nthMonth = 10 -> the 10th month in year 0 --> November year 0 nthMonth = 20 -> the 20th
+     * month since year 0 --> 8th month in year 1 --> September year 1
      */
     private String getMonthStringSinceYearZero(int nthMonth) {
         int year = nthMonth / 12;
@@ -514,18 +538,13 @@ public class DateUtilsTest {
         assertEquals("2015-12", DateUtils.getPreviousMonthPeriod("2016-01"));
     }
 
-    /**
-     * Not useful perhaps, but should still work if we'd ever do it
-     */
+    /** Not useful perhaps, but should still work if we'd ever do it */
     @Test
     public void januaryYearZero_HasPreviousDecemberYearMinusOne() {
         assertThat(DateUtils.getPreviousMonthPeriod("0000-01")).isEqualTo("-0001-12");
     }
 
-    /**
-     * Test that ensures our month periods are correctly calculated
-     * for year 0 -> 3000
-     */
+    /** Test that ensures our month periods are correctly calculated for year 0 -> 3000 */
     @Test
     public void ensurePreviousMonthPeriodForAllPeriods() {
         // Loop from year 0 up to year 3000 (12 months * 3000 years = 36000 iteratinos)
@@ -551,7 +570,8 @@ public class DateUtilsTest {
         List<Date> dates = DateUtils.createDailyDateList(first, last);
 
         assertEquals(6, dates.size());
-        assertEquals(ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
+        assertEquals(
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(5)));
     }
 
@@ -563,7 +583,8 @@ public class DateUtilsTest {
         List<Date> dates = DateUtils.createDailyDateList(first, last, true);
 
         assertEquals(6, dates.size());
-        assertEquals(ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
+        assertEquals(
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(last),
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
     }
 
@@ -576,7 +597,9 @@ public class DateUtilsTest {
 
         assertEquals(6, dates.size());
         assertEquals(
-                ThreadSafeDateFormat.FORMATTER_DAILY.toBuilder().setLocale(new Locale("fr_FR"))
+                ThreadSafeDateFormat.FORMATTER_DAILY
+                        .toBuilder()
+                        .setLocale(new Locale("fr_FR"))
                         .build()
                         .format(last),
                 ThreadSafeDateFormat.FORMATTER_DAILY.format(dates.get(0)));
@@ -584,11 +607,22 @@ public class DateUtilsTest {
 
     @Test
     public void testNonBankingDays() throws ParseException {
-        List<String> nonBankDays = Lists.newArrayList("2016-03-25", "2016-03-28", "2016-05-01", "2016-05-05",
-                "2016-06-06", "2016-06-24", "2016-12-24", "2016-12-25", "2016-12-26", "2016-12-31");
+        List<String> nonBankDays =
+                Lists.newArrayList(
+                        "2016-03-25",
+                        "2016-03-28",
+                        "2016-05-01",
+                        "2016-05-05",
+                        "2016-06-06",
+                        "2016-06-24",
+                        "2016-12-24",
+                        "2016-12-25",
+                        "2016-12-26",
+                        "2016-12-31");
 
         for (String nonBankDay : nonBankDays) {
-            assertFalse(nonBankDay + " should be a non business day, but it isn'.",
+            assertFalse(
+                    nonBankDay + " should be a non business day, but it isn'.",
                     DateUtils.isBusinessDay(
                             ThreadSafeDateFormat.FORMATTER_DAILY.parse(nonBankDay)));
         }
@@ -602,8 +636,9 @@ public class DateUtilsTest {
         Calendar referenceCalendar = (Calendar) calendar.clone();
 
         Date nextBusinessDate = DateUtils.getCurrentOrNextBusinessDay(calendar.getTime());
-        assertTrue(org.apache.commons.lang3.time.DateUtils.isSameDay(nextBusinessDate,
-                referenceCalendar.getTime()));
+        assertTrue(
+                org.apache.commons.lang3.time.DateUtils.isSameDay(
+                        nextBusinessDate, referenceCalendar.getTime()));
     }
 
     @Test
@@ -612,8 +647,9 @@ public class DateUtilsTest {
         calendar.setTime(new DateTime("2016-03-19").toDate());
 
         Date nextBusinessDate = DateUtils.getCurrentOrNextBusinessDay(calendar.getTime());
-        assertTrue(org.apache.commons.lang3.time.DateUtils.isSameDay(nextBusinessDate,
-                DateUtils.addDays(calendar.getTime(), 2)));
+        assertTrue(
+                org.apache.commons.lang3.time.DateUtils.isSameDay(
+                        nextBusinessDate, DateUtils.addDays(calendar.getTime(), 2)));
     }
 
     @Test
@@ -687,7 +723,8 @@ public class DateUtilsTest {
     @Test
     public void testIsBusinessDayMoreThanDaysFromNow_dateWithinRangeForBusinessDay() {
         Date oneYearFromNow = DateUtils.daysFromNow(365);
-        Date businessDay = DateUtils.addDays(DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow), -1);
+        Date businessDay =
+                DateUtils.addDays(DateUtils.getCurrentOrPreviousBusinessDay(oneYearFromNow), -1);
 
         assertTrue(DateUtils.isBusinessDayWithinDaysFromNow(businessDay, 365));
     }
@@ -703,7 +740,8 @@ public class DateUtilsTest {
     @Test
     public void testBuildSinglePeriodMonthlyAdjusted_periodEqualsPeriodsName() {
         String period = "2016-03";
-        Period generatedPeriod = DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        Period generatedPeriod =
+                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
         assertEquals(period, generatedPeriod.getName());
     }
 
@@ -717,29 +755,30 @@ public class DateUtilsTest {
     @Test
     public void testBuildSinglePeriodMonthlyAdjusted_startDate() {
         String period = "2016-08";
-        Period generatedPeriod = DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        Period generatedPeriod =
+                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
 
         String expectedStartDate = "2016-07-25";
-        String startDate = ThreadSafeDateFormat.FORMATTER_DAILY
-                .format(generatedPeriod.getStartDate());
+        String startDate =
+                ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getStartDate());
         assertEquals(expectedStartDate, startDate);
     }
 
     @Test
     public void testBuildSinglePeriodMonthlyAdjusted_endDate() {
         String period = "2016-08";
-        Period generatedPeriod = DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        Period generatedPeriod =
+                DateUtils.buildMonthlyPeriod(period, ResolutionTypes.MONTHLY_ADJUSTED, 25);
 
         String expectedEndDate = "2016-08-24";
-        String endDate = ThreadSafeDateFormat.FORMATTER_DAILY
-                .format(generatedPeriod.getEndDate());
+        String endDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(generatedPeriod.getEndDate());
         assertEquals(expectedEndDate, endDate);
     }
 
     @Test
     @Parameters({
-            "2017-01-01",
-            "2017-01-08",
+        "2017-01-01",
+        "2017-01-08",
     })
     public void buildDailyPeriod(String strPeriod) {
         Period period = DateUtils.buildDailyPeriod(strPeriod);
@@ -754,42 +793,56 @@ public class DateUtilsTest {
 
     @Test
     @Parameters({
-            "2017:1, en, 2017-01-01, 2017-01-07",
-            "2017:1, sv, 2017-01-02, 2017-01-08",
+        "2017:1, en, 2017-01-01, 2017-01-07",
+        "2017:1, sv, 2017-01-02, 2017-01-08",
     })
-    public void buildWeeklyPeriod(String strPeriod, String lang, String expStartDate, String expEndDate) {
+    public void buildWeeklyPeriod(
+            String strPeriod, String lang, String expStartDate, String expEndDate) {
         Period period = DateUtils.buildWeeklyPeriod(strPeriod, Locale.forLanguageTag(lang));
         assertEquals(strPeriod, period.getName());
         assertEquals(ResolutionTypes.WEEKLY, period.getResolution());
-        assertEquals(DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)), period.getStartDate());
-        assertEquals(DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)), period.getEndDate());
+        assertEquals(
+                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
+                period.getStartDate());
+        assertEquals(
+                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
+                period.getEndDate());
     }
 
     @Test
     @Parameters({
-            "2017, MONTHLY, 25, 2017-01-01, 2017-12-31",
-            "2017, MONTHLY_ADJUSTED, 25, 2016-12-23, 2017-12-21",
-            "2018, MONTHLY_ADJUSTED, 25, 2017-12-22, 2018-12-20",
+        "2017, MONTHLY, 25, 2017-01-01, 2017-12-31",
+        "2017, MONTHLY_ADJUSTED, 25, 2016-12-23, 2017-12-21",
+        "2018, MONTHLY_ADJUSTED, 25, 2017-12-22, 2018-12-20",
     })
-    public void buildYearlyPeriod(int year, ResolutionTypes periodMode, int periodBreakDay, String expStartDate,
+    public void buildYearlyPeriod(
+            int year,
+            ResolutionTypes periodMode,
+            int periodBreakDay,
+            String expStartDate,
             String expEndDate) {
         Period period = DateUtils.buildYearlyPeriod(year, periodMode, periodBreakDay);
         assertEquals(Integer.toString(year), period.getName());
         assertEquals(ResolutionTypes.YEARLY, period.getResolution());
-        assertEquals(DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)), period.getStartDate());
-        assertEquals(DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)), period.getEndDate());
+        assertEquals(
+                DateUtils.setInclusiveStartTime(DateUtils.parseDate(expStartDate)),
+                period.getStartDate());
+        assertEquals(
+                DateUtils.setInclusiveEndTime(DateUtils.parseDate(expEndDate)),
+                period.getEndDate());
     }
 
     @Test
     @Parameters({
-            "2016, MONTHLY_ADJUSTED, 25, 2016",
-            "2016-09, MONTHLY_ADJUSTED, 25, 2016",
-            "2016:09, MONTHLY_ADJUSTED, 25, 2016",
-            "2016-09-09, MONTHLY_ADJUSTED, 25, 2016",
-            "2016-12-30, MONTHLY_ADJUSTED, 25, 2017",
-            "2016-12-30, MONTHLY, 25, 2016",
+        "2016, MONTHLY_ADJUSTED, 25, 2016",
+        "2016-09, MONTHLY_ADJUSTED, 25, 2016",
+        "2016:09, MONTHLY_ADJUSTED, 25, 2016",
+        "2016-09-09, MONTHLY_ADJUSTED, 25, 2016",
+        "2016-12-30, MONTHLY_ADJUSTED, 25, 2017",
+        "2016-12-30, MONTHLY, 25, 2016",
     })
-    public void getYearlyPeriod(String period, ResolutionTypes resolution, int periodBreakDay, String expPeriod) {
+    public void getYearlyPeriod(
+            String period, ResolutionTypes resolution, int periodBreakDay, String expPeriod) {
         assertEquals(expPeriod, DateUtils.getYearlyPeriod(period, resolution, periodBreakDay));
     }
 
@@ -809,7 +862,8 @@ public class DateUtilsTest {
         expectedPeriods.add("2016-11");
         expectedPeriods.add("2016-12");
 
-        List<String> periods = DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY_ADJUSTED, 25);
+        List<String> periods =
+                DateUtils.createPeriodListForYear(2016, ResolutionTypes.MONTHLY_ADJUSTED, 25);
 
         assertEquals(expectedPeriods, periods);
     }
@@ -857,11 +911,16 @@ public class DateUtilsTest {
         LocalTime from = LocalTime.parse("23:00");
         LocalTime to = LocalTime.parse("01:00");
 
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("22:59:59"))).isFalse();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("23:00:00"))).isTrue();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("23:15:00"))).isTrue();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("01:00:00"))).isFalse();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("01:01:00"))).isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("22:59:59")))
+                .isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("23:00:00")))
+                .isTrue();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("23:15:00")))
+                .isTrue();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("01:00:00")))
+                .isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("01:01:00")))
+                .isFalse();
     }
 
     @Test
@@ -870,65 +929,74 @@ public class DateUtilsTest {
         LocalTime from = LocalTime.parse("04:00");
         LocalTime to = LocalTime.parse("05:00");
 
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("03:59:59"))).isFalse();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("04:00:00"))).isTrue();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("04:15:00"))).isTrue();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("05:00:00"))).isFalse();
-        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("05:01:00"))).isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("03:59:59")))
+                .isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("04:00:00")))
+                .isTrue();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("04:15:00")))
+                .isTrue();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("05:00:00")))
+                .isFalse();
+        assertThat(DateUtils.isWithinClosedInterval(from, to, LocalTime.parse("05:01:00")))
+                .isFalse();
     }
 
     @Test
     @Parameters({
-            "2017-03-26 10:10:10, 2017-03-20 00:00:00", // Sunday -> Monday
-            "2017-03-27 10:10:10, 2017-03-27 00:00:00", // Monday -> same day
-            "2017-03-28 10:10:10, 2017-03-27 00:00:00", // Tuesday -> Monday
+        "2017-03-26 10:10:10, 2017-03-20 00:00:00", // Sunday -> Monday
+        "2017-03-27 10:10:10, 2017-03-27 00:00:00", // Monday -> same day
+        "2017-03-28 10:10:10, 2017-03-27 00:00:00", // Tuesday -> Monday
     })
     public void getFirstDateOfWeekDefaultLocale(String date, String expectedDate) {
         Calendar calendar = DateUtils.getCalendar(DateUtils.parseDate(date));
 
-        assertEquals(DateUtils.parseDate(expectedDate), DateUtils.getFirstDateOfWeek(calendar).getTime());
+        assertEquals(
+                DateUtils.parseDate(expectedDate),
+                DateUtils.getFirstDateOfWeek(calendar).getTime());
     }
 
     @Test
     @Parameters({
-            "2017-03-27 10:10:10, 2017-03-26 00:00:00", // Monday -> Sunday
-            "2017-03-26 10:10:10, 2017-03-26 00:00:00", // Sunday -> same day
-            "2017-03-25 10:10:10, 2017-03-19 00:00:00", // Saturday -> Sunday
+        "2017-03-27 10:10:10, 2017-03-26 00:00:00", // Monday -> Sunday
+        "2017-03-26 10:10:10, 2017-03-26 00:00:00", // Sunday -> same day
+        "2017-03-25 10:10:10, 2017-03-19 00:00:00", // Saturday -> Sunday
     })
     public void getFirstDateOfWeekEnLocale(String date, String expectedDate) {
         Calendar calendar = DateUtils.getCalendar(Locale.ENGLISH);
         calendar.setTime(DateUtils.parseDate(date));
 
-        assertEquals(DateUtils.parseDate(expectedDate), DateUtils.getFirstDateOfWeek(calendar).getTime());
+        assertEquals(
+                DateUtils.parseDate(expectedDate),
+                DateUtils.getFirstDateOfWeek(calendar).getTime());
     }
 
     private Object[] parametersForCreateMonthlyPeriodList() {
         return new Object[] {
-                new Object[] { "2017-06", 0, Collections.emptyList() },
-                new Object[] { "2017-02", 1, Lists.newArrayList("2017-02") },
-                new Object[] {
-                        "2017-01",
-                        5,
-                        Lists.newArrayList("2016-09", "2016-10", "2016-11", "2016-12", "2017-01")
-                },
+            new Object[] {"2017-06", 0, Collections.emptyList()},
+            new Object[] {"2017-02", 1, Lists.newArrayList("2017-02")},
+            new Object[] {
+                "2017-01",
+                5,
+                Lists.newArrayList("2016-09", "2016-10", "2016-11", "2016-12", "2017-01")
+            },
         };
     }
 
     @Test
     @Parameters(method = "parametersForCreateMonthlyPeriodList")
     public void createMonthlyPeriodList(String lastPeriod, int size, List<String> result) {
-        assertThat(DateUtils.createMonthlyPeriodList(lastPeriod, size)).containsOnlyElementsOf(result);
+        assertThat(DateUtils.createMonthlyPeriodList(lastPeriod, size))
+                .containsOnlyElementsOf(result);
     }
 
     @Test
     @Parameters({
-            "2017-08-21, 2017-11-21, 3",
-            "2017-08-21, 2017-08-25, 0",
-            "2017-12-31, 2018-01-01, 1",
-            "2017-12-05, 2018-01-31, 1",
-            "2017-12-05, 2018-02-04, 2",
-            "2019-01-05, 2016-12-05, -25"
-
+        "2017-08-21, 2017-11-21, 3",
+        "2017-08-21, 2017-08-25, 0",
+        "2017-12-31, 2018-01-01, 1",
+        "2017-12-05, 2018-01-31, 1",
+        "2017-12-05, 2018-02-04, 2",
+        "2019-01-05, 2016-12-05, -25"
     })
     public void getCalendarMonthsBetween(String date1Raw, String date2Raw, Long expected) {
         Date date1 = new DateTime(DateTime.parse(date1Raw)).toDate();
@@ -938,5 +1006,4 @@ public class DateUtilsTest {
 
         assertEquals(expected, actual);
     }
-
 }

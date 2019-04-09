@@ -12,18 +12,18 @@ import se.tink.libraries.date.DateUtils;
 /**
  * Class for holding a a refresh schedule for a provider
  *
- * A schedule is simple a start time and and end time for when credentials are automatically refreshed against the
- * provider. The schedule is also supporting midnight overlap so a schedule can be from 22:00 to 03:00.
+ * <p>A schedule is simple a start time and and end time for when credentials are automatically
+ * refreshed against the provider. The schedule is also supporting midnight overlap so a schedule
+ * can be from 22:00 to 03:00.
  */
 public class ProviderRefreshSchedule implements Serializable {
 
-    private final static int TOTAL_MILLS_PER_DAY = (int) TimeUnit.DAYS.toMillis(1);
+    private static final int TOTAL_MILLS_PER_DAY = (int) TimeUnit.DAYS.toMillis(1);
 
     private LocalTime from;
     private LocalTime to;
 
-    public ProviderRefreshSchedule() {
-    }
+    public ProviderRefreshSchedule() {}
 
     public ProviderRefreshSchedule(String from, String to) {
         this.from = LocalTime.parse(from);
@@ -50,17 +50,13 @@ public class ProviderRefreshSchedule implements Serializable {
         return to.toString("HH:mm");
     }
 
-    /**
-     * Return true if the schedule is active right now
-     */
+    /** Return true if the schedule is active right now */
     @JsonIgnore
     public boolean isActiveNow() {
         return isActiveAt(LocalTime.now());
     }
 
-    /**
-     * Return true if the schedule is active at the specified date
-     */
+    /** Return true if the schedule is active at the specified date */
     @JsonIgnore
     public boolean isActiveAt(LocalTime time) {
         return DateUtils.isWithinClosedInterval(from, to, time);

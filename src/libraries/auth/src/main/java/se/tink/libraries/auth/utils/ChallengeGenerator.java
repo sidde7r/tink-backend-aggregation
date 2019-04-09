@@ -8,9 +8,7 @@ public class ChallengeGenerator {
 
     private static final SecureRandom random = new SecureRandom();
 
-    public ChallengeGenerator() {
-
-    }
+    public ChallengeGenerator() {}
 
     public String getRandomChallenge() {
         byte[] bytes = new byte[BYTES_IN_CHALLENGE];

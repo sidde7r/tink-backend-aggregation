@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
@@ -23,9 +23,7 @@ import se.tink.libraries.strings.StringUtils;
 public class Credentials implements Cloneable {
 
     @SuppressWarnings("serial")
-    private static class FieldsMap extends HashMap<String, String> {
-
-    }
+    private static class FieldsMap extends HashMap<String, String> {}
 
     private Date debugUntil;
     private long providerLatency;
@@ -33,14 +31,15 @@ public class Credentials implements Cloneable {
     @JsonInclude(Include.NON_NULL)
     private String sensitiveDataSerialized;
 
-    @JsonIgnore
-    private String fieldsSerialized;
+    @JsonIgnore private String fieldsSerialized;
     private String id;
     private Date nextUpdate;
     private String payload;
     private String providerName;
+
     @JsonInclude(Include.NON_NULL)
     private String secretKey;
+
     private CredentialsStatus status;
     private String statusPayload;
     private String statusPrompt;
@@ -137,9 +136,10 @@ public class Credentials implements Cloneable {
             return Maps.newHashMap();
         }
 
-        Map<String, String> sensitivePayload = SerializationUtils.deserializeFromString(getSensitivePayloadSerialized(),
-                new TypeReference<HashMap<String, String>>() {
-                });
+        Map<String, String> sensitivePayload =
+                SerializationUtils.deserializeFromString(
+                        getSensitivePayloadSerialized(),
+                        new TypeReference<HashMap<String, String>>() {});
 
         // `sensitivePayload` is `null` if we're unable to deserialize the payload
         if (sensitivePayload == null) {
@@ -379,7 +379,9 @@ public class Credentials implements Cloneable {
             removePersistentSession();
         }
 
-        setSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME, SerializationUtils.serializeToString(object));
+        setSensitivePayload(
+                Field.Key.PERSISTENT_LOGIN_SESSION_NAME,
+                SerializationUtils.serializeToString(object));
     }
 
     public void removePersistentSession() {

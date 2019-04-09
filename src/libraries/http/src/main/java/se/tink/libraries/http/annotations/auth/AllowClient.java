@@ -6,13 +6,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * A container Jersey resource that require client token authentication to be accessed.
- */
+/** A container Jersey resource that require client token authentication to be accessed. */
 @Inherited
-@Target({
-        ElementType.TYPE
-})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AllowClient {
     String value();

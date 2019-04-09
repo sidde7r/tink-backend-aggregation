@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import java.util.ArrayList;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfEmailFilterObject complex type.
- * 
+ * Java class for ArrayOfEmailFilterObject complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ArrayOfEmailFilterObject">
  *   &lt;complexContent>
@@ -25,13 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfEmailFilterObject", propOrder = {
-    "emailFilterObject"
-})
+@XmlType(
+        name = "ArrayOfEmailFilterObject",
+        propOrder = {"emailFilterObject"})
 public class ArrayOfEmailFilterObject {
 
     @XmlElement(name = "EmailFilterObject", nillable = true)
@@ -39,25 +35,18 @@ public class ArrayOfEmailFilterObject {
 
     /**
      * Gets the value of the emailFilterObject property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the emailFilterObject property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the emailFilterObject property.
+     *
+     * <p>For example, to add a new item, do as follows:
+     *
      * <pre>
      *    getEmailFilterObject().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link EmailFilterObject }
-     * 
-     * 
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link EmailFilterObject }
      */
     public List<EmailFilterObject> getEmailFilterObject() {
         if (emailFilterObject == null) {
@@ -65,5 +54,4 @@ public class ArrayOfEmailFilterObject {
         }
         return this.emailFilterObject;
     }
-
 }

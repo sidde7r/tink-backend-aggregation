@@ -4,9 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
-import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
-import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadFactory;
@@ -22,14 +19,15 @@ public class ListenableThreadPoolExecutorTest {
 
     @Test
     public void testGeneralUseCase() throws Exception {
-        BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue = Queues
-                .newLinkedBlockingQueue();
+        BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue =
+                Queues.newLinkedBlockingQueue();
         final MetricRegistry registry = new MetricRegistry();
 
-        ListenableThreadPoolExecutor<Runnable> executorService = ListenableThreadPoolExecutor.builder(
-                executorServiceQueue,
-                new TypedThreadPoolBuilder(1, threadFactory))
-                .withMetric(registry, "test_executor").build();
+        ListenableThreadPoolExecutor<Runnable> executorService =
+                ListenableThreadPoolExecutor.builder(
+                                executorServiceQueue, new TypedThreadPoolBuilder(1, threadFactory))
+                        .withMetric(registry, "test_executor")
+                        .build();
 
         try {
 
@@ -37,15 +35,17 @@ public class ListenableThreadPoolExecutorTest {
             final CountDownLatch allowedToFinish = new CountDownLatch(1);
 
             final AtomicInteger runs = new AtomicInteger(0);
-            ListenableFuture<?> firstFuture = executorService.execute(() -> {
-                started.countDown();
-                runs.incrementAndGet();
-                try {
-                    Assert.assertTrue(allowedToFinish.await(1, TimeUnit.MINUTES));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
+            ListenableFuture<?> firstFuture =
+                    executorService.execute(
+                            () -> {
+                                started.countDown();
+                                runs.incrementAndGet();
+                                try {
+                                    Assert.assertTrue(allowedToFinish.await(1, TimeUnit.MINUTES));
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            });
 
             Runnable incrementor = runs::incrementAndGet;
 
@@ -55,7 +55,8 @@ public class ListenableThreadPoolExecutorTest {
 
             Assert.assertFalse(firstFuture.isDone());
 
-            // Queue could either be 1 or 2 because the QueuePopper could have taken one item waiting to put it on the
+            // Queue could either be 1 or 2 because the QueuePopper could have taken one item
+            // waiting to put it on the
             // thread pool.
             Assert.assertTrue(ImmutableSet.of(1, 2).contains(executorServiceQueue.size()));
 
@@ -66,14 +67,16 @@ public class ListenableThreadPoolExecutorTest {
             Assert.assertEquals(0, executorServiceQueue.size());
             Assert.assertEquals(3, runs.get());
 
-            // Can't be asserted because of some race condition. according to getActiveCount's JavaDoc the returned
+            // Can't be asserted because of some race condition. according to getActiveCount's
+            // JavaDoc the returned
             // value is only approximate which could explain things.
-            //Assert.assertEquals(0, executorService.getThreadPool().getActiveCount());
+            // Assert.assertEquals(0, executorService.getThreadPool().getActiveCount());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            Assert.assertTrue(ExecutorServiceUtils.shutdownExecutor("identifier", executorService, 10, TimeUnit
-                    .SECONDS));
+            Assert.assertTrue(
+                    ExecutorServiceUtils.shutdownExecutor(
+                            "identifier", executorService, 10, TimeUnit.SECONDS));
         }
     }
 }

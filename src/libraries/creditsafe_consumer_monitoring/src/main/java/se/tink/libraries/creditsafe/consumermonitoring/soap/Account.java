@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Account complex type.
- * 
+ * Java class for Account complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Account">
  *   &lt;complexContent>
@@ -24,28 +22,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Account", propOrder = {
-    "userID",
-    "password"
-})
+@XmlType(
+        name = "Account",
+        propOrder = {"userID", "password"})
 public class Account {
 
     @XmlElement(name = "UserID")
     protected String userID;
+
     @XmlElement(name = "Password")
     protected String password;
 
     /**
      * Gets the value of the userID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getUserID() {
         return userID;
@@ -53,11 +46,8 @@ public class Account {
 
     /**
      * Sets the value of the userID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setUserID(String value) {
         this.userID = value;
@@ -65,11 +55,8 @@ public class Account {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPassword() {
         return password;
@@ -77,14 +64,10 @@ public class Account {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPassword(String value) {
         this.password = value;
     }
-
 }

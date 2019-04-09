@@ -93,7 +93,7 @@ public class FeatureFlags {
                 ImmutableSet.of(SPLIT_TRANSACTIONS),
                 "999.9.9",
                 "999.9.9"), // TODO: Set the client versions to align with their compatibility with
-                            // split transactions.
+        // split transactions.
         MULTI_CURRENCY_FOR_POCS(ImmutableSet.of(TINK_EMPLOYEE, MULTI_CURRENCY_PHASE_1));
 
         private ImmutableSet<String> flags;

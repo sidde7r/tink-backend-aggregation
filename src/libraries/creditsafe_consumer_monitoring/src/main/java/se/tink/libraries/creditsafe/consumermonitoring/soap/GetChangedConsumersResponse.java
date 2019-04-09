@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getChangedConsumersResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getChangedConsumersResult"})
 @XmlRootElement(name = "GetChangedConsumersResponse")
 public class GetChangedConsumersResponse {
 
@@ -39,11 +35,8 @@ public class GetChangedConsumersResponse {
 
     /**
      * Gets the value of the getChangedConsumersResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link MonitoringResponse }
-     *     
+     *
+     * @return possible object is {@link MonitoringResponse }
      */
     public MonitoringResponse getGetChangedConsumersResult() {
         return getChangedConsumersResult;
@@ -51,14 +44,10 @@ public class GetChangedConsumersResponse {
 
     /**
      * Sets the value of the getChangedConsumersResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link MonitoringResponse }
-     *     
+     *
+     * @param value allowed object is {@link MonitoringResponse }
      */
     public void setGetChangedConsumersResult(MonitoringResponse value) {
         this.getChangedConsumersResult = value;
     }
-
 }

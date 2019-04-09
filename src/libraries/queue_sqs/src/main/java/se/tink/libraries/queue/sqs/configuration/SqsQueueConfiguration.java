@@ -3,29 +3,22 @@ package se.tink.libraries.queue.sqs.configuration;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SqsQueueConfiguration {
 
-    @JsonProperty
-    private boolean enabled = false;
+    @JsonProperty private boolean enabled = false;
 
-    @JsonProperty
-    private String url;
+    @JsonProperty private String url;
 
-    @JsonProperty
-    private String region;
+    @JsonProperty private String region;
 
-    @JsonProperty
-    private String awsAccessKeyId;
+    @JsonProperty private String awsAccessKeyId;
 
-    @JsonProperty
-    private String awsSecretKey;
+    @JsonProperty private String awsSecretKey;
 
-    @JsonProperty
-    private String queueName;
+    @JsonProperty private String queueName;
 
-    public SqsQueueConfiguration() {
-    }
+    public SqsQueueConfiguration() {}
 
     public String getUrl() {
         return url;

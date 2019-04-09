@@ -6,9 +6,7 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Thread-safe.
- */
+/** Thread-safe. */
 public class FutureUncaughtExceptionLogger implements FutureCallback<Object> {
     private static final Logger log = LoggerFactory.getLogger(FutureUncaughtExceptionLogger.class);
 

@@ -39,11 +39,16 @@ package se.tink.libraries.net;
  * holder.
  */
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
+import com.sun.jersey.core.spi.component.ioc.IoCComponentProviderFactory;
 import java.net.URI;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -57,44 +62,39 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpParams;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
-import com.sun.jersey.core.spi.component.ioc.IoCComponentProviderFactory;
-
 /**
- * A {@link Client} that utilizes the Apache HTTP Client to send and receive
- * HTTP request and responses.
- * <p>
- * The following properties are only supported at construction of this class:
- * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_CONNECTION_MANAGER}<br>
+ * A {@link Client} that utilizes the Apache HTTP Client to send and receive HTTP request and
+ * responses.
+ *
+ * <p>The following properties are only supported at construction of this class: {@link
+ * com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_CONNECTION_MANAGER}<br>
  * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_HTTP_PARAMS}}<br>
- * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_CREDENTIALS_PROVIDER}}<br>
- * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_DISABLE_COOKIES}}<br>
+ * {@link
+ * com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_CREDENTIALS_PROVIDER}}<br>
+ * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_DISABLE_COOKIES}}
+ * <br>
  * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PROXY_URI}}<br>
  * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PROXY_USERNAME}}<br>
  * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PROXY_PASSWORD}}<br>
- * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION}}<br>
- * <p>
- * By default a request entity is buffered and repeatable such that
- * authorization may be performed automatically in response to a 401 response.
- * <p>
- * If the property {@link ClientConfig#PROPERTY_CHUNKED_ENCODING_SIZE} size
- * is set to a value greater than 0 then chunked encoding will be enabled
- * and the request entity (if present) will not be buffered and is not
- * repeatable. For authorization to work in such scenarios the property
- * {@link com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION} must
- * be set to true.
- * <p>
- * If a {@link com.sun.jersey.api.client.ClientResponse} is obtained and an
- * entity is not read from the response then
- * {@link com.sun.jersey.api.client.ClientResponse#close() } MUST be called 
+ * {@link
+ * com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION}}
+ * <br>
+ *
+ * <p>By default a request entity is buffered and repeatable such that authorization may be
+ * performed automatically in response to a 401 response.
+ *
+ * <p>If the property {@link ClientConfig#PROPERTY_CHUNKED_ENCODING_SIZE} size is set to a value
+ * greater than 0 then chunked encoding will be enabled and the request entity (if present) will not
+ * be buffered and is not repeatable. For authorization to work in such scenarios the property
+ * {@link
+ * com.sun.jersey.client.apache4.config.ApacheHttpClient4Config#PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION}
+ * must be set to true.
+ *
+ * <p>If a {@link com.sun.jersey.api.client.ClientResponse} is obtained and an entity is not read
+ * from the response then {@link com.sun.jersey.api.client.ClientResponse#close() } MUST be called
  * after processing the response to release connection-based resources.
  *
  * @see ApacheHttpClient4Config#PROPERTY_CONNECTION_MANAGER
- *
  * @author jorgeluisw@mac.com
  * @author Paul.Sandoz@Sun.Com
  * @author pavel.bucek@oracle.com
@@ -103,10 +103,7 @@ public class TinkApacheHttpClient4 extends Client {
 
     private final TinkApacheHttpClient4Handler client4Handler;
 
-    /**
-     * Create a new client instance.
-     *
-     */
+    /** Create a new client instance. */
     public TinkApacheHttpClient4() {
         this(createDefaultClientHandler(null), new DefaultClientConfig(), null);
     }
@@ -114,8 +111,7 @@ public class TinkApacheHttpClient4 extends Client {
     /**
      * Create a new client instance.
      *
-     * @param root the root client handler for dispatching a request and
-     *        returning a response.
+     * @param root the root client handler for dispatching a request and returning a response.
      */
     public TinkApacheHttpClient4(final TinkApacheHttpClient4Handler root) {
         this(root, new DefaultClientConfig(), null);
@@ -124,25 +120,25 @@ public class TinkApacheHttpClient4 extends Client {
     /**
      * Create a new client instance with a client configuration.
      *
-     * @param root the root client handler for dispatching a request and
-     *        returning a response.
+     * @param root the root client handler for dispatching a request and returning a response.
      * @param config the client configuration.
      */
-    public TinkApacheHttpClient4(final TinkApacheHttpClient4Handler root, final ClientConfig config) {
+    public TinkApacheHttpClient4(
+            final TinkApacheHttpClient4Handler root, final ClientConfig config) {
         this(root, config, null);
     }
 
     /**
-     * Create a new instance with a client configuration and a
-     * component provider.
+     * Create a new instance with a client configuration and a component provider.
      *
-     * @param root the root client handler for dispatching a request and
-     *        returning a response.
+     * @param root the root client handler for dispatching a request and returning a response.
      * @param config the client configuration.
      * @param provider the IoC component provider factory.
      */
-    public TinkApacheHttpClient4(final TinkApacheHttpClient4Handler root, final ClientConfig config,
-                             final IoCComponentProviderFactory provider) {
+    public TinkApacheHttpClient4(
+            final TinkApacheHttpClient4Handler root,
+            final ClientConfig config,
+            final IoCComponentProviderFactory provider) {
         super(root, config, provider);
 
         this.client4Handler = root;
@@ -183,7 +179,8 @@ public class TinkApacheHttpClient4 extends Client {
      * @param provider the IoC component provider factory.
      * @return a default client.
      */
-    public static TinkApacheHttpClient4 create(final ClientConfig cc, final IoCComponentProviderFactory provider) {
+    public static TinkApacheHttpClient4 create(
+            final ClientConfig cc, final IoCComponentProviderFactory provider) {
         return new TinkApacheHttpClient4(createDefaultClientHandler(cc), cc, provider);
     }
 
@@ -191,7 +188,6 @@ public class TinkApacheHttpClient4 extends Client {
      * Create a default Apache HTTP client handler.
      *
      * @param cc ClientConfig instance. Might be null.
-     *
      * @return a default Apache HTTP client handler.
      */
     private static TinkApacheHttpClient4Handler createDefaultClientHandler(final ClientConfig cc) {
@@ -199,80 +195,98 @@ public class TinkApacheHttpClient4 extends Client {
         Object connectionManager = null;
         Object httpParams = null;
 
-        if(cc != null) {
-            connectionManager = cc.getProperties().get(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER);
-            if(connectionManager != null) {
-                if(!(connectionManager instanceof ClientConnectionManager)) {
-                    Logger.getLogger(TinkApacheHttpClient4.class.getName()).log(
-                            Level.WARNING,
-                            "Ignoring value of property " + ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER +
-                                    " (" + connectionManager.getClass().getName() +
-                                    ") - not instance of org.apache.http.conn.ClientConnectionManager."
-                    );
+        if (cc != null) {
+            connectionManager =
+                    cc.getProperties().get(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER);
+            if (connectionManager != null) {
+                if (!(connectionManager instanceof ClientConnectionManager)) {
+                    Logger.getLogger(TinkApacheHttpClient4.class.getName())
+                            .log(
+                                    Level.WARNING,
+                                    "Ignoring value of property "
+                                            + ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER
+                                            + " ("
+                                            + connectionManager.getClass().getName()
+                                            + ") - not instance of org.apache.http.conn.ClientConnectionManager.");
                     connectionManager = null;
                 }
             }
 
             httpParams = cc.getProperties().get(ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS);
-            if(httpParams != null) {
-                if(!(httpParams instanceof HttpParams)) {
-                    Logger.getLogger(TinkApacheHttpClient4.class.getName()).log(
-                            Level.WARNING,
-                            "Ignoring value of property " + ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS +
-                                    " (" + httpParams.getClass().getName() +
-                                    ") - not instance of org.apache.http.params.HttpParams."
-                    );
+            if (httpParams != null) {
+                if (!(httpParams instanceof HttpParams)) {
+                    Logger.getLogger(TinkApacheHttpClient4.class.getName())
+                            .log(
+                                    Level.WARNING,
+                                    "Ignoring value of property "
+                                            + ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS
+                                            + " ("
+                                            + httpParams.getClass().getName()
+                                            + ") - not instance of org.apache.http.params.HttpParams.");
                     httpParams = null;
                 }
             }
         }
 
-
-        final DefaultHttpClient client = new DefaultHttpClient(
-                (ClientConnectionManager)connectionManager,
-                (HttpParams)httpParams
-        );
+        final DefaultHttpClient client =
+                new DefaultHttpClient(
+                        (ClientConnectionManager) connectionManager, (HttpParams) httpParams);
 
         CookieStore cookieStore = null;
         boolean preemptiveBasicAuth = false;
 
-        if(cc != null) {
+        if (cc != null) {
             for (Map.Entry<String, Object> entry : cc.getProperties().entrySet()) {
                 client.getParams().setParameter(entry.getKey(), entry.getValue());
             }
 
             if (cc.getPropertyAsFeature(ApacheHttpClient4Config.PROPERTY_DISABLE_COOKIES)) {
-                client.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.IGNORE_COOKIES);
+                client.getParams()
+                        .setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.IGNORE_COOKIES);
             }
 
-            Object credentialsProvider = cc.getProperty(ApacheHttpClient4Config.PROPERTY_CREDENTIALS_PROVIDER);
-            if(credentialsProvider != null && (credentialsProvider instanceof CredentialsProvider)) {
-                client.setCredentialsProvider((CredentialsProvider)credentialsProvider);
+            Object credentialsProvider =
+                    cc.getProperty(ApacheHttpClient4Config.PROPERTY_CREDENTIALS_PROVIDER);
+            if (credentialsProvider != null
+                    && (credentialsProvider instanceof CredentialsProvider)) {
+                client.setCredentialsProvider((CredentialsProvider) credentialsProvider);
             }
 
-            final Object proxyUri = cc.getProperties().get(ApacheHttpClient4Config.PROPERTY_PROXY_URI);
-            if(proxyUri != null) {
+            final Object proxyUri =
+                    cc.getProperties().get(ApacheHttpClient4Config.PROPERTY_PROXY_URI);
+            if (proxyUri != null) {
                 final URI u = getProxyUri(proxyUri);
                 final HttpHost proxy = new HttpHost(u.getHost(), u.getPort(), u.getScheme());
 
-                if(cc.getProperties().containsKey(ApacheHttpClient4Config.PROPERTY_PROXY_USERNAME) &&
-                        cc.getProperties().containsKey(ApacheHttpClient4Config.PROPERTY_PROXY_PASSWORD)) {
+                if (cc.getProperties().containsKey(ApacheHttpClient4Config.PROPERTY_PROXY_USERNAME)
+                        && cc.getProperties()
+                                .containsKey(ApacheHttpClient4Config.PROPERTY_PROXY_PASSWORD)) {
 
-                    client.getCredentialsProvider().setCredentials(
-                            new AuthScope(u.getHost(), u.getPort()),
-                            new UsernamePasswordCredentials(
-                                    cc.getProperty(ApacheHttpClient4Config.PROPERTY_PROXY_USERNAME).toString(),
-                                    cc.getProperty(ApacheHttpClient4Config.PROPERTY_PROXY_PASSWORD).toString())
-                    );
-
+                    client.getCredentialsProvider()
+                            .setCredentials(
+                                    new AuthScope(u.getHost(), u.getPort()),
+                                    new UsernamePasswordCredentials(
+                                            cc.getProperty(
+                                                            ApacheHttpClient4Config
+                                                                    .PROPERTY_PROXY_USERNAME)
+                                                    .toString(),
+                                            cc.getProperty(
+                                                            ApacheHttpClient4Config
+                                                                    .PROPERTY_PROXY_PASSWORD)
+                                                    .toString()));
                 }
                 client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
             }
 
-            preemptiveBasicAuth = cc.getPropertyAsFeature(ApacheHttpClient4Config.PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION);
+            preemptiveBasicAuth =
+                    cc.getPropertyAsFeature(
+                            ApacheHttpClient4Config.PROPERTY_PREEMPTIVE_BASIC_AUTHENTICATION);
         }
 
-        if(client.getParams().getParameter(ClientPNames.COOKIE_POLICY) == null || !client.getParams().getParameter(ClientPNames.COOKIE_POLICY).equals(CookiePolicy.IGNORE_COOKIES)) {
+        if (client.getParams().getParameter(ClientPNames.COOKIE_POLICY) == null
+                || !client.getParams()
+                        .getParameter(ClientPNames.COOKIE_POLICY)
+                        .equals(CookiePolicy.IGNORE_COOKIES)) {
             cookieStore = new BasicCookieStore();
             client.setCookieStore(cookieStore);
         }
@@ -286,8 +300,10 @@ public class TinkApacheHttpClient4 extends Client {
         } else if (proxy instanceof String) {
             return URI.create((String) proxy);
         } else {
-            throw new ClientHandlerException("The proxy URI (" + ApacheHttpClient4Config.PROPERTY_PROXY_URI +
-                    ") property MUST be an instance of String or URI");
+            throw new ClientHandlerException(
+                    "The proxy URI ("
+                            + ApacheHttpClient4Config.PROPERTY_PROXY_URI
+                            + ") property MUST be an instance of String or URI");
         }
     }
 }

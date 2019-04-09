@@ -9,10 +9,12 @@ import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 
 public class DropwizardLifecycleInjectorFactory {
     public static Injector build(LifecycleEnvironment lifecycle, Iterable<Module> modules) {
-        Injector injector = LifecycleInjector.builder()
-                .inStage(Stage.PRODUCTION)
-                .withModules(modules)
-                .build().createInjector();
+        Injector injector =
+                LifecycleInjector.builder()
+                        .inStage(Stage.PRODUCTION)
+                        .withModules(modules)
+                        .build()
+                        .createInjector();
         lifecycle.manage(new ManagedLifecycleManager(injector.getInstance(LifecycleManager.class)));
         return injector;
     }

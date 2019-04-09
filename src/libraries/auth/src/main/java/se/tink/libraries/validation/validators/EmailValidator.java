@@ -5,8 +5,9 @@ import java.util.regex.Pattern;
 import se.tink.libraries.validation.exceptions.InvalidEmailException;
 
 public class EmailValidator {
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[_a-z0-9-+]+(\\.[_a-z0-9-+]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*(\\.[a-z]{2,})$");
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile(
+                    "^[_a-z0-9-+]+(\\.[_a-z0-9-+]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*(\\.[a-z]{2,})$");
 
     public static void validate(String email) throws InvalidEmailException {
         if (Strings.isNullOrEmpty(email)) {

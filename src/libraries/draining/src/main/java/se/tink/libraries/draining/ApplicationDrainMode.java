@@ -9,8 +9,7 @@ public class ApplicationDrainMode {
     private volatile boolean enabled = false;
 
     @Inject
-    public ApplicationDrainMode() {
-    }
+    public ApplicationDrainMode() {}
 
     public boolean isEnabled() {
         return this.enabled;

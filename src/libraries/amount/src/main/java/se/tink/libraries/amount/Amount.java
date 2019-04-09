@@ -12,6 +12,7 @@ import java.util.Optional;
 public class Amount extends Number {
     @JsonIgnore
     private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
+
     private static final int SCALE = 2;
 
     private String currency;
@@ -64,8 +65,9 @@ public class Amount extends Number {
     }
 
     /**
-     * Should preferably return double rather than Double, but too much code expects a reference type here.
-     * It's probably better to call either {@link #doubleValue()} or {@link #toBigDecimal()}}.
+     * Should preferably return double rather than Double, but too much code expects a reference
+     * type here. It's probably better to call either {@link #doubleValue()} or {@link
+     * #toBigDecimal()}}.
      */
     public Double getValue() {
         return value;
@@ -93,7 +95,7 @@ public class Amount extends Number {
             return false;
         }
 
-        Amount other = (Amount)obj;
+        Amount other = (Amount) obj;
 
         if (!Objects.equals(this.currency, other.currency)) {
             return false;
@@ -174,13 +176,15 @@ public class Amount extends Number {
 
     @JsonIgnore
     public Amount subtract(Amount toSubtract) {
-        Preconditions.checkArgument(Objects.equals(this.currency, toSubtract.getCurrency()), CURRENCY_ERROR_MESSAGE);
+        Preconditions.checkArgument(
+                Objects.equals(this.currency, toSubtract.getCurrency()), CURRENCY_ERROR_MESSAGE);
         return subtract(toSubtract.getValue());
     }
 
     @JsonIgnore
     public Amount add(Amount toAdd) {
-        Preconditions.checkArgument(Objects.equals(this.currency, toAdd.getCurrency()), CURRENCY_ERROR_MESSAGE);
+        Preconditions.checkArgument(
+                Objects.equals(this.currency, toAdd.getCurrency()), CURRENCY_ERROR_MESSAGE);
         return add(toAdd.getValue());
     }
 
@@ -218,10 +222,10 @@ public class Amount extends Number {
 
     /**
      * Removes negative sign.
+     *
      * @return Unsigned amount
      */
     public Amount stripSign() {
         return new Amount(currency, Math.abs(value));
     }
-
 }

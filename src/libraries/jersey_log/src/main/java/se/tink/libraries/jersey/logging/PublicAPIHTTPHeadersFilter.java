@@ -22,9 +22,9 @@ public class PublicAPIHTTPHeadersFilter implements ContainerResponseFilter {
         return response;
     }
 
-    private static void setHttpHeader(MultivaluedMap<String, Object> headers, String key, String value) {
+    private static void setHttpHeader(
+            MultivaluedMap<String, Object> headers, String key, String value) {
         // Note that we override previously added headers.
-        headers.put(key, ImmutableList.<Object> of(value));
+        headers.put(key, ImmutableList.<Object>of(value));
     }
-
 }

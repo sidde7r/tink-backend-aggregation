@@ -21,14 +21,16 @@ public class DiscoveredWebServiceClassBuilder implements ServiceClassBuilder {
     private ServiceDiscoveryHelper serviceDiscoveryHelper;
     private String serviceName;
 
-    public DiscoveredWebServiceClassBuilder(CuratorFramework coordinationClient, Client client, String serviceName) {
+    public DiscoveredWebServiceClassBuilder(
+            CuratorFramework coordinationClient, Client client, String serviceName) {
         this.serviceDiscoveryHelper = new ServiceDiscoveryHelper(coordinationClient, serviceName);
         this.serviceName = serviceName;
         this.client = client;
     }
 
     private <T> T build(Class<T> serviceClass, List<RetryableWebResource.Candidate> candidates) {
-        ServiceInstance<ServiceDiscoveryHelper.InstanceDetails> instance = serviceDiscoveryHelper.queryForInstance();
+        ServiceInstance<ServiceDiscoveryHelper.InstanceDetails> instance =
+                serviceDiscoveryHelper.queryForInstance();
 
         String url = "http://" + instance.getAddress() + ":" + instance.getPort() + "/";
 
@@ -39,7 +41,8 @@ public class DiscoveredWebServiceClassBuilder implements ServiceClassBuilder {
 
         RetryableWebResource.decorate(jerseyResource, candidates, serviceName);
 
-        // Create a proxy class that acts as `serviceClass`, but transparently delegates HTTP calls to jerseyResource.
+        // Create a proxy class that acts as `serviceClass`, but transparently delegates HTTP calls
+        // to jerseyResource.
 
         return WebResourceFactory.newResource(serviceClass, jerseyResource);
     }
@@ -55,12 +58,11 @@ public class DiscoveredWebServiceClassBuilder implements ServiceClassBuilder {
         // Build.
 
         return build(serviceClass, candidates);
-
     }
 
     private Iterable<RetryableWebResource.Candidate> getCandidates() {
-        return Iterables.concat(Iterables.transform(
-                serviceDiscoveryHelper.queryForInstances(), urlGenerator));
+        return Iterables.concat(
+                Iterables.transform(serviceDiscoveryHelper.queryForInstances(), urlGenerator));
     }
 
     @Override

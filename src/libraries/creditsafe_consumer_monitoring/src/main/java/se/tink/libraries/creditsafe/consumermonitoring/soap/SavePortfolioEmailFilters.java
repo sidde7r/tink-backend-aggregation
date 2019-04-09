@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,28 +23,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "monReq",
-    "filters"
-})
+@XmlType(
+        name = "",
+        propOrder = {"monReq", "filters"})
 @XmlRootElement(name = "SavePortfolioEmailFilters")
 public class SavePortfolioEmailFilters {
 
     @XmlElement(name = "mon_req")
     protected MonitoringRequest monReq;
+
     protected ArrayOfEmailFilterObject filters;
 
     /**
      * Gets the value of the monReq property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link MonitoringRequest }
-     *     
+     *
+     * @return possible object is {@link MonitoringRequest }
      */
     public MonitoringRequest getMonReq() {
         return monReq;
@@ -54,11 +47,8 @@ public class SavePortfolioEmailFilters {
 
     /**
      * Sets the value of the monReq property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link MonitoringRequest }
-     *     
+     *
+     * @param value allowed object is {@link MonitoringRequest }
      */
     public void setMonReq(MonitoringRequest value) {
         this.monReq = value;
@@ -66,11 +56,8 @@ public class SavePortfolioEmailFilters {
 
     /**
      * Gets the value of the filters property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ArrayOfEmailFilterObject }
-     *     
+     *
+     * @return possible object is {@link ArrayOfEmailFilterObject }
      */
     public ArrayOfEmailFilterObject getFilters() {
         return filters;
@@ -78,14 +65,10 @@ public class SavePortfolioEmailFilters {
 
     /**
      * Sets the value of the filters property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ArrayOfEmailFilterObject }
-     *     
+     *
+     * @param value allowed object is {@link ArrayOfEmailFilterObject }
      */
     public void setFilters(ArrayOfEmailFilterObject value) {
         this.filters = value;
     }
-
 }

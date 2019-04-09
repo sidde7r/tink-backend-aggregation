@@ -1,8 +1,6 @@
 package se.tink.libraries.metrics;
 
-/**
- * To avoid sequence conflicts, since their domains aren't defined by the class, keep them here.
- */
+/** To avoid sequence conflicts, since their domains aren't defined by the class, keep them here. */
 public class SequenceTimers {
     /*
      * @see ActivityGeneratorWorker.process()

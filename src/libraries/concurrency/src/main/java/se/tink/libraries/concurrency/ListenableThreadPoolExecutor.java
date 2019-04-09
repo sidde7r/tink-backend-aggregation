@@ -22,22 +22,26 @@ import se.tink.libraries.metrics.Counter;
 
 /**
  * Something similar to a {@link ThreadPoolExecutor}, but
+ *
  * <ul>
- * <li>logs errors.</li>
- * <li>returns {@link ListenableFuture}s.</li>
- * <li>makes sure that submission to {@link ThreadPoolExecutor} is type-safe.</li>
- * <li>only handles {@link Runnable}s to make implementation of type safety _much_ easier. See
- * {@link ListenableThreadPoolSubmitter} for something that accepts {@link java.util.concurrent.Callable}s.</li>
+ *   <li>logs errors.
+ *   <li>returns {@link ListenableFuture}s.
+ *   <li>makes sure that submission to {@link ThreadPoolExecutor} is type-safe.
+ *   <li>only handles {@link Runnable}s to make implementation of type safety _much_ easier. See
+ *       {@link ListenableThreadPoolSubmitter} for something that accepts {@link
+ *       java.util.concurrent.Callable}s.
  * </ul>
  *
  * @param <T> the type of the runnable that can be submitted.
  */
-public class ListenableThreadPoolExecutor<T extends Runnable> implements TerminatableExecutor, ListenableExecutor<T> {
+public class ListenableThreadPoolExecutor<T extends Runnable>
+        implements TerminatableExecutor, ListenableExecutor<T> {
     private static final Logger log = LoggerFactory.getLogger(ListenableThreadPoolExecutor.class);
 
     private final FutureCallback<Object> errorLoggingCallback;
 
-    private final RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler;
+    private final RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>>
+            rejectedHandler;
     private final BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue;
     private final QueuePopper queuePopper;
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
@@ -54,7 +58,8 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
         protected void run() throws Exception {
             thread = Thread.currentThread();
 
-            // Must be called after setting `thread` above to avoid getting an NPE in `triggerShutdown` as a race
+            // Must be called after setting `thread` above to avoid getting an NPE in
+            // `triggerShutdown` as a race
             // condition.
             started.countDown();
 
@@ -86,15 +91,19 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
                 try {
                     threadPool.execute(item);
 
-                    // Since there is no queue capacity for the threadPool, we know the item is running.
+                    // Since there is no queue capacity for the threadPool, we know the item is
+                    // running.
                     startedItems.inc();
 
                     item = null;
                 } catch (RejectedExecutionException e) {
-                    // RejectedException is thrown when we interrupt when threadPool has all slots taken and we are
+                    // RejectedException is thrown when we interrupt when threadPool has all slots
+                    // taken and we are
                     // waiting for an opening.
                     if (!(e.getCause() instanceof InterruptedException)) {
-                        log.error("Unexpected error in when trying to delegate a Runnable to thread pool.", e);
+                        log.error(
+                                "Unexpected error in when trying to delegate a Runnable to thread pool.",
+                                e);
                     }
                 }
             }
@@ -117,10 +126,11 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
     }
 
     /**
-     * Package private Constructor.
-     * You probably want to use {@code ListenableThreadPoolExecutorBuilder} instead.
+     * Package private Constructor. You probably want to use {@code
+     * ListenableThreadPoolExecutorBuilder} instead.
      */
-    ListenableThreadPoolExecutor(RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler,
+    ListenableThreadPoolExecutor(
+            RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler,
             BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue,
             TypedThreadPoolBuilder threadPoolBuilder,
             FutureCallback<Object> errorLoggingCallback,
@@ -141,21 +151,25 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
         threadPool = threadPoolBuilder.build();
         queuePopper.startAsync();
 
-        // Need to call this here to really make sure that _our_ `QueuePopper#run` has started. Otherwise there's a
+        // Need to call this here to really make sure that _our_ `QueuePopper#run` has started.
+        // Otherwise there's a
         // race condition where it never starts if we:
         //
         // 1. Instantiate a `TypedRunnableThreadPoolExecutor`; and shortly thereafter
         // 2. Call `TypedRunnableThreadPoolExecutor#shutdown`.
         //
-        // The reason why this happen lies in the method name name "startAsync", which spawns a new thread and then,
+        // The reason why this happen lies in the method name name "startAsync", which spawns a new
+        // thread and then,
         // before calling `run()` double checks that the service still should be started.
         queuePopper.awaitStarted();
     }
 
     @Override
     protected void finalize() throws Throwable {
-        // Make sure that the background QueuePopper service can be garbage collected. Notice that, a ThreadPoolExecutor
-        // only will be garbage collected if `corePoolSize` is zero. See http://stackoverflow.com/a/7728645.
+        // Make sure that the background QueuePopper service can be garbage collected. Notice that,
+        // a ThreadPoolExecutor
+        // only will be garbage collected if `corePoolSize` is zero. See
+        // http://stackoverflow.com/a/7728645.
         shutdown();
     }
 
@@ -167,17 +181,19 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
         }
 
         final ThreadPoolExecutor tp = threadPool;
-        queuePopper.addListener(new Service.Listener() {
-            @Override
-            public void terminated(Service.State from) {
-                tp.shutdown();
-            }
+        queuePopper.addListener(
+                new Service.Listener() {
+                    @Override
+                    public void terminated(Service.State from) {
+                        tp.shutdown();
+                    }
 
-            @Override
-            public void failed(Service.State from, Throwable failure) {
-                tp.shutdown();
-            }
-        }, MoreExecutors.directExecutor());
+                    @Override
+                    public void failed(Service.State from, Throwable failure) {
+                        tp.shutdown();
+                    }
+                },
+                MoreExecutors.directExecutor());
         queuePopper.stopAsync();
     }
 
@@ -187,7 +203,9 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
         try {
             queuePopper.awaitTerminated(timeout, unit);
             if (Objects.equal(queuePopper.state(), Service.State.FAILED)) {
-                log.error("QueuePopper failed. This should never happen.", queuePopper.failureCause());
+                log.error(
+                        "QueuePopper failed. This should never happen.",
+                        queuePopper.failureCause());
             }
         } catch (TimeoutException e) {
             return false;
@@ -195,7 +213,8 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
 
         timeout -= stopwatch.elapsed(unit);
         if (timeout < 0) {
-            // Just in case. ThreadPoolExecutor#awaitTermination probably handles negative timeout, but better safe than
+            // Just in case. ThreadPoolExecutor#awaitTermination probably handles negative timeout,
+            // but better safe than
             // sorry.
             timeout = 0;
         }
@@ -214,12 +233,14 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
 
     @Override
     public ListenableFuture<?> execute(T r) {
-        WrappedRunnableListenableFutureTask<T, ?> future = new WrappedRunnableListenableFutureTask<>(r, null);
+        WrappedRunnableListenableFutureTask<T, ?> future =
+                new WrappedRunnableListenableFutureTask<>(r, null);
 
         if (!queue.offer(future)) {
             rejectedHandler.handle(future, queue);
 
-            // If we come here, we expect the rejectedHandler to have put `future` on `queue`. Otherwise it violates
+            // If we come here, we expect the rejectedHandler to have put `future` on `queue`.
+            // Otherwise it violates
             // the contract the defined for `RejectedExecutionHandler`.
         }
 
@@ -235,12 +256,14 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
 
     @Override
     public <V> ListenableFuture<V> execute(T r, V v) {
-        WrappedRunnableListenableFutureTask<T, V> future = new WrappedRunnableListenableFutureTask<>(r, v);
+        WrappedRunnableListenableFutureTask<T, V> future =
+                new WrappedRunnableListenableFutureTask<>(r, v);
 
         if (!queue.offer(future)) {
             rejectedHandler.handle(future, queue);
 
-            // If we come here, we expect the rejectedHandler to have put `future` on `queue`. Otherwise it violates
+            // If we come here, we expect the rejectedHandler to have put `future` on `queue`.
+            // Otherwise it violates
             // the contract the defined for `RejectedExecutionHandler`.
         }
 
@@ -256,8 +279,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable> implements Termina
 
     public static <T extends Runnable> ListenableThreadPoolExecutorBuilder<T> builder(
             BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue,
-            TypedThreadPoolBuilder tpb
-    ) {
+            TypedThreadPoolBuilder tpb) {
         return new ListenableThreadPoolExecutorBuilder<>(queue, tpb);
     }
 }

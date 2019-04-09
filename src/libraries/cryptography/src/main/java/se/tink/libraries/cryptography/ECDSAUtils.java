@@ -63,7 +63,8 @@ public class ECDSAUtils {
     }
 
     public static ECPrivateKey getPrivateKeyByPath(String path) {
-        try (PEMParser pemReader = new PEMParser(new InputStreamReader(new FileInputStream(path)))) {
+        try (PEMParser pemReader =
+                new PEMParser(new InputStreamReader(new FileInputStream(path)))) {
 
             PEMKeyPair keyPair = (PEMKeyPair) pemReader.readObject();
 
@@ -74,8 +75,10 @@ public class ECDSAUtils {
             throw new RuntimeException("Could not convert key path into valid private key.", e);
         }
     }
+
     public static ECPublicKey getPublicKeyByPath(String keyPath) {
-        try (PEMParser pemReader = new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
+        try (PEMParser pemReader =
+                new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
 
             SubjectPublicKeyInfo publicKeyInfo = (SubjectPublicKeyInfo) pemReader.readObject();
 
@@ -97,7 +100,8 @@ public class ECDSAUtils {
         }
     }
 
-    public static Signature getSignature(PrivateKey key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static Signature getSignature(PrivateKey key)
+            throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
 
         signature.initSign(key);
@@ -105,7 +109,8 @@ public class ECDSAUtils {
         return signature;
     }
 
-    public static Signature getSignature(PublicKey key) throws NoSuchAlgorithmException, InvalidKeyException {
+    public static Signature getSignature(PublicKey key)
+            throws NoSuchAlgorithmException, InvalidKeyException {
         Signature signature = Signature.getInstance(DEFAULT_SIGNATURE_ALGORITHM);
 
         signature.initVerify(key);

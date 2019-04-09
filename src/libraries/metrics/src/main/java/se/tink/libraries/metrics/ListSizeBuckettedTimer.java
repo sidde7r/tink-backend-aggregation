@@ -8,19 +8,26 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Calls a delegate {@link Callable < List >} and instruments the time it took to call, bucketed by the size of
- * the returned list. Useful to investigate the advantages of partitioning the data in various ways.
+ * Calls a delegate {@link Callable < List >} and instruments the time it took to call, bucketed by
+ * the size of the returned list. Useful to investigate the advantages of partitioning the data in
+ * various ways.
  */
 public class ListSizeBuckettedTimer {
     private static final TimeUnit PRECISION = TimeUnit.NANOSECONDS;
 
     private final ImmutableSortedMap<Integer, Timer> itemBuckets;
 
-    public ListSizeBuckettedTimer(MetricRegistry registry, MetricId metricId,
-            List<? extends Number> timeBuckets, List<Integer> itemBuckets) {
-        final ImmutableSortedMap.Builder<Integer, Timer> builder = ImmutableSortedMap.naturalOrder();
+    public ListSizeBuckettedTimer(
+            MetricRegistry registry,
+            MetricId metricId,
+            List<? extends Number> timeBuckets,
+            List<Integer> itemBuckets) {
+        final ImmutableSortedMap.Builder<Integer, Timer> builder =
+                ImmutableSortedMap.naturalOrder();
         for (Integer itemBucket : itemBuckets) {
-            builder.put(itemBucket, registry.timer(metricId.label("items_le", itemBucket.toString()), timeBuckets));
+            builder.put(
+                    itemBucket,
+                    registry.timer(metricId.label("items_le", itemBucket.toString()), timeBuckets));
         }
         builder.put(Integer.MAX_VALUE, registry.timer(metricId.label("items_le", "+Inf")));
         this.itemBuckets = builder.build();
@@ -38,7 +45,8 @@ public class ListSizeBuckettedTimer {
         };
     }
 
-    public <M extends Multimap<K, V>, K, V> Callable<M> decorateMultimap(final Callable<M> delegate) {
+    public <M extends Multimap<K, V>, K, V> Callable<M> decorateMultimap(
+            final Callable<M> delegate) {
         return () -> {
             final Stopwatch watch = Stopwatch.createStarted();
             M items = delegate.call();

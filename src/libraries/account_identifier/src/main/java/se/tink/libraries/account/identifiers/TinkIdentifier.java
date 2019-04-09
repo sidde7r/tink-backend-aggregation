@@ -18,7 +18,7 @@ public class TinkIdentifier extends AccountIdentifier {
     public String getIdentifier() {
         return identifier;
     }
-    
+
     @Override
     public Type getType() {
         return Type.TINK;

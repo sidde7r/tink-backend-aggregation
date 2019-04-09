@@ -20,5 +20,4 @@ public class BasicWebServiceClassBuilder implements ServiceClassBuilder {
         // Only a single candidate. Always using it.
         return build(serviceClass);
     }
-
 }

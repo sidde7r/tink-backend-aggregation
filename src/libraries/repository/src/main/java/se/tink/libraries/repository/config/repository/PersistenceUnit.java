@@ -20,7 +20,10 @@ public enum PersistenceUnit {
 
     private boolean canAccessTransactions;
 
-    private PersistenceUnit(String name, Class<? extends RepositoryConfigurator> configuratorKlass, boolean canAccessTransactions) {
+    private PersistenceUnit(
+            String name,
+            Class<? extends RepositoryConfigurator> configuratorKlass,
+            boolean canAccessTransactions) {
         this.name = name;
         this.configuratorKlass = configuratorKlass;
         this.canAccessTransactions = canAccessTransactions;
@@ -33,7 +36,7 @@ public enum PersistenceUnit {
     public String getName() {
         return name;
     }
-    
+
     public boolean canAccessTransactions() {
         return canAccessTransactions;
     }

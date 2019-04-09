@@ -1,14 +1,16 @@
 package se.tink.libraries.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GenericApplicationFieldGroupTest {
     @Test
     public void getFieldAsIntegerWithComma() {
-        GenericApplicationFieldGroup genericApplicationFieldGroup = new GenericApplicationFieldGroup();
+        GenericApplicationFieldGroup genericApplicationFieldGroup =
+                new GenericApplicationFieldGroup();
         genericApplicationFieldGroup.setFields(ImmutableMap.of("key", "1,5"));
 
         Integer value = genericApplicationFieldGroup.getFieldAsInteger("key");
@@ -19,7 +21,8 @@ public class GenericApplicationFieldGroupTest {
 
     @Test
     public void getFieldAsDoubleWithComma() {
-        GenericApplicationFieldGroup genericApplicationFieldGroup = new GenericApplicationFieldGroup();
+        GenericApplicationFieldGroup genericApplicationFieldGroup =
+                new GenericApplicationFieldGroup();
         genericApplicationFieldGroup.setFields(ImmutableMap.of("key", "1,5"));
 
         Double value = genericApplicationFieldGroup.getFieldAsDouble("key");

@@ -3,7 +3,6 @@ package se.tink.libraries.cli.printutils;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
@@ -37,17 +36,20 @@ public class CliPrintUtils {
                 if (col.getValue() == null) {
                     col.setValue("<null>");
                 }
-                columnWidths.put(col.getKey(),
-                        Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getValue().length
-                                ()));
-
+                columnWidths.put(
+                        col.getKey(),
+                        Math.max(
+                                Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0),
+                                col.getValue().length()));
             }
         }
 
-
         for (Map.Entry<String, Integer> col : columnWidths.entrySet()) {
-            columnWidths.put(col.getKey(),
-                    Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getKey().length()));
+            columnWidths.put(
+                    col.getKey(),
+                    Math.max(
+                            Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0),
+                            col.getKey().length()));
         }
 
         // Calculating total width of table.
@@ -94,7 +96,8 @@ public class CliPrintUtils {
                 }
                 String value = Optional.ofNullable(row.get(column.getKey())).orElse("");
                 System.out.print(value);
-                System.out.print(Strings.repeat(" ", column.getValue() - value.length())); // Padding
+                System.out.print(
+                        Strings.repeat(" ", column.getValue() - value.length())); // Padding
             }
             System.out.println(" |");
         }
@@ -103,7 +106,6 @@ public class CliPrintUtils {
 
         System.out.println(Strings.repeat("=", totalWidth));
     }
-
 
     public static void printTableLong(List<Map<String, String>> rows) {
 
@@ -120,17 +122,23 @@ public class CliPrintUtils {
                 if (col.getValue() == null) {
                     col.setValue("<null>");
                 }
-                columnWidths.put(col.getKey(), Math.min(MAX_COLUMN,
-                        Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getValue().length
-                                ())));
-
+                columnWidths.put(
+                        col.getKey(),
+                        Math.min(
+                                MAX_COLUMN,
+                                Math.max(
+                                        Optional.ofNullable(columnWidths.get(col.getKey()))
+                                                .orElse(0),
+                                        col.getValue().length())));
             }
         }
 
-
         for (Map.Entry<String, Integer> col : columnWidths.entrySet()) {
-            columnWidths.put(col.getKey(),
-                    Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getKey().length()));
+            columnWidths.put(
+                    col.getKey(),
+                    Math.max(
+                            Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0),
+                            col.getKey().length()));
         }
 
         // Calculating total width of table.
@@ -171,7 +179,9 @@ public class CliPrintUtils {
             Map<String, List<String>> linebreakRow = Maps.newHashMap();
             for (Map.Entry<String, Integer> column : columnWidths.entrySet()) {
                 String value = Optional.ofNullable(row.get(column.getKey())).orElse("");
-                linebreakRow.put(column.getKey(), Arrays.asList(value.split("(?<=\\G.{"+ MAX_COLUMN +"})")));
+                linebreakRow.put(
+                        column.getKey(),
+                        Arrays.asList(value.split("(?<=\\G.{" + MAX_COLUMN + "})")));
             }
             linebreakRows.add(linebreakRow);
         }
@@ -186,7 +196,7 @@ public class CliPrintUtils {
                 iteratorMap.put(entry.getKey(), entry.getValue().listIterator());
             }
 
-            while(!endOfRow) {
+            while (!endOfRow) {
                 System.out.print("| ");
                 first = true;
                 for (Map.Entry<String, Integer> column : columnWidths.entrySet()) {
@@ -197,7 +207,7 @@ public class CliPrintUtils {
                     }
 
                     ListIterator<String> iterator = iteratorMap.get(column.getKey());
-                    if (Objects.isNull(iterator)|| !iterator.hasNext()) {
+                    if (Objects.isNull(iterator) || !iterator.hasNext()) {
                         endOfRow = true;
                         System.out.print(Strings.repeat(" ", column.getValue())); // Padding
 
@@ -206,7 +216,8 @@ public class CliPrintUtils {
                     endOfRow = false;
                     String value = iterator.next();
                     System.out.print(value);
-                    System.out.print(Strings.repeat(" ", column.getValue() - value.length())); // Padding
+                    System.out.print(
+                            Strings.repeat(" ", column.getValue() - value.length())); // Padding
                 }
                 System.out.println(" |");
             }
@@ -216,5 +227,4 @@ public class CliPrintUtils {
 
         System.out.println(Strings.repeat("=", totalWidth));
     }
-
 }

@@ -40,6 +40,13 @@ package se.tink.libraries.net;
  * holder.
  */
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientRequest;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.TerminatingClientHandler;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.core.header.InBoundHeaders;
+import com.sun.jersey.core.util.ReaderWriter;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,9 +59,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.core.MultivaluedMap;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -77,36 +82,25 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.protocol.BasicHttpContext;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.TerminatingClientHandler;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.core.header.InBoundHeaders;
-import com.sun.jersey.core.util.ReaderWriter;
-
 /**
  * A root handler with Apache HTTP Client acting as a backend.
- * <p>
- * Client operations are thread safe, the HTTP connection may be shared between
- * different threads.
- * <p>
- * If a response entity is obtained that is an instance of {@link Closeable}
- * then the instance MUST be closed after processing the entity to release
+ *
+ * <p>Client operations are thread safe, the HTTP connection may be shared between different
+ * threads.
+ *
+ * <p>If a response entity is obtained that is an instance of {@link Closeable} then the instance
+ * MUST be closed after processing the entity to release connection-based resources.
+ *
+ * <p>If a {@link ClientResponse} is obtained and an entity is not read from the response then
+ * {@link ClientResponse#close() } MUST be called after processing the response to release
  * connection-based resources.
- * <p>
- * If a {@link ClientResponse} is obtained and an entity is not read from the
- * response then {@link ClientResponse#close() } MUST be called after processing
- * the response to release connection-based resources.
- * <p>
- * The following methods are currently supported: HEAD, GET, POST, PUT, DELETE
- * and OPTIONS.
- * <p>
- * Chunked transfer encoding can be enabled or disabled but configuration of the
- * chunked encoding size is not possible. If the
- * {@link ClientConfig#PROPERTY_CHUNKED_ENCODING_SIZE} property is set to a
- * non-null value then chunked transfer encoding is enabled.
- * 
+ *
+ * <p>The following methods are currently supported: HEAD, GET, POST, PUT, DELETE and OPTIONS.
+ *
+ * <p>Chunked transfer encoding can be enabled or disabled but configuration of the chunked encoding
+ * size is not possible. If the {@link ClientConfig#PROPERTY_CHUNKED_ENCODING_SIZE} property is set
+ * to a non-null value then chunked transfer encoding is enabled.
+ *
  * @author jorgeluisw@mac.com
  * @author Paul.Sandoz@Sun.Com
  * @author pavel.bucek@oracle.com
@@ -119,15 +113,14 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
 
     /**
      * Create a new root handler with an {@link HttpClient}.
-     * 
-     * @param client
-     *            the {@link HttpClient}.
-     * @param cookieStore
-     *            {@link CookieStore} instance
-     * @param preemptiveBasicAuth
-     *            turns on preemptive basic authentication
+     *
+     * @param client the {@link HttpClient}.
+     * @param cookieStore {@link CookieStore} instance
+     * @param preemptiveBasicAuth turns on preemptive basic authentication
      */
-    public TinkApacheHttpClient4Handler(final HttpClient client, final CookieStore cookieStore,
+    public TinkApacheHttpClient4Handler(
+            final HttpClient client,
+            final CookieStore cookieStore,
             final boolean preemptiveBasicAuth) {
         this.client = client;
         this.cookieStore = cookieStore;
@@ -136,7 +129,7 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
 
     /**
      * Get the {@link HttpClient}.
-     * 
+     *
      * @return the {@link HttpClient}.
      */
     public HttpClient getHttpClient() {
@@ -145,9 +138,9 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
 
     /**
      * Get the {@link CookieStore}.
-     * 
+     *
      * @return the {@link CookieStore} instance or null when
-     *         ApacheHttpClient4Config.PROPERTY_DISABLE_COOKIES set to true.
+     *     ApacheHttpClient4Config.PROPERTY_DISABLE_COOKIES set to true.
      */
     public CookieStore getCookieStore() {
         return cookieStore;
@@ -175,8 +168,12 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
                 response = getHttpClient().execute(getHost(request), request);
             }
 
-            ClientResponse r = new ClientResponse(response.getStatusLine().getStatusCode(),
-                    getInBoundHeaders(response), new HttpClientResponseInputStream(response), getMessageBodyWorkers());
+            ClientResponse r =
+                    new ClientResponse(
+                            response.getStatusLine().getStatusCode(),
+                            getInBoundHeaders(response),
+                            new HttpClientResponseInputStream(response),
+                            getMessageBodyWorkers());
             if (!r.hasEntity()) {
                 r.bufferEntity();
                 r.close();
@@ -186,11 +183,13 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
         } catch (Exception e) {
             throw new ClientHandlerException(e);
         }
-
     }
 
     private HttpHost getHost(final HttpUriRequest request) {
-        return new HttpHost(request.getURI().getHost(), request.getURI().getPort(), request.getURI().getScheme());
+        return new HttpHost(
+                request.getURI().getHost(),
+                request.getURI().getPort(),
+                request.getURI().getScheme());
     }
 
     private HttpUriRequest getUriHttpRequest(final ClientRequest cr) {
@@ -213,23 +212,25 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
         } else if (strMethod.equals("OPTIONS")) {
             request = new HttpOptions(uri);
         } else {
-            request = new HttpEntityEnclosingRequestBase() {
-                @Override
-                public String getMethod() {
-                    return strMethod;
-                }
+            request =
+                    new HttpEntityEnclosingRequestBase() {
+                        @Override
+                        public String getMethod() {
+                            return strMethod;
+                        }
 
-                @Override
-                public URI getURI() {
-                    return uri;
-                }
-            };
+                        @Override
+                        public URI getURI() {
+                            return uri;
+                        }
+                    };
         }
 
         if (entity != null && request instanceof HttpEntityEnclosingRequestBase) {
             ((HttpEntityEnclosingRequestBase) request).setEntity(entity);
         } else if (entity != null) {
-            throw new ClientHandlerException("Adding entity to http method " + cr.getMethod() + " is not supported.");
+            throw new ClientHandlerException(
+                    "Adding entity to http method " + cr.getMethod() + " is not supported.");
         }
 
         return request;
@@ -245,34 +246,35 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
         final RequestEntityWriter requestEntityWriter = getRequestEntityWriter(cr);
 
         try {
-            HttpEntity httpEntity = new AbstractHttpEntity() {
-                @Override
-                public boolean isRepeatable() {
-                    return false;
-                }
+            HttpEntity httpEntity =
+                    new AbstractHttpEntity() {
+                        @Override
+                        public boolean isRepeatable() {
+                            return false;
+                        }
 
-                @Override
-                public long getContentLength() {
-                    return requestEntityWriter.getSize();
-                }
+                        @Override
+                        public long getContentLength() {
+                            return requestEntityWriter.getSize();
+                        }
 
-                @Override
-                public InputStream getContent() throws IOException, IllegalStateException {
-                    ByteArrayOutputStream buffer = new ByteArrayOutputStream(512);
-                    writeTo(buffer);
-                    return new ByteArrayInputStream(buffer.toByteArray());
-                }
+                        @Override
+                        public InputStream getContent() throws IOException, IllegalStateException {
+                            ByteArrayOutputStream buffer = new ByteArrayOutputStream(512);
+                            writeTo(buffer);
+                            return new ByteArrayInputStream(buffer.toByteArray());
+                        }
 
-                @Override
-                public void writeTo(OutputStream outputStream) throws IOException {
-                    requestEntityWriter.writeRequestEntity(outputStream);
-                }
+                        @Override
+                        public void writeTo(OutputStream outputStream) throws IOException {
+                            requestEntityWriter.writeRequestEntity(outputStream);
+                        }
 
-                @Override
-                public boolean isStreaming() {
-                    return false;
-                }
-            };
+                        @Override
+                        public boolean isStreaming() {
+                            return false;
+                        }
+                    };
 
             if (cr.getProperties().get(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE) != null) {
                 // TODO return InputStreamEntity
@@ -287,7 +289,8 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
         return null;
     }
 
-    private void writeOutBoundHeaders(final MultivaluedMap<String, Object> headers, final HttpUriRequest request) {
+    private void writeOutBoundHeaders(
+            final MultivaluedMap<String, Object> headers, final HttpUriRequest request) {
         for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
             List<Object> vs = e.getValue();
             if (vs.size() == 1) {

@@ -1,12 +1,13 @@
 package se.tink.libraries.account.identifiers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+
 import java.net.URI;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
 
 public class IbanIdentifierTest {
 

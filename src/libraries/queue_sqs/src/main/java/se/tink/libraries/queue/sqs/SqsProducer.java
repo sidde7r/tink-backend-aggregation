@@ -2,11 +2,10 @@ package se.tink.libraries.queue.sqs;
 
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.inject.Inject;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.queue.QueueProducer;
-
-import java.io.IOException;
 
 public class SqsProducer implements QueueProducer {
 
@@ -23,10 +22,12 @@ public class SqsProducer implements QueueProducer {
     @Override
     public void send(Object t) {
         try {
-            SendMessageRequest sendMessageStandardQueue = new SendMessageRequest()
-                    .withQueueUrl(sqsQueue.getUrl())
-                    .withMessageBody(encodingHandler.encode(t))
-                    .withMessageAttributes(null); // FIXME: probably we want to use that in the future
+            SendMessageRequest sendMessageStandardQueue =
+                    new SendMessageRequest()
+                            .withQueueUrl(sqsQueue.getUrl())
+                            .withMessageBody(encodingHandler.encode(t))
+                            .withMessageAttributes(
+                                    null); // FIXME: probably we want to use that in the future
             sqsQueue.getSqs().sendMessage(sendMessageStandardQueue);
             sqsQueue.produced();
         } catch (IOException e) {

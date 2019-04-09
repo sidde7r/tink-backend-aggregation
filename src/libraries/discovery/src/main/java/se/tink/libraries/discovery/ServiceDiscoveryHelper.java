@@ -29,14 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.uuid.UUIDUtils;
 
-// TODO: Split this class into two classes; One that announces a service and another which allows querying for a service.
+// TODO: Split this class into two classes; One that announces a service and another which allows
+// querying for a service.
 public class ServiceDiscoveryHelper implements Managed {
     public static class InstanceDetails {
-        @JsonProperty
-        private String workerId;
+        @JsonProperty private String workerId;
 
-        public InstanceDetails() {
-        }
+        public InstanceDetails() {}
 
         InstanceDetails(@JsonProperty String workerId) {
             this.workerId = workerId;
@@ -45,8 +44,8 @@ public class ServiceDiscoveryHelper implements Managed {
 
     private static final Logger log = LoggerFactory.getLogger(ServiceDiscoveryHelper.class);
 
-    private static final ModifiedJsonInstanceSerializer<InstanceDetails> serializer = new ModifiedJsonInstanceSerializer<>(
-            InstanceDetails.class);
+    private static final ModifiedJsonInstanceSerializer<InstanceDetails> serializer =
+            new ModifiedJsonInstanceSerializer<>(InstanceDetails.class);
     private AtomicReference<ServiceCache<InstanceDetails>> cache;
     private CuratorFramework coordinationClient;
 
@@ -83,13 +82,16 @@ public class ServiceDiscoveryHelper implements Managed {
         }
     }
 
-    /**
-     * Constructor when helper will be used for either discovery or announcing a service.
-     */
-    public ServiceDiscoveryHelper(CuratorFramework coordinationClient, CoordinationConfiguration coordinationConfiguration, String serviceName, Optional<Integer> port,
+    /** Constructor when helper will be used for either discovery or announcing a service. */
+    public ServiceDiscoveryHelper(
+            CuratorFramework coordinationClient,
+            CoordinationConfiguration coordinationConfiguration,
+            String serviceName,
+            Optional<Integer> port,
             Optional<Integer> tlsPort) {
 
-        Preconditions.checkArgument(port.isPresent() || tlsPort.isPresent(),
+        Preconditions.checkArgument(
+                port.isPresent() || tlsPort.isPresent(),
                 "Either HTTP or HTTPS port must be present.");
 
         this.coordinationClient = coordinationClient;
@@ -116,20 +118,24 @@ public class ServiceDiscoveryHelper implements Managed {
     /**
      * Constructor when helper will be used for either discovery or announcing a service.
      *
-     * Is only used by Integration tests for the Encryption container.
+     * <p>Is only used by Integration tests for the Encryption container.
      */
     @Deprecated
-    public ServiceDiscoveryHelper(CuratorFramework coordinationClient, String serviceName, Optional<Integer> port,
+    public ServiceDiscoveryHelper(
+            CuratorFramework coordinationClient,
+            String serviceName,
+            Optional<Integer> port,
             Optional<Integer> tlsPort) {
         this(coordinationClient, null, serviceName, port, tlsPort);
     }
 
     /**
      * Deregister a previously registered service.
-     * <p>
-     * For outside accessors, call {@link #stop()} instead of this.
+     *
+     * <p>For outside accessors, call {@link #stop()} instead of this.
      */
-    private void deregisterService(ServiceInstance<InstanceDetails> serviceInstance) throws Exception {
+    private void deregisterService(ServiceInstance<InstanceDetails> serviceInstance)
+            throws Exception {
         log.info("Deregistering service container: {}", serviceName);
         discovery.unregisterService(serviceInstance);
     }
@@ -139,17 +145,21 @@ public class ServiceDiscoveryHelper implements Managed {
     }
 
     private ServiceDiscovery<InstanceDetails> getDiscovery() {
-        return ServiceDiscoveryBuilder.builder(InstanceDetails.class).serializer(serializer).basePath("/services")
-                .client(coordinationClient).build();
+        return ServiceDiscoveryBuilder.builder(InstanceDetails.class)
+                .serializer(serializer)
+                .basePath("/services")
+                .client(coordinationClient)
+                .build();
     }
 
     private ServiceInstance<InstanceDetails> generateInstance() throws Exception {
         String workerId = UUIDUtils.generateUUID();
 
-        ServiceInstanceBuilder<InstanceDetails> builder = ServiceInstance.<InstanceDetails>builder()
-                .name(serviceName)
-                .id(workerId)
-                .payload(new InstanceDetails(workerId));
+        ServiceInstanceBuilder<InstanceDetails> builder =
+                ServiceInstance.<InstanceDetails>builder()
+                        .name(serviceName)
+                        .id(workerId)
+                        .payload(new InstanceDetails(workerId));
 
         if (coordinationConfiguration != null) {
             // The configuration is on the format IP:PORT,IP:PORT
@@ -158,9 +168,14 @@ public class ServiceDiscoveryHelper implements Managed {
             firstZookeeperIP = firstZookeeperIP.substring(0, firstZookeeperIP.indexOf(":"));
 
             // Find the IP that we want to advertise
-            String advertiseIP = ExposedIpFinder.getIpForRoute(ServiceInstanceBuilder.getAllLocalIPs(), firstZookeeperIP);
+            String advertiseIP =
+                    ExposedIpFinder.getIpForRoute(
+                            ServiceInstanceBuilder.getAllLocalIPs(), firstZookeeperIP);
 
-            log.debug(String.format("Advertising IP %s based on ZooKeeper IP of %s", advertiseIP, firstZookeeperIP));
+            log.debug(
+                    String.format(
+                            "Advertising IP %s based on ZooKeeper IP of %s",
+                            advertiseIP, firstZookeeperIP));
 
             builder.address(advertiseIP);
         }
@@ -177,7 +192,8 @@ public class ServiceDiscoveryHelper implements Managed {
     public ServiceInstance<InstanceDetails> queryForInstance() {
         List<ServiceInstance<InstanceDetails>> instances = queryForInstances();
         if (instances.isEmpty()) {
-            throw new IllegalStateException(String.format("No running %s instances found. Are all down?", serviceName));
+            throw new IllegalStateException(
+                    String.format("No running %s instances found. Are all down?", serviceName));
         }
 
         return instances.get(random.nextInt(instances.size()));
@@ -194,10 +210,11 @@ public class ServiceDiscoveryHelper implements Managed {
 
     /**
      * Register a previously registered service.
-     * <p>
-     * For outside accessors, call {@link #start()} instead of this.
+     *
+     * <p>For outside accessors, call {@link #start()} instead of this.
      */
-    private void registerService(ServiceInstance<InstanceDetails> serviceInstance) throws Exception {
+    private void registerService(ServiceInstance<InstanceDetails> serviceInstance)
+            throws Exception {
         log.info("Registering service instance: {}", serviceInstance);
         discovery.registerService(serviceInstance);
     }
@@ -239,27 +256,25 @@ public class ServiceDiscoveryHelper implements Managed {
     }
 
     private void startServicesWatcher() throws Exception {
-        PathChildrenCache watcherWatcher = new PathChildrenCache(coordinationClient, "/services", false);
+        PathChildrenCache watcherWatcher =
+                new PathChildrenCache(coordinationClient, "/services", false);
         watcherWatcher.getListenable().addListener(new ServicesWatcher(this, serviceName));
         watcherWatcher.start();
     }
 }
 
-/**
- * Helper class to support new version of Jackson in Curator.
- */
+/** Helper class to support new version of Jackson in Curator. */
 class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
     private final ObjectMapper mMapper;
     private final Class<T> mPayloadClass;
 
-    /**
-     * @param payloadClass used to validate payloads when deserializing
-     */
+    /** @param payloadClass used to validate payloads when deserializing */
     ModifiedJsonInstanceSerializer(final Class<T> payloadClass) {
         this(payloadClass, new ObjectMapper());
     }
 
-    private ModifiedJsonInstanceSerializer(final Class<T> pPayloadClass, final ObjectMapper pMapper) {
+    private ModifiedJsonInstanceSerializer(
+            final Class<T> pPayloadClass, final ObjectMapper pMapper) {
         mPayloadClass = pPayloadClass;
         mMapper = pMapper;
         mMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -330,18 +345,21 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
     private Integer getIntegerField(final JsonNode pNode, final String pFieldName) {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
-        return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isNumber()) ? pNode.get(pFieldName)
-                .getIntValue() : null;
+        return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isNumber())
+                ? pNode.get(pFieldName).getIntValue()
+                : null;
     }
 
     private Long getLongField(final JsonNode pNode, final String pFieldName) {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
-        return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isLong()) ? pNode.get(pFieldName)
-                .getLongValue() : null;
+        return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isLong())
+                ? pNode.get(pFieldName).getLongValue()
+                : null;
     }
 
-    private <O> O getObject(final JsonNode pNode, final String pFieldName, final Class<O> pObjectClass)
+    private <O> O getObject(
+            final JsonNode pNode, final String pFieldName, final Class<O> pObjectClass)
             throws IOException {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
@@ -364,20 +382,21 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         mMapper.writeValue(out, pInstance);
         return out.toByteArray();
-
     }
 }
 
 /**
- * Curators ServiceCache does not properly handle the situation where all services disappear and then come back again
- * <p>
- * The znode "/services/${serviceName}" is of the ZK type CONTAINER. Containers are automatically garbage collected by
- * ZK if the become empty after having contained something.
- * <p>
- * ServicesWatcher listens on changes to "/services", and if "/services/${serviceName}" is removed we'll restart
- * ServiceCache, which creates "/services/${serviceName}" again, and is able to discover new service announcements.
- * <p>
- * This Curator bug is tracked here: https://issues.apache.org/jira/browse/CURATOR-388
+ * Curators ServiceCache does not properly handle the situation where all services disappear and
+ * then come back again
+ *
+ * <p>The znode "/services/${serviceName}" is of the ZK type CONTAINER. Containers are automatically
+ * garbage collected by ZK if the become empty after having contained something.
+ *
+ * <p>ServicesWatcher listens on changes to "/services", and if "/services/${serviceName}" is
+ * removed we'll restart ServiceCache, which creates "/services/${serviceName}" again, and is able
+ * to discover new service announcements.
+ *
+ * <p>This Curator bug is tracked here: https://issues.apache.org/jira/browse/CURATOR-388
  */
 class ServicesWatcher implements PathChildrenCacheListener {
     private static final Logger log = LoggerFactory.getLogger(ServiceDiscoveryHelper.class);
@@ -391,7 +410,8 @@ class ServicesWatcher implements PathChildrenCacheListener {
     }
 
     @Override
-    public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
+    public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event)
+            throws Exception {
         if (event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
             log.info("ServicesWatcher CHILD_REMOVED: " + event.toString());
 

@@ -1,4 +1,3 @@
-
 package se.tink.libraries.creditsafe.consumermonitoring.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,13 +22,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "getPortfolioInformationResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"getPortfolioInformationResult"})
 @XmlRootElement(name = "GetPortfolioInformationResponse")
 public class GetPortfolioInformationResponse {
 
@@ -39,11 +35,8 @@ public class GetPortfolioInformationResponse {
 
     /**
      * Gets the value of the getPortfolioInformationResult property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link MonitoringResponse }
-     *     
+     *
+     * @return possible object is {@link MonitoringResponse }
      */
     public MonitoringResponse getGetPortfolioInformationResult() {
         return getPortfolioInformationResult;
@@ -51,14 +44,10 @@ public class GetPortfolioInformationResponse {
 
     /**
      * Sets the value of the getPortfolioInformationResult property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link MonitoringResponse }
-     *     
+     *
+     * @param value allowed object is {@link MonitoringResponse }
      */
     public void setGetPortfolioInformationResult(MonitoringResponse value) {
         this.getPortfolioInformationResult = value;
     }
-
 }

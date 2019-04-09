@@ -13,15 +13,16 @@ import org.joda.time.LocalDate;
 
 public class CountryDateUtils {
     protected Locale DEFAULT_LOCALE;
-    private final static TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("CET");
+    private static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone("CET");
     private final ImmutableSet<String> HOLIDAYS;
 
-    private static  CountryDateUtils BE_DATE_UTILS = new CountryDateUtils(HolidayCalendar.BELGIUM, new Locale("fr", "BE"));
-    private static  CountryDateUtils SV_DATE_UTILS = new CountryDateUtils(HolidayCalendar.SWEDEN, new Locale("sv", "SE"));
+    private static CountryDateUtils BE_DATE_UTILS =
+            new CountryDateUtils(HolidayCalendar.BELGIUM, new Locale("fr", "BE"));
+    private static CountryDateUtils SV_DATE_UTILS =
+            new CountryDateUtils(HolidayCalendar.SWEDEN, new Locale("sv", "SE"));
 
-
-    public CountryDateUtils(HolidayCalendar country, Locale countryLocale){
-        //this.holidayManager = HolidayManager.getInstance(country);
+    public CountryDateUtils(HolidayCalendar country, Locale countryLocale) {
+        // this.holidayManager = HolidayManager.getInstance(country);
         this.DEFAULT_LOCALE = countryLocale;
 
         ImmutableSet.Builder<String> holidayBuilder = ImmutableSet.builder();
@@ -42,13 +43,13 @@ public class CountryDateUtils {
         // Copy all dates to string represenation
         for (LocalDate date : holidayLocalDateBuilder.build()) {
             holidayBuilder.add(date.toString("yyyyMMdd"));
-            javaLocalDateBuilder.add(java.time.LocalDate.of(
-                    date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+            javaLocalDateBuilder.add(
+                    java.time.LocalDate.of(
+                            date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
         }
 
         HOLIDAYS = holidayBuilder.build();
     }
-
 
     public static CountryDateUtils getSwedishDateUtils() {
         return SV_DATE_UTILS;
@@ -57,11 +58,10 @@ public class CountryDateUtils {
     public static CountryDateUtils getBelgianDateUtils() {
         return BE_DATE_UTILS;
     }
-    
 
-
-    private void getCountrySpecificHolidays(Holiday holiday, ImmutableSet.Builder<LocalDate> holidayLocalDateBuilder){
-        if(DEFAULT_LOCALE.getCountry().equals("SE")){
+    private void getCountrySpecificHolidays(
+            Holiday holiday, ImmutableSet.Builder<LocalDate> holidayLocalDateBuilder) {
+        if (DEFAULT_LOCALE.getCountry().equals("SE")) {
             // Add Christmas Eve
             if (holiday.getPropertiesKey().equals("CHRISTMAS")) {
                 holidayLocalDateBuilder.add(holiday.getDate().minusDays(1));
@@ -75,8 +75,8 @@ public class CountryDateUtils {
     }
 
     /**
-     * Flattens a date by setting the time of day to noon (used in the case where we don't get time information from
-     * upstream information providers).
+     * Flattens a date by setting the time of day to noon (used in the case where we don't get time
+     * information from upstream information providers).
      */
     public Date flattenTime(Date date) {
         Calendar calendar = getCalendar();
@@ -90,9 +90,7 @@ public class CountryDateUtils {
         return calendar.getTime();
     }
 
-    /**
-     * Creates a calendar with the default timezone and locale.
-     */
+    /** Creates a calendar with the default timezone and locale. */
     public Calendar getCalendar() {
         return Calendar.getInstance(DEFAULT_TIMEZONE, DEFAULT_LOCALE);
     }
@@ -108,13 +106,12 @@ public class CountryDateUtils {
     }
 
     /**
-     * Return the current or previous business day for a date (ie. a sunday returns the previous friday's date, and an
-     * actual business day returns the same date).
+     * Return the current or previous business day for a date (ie. a sunday returns the previous
+     * friday's date, and an actual business day returns the same date).
      */
     public Date getCurrentOrPreviousBusinessDay(Date date) {
         return getCurrentOrPreviousBusinessDay(getCalendar(date)).getTime();
     }
-
 
     private Calendar getCurrentOrPreviousBusinessDay(Calendar calendar) {
         Calendar businessDay = getCalendar(calendar.getTime());
@@ -152,7 +149,6 @@ public class CountryDateUtils {
         return getNextBusinessDay(date);
     }
 
-
     public Date getNextBusinessDay(Date date) {
         Calendar calendar = getCalendar(date);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -160,19 +156,15 @@ public class CountryDateUtils {
         return getCurrentOrNextBusinessDay(calendar).getTime();
     }
 
-    /**
-     * Returns today's date with flattened time (12.00).
-     */
+    /** Returns today's date with flattened time (12.00). */
     public Date getToday() {
         return flattenTime(new Date());
     }
 
-
-    /**
-     * Returns whether a date is a business day or not.
-     */
+    /** Returns whether a date is a business day or not. */
     public boolean isBusinessDay(Calendar calendar) {
-        if (HOLIDAYS.contains(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(calendar.getTime()))) {
+        if (HOLIDAYS.contains(
+                ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(calendar.getTime()))) {
             return false;
         }
 
@@ -193,7 +185,4 @@ public class CountryDateUtils {
 
         return isBusinessDay(calendar);
     }
-
 }
-
-

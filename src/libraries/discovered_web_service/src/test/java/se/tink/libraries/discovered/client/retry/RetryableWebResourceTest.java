@@ -1,5 +1,12 @@
 package se.tink.libraries.discovered.client.retry;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_SERVICE_UNAVAILABLE;
+import static org.junit.Assert.assertEquals;
+
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.api.client.util.Sleeper;
@@ -18,26 +25,25 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.libraries.discovered.RetryableWebResource;
 import se.tink.libraries.http.client.WebResourceFactory;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_SERVICE_UNAVAILABLE;
-import static org.junit.Assert.assertEquals;
 
 public class RetryableWebResourceTest {
 
-    @Rule public final WireMockRule server = new WireMockRule(WireMockConfiguration.options().dynamicPort());
-    @Rule public final WireMockRule unavailableServer = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    @Rule
+    public final WireMockRule server =
+            new WireMockRule(WireMockConfiguration.options().dynamicPort());
+
+    @Rule
+    public final WireMockRule unavailableServer =
+            new WireMockRule(WireMockConfiguration.options().dynamicPort());
 
     private interface Resource {
         @GET
-        @Path("/resource") String endpoint();
+        @Path("/resource")
+        String endpoint();
     }
 
     @Test(expected = ClientHandlerException.class)
@@ -97,7 +103,7 @@ public class RetryableWebResourceTest {
     public void testURIModificationBenchmark() throws URISyntaxException {
         Stopwatch timer = Stopwatch.createStarted();
         URI uri = new URI("http://10.11.1.51:9091/user/ping");
-        for (int i = 0 ; i < 40000 ; i++) {
+        for (int i = 0; i < 40000; i++) {
             UriBuilder.fromUri(uri).host("10.11.1.52").port(9091).scheme("http").build();
         }
         System.out.println(timer.stop()); // 667.9 ms
@@ -106,16 +112,17 @@ public class RetryableWebResourceTest {
     @Test
     public void test503ServiceUnavailableRetry() throws URISyntaxException {
         String unavailableUri = "http://localhost:" + unavailableServer.port();
-        unavailableServer.stubFor(get(urlEqualTo("/resource"))
-                .willReturn(aResponse().withStatus(SC_SERVICE_UNAVAILABLE)));
+        unavailableServer.stubFor(
+                get(urlEqualTo("/resource"))
+                        .willReturn(aResponse().withStatus(SC_SERVICE_UNAVAILABLE)));
 
         // no mapping present
         String notFoundUri = "http://localhost:" + server.port();
 
-        ImmutableList<RetryableWebResource.Candidate> fallbacks = ImmutableList.of(
-                RetryableWebResource.Candidate.fromURI(new URI(unavailableUri)),
-                RetryableWebResource.Candidate.fromURI(new URI(notFoundUri))
-                );
+        ImmutableList<RetryableWebResource.Candidate> fallbacks =
+                ImmutableList.of(
+                        RetryableWebResource.Candidate.fromURI(new URI(unavailableUri)),
+                        RetryableWebResource.Candidate.fromURI(new URI(notFoundUri)));
 
         FakeTime fakeTime = new FakeTime();
         WebResource resource = new Client().resource(unavailableUri);
@@ -131,7 +138,8 @@ public class RetryableWebResourceTest {
 
     private static class FakeTime extends Ticker implements Sleeper {
 
-        // This should be, for the sake of realistic testing, something close to the HTTP call latencies we have between
+        // This should be, for the sake of realistic testing, something close to the HTTP call
+        // latencies we have between
         // containers.
         private static final long READ_DURATION_DELTA_NANOS = TimeUnit.MILLISECONDS.toNanos(50);
 
@@ -153,7 +161,5 @@ public class RetryableWebResourceTest {
 
             return now;
         }
-
     }
-
 }

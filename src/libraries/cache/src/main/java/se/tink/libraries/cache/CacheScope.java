@@ -1,8 +1,6 @@
 package se.tink.libraries.cache;
 
-/**
- * Enumeration of cache namespaces.
- */
+/** Enumeration of cache namespaces. */
 public enum CacheScope {
     SUGGEST_TRANSACTIONS_RESPONSE_BY_USERID("suggest-by-userId:"),
     FULL_REFRESH_TIMER_BY_CREDENTIALS("/timer/refreshCredentials/credentials/"),
