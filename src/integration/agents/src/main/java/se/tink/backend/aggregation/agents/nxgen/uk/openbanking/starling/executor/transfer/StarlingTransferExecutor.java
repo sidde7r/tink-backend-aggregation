@@ -92,16 +92,17 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         .setAmount(transfer.getAmount())
                         .build();
 
+        OAuth2Token paymentApprovalToken = getPaymentApprovalToken();
         final ExecutePaymentResponse paymentResponse =
                 apiClient.executeTransfer(
                         paymentRequest,
                         PaymentSignature.builder(keyUid, privateKey),
                         sourceAccount.getAccountUid(),
                         sourceAccount.getDefaultCategory(),
-                        getPaymentApprovalToken());
+                        paymentApprovalToken);
 
         final TransferStatusEntity status =
-                apiClient.checkTransferStatus(paymentResponse.getPaymentOrderUid());
+                apiClient.checkTransferStatus(paymentResponse.getPaymentOrderUid(), paymentApprovalToken);
 
         if (!status.isOk()) {
             throw getTransferException(
