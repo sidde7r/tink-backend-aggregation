@@ -13,6 +13,9 @@ import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.libraries.credentials.service.AuthenticateRequest;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -69,7 +72,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void authenticate(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void authenticate(AuthenticateRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("transfer")

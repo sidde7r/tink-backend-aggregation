@@ -17,6 +17,8 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.libraries.credentials.service.AuthenticateRequest;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -29,7 +31,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
@@ -140,16 +141,8 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void authenticate(final RefreshInformationRequest request, ClientInfo clientInfo) throws Exception {
-        if (request.isManual()) {
-            agentWorker.execute(agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
-        } else {
-            if (producer.isAvailable()) {
-                producer.send(new RefreshInformation(request, clientInfo));
-            } else {
-                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clientInfo));
-            }
-        }
+    public void authenticate(final AuthenticateRequest request, ClientInfo clientInfo) throws Exception {
+        agentWorker.execute(agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
     }
 
     @Override
