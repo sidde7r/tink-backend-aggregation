@@ -67,18 +67,19 @@ public class RabobankAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final RabobankAuthenticator authenticator =
-                new RabobankAuthenticator(apiClient, persistentStorage);
-
         final OAuth2AuthenticationController controller =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new RabobankAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()));
 
-        final ThirdPartyAppAuthenticationController<String> thirdParty =
+        return new AutoAuthenticationController(
+                request,
+                context,
                 new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper);
-
-        return new AutoAuthenticationController(request, context, thirdParty, controller);
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
