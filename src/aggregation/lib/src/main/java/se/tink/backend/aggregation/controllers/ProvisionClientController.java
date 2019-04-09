@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.controllers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -29,7 +28,7 @@ public class ProvisionClientController {
     private ClusterConfigurationsRepository clusterConfigurationsRepository;
     private ClientConfigurationsRepository clientConfigurationsRepository;
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
-    private static String availableCluster = "oxford-production";
+    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-production";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public ProvisionClientController(
@@ -46,11 +45,11 @@ public class ProvisionClientController {
     private void provision(String clientName, String aggregatorIdentifier) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(clientName), "Client cannot be null.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(availableCluster), "Cluster name cannot be null.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(OXFORD_PROD_CLUSTER_NAME), "Cluster name cannot be null.");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorIdentifier),
                 "Aggregator Id or identifier value should not be null.");
 
-        ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(availableCluster);
+        ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(OXFORD_PROD_CLUSTER_NAME);
         Preconditions.checkNotNull(clusterConfiguration, "Cluster configuration could not be found.");
 
         ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
