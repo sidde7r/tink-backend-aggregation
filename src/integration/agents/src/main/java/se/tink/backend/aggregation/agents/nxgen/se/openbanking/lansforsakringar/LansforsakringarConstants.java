@@ -52,6 +52,12 @@ public abstract class LansforsakringarConstants {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
     }
 
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
     public class Market {
         public static final String INTEGRATION_NAME = "lansforsakringar";
     }
