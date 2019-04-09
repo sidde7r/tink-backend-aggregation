@@ -76,172 +76,172 @@ public class TransactionItem {
     @JsonProperty("creditorId")
     private String creditorId;
 
-    public void setDebtorAccount(DebtorAccount debtorAccount) {
-        this.debtorAccount = debtorAccount;
-    }
-
     public DebtorAccount getDebtorAccount() {
         return debtorAccount;
     }
 
-    public void setCreditorAgent(String creditorAgent) {
-        this.creditorAgent = creditorAgent;
+    public void setDebtorAccount(DebtorAccount debtorAccount) {
+        this.debtorAccount = debtorAccount;
     }
 
     public String getCreditorAgent() {
         return creditorAgent;
     }
 
-    public void setDebtorAgent(String debtorAgent) {
-        this.debtorAgent = debtorAgent;
+    public void setCreditorAgent(String creditorAgent) {
+        this.creditorAgent = creditorAgent;
     }
 
     public String getDebtorAgent() {
         return debtorAgent;
     }
 
-    public void setRemittanceInformationStructured(String remittanceInformationStructured) {
-        this.remittanceInformationStructured = remittanceInformationStructured;
+    public void setDebtorAgent(String debtorAgent) {
+        this.debtorAgent = debtorAgent;
     }
 
     public String getRemittanceInformationStructured() {
         return remittanceInformationStructured;
     }
 
-    public void setUltimateCreditor(String ultimateCreditor) {
-        this.ultimateCreditor = ultimateCreditor;
+    public void setRemittanceInformationStructured(String remittanceInformationStructured) {
+        this.remittanceInformationStructured = remittanceInformationStructured;
     }
 
     public String getUltimateCreditor() {
         return ultimateCreditor;
     }
 
-    public void setRaboBookingDateTime(String raboBookingDateTime) {
-        this.raboBookingDateTime = raboBookingDateTime;
+    public void setUltimateCreditor(String ultimateCreditor) {
+        this.ultimateCreditor = ultimateCreditor;
     }
 
     public String getRaboBookingDateTime() {
         return raboBookingDateTime;
     }
 
-    public void setValueDate(String valueDate) {
-        this.valueDate = valueDate;
+    public void setRaboBookingDateTime(String raboBookingDateTime) {
+        this.raboBookingDateTime = raboBookingDateTime;
     }
 
     public String getValueDate() {
         return valueDate;
     }
 
-    public void setEndToEndId(String endToEndId) {
-        this.endToEndId = endToEndId;
+    public void setValueDate(String valueDate) {
+        this.valueDate = valueDate;
     }
 
     public String getEndToEndId() {
         return endToEndId;
     }
 
-    public void setUltimateDebtor(String ultimateDebtor) {
-        this.ultimateDebtor = ultimateDebtor;
+    public void setEndToEndId(String endToEndId) {
+        this.endToEndId = endToEndId;
     }
 
     public String getUltimateDebtor() {
         return ultimateDebtor;
     }
 
-    public void setExchangeRate(List<ExchangeRateItem> exchangeRate) {
-        this.exchangeRate = exchangeRate;
+    public void setUltimateDebtor(String ultimateDebtor) {
+        this.ultimateDebtor = ultimateDebtor;
     }
 
     public List<ExchangeRateItem> getExchangeRate() {
         return exchangeRate;
     }
 
-    public void setMandateId(String mandateId) {
-        this.mandateId = mandateId;
+    public void setExchangeRate(List<ExchangeRateItem> exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 
     public String getMandateId() {
         return mandateId;
     }
 
-    public void setTransactionAmount(TransactionAmount transactionAmount) {
-        this.transactionAmount = transactionAmount;
+    public void setMandateId(String mandateId) {
+        this.mandateId = mandateId;
     }
 
     public Amount getTransactionAmount() {
         return transactionAmount.getAmount();
     }
 
-    public void setCreditorAccount(CreditorAccount creditorAccount) {
-        this.creditorAccount = creditorAccount;
+    public void setTransactionAmount(TransactionAmount transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     public CreditorAccount getCreditorAccount() {
         return creditorAccount;
     }
 
-    public void setPurposeCode(String purposeCode) {
-        this.purposeCode = purposeCode;
+    public void setCreditorAccount(CreditorAccount creditorAccount) {
+        this.creditorAccount = creditorAccount;
     }
 
     public String getPurposeCode() {
         return purposeCode;
     }
 
-    public void setRaboDetailedTransactionType(String raboDetailedTransactionType) {
-        this.raboDetailedTransactionType = raboDetailedTransactionType;
+    public void setPurposeCode(String purposeCode) {
+        this.purposeCode = purposeCode;
     }
 
     public String getRaboDetailedTransactionType() {
         return raboDetailedTransactionType;
     }
 
-    public void setRaboTransactionTypeName(String raboTransactionTypeName) {
-        this.raboTransactionTypeName = raboTransactionTypeName;
+    public void setRaboDetailedTransactionType(String raboDetailedTransactionType) {
+        this.raboDetailedTransactionType = raboDetailedTransactionType;
     }
 
     public String getRaboTransactionTypeName() {
         return raboTransactionTypeName;
     }
 
-    public void setBookingDate(String bookingDate) {
-        this.bookingDate = bookingDate;
+    public void setRaboTransactionTypeName(String raboTransactionTypeName) {
+        this.raboTransactionTypeName = raboTransactionTypeName;
     }
 
     public String getBookingDate() {
         return bookingDate;
     }
 
-    public void setInstructedAmount(InstructedAmount instructedAmount) {
-        this.instructedAmount = instructedAmount;
+    public void setBookingDate(String bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
     public InstructedAmount getInstructedAmount() {
         return instructedAmount;
     }
 
-    public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
-        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+    public void setInstructedAmount(InstructedAmount instructedAmount) {
+        this.instructedAmount = instructedAmount;
     }
 
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
     }
 
-    public void setInitiatingPartyName(String initiatingPartyName) {
-        this.initiatingPartyName = initiatingPartyName;
+    public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
+        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
     }
 
     public String getInitiatingPartyName() {
         return initiatingPartyName;
     }
 
-    public void setCreditorId(String creditorId) {
-        this.creditorId = creditorId;
+    public void setInitiatingPartyName(String initiatingPartyName) {
+        this.initiatingPartyName = initiatingPartyName;
     }
 
     public String getCreditorId() {
         return creditorId;
+    }
+
+    public void setCreditorId(String creditorId) {
+        this.creditorId = creditorId;
     }
 
     @JsonIgnore

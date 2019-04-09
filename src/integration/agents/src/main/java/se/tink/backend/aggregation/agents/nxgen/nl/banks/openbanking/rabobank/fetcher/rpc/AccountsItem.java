@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,44 +26,44 @@ public class AccountsItem {
     @JsonProperty("status")
     private String status;
 
-    public void setResourceId(final String resourceId) {
-        this.resourceId = resourceId;
-    }
-
     public String getResourceId() {
         return resourceId;
     }
 
-    public void setLinks(final Links links) {
-        this.links = links;
+    public void setResourceId(final String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public Links getLinks() {
         return links;
     }
 
-    public void setIban(final String iban) {
-        this.iban = iban;
+    public void setLinks(final Links links) {
+        this.links = links;
     }
 
     public String getIban() {
         return iban;
     }
 
-    public void setCurrency(final String currency) {
-        this.currency = currency;
+    public void setIban(final String iban) {
+        this.iban = iban;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setStatus(final String status) {
-        this.status = status;
+    public void setCurrency(final String currency) {
+        this.currency = currency;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(final String status) {
+        this.status = status;
     }
 
     @JsonIgnore
@@ -74,7 +74,7 @@ public class AccountsItem {
                 .setBalance(balanceResponse.toAmount())
                 .setAlias(getIban())
                 .addAccountIdentifier(new IbanIdentifier(getIban()))
-                .putInTemporaryStorage(RabobankConstants.StorageKey.RESOURCE_ID, getResourceId())
+                .putInTemporaryStorage(StorageKey.RESOURCE_ID, getResourceId())
                 .build();
     }
 }

@@ -10,11 +10,11 @@ public class TransactionalAccountsResponse {
     @JsonProperty("accounts")
     private List<AccountsItem> accounts;
 
-    public void setAccounts(final List<AccountsItem> accounts) {
-        this.accounts = accounts;
-    }
-
     public List<AccountsItem> getAccounts() {
         return accounts;
+    }
+
+    public void setAccounts(final List<AccountsItem> accounts) {
+        this.accounts = accounts;
     }
 }

@@ -42,6 +42,12 @@ public class RabobankConstants {
         }
     }
 
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
     public class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
@@ -90,11 +96,5 @@ public class RabobankConstants {
         public static final String TRANSACTIONS_SIZE = "100";
         public static final String SCOPES =
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
-    }
-
-    public static class ErrorMessages {
-        public static final String INVALID_CONFIGURATION =
-                "Invalid Configuration: %s cannot be empty or null";
-        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }

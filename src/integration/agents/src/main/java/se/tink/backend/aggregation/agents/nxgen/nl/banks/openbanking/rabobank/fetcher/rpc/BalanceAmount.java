@@ -12,20 +12,20 @@ public class BalanceAmount {
     @JsonProperty("currency")
     private String currency;
 
-    public void setAmount(final String amount) {
-        this.amount = amount;
-    }
-
     public double getAmount() {
         return Double.parseDouble(amount);
     }
 
-    public void setCurrency(final String currency) {
-        this.currency = currency;
+    public void setAmount(final String amount) {
+        this.amount = amount;
     }
 
     public String getCurrency() {
         return currency;
+    }
+
+    public void setCurrency(final String currency) {
+        this.currency = currency;
     }
 
     @Override

@@ -5,8 +5,11 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
@@ -41,15 +44,12 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
 
-        return RabobankConstants.URLs.AUTHORIZE_RABOBANK
-                .queryParam(
-                        RabobankConstants.QueryParams.RESPONSE_TYPE,
-                        RabobankConstants.QueryValues.CODE)
-                .queryParam(RabobankConstants.QueryParams.REDIRECT_URI, redirectUri)
-                .queryParam(RabobankConstants.QueryParams.CLIENT_ID, clientId)
-                .queryParam(
-                        RabobankConstants.QueryParams.SCOPE, RabobankConstants.QueryValues.SCOPES)
-                .queryParam(RabobankConstants.QueryParams.STATE, state);
+        return URLs.AUTHORIZE_RABOBANK
+                .queryParam(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
+                .queryParam(QueryParams.REDIRECT_URI, redirectUri)
+                .queryParam(QueryParams.CLIENT_ID, clientId)
+                .queryParam(QueryParams.SCOPE, QueryValues.SCOPES)
+                .queryParam(QueryParams.STATE, state);
     }
 
     @Override
@@ -57,11 +57,9 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final ExchangeAuthorizationCodeRequest request = new ExchangeAuthorizationCodeRequest();
 
-        request.put(
-                RabobankConstants.QueryParams.GRANT_TYPE,
-                RabobankConstants.QueryValues.AUTHORIZATION_CODE);
-        request.put(RabobankConstants.QueryParams.CODE, code);
-        request.put(RabobankConstants.QueryParams.REDIRECT_URI, redirectUri);
+        request.put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
+        request.put(QueryParams.CODE, code);
+        request.put(QueryParams.REDIRECT_URI, redirectUri);
 
         return apiClient.exchangeAuthorizationCode(request).toOauthToken();
     }
@@ -72,11 +70,9 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final RefreshTokenRequest request = new RefreshTokenRequest();
 
-        request.put(
-                RabobankConstants.QueryParams.GRANT_TYPE,
-                RabobankConstants.QueryValues.AUTHORIZATION_CODE);
-        request.put(RabobankConstants.QueryParams.REDIRECT_URI, redirectUri);
-        request.put(RabobankConstants.QueryParams.REFRESH_TOKEN, refreshToken);
+        request.put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
+        request.put(QueryParams.REDIRECT_URI, redirectUri);
+        request.put(QueryParams.REFRESH_TOKEN, refreshToken);
 
         try {
             return apiClient.refreshAccessToken(request).toOauthToken();
@@ -87,6 +83,6 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(final OAuth2Token accessToken) {
-        persistentStorage.put(RabobankConstants.StorageKey.OAUTH_TOKEN, accessToken);
+        persistentStorage.put(StorageKey.OAUTH_TOKEN, accessToken);
     }
 }
