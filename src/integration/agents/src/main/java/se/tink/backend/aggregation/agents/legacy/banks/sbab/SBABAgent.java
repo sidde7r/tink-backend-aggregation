@@ -261,14 +261,15 @@ public class SBABAgent extends AbstractAgent
     }
 
     private BankIdStatus loginWithMobileBankId() throws BankIdException {
-        authenticationClient.initiateBankIdLogin();
+        final InitBankIdResponse initBankIdResponse = authenticationClient.initiateBankIdLogin();
+        final String pendingAuthCode = initBankIdResponse.getPendingAuthorizationCode();
+        final String autostartToken = initBankIdResponse.getAutostartToken();
 
         credentials.setSupplementalInformation(null);
-        credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        supplementalRequester.requestSupplementalInformation(credentials, false);
+        supplementalRequester.openBankId(autostartToken, false);
 
         for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
-            BankIdStatus bankIdStatus = authenticationClient.getLoginStatus();
+            BankIdStatus bankIdStatus = authenticationClient.getLoginStatus(pendingAuthCode);
 
             switch (bankIdStatus) {
                 case DONE:

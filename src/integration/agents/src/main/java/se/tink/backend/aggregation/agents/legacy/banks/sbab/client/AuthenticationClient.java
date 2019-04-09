@@ -29,29 +29,23 @@ public class AuthenticationClient extends SBABClient {
     private static final String BANKID_INIT_URL = SECURE_BASE_URL + "/auth/api/v1/initiate";
     private static final String BANKID_POLL_URL = SECURE_BASE_URL + "/auth/api/v1/pending";
 
-    private String reference;
-
     public AuthenticationClient(Client client, Credentials credentials, String userAgent) {
         super(client, credentials, userAgent);
     }
 
-    public void initiateBankIdLogin() {
-
-        InitBankIdResponse response =
-                client.resource(BANKID_INIT_URL)
-                        .queryParam("dep", "privat")
-                        .queryParam("auth_mech", "PW_MBID")
-                        .queryParam("auth_device", "OTHER")
-                        .queryParam("pnr", credentials.getField(Field.Key.USERNAME))
-                        .get(InitBankIdResponse.class);
-        reference = response.getPendingAuthorizationCode();
+    public InitBankIdResponse initiateBankIdLogin() {
+        return client.resource(BANKID_INIT_URL)
+                .queryParam("dep", "privat")
+                .queryParam("auth_mech", "PW_MBID")
+                .queryParam("auth_device", "OTHER")
+                .queryParam("pnr", credentials.getField(Field.Key.USERNAME))
+                .get(InitBankIdResponse.class);
     }
 
-    public BankIdStatus getLoginStatus() {
-
-        PollBankIdResponse response =
+    public BankIdStatus getLoginStatus(String pendingAuthCode) {
+        final PollBankIdResponse response =
                 client.resource(BANKID_POLL_URL)
-                        .queryParam("code", reference)
+                        .queryParam("code", pendingAuthCode)
                         .get(PollBankIdResponse.class);
 
         return BANKID_STATUS.getOrDefault(response.getStatus(), BankIdStatus.FAILED_UNKNOWN);

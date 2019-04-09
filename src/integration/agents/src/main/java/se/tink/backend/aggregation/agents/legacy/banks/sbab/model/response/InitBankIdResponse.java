@@ -15,4 +15,8 @@ public class InitBankIdResponse {
     public String getPendingAuthorizationCode() {
         return pendingAuthorizationCode;
     }
+
+    public String getAutostartToken() {
+        return autostartToken;
+    }
 }
