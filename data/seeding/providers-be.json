@@ -579,7 +579,24 @@
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "supplementalFields": [
+                {
+                    "description": "Challenge",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "numeric": true,
+                    "name": "signcodeinput"
+                }
+            ]
         },
         {
             "className": "nxgen.be.banks.fortis.FortisAgent",
@@ -624,7 +641,24 @@
             "popular": false,
             "status": "ENABLED",
             "transactional": true,
-            "type": "BANK"
+            "type": "BANK",
+            "supplementalFields": [
+                {
+                    "description": "Challenge",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your 8 digit response code from your card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "numeric": true,
+                    "name": "signcodeinput"
+                }
+            ]
         },
         {
             "name": "be-test-password",
