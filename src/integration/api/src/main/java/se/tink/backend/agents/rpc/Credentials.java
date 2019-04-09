@@ -52,6 +52,7 @@ public class Credentials implements Cloneable {
     private CredentialsTypes type;
     private Date updated;
     private String userId;
+    @JsonIgnore
     private boolean forceManualAuthentication = false;
 
     @JsonIgnore // Shoudn't be used between containers.
@@ -412,6 +413,7 @@ public class Credentials implements Cloneable {
         this.providerLatency = providerLatency;
     }
 
+    @JsonIgnore
     public void setForceManualAuthentication(boolean forceManualAuthentication) {
         this.forceManualAuthentication = forceManualAuthentication;
     }
