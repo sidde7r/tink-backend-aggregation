@@ -11,7 +11,7 @@ import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 public enum RefreshableItem {
-    ACCOUNTS, TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS, EINVOICES, TRANSFER_DESTINATIONS,
+    ACCOUNTS, TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS, EINVOICES, TRANSFER_DESTINATIONS, IDENTITY,
 
     CHECKING_ACCOUNTS(AccountTypes.CHECKING, AccountTypes.OTHER),
     CHECKING_TRANSACTIONS(AccountTypes.CHECKING, AccountTypes.OTHER),
@@ -48,7 +48,9 @@ public enum RefreshableItem {
             RefreshableItem.TRANSFER_DESTINATIONS,
 
             RefreshableItem.ACCOUNTS,
-            RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS
+            RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
+
+            RefreshableItem.IDENTITY
     ));
 
     public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS = ImmutableSet.<RefreshableItem>builder()
@@ -81,6 +83,7 @@ public enum RefreshableItem {
             .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
             .add(RefreshableItem.EINVOICES)
             .add(RefreshableItem.TRANSFER_DESTINATIONS)
+            .add(RefreshableItem.IDENTITY)
             .build();
 
     public boolean isAccountType(AccountTypes type) {
