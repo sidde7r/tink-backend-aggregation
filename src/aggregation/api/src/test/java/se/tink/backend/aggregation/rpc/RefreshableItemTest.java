@@ -27,7 +27,9 @@ public class RefreshableItemTest {
             RefreshableItem.TRANSFER_DESTINATIONS,
 
             RefreshableItem.ACCOUNTS,
-            RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS
+            RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
+
+            RefreshableItem.IDENTITY
     ));
 
     @Test
@@ -50,6 +52,7 @@ public class RefreshableItemTest {
         Assert.assertEquals(RefreshableItem.TRANSFER_DESTINATIONS, sorted.get(11));
         Assert.assertEquals(RefreshableItem.ACCOUNTS, sorted.get(12));
         Assert.assertEquals(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS, sorted.get(13));
+        Assert.assertEquals(RefreshableItem.IDENTITY, sorted.get(14));
     }
 
     @Test
