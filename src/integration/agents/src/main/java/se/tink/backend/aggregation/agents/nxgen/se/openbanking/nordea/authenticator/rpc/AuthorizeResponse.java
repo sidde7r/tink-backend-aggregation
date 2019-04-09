@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

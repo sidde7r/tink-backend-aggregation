@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import javax.ws.rs.core.MediaType;
-
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetCodeResponse;
@@ -10,9 +8,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.http.*;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import javax.ws.rs.core.MediaType;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
@@ -40,13 +42,14 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public GetCodeResponse getCode() {
+        // Authentication for Sweden is still mocked. It differs from authentication for other
+        // countries.
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return createRequestWithTppToken(
-                        new URL(NordeaSeConstants.Urls.GET_CODE + getOrderRef()))
+        return createRequestWithTppToken(new URL(NordeaSeConstants.Urls.GET_CODE + getOrderRef()))
                 .get(GetCodeResponse.class);
     }
 

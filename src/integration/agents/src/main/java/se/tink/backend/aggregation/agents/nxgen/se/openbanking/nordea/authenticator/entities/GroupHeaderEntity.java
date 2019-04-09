@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,5 +14,4 @@ public class GroupHeaderEntity {
 
     @JsonProperty("message_identification")
     private String messageIdentification;
-
 }

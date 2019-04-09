@@ -7,8 +7,7 @@ import java.util.List;
 
 @JsonObject
 public class AuthorizeRequest {
-    @JsonProperty
-    private long duration;
+    @JsonProperty private long duration;
 
     @JsonProperty("psu_id")
     private String psuId;
@@ -19,13 +18,17 @@ public class AuthorizeRequest {
     @JsonProperty("response_type")
     private String responseType;
 
-    @JsonProperty
-    private List<String> scope;
+    @JsonProperty private List<String> scope;
 
-    @JsonProperty
-    private String state;
+    @JsonProperty private String state;
 
-    public AuthorizeRequest(long duration, String psuId, String redirectUri, String responseType, List<String> scope, String state) {
+    public AuthorizeRequest(
+            long duration,
+            String psuId,
+            String redirectUri,
+            String responseType,
+            List<String> scope,
+            String state) {
         this.duration = duration;
         this.psuId = psuId;
         this.redirectUri = redirectUri;

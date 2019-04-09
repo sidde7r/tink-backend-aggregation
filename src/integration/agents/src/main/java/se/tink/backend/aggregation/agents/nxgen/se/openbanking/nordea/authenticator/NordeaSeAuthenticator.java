@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
@@ -13,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 import java.util.Arrays;
 

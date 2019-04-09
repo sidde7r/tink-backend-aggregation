@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;

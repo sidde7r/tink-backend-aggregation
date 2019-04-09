@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
@@ -13,6 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.util.Optional;
 
 public final class NordeaSeAgent extends NordeaBaseAgent {
     private NordeaSeApiClient apiClient;

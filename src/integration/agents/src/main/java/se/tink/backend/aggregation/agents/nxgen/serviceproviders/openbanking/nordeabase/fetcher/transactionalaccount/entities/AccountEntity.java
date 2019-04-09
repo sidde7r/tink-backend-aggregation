@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -16,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.hadoop.ipc.Client.LOG;
 import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
 
 @JsonObject
 public class AccountEntity {
+    private static final AggregationLogger LOG = new AggregationLogger(AccountEntity.class);
 
     @JsonProperty("_id")
     private String id;
