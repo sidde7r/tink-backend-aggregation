@@ -55,7 +55,7 @@ public class ProvisionClientController {
 
         ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
         if (!Objects.isNull(existingClientConfiguration)) {
-            log.info(String.format("Another entry for %s was found in the database.", existingClientConfiguration.getClientName()));
+            log.info("Another entry for {} was found in the database.", existingClientConfiguration.getClientName());
             return;
         }
 
