@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Pagination;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration.BbvaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
@@ -39,7 +38,7 @@ public final class BbvaAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BbvaApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new BbvaApiClient(client, sessionStorage);
     }
 
     @Override
@@ -53,16 +52,9 @@ public final class BbvaAgent extends NextGenerationAgent {
                                 Market.CLIENT_NAME,
                                 BbvaConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
-        if (!bbvaConfiguration.isValid()) {
-            throw new IllegalStateException(Exceptions.INVALID_CONFIGURATION);
-        }
+                                () -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage.put(StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
-        persistentStorage.put(StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
-        persistentStorage.put(StorageKeys.CLIENT_ID, bbvaConfiguration.getClientId());
-        persistentStorage.put(StorageKeys.CLIENT_SECRET, bbvaConfiguration.getClientSecret());
-        persistentStorage.put(StorageKeys.REDIRECT_URI, bbvaConfiguration.getRedirectUrl());
+        apiClient.setConfiguration(bbvaConfiguration);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BbvaConstants {
@@ -22,11 +21,6 @@ public abstract class BbvaConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_AUTH_URL = "BASE_AUTH_URL";
-        public static final String BASE_API_URL = "BASE_API_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String TOKEN = "TOKEN";
     }
 
@@ -48,28 +42,14 @@ public abstract class BbvaConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
+    public static class FormKeys {
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public static class HeaderValues {
-        public static final String AUTHORIZATION_RESPONSE = "Basic %s";
-        public static final String AUTHORIZATION = "jwt %s";
-    }
-
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {
-        public static final LogTag MISSING_CONFIGURATION = LogTag.from("BBVA_MISSING_CONFIG");
-    }
-
-    public static class Exceptions {
-        public static final String MISSING_CONFIGURATION_LOG =
-                " {} - Missing BBVA configuration: {}";
-        public static final String MISSING_CONFIGURATION = "BBVA configuration missing.";
-        public static final String INVALID_CONFIGURATION = "BBVA configuration is invalid.";
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token!";
     }
 
@@ -84,9 +64,5 @@ public abstract class BbvaConstants {
 
     public class Formats {
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    }
-
-    public class BodyKeys {
-        public static final String REFRESH_TOKEN = "refresh_token";
     }
 }
