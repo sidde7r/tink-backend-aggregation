@@ -20,7 +20,7 @@ public class PortfolioAccountMapperEntity {
     @JsonProperty("KTO_FUNK_KOD")
     private Integer
             accountCode; // Looks like this is 3 for the mapping between depot id and the real
-                         // account number;
+    // account number;
 
     @JsonProperty("DISP_BEL")
     private Double availableAmount; // Looks like this value always is 0.00

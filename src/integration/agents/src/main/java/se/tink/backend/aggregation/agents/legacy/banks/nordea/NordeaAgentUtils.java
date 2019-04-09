@@ -857,7 +857,7 @@ public class NordeaAgentUtils {
             switch (beneficiaryBankId) {
                 case DANSKE_OGB:
                 case DANSKE_DDB: // Don't know if there is a correct match between OGB/DDB and
-                                 // DANSKE_BANK/DANSKE_BANK_SVERIGE so using same for both here
+                    // DANSKE_BANK/DANSKE_BANK_SVERIGE so using same for both here
                     return Optional.of(Bank.DANSKE_BANK);
                 default:
                     Optional<Map.Entry<Bank, String>> matchingBeneficiaryBankId =

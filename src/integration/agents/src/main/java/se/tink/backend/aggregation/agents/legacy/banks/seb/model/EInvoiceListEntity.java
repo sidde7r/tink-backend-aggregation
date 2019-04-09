@@ -365,10 +365,9 @@ public class EInvoiceListEntity implements MatchableTransferRequestEntity {
     public enum State {
         UNKNOWN(null),
         INITIAL("1"),
-        OUTBOX(
-                "2"); // Guess there can be more states, but these are the ones we know for now and
-                      // most importantly the "2" state is the needed for adding to outbox. If "1"
-                      // is set nothing happens.
+        OUTBOX("2"); // Guess there can be more states, but these are the ones we know for now and
+        // most importantly the "2" state is the needed for adding to outbox. If "1"
+        // is set nothing happens.
 
         private final String state;
 
