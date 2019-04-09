@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.controllers;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Objects;
@@ -18,6 +19,8 @@ import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfi
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
+import se.tink.backend.aggregation.storage.file.ProvisionConfigurationParser;
+import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 
 public class ProvisionClientController {
     private static final Logger log = LoggerFactory.getLogger(ProvisionClientController.class);
@@ -40,7 +43,7 @@ public class ProvisionClientController {
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
     }
 
-    public void provision(String clientName, String aggregatorIdentifier) {
+    private void provision(String clientName, String aggregatorIdentifier) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(clientName), "Client cannot be null.");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(availableCluster), "Cluster name cannot be null.");
@@ -52,7 +55,7 @@ public class ProvisionClientController {
 
         ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
         if (!Objects.isNull(existingClientConfiguration)) {
-            log.info(String.format("We found another entry for that %s in the database.", existingClientConfiguration.getClientName()));
+            log.info(String.format("Another entry for %s was found in the database.", existingClientConfiguration.getClientName()));
             return;
         }
 
@@ -94,5 +97,13 @@ public class ProvisionClientController {
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
         return BASE64_ENCODER.encodeToString(bytes);
+    }
+
+    public void provision() throws IOException {
+        ProvisionClientsConfig conf  = ProvisionConfigurationParser.parse();
+        conf.getClients().forEach((k,v) -> this.provision(
+                k,
+                v.getAggregatorIdentifier()
+        ));
     }
 }
