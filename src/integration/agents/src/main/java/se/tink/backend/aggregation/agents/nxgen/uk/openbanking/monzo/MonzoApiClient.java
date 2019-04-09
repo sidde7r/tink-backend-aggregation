@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
+import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.ExchangeRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.configuration.MonzoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.rpc.TransactionsResponse;
@@ -18,10 +21,21 @@ public class MonzoApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private MonzoConfiguration configuration;
 
-    public MonzoApiClient(TinkHttpClient client, PersistentStorage storage) {
+    public MonzoApiClient(
+            TinkHttpClient client, PersistentStorage storage) {
         this.client = client;
         this.persistentStorage = storage;
+    }
+
+    public MonzoConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(MonzoConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public TokenResponse exchangeAuthorizationCode(ExchangeRequest body) {
@@ -53,13 +67,14 @@ public class MonzoApiClient {
                 .get(BalanceResponse.class);
     }
 
-    public TransactionsResponse fetchTransactions(String accountId, Object since, Object before, int limit) {
-
-        RequestBuilder builder = client.request(MonzoConstants.URL.AIS_TRANSACTIONS)
-                .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
-                .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
-                .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(limit))
-                .accept(MediaType.APPLICATION_JSON);
+    public TransactionsResponse fetchTransactions(
+            String accountId, Object since, Object before, int limit) {
+        final RequestBuilder builder =
+                client.request(MonzoConstants.URL.AIS_TRANSACTIONS)
+                        .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
+                        .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
+                        .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(limit))
+                        .accept(MediaType.APPLICATION_JSON);
 
         if (since != null) {
             builder.queryParam(MonzoConstants.RequestKey.SINCE, since.toString());
@@ -72,11 +87,14 @@ public class MonzoApiClient {
     }
 
     private String getBearerHeaderValue() {
-
-        OAuth2Token token = persistentStorage.get(MonzoConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+        final OAuth2Token token =
+                persistentStorage
+                        .get(MonzoConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SessionError.SESSION_EXPIRED.exception()));
 
         return "Bearer " + token.getAccessToken();
     }
-
 }
