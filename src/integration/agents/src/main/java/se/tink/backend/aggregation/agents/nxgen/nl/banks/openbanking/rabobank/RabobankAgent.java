@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
-import java.util.Base64;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.session.RabobankSessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -39,6 +38,7 @@ public class RabobankAgent extends NextGenerationAgent {
             final AgentContext context,
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
         apiClient = new RabobankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
@@ -47,38 +47,19 @@ public class RabobankAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final RabobankConfiguration rabobankConfiguration = new RabobankConfiguration();
-        //                configuration
-        //                        .getIntegrations()
-        //                        .getClientConfiguration(RabobankConstants.INTEGRATION_NAME,
-        // clientName, RabobankConfiguration.class)
-        //                        .orElseThrow(
-        //                                () -> new IllegalStateException("Rabobank configuration
-        // missing."));
-        if (!rabobankConfiguration.isValid()) {
-            throw new IllegalStateException("Rabobank configuration is invalid.");
-        }
-
-        final String clientSSLP12 = rabobankConfiguration.getClientSSLP12();
+        final RabobankConfiguration rabobankConfiguration = getClientConfiguration();
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
-        final byte[] p12 = Base64.getDecoder().decode(clientSSLP12);
-        client.setSslClientCertificate(p12, password);
+        final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
-        persistentStorage.put(
-                RabobankConstants.StorageKey.CLIENT_ID, rabobankConfiguration.getClientId());
-        persistentStorage.put(
-                RabobankConstants.StorageKey.CLIENT_SECRET,
-                rabobankConfiguration.getClientSecret());
-        persistentStorage.put(
-                RabobankConstants.StorageKey.REDIRECT_URL, rabobankConfiguration.getRedirectUrl());
-        persistentStorage.put(RabobankConstants.StorageKey.CLIENT_CERT_KEY_PASSWORD, password);
-        persistentStorage.put(RabobankConstants.StorageKey.CLIENT_SSL_P12, clientSSLP12);
-        persistentStorage.put(
-                RabobankConstants.StorageKey.CLIENT_CERT,
-                RabobankUtils.getB64EncodedX509Certificate(p12, password));
-        persistentStorage.put(
-                RabobankConstants.StorageKey.CLIENT_CERT_SERIAL,
-                RabobankUtils.getCertificateSerialNumber(p12, password));
+        client.setSslClientCertificate(p12, password);
+    }
+
+    public RabobankConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

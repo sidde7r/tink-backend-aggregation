@@ -43,14 +43,7 @@ public class RabobankConstants {
     }
 
     public class StorageKey {
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
-        public static final String REDIRECT_URL = "redirect_url";
-        public static final String CLIENT_CERT = "client_cert";
-        public static final String CLIENT_SSL_P12 = "client_ssl_p12";
-        public static final String CLIENT_CERT_KEY_PASSWORD = "client_cert_key_password";
-        public static final String CLIENT_CERT_SERIAL = "client_cert_serial";
         public static final String RESOURCE_ID = "resource_id";
     }
 
@@ -97,5 +90,11 @@ public class RabobankConstants {
         public static final String TRANSACTIONS_SIZE = "100";
         public static final String SCOPES =
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }
