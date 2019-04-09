@@ -16,13 +16,13 @@ container_image(
         "server",
         "/etc/tink/aggregation-server.yml",
     ],
-    workdir = "/usr/share/tink-backend-aggregation",
     tars = [
         "//deb:aggregation_bin_tar",
         "//deb:aggregation_data_tar",
         "//deb:libkbc_wbaes_bin_tar",
         "//deb:phantomjs_bin_tar",
     ],
+    workdir = "/usr/share/tink-backend-aggregation",
 )
 
 container_push(

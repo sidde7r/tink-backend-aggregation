@@ -38,6 +38,6 @@ genrule(
     srcs = [":bin_deploy.jar"],
     outs = ["aggregation_service.jar"],
     cmd = "cp $(location :bin_deploy.jar) \"$(@)\"",
-    visibility = ["//visibility:public"],
     tags = ["manual"],
+    visibility = ["//visibility:public"],
 )

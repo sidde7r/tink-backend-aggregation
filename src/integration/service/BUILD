@@ -8,43 +8,40 @@ load(
 java_binary(
     name = "integration",
     srcs = glob(["src/main/java/**/*.java"]),
+    data = [
+        "//etc/integration:development-configuration",
+    ],
     main_class = "se.tink.backend.integration.boot.IntegrationService",
+    resources = glob([
+        "src/main/resources/**/*",
+    ]),
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:log-runtime",
         "//third_party:netty-runtime",
     ],
-    resources = glob([
-        "src/main/resources/**/*",
-    ]),
-    data = [
-        "//etc/integration:development-configuration",
-    ],
     deps = [
-        "//src/integration/grpc-server:grpc-server",
-        "//src/integration/grpc-services:grpc-services",
-
-        "//src/libraries:simple-http-server",
+        "//src/integration/grpc-server",
+        "//src/integration/grpc-services",
         "//src/libraries:health-check-handler",
-        "//src/libraries/metrics:metrics",
-
-        "//third_party:log",
-        "//third_party:prometheus",
-        "//third_party:com_google_inject_guice",
-
-        "@io_grpc_grpc_core//jar",
+        "//src/libraries:simple-http-server",
+        "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:log",
         "//third_party:org_yaml_snakeyaml",
+        "//third_party:prometheus",
+        "@io_grpc_grpc_core//jar",
     ],
 )
 
 genrule(
     name = "renamed-deploy-jar",
     srcs = [
-        ":integration_deploy.jar"
+        ":integration_deploy.jar",
     ],
     outs = [
-        "service.jar"
+        "service.jar",
     ],
     cmd = "cp $(location :integration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
@@ -61,11 +58,11 @@ pkg_tar(
 container_image(
     name = "docker",
     base = "@openjdk_jdk8//image",
+    tags = ["manual"],
     tars = [
         ":bin_tar",
     ],
     workdir = "/usr/share/tink-backend-integration",
-    tags = ["manual"],
 )
 
 container_push(

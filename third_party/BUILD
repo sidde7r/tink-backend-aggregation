@@ -1,4 +1,3 @@
-
 java_library(
     name = "asm_asm",
     visibility = ["//visibility:public"],
@@ -122,7 +121,8 @@ java_library(
     ],
 )
 
-java_library( # TODO check is this used?
+java_library(
+    # TODO check is this used?
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
     visibility = ["//visibility:public"],
     exports = [
@@ -302,7 +302,8 @@ java_library(
     ],
 )
 
-java_library( # TODO check is it used??
+java_library(
+    # TODO check is it used??
     name = "com_maxmind_geoip2_geoip2",
     visibility = ["//visibility:public"],
     exports = [
@@ -584,7 +585,8 @@ java_library(
     ],
 )
 
-java_library( # is it necessary ?
+java_library(
+    # is it necessary ?
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
     exports = [
@@ -604,7 +606,7 @@ java_library(
     exports = [
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_grpc_metrics//jar",
-    ]
+    ],
 )
 
 java_library(
@@ -746,7 +748,8 @@ java_library(
     ],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "jfree_jcommon",
     visibility = ["//visibility:public"],
     exports = [
@@ -796,7 +799,8 @@ java_library(
     ],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
     exports = [
@@ -832,7 +836,8 @@ java_library(
     ],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "oauth_signpost_signpost_commonshttp4",
     visibility = ["//visibility:public"],
     exports = [
@@ -1019,7 +1024,8 @@ java_library(
     ],
 )
 
-java_library( # is this used?
+java_library(
+    # is this used?
     name = "org_apache_kafka_kafka_streams",
     visibility = ["//visibility:public"],
     exports = [
@@ -1034,7 +1040,8 @@ java_library( # is this used?
     ],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "org_apache_lucene_lucene_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1042,7 +1049,8 @@ java_library( # TODO: check is this used?
     ],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "org_apache_mahout_mahout_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1333,7 +1341,6 @@ java_library(
     ],
 )
 
-
 java_library(
     name = "org_seleniumhq_selenium_selenium_java",
     visibility = ["//visibility:public"],
@@ -1501,7 +1508,8 @@ java_library(
     exports = ["@org_hamcrest_hamcrest_core//jar"],
 )
 
-java_library( # TODO: check is this used?
+java_library(
+    # TODO: check is this used?
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = ["@org_hamcrest_hamcrest_library//jar"],
@@ -1560,63 +1568,57 @@ java_library(
     name = "log",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_logging_log4j_log4j_core//jar",
-        "@org_apache_logging_log4j_log4j_api//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
-    ]
+        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
+        "@org_apache_logging_log4j_log4j_api//jar",
+        "@org_apache_logging_log4j_log4j_core//jar",
+    ],
 )
 
 java_library(
     name = "log-runtime",
     visibility = ["//visibility:public"],
     exports = [
-       "@com_fasterxml_jackson_core_jackson_core//jar",
-       "@com_fasterxml_jackson_core_jackson_annotations//jar",
-       "@org_yaml_snakeyaml//jar",
-    ]
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@com_fasterxml_jackson_core_jackson_core//jar",
+        "@org_yaml_snakeyaml//jar",
+    ],
 )
 
 java_library(
     name = "netty",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_codec_dns//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_socks//jar",
-        "@io_netty_netty_transport//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler_proxy//jar",
-
-        "@io_grpc_grpc_protobuf//jar",
+        "@com_google_api_grpc_proto_google_common_protos//jar",
+        "@com_google_code_findbugs_jsr305//jar",
+        "@com_google_code_gson_gson//jar",
+        "@com_google_guava_guava//jar",
+        "@com_google_instrumentation_instrumentation_api//jar",
+        "@com_google_protobuf_protobuf_java//jar",
+        "@com_google_protobuf_protobuf_java_util//jar",
         "@io_grpc_grpc_auth//jar",
         "@io_grpc_grpc_context//jar",
+        "@io_grpc_grpc_core//jar",
+        "@io_grpc_grpc_netty//jar",
+        "@io_grpc_grpc_protobuf//jar",
         "@io_grpc_grpc_protobuf_lite//jar",
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_grpc_grpc_stub//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_netty//jar",
         "@io_grpc_grpc_testing//jar",
-
-        "@com_google_guava_guava//jar",
-        "@com_google_code_gson_gson//jar",
-
-        "@com_google_api_grpc_proto_google_common_protos//jar",
-
-        "@com_google_protobuf_protobuf_java//jar",
-        "@com_google_protobuf_protobuf_java_util//jar",
-
-        "@com_google_code_findbugs_jsr305//jar",
-
+        "@io_netty_netty_buffer//jar",
+        "@io_netty_netty_codec//jar",
+        "@io_netty_netty_codec_dns//jar",
+        "@io_netty_netty_codec_http//jar",
+        "@io_netty_netty_codec_http2//jar",
+        "@io_netty_netty_codec_socks//jar",
+        "@io_netty_netty_common//jar",
+        "@io_netty_netty_handler//jar",
+        "@io_netty_netty_handler_proxy//jar",
+        "@io_netty_netty_resolver//jar",
+        "@io_netty_netty_resolver_dns//jar",
+        "@io_netty_netty_transport//jar",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_grpc_metrics//jar",
-        "@com_google_instrumentation_instrumentation_api//jar",
     ],
 )
 
@@ -1625,19 +1627,19 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@io_netty_netty_tcnative_boringssl_static//jar",
-    ]
+    ],
 )
 
 java_library(
     name = "prometheus",
     visibility = ["//visibility:public"],
     exports = [
-        "@io_prometheus_simpleclient_skeleton_version//jar",
+        "@io_prometheus_simpleclient_common_skeleton_version//jar",
         "@io_prometheus_simpleclient_hotspot_skeleton_version//jar",
         "@io_prometheus_simpleclient_httpserver//jar",
         "@io_prometheus_simpleclient_pushgateway//jar",
-        "@io_prometheus_simpleclient_common_skeleton_version//jar",
-    ]
+        "@io_prometheus_simpleclient_skeleton_version//jar",
+    ],
 )
 
 java_library(
@@ -1664,14 +1666,9 @@ java_library(
     name = "java_spark",
     visibility = ["//visibility:public"],
     exports = [
-        "@commons_logging_commons_logging//jar",
         "@com_sparkjava_spark_core//jar",
+        "@commons_logging_commons_logging//jar",
         "@javax_servlet_javax_servlet_api_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_client_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_common_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
-        "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
         "@org_eclipse_jetty_jetty_client_spark_dep//jar",
         "@org_eclipse_jetty_jetty_http_spark_dep//jar",
         "@org_eclipse_jetty_jetty_io_spark_dep//jar",
@@ -1681,6 +1678,11 @@ java_library(
         "@org_eclipse_jetty_jetty_util_spark_dep//jar",
         "@org_eclipse_jetty_jetty_webapp_spark_dep//jar",
         "@org_eclipse_jetty_jetty_xml_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_client_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_common_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )

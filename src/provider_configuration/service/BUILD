@@ -31,8 +31,8 @@ java_binary(
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//src/provider_configuration/service",
         "//src/libraries/console_json_logger",
+        "//src/provider_configuration/service",
         "//third_party:mysql_mysql_connector_java",
     ],
 )
@@ -43,6 +43,6 @@ genrule(
     srcs = [":bin_deploy.jar"],
     outs = ["provider_configuration_service.jar"],
     cmd = "cp $(location :bin_deploy.jar) \"$(@)\"",
-    visibility = ["//visibility:public"],
     tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
