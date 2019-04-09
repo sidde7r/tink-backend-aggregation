@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
+import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.QueryValues;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.Deut
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.rpc.PartnersResponse;
@@ -21,70 +24,78 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class DeutscheBankApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
+    private DeutscheBankConfiguration configuration;
 
-    DeutscheBankApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    DeutscheBankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
+    }
+
+    public void setConfiguration(DeutscheBankConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    public DeutscheBankConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     private RequestBuilder createRequestInSession(String url) {
-        return client.request(new URL(url)).addBearerToken(getTokenFromSession());
+        return client.request(url).addBearerToken(getTokenFromSession());
     }
 
     public PartnersResponse fetchPartners() {
-        final String url = persistentStorage.get(StorageKeys.BASE_URL) + Urls.PARTNERS;
+        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return createRequestInSession(url).get(PartnersResponse.class);
+        return createRequestInSession(baseUrl + Urls.PARTNERS).get(PartnersResponse.class);
     }
 
     public FetchAccountResponse fetchAccounts() {
-        final String url = persistentStorage.get(StorageKeys.BASE_URL) + Urls.ACCOUNTS;
+        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return createRequestInSession(url).get(FetchAccountResponse.class);
+        return createRequestInSession(baseUrl + Urls.ACCOUNTS).get(FetchAccountResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, int page) {
-        final String url = persistentStorage.get(StorageKeys.BASE_URL) + Urls.TRANSACTIONS;
+        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return createRequestInSession(url)
+        return createRequestInSession(baseUrl + Urls.TRANSACTIONS)
                 .queryParam(QueryKeys.IBAN, account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID))
                 .queryParam(QueryKeys.OFFSET, Integer.toString(page))
                 .get(FetchTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(String state) {
-        final String url = persistentStorage.get(StorageKeys.BASE_URL) + Urls.OAUTH;
+        final String clientId = getConfiguration().getClientId();
 
-        return createRequestInSession(url)
-                .queryParam(QueryKeys.CLIENT_ID, persistentStorage.get(StorageKeys.CLIENT_ID))
+        final String baseUrl = getConfiguration().getBaseUrl();
+        final String redirectUri = getConfiguration().getRedirectUri();
+
+        return createRequestInSession(baseUrl + Urls.OAUTH)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
-                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.STATE, state)
                 .getUrl();
     }
 
     public OAuth2Token refreshToken(String token) throws SessionException {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+
+        final String baseUrl = getConfiguration().getBaseUrl();
+
         try {
             final RefreshRequest request =
-                    new RefreshRequest(
-                            FormValues.GRANT_TYPE,
-                            persistentStorage.get(StorageKeys.CLIENT_ID),
-                            persistentStorage.get(StorageKeys.CLIENT_SECRET),
-                            token);
+                    new RefreshRequest(FormValues.GRANT_TYPE, clientId, clientSecret, token);
 
-            return client.request(new URL(persistentStorage.get(StorageKeys.BASE_URL) + Urls.TOKEN))
+            return client.request(baseUrl + Urls.TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                     .post(TokenResponse.class, request.toData())
                     .toTinkToken();
@@ -97,17 +108,17 @@ public final class DeutscheBankApiClient {
     }
 
     public OAuth2Token getToken(String code) {
-        final TokenRequest request =
-                new TokenRequest(
-                        FormValues.GRANT_TYPE,
-                        code,
-                        persistentStorage.get(StorageKeys.REDIRECT_URI));
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
 
-        return client.request(new URL(persistentStorage.get(StorageKeys.BASE_URL) + Urls.TOKEN))
+        final String baseUrl = getConfiguration().getBaseUrl();
+        final String redirectUri = getConfiguration().getRedirectUri();
+
+        final TokenRequest request = new TokenRequest(FormValues.GRANT_TYPE, code, redirectUri);
+
+        return client.request(baseUrl + Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .addBasicAuth(
-                        persistentStorage.get(StorageKeys.CLIENT_ID),
-                        persistentStorage.get(StorageKeys.CLIENT_SECRET))
+                .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
@@ -119,6 +130,6 @@ public final class DeutscheBankApiClient {
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 }
