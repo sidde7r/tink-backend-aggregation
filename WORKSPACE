@@ -232,6 +232,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "com_google_errorprone",
+    artifact  = "com.google.errorprone:javac-shaded:9+181-r4173-1",
+    sha1 = "a399ee380b6d6b6ea53af1cfbcb086b108d1efb7"
+)
+
+maven_jar(
     name = "com_netflix_governator",
     artifact = "com.netflix.governator:governator:1.17.2",
     sha1 = "0738b9a37389339f86ad68f4d74fc59fa69e0fb6",
