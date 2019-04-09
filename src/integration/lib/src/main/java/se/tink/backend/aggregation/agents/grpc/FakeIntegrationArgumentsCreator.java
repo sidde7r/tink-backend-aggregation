@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
+import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -76,6 +77,14 @@ public class FakeIntegrationArgumentsCreator {
 
                     @Override
                     public void cacheAccount(Account account, AccountFeatures accountFeatures) {}
+
+                    @Override
+                    public void updateCustomerInfo(CustomerInfo customerInfo) {}
+
+                    @Override
+                    public Optional<CustomerInfo> getCustomerInfo() {
+                        return Optional.empty();
+                    }
 
                     @Override
                     public void updateStatus(CredentialsStatus status) {}

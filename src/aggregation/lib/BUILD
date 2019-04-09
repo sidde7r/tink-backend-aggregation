@@ -31,6 +31,7 @@ java_library(
         "//src/libraries/credentials:rpc",
         "//src/libraries/credentials:service",
         "//src/libraries/creditsafe_consumer_monitoring",
+        "//src/libraries/customer_info",
         "//src/libraries/date",
         "//src/libraries/discovery",
         "//src/libraries/document_container",

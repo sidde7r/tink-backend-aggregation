@@ -15,6 +15,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
@@ -68,7 +70,6 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -80,6 +81,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 RefreshEInvoiceExecutor,
+                RefreshCustomerInfoExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
                 // TODO auth: remove this implements
@@ -439,7 +441,11 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
-    public Optional<CustomerInfo> fetchCustomerInfo() {
-        return constructCustomerInfoFetcher().map(CustomerInfoFetcher::fetchCustomerInfo);
+    @Override
+    public final FetchCustomerInfoResponse fetchCustomerInfo() {
+        return constructCustomerInfoFetcher()
+                .map(CustomerInfoFetcher::fetchCustomerInfo)
+                .map(FetchCustomerInfoResponse::new)
+                .orElse(FetchCustomerInfoResponse.empty());
     }
 }

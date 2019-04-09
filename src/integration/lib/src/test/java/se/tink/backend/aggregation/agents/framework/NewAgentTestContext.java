@@ -306,8 +306,14 @@ public class NewAgentTestContext extends AgentContext {
                                 : " (" + operation.getStatusMessage() + ")"));
     }
 
+    @Override
     public void updateCustomerInfo(CustomerInfo customerInfo) {
         this.customerInfo = customerInfo;
+    }
+
+    @Override
+    public Optional<CustomerInfo> getCustomerInfo() {
+        return Optional.ofNullable(customerInfo);
     }
 
     @Override

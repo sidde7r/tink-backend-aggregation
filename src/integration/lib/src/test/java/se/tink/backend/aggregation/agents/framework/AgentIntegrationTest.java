@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -43,7 +42,6 @@ import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
@@ -261,16 +259,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 context.processTransferDestinationPatterns();
             } else {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
-            }
-
-            // COB-393: We haven't yet implemented a RefreshableItem for fetching customer info,
-            // so here we fetch it so we can implement it on the agent side and print it in the
-            // agent test.
-            // This should be removed once it's implemented as a proper refresh item.
-            if (agent instanceof NextGenerationAgent) {
-                Optional<CustomerInfo> customerInfo =
-                        ((NextGenerationAgent) agent).fetchCustomerInfo();
-                customerInfo.ifPresent(context::updateCustomerInfo);
             }
         }
 

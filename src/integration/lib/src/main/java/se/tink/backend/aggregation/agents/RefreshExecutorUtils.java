@@ -29,6 +29,7 @@ public class RefreshExecutorUtils {
                     .put(
                             RefreshableItem.CREDITCARD_TRANSACTIONS,
                             RefreshCreditCardAccountsExecutor.class)
+                    .put(RefreshableItem.IDENTITY, RefreshCustomerInfoExecutor.class)
                     .put(RefreshableItem.LOAN_ACCOUNTS, RefreshLoanAccountsExecutor.class)
                     .put(RefreshableItem.LOAN_TRANSACTIONS, RefreshLoanAccountsExecutor.class)
                     .put(
@@ -68,6 +69,12 @@ public class RefreshExecutorUtils {
                             ((RefreshCheckingAccountsExecutor) agent)
                                     .fetchCheckingAccounts()
                                     .getAccounts());
+                    break;
+                case IDENTITY:
+                    ((RefreshCustomerInfoExecutor) agent)
+                            .fetchCustomerInfo()
+                            .getCustomerInfo()
+                            .ifPresent(context::updateCustomerInfo);
                     break;
                 case CHECKING_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :

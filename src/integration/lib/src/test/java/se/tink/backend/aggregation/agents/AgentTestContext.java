@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -179,6 +180,16 @@ public class AgentTestContext extends AgentContext {
         }
 
         accountsByBankId.put(account.getBankId(), account);
+    }
+
+    @Override
+    public void updateCustomerInfo(CustomerInfo customerInfo) {
+        throw new NotImplementedException("TODO");
+    }
+
+    @Override
+    public Optional<CustomerInfo> getCustomerInfo() {
+        throw new NotImplementedException("TODO");
     }
 
     public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
