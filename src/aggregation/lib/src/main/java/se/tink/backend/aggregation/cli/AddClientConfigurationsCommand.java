@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfi
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
+import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
+import se.tink.backend.aggregation.storage.file.ProvisionConfigurationParser;
 
 public class AddClientConfigurationsCommand extends AggregationServiceContextCommand<AggregationServiceConfiguration> {
 
@@ -36,15 +38,10 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
                 cryptoConfigurationsRepository
         );
 
-        final String clientName = System.getProperty("clientName");
-        final String aggregatorIdentifier = System.getProperty("aggregatorIdentifier");
-        final String aggregatorId = System.getProperty("aggregatorId");
-        final String clusterName = System.getProperty("clusterName");
-        provisionClientController.provision(
-                clientName,
-                clusterName,
-                aggregatorIdentifier,
-                aggregatorId
-        );
+        ProvisionClientsConfig conf  = ProvisionConfigurationParser.parse();
+        conf.getClients().forEach((k,v) -> provisionClientController.provision(
+                k,
+                v.getAggregatorIdentifier()
+        ));
     }
 }

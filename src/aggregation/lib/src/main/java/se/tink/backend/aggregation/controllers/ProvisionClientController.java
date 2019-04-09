@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.controllers;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -25,11 +26,7 @@ public class ProvisionClientController {
     private ClusterConfigurationsRepository clusterConfigurationsRepository;
     private ClientConfigurationsRepository clientConfigurationsRepository;
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
-    private static ImmutableList<String> availableClusterNames = ImmutableList.of(
-            "oxford-staging",
-            "oxford-production",
-            "local-development"
-    );
+    private static String availableCluster = "oxford-production";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public ProvisionClientController(
@@ -43,23 +40,23 @@ public class ProvisionClientController {
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
     }
 
-    public void provision(String clientName, String clusterName, String aggregatorIdentifier, String aggregatorId) {
-        Preconditions.checkNotNull(clientName, "Client cannot be null.");
-        Preconditions.checkNotNull(clusterName, "Cluster name cannot be null.");
-        Preconditions.checkArgument((aggregatorIdentifier != null || aggregatorId != null),
-                "Aggregator Id or identifier value should not be null.");
-        Preconditions.checkArgument(availableClusterNames.contains(clusterName),
-                "Cannot set up multi tenancy for cluster: {}.", clusterName);
+    public void provision(String clientName, String aggregatorIdentifier) {
 
-        ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(clusterName);
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(clientName), "Client cannot be null.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(availableCluster), "Cluster name cannot be null.");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorIdentifier),
+                "Aggregator Id or identifier value should not be null.");
+
+        ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(availableCluster);
         Preconditions.checkNotNull(clusterConfiguration, "Cluster configuration could not be found.");
 
         ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
-        Preconditions.checkArgument(Objects.isNull(existingClientConfiguration),
-                "We found another entry for that clientName in the database.");
+        if (!Objects.isNull(existingClientConfiguration)) {
+            log.info(String.format("We found another entry for that %s in the database.", existingClientConfiguration.getClientName()));
+            return;
+        }
 
-        AggregatorConfiguration aggregatorConfiguration = getOrCreateAggregatorIdentifier(
-                aggregatorConfigurationsRepository, aggregatorId, aggregatorIdentifier);
+        AggregatorConfiguration aggregatorConfiguration = createAggregatorIdentifier(aggregatorIdentifier);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.setApiClientKey(UUID.randomUUID().toString());
@@ -84,20 +81,9 @@ public class ProvisionClientController {
         log.info("Please store the encrypted keys on an offline drive.");
     }
 
-    private AggregatorConfiguration getOrCreateAggregatorIdentifier(
-            AggregatorConfigurationsRepository aggregatorConfigurationsRepository, String aggregatorId,
+    private AggregatorConfiguration createAggregatorIdentifier(
             String aggregatorIdentifier) {
-        AggregatorConfiguration aggregatorConfiguration = null;
-        if (aggregatorId != null) {
-            aggregatorConfiguration = aggregatorConfigurationsRepository.findOne(aggregatorId);
-
-            if (aggregatorConfiguration == null) {
-                throw new RuntimeException(String.format("Aggregator with id %s not found in the db", aggregatorId));
-            }
-            return aggregatorConfiguration;
-        }
-
-        aggregatorConfiguration = new AggregatorConfiguration();
+        AggregatorConfiguration aggregatorConfiguration = new AggregatorConfiguration();
         aggregatorConfiguration.setAggregatorId(UUID.randomUUID().toString());
         aggregatorConfiguration.setAggregatorInfo(aggregatorIdentifier);
         return aggregatorConfiguration;
