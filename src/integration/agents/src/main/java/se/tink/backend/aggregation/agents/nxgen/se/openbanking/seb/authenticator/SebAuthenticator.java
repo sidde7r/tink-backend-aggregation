@@ -9,34 +9,34 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebAuthenticator implements OAuth2Authenticator {
-  private final SebApiClient client;
-  private final SessionStorage sessionStorage;
+    private final SebApiClient client;
+    private final SessionStorage sessionStorage;
 
-  public SebAuthenticator(SebApiClient client, SessionStorage sessionStorage) {
-    this.client = client;
-    this.sessionStorage = sessionStorage;
-  }
+    public SebAuthenticator(SebApiClient client, SessionStorage sessionStorage) {
+        this.client = client;
+        this.sessionStorage = sessionStorage;
+    }
 
-  @Override
-  public URL buildAuthorizeUrl(String state) {
-    return client.getAuthorizeUrl(state);
-  }
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        return client.getAuthorizeUrl(state);
+    }
 
-  @Override
-  public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-    return client.getToken(code);
-  }
+    @Override
+    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+        return client.getToken(code);
+    }
 
-  @Override
-  public OAuth2Token refreshAccessToken(String refreshToken)
-      throws SessionException, BankServiceException {
-    OAuth2Token token = this.client.refreshToken(refreshToken);
-    client.setTokenToSession(token);
-    return token;
-  }
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
+        OAuth2Token token = this.client.refreshToken(refreshToken);
+        client.setTokenToSession(token);
+        return token;
+    }
 
-  @Override
-  public void useAccessToken(OAuth2Token accessToken) {
-    client.setTokenToSession(accessToken);
-  }
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {
+        client.setTokenToSession(accessToken);
+    }
 }

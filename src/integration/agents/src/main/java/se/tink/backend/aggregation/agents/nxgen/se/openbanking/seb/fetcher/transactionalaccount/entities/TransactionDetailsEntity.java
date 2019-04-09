@@ -4,5 +4,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionDetailsEntity {
-  private String href;
+    private String href;
 }
