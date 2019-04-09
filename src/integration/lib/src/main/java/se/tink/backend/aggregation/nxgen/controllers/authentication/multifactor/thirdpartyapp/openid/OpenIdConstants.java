@@ -45,9 +45,8 @@ public class OpenIdConstants {
     public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES =
             ImmutableList.<String>builder()
                     .add("code")
-                    .add(
-                            "id_token") // TODO: Enable when we have fragment implemented or when
-                                        // response_mode=query has effect.
+                    .add("id_token") // TODO: Enable when we have fragment implemented or when
+                    // response_mode=query has effect.
                     .build();
 
     public static final ImmutableList<String> PREFERRED_ID_TOKEN_SIGNING_ALGORITHM =

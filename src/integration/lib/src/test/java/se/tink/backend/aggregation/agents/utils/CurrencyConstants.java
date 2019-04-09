@@ -29,8 +29,7 @@ public enum CurrencyConstants {
         return this.symbol;
     }
 
-    public String getCountryCode(){
+    public String getCountryCode() {
         return this.name();
     }
-
 }

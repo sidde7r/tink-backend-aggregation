@@ -14,10 +14,11 @@ public class TransferExecutionExceptionTest {
 
         @Test
         public void testBasicConstruction() {
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.CANCELLED).build();
 
-            Assert.assertEquals(SignableOperationStatuses.CANCELLED, e.getSignableOperationStatus());
+            Assert.assertEquals(
+                    SignableOperationStatuses.CANCELLED, e.getSignableOperationStatus());
             Assert.assertNull(e.getMessage());
             Assert.assertNull(e.getUserMessage());
             Assert.assertNull(e.getCause());
@@ -25,8 +26,10 @@ public class TransferExecutionExceptionTest {
 
         @Test
         public void testConstructionWithMessage() {
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(TEST_EXCEPTION_MESSAGE).build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setMessage(TEST_EXCEPTION_MESSAGE)
+                            .build();
 
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(TEST_EXCEPTION_MESSAGE, e.getMessage());
@@ -37,9 +40,11 @@ public class TransferExecutionExceptionTest {
         @Test
         public void testConstructionWithMessageAndException() {
             RuntimeException cause = new RuntimeException();
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setException(cause)
-                    .setMessage(TEST_EXCEPTION_MESSAGE).build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setException(cause)
+                            .setMessage(TEST_EXCEPTION_MESSAGE)
+                            .build();
 
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(TEST_EXCEPTION_MESSAGE, e.getMessage());
@@ -50,10 +55,12 @@ public class TransferExecutionExceptionTest {
         @Test
         public void testConstructionWithMessageAndExceptionAndUserMessage() {
             RuntimeException cause = new RuntimeException();
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setException(cause)
-                    .setEndUserMessage(TEST_USER_MESSAGE)
-                    .setMessage(TEST_EXCEPTION_MESSAGE).build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setException(cause)
+                            .setEndUserMessage(TEST_USER_MESSAGE)
+                            .setMessage(TEST_EXCEPTION_MESSAGE)
+                            .build();
 
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(TEST_EXCEPTION_MESSAGE, e.getMessage());
@@ -64,8 +71,11 @@ public class TransferExecutionExceptionTest {
         @Test
         public void testConstructionExceptionAndUserMessage() {
             RuntimeException cause = new RuntimeException();
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setException(cause).setEndUserMessage(TEST_USER_MESSAGE).build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setException(cause)
+                            .setEndUserMessage(TEST_USER_MESSAGE)
+                            .build();
 
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(cause.getClass().getCanonicalName(), e.getMessage());
@@ -76,8 +86,10 @@ public class TransferExecutionExceptionTest {
         @Test
         public void testConstructionException() {
             RuntimeException cause = new RuntimeException();
-            TransferExecutionException e = TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setException(cause).build();
+            TransferExecutionException e =
+                    TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                            .setException(cause)
+                            .build();
 
             Assert.assertEquals(SignableOperationStatuses.FAILED, e.getSignableOperationStatus());
             Assert.assertEquals(cause.getClass().getCanonicalName(), e.getMessage());

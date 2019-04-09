@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.jersey;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class EntityIdentifierTest {
 

@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.Assert;
@@ -13,20 +18,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionIndexPaginationControllerTest {
 
-    @Mock
-    private TransactionIndexPaginator<Account> paginator;
-    @Mock
-    private Account account;
-    @Mock
-    private Transaction transaction;
+    @Mock private TransactionIndexPaginator<Account> paginator;
+    @Mock private Account account;
+    @Mock private Transaction transaction;
 
     private TransactionIndexPaginationController<Account> paginationController;
 
@@ -46,11 +44,13 @@ public class TransactionIndexPaginationControllerTest {
     }
 
     @Test
-    public void ensureStopFetching_whenNumberOfTransactionsFetched_isLess_thanNumberOfTransactionsToFetch() {
+    public void
+            ensureStopFetching_whenNumberOfTransactionsFetched_isLess_thanNumberOfTransactionsToFetch() {
         Collection<Transaction> mockTransactions = new ArrayList<>();
         mockTransactions.add(transaction);
 
-        when(paginator.getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
+        when(paginator.getTransactionsFor(
+                        Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(PaginatorResponseImpl.create(mockTransactions));
 
         paginationController.fetchTransactionsFor(account);
@@ -60,8 +60,10 @@ public class TransactionIndexPaginationControllerTest {
     }
 
     @Test
-    public void ensureEmptyCollection_isReturned_andCanFetchMore_isFalse_whenListOfFetchedTransactionIsEmpty() {
-        when(paginator.getTransactionsFor(Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
+    public void
+            ensureEmptyCollection_isReturned_andCanFetchMore_isFalse_whenListOfFetchedTransactionIsEmpty() {
+        when(paginator.getTransactionsFor(
+                        Mockito.any(Account.class), Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(PaginatorResponseImpl.createEmpty());
 
         PaginatorResponse response = paginationController.fetchTransactionsFor(account);

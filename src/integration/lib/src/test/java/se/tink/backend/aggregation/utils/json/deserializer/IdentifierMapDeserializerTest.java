@@ -15,17 +15,19 @@ public class IdentifierMapDeserializerTest {
 
     @Before
     public void setup() {
-        expectedResult = ImmutableMap.<String, TestResultEntity>builder()
-                .put("adam", new TestResultEntity("adam", "oranges"))
-                .put("steve", new TestResultEntity("steve", "thoughts"))
-                .build();
+        expectedResult =
+                ImmutableMap.<String, TestResultEntity>builder()
+                        .put("adam", new TestResultEntity("adam", "oranges"))
+                        .put("steve", new TestResultEntity("steve", "thoughts"))
+                        .build();
     }
 
     @Test
     public void testValidInput() {
 
         try {
-            Map<String, TestResultEntity> resultMap = deserialize(TestData.VALID_JSON).getEntities();
+            Map<String, TestResultEntity> resultMap =
+                    deserialize(TestData.VALID_JSON).getEntities();
             Assert.assertEquals(resultMap, expectedResult);
         } catch (Exception e) {
             Assert.fail(e.getMessage());
@@ -44,7 +46,7 @@ public class IdentifierMapDeserializerTest {
 
     @Test(expected = JsonMappingException.class)
     public void testNameNotString() throws IOException {
-         deserialize(TestData.NAME_IS_NOT_STRING);
+        deserialize(TestData.NAME_IS_NOT_STRING);
     }
 
     private TestRootEntity deserialize(String json) throws IOException {

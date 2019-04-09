@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -14,8 +16,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class BankIdAuthenticationControllerTest {
     private static final String REFERENCE = "reference";
@@ -59,25 +59,28 @@ public class BankIdAuthenticationControllerTest {
     }
 
     @Test(expected = NotImplementedException.class)
-    public void ensureExceptionIsThrown_whenCredentials_isNotOfType_mobileBankId() throws AuthenticationException,
-            AuthorizationException {
+    public void ensureExceptionIsThrown_whenCredentials_isNotOfType_mobileBankId()
+            throws AuthenticationException, AuthorizationException {
         credentials.setType(CredentialsTypes.PASSWORD);
         authenticationController.authenticate(credentials);
     }
 
     @Test(expected = LoginException.class)
-    public void ensureExceptionIsThrown_whenSsn_isNull() throws AuthenticationException, AuthorizationException {
+    public void ensureExceptionIsThrown_whenSsn_isNull()
+            throws AuthenticationException, AuthorizationException {
         authenticationController.authenticate(credentials);
     }
 
     @Test(expected = LoginException.class)
-    public void ensureExceptionIsThrown_whenSsn_isEmpty() throws AuthenticationException, AuthorizationException {
+    public void ensureExceptionIsThrown_whenSsn_isEmpty()
+            throws AuthenticationException, AuthorizationException {
         credentials.setField(Field.Key.USERNAME, "");
         authenticationController.authenticate(credentials);
     }
 
     @Test
-    public void ensureBankId_isOpened_betweenInitAndPoll() throws AuthenticationException, AuthorizationException {
+    public void ensureBankId_isOpened_betweenInitAndPoll()
+            throws AuthenticationException, AuthorizationException {
         credentials.setField(Field.Key.USERNAME, USERNAME);
         authenticationController.authenticate(credentials);
 
@@ -88,10 +91,11 @@ public class BankIdAuthenticationControllerTest {
     }
 
     @Test
-    public void ensureBankIdStatus_waiting_keepsCollectingBankIdStatus() throws AuthenticationException,
-            AuthorizationException {
+    public void ensureBankIdStatus_waiting_keepsCollectingBankIdStatus()
+            throws AuthenticationException, AuthorizationException {
         credentials.setField(Field.Key.USERNAME, USERNAME);
-        Mockito.when(authenticator.collect(REFERENCE)).thenReturn(BankIdStatus.WAITING)
+        Mockito.when(authenticator.collect(REFERENCE))
+                .thenReturn(BankIdStatus.WAITING)
                 .thenReturn(BankIdStatus.DONE);
         authenticationController.authenticate(credentials);
 
@@ -99,37 +103,42 @@ public class BankIdAuthenticationControllerTest {
     }
 
     @Test
-    public void ensureBankIdStatus_cancelled_isMappedTo_correctBankIdException() throws AuthenticationException,
-            AuthorizationException {
-        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.CANCELLED, BankIdError.CANCELLED);
+    public void ensureBankIdStatus_cancelled_isMappedTo_correctBankIdException()
+            throws AuthenticationException, AuthorizationException {
+        ensureBankIdStatus_isMappedToCorrectException(
+                BankIdStatus.CANCELLED, BankIdError.CANCELLED);
     }
 
     @Test
-    public void ensureBankIdStatus_noClient_isMappedTo_correctBankIdException() throws AuthenticationException,
-            AuthorizationException {
-        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.NO_CLIENT, BankIdError.NO_CLIENT);
+    public void ensureBankIdStatus_noClient_isMappedTo_correctBankIdException()
+            throws AuthenticationException, AuthorizationException {
+        ensureBankIdStatus_isMappedToCorrectException(
+                BankIdStatus.NO_CLIENT, BankIdError.NO_CLIENT);
     }
 
     @Test
-    public void ensureBankIdStatus_timeout_isMappedTo_correctBankIdException() throws AuthenticationException,
-            AuthorizationException {
+    public void ensureBankIdStatus_timeout_isMappedTo_correctBankIdException()
+            throws AuthenticationException, AuthorizationException {
         ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.TIMEOUT, BankIdError.TIMEOUT);
     }
 
     @Test
-    public void ensureBankIdStatus_interrupted_isMappedTo_correctBankIdException() throws AuthenticationException,
-            AuthorizationException {
-        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.INTERRUPTED, BankIdError.INTERRUPTED);
+    public void ensureBankIdStatus_interrupted_isMappedTo_correctBankIdException()
+            throws AuthenticationException, AuthorizationException {
+        ensureBankIdStatus_isMappedToCorrectException(
+                BankIdStatus.INTERRUPTED, BankIdError.INTERRUPTED);
     }
 
     @Test
-    public void ensureBankIdStatus_failedUnknown_isMappedTo_correctBankIdException() throws AuthenticationException,
-            AuthorizationException {
-        ensureBankIdStatus_isMappedToCorrectException(BankIdStatus.FAILED_UNKNOWN, BankIdError.UNKNOWN);
+    public void ensureBankIdStatus_failedUnknown_isMappedTo_correctBankIdException()
+            throws AuthenticationException, AuthorizationException {
+        ensureBankIdStatus_isMappedToCorrectException(
+                BankIdStatus.FAILED_UNKNOWN, BankIdError.UNKNOWN);
     }
 
-    private void ensureBankIdStatus_isMappedToCorrectException(BankIdStatus status, BankIdError error) throws
-            AuthenticationException, AuthorizationException {
+    private void ensureBankIdStatus_isMappedToCorrectException(
+            BankIdStatus status, BankIdError error)
+            throws AuthenticationException, AuthorizationException {
         try {
             credentials.setField(Field.Key.USERNAME, USERNAME);
             Mockito.when(authenticator.collect(REFERENCE)).thenReturn(status);

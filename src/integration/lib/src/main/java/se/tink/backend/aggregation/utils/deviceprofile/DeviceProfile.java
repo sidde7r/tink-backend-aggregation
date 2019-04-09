@@ -14,8 +14,15 @@ public class DeviceProfile {
     private final String modelNumber;
     private final String make;
 
-    private DeviceProfile(String osVersion, String screenHeight, String screenWidth, UserAgentEntity userAgentEntity,
-            String phoneModel, String os, String modelNumber, String make) {
+    private DeviceProfile(
+            String osVersion,
+            String screenHeight,
+            String screenWidth,
+            UserAgentEntity userAgentEntity,
+            String phoneModel,
+            String os,
+            String modelNumber,
+            String make) {
         Preconditions.checkNotNull(osVersion);
         Preconditions.checkNotNull(screenHeight);
         Preconditions.checkNotNull(screenWidth);
@@ -82,8 +89,7 @@ public class DeviceProfile {
         private String modelNumber;
         private String make;
 
-        public DeviceProfileBuilder() {
-        }
+        public DeviceProfileBuilder() {}
 
         public DeviceProfileBuilder setOS(String os) {
             Preconditions.checkNotNull(os);
@@ -134,9 +140,15 @@ public class DeviceProfile {
         }
 
         public DeviceProfile build() {
-            return new DeviceProfile(osVersion, screenHeight, screenWidth, userAgentEntity, phoneModel, os, modelNumber,
+            return new DeviceProfile(
+                    osVersion,
+                    screenHeight,
+                    screenWidth,
+                    userAgentEntity,
+                    phoneModel,
+                    os,
+                    modelNumber,
                     make);
         }
-
     }
 }

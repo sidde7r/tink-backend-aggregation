@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -9,15 +11,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class MapValueMaskerImplTest {
     @Test
     public void testMaskAllValues() {
-        Map<String, String> map = ImmutableMap.<String, String>builder()
-                .put("key1", "value1")
-                .put("key2", "value2")
-                .build();
+        Map<String, String> map =
+                ImmutableMap.<String, String>builder()
+                        .put("key1", "value1")
+                        .put("key2", "value2")
+                        .build();
         MapValueMaskerImpl mapValueMasker = new MapValueMaskerImpl(Optional.empty());
 
         Map<String, String> maskedMap = mapValueMasker.copyAndMaskValues(map);
@@ -28,11 +30,12 @@ public class MapValueMaskerImplTest {
 
     @Test
     public void testMaskAFewValues() {
-        Map<String, String> map = ImmutableMap.<String, String>builder()
-                .put("key1", "value1")
-                .put("key2", "value2")
-                .put("key3", "value3")
-                .build();
+        Map<String, String> map =
+                ImmutableMap.<String, String>builder()
+                        .put("key1", "value1")
+                        .put("key2", "value2")
+                        .put("key3", "value3")
+                        .build();
 
         Set<String> whiteListedKeys = ImmutableSet.of("key2");
 
@@ -49,10 +52,11 @@ public class MapValueMaskerImplTest {
 
     @Test
     public void testMaskKeysNotExistingIsOk() {
-        Map<String, String> map = ImmutableMap.<String, String>builder()
-                .put("key1", "value1")
-                .put("existingkey", "value1")
-                .build();
+        Map<String, String> map =
+                ImmutableMap.<String, String>builder()
+                        .put("key1", "value1")
+                        .put("existingkey", "value1")
+                        .build();
 
         Set<String> whiteListedKeys = ImmutableSet.of("notexistingkey", "existingkey");
 
@@ -98,7 +102,8 @@ public class MapValueMaskerImplTest {
 
         ImmutableSet<String> whiteListedKeys = ImmutableSet.of("key2");
 
-        MapValueMaskerImpl mapValueMasker = new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
+        MapValueMaskerImpl mapValueMasker =
+                new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
 
         Map<String, Collection<String>> maskedMap = mapValueMasker.copyAndMaskMultiValues(map);
 
@@ -124,7 +129,8 @@ public class MapValueMaskerImplTest {
 
         ImmutableSet<String> whiteListedKeys = ImmutableSet.of("key2");
 
-        MapValueMaskerImpl mapValueMasker = new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
+        MapValueMaskerImpl mapValueMasker =
+                new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
 
         Map<String, Collection<String>> maskedMap = mapValueMasker.copyAndMaskMultiValues(map);
 
@@ -153,7 +159,8 @@ public class MapValueMaskerImplTest {
 
         ImmutableSet<String> whiteListedKeys = ImmutableSet.of("someweird-CÅÄÖSING");
 
-        MapValueMaskerImpl mapValueMasker = new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
+        MapValueMaskerImpl mapValueMasker =
+                new MapValueMaskerImpl(Optional.<Set<String>>of(whiteListedKeys));
 
         Map<String, Collection<String>> maskedMap = mapValueMasker.copyAndMaskMultiValues(map);
 
@@ -162,6 +169,7 @@ public class MapValueMaskerImplTest {
         assertThat(maskedMap.get("SOMEWEIRD-cåäösing")).hasSize(2);
         assertThat(maskedMap.get("SOMEWEIRD-cåäösing")).containsExactlyElementsOf(value1);
         assertThat(maskedMap.get("otherkey")).hasSize(2);
-        assertThat(maskedMap.get("otherkey")).containsOnlyElementsOf(ImmutableList.of("***MASKED***"));
+        assertThat(maskedMap.get("otherkey"))
+                .containsOnlyElementsOf(ImmutableList.of("***MASKED***"));
     }
 }

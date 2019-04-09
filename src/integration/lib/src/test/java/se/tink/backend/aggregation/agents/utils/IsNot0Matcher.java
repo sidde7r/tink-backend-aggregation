@@ -4,8 +4,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
 public class IsNot0Matcher extends BaseMatcher<Double> {
-    private IsNot0Matcher() {
-    }
+    private IsNot0Matcher() {}
 
     public static IsNot0Matcher isNot0() {
         return new IsNot0Matcher();

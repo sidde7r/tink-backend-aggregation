@@ -3,17 +3,16 @@ package se.tink.backend.aggregation.configuration.integrations.abnamro;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AbnAmroInternetBankingConfiguration {
-    @JsonProperty
-    private String host;
+    @JsonProperty private String host;
 
-    @JsonProperty
-    private String authorizationToken;
+    @JsonProperty private String authorizationToken;
 
     @JsonProperty
     private AbnAmroProductsConfiguration products = new AbnAmroProductsConfiguration();
 
     @JsonProperty
-    private AbnAmroAccountUpdatesConfiguration accountUpdates = new AbnAmroAccountUpdatesConfiguration();
+    private AbnAmroAccountUpdatesConfiguration accountUpdates =
+            new AbnAmroAccountUpdatesConfiguration();
 
     public String getHost() {
         return host;
@@ -34,5 +33,4 @@ public class AbnAmroInternetBankingConfiguration {
     public AbnAmroAccountUpdatesConfiguration getAccountUpdates() {
         return accountUpdates;
     }
-
 }

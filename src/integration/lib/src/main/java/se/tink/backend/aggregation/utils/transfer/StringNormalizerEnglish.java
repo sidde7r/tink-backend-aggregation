@@ -1,47 +1,43 @@
 package se.tink.backend.aggregation.utils.transfer;
 
 import com.google.common.base.Joiner;
-import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.text.Normalizer;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Changes some chars, like åäö to their corresponding visible english match. Other special chars are removed. Lastly
- * trims the string from white spaces.
+ * Changes some chars, like åäö to their corresponding visible english match. Other special chars
+ * are removed. Lastly trims the string from white spaces.
  *
- * Examples:
- * åäöÅÄÖ -> aaoAAO
- * ß -> s
- * Ø -> O
- * $ -> '' (empty string)
- * test$ $ ∞£@ ß åäö -> test s aao
+ * <p>Examples: åäöÅÄÖ -> aaoAAO ß -> s Ø -> O $ -> '' (empty string) test$ $ ∞£@ ß åäö -> test s
+ * aao
  *
- * It's possible to construct this class with a white list, that makes it possible to e.g. white list swedish chars
+ * <p>It's possible to construct this class with a white list, that makes it possible to e.g. white
+ * list swedish chars
  *
- * TODO: Improve performance when using larger strings and white listing
+ * <p>TODO: Improve performance when using larger strings and white listing
  */
 public class StringNormalizerEnglish implements StringNormalizer {
     /**
-     * Ref: http://stackoverflow.com/questions/1453171/remove-diacritical-marks-%C5%84-%C7%B9-%C5%88-%C3%B1-%E1%B9%85-%C5%86-%E1%B9%87-%E1%B9%8B-%E1%B9%89-%CC%88-%C9%B2-%C6%9E-%E1%B6%87-%C9%B3-%C8%B5-from-unicode-chars
+     * Ref:
+     * http://stackoverflow.com/questions/1453171/remove-diacritical-marks-%C5%84-%C7%B9-%C5%88-%C3%B1-%E1%B9%85-%C5%86-%E1%B9%87-%E1%B9%8B-%E1%B9%89-%CC%88-%C9%B2-%C6%9E-%E1%B6%87-%C9%B3-%C8%B5-from-unicode-chars
      */
-    private static final Pattern DIACRITICS
-            = Pattern.compile("["
-            + "\\p{InCombiningDiacriticalMarks}"
-            + "\\p{IsLm}"
-            + "\\p{IsSk}]+");
+    private static final Pattern DIACRITICS =
+            Pattern.compile("[" + "\\p{InCombiningDiacriticalMarks}" + "\\p{IsLm}" + "\\p{IsSk}]+");
 
-    private static final ImmutableMap<Character, Character> SPECIALCHARS = ImmutableMap.<Character, Character>builder()
-            // Replace some specials as their equivalent characters
-            .put('ß', 's')
-            .put('æ', 'a')
-            .put('Æ', 'A')
-            .put('ø', 'o')
-            .put('Ø', 'O')
-            .build();
+    private static final ImmutableMap<Character, Character> SPECIALCHARS =
+            ImmutableMap.<Character, Character>builder()
+                    // Replace some specials as their equivalent characters
+                    .put('ß', 's')
+                    .put('æ', 'a')
+                    .put('Æ', 'A')
+                    .put('ø', 'o')
+                    .put('Ø', 'O')
+                    .build();
 
     private static final Pattern ENGLISH_CHARACTER = Pattern.compile("[a-zA-Z0-9\\s]");
 
@@ -67,9 +63,9 @@ public class StringNormalizerEnglish implements StringNormalizer {
     }
 
     /**
-     * TODO: Improve performance (skip looping each char)
-     * Let's loop through the characters, although not perfect performance.
-     * This is not awesome for large strings, but not meant to be used with large strings
+     * TODO: Improve performance (skip looping each char) Let's loop through the characters,
+     * although not perfect performance. This is not awesome for large strings, but not meant to be
+     * used with large strings
      */
     private static String normalize(String str, Optional<Set<Character>> whiteListedCharacters) {
         Set<Character> whiteList = whiteListedCharacters.orElse(null);
@@ -124,9 +120,7 @@ public class StringNormalizerEnglish implements StringNormalizer {
         Set<Character> characters = whiteListedCharacters.get();
         if (!characters.isEmpty()) {
             String whiteListString = Joiner.on(" ").join(characters);
-            stringBuilder
-                    .append(" ")
-                    .append(whiteListString);
+            stringBuilder.append(" ").append(whiteListString);
         }
 
         return stringBuilder.toString();

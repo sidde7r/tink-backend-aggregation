@@ -12,5 +12,4 @@ import java.lang.annotation.RetentionPolicy;
 @JacksonAnnotationsInside
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public @interface JsonObject {
-}
+public @interface JsonObject {}

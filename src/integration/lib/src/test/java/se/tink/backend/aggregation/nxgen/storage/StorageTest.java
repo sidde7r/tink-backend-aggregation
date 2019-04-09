@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.storage;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,8 +11,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StorageTest {
 
@@ -28,12 +29,10 @@ public class StorageTest {
         this.sessionStorage.put(KEY, Collections.<String>emptyList());
         assertThat(
                 Collections.EMPTY_LIST,
-                equalTo(this.sessionStorage.get(KEY, new TypeReference<List<String>>() {
-                }).get()));
+                equalTo(this.sessionStorage.get(KEY, new TypeReference<List<String>>() {}).get()));
         assertThat(
                 Optional.empty(),
-                equalTo(this.persistentStorage.get(KEY, new TypeReference<List<String>>() {
-                })));
+                equalTo(this.persistentStorage.get(KEY, new TypeReference<List<String>>() {})));
     }
 
     @Test
@@ -43,23 +42,25 @@ public class StorageTest {
         this.sessionStorage.put(KEY, map);
         assertThat(
                 map,
-                equalTo(this.sessionStorage.get(KEY, new TypeReference<Map<Integer, Long>>() {
-                }).get()));
+                equalTo(
+                        this.sessionStorage
+                                .get(KEY, new TypeReference<Map<Integer, Long>>() {})
+                                .get()));
         assertThat(
                 Optional.empty(),
-                equalTo(this.persistentStorage.get(KEY, new TypeReference<Map<Integer, Long>>() {
-                })));
+                equalTo(
+                        this.persistentStorage.get(
+                                KEY, new TypeReference<Map<Integer, Long>>() {})));
     }
 
     @Test
     public void getGenericClassFromSessionStorage() {
         Double value = 1d;
         this.sessionStorage.put(KEY, value);
-        assertThat(1d, equalTo(sessionStorage.get(KEY, new TypeReference<Double>() {
-        }).get()));
+        assertThat(1d, equalTo(sessionStorage.get(KEY, new TypeReference<Double>() {}).get()));
         assertThat(
-                Optional.empty(), equalTo(this.persistentStorage.get(KEY, new TypeReference<Double>() {
-                })));
+                Optional.empty(),
+                equalTo(this.persistentStorage.get(KEY, new TypeReference<Double>() {})));
     }
 
     @Test
@@ -67,12 +68,13 @@ public class StorageTest {
         this.persistentStorage.put(KEY, Collections.<String>emptyList());
         assertThat(
                 Collections.EMPTY_LIST,
-                equalTo(this.persistentStorage.get(KEY, new TypeReference<List<String>>() {
-                }).get()));
+                equalTo(
+                        this.persistentStorage
+                                .get(KEY, new TypeReference<List<String>>() {})
+                                .get()));
         assertThat(
                 Optional.empty(),
-                equalTo(this.sessionStorage.get(KEY, new TypeReference<List<String>>() {
-                })));
+                equalTo(this.sessionStorage.get(KEY, new TypeReference<List<String>>() {})));
     }
 
     @Test
@@ -82,23 +84,24 @@ public class StorageTest {
         this.persistentStorage.put(KEY, map);
         assertThat(
                 map,
-                equalTo(this.persistentStorage.get(KEY, new TypeReference<Map<Integer, Long>>() {
-                }).get()));
+                equalTo(
+                        this.persistentStorage
+                                .get(KEY, new TypeReference<Map<Integer, Long>>() {})
+                                .get()));
         assertThat(
                 Optional.empty(),
-                equalTo(this.sessionStorage.get(KEY, new TypeReference<Map<Integer, Long>>() {
-                })));
+                equalTo(this.sessionStorage.get(KEY, new TypeReference<Map<Integer, Long>>() {})));
     }
 
     @Test
     public void getGenericClassFromPersistentStorage() {
         Double value = 1d;
         this.persistentStorage.put(KEY, value);
-        assertThat(1d, equalTo(this.persistentStorage.get(KEY, new TypeReference<Double>() {
-        }).get()));
         assertThat(
-                Optional.empty(), equalTo(this.sessionStorage.get(KEY, new TypeReference<Double>() {
-                })));
+                1d, equalTo(this.persistentStorage.get(KEY, new TypeReference<Double>() {}).get()));
+        assertThat(
+                Optional.empty(),
+                equalTo(this.sessionStorage.get(KEY, new TypeReference<Double>() {})));
     }
 
     @Test

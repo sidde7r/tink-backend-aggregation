@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
@@ -30,6 +29,7 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.SuperAbstractAgent;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -82,7 +82,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                 RefreshEInvoiceExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
-// TODO auth: remove this implements
+                // TODO auth: remove this implements
                 ProgressiveAuthAgent {
 
     static {
@@ -111,30 +111,41 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     private boolean hasRefreshedCheckingAccounts = false;
     private boolean hasRefreshedCheckingTransactions = false;
 
-    protected NextGenerationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    protected NextGenerationAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         this.catalog = context.getCatalog();
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
-        this.updateController = new UpdateController(
-                // TODO: Remove when provider uses MarketCode
-                MarketCode.valueOf(request.getProvider().getMarket()),
-                request.getProvider().getCurrency(), request.getUser());
-        this.client = new TinkHttpClient(context.getAggregatorInfo(), metricContext.getMetricRegistry(),
-                context.getLogOutputStream(), signatureKeyPair, request.getProvider());
+        this.updateController =
+                new UpdateController(
+                        // TODO: Remove when provider uses MarketCode
+                        MarketCode.valueOf(request.getProvider().getMarket()),
+                        request.getProvider().getCurrency(),
+                        request.getUser());
+        this.client =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        metricContext.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        signatureKeyPair,
+                        request.getProvider());
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
-        this.supplementalInformationController = new SupplementalInformationController(supplementalRequester, credentials);
-        this.metricRefreshController = new MetricRefreshController(
-                metricContext.getMetricRegistry(),
-                request.getProvider(),
-                credentials,
-                request.isManual(),
-                request.getType());
-        this.supplementalInformationHelper = new SupplementalInformationHelper(
-                request.getProvider(),
-                supplementalInformationController);
-        this.supplementalInformationFormer = new SupplementalInformationFormer(request.getProvider());
+        this.supplementalInformationController =
+                new SupplementalInformationController(supplementalRequester, credentials);
+        this.metricRefreshController =
+                new MetricRefreshController(
+                        metricContext.getMetricRegistry(),
+                        request.getProvider(),
+                        credentials,
+                        request.isManual(),
+                        request.getType());
+        this.supplementalInformationHelper =
+                new SupplementalInformationHelper(
+                        request.getProvider(), supplementalInformationController);
+        this.supplementalInformationFormer =
+                new SupplementalInformationFormer(request.getProvider());
         configureHttpClient(client);
     }
 
@@ -247,7 +258,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     private <T extends Refresher> List<T> getRefreshControllersOfType(Class<T> cls) {
         return getRefreshControllers().stream()
                 .filter(cls::isInstance)
-                .map(refresher ->  (T) refresher)
+                .map(refresher -> (T) refresher)
                 .collect(Collectors.toList());
     }
 
@@ -265,21 +276,35 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
 
     private SessionController getSessionController() {
         if (sessionController == null) {
-            sessionController = new SessionController(context, client, persistentStorage, sessionStorage, credentials,
-                    constructSessionHandler());
+            sessionController =
+                    new SessionController(
+                            context,
+                            client,
+                            persistentStorage,
+                            sessionStorage,
+                            credentials,
+                            constructSessionHandler());
         }
         return sessionController;
     }
 
     protected abstract void configureHttpClient(TinkHttpClient client);
+
     protected abstract Authenticator constructAuthenticator();
 
-    protected abstract Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController();
+    protected abstract Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController();
+
     protected abstract Optional<CreditCardRefreshController> constructCreditCardRefreshController();
+
     protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController();
+
     protected abstract Optional<LoanRefreshController> constructLoanRefreshController();
+
     protected abstract Optional<EInvoiceRefreshController> constructEInvoiceRefreshController();
-    protected abstract Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController();
+
+    protected abstract Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController();
 
     protected Optional<CustomerInfoFetcher> constructCustomerInfoFetcher() {
         return Optional.empty();
@@ -308,7 +333,8 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher : getRefreshControllersOfType(LoanRefreshController.class)) {
+        for (AccountRefresher refresher :
+                getRefreshControllersOfType(LoanRefreshController.class)) {
             accounts.putAll(refresher.fetchAccounts());
         }
 
@@ -318,7 +344,8 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher : getRefreshControllersOfType(InvestmentRefreshController.class)) {
+        for (AccountRefresher refresher :
+                getRefreshControllersOfType(InvestmentRefreshController.class)) {
             accounts.putAll(refresher.fetchAccounts());
         }
 

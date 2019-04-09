@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.nxgen.framework.validation;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public final class ValidatorFactory {
     private ValidatorFactory() {
@@ -71,12 +70,8 @@ public final class ValidatorFactory {
                                         dupeFinder.getAnyDuplicates(aisdata.getTransactions())))
                 .rule(
                         "Customer info is provided",
-                        aisData ->
-                            aisData.getCustomerInfo() != null,
-                        aisData ->
-                                "Agent did not fetch customer info"
-
-                )
+                        aisData -> aisData.getCustomerInfo() != null,
+                        aisData -> "Agent did not fetch customer info")
                 .build();
     }
 }

@@ -2,17 +2,16 @@ package se.tink.backend.aggregation.agents.framework;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import org.junit.Assume;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class allowing you to pass custom command line arguments to tests. This has a couple of

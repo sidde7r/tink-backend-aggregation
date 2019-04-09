@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

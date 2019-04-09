@@ -4,9 +4,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * A rule is uniquely identified and recognized by its string identifier.
- */
+/** A rule is uniquely identified and recognized by its string identifier. */
 public final class AisDataRule implements ValidationRule<AisData> {
     private String ruleIdentifier;
 

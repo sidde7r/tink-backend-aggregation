@@ -5,18 +5,15 @@ import com.google.common.collect.ImmutableList;
 
 public class AbnAmroProductConfiguration {
 
-    public AbnAmroProductConfiguration() {
-    }
+    public AbnAmroProductConfiguration() {}
 
     AbnAmroProductConfiguration(ImmutableList<Integer> ids, ImmutableList<String> groups) {
         this.ids = ids;
         this.groups = groups;
     }
 
-    @JsonProperty
-    private ImmutableList<Integer> ids;
-    @JsonProperty
-    private ImmutableList<String> groups;
+    @JsonProperty private ImmutableList<Integer> ids;
+    @JsonProperty private ImmutableList<String> groups;
 
     public ImmutableList<String> getGroups() {
         return groups;
@@ -33,5 +30,4 @@ public class AbnAmroProductConfiguration {
     public void setIds(ImmutableList<Integer> ids) {
         this.ids = ids;
     }
-
 }

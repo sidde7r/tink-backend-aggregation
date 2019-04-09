@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.utils.transfer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.base.Objects;
 import java.util.Locale;
 import java.util.Optional;
@@ -12,29 +16,28 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.libraries.transfer.mocks.TransferMock;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @RunWith(Enclosed.class)
 public class TransferMessageFormatterTest {
     public static class MessageLength {
-        private TransferMessageLengthConfig lengthConfig = TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
-        private TransferMessageFormatter formatter = new TransferMessageFormatter(Catalog.getCatalog("en-US"),
-                lengthConfig, Optional.empty());
+        private TransferMessageLengthConfig lengthConfig =
+                TransferMessageLengthConfig.createWithMaxLength(25, 12, 25);
+        private TransferMessageFormatter formatter =
+                new TransferMessageFormatter(
+                        Catalog.getCatalog("en-US"), lengthConfig, Optional.empty());
 
-        private static final String LONG_MESSAGE = "Longest message ever written in the history of the world";
+        private static final String LONG_MESSAGE =
+                "Longest message ever written in the history of the world";
         private static final String VALID_SOURCE_MESSAGE = "Valid source message";
         private static final String VALID_DESTINATION_MESSAGE = "Message";
 
         private Transfer transfer = new Transfer();
 
-        @Rule
-        public ExpectedException expectedException = ExpectedException.none();
+        @Rule public ExpectedException expectedException = ExpectedException.none();
 
         @Before
         public void setup() {
@@ -44,7 +47,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forInternalTransfers() {
+        public void
+                ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forInternalTransfers() {
             transfer.setGeneratedSourceMessage(LONG_MESSAGE);
             transfer.setGeneratedDestinationMessage(LONG_MESSAGE);
 
@@ -55,7 +59,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forExternalTransfers() {
+        public void
+                ensureGeneratedMessages_areTrimmed_whenMessagesAreTooLong_forExternalTransfers() {
             transfer.setGeneratedSourceMessage(LONG_MESSAGE);
             transfer.setGeneratedDestinationMessage(LONG_MESSAGE);
 
@@ -66,7 +71,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureGeneratedMessages_areNotTrimmed_whenMessagesWithinRange_forInternalTransfers() {
+        public void
+                ensureGeneratedMessages_areNotTrimmed_whenMessagesWithinRange_forInternalTransfers() {
             transfer.setGeneratedSourceMessage(VALID_SOURCE_MESSAGE);
             transfer.setGeneratedDestinationMessage(VALID_SOURCE_MESSAGE);
 
@@ -86,7 +92,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureExceptionIsThrown_whenUserProvidedDestinationMessage_forExternalTransfer_isTooLong() {
+        public void
+                ensureExceptionIsThrown_whenUserProvidedDestinationMessage_forExternalTransfer_isTooLong() {
             expectTransferMessageException_withUserMessage(
                     TransferMessageFormatter.EndUserMessage.DESTINATION_MESSAGE_TO_LONG, 12);
 
@@ -95,7 +102,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureExceptionIsThrown_whenUserProvidedDestinationMessage_forInternalTransfer_isTooLong() {
+        public void
+                ensureExceptionIsThrown_whenUserProvidedDestinationMessage_forInternalTransfer_isTooLong() {
             expectTransferMessageException_withUserMessage(
                     TransferMessageFormatter.EndUserMessage.DESTINATION_MESSAGE_TO_LONG, 25);
 
@@ -104,7 +112,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureExceptionIsThrown_inCorrectOrder_whenUserProvidedDestinationMessage_isTooLong() {
+        public void
+                ensureExceptionIsThrown_inCorrectOrder_whenUserProvidedDestinationMessage_isTooLong() {
             // The max for dest == 12 between external, source == 25.
             // The message should contain the dest limit when fetching both messages at same time
             expectTransferMessageException_withUserMessage(
@@ -113,18 +122,19 @@ public class TransferMessageFormatterTest {
             transfer.setSourceMessage(LONG_MESSAGE);
             transfer.setDestinationMessage(LONG_MESSAGE);
             formatter.getMessages(transfer, false);
-
         }
 
         private void expectTransferMessageException_withUserMessage(
                 TransferMessageFormatter.EndUserMessage message, Object... args) {
             String localizableString = message.getKey().get();
             String expectedUserMessage = Catalog.format(localizableString, args);
-            expectedException.expect(TransferMessageExceptionMatcher.userMessageEquals(expectedUserMessage));
+            expectedException.expect(
+                    TransferMessageExceptionMatcher.userMessageEquals(expectedUserMessage));
         }
 
         @Test
-        public void ensureMessagesIsReturned_whenUserProvidedMessages_forExternalTransfer_isWithinLimit() {
+        public void
+                ensureMessagesIsReturned_whenUserProvidedMessages_forExternalTransfer_isWithinLimit() {
             TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
 
             assertEquals(VALID_DESTINATION_MESSAGE, messages.getDestinationMessage());
@@ -132,7 +142,8 @@ public class TransferMessageFormatterTest {
         }
 
         @Test
-        public void ensureMessageIsReturned_whenUserProvidedDestinationMessage_forInternalTransfer_isWithinLimit() {
+        public void
+                ensureMessageIsReturned_whenUserProvidedDestinationMessage_forInternalTransfer_isWithinLimit() {
             transfer.setDestinationMessage(VALID_SOURCE_MESSAGE);
 
             TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, true);
@@ -148,24 +159,27 @@ public class TransferMessageFormatterTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void ensureGetDestinationMessageThrowsException_whenTransferType_isNot_BANK_TRANSFER() {
+        public void
+                ensureGetDestinationMessageThrowsException_whenTransferType_isNot_BANK_TRANSFER() {
             transfer.setType(TransferType.EINVOICE);
             formatter.getDestinationMessage(transfer, false);
         }
     }
 
     public static class Normalize {
-        private TransferMessageLengthConfig lengthConfig = TransferMessageLengthConfig.createWithMaxLength(999);
+        private TransferMessageLengthConfig lengthConfig =
+                TransferMessageLengthConfig.createWithMaxLength(999);
 
         @Test
         public void normalizerAbsent_doesntNormalizeUserMessages() {
-            TransferMessageFormatter formatter = new TransferMessageFormatter(
-                    null, lengthConfig, Optional.empty());
+            TransferMessageFormatter formatter =
+                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
 
-            Transfer transfer = TransferMock.bankTransfer()
-                    .withSourceMessage("source:123åäöüÅÄÖÜ$©@£")
-                    .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£")
-                    .build();
+            Transfer transfer =
+                    TransferMock.bankTransfer()
+                            .withSourceMessage("source:123åäöüÅÄÖÜ$©@£")
+                            .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£")
+                            .build();
 
             TransferMessageFormatter.Messages messages = formatter.getMessages(transfer, false);
 
@@ -175,8 +189,8 @@ public class TransferMessageFormatterTest {
 
         @Test
         public void normalizerAbsent_doesntNormalizeTinkGeneratedMessages() {
-            TransferMessageFormatter formatter = new TransferMessageFormatter(
-                    null, lengthConfig, Optional.empty());
+            TransferMessageFormatter formatter =
+                    new TransferMessageFormatter(null, lengthConfig, Optional.empty());
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£");
@@ -190,8 +204,9 @@ public class TransferMessageFormatterTest {
 
         @Test
         public void normalizerPresent_normalizesGeneratedMessages() {
-            TransferMessageFormatter formatter = new TransferMessageFormatter(
-                    null, lengthConfig, new StringNormalizerSwedish(':'));
+            TransferMessageFormatter formatter =
+                    new TransferMessageFormatter(
+                            null, lengthConfig, new StringNormalizerSwedish(':'));
 
             Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£^");
@@ -206,12 +221,16 @@ public class TransferMessageFormatterTest {
         @Test(expected = TransferExecutionException.class)
         public void normalizerPresent_throwsWhenNormalizedSourceMessageDiffers() {
             try {
-                TransferMessageFormatter formatter = new TransferMessageFormatter(
-                        Catalog.getCatalog(Locale.ENGLISH),
-                        lengthConfig, new StringNormalizerSwedish(':'));
+                TransferMessageFormatter formatter =
+                        new TransferMessageFormatter(
+                                Catalog.getCatalog(Locale.ENGLISH),
+                                lengthConfig,
+                                new StringNormalizerSwedish(':'));
 
-                Transfer transfer = TransferMock.bankTransfer()
-                        .withSourceMessage("source:123åäöüÅÄÖÜ$©@£^è").build();
+                Transfer transfer =
+                        TransferMock.bankTransfer()
+                                .withSourceMessage("source:123åäöüÅÄÖÜ$©@£^è")
+                                .build();
 
                 formatter.getSourceMessage(transfer);
             } catch (TransferExecutionException e) {
@@ -227,12 +246,16 @@ public class TransferMessageFormatterTest {
         @Test(expected = TransferExecutionException.class)
         public void normalizerPresent_throwsWhenNormalizedDestinationMessageDiffers() {
             try {
-                TransferMessageFormatter formatter = new TransferMessageFormatter(
-                        Catalog.getCatalog(Locale.ENGLISH),
-                        lengthConfig, new StringNormalizerSwedish(':'));
+                TransferMessageFormatter formatter =
+                        new TransferMessageFormatter(
+                                Catalog.getCatalog(Locale.ENGLISH),
+                                lengthConfig,
+                                new StringNormalizerSwedish(':'));
 
-                Transfer transfer = TransferMock.bankTransfer()
-                        .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£^è").build();
+                Transfer transfer =
+                        TransferMock.bankTransfer()
+                                .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£^è")
+                                .build();
 
                 formatter.getDestinationMessage(transfer, false);
             } catch (TransferExecutionException e) {
@@ -247,8 +270,8 @@ public class TransferMessageFormatterTest {
 
         @Test
         public void ensureDuplicateSpaces_betweenWords_areTrimmed_forGeneratedMessages() {
-            TransferMessageFormatter formatter = new TransferMessageFormatter(null, lengthConfig,
-                    new StringNormalizerSwedish());
+            TransferMessageFormatter formatter =
+                    new TransferMessageFormatter(null, lengthConfig, new StringNormalizerSwedish());
 
             Transfer transfer = new Transfer();
             transfer.setType(TransferType.BANK_TRANSFER);
@@ -269,8 +292,8 @@ public class TransferMessageFormatterTest {
 
         @Test
         public void ensureSpaces_beforeAndAfter_isRemoved_forGeneratedMessages() {
-            TransferMessageFormatter formatter = new TransferMessageFormatter(null, lengthConfig,
-                    new StringNormalizerSwedish());
+            TransferMessageFormatter formatter =
+                    new TransferMessageFormatter(null, lengthConfig, new StringNormalizerSwedish());
 
             Transfer transfer = new Transfer();
             transfer.setType(TransferType.BANK_TRANSFER);
@@ -290,12 +313,15 @@ public class TransferMessageFormatterTest {
         }
     }
 
-    private static class TransferMessageExceptionMatcher extends TypeSafeMatcher<TransferMessageException> {
+    private static class TransferMessageExceptionMatcher
+            extends TypeSafeMatcher<TransferMessageException> {
         private String expectedUserMessage;
         private String foundUserMessage;
 
-        private static TransferMessageExceptionMatcher userMessageEquals(String expectedUserMessage) {
-            TransferMessageExceptionMatcher transferMessageExceptionMatcher = new TransferMessageExceptionMatcher();
+        private static TransferMessageExceptionMatcher userMessageEquals(
+                String expectedUserMessage) {
+            TransferMessageExceptionMatcher transferMessageExceptionMatcher =
+                    new TransferMessageExceptionMatcher();
             transferMessageExceptionMatcher.expectedUserMessage = expectedUserMessage;
             return transferMessageExceptionMatcher;
         }
@@ -308,7 +334,8 @@ public class TransferMessageFormatterTest {
 
         @Override
         public void describeTo(Description description) {
-            description.appendValue(foundUserMessage)
+            description
+                    .appendValue(foundUserMessage)
                     .appendText(" was found, which is not equal to expected ")
                     .appendValue(expectedUserMessage);
         }

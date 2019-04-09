@@ -17,7 +17,6 @@ public class CliPrintUtils {
     private static final String ROW_START = "| ";
     private static final String ROW_END = " |";
 
-
     private static PrintStream initOutput() {
         try {
             return new PrintStream(System.out, true, "UTF-8");
@@ -26,7 +25,8 @@ public class CliPrintUtils {
         }
     }
 
-    public static void printTable(int indentation, String tableName, List<Map<String, String>> rows) {
+    public static void printTable(
+            int indentation, String tableName, List<Map<String, String>> rows) {
         printTable(indentation, tableName, rows, INFINITE_MAX_ROWS);
     }
 
@@ -39,7 +39,8 @@ public class CliPrintUtils {
         return Strings.padEnd(header, maxLength, c);
     }
 
-    public static void printTable(int indentation, String tableName, List<Map<String, String>> rows, int maxRows) {
+    public static void printTable(
+            int indentation, String tableName, List<Map<String, String>> rows, int maxRows) {
         if (rows.isEmpty()) {
             return;
         }
@@ -52,14 +53,19 @@ public class CliPrintUtils {
                 if (col.getValue() == null) {
                     col.setValue(NULL_VALUE);
                 }
-                columnWidths.put(col.getKey(),
-                        Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getValue().length
-                                ()));
+                columnWidths.put(
+                        col.getKey(),
+                        Math.max(
+                                Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0),
+                                col.getValue().length()));
             }
         }
         for (Map.Entry<String, Integer> col : columnWidths.entrySet()) {
-            columnWidths.put(col.getKey(),
-                    Math.max(Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0), col.getKey().length()));
+            columnWidths.put(
+                    col.getKey(),
+                    Math.max(
+                            Optional.ofNullable(columnWidths.get(col.getKey())).orElse(0),
+                            col.getKey().length()));
         }
 
         // Calculating total width of table.
@@ -100,16 +106,21 @@ public class CliPrintUtils {
             int segmentCount = maxRows / 2;
 
             // from start
-            for (int i=0; i<segmentCount; i++) {
+            for (int i = 0; i < segmentCount; i++) {
                 Map<String, String> row = rows.get(i);
                 printRow(indentation, row, columnWidths);
             }
 
-            String skippedRowsMessage = String.format("Skipped rows: %d", rows.size() - segmentCount * 2);
-            out.println(Strings.repeat(" ", indentation) + ROW_START + encapsuleTitle(skippedRowsMessage, totalWidth - 4, '~') + ROW_END);
+            String skippedRowsMessage =
+                    String.format("Skipped rows: %d", rows.size() - segmentCount * 2);
+            out.println(
+                    Strings.repeat(" ", indentation)
+                            + ROW_START
+                            + encapsuleTitle(skippedRowsMessage, totalWidth - 4, '~')
+                            + ROW_END);
 
             // from end
-            for (int i=segmentCount; i>0; i--) {
+            for (int i = segmentCount; i > 0; i--) {
                 Map<String, String> row = rows.get(rows.size() - i);
                 printRow(indentation, row, columnWidths);
             }
@@ -123,7 +134,8 @@ public class CliPrintUtils {
         out.println(Strings.repeat(" ", indentation) + Strings.repeat("=", totalWidth));
     }
 
-    private static void printRow(int indentation, Map<String, String> row, final Map<String, Integer> columnWidths) {
+    private static void printRow(
+            int indentation, Map<String, String> row, final Map<String, Integer> columnWidths) {
         out.print(Strings.repeat(" ", indentation) + ROW_START);
         boolean first = true;
         for (Map.Entry<String, Integer> column : columnWidths.entrySet()) {
@@ -133,7 +145,11 @@ public class CliPrintUtils {
                 first = false;
             }
             String value = Optional.ofNullable(row.get(column.getKey())).orElse("");
-            value = value.replace("\n", "⏎"); // Newlines ruin the table; replaced string needs to be a single char
+            value =
+                    value.replace(
+                            "\n",
+                            "⏎"); // Newlines ruin the table; replaced string needs to be a single
+            // char
             out.print(value);
             out.print(Strings.repeat(" ", column.getValue() - value.length())); // Padding
         }

@@ -13,26 +13,24 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.application.GenericApplication;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
 /**
- * Extension of AggregationLogger to provide custom formatter for
- * - {@link Credentials}
+ * Extension of AggregationLogger to provide custom formatter for - {@link Credentials}
  *
- * The methods for (String, String, String) and similar are deprecated, and should be converted to type-safe
- * alternatives.
+ * <p>The methods for (String, String, String) and similar are deprecated, and should be converted
+ * to type-safe alternatives.
  */
 public class AggregationLogger {
     protected Logger log;
 
-    @VisibleForTesting
-    static final int EXTRA_LONG_LIMIT = 1550;
+    @VisibleForTesting static final int EXTRA_LONG_LIMIT = 1550;
 
     public AggregationLogger(Class clazz) {
         this.log = LoggerFactory.getLogger(clazz);
@@ -112,14 +110,14 @@ public class AggregationLogger {
     static void logExtraLong(String message, LogTag logTag, Consumer<String> logger) {
         // Hack to handle max characters 2048 in logging message
         UUID uuid = UUID.randomUUID();
-        String messageHeader = String.format("%s - %s - counter: COUNTER - message: ", logTag, uuid);
+        String messageHeader =
+                String.format("%s - %s - counter: COUNTER - message: ", logTag, uuid);
         List<String> loggableStrings = toLoggableStrings(messageHeader, message);
         int totalSize = loggableStrings.size();
         for (int i = 0; i < totalSize; i++) {
             logger.accept(
-                    messageHeader.replaceAll("COUNTER", (i + 1) +  "/" + totalSize) +
-                            loggableStrings.get(i)
-            );
+                    messageHeader.replaceAll("COUNTER", (i + 1) + "/" + totalSize)
+                            + loggableStrings.get(i));
         }
     }
 
@@ -144,7 +142,6 @@ public class AggregationLogger {
             }
 
             substringLength++;
-
         }
         loggableStrings.add(subString(chars, substringLength, substringStart));
         return loggableStrings.build();
@@ -175,7 +172,10 @@ public class AggregationLogger {
     }
 
     private String format(GenericApplication application, String message) {
-        return "[applicationId: " + UUIDUtils.toTinkUUID(application.getApplicationId()) + "] " + message;
+        return "[applicationId: "
+                + UUIDUtils.toTinkUUID(application.getApplicationId())
+                + "] "
+                + message;
     }
 
     public void info(GenericApplication application, String message) {
@@ -191,7 +191,11 @@ public class AggregationLogger {
     }
 
     public void debug(GenericApplication application, String message) {
-        debug(String.format("[userId:%s applicationId:%s] %s", UUIDUtils.toTinkUUID(application.getUserId()),
-                UUIDUtils.toTinkUUID(application.getApplicationId()), message));
+        debug(
+                String.format(
+                        "[userId:%s applicationId:%s] %s",
+                        UUIDUtils.toTinkUUID(application.getUserId()),
+                        UUIDUtils.toTinkUUID(application.getApplicationId()),
+                        message));
     }
 }

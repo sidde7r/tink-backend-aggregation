@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -11,8 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class NoEscapeOfBackslashMessageBodyWriterTest {
 
@@ -24,10 +25,12 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
         noEscapeBodyWriter = new NoEscapeOfBackslashMessageBodyWriter(HashMap.class);
 
         // a bit strange, but this way we can get the default message body writer for Json
-        defaultMessageBodyWriter = new TinkHttpClient().getInternalClient()
-                .getMessageBodyWorkers()
-                .getMessageBodyWriter(HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE);
-
+        defaultMessageBodyWriter =
+                new TinkHttpClient()
+                        .getInternalClient()
+                        .getMessageBodyWorkers()
+                        .getMessageBodyWriter(
+                                HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE);
     }
 
     @Test
@@ -61,25 +64,36 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
 
     @Test
     public void objectsOfCorrectClassAreWriteable() throws Exception {
-        assertTrue(noEscapeBodyWriter.isWriteable(HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE));
+        assertTrue(
+                noEscapeBodyWriter.isWriteable(
+                        HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE));
     }
 
     @Test
     public void objectsNotOfCorrectClassAreNotWriteable() throws Exception {
-        assertFalse(noEscapeBodyWriter.isWriteable(TestData.class, null, null, MediaType.APPLICATION_JSON_TYPE));
+        assertFalse(
+                noEscapeBodyWriter.isWriteable(
+                        TestData.class, null, null, MediaType.APPLICATION_JSON_TYPE));
     }
 
     @Test
     public void defaultImplementationAcceptsAll() throws Exception {
-        assertTrue(defaultMessageBodyWriter.isWriteable(HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE));
-        assertTrue(defaultMessageBodyWriter.isWriteable(TestData.class, null, TestData.class.getAnnotations(), MediaType.APPLICATION_JSON_TYPE));
+        assertTrue(
+                defaultMessageBodyWriter.isWriteable(
+                        HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE));
+        assertTrue(
+                defaultMessageBodyWriter.isWriteable(
+                        TestData.class,
+                        null,
+                        TestData.class.getAnnotations(),
+                        MediaType.APPLICATION_JSON_TYPE));
     }
 
-    private String testWriteObjectAsString(Object o, MessageBodyWriter aBodyWriter) throws IOException {
+    private String testWriteObjectAsString(Object o, MessageBodyWriter aBodyWriter)
+            throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        aBodyWriter.writeTo(o, o.getClass(), null, new Annotation[0], null,
-                null, baos);
+        aBodyWriter.writeTo(o, o.getClass(), null, new Annotation[0], null, null, baos);
         return baos.toString("UTF-8");
     }
 

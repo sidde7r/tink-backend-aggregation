@@ -4,18 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DatawarehouseRemoteConfiguration {
     /* Setting this to true is against Tink cryptography policy */
-    @JsonProperty
-    private boolean useDiffieHellmanSha1 = false; // TODO Remove me
-    @JsonProperty
-    private String host = "localhost";
-    @JsonProperty
-    private String remotePath = "/tmp/";
-    @JsonProperty
-    private int remotePort = 22;
-    @JsonProperty
-    private boolean deleteFileWhenDone = true;
-    @JsonProperty
-    private boolean useSftp = false;
+    @JsonProperty private boolean useDiffieHellmanSha1 = false; // TODO Remove me
+    @JsonProperty private String host = "localhost";
+    @JsonProperty private String remotePath = "/tmp/";
+    @JsonProperty private int remotePort = 22;
+    @JsonProperty private boolean deleteFileWhenDone = true;
+    @JsonProperty private boolean useSftp = false;
 
     public boolean shouldUseDiffieHellmanSha1() {
         return useDiffieHellmanSha1;

@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CreditSafeConfiguration {
     @JsonProperty("username")
     private String username;
+
     @JsonProperty("password")
     private String password;
+
     @JsonProperty("logConsumerMonitoringTraffic")
     private boolean logConsumerMonitoringTraffic;
-
 
     public String getUsername() {
         return username;
@@ -30,5 +31,4 @@ public class CreditSafeConfiguration {
     public boolean isLogConsumerMonitoringTraffic() {
         return logConsumerMonitoringTraffic;
     }
-
 }

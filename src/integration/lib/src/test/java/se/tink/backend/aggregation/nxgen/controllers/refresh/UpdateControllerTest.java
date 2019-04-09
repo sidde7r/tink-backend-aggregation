@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,16 +23,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.user.rpc.User;
 
-import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @RunWith(MockitoJUnitRunner.class)
 public final class UpdateControllerTest {
-    @Spy
-    private FakeAgentContext context;
+    @Spy private FakeAgentContext context;
 
     private User user = new User();
 
@@ -41,10 +39,11 @@ public final class UpdateControllerTest {
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
         final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
 
-        final LoanAccount loanAccount = LoanAccount.builder("1337")
-                .setAccountNumber("777")
-                .setBalance(new Amount("SEK", -7.0))
-                .build();
+        final LoanAccount loanAccount =
+                LoanAccount.builder("1337")
+                        .setAccountNumber("777")
+                        .setBalance(new Amount("SEK", -7.0))
+                        .build();
 
         final Collection<AggregationTransaction> transactions = Collections.emptySet();
 
@@ -63,10 +62,11 @@ public final class UpdateControllerTest {
     public void ensureCacheTransactions_whenUpdateTransactions_isNotCalledWithNull() {
         final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
 
-        final LoanAccount loanAccount = LoanAccount.builder("1337")
-                .setAccountNumber("777")
-                .setBalance(new Amount("SEK", -7.0))
-                .build();
+        final LoanAccount loanAccount =
+                LoanAccount.builder("1337")
+                        .setAccountNumber("777")
+                        .setBalance(new Amount("SEK", -7.0))
+                        .build();
 
         final Collection<AggregationTransaction> transactions = Collections.emptySet();
 
@@ -76,23 +76,23 @@ public final class UpdateControllerTest {
         updateController.updateTransactions(loanAccount, transactions);
     }
 
-    static abstract class FakeAgentContext extends AgentContext {
+    abstract static class FakeAgentContext extends AgentContext {
         AccountFeatures accountFeatures;
 
         @Override
-        public void cacheAccount(final Account account,
-                final AccountFeatures accountFeatures) {
+        public void cacheAccount(final Account account, final AccountFeatures accountFeatures) {
             this.accountFeatures = accountFeatures;
         }
 
         @Override
-        public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
-            Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
+        public void cacheTransactions(
+                @Nonnull String accountUniqueId, List<Transaction> transactions) {
+            Preconditions.checkNotNull(
+                    accountUniqueId); // Necessary until we make @Nonnull throw the exception
         }
 
         public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
             return Optional.ofNullable(accountFeatures);
         }
-
     }
 }

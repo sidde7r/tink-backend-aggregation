@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date;
 
+import static org.mockito.ArgumentMatchers.any;
+import static se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController.MAX_TOTAL_EMPTY_PAGES;
+
 import java.time.Month;
 import java.time.Year;
 import java.time.ZoneId;
@@ -10,8 +13,6 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import static org.mockito.ArgumentMatchers.any;
-import static se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController.MAX_TOTAL_EMPTY_PAGES;
 
 public class TransactionMonthPaginationControllerTest {
     private TransactionMonthPaginator paginator;
@@ -22,7 +23,9 @@ public class TransactionMonthPaginationControllerTest {
     @Before
     public void setup() {
         paginator = Mockito.mock(TransactionMonthPaginator.class);
-        paginationController = new TransactionMonthPaginationController<>(paginator, ZoneId.of("Europe/Stockholm"));
+        paginationController =
+                new TransactionMonthPaginationController<>(
+                        paginator, ZoneId.of("Europe/Stockholm"));
     }
 
     @Test(expected = NullPointerException.class)
@@ -37,7 +40,9 @@ public class TransactionMonthPaginationControllerTest {
 
     @Test
     public void ensureWeStopFetchingMoreTransactions_whenMaxTotalEmptyPages_isReached() {
-        Mockito.when(paginator.getTransactionsFor(any(Account.class), any(Year.class), any(Month.class)))
+        Mockito.when(
+                        paginator.getTransactionsFor(
+                                any(Account.class), any(Year.class), any(Month.class)))
                 .thenReturn(PaginatorResponseImpl.createEmpty());
 
         paginationController.resetState();

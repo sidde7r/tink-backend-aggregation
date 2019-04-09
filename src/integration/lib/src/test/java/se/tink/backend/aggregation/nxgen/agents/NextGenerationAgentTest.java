@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public abstract class NextGenerationAgentTest<T extends NextGenerationAgent> extends AbstractAgentTest<T> {
+public abstract class NextGenerationAgentTest<T extends NextGenerationAgent>
+        extends AbstractAgentTest<T> {
     protected NextGenerationAgentTest(Class<T> cls) {
         super(cls);
     }
@@ -44,13 +45,13 @@ public abstract class NextGenerationAgentTest<T extends NextGenerationAgent> ext
 
         credentials.setStatus(CredentialsStatus.UPDATING);
 
-
         for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
             RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
         }
     }
 
-    private Agent createAgent(RefreshInformationRequest refreshInformationRequest) throws Exception {
+    private Agent createAgent(RefreshInformationRequest refreshInformationRequest)
+            throws Exception {
         testContext = new AgentTestContext(refreshInformationRequest.getCredentials());
         testContext.setTestContext(true);
         return factory.create(cls, refreshInformationRequest, testContext);

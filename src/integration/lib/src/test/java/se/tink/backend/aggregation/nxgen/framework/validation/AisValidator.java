@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.nxgen.framework.validation;
 
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.customerinfo.CustomerInfo;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.customerinfo.CustomerInfo;
 
 public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;
@@ -50,17 +49,20 @@ public final class AisValidator {
      * @param transactions A collection of transactions to be validated
      */
     public void validate(
-            final Collection<Account> accounts, final Collection<Transaction> transactions, final CustomerInfo customerInfo) {
+            final Collection<Account> accounts,
+            final Collection<Transaction> transactions,
+            final CustomerInfo customerInfo) {
         validate(new AisData(accounts, transactions, customerInfo));
     }
 
     public void validate(final AisData aisData) {
-        final ValidationResult result = ValidationResult.builder()
-                .addAisDataRules(aisDataRules)
-                .addAccountRules(accountRules)
-                .addTransactionRules(transactionRules)
-                .validate(aisData)
-                .build();
+        final ValidationResult result =
+                ValidationResult.builder()
+                        .addAisDataRules(aisDataRules)
+                        .addAccountRules(accountRules)
+                        .addTransactionRules(transactionRules)
+                        .validate(aisData)
+                        .build();
 
         executor.execute(result);
     }
@@ -84,18 +86,15 @@ public final class AisValidator {
         private <V> void checkForDuplicates(final ValidationRule<V> rule) {
             // TODO checked exception alternative
             final boolean accountDupes =
-                    accountRules
-                            .stream()
+                    accountRules.stream()
                             .map(AccountRule::getRuleIdentifier)
                             .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
             final boolean transactionDupes =
-                    transactionRules
-                            .stream()
+                    transactionRules.stream()
                             .map(TransactionRule::getRuleIdentifier)
                             .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
             final boolean aisDataDupes =
-                    aisDataRules
-                            .stream()
+                    aisDataRules.stream()
                             .map(AisDataRule::getRuleIdentifier)
                             .anyMatch(id -> Objects.equals(id, rule.getRuleIdentifier()));
             if (aisDataDupes || accountDupes || transactionDupes) {
@@ -171,7 +170,8 @@ public final class AisValidator {
         public Builder disableRule(final String ruleIdentifier) {
             aisDataRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
             accountRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
-            transactionRules.removeIf(rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
+            transactionRules.removeIf(
+                    rule -> Objects.equals(rule.getRuleIdentifier(), ruleIdentifier));
             return this;
         }
     }

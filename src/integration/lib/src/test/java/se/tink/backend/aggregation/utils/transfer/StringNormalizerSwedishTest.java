@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.utils.transfer;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class StringNormalizerSwedishTest {
     @Test
@@ -17,8 +18,7 @@ public class StringNormalizerSwedishTest {
                 .isEqualTo(swedishUppercaseCharacters);
 
         String swedishNumbers = "1234567890";
-        assertThat(normalizer.normalize(swedishNumbers))
-                .isEqualTo(swedishNumbers);
+        assertThat(normalizer.normalize(swedishNumbers)).isEqualTo(swedishNumbers);
     }
 
     @Test
@@ -26,8 +26,7 @@ public class StringNormalizerSwedishTest {
         StringNormalizerSwedish normalizer = new StringNormalizerSwedish();
 
         String lookalikes = "é ñ";
-        assertThat(normalizer.normalize(lookalikes))
-                .isEqualTo("e n");
+        assertThat(normalizer.normalize(lookalikes)).isEqualTo("e n");
     }
 
     @Test
@@ -35,8 +34,7 @@ public class StringNormalizerSwedishTest {
         StringNormalizerSwedish normalizer = new StringNormalizerSwedish();
 
         String lookalikes = "# $";
-        assertThat(normalizer.normalize(lookalikes))
-                .isEqualTo(" ");
+        assertThat(normalizer.normalize(lookalikes)).isEqualTo(" ");
     }
 
     @Test
@@ -44,8 +42,7 @@ public class StringNormalizerSwedishTest {
         StringNormalizerSwedish normalizer = new StringNormalizerSwedish("#^");
 
         String lookalikes = "# ^ $";
-        assertThat(normalizer.normalize(lookalikes))
-                .isEqualTo("# ^ ");
+        assertThat(normalizer.normalize(lookalikes)).isEqualTo("# ^ ");
     }
 
     @Test

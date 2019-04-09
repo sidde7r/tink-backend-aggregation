@@ -15,20 +15,14 @@ import se.tink.libraries.cryptography.RSAUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class SignatureKeyPair {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(SignatureKeyPair.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(SignatureKeyPair.class);
 
-    @JsonProperty
-    private String privateKeyPath;
-    @JsonProperty
-    private String publicKeyPath;
+    @JsonProperty private String privateKeyPath;
+    @JsonProperty private String publicKeyPath;
 
-    @JsonIgnore
-    private RSAPrivateKey privateKey;
-    @JsonIgnore
-    private RSAPublicKey publicKey;
-    @JsonIgnore
-    private String keyId;
+    @JsonIgnore private RSAPrivateKey privateKey;
+    @JsonIgnore private RSAPublicKey publicKey;
+    @JsonIgnore private String keyId;
 
     public String getPrivateKeyPath() {
         return privateKeyPath;
@@ -49,7 +43,8 @@ public final class SignatureKeyPair {
     @JsonIgnore
     public RSAPrivateKey getPrivateKey() {
         if (Strings.isNullOrEmpty(privateKeyPath)) {
-            log.error("The path to get the private key was null / empty. Make sure to add a path to the config.");
+            log.error(
+                    "The path to get the private key was null / empty. Make sure to add a path to the config.");
             return null;
         }
 
@@ -63,7 +58,8 @@ public final class SignatureKeyPair {
     @JsonIgnore
     public RSAPublicKey getPublicKey() {
         if (Strings.isNullOrEmpty(publicKeyPath)) {
-            log.error("The path to get the public key was null / empty. Make sure to add a path to the config.");
+            log.error(
+                    "The path to get the public key was null / empty. Make sure to add a path to the config.");
             return null;
         }
 

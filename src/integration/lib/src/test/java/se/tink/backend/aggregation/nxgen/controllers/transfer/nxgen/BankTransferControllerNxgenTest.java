@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen;
 
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.*;
+
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BankTransferControllerNxgenTest {
 
@@ -19,7 +20,8 @@ public class BankTransferControllerNxgenTest {
 
     @Test
     public void noSourceAccountShouldTrowException() {
-        BankTransferControllerNxgen controller = new BankTransferControllerNxgen(mock(BankTransferExecutorNxgen.class));
+        BankTransferControllerNxgen controller =
+                new BankTransferControllerNxgen(mock(BankTransferExecutorNxgen.class));
 
         Transfer transfer = new Transfer();
 
@@ -33,7 +35,8 @@ public class BankTransferControllerNxgenTest {
 
     @Test
     public void noDestinationAccountShouldTrowException() {
-        BankTransferControllerNxgen controller = new BankTransferControllerNxgen(mock(BankTransferExecutorNxgen.class));
+        BankTransferControllerNxgen controller =
+                new BankTransferControllerNxgen(mock(BankTransferExecutorNxgen.class));
 
         Transfer transfer = new Transfer();
         transfer.setSource(new SwedishIdentifier("33001212121212"));
@@ -42,7 +45,8 @@ public class BankTransferControllerNxgenTest {
             controller.executeTransfer(transfer);
         } catch (TransferExecutionException e) {
             assertThat(e.getSignableOperationStatus()).isEqualTo(SignableOperationStatuses.FAILED);
-            assertThat(e.getUserMessage()).isEqualTo(EndUserMessage.INVALID_DESTINATION.getKey().get());
+            assertThat(e.getUserMessage())
+                    .isEqualTo(EndUserMessage.INVALID_DESTINATION.getKey().get());
         }
     }
 
@@ -64,8 +68,10 @@ public class BankTransferControllerNxgenTest {
         try {
             controller.executeTransfer(transfer);
         } catch (TransferExecutionException e) {
-            assertThat(e.getSignableOperationStatus()).isEqualTo(SignableOperationStatuses.CANCELLED);
-            assertThat(e.getUserMessage()).isEqualTo(EndUserMessage.EXISTING_UNSIGNED_TRANSFERS.getKey().get());
+            assertThat(e.getSignableOperationStatus())
+                    .isEqualTo(SignableOperationStatuses.CANCELLED);
+            assertThat(e.getUserMessage())
+                    .isEqualTo(EndUserMessage.EXISTING_UNSIGNED_TRANSFERS.getKey().get());
         }
     }
 }

@@ -25,8 +25,14 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
     private String prefix;
     private String suffix;
 
-    public DoubleSerializer(JsonType outputType, int decimals, boolean trailingZeros,
-            char decimalSeparator, char groupingSeparator, String prefix, String suffix) {
+    public DoubleSerializer(
+            JsonType outputType,
+            int decimals,
+            boolean trailingZeros,
+            char decimalSeparator,
+            char groupingSeparator,
+            String prefix,
+            String suffix) {
         super(Double.class);
         this.outputType = outputType;
         this.decimals = decimals;
@@ -46,17 +52,18 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
     }
 
     @Override
-    public void serialize(Double value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    public void serialize(Double value, JsonGenerator jgen, SerializerProvider provider)
+            throws IOException {
         switch (outputType) {
-        case NUMERIC:
-            jgen.writeRawValue(getNumericValue(value));
-            return;
-        case STRING:
-            jgen.writeString(getStringValue(value));
-            return;
-        default:
-            // Unknown type, handle as standard double serialization
-            jgen.writeRawValue(new BigDecimal(value).toPlainString());
+            case NUMERIC:
+                jgen.writeRawValue(getNumericValue(value));
+                return;
+            case STRING:
+                jgen.writeString(getStringValue(value));
+                return;
+            default:
+                // Unknown type, handle as standard double serialization
+                jgen.writeRawValue(new BigDecimal(value).toPlainString());
         }
     }
 
@@ -69,9 +76,14 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
     }
 
     private String getStringValue(Double value) {
-        DecimalFormat formatter = new DecimalFormat(String.format("0%s%s",
-                (decimals > 0 ? "." : ""),
-                CharBuffer.allocate(decimals).toString().replace('\0', (trailingZeros ? '0' : '#'))));
+        DecimalFormat formatter =
+                new DecimalFormat(
+                        String.format(
+                                "0%s%s",
+                                (decimals > 0 ? "." : ""),
+                                CharBuffer.allocate(decimals)
+                                        .toString()
+                                        .replace('\0', (trailingZeros ? '0' : '#'))));
 
         DecimalFormatSymbols symbols = formatter.getDecimalFormatSymbols();
         if (groupingSeparator != Character.MIN_VALUE) {
@@ -88,10 +100,9 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
         return String.format("%s%s%s", prefix, number, suffix);
     }
 
-
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) throws
-            JsonMappingException {
+    public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property)
+            throws JsonMappingException {
         JsonType outputType = null;
         int decimals = 0;
         boolean trailingZeros = false;
@@ -113,7 +124,13 @@ public class DoubleSerializer extends StdSerializer<Double> implements Contextua
             prefix = jsonDouble.prefix();
             suffix = jsonDouble.suffix();
         }
-        return new DoubleSerializer(outputType,
-                decimals, trailingZeros, decimalSeparator, groupingSeparator, prefix, suffix);
+        return new DoubleSerializer(
+                outputType,
+                decimals,
+                trailingZeros,
+                decimalSeparator,
+                groupingSeparator,
+                prefix,
+                suffix);
     }
 }

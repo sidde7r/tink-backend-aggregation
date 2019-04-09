@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import static org.assertj.core.api.Assertions.assertThat;
+import se.tink.libraries.account.AccountIdentifier;
 
 public class TransferDestinationsResponseTest {
     @Test
@@ -35,11 +36,14 @@ public class TransferDestinationsResponseTest {
         TransferDestinationPattern destination1 = createTransferDestinationPattern(1);
         TransferDestinationPattern destination2 = createTransferDestinationPattern(2);
 
-        TransferDestinationsResponse response = new TransferDestinationsResponse(
-                account, ImmutableList.of(destination1, destination2));
+        TransferDestinationsResponse response =
+                new TransferDestinationsResponse(
+                        account, ImmutableList.of(destination1, destination2));
 
         assertThat(response.getDestinations()).hasSize(1).containsKey(account);
-        assertThat(response.getDestinations().get(account)).hasSize(2).contains(destination1, destination2);
+        assertThat(response.getDestinations().get(account))
+                .hasSize(2)
+                .contains(destination1, destination2);
     }
 
     @Test
@@ -53,7 +57,9 @@ public class TransferDestinationsResponseTest {
         response.addDestinations(account, ImmutableList.of(destination2));
 
         assertThat(response.getDestinations()).hasSize(1).containsKey(account);
-        assertThat(response.getDestinations().get(account)).hasSize(2).contains(destination1, destination2);
+        assertThat(response.getDestinations().get(account))
+                .hasSize(2)
+                .contains(destination1, destination2);
     }
 
     @Test
@@ -64,16 +70,19 @@ public class TransferDestinationsResponseTest {
         TransferDestinationPattern destination1 = createTransferDestinationPattern(1);
         TransferDestinationPattern destination2 = createTransferDestinationPattern(2);
 
-        ImmutableMap<Account, List<TransferDestinationPattern>> accountDestinations = ImmutableMap
-                .<Account, List<TransferDestinationPattern>>builder()
-                .put(account1, ImmutableList.of(destination1, destination2))
-                .put(account2, ImmutableList.of(destination2))
-                .build();
+        ImmutableMap<Account, List<TransferDestinationPattern>> accountDestinations =
+                ImmutableMap.<Account, List<TransferDestinationPattern>>builder()
+                        .put(account1, ImmutableList.of(destination1, destination2))
+                        .put(account2, ImmutableList.of(destination2))
+                        .build();
 
-        TransferDestinationsResponse response = new TransferDestinationsResponse(accountDestinations);
+        TransferDestinationsResponse response =
+                new TransferDestinationsResponse(accountDestinations);
 
         assertThat(response.getDestinations()).hasSize(2).containsKeys(account1, account2);
-        assertThat(response.getDestinations().get(account1)).hasSize(2).contains(destination1, destination2);
+        assertThat(response.getDestinations().get(account1))
+                .hasSize(2)
+                .contains(destination1, destination2);
         assertThat(response.getDestinations().get(account2)).hasSize(1).contains(destination2);
     }
 
@@ -85,18 +94,22 @@ public class TransferDestinationsResponseTest {
         TransferDestinationPattern destination1 = createTransferDestinationPattern(1);
         TransferDestinationPattern destination2 = createTransferDestinationPattern(2);
 
-        TransferDestinationsResponse response = new TransferDestinationsResponse(
-                account1, ImmutableList.of(destination1, destination2));
+        TransferDestinationsResponse response =
+                new TransferDestinationsResponse(
+                        account1, ImmutableList.of(destination1, destination2));
         response.addDestinations(account2, ImmutableList.of(destination2));
 
         assertThat(response.getDestinations()).hasSize(2).containsKeys(account1, account2);
-        assertThat(response.getDestinations().get(account1)).hasSize(2).contains(destination1, destination2);
+        assertThat(response.getDestinations().get(account1))
+                .hasSize(2)
+                .contains(destination1, destination2);
         assertThat(response.getDestinations().get(account2)).hasSize(1).contains(destination2);
     }
 
     private static TransferDestinationPattern createTransferDestinationPattern(int pattern) {
-        TransferDestinationPattern destination = TransferDestinationPattern
-                .createForMultiMatch(AccountIdentifier.Type.SE, "" + pattern);
+        TransferDestinationPattern destination =
+                TransferDestinationPattern.createForMultiMatch(
+                        AccountIdentifier.Type.SE, "" + pattern);
         destination.setUserId(UUID.randomUUID());
         destination.setAccountId(UUID.randomUUID());
         return destination;

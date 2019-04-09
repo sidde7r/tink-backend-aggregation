@@ -16,13 +16,13 @@ public class NemidAuthenticationControllerTest {
 
     @Test(expected = LoginException.class)
     public void testThrowErrorIncorrectUserIdOrPassword() throws LoginException {
-        authenticationController.throwError("Incorrect user ID or password. Enter user ID and password."
-                + " Changed your password recently, perhaps?");
+        authenticationController.throwError(
+                "Incorrect user ID or password. Enter user ID and password."
+                        + " Changed your password recently, perhaps?");
     }
 
     @Test(expected = LoginException.class)
     public void testThrowErrorIncorrectPassword() throws LoginException {
         authenticationController.throwError("Incorrect password.");
-
     }
 }

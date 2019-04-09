@@ -12,8 +12,7 @@ public class StructuredMessageValidatorTest {
 
     @Test
     public void correctVisualMessage() {
-        Assert.assertTrue(
-                StructuredMessageValidator.isValidOgmVcs("+++010/8068/17183+++"));
+        Assert.assertTrue(StructuredMessageValidator.isValidOgmVcs("+++010/8068/17183+++"));
     }
 
     @Test
@@ -25,5 +24,4 @@ public class StructuredMessageValidatorTest {
     public void correctElectronicMessageBiggerThanInt() {
         Assert.assertTrue(StructuredMessageValidator.isValidOgmVcs("801181001047"));
     }
-
 }

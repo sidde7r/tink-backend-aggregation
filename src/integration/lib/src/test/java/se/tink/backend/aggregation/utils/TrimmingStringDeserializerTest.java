@@ -4,11 +4,10 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class TrimmingStringDeserializerTest {
 
@@ -18,14 +17,16 @@ public class TrimmingStringDeserializerTest {
     private static final String VALUE_2 = "hejsan på dejsan";
     private static final String VALUE_3 = "   hejsan på         dejsan     ";
 
-    private static final String JSON_TEST_ENTITY_1 = "{\"a\":\""+ VALUE_1 +"\"}";
-    private static final String JSON_TEST_ENTITY_2 = "{\"a\":\""+ VALUE_2 +"\"}";
-    private static final String JSON_TEST_ENTITY_3 = "{\"a\":\""+ VALUE_3 +"\"}";
+    private static final String JSON_TEST_ENTITY_1 = "{\"a\":\"" + VALUE_1 + "\"}";
+    private static final String JSON_TEST_ENTITY_2 = "{\"a\":\"" + VALUE_2 + "\"}";
+    private static final String JSON_TEST_ENTITY_3 = "{\"a\":\"" + VALUE_3 + "\"}";
 
-    private static final String JSON_TEST_ENTITY_MIXED_1 = "{\"a\":\""+ VALUE_1 +"\",\"b\":\""+ VALUE_1 +"\"}";
-    private static final String JSON_TEST_ENTITY_MIXED_2 = "{\"a\":\""+ VALUE_2 +"\",\"b\":\""+ VALUE_2 +"\"}";
-    private static final String JSON_TEST_ENTITY_MIXED_3 = "{\"a\":\""+ VALUE_3 +"\",\"b\":\""+ VALUE_3 +"\"}";
-
+    private static final String JSON_TEST_ENTITY_MIXED_1 =
+            "{\"a\":\"" + VALUE_1 + "\",\"b\":\"" + VALUE_1 + "\"}";
+    private static final String JSON_TEST_ENTITY_MIXED_2 =
+            "{\"a\":\"" + VALUE_2 + "\",\"b\":\"" + VALUE_2 + "\"}";
+    private static final String JSON_TEST_ENTITY_MIXED_3 =
+            "{\"a\":\"" + VALUE_3 + "\",\"b\":\"" + VALUE_3 + "\"}";
 
     private static final String JSON_TEST_ENTITY_EMPTY_1 = "{\"a\":\"\"}";
     private static final String JSON_TEST_ENTITY_EMPTY_2 = "{}";
@@ -49,6 +50,7 @@ public class TrimmingStringDeserializerTest {
 
         Assert.assertEquals("", e.getA());
     }
+
     @Test
     public void shouldNotCrashEmpty2() throws IOException {
         TestEntity e = mapper.readValue(JSON_TEST_ENTITY_EMPTY_2, TestEntity.class);
@@ -100,7 +102,7 @@ public class TrimmingStringDeserializerTest {
     }
 
     @Test
-     public void deserialize1() throws IOException {
+    public void deserialize1() throws IOException {
         TestEntity e = mapper.readValue(JSON_TEST_ENTITY_1, TestEntity.class);
 
         Assert.assertNotEquals(VALUE_1, e.getA());
@@ -176,9 +178,8 @@ public class TrimmingStringDeserializerTest {
     public static class TestEntity {
 
         private String a;
-        public TestEntity() {
 
-        }
+        public TestEntity() {}
 
         public String getA() {
             return a;
@@ -194,9 +195,8 @@ public class TrimmingStringDeserializerTest {
 
         private String a;
         private String b;
-        public TestEntityMixed() {
 
-        }
+        public TestEntityMixed() {}
 
         public String getA() {
             return a;
@@ -220,9 +220,8 @@ public class TrimmingStringDeserializerTest {
 
         private String a;
 
-        public TestEntityWithoutTrim() {
+        public TestEntityWithoutTrim() {}
 
-        }
         public String getA() {
             return a;
         }

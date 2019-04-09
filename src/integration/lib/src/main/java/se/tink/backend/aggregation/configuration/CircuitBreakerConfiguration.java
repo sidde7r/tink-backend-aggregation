@@ -7,22 +7,17 @@ import java.util.concurrent.TimeUnit;
 
 public class CircuitBreakerConfiguration {
 
-    @JsonProperty
-    private double rateLimitRate = 1d / 60; // 1 action per minute
+    @JsonProperty private double rateLimitRate = 1d / 60; // 1 action per minute
+
     @JsonProperty
     private List<Integer> rateLimitMultiplicationFactors = ImmutableList.of(1, 2, 4, 8, 16);
-    @JsonProperty
-    private int resetInterval = 60;
-    @JsonProperty
-    private String resetIntervalTimeUnit = "SECONDS";
-    @JsonProperty
-    private double failRatioThreshold = 0.5;
-    @JsonProperty
-    private CircuitBreakerMode mode = CircuitBreakerMode.ENABLED;
-    @JsonProperty
-    private int circuitBreakerThreshold = 2;
-    @JsonProperty
-    private int breakCircuitBreakerThreshold = 5;
+
+    @JsonProperty private int resetInterval = 60;
+    @JsonProperty private String resetIntervalTimeUnit = "SECONDS";
+    @JsonProperty private double failRatioThreshold = 0.5;
+    @JsonProperty private CircuitBreakerMode mode = CircuitBreakerMode.ENABLED;
+    @JsonProperty private int circuitBreakerThreshold = 2;
+    @JsonProperty private int breakCircuitBreakerThreshold = 5;
 
     public double getRateLimitRate() {
         return rateLimitRate;

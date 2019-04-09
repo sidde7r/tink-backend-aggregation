@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.utils.transfer;
 
-import java.util.Optional;
 import com.google.common.collect.Sets;
+import java.util.Optional;
 import java.util.Set;
 
 public class StringNormalizerSwedish extends StringNormalizerEnglish {
@@ -22,10 +22,9 @@ public class StringNormalizerSwedish extends StringNormalizerEnglish {
         this.nonSwedishWhiteList = createNonSwedishWhiteList(this.whiteListedCharacters);
     }
 
-    /**
-     * Used later for constructing human readable list of chars subject to normalization
-     */
-    private static Set<Character> createNonSwedishWhiteList(Optional<Set<Character>> whiteListedCharacters) {
+    /** Used later for constructing human readable list of chars subject to normalization */
+    private static Set<Character> createNonSwedishWhiteList(
+            Optional<Set<Character>> whiteListedCharacters) {
         if (!whiteListedCharacters.isPresent()) {
             return Sets.newHashSet();
         }
@@ -43,6 +42,7 @@ public class StringNormalizerSwedish extends StringNormalizerEnglish {
 
     @Override
     public String getUnchangedCharactersHumanReadable() {
-        return createUnchangedCharactersHumanReadable("a-ö A-Ö 0-9", Optional.of(nonSwedishWhiteList));
+        return createUnchangedCharactersHumanReadable(
+                "a-ö A-Ö 0-9", Optional.of(nonSwedishWhiteList));
     }
 }
