@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.session.SEBSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.session.SebSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -119,7 +119,7 @@ public final class SebAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SEBSessionHandler(apiClient, sessionStorage);
+        return new SebSessionHandler(apiClient, sessionStorage);
     }
 
     @Override
