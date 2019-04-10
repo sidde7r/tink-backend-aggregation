@@ -1,11 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkParser;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
@@ -13,10 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.rpc.initialContext.InitialContextResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.Credentials;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class InitialContextResponseTest {
 
@@ -40,9 +41,11 @@ public class InitialContextResponseTest {
         NordeaV20Parser parser = new NordeaDkParser(new NordeaDkTransactionParser(), credentials);
 
         InitialContextResponse response = InitialContextResponseTestData.getTestData();
-        List<ProductEntity> products = response.getProductsOfTypes(NordeaV20Constants.ProductType.ACCOUNT);
-        Map<TransactionalAccount, ProductEntity> productsByAccount = products.stream()
-                .collect(Collectors.toMap(parser::parseAccount, Function.identity()));
+        List<ProductEntity> products =
+                response.getProductsOfTypes(NordeaV20Constants.ProductType.ACCOUNT);
+        Map<TransactionalAccount, ProductEntity> productsByAccount =
+                products.stream()
+                        .collect(Collectors.toMap(parser::parseAccount, Function.identity()));
 
         Collection<TransactionalAccount> accounts = productsByAccount.keySet();
 

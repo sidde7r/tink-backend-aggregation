@@ -12,8 +12,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-public class JyskeTransactionFetcher implements TransactionPagePaginator<TransactionalAccount>,
-        UpcomingTransactionFetcher<TransactionalAccount> {
+public class JyskeTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
     private JyskeApiClient apiClient;
 
@@ -27,7 +28,8 @@ public class JyskeTransactionFetcher implements TransactionPagePaginator<Transac
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         GetTransactionsResponse response = apiClient.fetchFutureTransactions(account);
         if (response.getNumOfTransactions() > 0) {
             return response.getLstTransactions().stream()

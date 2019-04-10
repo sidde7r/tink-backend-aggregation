@@ -17,7 +17,8 @@ public final class JyskeConstants {
 
     public static final class Url {
         private static final String BANKDATA_BASE_URL = "https://mobil.bankdata.dk/mobilbank";
-        private static final String SERVICE_BASE_URL = "https://mobile-services.jyskebank.dk/mobilebank.services/rest";
+        private static final String SERVICE_BASE_URL =
+                "https://mobile-services.jyskebank.dk/mobilebank.services/rest";
 
         public static final URL NEMID_INIT = toBankDataUrl("/nemid/init");
 
@@ -65,31 +66,35 @@ public final class JyskeConstants {
     public static final class Crypto {
 
         public static final String RSA_LABEL = "jbprodver001";
-        public static final RSAPublicKey PRODUCT_NEMID_KEY = JyskeSecurityHelper
-                .convertToPublicKey(("-----BEGIN CERTIFICATE-----\n"
-                        + " MIIEVDCCAzygAwIBAgIJAOZ1nSI+Z/1TMA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYTAkRLMQowCAYDVQQIEwEgMR0wGwYDVQQ"
-                        + "HExRFcnJpdHNvZSwgRnJlZGVyaWNpYTERMA8GA1UEChMIQmFua2RhdGExDDAKBgNVBAsTA1NJSzEeMBwGA1UEAxMVTW9iaWxiYW5"
-                        + "rIHZlcjAwMSBQcm9kMB4XDTE2MDQxMTE1MTE0OFoXDTQxMDQwNTE1MTE0OFoweTELMAkGA1UEBhMCREsxCjAIBgNVBAgTASAxHTA"
-                        + "bBgNVBAcTFEVycml0c29lLCBGcmVkZXJpY2lhMREwDwYDVQQKEwhCYW5rZGF0YTEMMAoGA1UECxMDU0lLMR4wHAYDVQQDExVNb2J"
-                        + "pbGJhbmsgdmVyMDAxIFByb2QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfhSKIK21UpwaEWhnyDr0SPXdhQc5+qB9"
-                        + "0Y3ioQKBqgnySMlBqULw6AEZ3SXREikzdHInaBlscP97NKvinMv0j2wogJ4lDikDuXidWofNdce2eGdudqO2Cf0uwfxR1Mrl0PRU"
-                        + "UR1gYSvU9HeuoEdLKMxqbewYYbBPOYUWfc5kTRFNfz03ScFp/AZogO/F49or5Pn1U41u29MiTnvHD2PlqfklLScyTA+iULZ+NH3W"
-                        + "9/eGZ6igCpZubUSkj3JVaahJip9OE3usGSet0dQT+ckQ94mOvzzRC/e/0C+faxtXbqwLhnLm1LpOwdkSGLcW/EgmIO5pv1Gf3IX5"
-                        + "HmlLQlIN1AgMBAAGjgd4wgdswHQYDVR0OBBYEFH/N+XATSI+6MdtD5ZbDk/3ev9PEMIGrBgNVHSMEgaMwgaCAFH/N+XATSI+6Mdt"
-                        + "D5ZbDk/3ev9PEoX2kezB5MQswCQYDVQQGEwJESzEKMAgGA1UECBMBIDEdMBsGA1UEBxMURXJyaXRzb2UsIEZyZWRlcmljaWExETA"
-                        + "PBgNVBAoTCEJhbmtkYXRhMQwwCgYDVQQLEwNTSUsxHjAcBgNVBAMTFU1vYmlsYmFuayB2ZXIwMDEgUHJvZIIJAOZ1nSI+Z/1TMAw"
-                        + "GA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBADqGsF7mxb1CxpRaAOv5+w5+B44rQykqZP3iic14A/zG+6mHLleyscwIiYQ"
-                        + "lW9iw480sac0Zt7GoxiWZChFa+PD/+joLB/6lFO+/bx0GPWy5SkPdZII7689/Zo70rJdyZRd1tp6qk/O/+WDPy+M0w90HiNZG0q0"
-                        + "NqxfomZvZ6fAFuPVsupJIJq6DLL24FvBcCiJm5v6LPjjr9/lKwXZj5pBR9icqBucHhPmrv9YQmMwEyHnDqK27NKKim0Xny8w7xGW"
-                        + "V5It/uTbJMNetYXIiWkW0wKZkS71hgPSSkfMWhN+tx5eViVG7VVI/CN4Aj6zrfPW6moETruOfyOQmmq1lr1A=\n"
-                        + "-----END CERTIFICATE-----").getBytes(JyskeConstants.CHARSET));
+        public static final RSAPublicKey PRODUCT_NEMID_KEY =
+                JyskeSecurityHelper.convertToPublicKey(
+                        ("-----BEGIN CERTIFICATE-----\n"
+                                        + " MIIEVDCCAzygAwIBAgIJAOZ1nSI+Z/1TMA0GCSqGSIb3DQEBBQUAMHkxCzAJBgNVBAYTAkRLMQowCAYDVQQIEwEgMR0wGwYDVQQ"
+                                        + "HExRFcnJpdHNvZSwgRnJlZGVyaWNpYTERMA8GA1UEChMIQmFua2RhdGExDDAKBgNVBAsTA1NJSzEeMBwGA1UEAxMVTW9iaWxiYW5"
+                                        + "rIHZlcjAwMSBQcm9kMB4XDTE2MDQxMTE1MTE0OFoXDTQxMDQwNTE1MTE0OFoweTELMAkGA1UEBhMCREsxCjAIBgNVBAgTASAxHTA"
+                                        + "bBgNVBAcTFEVycml0c29lLCBGcmVkZXJpY2lhMREwDwYDVQQKEwhCYW5rZGF0YTEMMAoGA1UECxMDU0lLMR4wHAYDVQQDExVNb2J"
+                                        + "pbGJhbmsgdmVyMDAxIFByb2QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfhSKIK21UpwaEWhnyDr0SPXdhQc5+qB9"
+                                        + "0Y3ioQKBqgnySMlBqULw6AEZ3SXREikzdHInaBlscP97NKvinMv0j2wogJ4lDikDuXidWofNdce2eGdudqO2Cf0uwfxR1Mrl0PRU"
+                                        + "UR1gYSvU9HeuoEdLKMxqbewYYbBPOYUWfc5kTRFNfz03ScFp/AZogO/F49or5Pn1U41u29MiTnvHD2PlqfklLScyTA+iULZ+NH3W"
+                                        + "9/eGZ6igCpZubUSkj3JVaahJip9OE3usGSet0dQT+ckQ94mOvzzRC/e/0C+faxtXbqwLhnLm1LpOwdkSGLcW/EgmIO5pv1Gf3IX5"
+                                        + "HmlLQlIN1AgMBAAGjgd4wgdswHQYDVR0OBBYEFH/N+XATSI+6MdtD5ZbDk/3ev9PEMIGrBgNVHSMEgaMwgaCAFH/N+XATSI+6Mdt"
+                                        + "D5ZbDk/3ev9PEoX2kezB5MQswCQYDVQQGEwJESzEKMAgGA1UECBMBIDEdMBsGA1UEBxMURXJyaXRzb2UsIEZyZWRlcmljaWExETA"
+                                        + "PBgNVBAoTCEJhbmtkYXRhMQwwCgYDVQQLEwNTSUsxHjAcBgNVBAMTFU1vYmlsYmFuayB2ZXIwMDEgUHJvZIIJAOZ1nSI+Z/1TMAw"
+                                        + "GA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBADqGsF7mxb1CxpRaAOv5+w5+B44rQykqZP3iic14A/zG+6mHLleyscwIiYQ"
+                                        + "lW9iw480sac0Zt7GoxiWZChFa+PD/+joLB/6lFO+/bx0GPWy5SkPdZII7689/Zo70rJdyZRd1tp6qk/O/+WDPy+M0w90HiNZG0q0"
+                                        + "NqxfomZvZ6fAFuPVsupJIJq6DLL24FvBcCiJm5v6LPjjr9/lKwXZj5pBR9icqBucHhPmrv9YQmMwEyHnDqK27NKKim0Xny8w7xGW"
+                                        + "V5It/uTbJMNetYXIiWkW0wKZkS71hgPSSkfMWhN+tx5eViVG7VVI/CN4Aj6zrfPW6moETruOfyOQmmq1lr1A=\n"
+                                        + "-----END CERTIFICATE-----")
+                                .getBytes(JyskeConstants.CHARSET));
 
         public static final String AES_PADDING = "XOXOXOXOXOXOXOXO";
         public static final String CERT_TYPE = "X.509";
-        public static final RSAPublicKey MOBILE_SERVICE_KEY = RSA.getPubKeyFromBytes(Base64.decodeBase64(
-                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoahwTZuZhJxmSDdOQeTIfNpohuipfQS4ttaypknG7lOX4Y"
-                        + "+bQf8xYpQx6C2fs4hR+W6KupEJBuxb2a8ENoEbxnXsbLv9YtDTmNQbNJ14ED"
-                        + "+iRXqzgatmMtZs3RxQiK2qJ0InVjTSnNwHS3WAOhplp74TeCiEpoAsAlyzT7VPUEQIDAQAB"));
+        public static final RSAPublicKey MOBILE_SERVICE_KEY =
+                RSA.getPubKeyFromBytes(
+                        Base64.decodeBase64(
+                                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoahwTZuZhJxmSDdOQeTIfNpohuipfQS4ttaypknG7lOX4Y"
+                                        + "+bQf8xYpQx6C2fs4hR+W6KupEJBuxb2a8ENoEbxnXsbLv9YtDTmNQbNJ14ED"
+                                        + "+iRXqzgatmMtZs3RxQiK2qJ0InVjTSnNwHS3WAOhplp74TeCiEpoAsAlyzT7VPUEQIDAQAB"));
     }
 
     public static final class Storage {
@@ -100,17 +105,20 @@ public final class JyskeConstants {
         public static final int INVALID_CREDENTIAL = 112;
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
-            .put(AccountTypes.CHECKING, "Budget",
-                    "Totalkonto",
-                    "Totalkonto Ung",
-                    "Lønkonto",
-                    "Budgetkonto",
-                    "Budgetkonto Ung",
-                    "Grundkonto",
-                    "Forbrug")
-            .build();
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
+                    .put(
+                            AccountTypes.CHECKING,
+                            "Budget",
+                            "Totalkonto",
+                            "Totalkonto Ung",
+                            "Lønkonto",
+                            "Budgetkonto",
+                            "Budgetkonto Ung",
+                            "Grundkonto",
+                            "Forbrug")
+                    .build();
 
     public static final class Log {
         public static final LogTag CREDITCARD_LOGGING = LogTag.from("#dk_jyske_creditcard");

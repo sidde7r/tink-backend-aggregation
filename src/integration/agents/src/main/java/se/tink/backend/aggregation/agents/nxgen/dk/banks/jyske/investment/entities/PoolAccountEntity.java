@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entit
 
 import java.util.Collections;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PoolAccountEntity {
@@ -33,8 +33,7 @@ public class PoolAccountEntity {
                         .setName(name)
                         .setCashBalance(Amount.inDKK(balance))
                         .setPortfolios(Collections.singletonList(toPortfolio(uniqueIdentifier)))
-                        .build()
-        );
+                        .build());
     }
 
     private Portfolio toPortfolio(String uniqueIdentifier) {
@@ -53,8 +52,10 @@ public class PoolAccountEntity {
         if (JyskeConstants.Fetcher.Investment.CHILD_SAVING_TYPE.equalsIgnoreCase(type)) {
             return Portfolio.Type.OTHER;
         }
-        LOGGER.info(JyskeConstants.Log.INVESTMENT_LOGGING.concat(
-                String.format("Found pool account in group: '%s' and type: '%s'", group, type)));
+        LOGGER.info(
+                JyskeConstants.Log.INVESTMENT_LOGGING.concat(
+                        String.format(
+                                "Found pool account in group: '%s' and type: '%s'", group, type)));
         return Portfolio.Type.OTHER;
     }
 }

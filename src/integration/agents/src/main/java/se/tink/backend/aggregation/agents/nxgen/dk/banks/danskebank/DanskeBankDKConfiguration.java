@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-
-import java.util.List;
-import java.util.Map;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
@@ -18,7 +17,8 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String LANGUAGE_CODE = "DA";
     private static final String MARKET_CODE = "DK";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET = "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
+    private static final String CLIENT_SECRET =
+            "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
     private static final String APP_VERSION_HEADER = "MobileBank ios DK 1315090";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
@@ -85,7 +85,8 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .add("13X")
                 .add("19C")
                 .add("15C")
-                .add("12G").build();
+                .add("12G")
+                .build();
     }
 
     @Override
@@ -99,7 +100,8 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .add("055")
                 .add("15U")
                 .add("655")
-                .add("12K").build();
+                .add("12K")
+                .build();
     }
 
     @Override
@@ -108,7 +110,8 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .put("155", Loan.Type.MORTGAGE)
                 .put("165", Loan.Type.MORTGAGE)
                 .put("16L", Loan.Type.BLANCO)
-                .put("094", Loan.Type.VEHICLE).build();
+                .put("094", Loan.Type.VEHICLE)
+                .build();
     }
 
     @Override

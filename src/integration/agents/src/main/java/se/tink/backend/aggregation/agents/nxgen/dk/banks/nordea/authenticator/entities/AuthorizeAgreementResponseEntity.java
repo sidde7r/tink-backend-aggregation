@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AuthorizeAgreementResponseEntity {
     private AuthenticationTokenEntity authenticationToken;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String secureMailAccess;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String nativeMessagingAccess;
 

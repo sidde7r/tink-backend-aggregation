@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ParamTable {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String key;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String val;
 
@@ -17,6 +18,5 @@ public class ParamTable {
 
     public String getVal() {
         return val;
-
     }
 }

@@ -9,8 +9,7 @@ public class AuthorizeAgreementDetails {
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String agreement;
 
-    public AuthorizeAgreementDetails setAgreement(
-            String agreement) {
+    public AuthorizeAgreementDetails setAgreement(String agreement) {
         this.agreement = agreement;
         return this;
     }

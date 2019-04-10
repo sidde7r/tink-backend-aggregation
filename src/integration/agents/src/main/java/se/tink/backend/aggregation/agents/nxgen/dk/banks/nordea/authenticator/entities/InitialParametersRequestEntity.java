@@ -8,16 +8,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitialParametersRequestEntity {
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String authLevel;
+
     private String RemeberUserId;
 
-    public InitialParametersRequestEntity setAuthLevel(
-            String authLevel) {
+    public InitialParametersRequestEntity setAuthLevel(String authLevel) {
         this.authLevel = authLevel;
         return this;
     }
 
-    public InitialParametersRequestEntity setRemeberUserId(
-            String remeberUserId) {
+    public InitialParametersRequestEntity setRemeberUserId(String remeberUserId) {
         RemeberUserId = remeberUserId;
         return this;
     }

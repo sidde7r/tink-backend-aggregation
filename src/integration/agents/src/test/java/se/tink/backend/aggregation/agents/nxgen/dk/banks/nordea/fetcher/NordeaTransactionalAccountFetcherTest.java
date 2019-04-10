@@ -28,21 +28,25 @@ public class NordeaTransactionalAccountFetcherTest extends NordeaTestBase {
     public void fetchAccounts() throws Exception {
         authenticateTestUser();
         Collection<TransactionalAccount> accounts = transactionalAccountFetcher.fetchAccounts();
-        accounts.forEach(a -> {
-            Assert.assertEquals(TestConfig.ACCOUNT_NUMBER, a.getAccountNumber());
-        });
+        accounts.forEach(
+                a -> {
+                    Assert.assertEquals(TestConfig.ACCOUNT_NUMBER, a.getAccountNumber());
+                });
     }
 
     @Test
     public void fetchTransactions() throws Exception {
         authenticateTestUser();
         Collection<TransactionalAccount> accounts = transactionalAccountFetcher.fetchAccounts();
-        accounts.forEach(a -> {
-            TransactionKeyPaginatorResponse<String> txResponse = transactionalAccountFetcher.getTransactionsFor(a, null);
-            Collection<? extends Transaction> transactions = txResponse.getTinkTransactions();
+        accounts.forEach(
+                a -> {
+                    TransactionKeyPaginatorResponse<String> txResponse =
+                            transactionalAccountFetcher.getTransactionsFor(a, null);
+                    Collection<? extends Transaction> transactions =
+                            txResponse.getTinkTransactions();
 
-            Assert.assertEquals(1, transactions.size());
-            Assert.assertEquals(TestConfig.ACCOUNT_NUMBER, a.getAccountNumber());
-        });
+                    Assert.assertEquals(1, transactions.size());
+                    Assert.assertEquals(TestConfig.ACCOUNT_NUMBER, a.getAccountNumber());
+                });
     }
 }

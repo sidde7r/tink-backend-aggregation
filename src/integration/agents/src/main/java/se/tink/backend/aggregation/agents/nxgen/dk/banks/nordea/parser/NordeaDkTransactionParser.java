@@ -14,13 +14,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v2
 import se.tink.libraries.amount.Amount;
 
 public class NordeaDkTransactionParser implements TransactionParser {
-    private static final Splitter CLEANUP_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+    private static final Splitter CLEANUP_SPLITTER =
+            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
     private static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
     @VisibleForTesting
     protected String getRawDescription(TransactionEntity te) {
-        return CharMatcher.WHITESPACE.trimFrom(Optional.ofNullable(Strings.emptyToNull(te.getText()))
-                .orElse(te.getCounterPartyName()));
+        return CharMatcher.WHITESPACE.trimFrom(
+                Optional.ofNullable(Strings.emptyToNull(te.getText()))
+                        .orElse(te.getCounterPartyName()));
     }
 
     @Override
@@ -66,7 +68,10 @@ public class NordeaDkTransactionParser implements TransactionParser {
     @VisibleForTesting
     public Date getDate(PaymentEntity pe) {
         return Optional.ofNullable(pe.getPaymentDate())
-                .map(date -> AgentParsingUtils.parseDate(pe.getPaymentDate().substring(0, 10), true))
+                .map(
+                        date ->
+                                AgentParsingUtils.parseDate(
+                                        pe.getPaymentDate().substring(0, 10), true))
                 .orElse(null);
     }
 

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

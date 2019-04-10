@@ -15,16 +15,16 @@ public class DanskeBankDKAgentTest {
 
     @Before
     public void setUp() throws Exception {
-        builder = new AgentIntegrationTest.Builder("dk", "dk-danskebank-servicecode")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true);
+        builder =
+                new AgentIntegrationTest.Builder("dk", "dk-danskebank-servicecode")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
 }

@@ -18,7 +18,7 @@ public class SdcDkConstants {
 
     public static class Authentication {
         // SDC banks supporting SMS pinning of devices
-        public static final ImmutableList<String> BANKS_WITH_SMS_AUTHENTICATION = ImmutableList
-                .of("0400", "9090", "9335");
+        public static final ImmutableList<String> BANKS_WITH_SMS_AUTHENTICATION =
+                ImmutableList.of("0400", "9090", "9335");
     }
 }

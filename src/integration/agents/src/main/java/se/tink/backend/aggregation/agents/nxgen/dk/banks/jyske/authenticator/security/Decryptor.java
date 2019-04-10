@@ -15,10 +15,12 @@ public class Decryptor {
     }
 
     public <C> C read(NemIdResponse challenge, Class<C> clazz) {
-        byte[] decodedChallengeBytes = JyskeSecurityHelper.base64DecodeAndDecryptAES(challenge.getData(), token);
+        byte[] decodedChallengeBytes =
+                JyskeSecurityHelper.base64DecodeAndDecryptAES(challenge.getData(), token);
         String serializedData =
-                new String(Arrays.copyOfRange(decodedChallengeBytes, 16, decodedChallengeBytes.length),
-                    JyskeConstants.CHARSET);
+                new String(
+                        Arrays.copyOfRange(decodedChallengeBytes, 16, decodedChallengeBytes.length),
+                        JyskeConstants.CHARSET);
         return Optional.ofNullable(SerializationUtils.deserializeFromString(serializedData, clazz))
                 .orElseThrow(() -> new IllegalStateException("ObjectMapper read value failed"));
     }

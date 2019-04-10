@@ -47,8 +47,7 @@ public class NemIdEnrollEntity implements Encryptable {
         return securityDevice;
     }
 
-    public void setSecurityDevice(
-            NemIdSecurityDeviceEntity securityDevice) {
+    public void setSecurityDevice(NemIdSecurityDeviceEntity securityDevice) {
         this.securityDevice = securityDevice;
     }
 }

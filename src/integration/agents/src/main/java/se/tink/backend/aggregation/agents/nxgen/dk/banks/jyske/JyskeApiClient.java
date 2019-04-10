@@ -41,24 +41,23 @@ public class JyskeApiClient {
 
         request.setData(
                 JyskeSecurityHelper.encryptForBankdataWithRSAAndBase64Encode(
-                        token.getBytes(), JyskeConstants.Crypto.PRODUCT_NEMID_KEY
-                )
-        );
+                        token.getBytes(), JyskeConstants.Crypto.PRODUCT_NEMID_KEY));
 
         return createJsonRequest(JyskeConstants.Url.NEMID_INIT)
                 .post(NemIdLoginResponse.class, request);
     }
 
-    public NemIdResponse nemIdGetChallenge(NemIdLoginEncryptionEntity encryptionEntity, Token token) {
+    public NemIdResponse nemIdGetChallenge(
+            NemIdLoginEncryptionEntity encryptionEntity, Token token) {
         return doNemIdRequest(JyskeConstants.Url.NEMID_GET_CHALLANGE, token, encryptionEntity);
-
     }
 
     public NemIdResponse nemIdEnroll(NemIdEnrollEntity enrollEntity, Token token) {
         return doNemIdRequest(JyskeConstants.Url.NEMID_ENROLL, token, enrollEntity);
     }
 
-    public NemIdResponse nemIdLoginWithInstallId(NemIdLoginEncryptionEntity encryptionEntity, Token token) {
+    public NemIdResponse nemIdLoginWithInstallId(
+            NemIdLoginEncryptionEntity encryptionEntity, Token token) {
         return doNemIdRequest(JyskeConstants.Url.NEMID_LOGIN, token, encryptionEntity);
     }
 
@@ -72,15 +71,14 @@ public class JyskeApiClient {
 
         request.setData(
                 JyskeSecurityHelper.encryptForServiceWithRSAAndBase64Encode(
-                        token.getBytes(), JyskeConstants.Crypto.MOBILE_SERVICE_KEY
-                )
-        );
+                        token.getBytes(), JyskeConstants.Crypto.MOBILE_SERVICE_KEY));
 
         return createJsonRequest(JyskeConstants.Url.TRANSPORT_KEY)
                 .post(NemIdLoginResponse.class, request);
     }
 
-    public NemIdLoginResponse mobilServiceLogin(NemIdLoginWithInstallIdResponse nemIdLogin, Token token) {
+    public NemIdLoginResponse mobilServiceLogin(
+            NemIdLoginWithInstallIdResponse nemIdLogin, Token token) {
         NemIdInitRequest request = new NemIdInitRequest();
         request.setData(nemIdLogin.encrypt(token));
         return createJsonRequest(JyskeConstants.Url.MOBILE_SERVICE_LOGIN)
@@ -89,9 +87,12 @@ public class JyskeApiClient {
 
     public GetAccountResponse fetchAccounts() {
 
-        GetAccountResponse getAccountResponse = this.createRequest(JyskeConstants.Url.GET_ACCOUNTS)
-                .header(JyskeConstants.Header.BUILDNO_KEY, JyskeConstants.Header.BUILDNO_VALUE)
-                .get(GetAccountResponse.class);
+        GetAccountResponse getAccountResponse =
+                this.createRequest(JyskeConstants.Url.GET_ACCOUNTS)
+                        .header(
+                                JyskeConstants.Header.BUILDNO_KEY,
+                                JyskeConstants.Header.BUILDNO_VALUE)
+                        .get(GetAccountResponse.class);
 
         this.accounts = getAccountResponse.getAccountsBrief();
 
@@ -101,10 +102,16 @@ public class JyskeApiClient {
     public GetTransactionsResponse fetchTransactions(Account account, int page) {
         GetTransactionsRequest request = new GetTransactionsRequest();
 
-        Optional<AccountBriefEntity> accountBriefEntity = this.accounts.stream()
-                .filter(acc -> Objects.equals(Optional.ofNullable(acc.getRegNo()).orElse("") +
-                        Optional.ofNullable(acc.getAccountNo()).orElse(""), account.getAccountNumber()))
-                .findFirst();
+        Optional<AccountBriefEntity> accountBriefEntity =
+                this.accounts.stream()
+                        .filter(
+                                acc ->
+                                        Objects.equals(
+                                                Optional.ofNullable(acc.getRegNo()).orElse("")
+                                                        + Optional.ofNullable(acc.getAccountNo())
+                                                                .orElse(""),
+                                                account.getAccountNumber()))
+                        .findFirst();
 
         if (accountBriefEntity.isPresent()) {
             request.setAccounts(Collections.singletonList(accountBriefEntity.get()));
@@ -124,9 +131,14 @@ public class JyskeApiClient {
 
         GetFutureTransactionsRequest request = new GetFutureTransactionsRequest();
 
-        Optional<AccountBriefEntity> accountBriefEntity = this.accounts.stream()
-                .filter(acc -> Objects.equals(acc.getRegNo() + acc.getAccountNo(), account.getAccountNumber()))
-                .findFirst();
+        Optional<AccountBriefEntity> accountBriefEntity =
+                this.accounts.stream()
+                        .filter(
+                                acc ->
+                                        Objects.equals(
+                                                acc.getRegNo() + acc.getAccountNo(),
+                                                account.getAccountNumber()))
+                        .findFirst();
 
         if (accountBriefEntity.isPresent()) {
             request.setAccounts(Collections.singletonList(accountBriefEntity.get()));
@@ -156,8 +168,7 @@ public class JyskeApiClient {
     }
 
     public String fetchCards() {
-        return createJsonRequest(JyskeConstants.Url.GET_CARDS)
-                .get(String.class);
+        return createJsonRequest(JyskeConstants.Url.GET_CARDS).get(String.class);
     }
 
     private RequestBuilder createRequest(URL url) {

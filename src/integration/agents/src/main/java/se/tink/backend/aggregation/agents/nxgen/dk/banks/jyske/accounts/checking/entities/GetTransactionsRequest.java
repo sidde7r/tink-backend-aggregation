@@ -13,8 +13,7 @@ public class GetTransactionsRequest {
         return accounts;
     }
 
-    public void setAccounts(
-            List<AccountBriefEntity> accounts) {
+    public void setAccounts(List<AccountBriefEntity> accounts) {
         this.accounts = accounts;
     }
 

@@ -24,7 +24,8 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
     private final NordeaDkApiClient bankClient;
     private final NordeaDkSessionStorage sessionStorage;
 
-    public NordeaNemIdAuthenticator(NordeaDkApiClient bankClient, NordeaDkSessionStorage sessionStorage) {
+    public NordeaNemIdAuthenticator(
+            NordeaDkApiClient bankClient, NordeaDkSessionStorage sessionStorage) {
 
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
@@ -33,32 +34,41 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
     @Override
     public NemIdParameters getNemIdParameters() throws AuthenticationException {
         InitialParametersResponse initialParametersResponse = bankClient.fetchInitialParameters();
-        sessionStorage.setSessionId(initialParametersResponse.getInitialParametersResponse().getSessionId());
+        sessionStorage.setSessionId(
+                initialParametersResponse.getInitialParametersResponse().getSessionId());
         return new NemIdParameters(
-                initialParametersResponse.getInitialParametersResponse().getInitialParameters().getParamTable().getVal()
-        );
+                initialParametersResponse
+                        .getInitialParametersResponse()
+                        .getInitialParameters()
+                        .getParamTable()
+                        .getVal());
     }
 
     @Override
-    public void exchangeNemIdToken(String nemIdToken) throws AuthenticationException, AuthorizationException {
+    public void exchangeNemIdToken(String nemIdToken)
+            throws AuthenticationException, AuthorizationException {
         String sessionId = sessionStorage.getSessionId();
 
-        NemIdAuthenticateUserRequestBody authenticateUserRequest = new NemIdAuthenticateUserRequestBody()
-                .setNemIdAuthenticateUserRequest(
-                        new NemidAuthenticateUserEntity()
-                        .setLoginType(NordeaDkConstants.Authentication.LOGIN_TYPE_NEMID)
-                        .setNemIdSessionId(sessionId)
-                        .setNemIdToken(nemIdToken)
-                );
+        NemIdAuthenticateUserRequestBody authenticateUserRequest =
+                new NemIdAuthenticateUserRequestBody()
+                        .setNemIdAuthenticateUserRequest(
+                                new NemidAuthenticateUserEntity()
+                                        .setLoginType(
+                                                NordeaDkConstants.Authentication.LOGIN_TYPE_NEMID)
+                                        .setNemIdSessionId(sessionId)
+                                        .setNemIdToken(nemIdToken));
 
-        AuthenticatedUserEntity authenticateUserResponse = bankClient.nemIdAuthenticateUser(authenticateUserRequest)
-                .getAuthenticateUserResponse();
+        AuthenticatedUserEntity authenticateUserResponse =
+                bankClient
+                        .nemIdAuthenticateUser(authenticateUserRequest)
+                        .getAuthenticateUserResponse();
 
         Optional<String> errorCode = authenticateUserResponse.getErrorCode();
 
         if (errorCode.isPresent()) {
-            throw new IllegalStateException(NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE
-                    .getOrDefault(errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
+            throw new IllegalStateException(
+                    NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
+                            errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
         }
 
         sessionStorage.setToken(authenticateUserResponse.getAuthenticationToken().getToken());
@@ -70,14 +80,18 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
         // is it possible to have multiple agreements?
         String agreementId = agreements.get(0).getAgreement().getId();
 
-        AuthorizeAgreementRequestBody authorizeAgreementRequest = new AuthorizeAgreementRequestBody()
-                .setAuthorizeAgreementRequest(
-                        new AuthorizeAgreementDetails()
-                                .setAgreement(agreementId)
-                );
+        AuthorizeAgreementRequestBody authorizeAgreementRequest =
+                new AuthorizeAgreementRequestBody()
+                        .setAuthorizeAgreementRequest(
+                                new AuthorizeAgreementDetails().setAgreement(agreementId));
 
-        AuthorizeAgreementResponse authorizeAgreementResponse = bankClient.authorizeAgreement(authorizeAgreementRequest);
-        String token = authorizeAgreementResponse.getAuthorizeAgreementResponse().getAuthenticationToken().getToken();
+        AuthorizeAgreementResponse authorizeAgreementResponse =
+                bankClient.authorizeAgreement(authorizeAgreementRequest);
+        String token =
+                authorizeAgreementResponse
+                        .getAuthorizeAgreementResponse()
+                        .getAuthenticationToken()
+                        .getToken();
         bankClient.setToken(token);
     }
 }

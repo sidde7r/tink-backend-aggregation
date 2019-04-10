@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity extends AccountBriefEntity {
 
-    // account type might have something to do with shadow accounts according to the app, although the json data is
+    // account type might have something to do with shadow accounts according to the app, although
+    // the json data is
     // not used there.
     private Integer accountType;
     private Double balance;
@@ -80,5 +81,4 @@ public class AccountEntity extends AccountBriefEntity {
         accountBriefEntity.setRegNo(regNo);
         return accountBriefEntity;
     }
-
 }

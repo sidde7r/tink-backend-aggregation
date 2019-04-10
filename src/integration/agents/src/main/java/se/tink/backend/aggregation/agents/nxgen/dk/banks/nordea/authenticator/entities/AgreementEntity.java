@@ -10,22 +10,28 @@ public class AgreementEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     @JsonProperty("@id")
     private String id;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String agreementNumber;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String agreementNickName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String swippAccess;
 
     public String getId() {
         return id;
     }
+
     public String getAgreementNumber() {
         return agreementNumber;
     }
+
     public String getAgreementNickName() {
         return agreementNickName;
     }
+
     public String getSwipAccess() {
         return swippAccess;
     }

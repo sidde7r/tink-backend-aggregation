@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkT
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Agent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20ApiClient;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -17,14 +18,17 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class NordeaDkAgent  extends NordeaV20Agent {
+public class NordeaDkAgent extends NordeaV20Agent {
     private NordeaDkApiClient nordeaClient;
     private NordeaDkSessionStorage nordeaSessionStorage;
 
-    public NordeaDkAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair,
+    public NordeaDkAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(
+                request,
+                context,
+                signatureKeyPair,
                 new NordeaDkParser(new NordeaDkTransactionParser(), request.getCredentials()));
     }
 
@@ -32,7 +36,12 @@ public class NordeaDkAgent  extends NordeaV20Agent {
     protected NordeaV20ApiClient constructNordeaClient() {
         nordeaSessionStorage = new NordeaDkSessionStorage(sessionStorage);
 
-        return nordeaClient = new NordeaDkApiClient(nordeaSessionStorage, client, request.getCredentials(), NordeaDkConstants.MARKET_CODE);
+        return nordeaClient =
+                new NordeaDkApiClient(
+                        nordeaSessionStorage,
+                        client,
+                        request.getCredentials(),
+                        NordeaDkConstants.MARKET_CODE);
     }
 
     @Override
@@ -43,13 +52,12 @@ public class NordeaDkAgent  extends NordeaV20Agent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        NordeaNemIdAuthenticator nemIdAuthenticator = new NordeaNemIdAuthenticator(nordeaClient, nordeaSessionStorage);
+        NordeaNemIdAuthenticator nemIdAuthenticator =
+                new NordeaNemIdAuthenticator(nordeaClient, nordeaSessionStorage);
 
         return new TypedAuthenticationController(
                 new PasswordAuthenticationController(
-                        new NemidPasswordAuthenticationController(nemIdAuthenticator)
-                )
-        );
+                        new NemidPasswordAuthenticationController(nemIdAuthenticator)));
     }
 
     @Override
@@ -58,7 +66,8 @@ public class NordeaDkAgent  extends NordeaV20Agent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
