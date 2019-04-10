@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
@@ -9,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class CrossKeyAccount {
@@ -36,7 +36,9 @@ public class CrossKeyAccount {
 
     public boolean isTransactionalAccount() {
         AccountTypes type = translateAccountType();
-        return type == AccountTypes.CHECKING || type == AccountTypes.SAVINGS || type == AccountTypes.OTHER;
+        return type == AccountTypes.CHECKING
+                || type == AccountTypes.SAVINGS
+                || type == AccountTypes.OTHER;
     }
 
     public AccountTypes translateAccountType() {
@@ -45,14 +47,14 @@ public class CrossKeyAccount {
         }
 
         switch (Strings.nullToEmpty(accountGroup).toLowerCase()) {
-        case CrossKeyConstants.Fetcher.Account.LOAN:
-            return AccountTypes.LOAN;
-        case CrossKeyConstants.Fetcher.Account.CHECK:
-            return AccountTypes.CHECKING;
-        case CrossKeyConstants.Fetcher.Account.INVESTMENT:
-            return AccountTypes.INVESTMENT;
-        default:
-            return AccountTypes.OTHER;
+            case CrossKeyConstants.Fetcher.Account.LOAN:
+                return AccountTypes.LOAN;
+            case CrossKeyConstants.Fetcher.Account.CHECK:
+                return AccountTypes.CHECKING;
+            case CrossKeyConstants.Fetcher.Account.INVESTMENT:
+                return AccountTypes.INVESTMENT;
+            default:
+                return AccountTypes.OTHER;
         }
     }
 
@@ -61,7 +63,8 @@ public class CrossKeyAccount {
         return type == AccountTypes.INVESTMENT;
     }
 
-    public InvestmentAccount toInvestmentAccount(CrossKeyConfiguration agentConfiguration, Portfolio portfolio) {
+    public InvestmentAccount toInvestmentAccount(
+            CrossKeyConfiguration agentConfiguration, Portfolio portfolio) {
         return agentConfiguration.parseInvestmentAccount(this, portfolio);
     }
 
@@ -85,7 +88,8 @@ public class CrossKeyAccount {
         return CrossKeyConstants.LOAN_TYPES.getOrDefault(accountType, LoanDetails.Type.OTHER);
     }
 
-    public LoanAccount toLoanAccount(CrossKeyConfiguration agentConfiguration, LoanDetailsEntity loanDetailsEntity) {
+    public LoanAccount toLoanAccount(
+            CrossKeyConfiguration agentConfiguration, LoanDetailsEntity loanDetailsEntity) {
         return agentConfiguration.parseLoanAccount(this, loanDetailsEntity);
     }
 

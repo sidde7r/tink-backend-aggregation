@@ -15,5 +15,4 @@ public class ShortCardEntitySummary {
     public String getCardProductName() {
         return cardProductName;
     }
-
 }

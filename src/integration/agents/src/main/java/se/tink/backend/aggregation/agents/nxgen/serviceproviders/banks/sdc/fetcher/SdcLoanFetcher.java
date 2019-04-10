@@ -17,7 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 public class SdcLoanFetcher extends SdcAgreementFetcher implements AccountFetcher<LoanAccount> {
     private final Provider provider;
 
-    public SdcLoanFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage, Provider provider) {
+    public SdcLoanFetcher(
+            SdcApiClient bankClient, SdcSessionStorage sessionStorage, Provider provider) {
         super(bankClient, sessionStorage);
         this.provider = provider;
     }
@@ -28,8 +29,8 @@ public class SdcLoanFetcher extends SdcAgreementFetcher implements AccountFetche
         SessionStorageAgreements agreements = getAgreements();
 
         for (SessionStorageAgreement agreement : agreements) {
-            Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement,
-                    agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfiguration =
+                    selectAgreement(agreement, agreements);
 
             if (!serviceConfiguration.isPresent()) {
                 continue;

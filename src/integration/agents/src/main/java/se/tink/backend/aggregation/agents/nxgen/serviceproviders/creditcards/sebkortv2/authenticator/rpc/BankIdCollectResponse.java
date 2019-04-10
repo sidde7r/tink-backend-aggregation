@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class BankIdCollectResponse {
-    private static final Logger LOGGER = LoggerFactory.getLogger(
-            BankIdCollectResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BankIdCollectResponse.class);
 
     private String progressStatus;
     private URL completeUrl;

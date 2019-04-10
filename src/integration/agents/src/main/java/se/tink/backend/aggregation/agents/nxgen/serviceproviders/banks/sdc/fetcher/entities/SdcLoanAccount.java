@@ -35,8 +35,7 @@ public class SdcLoanAccount {
     }
 
     public Optional<String> findAccountId() {
-        return Optional.ofNullable(entityKey)
-                .map(SdcAccountKey::getAccountId);
+        return Optional.ofNullable(entityKey).map(SdcAccountKey::getAccountId);
     }
 
     public LoanAccount toTinkLoan(String defaultCurrency) {

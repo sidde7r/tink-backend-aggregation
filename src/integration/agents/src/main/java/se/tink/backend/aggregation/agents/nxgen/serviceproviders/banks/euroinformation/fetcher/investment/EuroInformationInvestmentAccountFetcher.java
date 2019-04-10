@@ -22,64 +22,81 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EuroInformationInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationInvestmentAccountFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
-            EuroInformationInvestmentAccountFetcher.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationInvestmentAccountFetcher.class);
+    private static final AggregationLogger AGGREGATION_LOGGER =
+            new AggregationLogger(EuroInformationInvestmentAccountFetcher.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    private EuroInformationInvestmentAccountFetcher(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    private EuroInformationInvestmentAccountFetcher(
+            EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
-    public static EuroInformationInvestmentAccountFetcher create(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage) {
+    public static EuroInformationInvestmentAccountFetcher create(
+            EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         return new EuroInformationInvestmentAccountFetcher(apiClient, sessionStorage);
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        InvestmentAccountsListResponse investmentAccountsListResponse = this.sessionStorage
-                .get(EuroInformationConstants.Tags.INVESTMENT_ACCOUNTS, InvestmentAccountsListResponse.class)
-                .orElseGet(() -> apiClient.requestInvestmentAccounts());
+        InvestmentAccountsListResponse investmentAccountsListResponse =
+                this.sessionStorage
+                        .get(
+                                EuroInformationConstants.Tags.INVESTMENT_ACCOUNTS,
+                                InvestmentAccountsListResponse.class)
+                        .orElseGet(() -> apiClient.requestInvestmentAccounts());
 
         String returnCode = investmentAccountsListResponse.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {
-            if (!EuroInformationErrorCodes.NO_ACCOUNT.equals(EuroInformationErrorCodes.getByCodeNumber(returnCode))) {
-                AGGREGATION_LOGGER.infoExtraLong("Problem while fetching investment accounts: " + SerializationUtils
-                        .serializeToString(investmentAccountsListResponse), EuroInformationConstants.LoggingTags.investmentLogTag);
+            if (!EuroInformationErrorCodes.NO_ACCOUNT.equals(
+                    EuroInformationErrorCodes.getByCodeNumber(returnCode))) {
+                AGGREGATION_LOGGER.infoExtraLong(
+                        "Problem while fetching investment accounts: "
+                                + SerializationUtils.serializeToString(
+                                        investmentAccountsListResponse),
+                        EuroInformationConstants.LoggingTags.investmentLogTag);
             }
             return Collections.emptyList();
         }
 
-        List<SecurityAccountListEntity> accountListEntities = Optional
-                .ofNullable(investmentAccountsListResponse.getSecurityAccountList()).orElseThrow(() ->
-                        new IllegalStateException(
-                                SerializationUtils.serializeToString(investmentAccountsListResponse)));
+        List<SecurityAccountListEntity> accountListEntities =
+                Optional.ofNullable(investmentAccountsListResponse.getSecurityAccountList())
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SerializationUtils.serializeToString(
+                                                        investmentAccountsListResponse)));
 
         Collection<InvestmentAccount> accountsDetails = Lists.newArrayList();
         accountListEntities.stream()
-                .forEach(a ->
-                        {
-                            //TODO: Temporary get only one page
+                .forEach(
+                        a -> {
+                            // TODO: Temporary get only one page
                             int page = 1;
-                            InvestmentAccountOverviewResponse investmentAccount = apiClient
-                                    .requestAccountDetails(a.getNumber(), page);
-                            Amount amount = EuroInformationUtils
-                                    .parseAmount(investmentAccount.getSecurityAccountOverview().getOverview().getAmount());
-                            AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(investmentAccount), EuroInformationConstants.LoggingTags.investmentLogTag);
-                            String accountNumber = investmentAccount
-                                    .getSecurityAccountOverview()
-                                    .getOverview()
-                                    .getNumber();
-                            accountsDetails.add(InvestmentAccount
-                                    .builder(accountNumber, amount)
-                                    .setAccountNumber(accountNumber)
-                                    .build());
-                        }
-                );
+                            InvestmentAccountOverviewResponse investmentAccount =
+                                    apiClient.requestAccountDetails(a.getNumber(), page);
+                            Amount amount =
+                                    EuroInformationUtils.parseAmount(
+                                            investmentAccount
+                                                    .getSecurityAccountOverview()
+                                                    .getOverview()
+                                                    .getAmount());
+                            AGGREGATION_LOGGER.infoExtraLong(
+                                    SerializationUtils.serializeToString(investmentAccount),
+                                    EuroInformationConstants.LoggingTags.investmentLogTag);
+                            String accountNumber =
+                                    investmentAccount
+                                            .getSecurityAccountOverview()
+                                            .getOverview()
+                                            .getNumber();
+                            accountsDetails.add(
+                                    InvestmentAccount.builder(accountNumber, amount)
+                                            .setAccountNumber(accountNumber)
+                                            .build());
+                        });
         return accountsDetails;
     }
-
 }

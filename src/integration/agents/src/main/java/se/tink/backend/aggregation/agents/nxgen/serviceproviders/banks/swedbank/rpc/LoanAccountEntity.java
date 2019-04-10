@@ -18,13 +18,16 @@ public class LoanAccountEntity extends AccountEntity {
             return Optional.empty();
         }
 
-        LoanDetails loanDetails = LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
-                .setLoanNumber(accountNumber)
-                .setNextDayOfTermsChange(nextDayOfTermsChange)
-                .build();
+        LoanDetails loanDetails =
+                LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                        .setLoanNumber(accountNumber)
+                        .setNextDayOfTermsChange(nextDayOfTermsChange)
+                        .build();
 
         return Optional.of(
-                LoanAccount.builder(fullyFormattedNumber, new Amount(currency, StringUtils.parseAmount(balance)))
+                LoanAccount.builder(
+                                fullyFormattedNumber,
+                                new Amount(currency, StringUtils.parseAmount(balance)))
                         .setAccountNumber(fullyFormattedNumber)
                         .setDetails(loanDetails)
                         .setInterestRate(parsePercentageToDouble(interest))

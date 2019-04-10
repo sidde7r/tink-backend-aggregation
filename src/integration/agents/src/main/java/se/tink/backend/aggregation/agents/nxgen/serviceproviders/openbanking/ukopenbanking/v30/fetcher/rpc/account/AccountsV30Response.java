@@ -12,28 +12,35 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public class AccountsV30Response extends BaseResponse<List<AccountEntity>> implements AccountStream {
+public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
+        implements AccountStream {
 
     public Stream<AccountEntity> stream() {
         return getData().stream();
     }
 
-    public static Optional<TransactionalAccount> toTransactionalAccount(AccountsV30Response accounts,
-            AccountBalanceV30Response balance) {
+    public static Optional<TransactionalAccount> toTransactionalAccount(
+            AccountsV30Response accounts, AccountBalanceV30Response balance) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
-                .filter(e -> UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(e.getRawAccountSubType()))
+                .filter(
+                        e ->
+                                UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER
+                                        .isTransactionalAccount(e.getRawAccountSubType()))
                 .findFirst()
                 .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance()));
     }
 
-    public static Optional<CreditCardAccount> toCreditCardAccount(AccountsV30Response accounts,
-            AccountBalanceV30Response balance) {
+    public static Optional<CreditCardAccount> toCreditCardAccount(
+            AccountsV30Response accounts, AccountBalanceV30Response balance) {
 
         return accounts.stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
-                .filter(e -> UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(e.getRawAccountSubType()))
+                .filter(
+                        e ->
+                                UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(
+                                        e.getRawAccountSubType()))
                 .findFirst()
                 .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));
     }

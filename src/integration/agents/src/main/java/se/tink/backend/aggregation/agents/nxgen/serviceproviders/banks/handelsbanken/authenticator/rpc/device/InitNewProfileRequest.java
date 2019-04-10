@@ -14,10 +14,10 @@ public class InitNewProfileRequest {
     private String handshakeKey;
     private String profileTransformationTp;
 
-    private InitNewProfileRequest() {
-    }
+    private InitNewProfileRequest() {}
 
-    public static InitNewProfileRequest create(HandelsbankenConfiguration configuration, LibTFA tfa) {
+    public static InitNewProfileRequest create(
+            HandelsbankenConfiguration configuration, LibTFA tfa) {
         return new InitNewProfileRequest()
                 .setAppId(configuration.getAppId())
                 .setAuthTp(configuration.getAuthTp())

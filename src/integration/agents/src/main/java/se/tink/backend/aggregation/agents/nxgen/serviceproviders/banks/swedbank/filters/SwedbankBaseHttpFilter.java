@@ -11,11 +11,12 @@ import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 
 public class SwedbankBaseHttpFilter extends Filter {
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         httpRequest.getHeaders().add("Accept", MediaType.APPLICATION_JSON);
 
-        if (Objects.equals(HttpMethod.POST, httpRequest.getMethod()) ||
-                Objects.equals(HttpMethod.PUT, httpRequest.getMethod())) {
+        if (Objects.equals(HttpMethod.POST, httpRequest.getMethod())
+                || Objects.equals(HttpMethod.PUT, httpRequest.getMethod())) {
             httpRequest.getHeaders().add("Content-Type", MediaType.APPLICATION_JSON);
         }
 

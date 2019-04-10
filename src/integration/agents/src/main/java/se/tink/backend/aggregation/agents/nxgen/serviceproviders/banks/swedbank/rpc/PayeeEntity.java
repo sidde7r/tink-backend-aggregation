@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.libraries.account.AccountIdentifier;
 
 public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(PayeeEntity.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(PayeeEntity.class);
 
     private String referenceType;
     private LinksEntity links;
@@ -54,13 +53,13 @@ public class PayeeEntity extends AbstractPayeeEntity implements GeneralAccountEn
         }
 
         switch (this.type.toUpperCase()) {
-        case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
-            return Optional.of(AccountIdentifier.Type.SE_BG);
-        case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
-            return Optional.of(AccountIdentifier.Type.SE_PG);
-        default:
-            log.warn("Unknown payee entity type: {}", this.type);
-            return Optional.empty();
+            case SwedbankBaseConstants.PaymentAccountType.BGACCOUNT:
+                return Optional.of(AccountIdentifier.Type.SE_BG);
+            case SwedbankBaseConstants.PaymentAccountType.PGACCOUNT:
+                return Optional.of(AccountIdentifier.Type.SE_PG);
+            default:
+                log.warn("Unknown payee entity type: {}", this.type);
+                return Optional.empty();
         }
     }
 }

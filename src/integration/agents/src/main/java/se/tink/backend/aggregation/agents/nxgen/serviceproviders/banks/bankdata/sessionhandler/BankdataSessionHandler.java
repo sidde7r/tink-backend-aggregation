@@ -7,9 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class BankdataSessionHandler implements SessionHandler {
 
     @Override
-    public void logout() {
-
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {

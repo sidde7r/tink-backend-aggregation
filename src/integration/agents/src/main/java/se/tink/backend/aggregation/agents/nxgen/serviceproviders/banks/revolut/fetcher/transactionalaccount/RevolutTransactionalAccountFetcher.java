@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
@@ -10,12 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.f
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RevolutTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final RevolutApiClient apiClient;
@@ -39,8 +38,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
             account.getIban().ifPresent(iban -> currencyIbanMap.put(account.getCurrency(), iban));
         }
 
-        return wallet.getPockets()
-                .stream()
+        return wallet.getPockets().stream()
                 .filter(PocketEntity::isActive)
                 .filter(PocketEntity::isOpen)
                 .map(

@@ -9,21 +9,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
     @JsonIgnore
     private static final Logger log = LoggerFactory.getLogger(DetailedPortfolioEntity.class);
-    @JsonIgnore
-    private static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
+
+    @JsonIgnore private static final String API_CLIENT_ERROR_MESSAGE = "No API client provided.";
 
     private AmountEntity acquisitionValue;
     private ChartDataEntity chartData;
@@ -71,8 +71,8 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         return encompassedHoldings;
     }
 
-    public Optional<InvestmentAccount> toTinkFundInvestmentAccount(SwedbankDefaultApiClient apiClient,
-            String defaultCurrency) {
+    public Optional<InvestmentAccount> toTinkFundInvestmentAccount(
+            SwedbankDefaultApiClient apiClient, String defaultCurrency) {
         validateInvestmentAccountArguments(apiClient, defaultCurrency);
 
         List<Instrument> instruments = toTinkFundInstruments(apiClient);
@@ -82,12 +82,16 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
             return Optional.empty();
         }
 
-        return createTinkInvestmentAccount(this.fullyFormattedNumber, portfolio.map(Collections::singletonList)
-                .orElseGet(Collections::emptyList), defaultCurrency, this.marketValue, this.name);
+        return createTinkInvestmentAccount(
+                this.fullyFormattedNumber,
+                portfolio.map(Collections::singletonList).orElseGet(Collections::emptyList),
+                defaultCurrency,
+                this.marketValue,
+                this.name);
     }
 
-    public Optional<InvestmentAccount> toTinkInvestmentAccount(SwedbankDefaultApiClient apiClient,
-            String defaultCurrency) {
+    public Optional<InvestmentAccount> toTinkInvestmentAccount(
+            SwedbankDefaultApiClient apiClient, String defaultCurrency) {
         validateInvestmentAccountArguments(apiClient, defaultCurrency);
 
         List<Instrument> instruments = toTinkInstruments(apiClient);
@@ -96,12 +100,20 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
             return Optional.empty();
         }
 
-        return createTinkInvestmentAccount(this.fullyFormattedNumber, portfolio.map(Collections::singletonList)
-                .orElseGet(Collections::emptyList), defaultCurrency, this.marketValue, this.name);
+        return createTinkInvestmentAccount(
+                this.fullyFormattedNumber,
+                portfolio.map(Collections::singletonList).orElseGet(Collections::emptyList),
+                defaultCurrency,
+                this.marketValue,
+                this.name);
     }
 
-    private static Optional<InvestmentAccount> createTinkInvestmentAccount(String accountNumber,
-            List<Portfolio> portfolios, String defaultCurrency, AmountEntity marketValue, String name) {
+    private static Optional<InvestmentAccount> createTinkInvestmentAccount(
+            String accountNumber,
+            List<Portfolio> portfolios,
+            String defaultCurrency,
+            AmountEntity marketValue,
+            String name) {
         if (accountNumber == null || marketValue == null || marketValue.getAmount() == null) {
             return Optional.empty();
         }
@@ -109,42 +121,48 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         // sum cash value from portfolios and add to account
         double cashBalance = portfolios.stream().mapToDouble(Portfolio::getCashValue).sum();
 
-        return Optional.of(InvestmentAccount.builder(accountNumber)
-                .setCashBalance(new Amount(defaultCurrency, cashBalance))
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .setPortfolios(portfolios)
-                .build());
+        return Optional.of(
+                InvestmentAccount.builder(accountNumber)
+                        .setCashBalance(new Amount(defaultCurrency, cashBalance))
+                        .setAccountNumber(accountNumber)
+                        .setName(name)
+                        .setPortfolios(portfolios)
+                        .build());
     }
 
-    private static void validateInvestmentAccountArguments(SwedbankDefaultApiClient apiClient,
-            String defaultCurrency) {
+    private static void validateInvestmentAccountArguments(
+            SwedbankDefaultApiClient apiClient, String defaultCurrency) {
         Preconditions.checkNotNull(apiClient, API_CLIENT_ERROR_MESSAGE);
         Preconditions.checkNotNull(defaultCurrency, "No default currency provided.");
     }
 
-    private Optional<Portfolio> toTinkPortfolio(List<Instrument> instruments, String defaultCurrency) {
-        Preconditions.checkNotNull(instruments, "You need to at least provide a empty list of instruments.");
+    private Optional<Portfolio> toTinkPortfolio(
+            List<Instrument> instruments, String defaultCurrency) {
+        Preconditions.checkNotNull(
+                instruments, "You need to at least provide a empty list of instruments.");
         Portfolio portfolio = new Portfolio();
 
         portfolio.setType(getTinkPortfolioType());
-        portfolio.setTotalValue(Optional.ofNullable(this.marketValue)
-                .map(amountEntity -> amountEntity.toTinkAmount(defaultCurrency))
-                .map(Amount::getValue)
-                .orElse(null));
+        portfolio.setTotalValue(
+                Optional.ofNullable(this.marketValue)
+                        .map(amountEntity -> amountEntity.toTinkAmount(defaultCurrency))
+                        .map(Amount::getValue)
+                        .orElse(null));
         portfolio.setRawType(this.type != null ? this.type : "");
-        portfolio.setTotalProfit(Optional.ofNullable(this.performance)
-                .map(performanceEntity -> performanceEntity.getTinkAmount(defaultCurrency))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(Amount::getValue)
-                .orElse(null));
+        portfolio.setTotalProfit(
+                Optional.ofNullable(this.performance)
+                        .map(performanceEntity -> performanceEntity.getTinkAmount(defaultCurrency))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(Amount::getValue)
+                        .orElse(null));
 
         portfolio.setCashValue(
                 Optional.ofNullable(this.settlements).orElse(Collections.emptyList()).stream()
                         .map(SettlementEntity::getBuyingPower)
                         .map(AmountEntity::toTinkAmount)
-                        .mapToDouble(Amount::getValue).sum());
+                        .mapToDouble(Amount::getValue)
+                        .sum());
 
         portfolio.setInstruments(instruments);
         portfolio.setUniqueIdentifier(this.accountNumber);
@@ -165,7 +183,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         Preconditions.checkNotNull(apiClient, API_CLIENT_ERROR_MESSAGE);
 
         return Optional.ofNullable(placements).orElse(Collections.emptyList()).stream()
-                .map(placementEntity ->  placementEntity.toTinkInstruments(apiClient))
+                .map(placementEntity -> placementEntity.toTinkInstruments(apiClient))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
@@ -176,18 +194,19 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         }
 
         switch (SwedbankBaseConstants.InvestmentAccountType.fromAccountType(type)) {
-        case ISK:
-            return Portfolio.Type.ISK;
-        case FUNDACCOUNT:
-        case EQUITY_TRADER:
-            return Portfolio.Type.DEPOT;
-        case ENDOWMENT:
-            return Portfolio.Type.KF;
-        case SAVINGSACCOUNT:
-            log.error("Normalized savings account to portfolio. This should not happen, but not failing refresh.");
-            // Intentional fall trough
-        default:
-            return Portfolio.Type.OTHER;
+            case ISK:
+                return Portfolio.Type.ISK;
+            case FUNDACCOUNT:
+            case EQUITY_TRADER:
+                return Portfolio.Type.DEPOT;
+            case ENDOWMENT:
+                return Portfolio.Type.KF;
+            case SAVINGSACCOUNT:
+                log.error(
+                        "Normalized savings account to portfolio. This should not happen, but not failing refresh.");
+                // Intentional fall trough
+            default:
+                return Portfolio.Type.OTHER;
         }
     }
 }

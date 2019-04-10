@@ -47,73 +47,69 @@ public class SdcApiClient {
     public void initSession() {
         InitSessionRequest initSessionRequest = new InitSessionRequest();
 
-        createApiRequest(this.agentConfiguration.getInitSessionUrl())
-                .post(initSessionRequest);
+        createApiRequest(this.agentConfiguration.getInitSessionUrl()).post(initSessionRequest);
     }
 
     public void initBankId(String ssn) {
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest().setSsn(ssn);
 
-        createApiRequest(this.agentConfiguration.getBankIdLoginUrl())
-                .post(initBankIdRequest);
+        createApiRequest(this.agentConfiguration.getBankIdLoginUrl()).post(initBankIdRequest);
     }
 
     public AgreementsResponse pinLogon(String username, String password) {
-        PinLogonRequest pinLogonRequest = new PinLogonRequest()
-                .setUserId(username)
-                .setPin(password);
+        PinLogonRequest pinLogonRequest =
+                new PinLogonRequest().setUserId(username).setPin(password);
 
-        return createApiRequest(this.agentConfiguration.getPinLogonUrl(), SdcConstants.Headers.API_VERSION_3)
+        return createApiRequest(
+                        this.agentConfiguration.getPinLogonUrl(),
+                        SdcConstants.Headers.API_VERSION_3)
                 .post(AgreementsResponse.class, pinLogonRequest);
     }
 
     public ChallengeResponse getChallenge() {
-        HttpResponse response = createApiRequest(this.agentConfiguration.getChallengeUrl())
-                .get(HttpResponse.class);
+        HttpResponse response =
+                createApiRequest(this.agentConfiguration.getChallengeUrl()).get(HttpResponse.class);
 
         return response.getBody(ChallengeResponse.class);
     }
 
     public HttpResponse pinDevice(SdcDevice device, String phoneNumber) {
-        PinDeviceRequest request = new PinDeviceRequest()
-                .setPublicKey(device.getPublicKey())
-                .setDeviceId(device.getDeviceId())
-                .setDeviceName(SdcConstants.Session.MODEL)
-                .setPhoneNumber(phoneNumber);
+        PinDeviceRequest request =
+                new PinDeviceRequest()
+                        .setPublicKey(device.getPublicKey())
+                        .setDeviceId(device.getDeviceId())
+                        .setDeviceName(SdcConstants.Session.MODEL)
+                        .setPhoneNumber(phoneNumber);
 
-        return createApiRequest(this.agentConfiguration.getPinDeviceUrl(), SdcConstants.Headers.API_VERSION_2)
+        return createApiRequest(
+                        this.agentConfiguration.getPinDeviceUrl(),
+                        SdcConstants.Headers.API_VERSION_2)
                 .post(HttpResponse.class, request);
     }
 
     public void sendOTPRequest(String transId) {
-        SendOTPRequest request = new SendOTPRequest()
-                .setTransId(transId);
+        SendOTPRequest request = new SendOTPRequest().setTransId(transId);
 
-        createApiRequest(this.agentConfiguration.getSendOTPRequestUrl())
-                .post(request);
+        createApiRequest(this.agentConfiguration.getSendOTPRequestUrl()).post(request);
     }
 
     public void signOTP(String transId, String otp, String pin) {
-        SignOTPRequest request = new SignOTPRequest()
-                .setTransId(transId)
-                .setOtp(otp)
-                .setPin(pin);
+        SignOTPRequest request = new SignOTPRequest().setTransId(transId).setOtp(otp).setPin(pin);
 
-        createApiRequest(this.agentConfiguration.getSignOTPUrl())
-                .post(request);
+        createApiRequest(this.agentConfiguration.getSignOTPUrl()).post(request);
     }
 
     public void logout() {
-        createApiRequest(this.agentConfiguration.getLogoutUrl())
-                .get(HttpResponse.class);
+        createApiRequest(this.agentConfiguration.getLogoutUrl()).get(HttpResponse.class);
     }
 
     public AgreementsResponse fetchAgreements() {
         return createApiRequest(this.agentConfiguration.getAgreementsUrl())
-                        .get(AgreementsResponse.class);
+                .get(AgreementsResponse.class);
     }
 
-    public SdcAgreementServiceConfigurationResponse selectAgreement(SelectAgreementRequest selectAgreementRequest) {
+    public SdcAgreementServiceConfigurationResponse selectAgreement(
+            SelectAgreementRequest selectAgreementRequest) {
         Preconditions.checkNotNull(selectAgreementRequest);
 
         HttpResponse response = internalSelectAgreement(selectAgreementRequest);
@@ -124,7 +120,9 @@ public class SdcApiClient {
     public HttpResponse internalSelectAgreement(SelectAgreementRequest selectAgreementRequest) {
         Preconditions.checkNotNull(selectAgreementRequest);
 
-        return createApiRequest(this.agentConfiguration.getSelectAgreementUrl(), SdcConstants.Headers.API_VERSION_2)
+        return createApiRequest(
+                        this.agentConfiguration.getSelectAgreementUrl(),
+                        SdcConstants.Headers.API_VERSION_2)
                 .post(HttpResponse.class, selectAgreementRequest);
     }
 
@@ -139,8 +137,11 @@ public class SdcApiClient {
                 .get(ListCreditCardsResponse.class);
     }
 
-    public SearchTransactionsResponse searchTransactions(SearchTransactionsRequest searchTransactionsRequest) {
-        return createApiRequest(this.agentConfiguration.getSearchTransactionsUrl(), SdcConstants.Headers.API_VERSION_5)
+    public SearchTransactionsResponse searchTransactions(
+            SearchTransactionsRequest searchTransactionsRequest) {
+        return createApiRequest(
+                        this.agentConfiguration.getSearchTransactionsUrl(),
+                        SdcConstants.Headers.API_VERSION_5)
                 .post(SearchTransactionsResponse.class, searchTransactionsRequest);
     }
 
@@ -178,13 +179,21 @@ public class SdcApiClient {
     }
 
     private RequestBuilder createApiRequest(URL url, String apiVersion) {
-        RequestBuilder builder = this.client.request(url)
-                .header(SdcConstants.Headers.X_SDC_API_VERSION, apiVersion)
-                .header(SdcConstants.Headers.X_SDC_CLIENT_TYPE, SdcConstants.Headers.CLIENT_TYPE)
-                .header(SdcConstants.Headers.X_SDC_PORTLET_PATH, SdcConstants.Headers.PORTLET_PATH)
-                .header(SdcConstants.Headers.X_SDC_LOCALE, SdcConstants.Headers.LOCALE_EN_GB)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_JSON);
+        RequestBuilder builder =
+                this.client
+                        .request(url)
+                        .header(SdcConstants.Headers.X_SDC_API_VERSION, apiVersion)
+                        .header(
+                                SdcConstants.Headers.X_SDC_CLIENT_TYPE,
+                                SdcConstants.Headers.CLIENT_TYPE)
+                        .header(
+                                SdcConstants.Headers.X_SDC_PORTLET_PATH,
+                                SdcConstants.Headers.PORTLET_PATH)
+                        .header(
+                                SdcConstants.Headers.X_SDC_LOCALE,
+                                SdcConstants.Headers.LOCALE_EN_GB)
+                        .accept(MediaType.WILDCARD)
+                        .type(MediaType.APPLICATION_JSON);
         if (deviceToken != null) {
             builder.header(SdcConstants.Headers.X_SDC_DEVICE_TOKEN, deviceToken.signToken());
         }

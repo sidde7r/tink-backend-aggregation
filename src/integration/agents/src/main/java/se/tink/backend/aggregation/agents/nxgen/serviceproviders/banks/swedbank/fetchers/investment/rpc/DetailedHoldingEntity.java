@@ -5,17 +5,17 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class DetailedHoldingEntity {
-    @JsonIgnore
-    private static final String EMPTY_STRING = "";
+    @JsonIgnore private static final String EMPTY_STRING = "";
+
     @JsonIgnore
     private static final Logger log = LoggerFactory.getLogger(DetailedHoldingEntity.class);
 
@@ -151,70 +151,57 @@ public class DetailedHoldingEntity {
         Instrument instrument = new Instrument();
 
         instrument.setAverageAcquisitionPriceFromAmount(
-                Optional.ofNullable(acquisitionValue)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.ofNullable(acquisitionValue).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setCurrency(
-                Optional.ofNullable(marketValue)
-                        .map(AmountEntity::getCurrencyCode)
-                        .orElse(null));
+                Optional.ofNullable(marketValue).map(AmountEntity::getCurrencyCode).orElse(null));
         instrument.setIsin(isinCode);
         instrument.setMarketValueFromAmount(
-                Optional.ofNullable(marketValue)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.ofNullable(marketValue).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setName(name);
         instrument.setPriceFromAmount(
-                Optional.of(fundRate)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.of(fundRate).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setProfitFromAmount(
-                Optional.ofNullable(changeOfValue)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.ofNullable(changeOfValue).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setQuantity(StringUtils.parseAmountEU(numberOfFundParts));
         instrument.setType(Instrument.Type.FUND);
-        instrument.setUniqueIdentifier(isinCode + Optional.ofNullable(fundCode).orElse(EMPTY_STRING));
+        instrument.setUniqueIdentifier(
+                isinCode + Optional.ofNullable(fundCode).orElse(EMPTY_STRING));
 
         return Optional.of(instrument);
     }
 
     public Optional<Instrument> toTinkInstrument(String rawType) {
-        if (isin == null || nameMarketPlace == null || numberOrAmount == null ||
-                numberOrAmount.getNominalValue() == null || numberOrAmount.getNominalValue().getAmount() == null) {
+        if (isin == null
+                || nameMarketPlace == null
+                || numberOrAmount == null
+                || numberOrAmount.getNominalValue() == null
+                || numberOrAmount.getNominalValue().getAmount() == null) {
             return Optional.empty();
         }
 
         Instrument instrument = new Instrument();
 
         instrument.setAverageAcquisitionPriceFromAmount(
-                Optional.ofNullable(acquisitionPrice)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
-        instrument.setCurrency(
-                getInstrumentCurrency());
+                Optional.ofNullable(acquisitionPrice).map(AmountEntity::toTinkAmount).orElse(null));
+        instrument.setCurrency(getInstrumentCurrency());
         instrument.setIsin(isin);
         instrument.setMarketValueFromAmount(
-                Optional.ofNullable(marketValue)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.ofNullable(marketValue).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setName(name);
         instrument.setPriceFromAmount(
-                Optional.of(valuationPrice)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
+                Optional.of(valuationPrice).map(AmountEntity::toTinkAmount).orElse(null));
         instrument.setProfitFromAmount(
-                Optional.ofNullable(changeOfValue)
-                        .map(AmountEntity::toTinkAmount)
-                        .orElse(null));
-        instrument.setQuantity(StringUtils.parseAmountEU(
-                Optional.ofNullable(numberOrAmount)
-                        .map(NumberOrAmountEntity::getNominalValue)
-                        .map(AmountEntity::getAmount)
-                        .orElse(EMPTY_STRING)));
+                Optional.ofNullable(changeOfValue).map(AmountEntity::toTinkAmount).orElse(null));
+        instrument.setQuantity(
+                StringUtils.parseAmountEU(
+                        Optional.ofNullable(numberOrAmount)
+                                .map(NumberOrAmountEntity::getNominalValue)
+                                .map(AmountEntity::getAmount)
+                                .orElse(EMPTY_STRING)));
         instrument.setRawType(rawType);
         instrument.setType(getTinkType(rawType));
-        instrument.setUniqueIdentifier(isin + Optional.ofNullable(nameMarketPlace).orElse(EMPTY_STRING));
+        instrument.setUniqueIdentifier(
+                isin + Optional.ofNullable(nameMarketPlace).orElse(EMPTY_STRING));
         instrument.setMarketPlace(nameMarketPlace);
 
         return Optional.of(instrument);
@@ -223,9 +210,9 @@ public class DetailedHoldingEntity {
     private String getInstrumentCurrency() {
         String numberOrAmountCurrency =
                 Optional.ofNullable(numberOrAmount)
-                .map(NumberOrAmountEntity::getNominalValue)
-                .map(AmountEntity::getCurrencyCode)
-                .orElse(null);
+                        .map(NumberOrAmountEntity::getNominalValue)
+                        .map(AmountEntity::getCurrencyCode)
+                        .orElse(null);
 
         if (numberOrAmountCurrency != null) {
             return numberOrAmountCurrency;
@@ -243,23 +230,24 @@ public class DetailedHoldingEntity {
         }
 
         switch (rawType.toLowerCase()) {
-        case "equity":
-        case "equities":
-            return Instrument.Type.STOCK;
-        case "equityfund":
-            return Instrument.Type.FUND;
-        // Instrument types that don't match any of our instrument types, but setting it explicitly to OTHER
-        // so we don't log it as a warning.
-        case "subscription_right":
-        case "spax":
-        case "etf":
-        case "warrant":
-        case "fixed_income":
-        case "interestequity":
-            return Instrument.Type.OTHER;
-        default:
-            log.warn("Unkown instrument type:[{}]", rawType);
-            return Instrument.Type.OTHER;
+            case "equity":
+            case "equities":
+                return Instrument.Type.STOCK;
+            case "equityfund":
+                return Instrument.Type.FUND;
+                // Instrument types that don't match any of our instrument types, but setting it
+                // explicitly to OTHER
+                // so we don't log it as a warning.
+            case "subscription_right":
+            case "spax":
+            case "etf":
+            case "warrant":
+            case "fixed_income":
+            case "interestequity":
+                return Instrument.Type.OTHER;
+            default:
+                log.warn("Unkown instrument type:[{}]", rawType);
+                return Instrument.Type.OTHER;
         }
     }
 }

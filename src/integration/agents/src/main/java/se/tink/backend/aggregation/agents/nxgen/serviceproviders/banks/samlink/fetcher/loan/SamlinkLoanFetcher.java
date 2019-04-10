@@ -23,10 +23,13 @@ public class SamlinkLoanFetcher implements AccountFetcher<LoanAccount> {
         if (Objects.nonNull(loansResponse.getLoans())) {
             return loansResponse.getLoans().stream()
                     .filter(le -> le.getDetailsLink().isPresent())
-                    .map(le -> {
-                        String detailsLink = le.getDetailsLink().orElseThrow(IllegalStateException::new);
-                        return apiClient.getLoanDetails(detailsLink).toAccount();
-                    }).collect(Collectors.toList());
+                    .map(
+                            le -> {
+                                String detailsLink =
+                                        le.getDetailsLink().orElseThrow(IllegalStateException::new);
+                                return apiClient.getLoanDetails(detailsLink).toAccount();
+                            })
+                    .collect(Collectors.toList());
         }
 
         return Collections.emptyList();

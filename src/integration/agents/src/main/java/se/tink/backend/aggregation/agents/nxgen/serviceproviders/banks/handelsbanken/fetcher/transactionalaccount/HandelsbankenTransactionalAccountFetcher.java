@@ -14,8 +14,8 @@ public class HandelsbankenTransactionalAccountFetcher
     private final HandelsbankenApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
 
-    public HandelsbankenTransactionalAccountFetcher(HandelsbankenApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+    public HandelsbankenTransactionalAccountFetcher(
+            HandelsbankenApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
@@ -23,11 +23,15 @@ public class HandelsbankenTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        return sessionStorage.applicationEntryPoint().map(applicationEntryPoint -> {
-                    AccountListResponse accountList = client.accountList(applicationEntryPoint);
-                    sessionStorage.persist(accountList);
-                    return accountList.toTinkAccounts(client).collect(Collectors.toList());
-                }
-        ).orElse(Collections.emptyList());
+        return sessionStorage
+                .applicationEntryPoint()
+                .map(
+                        applicationEntryPoint -> {
+                            AccountListResponse accountList =
+                                    client.accountList(applicationEntryPoint);
+                            sessionStorage.persist(accountList);
+                            return accountList.toTinkAccounts(client).collect(Collectors.toList());
+                        })
+                .orElse(Collections.emptyList());
     }
 }

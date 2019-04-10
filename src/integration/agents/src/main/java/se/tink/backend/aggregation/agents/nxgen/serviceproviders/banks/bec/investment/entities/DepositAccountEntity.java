@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.entities;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class DepositAccountEntity {

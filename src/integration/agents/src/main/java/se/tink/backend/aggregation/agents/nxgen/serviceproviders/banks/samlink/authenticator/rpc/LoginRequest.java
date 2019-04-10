@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginRequest {
     private String username;
     private String password;
+
     @JsonProperty("device_token")
     private String deviceToken;
+
     @JsonProperty("device_id")
     private String deviceId;
 

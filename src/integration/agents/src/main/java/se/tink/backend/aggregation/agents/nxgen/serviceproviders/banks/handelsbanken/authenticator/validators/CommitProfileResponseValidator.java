@@ -15,13 +15,13 @@ public class CommitProfileResponseValidator extends HandelsbankenValidator<BaseR
     public void validate() throws AuthenticationException, AuthorizationException {
         String statusCode = getCode();
         if (!Strings.isNullOrEmpty(statusCode)) {
-            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(this, () ->
-                    new IllegalStateException(String.format(
-                            "#login-refactoring - SHB - Login failed (commitProfileResponse) with message %s, code %s, error message %s",
-                            getMessage(),
-                            statusCode,
-                            getFirstErrorMessage()))
-            );
+            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(
+                    this,
+                    () ->
+                            new IllegalStateException(
+                                    String.format(
+                                            "#login-refactoring - SHB - Login failed (commitProfileResponse) with message %s, code %s, error message %s",
+                                            getMessage(), statusCode, getFirstErrorMessage())));
         }
     }
 }

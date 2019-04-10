@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FetchInvestmentResponse {
     private List<DepositAccountEntity> depositAccounts;
+
     @JsonProperty("stockorders")
     private List<Object> stockOrders;
 

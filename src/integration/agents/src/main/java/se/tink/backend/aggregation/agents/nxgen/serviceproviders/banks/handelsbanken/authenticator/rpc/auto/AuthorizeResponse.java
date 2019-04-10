@@ -13,5 +13,4 @@ public class AuthorizeResponse extends BaseResponse {
     public URL toApplicationExitPoint() {
         return findLink(HandelsbankenConstants.URLS.Links.APPLICATION_EXIT_POINT);
     }
-
 }

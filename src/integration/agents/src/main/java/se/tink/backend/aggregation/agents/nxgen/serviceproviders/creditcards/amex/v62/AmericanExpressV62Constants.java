@@ -37,13 +37,14 @@ public class AmericanExpressV62Constants {
     }
 
     public static final class Urls {
-        public static final String LOG_ON = "/mobileone/msl/services/accountservicing/v1/loginsummary";
-        public static final String TRANSACTION = "/mobileone/msl/services/transactions/v1/getDetails";
+        public static final String LOG_ON =
+                "/mobileone/msl/services/accountservicing/v1/loginsummary";
+        public static final String TRANSACTION =
+                "/mobileone/msl/services/transactions/v1/getDetails";
         public static final String TIMELINE = "/mobileone/msl/services/timeline/v1/timelineDetail";
         public static final String EXTEND_SESSION =
                 "/mobileone/msl/services/accountservicing/v1/extendSession";
-        public static final String LOG_OUT =
-                "/mobileone/msl/services/accountservicing/v1/logoff";
+        public static final String LOG_OUT = "/mobileone/msl/services/accountservicing/v1/logoff";
     }
 
     public static final class Tags {

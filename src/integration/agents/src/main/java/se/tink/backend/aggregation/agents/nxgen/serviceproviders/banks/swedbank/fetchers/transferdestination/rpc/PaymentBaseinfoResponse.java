@@ -14,15 +14,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBasePredicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonObject
 public class PaymentBaseinfoResponse {
     @JsonIgnore
-    private static final AccountIdentifierFormatter DEFAULT_FORMAT = new DefaultAccountIdentifierFormatter();
+    private static final AccountIdentifierFormatter DEFAULT_FORMAT =
+            new DefaultAccountIdentifierFormatter();
+
     private PaymentDestinationsEntity payment;
     private TransferDestinationsEntity transfer;
     private AllowedLinksEntity addRecipientStatus;
@@ -80,8 +82,8 @@ public class PaymentBaseinfoResponse {
 
     @JsonIgnore
     private List<? extends GeneralAccountEntity> getSourceAccounts(String scope) {
-        return Optional.ofNullable(transactionAccountGroups)
-                .orElseGet(Collections::emptyList).stream()
+        return Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
+                .stream()
                 .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
                 .filter(tdae -> tdae.scopesContainsIgnoreCase(scope))
@@ -89,16 +91,18 @@ public class PaymentBaseinfoResponse {
     }
 
     /**
-     * Tries to match the given account identifier with an account in transactionAccountGroups, and then return
-     * that matching account entity.
+     * Tries to match the given account identifier with an account in transactionAccountGroups, and
+     * then return that matching account entity.
      */
     @JsonIgnore
-    public Optional<TransferDestinationAccountEntity> getSourceAccount(AccountIdentifier accountIdentifier) {
+    public Optional<TransferDestinationAccountEntity> getSourceAccount(
+            AccountIdentifier accountIdentifier) {
         Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
+        Preconditions.checkState(
+                accountIdentifier.isValid(), "The account identifier must be valid.");
 
-        return Optional.ofNullable(transactionAccountGroups)
-                .orElseGet(Collections::emptyList).stream()
+        return Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
+                .stream()
                 .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
                 .filter(tdae -> accountIdentifier.equals(tdae.generalGetAccountIdentifier()))
@@ -106,26 +110,36 @@ public class PaymentBaseinfoResponse {
     }
 
     /**
-     * Validates that it's allowed to make transfer from given account entity, if not an exception is thrown.
-     * If the ID of this account is null we also throw an exception, since the ID is required to make a transfer.
+     * Validates that it's allowed to make transfer from given account entity, if not an exception
+     * is thrown. If the ID of this account is null we also throw an exception, since the ID is
+     * required to make a transfer.
      */
     @JsonIgnore
-    public String validateAndGetSourceAccountId(TransferDestinationAccountEntity transferDestinationAccountEntity) {
+    public String validateAndGetSourceAccountId(
+            TransferDestinationAccountEntity transferDestinationAccountEntity) {
 
         transferDestinationAccountEntity.getScopes().stream()
                 .filter(SwedbankBaseConstants.TransferScope.TRANSFER_FROM::equalsIgnoreCase)
                 .findAny()
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_TRANSFER_CAPABLE)
-                        .build());
+                .orElseThrow(
+                        () ->
+                                TransferExecutionException.builder(
+                                                SignableOperationStatuses.CANCELLED)
+                                        .setEndUserMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .INVALID_SOURCE)
+                                        .setMessage(
+                                                SwedbankBaseConstants.ErrorMessage
+                                                        .SOURCE_NOT_TRANSFER_CAPABLE)
+                                        .build());
 
         String transferDestinationAccountId = transferDestinationAccountEntity.getId();
 
         if (transferDestinationAccountId == null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                    .build();
         }
 
         return transferDestinationAccountId;
@@ -134,20 +148,24 @@ public class PaymentBaseinfoResponse {
     @JsonIgnore
     public Optional<String> getTransferDestinationAccountId(AccountIdentifier accountIdentifier) {
         Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
+        Preconditions.checkState(
+                accountIdentifier.isValid(), "The account identifier must be valid.");
 
-        Optional<ExternalRecipientEntity> accountEntity = Optional.ofNullable(transfer)
-                .map(TransferDestinationsEntity::getExternalRecipients)
-                .orElseGet(Collections::emptyList).stream()
-                .filter(SwedbankBasePredicates.filterExternalRecipients(accountIdentifier))
-                .findFirst();
+        Optional<ExternalRecipientEntity> accountEntity =
+                Optional.ofNullable(transfer).map(TransferDestinationsEntity::getExternalRecipients)
+                        .orElseGet(Collections::emptyList).stream()
+                        .filter(SwedbankBasePredicates.filterExternalRecipients(accountIdentifier))
+                        .findFirst();
 
-        Optional<TransferDestinationAccountEntity> internalAccountEntity = Optional.ofNullable(transactionAccountGroups)
-                .orElseGet(Collections::emptyList).stream()
-                .map(TransactionAccountGroupEntity::getAccounts)
-                .flatMap(Collection::stream)
-                .filter(SwedbankBasePredicates.filterTransferDestinationAccounts(accountIdentifier))
-                .findFirst();
+        Optional<TransferDestinationAccountEntity> internalAccountEntity =
+                Optional.ofNullable(transactionAccountGroups).orElseGet(Collections::emptyList)
+                        .stream()
+                        .map(TransactionAccountGroupEntity::getAccounts)
+                        .flatMap(Collection::stream)
+                        .filter(
+                                SwedbankBasePredicates.filterTransferDestinationAccounts(
+                                        accountIdentifier))
+                        .findFirst();
 
         if (!accountEntity.isPresent() && !internalAccountEntity.isPresent()) {
             return Optional.empty();
@@ -158,20 +176,22 @@ public class PaymentBaseinfoResponse {
             return Optional.ofNullable(externalRecipientEntity.getId());
         }
 
-        TransferDestinationAccountEntity transferDestinationAccountEntity = internalAccountEntity.get();
+        TransferDestinationAccountEntity transferDestinationAccountEntity =
+                internalAccountEntity.get();
         return Optional.ofNullable(transferDestinationAccountEntity.getId());
     }
 
     @JsonIgnore
     public Optional<String> getPaymentDestinationAccountId(AccountIdentifier accountIdentifier) {
         Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
+        Preconditions.checkState(
+                accountIdentifier.isValid(), "The account identifier must be valid.");
 
-        Optional<PayeeEntity> payeeEntity = Optional.ofNullable(payment)
-                .map(PaymentDestinationsEntity::getPayees)
-                .orElseGet(Collections::emptyList).stream()
-                .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
-                .findFirst();
+        Optional<PayeeEntity> payeeEntity =
+                Optional.ofNullable(payment).map(PaymentDestinationsEntity::getPayees)
+                        .orElseGet(Collections::emptyList).stream()
+                        .filter(SwedbankBasePredicates.filterPayees(accountIdentifier))
+                        .findFirst();
 
         if (!payeeEntity.isPresent()) {
             return Optional.empty();
@@ -182,8 +202,8 @@ public class PaymentBaseinfoResponse {
 
     @JsonIgnore
     public List<? extends GeneralAccountEntity> getAllRecipientAccounts() {
-        List<GeneralAccountEntity> recipientAccounts = new ArrayList<>(
-                getSourceAccounts(SwedbankBaseConstants.TransferScope.TRANSFER_TO));
+        List<GeneralAccountEntity> recipientAccounts =
+                new ArrayList<>(getSourceAccounts(SwedbankBaseConstants.TransferScope.TRANSFER_TO));
         recipientAccounts.addAll(getTransferDestinations());
 
         return recipientAccounts;

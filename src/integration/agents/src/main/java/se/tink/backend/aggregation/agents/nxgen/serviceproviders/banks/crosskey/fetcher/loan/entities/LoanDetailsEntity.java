@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoanDetailsEntity {
     private double grantedAmount;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date openingdate;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date nextInterestAdjustmentDate;
 

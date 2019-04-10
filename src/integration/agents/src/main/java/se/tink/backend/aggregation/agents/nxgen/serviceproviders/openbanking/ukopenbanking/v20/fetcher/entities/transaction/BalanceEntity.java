@@ -10,8 +10,10 @@ public class BalanceEntity {
 
     @JsonProperty("Amount")
     private AmountEntity amount;
+
     @JsonProperty("CreditDebitIndicator")
     private String creditDebitIndicator;
+
     @JsonProperty("Type")
     private String type;
 

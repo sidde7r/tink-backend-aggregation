@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class BecCreditCardTransactionsFetcher implements TransactionDatePaginator<CreditCardAccount> {
+public class BecCreditCardTransactionsFetcher
+        implements TransactionDatePaginator<CreditCardAccount> {
 
     private final BecApiClient apiClient;
 
@@ -21,12 +22,16 @@ public class BecCreditCardTransactionsFetcher implements TransactionDatePaginato
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
-        Collection<? extends Transaction> transactions =  Optional.of(
-                apiClient.fetchAccountTransactions(account, fromDate, toDate).getRecord())
-                .orElseThrow(() -> new IllegalStateException("No records")).stream()
-                .map(RecordEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                Optional.of(
+                                apiClient
+                                        .fetchAccountTransactions(account, fromDate, toDate)
+                                        .getRecord())
+                        .orElseThrow(() -> new IllegalStateException("No records")).stream()
+                        .map(RecordEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
     }

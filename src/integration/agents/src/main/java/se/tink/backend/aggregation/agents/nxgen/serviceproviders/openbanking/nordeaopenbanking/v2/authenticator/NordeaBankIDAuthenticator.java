@@ -25,22 +25,28 @@ public class NordeaBankIDAuthenticator implements BankIdAuthenticator<InitAuthRe
     private final NordeaSessionStorage sessionStorage;
     private final NordeaPersistentStorage persistentStorage;
 
-    public NordeaBankIDAuthenticator(NordeaBaseApiClient apiClient,
-            NordeaSessionStorage sessionStorage, NordeaPersistentStorage persistentStorage) {
+    public NordeaBankIDAuthenticator(
+            NordeaBaseApiClient apiClient,
+            NordeaSessionStorage sessionStorage,
+            NordeaPersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public InitAuthResponse init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
+    public InitAuthResponse init(String ssn)
+            throws BankIdException, BankServiceException, AuthorizationException {
         // Start auth - POST on endpoint: /v2/authorize-decoupled
         // read values from persistent storage - ClientID and ClientSecret
 
         // where will we get account numbers from??????
-        InitAuthRequest request = InitAuthRequest.create(persistentStorage.getRedirectUrl(), ssn,
-                // DUMMY ACCOUNT NUMBER LIST TODO: remove when made Optional
-                ImmutableList.of(ssn.substring(0, 11)));
+        InitAuthRequest request =
+                InitAuthRequest.create(
+                        persistentStorage.getRedirectUrl(),
+                        ssn,
+                        // DUMMY ACCOUNT NUMBER LIST TODO: remove when made Optional
+                        ImmutableList.of(ssn.substring(0, 11)));
         InitAuthResponse response = apiClient.initAuthorization(request);
 
         return response;
@@ -52,9 +58,10 @@ public class NordeaBankIDAuthenticator implements BankIdAuthenticator<InitAuthRe
     }
 
     @Override
-    public BankIdStatus collect(InitAuthResponse reference) throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(InitAuthResponse reference)
+            throws AuthenticationException, AuthorizationException {
         // open bank id
-        //TODO: When we have an environment connected to BankID, implement this!
+        // TODO: When we have an environment connected to BankID, implement this!
 
         // Polling for auth code - get on endpoint: /v2/authorize-decoupled
         String collectPath = reference.getCollectPath();
@@ -69,20 +76,22 @@ public class NordeaBankIDAuthenticator implements BankIdAuthenticator<InitAuthRe
             int status = hre.getResponse().getStatus();
 
             switch (status) {
-            case HttpStatus.SC_NOT_MODIFIED:
-                return BankIdStatus.WAITING;
-            case HttpStatus.SC_REQUEST_TIMEOUT:
-                return BankIdStatus.CANCELLED;
-            default:
-                throw hre;
+                case HttpStatus.SC_NOT_MODIFIED:
+                    return BankIdStatus.WAITING;
+                case HttpStatus.SC_REQUEST_TIMEOUT:
+                    return BankIdStatus.CANCELLED;
+                default:
+                    throw hre;
             }
         }
 
         // Retrieve access token - POST on endpoint: /v2/authorize-decoupled/token
         // store access token in session storage
-        TokenRequest request = new TokenRequest(pollResponse.getCode(), persistentStorage.getRedirectUrl());
-        TokenResponse tokenResponse = apiClient.getAccessToken(pollResponse.getTokenPath(),
-                reference.tppTokenAsHeaderValue(), request);
+        TokenRequest request =
+                new TokenRequest(pollResponse.getCode(), persistentStorage.getRedirectUrl());
+        TokenResponse tokenResponse =
+                apiClient.getAccessToken(
+                        pollResponse.getTokenPath(), reference.tppTokenAsHeaderValue(), request);
         sessionStorage.setAccessToken(tokenResponse.toOauth2Token());
 
         return BankIdStatus.DONE;

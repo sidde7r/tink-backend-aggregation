@@ -33,15 +33,27 @@ public class ErrorResponse {
 
         String msg = "";
         if (errorMessages != null && errorMessages.getGeneral() != null) {
-            msg += errorMessages.getGeneral().stream()
-                    .map(generalEntity -> String.format("%s: %s", generalEntity.getCode(), generalEntity.getMessage()))
-                    .collect(Collectors.joining("\n"));
+            msg +=
+                    errorMessages.getGeneral().stream()
+                            .map(
+                                    generalEntity ->
+                                            String.format(
+                                                    "%s: %s",
+                                                    generalEntity.getCode(),
+                                                    generalEntity.getMessage()))
+                            .collect(Collectors.joining("\n"));
         }
 
         if (errorMessages != null && errorMessages.getFields() != null) {
-            msg += errorMessages.getFields().stream()
-                    .map(fieldEntity -> String.format("%s: %s", fieldEntity.getField(), fieldEntity.getMessage()))
-                    .collect(Collectors.joining("\n"));
+            msg +=
+                    errorMessages.getFields().stream()
+                            .map(
+                                    fieldEntity ->
+                                            String.format(
+                                                    "%s: %s",
+                                                    fieldEntity.getField(),
+                                                    fieldEntity.getMessage()))
+                            .collect(Collectors.joining("\n"));
         }
 
         return msg;

@@ -35,13 +35,14 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Outbox
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferDestination;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExecutorNxgen {
-    private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultBankTransferExecutorNxgen.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(SwedbankDefaultBankTransferExecutorNxgen.class);
 
     private final Catalog catalog;
     private final SwedbankDefaultApiClient apiClient;
@@ -50,7 +51,9 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
     private PaymentBaseinfoResponse paymentBaseinfoResponse;
     private RegisteredTransfersResponse registeredTransfersResponse;
 
-    public SwedbankDefaultBankTransferExecutorNxgen(Catalog catalog, SwedbankDefaultApiClient apiClient,
+    public SwedbankDefaultBankTransferExecutorNxgen(
+            Catalog catalog,
+            SwedbankDefaultApiClient apiClient,
             SwedbankTransferHelper transferHelper) {
         this.catalog = catalog;
         this.apiClient = apiClient;
@@ -70,20 +73,24 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
 
     @Override
     public void addToOutbox(OutboxItem item) {
-        RegisterTransferResponse registerTransfer = apiClient.registerTransfer(
-                item.getAmount().getValue(),
-                item.getDestination().getValueByKey(SwedbankBaseConstants.StorageKey.ID),
-                item.getSource().getValueByKey(SwedbankBaseConstants.StorageKey.ID));
+        RegisterTransferResponse registerTransfer =
+                apiClient.registerTransfer(
+                        item.getAmount().getValue(),
+                        item.getDestination().getValueByKey(SwedbankBaseConstants.StorageKey.ID),
+                        item.getSource().getValueByKey(SwedbankBaseConstants.StorageKey.ID));
 
-        registeredTransfersResponse = apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());
+        registeredTransfersResponse =
+                apiClient.registeredTransfers(registerTransfer.getLinks().getNextOrThrow());
 
         registeredTransfersResponse.oneUnsignedTransferOrThrow();
 
         Optional<String> idToConfirm = registeredTransfersResponse.getIdToConfirm();
         if (!idToConfirm.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                    .build();
         }
     }
 
@@ -101,8 +108,8 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
 
         // Sign the transfer if needed.
         if (!confirmTransferLink.isPresent()) {
-            InitiateSignTransferResponse initiateSignTransfer = apiClient
-                    .signExternalTransfer(links.getSignOrThrow());
+            InitiateSignTransferResponse initiateSignTransfer =
+                    apiClient.signExternalTransfer(links.getSignOrThrow());
             links = transferHelper.collectBankId(initiateSignTransfer);
 
             confirmTransferLink = Optional.ofNullable(links.getNext());
@@ -113,20 +120,22 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
 
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                         .setMessage("No confirm transfer link found. Transfer failed.")
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
+                        .setEndUserMessage(
+                                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
                         .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED)
                         .build();
             }
         }
 
         // Confirm the transfer.
-        SwedbankTransferHelper.ensureLinksNotNull(links,
+        SwedbankTransferHelper.ensureLinksNotNull(
+                links,
                 TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
                 SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
 
         confirmTransferResponse = apiClient.confirmTransfer(links.getNextOrThrow());
-        SwedbankTransferHelper.confirmSuccessfulTransfer(confirmTransferResponse,
-                registeredTransfersResponse.getIdToConfirm().orElse(""));
+        SwedbankTransferHelper.confirmSuccessfulTransfer(
+                confirmTransferResponse, registeredTransfersResponse.getIdToConfirm().orElse(""));
     }
 
     @Override
@@ -138,11 +147,14 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
         }
 
         return transfer.getExternalRecipients().stream()
-                .map(b -> Beneficiary.builder()
-                        .withName(b.getName())
-                        .withAccountIdentifier(b.generalGetAccountIdentifier())
-                        .withKeyValue(SwedbankBaseConstants.StorageKey.ID, b.getId())
-                        .build())
+                .map(
+                        b ->
+                                Beneficiary.builder()
+                                        .withName(b.getName())
+                                        .withAccountIdentifier(b.generalGetAccountIdentifier())
+                                        .withKeyValue(
+                                                SwedbankBaseConstants.StorageKey.ID, b.getId())
+                                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -150,20 +162,22 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
     public Beneficiary addBeneficiary(String name, AccountIdentifier identifier) {
         if (identifier.getType() != AccountIdentifier.Type.SE) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(catalog.getString("You can only make transfers to Swedish accounts"))
+                    .setEndUserMessage(
+                            catalog.getString("You can only make transfers to Swedish accounts"))
                     .build();
         }
 
         SwedishIdentifier destination = identifier.to(SwedishIdentifier.class);
 
-        RegisterTransferRecipientRequest registerTransferRecipientRequest = RegisterTransferRecipientRequest.create(
-                destination, name);
+        RegisterTransferRecipientRequest registerTransferRecipientRequest =
+                RegisterTransferRecipientRequest.create(destination, name);
 
-        RegisterTransferRecipientResponse registerTransferRecipientResponse = apiClient.registerTransferRecipient(
-                registerTransferRecipientRequest);
+        RegisterTransferRecipientResponse registerTransferRecipientResponse =
+                apiClient.registerTransferRecipient(registerTransferRecipientRequest);
 
-        AbstractAccountEntity entity = transferHelper
-                .signAndConfirmNewRecipient(registerTransferRecipientResponse.getLinks(),
+        AbstractAccountEntity entity =
+                transferHelper.signAndConfirmNewRecipient(
+                        registerTransferRecipientResponse.getLinks(),
                         findNewRecipientFromPaymentResponse(registerTransferRecipientRequest));
 
         return Beneficiary.builder()
@@ -174,58 +188,71 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
     }
 
     /**
-     * Returns a function that streams through all registered recipients with a filter to find the newly added recipient
-     * among them.
+     * Returns a function that streams through all registered recipients with a filter to find the
+     * newly added recipient among them.
      */
-    private Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewRecipientFromPaymentResponse(
-            RegisterTransferRecipientRequest newRecipientEntity) {
+    private Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>>
+            findNewRecipientFromPaymentResponse(
+                    RegisterTransferRecipientRequest newRecipientEntity) {
 
-        return confirmResponse -> confirmResponse.getAllRecipientAccounts().stream()
-                .filter(account ->
-                        account.generalGetAccountIdentifier()
-                                .getIdentifier()
-                                .replaceAll("[^0-9]", "")
-                                .equalsIgnoreCase(newRecipientEntity.getRecipientNumber()))
-                .findFirst()
-                .map(AbstractAccountEntity.class::cast);
+        return confirmResponse ->
+                confirmResponse.getAllRecipientAccounts().stream()
+                        .filter(
+                                account ->
+                                        account.generalGetAccountIdentifier()
+                                                .getIdentifier()
+                                                .replaceAll("[^0-9]", "")
+                                                .equalsIgnoreCase(
+                                                        newRecipientEntity.getRecipientNumber()))
+                        .findFirst()
+                        .map(AbstractAccountEntity.class::cast);
     }
 
     @Override
     public Collection<TransferSource> getSourceAccounts() {
-        List<TransactionAccountGroupEntity> transactionAccountGroups = this.paymentBaseinfoResponse
-                .getTransactionAccountGroups();
+        List<TransactionAccountGroupEntity> transactionAccountGroups =
+                this.paymentBaseinfoResponse.getTransactionAccountGroups();
 
         if (transactionAccountGroups == null || transactionAccountGroups.isEmpty()) {
             return Lists.newArrayList();
         }
 
-        return transactionAccountGroups.stream().map(TransactionAccountGroupEntity::getAccounts)
+        return transactionAccountGroups.stream()
+                .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
-                .map(t -> TransferSource.builder()
-                        .withKeyValue(SwedbankBaseConstants.StorageKey.ID, t.getId())
-                        .withIdentifier(t.generalGetAccountIdentifier())
-                        .isTransferable(t.scopesContainsIgnoreCase(SwedbankBaseConstants.TransferScope.TRANSFER_FROM))
-                        .build())
+                .map(
+                        t ->
+                                TransferSource.builder()
+                                        .withKeyValue(
+                                                SwedbankBaseConstants.StorageKey.ID, t.getId())
+                                        .withIdentifier(t.generalGetAccountIdentifier())
+                                        .isTransferable(
+                                                t.scopesContainsIgnoreCase(
+                                                        SwedbankBaseConstants.TransferScope
+                                                                .TRANSFER_FROM))
+                                        .build())
                 .collect(Collectors.toList());
     }
 
     @Override
     public Collection<TransferDestination> getInternalTransferDestinations() {
-        List<TransactionAccountGroupEntity> transactionAccountGroups = this.paymentBaseinfoResponse
-                .getTransactionAccountGroups();
+        List<TransactionAccountGroupEntity> transactionAccountGroups =
+                this.paymentBaseinfoResponse.getTransactionAccountGroups();
 
-        return transactionAccountGroups.stream().map(TransactionAccountGroupEntity::getAccounts)
+        return transactionAccountGroups.stream()
+                .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
-                .map(t -> TransferDestination.builder()
-                        .withKeyValue(SwedbankBaseConstants.StorageKey.ID, t.getId())
-                        .withIdentifier(t.generalGetAccountIdentifier())
-                        .build())
+                .map(
+                        t ->
+                                TransferDestination.builder()
+                                        .withKeyValue(
+                                                SwedbankBaseConstants.StorageKey.ID, t.getId())
+                                        .withIdentifier(t.generalGetAccountIdentifier())
+                                        .build())
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Delete a set of transfer groups (used when cancelling injected transfers).
-     */
+    /** Delete a set of transfer groups (used when cancelling injected transfers). */
     private void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
         for (TransferTransactionEntity transferTransaction : transferTransactions) {
             for (TransactionEntity transactionEntity : transferTransaction.getTransactions()) {
@@ -240,7 +267,9 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
         if (deleteResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             ErrorResponse errorResponse = deleteResponse.getBody(ErrorResponse.class);
             String errorMessages = errorResponse.getAllErrors();
-            log.warn(String.format("#Swedbank-v5 - Delete transfer - Error messages: %s", errorMessages));
+            log.warn(
+                    String.format(
+                            "#Swedbank-v5 - Delete transfer - Error messages: %s", errorMessages));
         }
     }
 }

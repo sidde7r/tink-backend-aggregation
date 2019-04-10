@@ -10,8 +10,10 @@ public class CreditLineEntity {
 
     @JsonProperty("Included")
     private boolean included;
+
     @JsonProperty("Amount")
     private AmountEntity amount;
+
     @JsonProperty("Type")
     private ExternalLimitType type;
 

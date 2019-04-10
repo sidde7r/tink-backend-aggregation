@@ -9,17 +9,19 @@ import se.tink.libraries.amount.Amount;
 public class InstructedAmountEntity {
     @JsonProperty("Amount")
     private String amount;
+
     @JsonProperty("Currency")
     private String currency; // MUST BE "GBP"
 
-    private InstructedAmountEntity(@JsonProperty("Amount") String amount,
-            @JsonProperty("Currency") String currency) {
+    private InstructedAmountEntity(
+            @JsonProperty("Amount") String amount, @JsonProperty("Currency") String currency) {
         this.amount = amount;
         this.currency = currency;
     }
 
     @JsonIgnore
     public static InstructedAmountEntity create(Amount tinkAmount) {
-        return new InstructedAmountEntity(String.valueOf(tinkAmount.getValue()), tinkAmount.getCurrency());
+        return new InstructedAmountEntity(
+                String.valueOf(tinkAmount.getValue()), tinkAmount.getCurrency());
     }
 }

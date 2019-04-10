@@ -17,8 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionResponse {
     private TransactionDetailsEntity transactionDetails;
-    @JsonIgnore
-    private AmericanExpressV62Configuration config;
+    @JsonIgnore private AmericanExpressV62Configuration config;
 
     public TransactionDetailsEntity getTransactionDetails() {
         return this.transactionDetails;
@@ -30,7 +29,8 @@ public class TransactionResponse {
     }
 
     @JsonIgnore
-    public PaginatorResponse getPaginatorResponse(AmericanExpressV62Configuration config, List<Transaction> pendingTransactions) {
+    public PaginatorResponse getPaginatorResponse(
+            AmericanExpressV62Configuration config, List<Transaction> pendingTransactions) {
         this.config = config;
 
         List<Transaction> transactions = new ArrayList<>();
@@ -50,13 +50,16 @@ public class TransactionResponse {
             return Lists.emptyList();
         }
 
-        transactionDetails.getActivityList()
+        transactionDetails
+                .getActivityList()
                 .forEach(
                         activity ->
-                                AmericanExpressV62Predicates.getTransactionsFromGivenPage.apply(activity)
-                                        .forEach(AmericanExpressV62Predicates
-                                                .transformIntoTinkTransactions(config, list))
-                );
+                                AmericanExpressV62Predicates.getTransactionsFromGivenPage
+                                        .apply(activity)
+                                        .forEach(
+                                                AmericanExpressV62Predicates
+                                                        .transformIntoTinkTransactions(
+                                                                config, list)));
 
         return list;
     }

@@ -9,8 +9,7 @@ public class SessionStorageAgreement {
     private String agreementId;
     private List<String> accountBankIds;
 
-    public SessionStorageAgreement() {
-    }
+    public SessionStorageAgreement() {}
 
     public SessionStorageAgreement(SdcAgreementEntityKey entityKey) {
         this.userNumber = entityKey.getUserNumber();

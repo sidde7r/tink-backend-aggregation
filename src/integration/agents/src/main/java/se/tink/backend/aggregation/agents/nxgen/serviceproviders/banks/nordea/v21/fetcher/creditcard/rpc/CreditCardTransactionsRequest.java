@@ -7,8 +7,11 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class CreditCardTransactionsRequest extends HttpRequestImpl {
     public CreditCardTransactionsRequest(String cardNumber, String continueKey) {
-        super(HttpMethod.GET, Url.TRANSACTIONS.queryParam(UrlParameter.CARD_NUMBER, cardNumber)
-                .queryParam(UrlParameter.CONTINUATION_KEY, continueKey)
-                .queryParam("ownTransactionsOnly", "false"));
+        super(
+                HttpMethod.GET,
+                Url.TRANSACTIONS
+                        .queryParam(UrlParameter.CARD_NUMBER, cardNumber)
+                        .queryParam(UrlParameter.CONTINUATION_KEY, continueKey)
+                        .queryParam("ownTransactionsOnly", "false"));
     }
 }

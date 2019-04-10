@@ -22,15 +22,20 @@ public class GetCardBalancesOutEntity {
     private List<CardsEntity> cards;
 
     /**
-     * Returns a list of distinct cards returned by the bank. If the id, owner name and balance are equal for two cards
-     * the are considered to be the same card, and only one cardsEntity will be returned as a list.
+     * Returns a list of distinct cards returned by the bank. If the id, owner name and balance are
+     * equal for two cards the are considered to be the same card, and only one cardsEntity will be
+     * returned as a list.
      */
     @JsonIgnore
     public List<CardsEntity> getDistinctCardsList() {
-        return cards
-                .stream()
-                .filter(distinctByProperties(cardsEntity -> Arrays
-                        .asList(cardsEntity.getCardId(), cardsEntity.getOwnerName(), cardsEntity.getBalance())))
+        return cards.stream()
+                .filter(
+                        distinctByProperties(
+                                cardsEntity ->
+                                        Arrays.asList(
+                                                cardsEntity.getCardId(),
+                                                cardsEntity.getOwnerName(),
+                                                cardsEntity.getBalance())))
                 .collect(Collectors.toList());
     }
 

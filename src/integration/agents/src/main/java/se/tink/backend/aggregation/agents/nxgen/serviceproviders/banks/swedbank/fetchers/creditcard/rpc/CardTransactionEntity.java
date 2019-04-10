@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class CardTransactionEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     private String description;
     private String expenseControlIncluded;
     private AmountEntity localAmount;
@@ -33,20 +34,22 @@ public class CardTransactionEntity {
         return localAmount;
     }
 
-    public Optional<CreditCardTransaction> toTinkCreditCardTransaction(CreditCardAccount creditCardAccount,
-            String defaultCurrency) {
-        Preconditions.checkArgument(creditCardAccount != null, "Credit card account cannot be null.");
+    public Optional<CreditCardTransaction> toTinkCreditCardTransaction(
+            CreditCardAccount creditCardAccount, String defaultCurrency) {
+        Preconditions.checkArgument(
+                creditCardAccount != null, "Credit card account cannot be null.");
         Preconditions.checkArgument(defaultCurrency != null, "Default currency cannot be null.");
 
         if (localAmount == null) {
             return Optional.empty();
         }
 
-        return Optional.of(CreditCardTransaction.builder()
-                .setAmount(localAmount.toTinkAmount(defaultCurrency))
-                .setCreditAccount(creditCardAccount)
-                .setDate(date)
-                .setDescription(description)
-                .build());
+        return Optional.of(
+                CreditCardTransaction.builder()
+                        .setAmount(localAmount.toTinkAmount(defaultCurrency))
+                        .setCreditAccount(creditCardAccount)
+                        .setDate(date)
+                        .setDescription(description)
+                        .build());
     }
 }

@@ -16,15 +16,18 @@ public class LoginResponse {
 
     @XmlElement(name = "code_retour")
     private String returnCode;
+
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     @XmlElement(name = "dtcnx")
     private Date date;
+
     private String typctr;
     private String rib;
     private String fede;
     private String urlfede;
     private String userid;
     private String cin;
+
     @XmlElementWrapper(name = "domain_list")
     @XmlElement(name = "domain")
     private List<String> domainList;

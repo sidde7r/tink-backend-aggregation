@@ -16,12 +16,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class SdcInvestmentFetcher extends SdcAgreementFetcher implements AccountFetcher<InvestmentAccount> {
+public class SdcInvestmentFetcher extends SdcAgreementFetcher
+        implements AccountFetcher<InvestmentAccount> {
     private static final Logger log = LoggerFactory.getLogger(SdcInvestmentFetcher.class);
 
     private final SdcConfiguration agentConfiguration;
 
-    public SdcInvestmentFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
+    public SdcInvestmentFetcher(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
             SdcConfiguration agentConfiguration) {
         super(bankClient, sessionStorage);
         this.agentConfiguration = agentConfiguration;
@@ -44,14 +47,18 @@ public class SdcInvestmentFetcher extends SdcAgreementFetcher implements Account
         Collection<InvestmentAccount> investmentAccounts = new ArrayList<>();
 
         for (SessionStorageAgreement agreement : agreements) {
-            Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfiguration =
+                    selectAgreement(agreement, agreements);
 
-            serviceConfiguration.ifPresent(configurationEntity -> {
-                if (configurationEntity.isInvestmentDeposit()) {
-                    investmentAccounts.addAll(
-                            this.bankClient.fetchCustodyOverview().toInvestmentAccounts(this.bankClient));
-                }
-            });
+            serviceConfiguration.ifPresent(
+                    configurationEntity -> {
+                        if (configurationEntity.isInvestmentDeposit()) {
+                            investmentAccounts.addAll(
+                                    this.bankClient
+                                            .fetchCustodyOverview()
+                                            .toInvestmentAccounts(this.bankClient));
+                        }
+                    });
         }
 
         return investmentAccounts;

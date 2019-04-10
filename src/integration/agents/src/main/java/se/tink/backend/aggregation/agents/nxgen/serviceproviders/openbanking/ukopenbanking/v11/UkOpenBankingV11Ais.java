@@ -25,8 +25,8 @@ public class UkOpenBankingV11Ais implements UkOpenBankingAis {
     }
 
     @Override
-    public TransactionKeyPaginationController<TransactionalAccount, ?> makeAccountTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+    public TransactionKeyPaginationController<TransactionalAccount, ?>
+            makeAccountTransactionPaginatorController(UkOpenBankingApiClient apiClient) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
                         apiClient,
@@ -51,8 +51,8 @@ public class UkOpenBankingV11Ais implements UkOpenBankingAis {
     }
 
     @Override
-    public TransactionKeyPaginationController<CreditCardAccount, ?> makeCreditCardTransactionPaginatorController(
-            UkOpenBankingApiClient apiClient) {
+    public TransactionKeyPaginationController<CreditCardAccount, ?>
+            makeCreditCardTransactionPaginatorController(UkOpenBankingApiClient apiClient) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
                         apiClient,

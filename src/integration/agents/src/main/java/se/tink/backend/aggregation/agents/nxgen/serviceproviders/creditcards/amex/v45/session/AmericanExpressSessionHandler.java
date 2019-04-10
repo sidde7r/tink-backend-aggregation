@@ -14,8 +14,8 @@ public class AmericanExpressSessionHandler implements SessionHandler {
     private final AmericanExpressApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public AmericanExpressSessionHandler(AmericanExpressApiClient apiClient,
-            SessionStorage sessionStorage) {
+    public AmericanExpressSessionHandler(
+            AmericanExpressApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -28,15 +28,15 @@ public class AmericanExpressSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         if ((sessionStorage.get(AmericanExpressConstants.Tags.SESSION_ID) != null)) {
-            int status = Optional.of(apiClient.requestExtendSession())
-                    .map(ExtendResponse::getExtendSession)
-                    .map(SessionEntity::getStatus)
-                    .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            int status =
+                    Optional.of(apiClient.requestExtendSession())
+                            .map(ExtendResponse::getExtendSession)
+                            .map(SessionEntity::getStatus)
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
             if (status == 0) {
                 return;
             }
         }
         throw SessionError.SESSION_EXPIRED.exception();
     }
-
 }

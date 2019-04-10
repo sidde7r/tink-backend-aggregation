@@ -13,13 +13,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class CreditAgricoleTransactionalAccountsFetcher implements AccountFetcher,
-        TransactionFetcher<TransactionalAccount> {
+public class CreditAgricoleTransactionalAccountsFetcher
+        implements AccountFetcher, TransactionFetcher<TransactionalAccount> {
 
     private final CreditAgricoleApiClient apiClient;
 
-    public CreditAgricoleTransactionalAccountsFetcher(
-            CreditAgricoleApiClient apiClient) {
+    public CreditAgricoleTransactionalAccountsFetcher(CreditAgricoleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -33,7 +32,8 @@ public class CreditAgricoleTransactionalAccountsFetcher implements AccountFetche
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
-        return checkResponseErrors(apiClient.operations(account.getAccountNumber())).getOperations().stream()
+        return checkResponseErrors(apiClient.operations(account.getAccountNumber())).getOperations()
+                .stream()
                 .map(OperationEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

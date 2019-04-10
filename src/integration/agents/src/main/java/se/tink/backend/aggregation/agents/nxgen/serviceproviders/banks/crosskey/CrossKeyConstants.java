@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -29,21 +28,23 @@ public class CrossKeyConstants {
         public static final String ADD_DEVICE = "v2/addDevice.do";
         public static final String FETCH_ACCOUNTS = "accounts.do";
         public static final String FETCH_TRANSACTIONS = "transactions.do";
-        public static final String LOGOUT =  "logout.do";
-        public static final String KEEPALIVE =  "keepAlive.do";
-        public static final String FETCH_LOANDETAILS =  "loanDetails.do";
-        public static final String FETCH_GETCARDS =  "cards/getCardsCached.do";
-        public static final String FETCH_GETCARD =  "v1/getCard.do";
-        public static final String FETCH_CARD_TRANSACTIONS =  "v1/getCardTransactions.do";
-        public static final String FETCH_PORTFOLIO =  "showPortfolio.do";
-        public static final String FETCH_INSTRUMENT_DETAILS =  "v1/security/instrumentDetails.do";
-        public static final String FETCH_FUND_INFO =  "v1/getFundInfo.do";
+        public static final String LOGOUT = "logout.do";
+        public static final String KEEPALIVE = "keepAlive.do";
+        public static final String FETCH_LOANDETAILS = "loanDetails.do";
+        public static final String FETCH_GETCARDS = "cards/getCardsCached.do";
+        public static final String FETCH_GETCARD = "v1/getCard.do";
+        public static final String FETCH_CARD_TRANSACTIONS = "v1/getCardTransactions.do";
+        public static final String FETCH_PORTFOLIO = "showPortfolio.do";
+        public static final String FETCH_INSTRUMENT_DETAILS = "v1/security/instrumentDetails.do";
+        public static final String FETCH_FUND_INFO = "v1/getFundInfo.do";
     }
 
     public static final class AutoAuthentication {
         public static final String PASSWORD_STATUS_CHANGE = "CHANGE";
-        public static final String ERR_PASSWORD_TOKEN_LOGIN_FAILED = "ERR_PASSWORD_TOKEN_LOGIN_FAILED";
-        public static final String ERR_PASSWORD_MISSING = "ERR_PASSWORD_MISSING";  // happens if field is missing (i.e. null)
+        public static final String ERR_PASSWORD_TOKEN_LOGIN_FAILED =
+                "ERR_PASSWORD_TOKEN_LOGIN_FAILED";
+        public static final String ERR_PASSWORD_MISSING =
+                "ERR_PASSWORD_MISSING"; // happens if field is missing (i.e. null)
         public static final String ERR_PASSWORD_NOT_VALID = "ERR_PASSWORD_NOT_VALID";
         public static final String PIN_CODE_INVALID = "PIN_CODE_INVALID";
         public static final String APP_VERSION = "1.8.0-iOS";
@@ -62,7 +63,8 @@ public class CrossKeyConstants {
                         .put("INTERNAL_SERVER_ERROR", BankIdStatus.WAITING)
                         .put("BANK_ID_USER_CANCEL", BankIdStatus.CANCELLED)
                         .put("BANK_ID_EXPIRED_TRANSACTION", BankIdStatus.TIMEOUT)
-                        // We try to collect BankId result from server too fast what results in this error
+                        // We try to collect BankId result from server too fast what results in this
+                        // error
                         // So in BankId context we will treat this error as waiting for BankId
                         .put("NOT_AUTHORIZED", BankIdStatus.WAITING)
                         .build();
@@ -91,10 +93,10 @@ public class CrossKeyConstants {
 
     public static final class Fetcher {
         public static final LogTag LOAN_LOGGING = LogTag.from("#loan_crosskey");
-        public static final LogTag INVESTMENT_PORTFOLIO_LOGGING = LogTag.from
-                ("#investment_portfolio_crosskey");
-        public static final LogTag INVESTMENT_INSTRUMENT_LOGGING = LogTag.from
-                ("#investment_instrument_crosskey");
+        public static final LogTag INVESTMENT_PORTFOLIO_LOGGING =
+                LogTag.from("#investment_portfolio_crosskey");
+        public static final LogTag INVESTMENT_INSTRUMENT_LOGGING =
+                LogTag.from("#investment_instrument_crosskey");
 
         public static final class Account {
             public static final String CHECK = "check";
@@ -108,27 +110,30 @@ public class CrossKeyConstants {
         }
     }
 
-    public static final ImmutableMap<Integer, Portfolio.Type> PORTFOLIO_TYPES = ImmutableMap.<Integer, Portfolio.Type>builder()
-            .put(849, Portfolio.Type.DEPOT)
-            .build();
+    public static final ImmutableMap<Integer, Portfolio.Type> PORTFOLIO_TYPES =
+            ImmutableMap.<Integer, Portfolio.Type>builder().put(849, Portfolio.Type.DEPOT).build();
 
-    public static final ImmutableMap<Integer, LoanDetails.Type> LOAN_TYPES = ImmutableMap.<Integer, LoanDetails.Type>builder()
-            .put(505, LoanDetails.Type.BLANCO)
-            .put(510, LoanDetails.Type.OTHER)
-            .put(512, LoanDetails.Type.OTHER)
-            .put(532, LoanDetails.Type.STUDENT)
-            .put(536, LoanDetails.Type.OTHER)
-            .put(539, LoanDetails.Type.OTHER)
-            .build();
+    public static final ImmutableMap<Integer, LoanDetails.Type> LOAN_TYPES =
+            ImmutableMap.<Integer, LoanDetails.Type>builder()
+                    .put(505, LoanDetails.Type.BLANCO)
+                    .put(510, LoanDetails.Type.OTHER)
+                    .put(512, LoanDetails.Type.OTHER)
+                    .put(532, LoanDetails.Type.STUDENT)
+                    .put(536, LoanDetails.Type.OTHER)
+                    .put(539, LoanDetails.Type.OTHER)
+                    .build();
 
-    public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES = ImmutableMap.<String, Instrument.Type>builder()
-            .put(Fetcher.Instrument.STOCK.toLowerCase(), Instrument.Type.STOCK)
-            .build();
+    public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =
+            ImmutableMap.<String, Instrument.Type>builder()
+                    .put(Fetcher.Instrument.STOCK.toLowerCase(), Instrument.Type.STOCK)
+                    .build();
 
     public enum EndUserMessage implements LocalizableEnum {
-        PASSWORD_EXPIRED(new LocalizableKey("Your current password has expired and you have to create a new one." +
-                " You can do this in Ålandsbanken's app if you have a registered device, if not, please contact " +
-                "Ålandsbanken at: 0204 292 910."));
+        PASSWORD_EXPIRED(
+                new LocalizableKey(
+                        "Your current password has expired and you have to create a new one."
+                                + " You can do this in Ålandsbanken's app if you have a registered device, if not, please contact "
+                                + "Ålandsbanken at: 0204 292 910."));
 
         private LocalizableKey userMessage;
 

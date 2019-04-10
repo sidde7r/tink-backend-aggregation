@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ListLoanAccountsResponse extends ArrayList<SdcLoanAccount> {
-
-}
+public class ListLoanAccountsResponse extends ArrayList<SdcLoanAccount> {}

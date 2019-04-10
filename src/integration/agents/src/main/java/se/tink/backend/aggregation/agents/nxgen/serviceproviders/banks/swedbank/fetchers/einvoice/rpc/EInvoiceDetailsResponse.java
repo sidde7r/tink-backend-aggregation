@@ -19,7 +19,9 @@ public class EInvoiceDetailsResponse {
     }
 
     public Optional<Transfer> toEInvoiceTransfer(String currency, String hashedRefNumber) {
-        return Optional.ofNullable(payment).flatMap(EInvoicePaymentEntity ->
-                EInvoicePaymentEntity.toTinkTransfer(currency, hashedRefNumber));
+        return Optional.ofNullable(payment)
+                .flatMap(
+                        EInvoicePaymentEntity ->
+                                EInvoicePaymentEntity.toTinkTransfer(currency, hashedRefNumber));
     }
 }

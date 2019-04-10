@@ -31,6 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.DeviceInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.HandshakeDecoded;
@@ -40,12 +41,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.HandshakeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CreateProfileResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.InitNewProfileResponse;
-import se.tink.backend.agents.rpc.Credentials;
 
 /**
- * Port of {@link se.tink.backend.aggregation.agents.banks.handelsbanken.v6.tfa.LibTFA}
- * Based on native C code in Handelsbanken app
- * Careful! This is a stateful object!
+ * Port of {@link se.tink.backend.aggregation.agents.banks.handelsbanken.v6.tfa.LibTFA} Based on
+ * native C code in Handelsbanken app Careful! This is a stateful object!
  */
 public class LibTFA {
 
@@ -140,19 +139,20 @@ public class LibTFA {
     }
 
     public String generateEncUserCredentials(
-            InitNewProfileResponse initNewProfile,
-            UserCredentialsRequest userCredentialsRequest) {
+            InitNewProfileResponse initNewProfile, UserCredentialsRequest userCredentialsRequest) {
         serverNonce = decryptServerNonce(initNewProfile.getSnonce());
         return encryptAndEncodeBase64(userCredentialsRequest);
     }
 
     public String generateEncUserCredentials(
-            HandshakeResponse handshake,
-            UserCredentialsRequest userCredentialsRequest) {
+            HandshakeResponse handshake, UserCredentialsRequest userCredentialsRequest) {
         try {
-            HandshakeDecoded handshakeDecoded = MAPPER.readValue(
-                    new String(decryptServerNonce(handshake.getServerHello()), Charsets.US_ASCII),
-                    HandshakeDecoded.class);
+            HandshakeDecoded handshakeDecoded =
+                    MAPPER.readValue(
+                            new String(
+                                    decryptServerNonce(handshake.getServerHello()),
+                                    Charsets.US_ASCII),
+                            HandshakeDecoded.class);
             serverNonce = decode(handshakeDecoded.getSnonce());
             return encryptAndEncodeBase64(userCredentialsRequest);
         } catch (IOException e) {
@@ -164,13 +164,20 @@ public class LibTFA {
         checkServerNonceAvailable();
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
-            IvParameterSpec ivSpec = new IvParameterSpec(Arrays.copyOfRange(this.serverNonce, 0, 16));
+            IvParameterSpec ivSpec =
+                    new IvParameterSpec(Arrays.copyOfRange(this.serverNonce, 0, 16));
             SecretKey keyValue = new SecretKeySpec(calculateNewSessionKey(), "AES");
             cipher.init(Cipher.ENCRYPT_MODE, keyValue, ivSpec);
 
-            return HandelsbankenConstants.BASE64_CODEC.encodeToString(cipher.doFinal(MAPPER.writeValueAsBytes(object)));
-        } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException |
-                NoSuchPaddingException | BadPaddingException | NoSuchProviderException | IllegalBlockSizeException
+            return HandelsbankenConstants.BASE64_CODEC.encodeToString(
+                    cipher.doFinal(MAPPER.writeValueAsBytes(object)));
+        } catch (NoSuchAlgorithmException
+                | InvalidKeyException
+                | InvalidAlgorithmParameterException
+                | NoSuchPaddingException
+                | BadPaddingException
+                | NoSuchProviderException
+                | IllegalBlockSizeException
                 | JsonProcessingException e) {
             throw asIllegalState(e);
         }
@@ -183,8 +190,11 @@ public class LibTFA {
 
             cipher.init(Cipher.DECRYPT_MODE, handshakeKey.getPrivate());
             return cipher.doFinal(decode(snonce));
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException |
-                IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException
+                | InvalidKeyException
+                | NoSuchPaddingException
+                | BadPaddingException
+                | IllegalBlockSizeException e) {
             throw asIllegalState(e);
         } finally {
             handshakeKey = null; // making sure we have a new one every time!
@@ -209,8 +219,7 @@ public class LibTFA {
         // Not unsetting clientNonce, because it's reused for AuthTP=3
     }
 
-    public PdeviceSignContainer generatePDeviceSignContainer(
-            CreateProfileResponse createProfile) {
+    public PdeviceSignContainer generatePDeviceSignContainer(CreateProfileResponse createProfile) {
         return generatePDeviceSignContainer(createProfile.getChallenge());
     }
 
@@ -267,11 +276,9 @@ public class LibTFA {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         LibTFA libTFA = (LibTFA) o;
 

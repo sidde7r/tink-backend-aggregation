@@ -21,7 +21,8 @@ public class SamlinkPersistentStorage {
     }
 
     public void putDeviceToken(String deviceToken) {
-        Preconditions.checkNotNull(Strings.emptyToNull(deviceToken), "Device token is null or empty");
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(deviceToken), "Device token is null or empty");
         persistentStorage.put(SamlinkConstants.Storage.DEVICE_TOKEN, deviceToken);
     }
 

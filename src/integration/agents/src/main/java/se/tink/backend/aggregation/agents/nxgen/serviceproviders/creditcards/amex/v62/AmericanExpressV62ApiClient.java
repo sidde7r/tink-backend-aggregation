@@ -35,31 +35,22 @@ public class AmericanExpressV62ApiClient {
 
     protected RequestBuilder createRequest(String uri) {
         URL url = new URL(AmericanExpressV62Constants.BASE_API + uri);
-        return client
-                .request(url)
+        return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(AmericanExpressV62Constants.Headers.APP_ID, config.getAppId())
                 .header(HttpHeaders.USER_AGENT, config.getUserAgent())
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.CLIENT_TYPE)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.APP_VERSION)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_MODEL)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_OS)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.HARDWARE_ID)
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.OS_VERSION)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.CHARSET)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.CLIENT_TYPE)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.APP_VERSION)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_MODEL)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.DEVICE_OS)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.HARDWARE_ID)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.OS_VERSION)
                 .header(
                         AmericanExpressV62Constants.Headers.INSTALLATION_ID,
                         persistentStorage.get(AmericanExpressV62Constants.Tags.INSTALLATION_ID))
-                .header(
-                        AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_OFFSET)
+                .header(AmericanExpressV62Constants.ConstantValueHeaders.TIMEZONE_OFFSET)
                 .header(AmericanExpressV62Constants.Headers.LOCALE, config.getLocale());
     }
 

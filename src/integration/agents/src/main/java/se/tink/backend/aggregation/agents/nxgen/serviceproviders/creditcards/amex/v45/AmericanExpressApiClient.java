@@ -21,7 +21,9 @@ public class AmericanExpressApiClient {
     private final AmericanExpressConfiguration config;
 
     public AmericanExpressApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, AmericanExpressConfiguration config) {
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            AmericanExpressConfiguration config) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.config = config;
@@ -30,8 +32,7 @@ public class AmericanExpressApiClient {
     protected RequestBuilder createRequest(String uri) {
 
         URL url = new URL(AmericanExpressConstants.BASE_API + uri + config.getFace());
-        return client
-                .request(url)
+        return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(AmericanExpressConstants.Headers.APP_ID, config.getAppId())
@@ -42,9 +43,7 @@ public class AmericanExpressApiClient {
                 .header(
                         AmericanExpressConstants.Headers.CLIENT_TYPE,
                         AmericanExpressConstants.HeaderValues.CLIENT_TYPE)
-                .header(
-                        AmericanExpressConstants.Headers.CLIENT_VERSION,
-                        config.getClientVersion())
+                .header(AmericanExpressConstants.Headers.CLIENT_VERSION, config.getClientVersion())
                 .header(
                         AmericanExpressConstants.Headers.DEVICE_ID,
                         sessionStorage.get(AmericanExpressConstants.Tags.HARDWARE_ID))
@@ -86,10 +85,12 @@ public class AmericanExpressApiClient {
 
     public TransactionResponse requestTransaction(TransactionsRequest request) {
         // the response is in html format instead of Json
-        String transactionString = createRequestInSession(AmericanExpressConstants.Urls.TRANSACTION)
-                .post(String.class, request);
-        TransactionResponse response = SerializationUtils.deserializeFromString(transactionString, TransactionResponse
-                .class);
+        String transactionString =
+                createRequestInSession(AmericanExpressConstants.Urls.TRANSACTION)
+                        .post(String.class, request);
+        TransactionResponse response =
+                SerializationUtils.deserializeFromString(
+                        transactionString, TransactionResponse.class);
         return response;
     }
 

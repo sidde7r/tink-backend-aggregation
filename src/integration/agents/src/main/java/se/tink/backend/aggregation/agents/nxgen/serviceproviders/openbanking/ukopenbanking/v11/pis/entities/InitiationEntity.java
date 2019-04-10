@@ -10,15 +10,20 @@ import se.tink.libraries.amount.Amount;
 public class InitiationEntity {
     @JsonProperty("InstructionIdentification")
     private String instructionIdentification; // Max35Text
+
     @JsonProperty("EndToEndIdentification")
     private String endToEndIdentification; // Max35Text (UNIQUE ID)
+
     @JsonProperty("InstructedAmount")
     private InstructedAmountEntity instructedAmount;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("DebtorAccount")
     private DebtorCreditorAccountEntity sourceAccount;
+
     @JsonProperty("CreditorAccount")
     private DebtorCreditorAccountEntity destinationAccount;
+
     @JsonProperty("RemittanceInformation")
     private RemittanceInformationEntity remittanceInformation;
 
@@ -33,7 +38,8 @@ public class InitiationEntity {
             @JsonProperty("InstructedAmount") InstructedAmountEntity instructedAmount,
             @JsonProperty("DebtorAccount") DebtorCreditorAccountEntity sourceAccount,
             @JsonProperty("CreditorAccount") DebtorCreditorAccountEntity destinationAccount,
-            @JsonProperty("RemittanceInformation") RemittanceInformationEntity remittanceInformation) {
+            @JsonProperty("RemittanceInformation")
+                    RemittanceInformationEntity remittanceInformation) {
         this.instructionIdentification = instructionIdentification;
         this.endToEndIdentification = endToEndIdentification;
         this.instructedAmount = instructedAmount;
@@ -57,7 +63,6 @@ public class InitiationEntity {
                 InstructedAmountEntity.create(amount),
                 sourceAccount,
                 destinationAccount,
-                RemittanceInformationEntity.create(bankTransferMessage)
-        );
+                RemittanceInformationEntity.create(bankTransferMessage));
     }
 }

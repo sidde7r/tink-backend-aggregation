@@ -19,6 +19,7 @@ public class TransactionEntity {
     @JsonFormat(pattern = "yyyyMMdd")
     @JsonDeserialize(using = AmericanExpressV62DateDeserializer.class)
     private Date date;
+
     private AmountEntity amount;
     private List<String> description;
 

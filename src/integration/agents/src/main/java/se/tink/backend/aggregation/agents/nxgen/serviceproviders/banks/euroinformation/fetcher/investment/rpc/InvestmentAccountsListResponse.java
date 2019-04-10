@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 public class InvestmentAccountsListResponse {
     @XmlElement(name = "code_retour")
     private String returnCode;
+
     @XmlElement(name = "date_msg")
     @XmlJavaTypeAdapter(EuroInformationMsgDateDeserializer.class)
     private Date date;
+
     @XmlElementWrapper(name = "SecurityAccountList")
     @XmlElement(name = "SecurityAccount")
     private List<SecurityAccountListEntity> securityAccountList;

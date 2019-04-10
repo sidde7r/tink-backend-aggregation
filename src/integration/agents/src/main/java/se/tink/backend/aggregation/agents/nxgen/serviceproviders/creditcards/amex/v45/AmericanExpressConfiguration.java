@@ -23,5 +23,4 @@ public interface AmericanExpressConfiguration {
 
     // == Timeline Api ==
     public TimelineRequest createTimelineRequest(Integer cardIndex);
-
 }

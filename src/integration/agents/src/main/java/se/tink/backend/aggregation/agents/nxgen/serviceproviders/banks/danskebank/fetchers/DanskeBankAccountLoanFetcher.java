@@ -19,7 +19,9 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     private final DanskeBankConfiguration configuration;
     private final String languageCode;
 
-    public DanskeBankAccountLoanFetcher(Credentials credentials, DanskeBankApiClient apiClient,
+    public DanskeBankAccountLoanFetcher(
+            Credentials credentials,
+            DanskeBankApiClient apiClient,
             DanskeBankConfiguration configuration) {
         this.credentials = credentials;
         this.apiClient = apiClient;
@@ -29,14 +31,13 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        ListAccountsResponse listAccounts = apiClient.listAccounts(
-                ListAccountsRequest.createFromLanguageCode(languageCode));
+        ListAccountsResponse listAccounts =
+                apiClient.listAccounts(ListAccountsRequest.createFromLanguageCode(languageCode));
 
         // log any loan account of unknown product type
         logUnknownLoanAccountTypes(listAccounts);
 
-        return listAccounts
-                .getAccounts().stream()
+        return listAccounts.getAccounts().stream()
                 .filter(AccountEntity::isLoanAccount)
                 .map(AccountEntity::toLoanAccount)
                 .distinct()
@@ -46,7 +47,10 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
     private void logUnknownLoanAccountTypes(ListAccountsResponse listAccounts) {
         listAccounts.getAccounts().stream()
                 .filter(AccountEntity::isLoanAccount)
-                .filter(DanskeBankPredicates.knownLoanAccountProducts(configuration.getLoanAccountTypes()).negate())
+                .filter(
+                        DanskeBankPredicates.knownLoanAccountProducts(
+                                        configuration.getLoanAccountTypes())
+                                .negate())
                 .forEach(AccountEntity::logLoanAccount);
     }
 }

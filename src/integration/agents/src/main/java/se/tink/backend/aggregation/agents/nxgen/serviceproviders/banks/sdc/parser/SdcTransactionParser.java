@@ -8,7 +8,12 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public interface SdcTransactionParser {
     Transaction parseTransaction(SdcTransaction bankTransaction);
+
     Transaction parseTransaction(SdcReservation bankReservation);
-    CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcTransaction bankTransaction);
-    CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcReservation bankReservation);
+
+    CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcTransaction bankTransaction);
+
+    CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcReservation bankReservation);
 }

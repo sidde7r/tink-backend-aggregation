@@ -13,9 +13,15 @@ public class NordeaV20Authenticator<T extends NordeaV20ApiClient> implements Pas
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        String token = client.passwordLogin(username, password).getToken()
-                .orElseThrow(() -> new IllegalStateException("No token present on the lightLoginResponse"));
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        String token =
+                client.passwordLogin(username, password)
+                        .getToken()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "No token present on the lightLoginResponse"));
         client.setToken(token);
     }
 }

@@ -27,13 +27,11 @@ public class TransactionEntity {
     public Transaction toTransaction(AmericanExpressConfiguration config, boolean isPending) {
         Date date = new Date();
         try {
-            date = DateUtils.flattenTime(
+            date =
                     DateUtils.flattenTime(
-                            ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(
-                                    Long.toString(chargeDate.getRawValue())
-                            )
-                    )
-            );
+                            DateUtils.flattenTime(
+                                    ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(
+                                            Long.toString(chargeDate.getRawValue()))));
         } catch (ParseException ignored) {
         }
 
@@ -49,18 +47,20 @@ public class TransactionEntity {
         this.description = description;
     }
 
-    public boolean belongsTo(CreditCardAccount account){
+    public boolean belongsTo(CreditCardAccount account) {
         Integer transactionSuppIndex = -1;
         try {
             transactionSuppIndex = Integer.valueOf(this.suppIndex);
         } catch (NumberFormatException e) {
-            throw new IllegalStateException("transaction contains illegal suppIndex: " + this.suppIndex
-                    + "from transaction: " + description
-                    + "in account: " + account.getAccountNumber()
-            );
+            throw new IllegalStateException(
+                    "transaction contains illegal suppIndex: "
+                            + this.suppIndex
+                            + "from transaction: "
+                            + description
+                            + "in account: "
+                            + account.getAccountNumber());
         }
 
         return transactionSuppIndex.equals(Integer.valueOf(account.getBankIdentifier()));
-
     }
 }

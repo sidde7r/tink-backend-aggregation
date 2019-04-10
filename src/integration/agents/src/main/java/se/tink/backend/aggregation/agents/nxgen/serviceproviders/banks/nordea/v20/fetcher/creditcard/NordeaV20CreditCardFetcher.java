@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard.rpc.CardDetailsResponse;
@@ -13,14 +16,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collectors;
+public class NordeaV20CreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
 
-public class NordeaV20CreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, String> {
-
-    private static final AggregationLogger log = new AggregationLogger(NordeaV20CreditCardFetcher.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(NordeaV20CreditCardFetcher.class);
     private final NordeaV20ApiClient client;
     private final NordeaV20Parser parser;
 
@@ -34,11 +35,18 @@ public class NordeaV20CreditCardFetcher implements AccountFetcher<CreditCardAcco
 
         try {
             return client.getAccountProductsOfTypes(NordeaV20Constants.ProductType.CARD).stream()
-                    .filter(pe -> !NordeaV20Constants.CardGroup.DEBIT_CARD.equalsIgnoreCase(pe.getCardGroup()))
-                    .map(pe -> {
-                        CardDetailsResponse cardDetailsResponse = client.fetchCardDetails(pe.getNordeaAccountIdV2());
-                        return parser.parseCreditCardAccount(pe, cardDetailsResponse.getCardDetails());
-                    }).collect(Collectors.toList());
+                    .filter(
+                            pe ->
+                                    !NordeaV20Constants.CardGroup.DEBIT_CARD.equalsIgnoreCase(
+                                            pe.getCardGroup()))
+                    .map(
+                            pe -> {
+                                CardDetailsResponse cardDetailsResponse =
+                                        client.fetchCardDetails(pe.getNordeaAccountIdV2());
+                                return parser.parseCreditCardAccount(
+                                        pe, cardDetailsResponse.getCardDetails());
+                            })
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Could not fetch credit card: ", e);
             return Collections.emptyList();
@@ -46,22 +54,28 @@ public class NordeaV20CreditCardFetcher implements AccountFetcher<CreditCardAcco
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(final CreditCardAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            final CreditCardAccount account, String key) {
         if (!client.canViewTransactions(account)) {
             return new TransactionKeyPaginatorResponseImpl<>();
         }
 
-        CreditCardTransactionsResponse transactionsResponse = client.fetchCreditCardTransactions(
-                account.getBankIdentifier(), key);
+        CreditCardTransactionsResponse transactionsResponse =
+                client.fetchCreditCardTransactions(account.getBankIdentifier(), key);
 
-        Collection<CreditCardTransaction> transactions = transactionsResponse.getTransactions().stream()
-                .map(te -> {
-                    CreditCardTransaction.Builder builder = parser.parseTransaction(te);
-                    builder.setCreditAccount(account);
-                    return builder.build();
-                }).collect(Collectors.toList());
+        Collection<CreditCardTransaction> transactions =
+                transactionsResponse.getTransactions().stream()
+                        .map(
+                                te -> {
+                                    CreditCardTransaction.Builder builder =
+                                            parser.parseTransaction(te);
+                                    builder.setCreditAccount(account);
+                                    return builder.build();
+                                })
+                        .collect(Collectors.toList());
 
-        TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
+        TransactionKeyPaginatorResponseImpl<String> response =
+                new TransactionKeyPaginatorResponseImpl<>();
         response.setTransactions(transactions);
         response.setNext(transactionsResponse.getContinuationKey());
 

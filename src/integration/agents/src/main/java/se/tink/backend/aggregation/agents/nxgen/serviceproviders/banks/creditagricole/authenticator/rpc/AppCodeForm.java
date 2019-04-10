@@ -5,8 +5,7 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class AppCodeForm extends AbstractForm {
 
-    public AppCodeForm() {
-    }
+    public AppCodeForm() {}
 
     public AppCodeForm setUserAccountNumber(String userAccountNumber) {
         this.put(Form.USER_ACCOUNT_NUMBER, userAccountNumber);

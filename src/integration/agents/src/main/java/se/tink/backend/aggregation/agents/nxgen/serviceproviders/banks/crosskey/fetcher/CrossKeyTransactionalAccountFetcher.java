@@ -11,7 +11,8 @@ public class CrossKeyTransactionalAccountFetcher implements AccountFetcher<Trans
     private final CrossKeyApiClient client;
     private final CrossKeyConfiguration agentConfiguration;
 
-    public CrossKeyTransactionalAccountFetcher(CrossKeyApiClient client, CrossKeyConfiguration agentConfiguration) {
+    public CrossKeyTransactionalAccountFetcher(
+            CrossKeyApiClient client, CrossKeyConfiguration agentConfiguration) {
         this.client = client;
         this.agentConfiguration = agentConfiguration;
     }

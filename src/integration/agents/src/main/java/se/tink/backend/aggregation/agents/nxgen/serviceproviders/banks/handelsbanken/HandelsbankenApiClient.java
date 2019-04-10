@@ -35,31 +35,31 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public abstract class HandelsbankenApiClient {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(
-            HandelsbankenApiClient.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(HandelsbankenApiClient.class);
 
     private final TinkHttpClient client;
     protected final HandelsbankenConfiguration<?> handelsbankenConfiguration;
 
-    public HandelsbankenApiClient(TinkHttpClient client,
-            HandelsbankenConfiguration handelsbankenConfiguration) {
+    public HandelsbankenApiClient(
+            TinkHttpClient client, HandelsbankenConfiguration handelsbankenConfiguration) {
         this.client = client;
         this.handelsbankenConfiguration = handelsbankenConfiguration;
     }
 
     public EntryPointResponse fetchEntryPoint() {
-       return createRequest(handelsbankenConfiguration.getEntryPoint())
+        return createRequest(handelsbankenConfiguration.getEntryPoint())
                 .get(EntryPointResponse.class);
     }
 
-    public InitNewProfileResponse initNewProfile(EntryPointResponse entryPoint,
-            InitNewProfileRequest initNewProfileRequest) {
+    public InitNewProfileResponse initNewProfile(
+            EntryPointResponse entryPoint, InitNewProfileRequest initNewProfileRequest) {
         return createPostRequest(entryPoint.toPinnedActivation())
                 .post(InitNewProfileResponse.class, initNewProfileRequest);
     }
 
-    public ActivateProfileResponse activateProfile(CreateProfileResponse createProfile,
-            ActivateProfileRequest activateProfileRequest) {
+    public ActivateProfileResponse activateProfile(
+            CreateProfileResponse createProfile, ActivateProfileRequest activateProfileRequest) {
         return createPostRequest(createProfile.toActivateProfile())
                 .post(ActivateProfileResponse.class, activateProfileRequest);
     }
@@ -68,29 +68,28 @@ public abstract class HandelsbankenApiClient {
         return createRequest(activateProfile.toCommitProfile()).get(CommitProfileResponse.class);
     }
 
-    public HandshakeResponse handshake(EntryPointResponse entrypoint,
-            HandshakeRequest handshakeRequest) {
+    public HandshakeResponse handshake(
+            EntryPointResponse entrypoint, HandshakeRequest handshakeRequest) {
         return createPostRequest(entrypoint.toPinnedLogin())
                 .post(HandshakeResponse.class, handshakeRequest);
     }
 
-    public ServerProfileResponse serverProfile(HandshakeResponse handshake,
-            ServerProfileRequest serverProfileRequest) {
+    public ServerProfileResponse serverProfile(
+            HandshakeResponse handshake, ServerProfileRequest serverProfileRequest) {
         return createPostRequest(handshake.toGetServerProfile())
                 .post(ServerProfileResponse.class, serverProfileRequest);
     }
 
-    public ChallengeResponse challenge(ServerProfileResponse serverProfile,
-            ChallengeRequest challengeRequest) {
+    public ChallengeResponse challenge(
+            ServerProfileResponse serverProfile, ChallengeRequest challengeRequest) {
         return createPostRequest(serverProfile.toGetChallenge())
                 .post(ChallengeResponse.class, challengeRequest);
     }
 
-    public ValidateSignatureResponse validateSignature(ChallengeResponse challenge,
-            ValidateSignatureRequest validateSignature) {
+    public ValidateSignatureResponse validateSignature(
+            ChallengeResponse challenge, ValidateSignatureRequest validateSignature) {
         return createPostRequest(challenge.toValidateSignature())
-                .post(ValidateSignatureResponse.class,
-                        validateSignature);
+                .post(ValidateSignatureResponse.class, validateSignature);
     }
 
     public ApplicationEntryPointResponse applicationEntryPoint(AuthorizeResponse authorize) {
@@ -100,9 +99,10 @@ public abstract class HandelsbankenApiClient {
 
     public KeepAliveResponse keepAlive(ApplicationEntryPointResponse applicationEntryPoint) {
         try {
-            // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns XML if not...
-            HttpResponse httpResponse = createRequest(applicationEntryPoint.toKeepAlive())
-                    .get(HttpResponse.class);
+            // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns
+            // XML if not...
+            HttpResponse httpResponse =
+                    createRequest(applicationEntryPoint.toKeepAlive()).get(HttpResponse.class);
 
             if (httpResponse.hasBody()) {
 
@@ -111,8 +111,9 @@ public abstract class HandelsbankenApiClient {
 
             return KeepAliveResponse.aliveEntryPoint();
         } catch (HttpResponseException e) {
-            LOGGER.warn(HandelsbankenConstants.URLS.KeepAlive.LOG_TAG
-                    + " - Keeping session alive failed");
+            LOGGER.warn(
+                    HandelsbankenConstants.URLS.KeepAlive.LOG_TAG
+                            + " - Keeping session alive failed");
             return KeepAliveResponse.deadEntryPoint();
         }
     }
@@ -122,8 +123,8 @@ public abstract class HandelsbankenApiClient {
     }
 
     public AccountListResponse accountList(ApplicationEntryPointResponse applicationEntryPoint) {
-        return createRequest(applicationEntryPoint.toAccounts()).get(handelsbankenConfiguration
-                .getAccountListResponse());
+        return createRequest(applicationEntryPoint.toAccounts())
+                .get(handelsbankenConfiguration.getAccountListResponse());
     }
 
     public HandelsbankenLoansResponse loans(ApplicationEntryPointResponse applicationEntryPoint) {
@@ -137,11 +138,11 @@ public abstract class HandelsbankenApiClient {
 
     public abstract TransactionsResponse transactions(HandelsbankenAccount handelsbankenAccount);
 
-    public abstract <CreditCard extends HandelsbankenCreditCard> CreditCardTransactionsResponse
-    creditCardTransactions(CreditCard creditcard);
+    public abstract <CreditCard extends HandelsbankenCreditCard>
+            CreditCardTransactionsResponse creditCardTransactions(CreditCard creditcard);
 
-    public abstract <CreditCard extends HandelsbankenCreditCard> CreditCardTransactionsResponse<CreditCard>
-    creditCardTransactions(URL url);
+    public abstract <CreditCard extends HandelsbankenCreditCard>
+            CreditCardTransactionsResponse<CreditCard> creditCardTransactions(URL url);
 
     protected RequestBuilder createPostRequest(URL url) {
         return createRequest(url).type(MediaType.APPLICATION_JSON);
@@ -149,17 +150,23 @@ public abstract class HandelsbankenApiClient {
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
-                //Have to set Accept header, otherwise Handelsbanken doesn't set a Content-Type or returns error.
-                .accept(MediaType.APPLICATION_JSON,
+                // Have to set Accept header, otherwise Handelsbanken doesn't set a Content-Type or
+                // returns error.
+                .accept(
+                        MediaType.APPLICATION_JSON,
                         MediaType.APPLICATION_XML) // unexpectedly Handelsbanken may
                 // return application/xml
-                .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_NAME,
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_NAME,
                         HandelsbankenConstants.Headers.DEVICE_NAME)
-                .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_MODEL,
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_MODEL,
                         handelsbankenConfiguration.getDeviceModel())
-                .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_CLASS,
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_DEVICE_CLASS,
                         HandelsbankenConstants.Headers.DEVICE_CLASS)
-                .header(HandelsbankenConstants.Headers.X_SHB_APP_VERSION,
+                .header(
+                        HandelsbankenConstants.Headers.X_SHB_APP_VERSION,
                         handelsbankenConfiguration.getAppVersion());
     }
 }

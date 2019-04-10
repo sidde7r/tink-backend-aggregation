@@ -51,7 +51,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             TinkHttpClient httpClient,
             UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher,
             UkOpenBankingPis ukOpenBankingPis,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair, String callbackUriId) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            String callbackUriId) {
         this.catalog = catalog;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;

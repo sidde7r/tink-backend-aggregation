@@ -16,7 +16,9 @@ public class CreditCardTransactionsResponse extends NordeaResponse {
     private CreditCardTransactionEntities transactionsEntity;
 
     public CreditCardTransactionEntities getTransactionsEntity() {
-        return transactionsEntity != null ? transactionsEntity : new CreditCardTransactionEntities();
+        return transactionsEntity != null
+                ? transactionsEntity
+                : new CreditCardTransactionEntities();
     }
 
     public List<CreditCardTransactionEntity> getTransactions() {

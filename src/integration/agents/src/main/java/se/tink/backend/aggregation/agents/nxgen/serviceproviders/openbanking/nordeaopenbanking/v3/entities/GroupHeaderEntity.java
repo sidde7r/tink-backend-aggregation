@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class GroupHeaderEntity {
     @JsonProperty("message_identification")
     private String messageIdentification;
+
     @JsonProperty("creation_date_time")
     private String creationDateTime;
+
     @JsonProperty("http_code")
     private int httpCode;
+
     @JsonProperty("message_pagination")
     private MessagePaginationEntity messagePagination;
 

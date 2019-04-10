@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class IdTokenEntity {
     @JsonProperty("openbanking_intent_id")
     private OpenbankingIntentIdEntity openbankingIntentId;
+
     private AcrEntity acr;
 
     public IdTokenEntity(String intentId, String... acrValues) {

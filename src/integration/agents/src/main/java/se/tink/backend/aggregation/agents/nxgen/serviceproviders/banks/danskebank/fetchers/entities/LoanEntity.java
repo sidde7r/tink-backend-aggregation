@@ -28,20 +28,21 @@ public class LoanEntity {
     private String loanTypeName;
     private String propertyAddress;
 
-
     public String getRealEstateNumber() {
         return realEstateNumber;
     }
+
     public String getLoanNumber() {
         return loanNumber;
     }
 
     @JsonIgnore
     public LoanAccount toTinkLoan(LoanDetailsResponse loanDetailsResponse) {
-        LoanDetails details = LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                .setLoanNumber(loanNumber)
-                .setSecurity(realEstateNumber)
-                .build();
+        LoanDetails details =
+                LoanDetails.builder(LoanDetails.Type.MORTGAGE)
+                        .setLoanNumber(loanNumber)
+                        .setSecurity(realEstateNumber)
+                        .build();
         return LoanAccount.builder(getAccoutNumber())
                 .setDetails(details)
                 .setBalance(getBalance())

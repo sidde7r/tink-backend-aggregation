@@ -9,6 +9,7 @@ import se.tink.libraries.account.AccountIdentifier;
 @JsonObject
 public class AccountNumbersEntity {
     private String value;
+
     @JsonProperty("_type")
     private String type;
 

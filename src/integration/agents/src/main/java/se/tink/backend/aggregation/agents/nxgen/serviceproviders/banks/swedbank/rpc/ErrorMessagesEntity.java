@@ -11,6 +11,7 @@ public class ErrorMessagesEntity {
     public List<GeneralEntity> getGeneral() {
         return general;
     }
+
     public List<FieldsEntity> getFields() {
         return fields;
     }

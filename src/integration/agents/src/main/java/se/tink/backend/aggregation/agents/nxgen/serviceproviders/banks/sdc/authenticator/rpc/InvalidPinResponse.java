@@ -29,7 +29,7 @@ public class InvalidPinResponse {
     }
 
     public AuthenticationException exception() {
-        return LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(String.format(
-                SdcConstants.Session.INVALID_LOGIN_MESSAGE, pin)));
+        return LoginError.INCORRECT_CREDENTIALS.exception(
+                new LocalizableKey(String.format(SdcConstants.Session.INVALID_LOGIN_MESSAGE, pin)));
     }
 }

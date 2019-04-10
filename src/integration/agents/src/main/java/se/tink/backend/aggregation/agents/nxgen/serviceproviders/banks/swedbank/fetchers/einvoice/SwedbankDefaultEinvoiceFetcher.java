@@ -35,8 +35,11 @@ public class SwedbankDefaultEinvoiceFetcher implements EInvoiceFetcher {
                 Optional.ofNullable(eInvoiceEntity.getLinks())
                         .map(LinksEntity::getNext)
                         .map(apiClient::eInvoiceDetails)
-                        .flatMap(eInvoiceDetails -> eInvoiceDetails.toEInvoiceTransfer(
-                                eInvoiceEntity.getCurrency(), eInvoiceEntity.getHashedEinvoiceRefNo()))
+                        .flatMap(
+                                eInvoiceDetails ->
+                                        eInvoiceDetails.toEInvoiceTransfer(
+                                                eInvoiceEntity.getCurrency(),
+                                                eInvoiceEntity.getHashedEinvoiceRefNo()))
                         .ifPresent(eInvoices::add);
             }
         }

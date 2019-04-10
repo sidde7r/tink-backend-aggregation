@@ -20,7 +20,5 @@ public class N26AgentTest {
                 .saveCredentialsAfter(false)
                 .build()
                 .testRefresh();
-
     }
-
 }

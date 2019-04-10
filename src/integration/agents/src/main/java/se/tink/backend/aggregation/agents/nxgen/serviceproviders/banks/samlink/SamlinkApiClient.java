@@ -34,28 +34,31 @@ public class SamlinkApiClient {
 
     private Links cachedApiEndpoints;
 
-    public SamlinkApiClient(TinkHttpClient httpClient, SamlinkSessionStorage sessionStorage,
+    public SamlinkApiClient(
+            TinkHttpClient httpClient,
+            SamlinkSessionStorage sessionStorage,
             SamlinkConfiguration agentConfiguration) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
         this.agentConfiguration = agentConfiguration;
     }
 
-    public LoginResponse login(String username, String password, String deviceId, String deviceToken) {
+    public LoginResponse login(
+            String username, String password, String deviceId, String deviceToken) {
         Links links = getApiEndpoints();
 
-        LoginRequest loginRequest = new LoginRequest()
-                .setUsername(username)
-                .setPassword(password);
+        LoginRequest loginRequest = new LoginRequest().setUsername(username).setPassword(password);
 
         if (!Strings.isNullOrEmpty(deviceId) && !Strings.isNullOrEmpty(deviceToken)) {
             loginRequest.setDeviceId(deviceId).setDeviceToken(deviceToken);
         }
 
-        LoginResponse loginResponse = buildRequest(links.getLinkPath(SamlinkConstants.LinkRel.IDENTIFICATION))
-                .post(LoginResponse.class, loginRequest);
+        LoginResponse loginResponse =
+                buildRequest(links.getLinkPath(SamlinkConstants.LinkRel.IDENTIFICATION))
+                        .post(LoginResponse.class, loginRequest);
 
-        sessionStorage.storeAccessToken(loginResponse.getTokenType(), loginResponse.getAccessToken());
+        sessionStorage.storeAccessToken(
+                loginResponse.getTokenType(), loginResponse.getAccessToken());
 
         // get the services endpoints and store it in sessionStorage
         Links serviceLinks = fetchServicesEndpoints(loginResponse.getLinks());
@@ -69,18 +72,22 @@ public class SamlinkApiClient {
         return login(username, password, null, null);
     }
 
-    public RegisterDeviceResponse registerDevice(Links loginLinks, String codeCardValue, String deviceId) {
-        URL authenticationUrl = agentConfiguration
-                .build(loginLinks.getLinkPath(SamlinkConstants.LinkRel.AUTHENTICATION));
+    public RegisterDeviceResponse registerDevice(
+            Links loginLinks, String codeCardValue, String deviceId) {
+        URL authenticationUrl =
+                agentConfiguration.build(
+                        loginLinks.getLinkPath(SamlinkConstants.LinkRel.AUTHENTICATION));
 
         RegisterDeviceRequest registerDeviceRequest = new RegisterDeviceRequest();
         registerDeviceRequest.setCodeCardValue(codeCardValue).setDeviceId(deviceId);
 
-        RegisterDeviceResponse registerDeviceResponse = buildRequest(authenticationUrl)
-                .post(RegisterDeviceResponse.class, registerDeviceRequest);
+        RegisterDeviceResponse registerDeviceResponse =
+                buildRequest(authenticationUrl)
+                        .post(RegisterDeviceResponse.class, registerDeviceRequest);
 
         // update session token
-        sessionStorage.storeAccessToken(registerDeviceResponse.getTokenType(), registerDeviceResponse.getAccessToken());
+        sessionStorage.storeAccessToken(
+                registerDeviceResponse.getTokenType(), registerDeviceResponse.getAccessToken());
 
         // get the services endpoints and store it in sessionStorage
         Links serviceLinks = fetchServicesEndpoints(registerDeviceResponse.getLinks());
@@ -90,7 +97,9 @@ public class SamlinkApiClient {
     }
 
     public List<AccountEntity> getAccounts() {
-        return buildAccountRequest(SamlinkConstants.LinkRel.ACCOUNTS).get(AccountsResponse.class).getAccounts();
+        return buildAccountRequest(SamlinkConstants.LinkRel.ACCOUNTS)
+                .get(AccountsResponse.class)
+                .getAccounts();
     }
 
     public Optional<TransactionsResponse> getTransactions(TransactionalAccount account) {
@@ -99,7 +108,8 @@ public class SamlinkApiClient {
                 .map(link -> fetchTransactions(link, 0));
     }
 
-    public Optional<TransactionsResponse> getTransactions(TransactionsResponse transactions, int offset) {
+    public Optional<TransactionsResponse> getTransactions(
+            TransactionsResponse transactions, int offset) {
         return transactions.getNext().map(link -> fetchTransactions(link.getHref(), offset));
     }
 
@@ -109,11 +119,14 @@ public class SamlinkApiClient {
 
     private RequestBuilder buildRequestWithLimitAndOffset(String path, int offset) {
         return buildRequest(
-                agentConfiguration.build(path)
-                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
-                        SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_TX_DEFAULT)
-                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET, String.valueOf(offset))
-        );
+                agentConfiguration
+                        .build(path)
+                        .queryParam(
+                                SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
+                                SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_TX_DEFAULT)
+                        .queryParam(
+                                SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET,
+                                String.valueOf(offset)));
     }
 
     public TransactionDetailsResponse getTransactionDetails(Links transactionLinks) {
@@ -127,12 +140,15 @@ public class SamlinkApiClient {
 
     // The app requests 999 accounts, I don't see a need to page these
     private RequestBuilder buildAccountRequest(String relKey) {
-        URL creditCardsUrl = agentConfiguration
-                .build(sessionStorage.getServicesEndpoint(relKey))
-                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
-                        SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_ACCOUNT_DEFAULT)
-                .queryParam(SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET,
-                        SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET_DEFAULT);
+        URL creditCardsUrl =
+                agentConfiguration
+                        .build(sessionStorage.getServicesEndpoint(relKey))
+                        .queryParam(
+                                SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT,
+                                SamlinkConstants.QueryParams.QUERY_PARAM_LIMIT_ACCOUNT_DEFAULT)
+                        .queryParam(
+                                SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET,
+                                SamlinkConstants.QueryParams.QUERY_PARAM_OFFSET_DEFAULT);
 
         return buildRequest(creditCardsUrl);
     }
@@ -143,10 +159,12 @@ public class SamlinkApiClient {
     }
 
     public Optional<CardDetailsResponse> getCardDetails(CreditCard creditCard) {
-        return creditCard.getDetailsLink()
-                .map(link ->
-                        buildRequest(agentConfiguration.build(link.getHref())).get(CardDetailsResponse.class)
-                );
+        return creditCard
+                .getDetailsLink()
+                .map(
+                        link ->
+                                buildRequest(agentConfiguration.build(link.getHref()))
+                                        .get(CardDetailsResponse.class));
     }
 
     public LoanDetailsEntity getLoanDetails(String detailsLink) {
@@ -158,14 +176,18 @@ public class SamlinkApiClient {
     }
 
     private RequestBuilder buildRequest(URL url) {
-        RequestBuilder requestBuilder = httpClient.request(url)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(SamlinkConstants.Header.VALUE_ACCEPT)
-                .header(SamlinkConstants.Header.CLIENT_VERSION, SamlinkConstants.Header.VALUE_CLIENT_VERSION);
+        RequestBuilder requestBuilder =
+                httpClient
+                        .request(url)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(SamlinkConstants.Header.VALUE_ACCEPT)
+                        .header(
+                                SamlinkConstants.Header.CLIENT_VERSION,
+                                SamlinkConstants.Header.VALUE_CLIENT_VERSION);
 
         if (sessionStorage.hasAccessToken()) {
-            return requestBuilder.header(HttpHeaders.AUTHORIZATION,
-                    sessionStorage.getAccessToken());
+            return requestBuilder.header(
+                    HttpHeaders.AUTHORIZATION, sessionStorage.getAccessToken());
         }
         return requestBuilder;
     }
@@ -175,15 +197,16 @@ public class SamlinkApiClient {
             return cachedApiEndpoints;
         }
 
-        LinksResponse linksResponse = buildRequest(SamlinkConstants.Url.BASE_PATH)
-                .get(LinksResponse.class);
+        LinksResponse linksResponse =
+                buildRequest(SamlinkConstants.Url.BASE_PATH).get(LinksResponse.class);
         cachedApiEndpoints = linksResponse.getLinks();
 
         return cachedApiEndpoints;
     }
 
     private Links fetchServicesEndpoints(Links loginLinks) {
-        return buildRequest(loginLinks.getLinkPath(SamlinkConstants.LinkRel.SERVICES)).get(LinksResponse.class)
+        return buildRequest(loginLinks.getLinkPath(SamlinkConstants.LinkRel.SERVICES))
+                .get(LinksResponse.class)
                 .getLinks();
     }
 
@@ -195,10 +218,13 @@ public class SamlinkApiClient {
 
     public Optional<CreditCardTransactionsResponse> getTransactions(
             CreditCardTransactionsResponse creditCardTransactions, int offset) {
-        return creditCardTransactions.getNext().map(link -> fetchCreditCardTransactions(offset, link.getHref()));
+        return creditCardTransactions
+                .getNext()
+                .map(link -> fetchCreditCardTransactions(offset, link.getHref()));
     }
 
     private CreditCardTransactionsResponse fetchCreditCardTransactions(int offset, String link) {
-        return buildRequestWithLimitAndOffset(link, offset).get(CreditCardTransactionsResponse.class);
+        return buildRequestWithLimitAndOffset(link, offset)
+                .get(CreditCardTransactionsResponse.class);
     }
 }

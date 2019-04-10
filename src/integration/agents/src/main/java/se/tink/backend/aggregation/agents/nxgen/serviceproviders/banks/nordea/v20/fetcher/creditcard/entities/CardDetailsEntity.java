@@ -11,6 +11,7 @@ import se.tink.libraries.strings.StringUtils;
 public class CardDetailsEntity {
     @JsonProperty("ATMWithdrawals")
     private Map<String, Object> atmWithdrawals = new HashMap<String, Object>();
+
     private Map<String, Object> authorityRole = new HashMap<String, Object>();
     private Map<String, Object> balance = new HashMap<String, Object>();
     private Map<String, Object> balanceDate = new HashMap<String, Object>();
@@ -143,8 +144,8 @@ public class CardDetailsEntity {
 
         // First priority is Balance = FundsAvailable - CreditLimit
         if (getFundsAvailable().containsKey("$") && getCreditLimit().containsKey("$")) {
-            return StringUtils.parseAmount(getFundsAvailable().get("$").toString()) - StringUtils
-                    .parseAmount(getCreditLimit().get("$").toString());
+            return StringUtils.parseAmount(getFundsAvailable().get("$").toString())
+                    - StringUtils.parseAmount(getCreditLimit().get("$").toString());
 
             // Fallback to using the creditUsed field if above isn't available
         } else if (getCreditUsed().containsKey("$")) {

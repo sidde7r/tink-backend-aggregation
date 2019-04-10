@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
-import java.util.Optional;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.RequestBodyValues.APP_VERSION;
+
+import java.util.Optional;
 
 public interface EuroInformationConfiguration {
 

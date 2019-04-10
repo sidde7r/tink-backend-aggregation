@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class DeviceToken {
-    private static final String JWT_HEADER = Base64.encodeBase64URLSafeString(
-            SerializationUtils.serializeToString(new DeviceToken.Header()).getBytes(SdcConstants.Jwt.UTF8));
+    private static final String JWT_HEADER =
+            Base64.encodeBase64URLSafeString(
+                    SerializationUtils.serializeToString(new DeviceToken.Header())
+                            .getBytes(SdcConstants.Jwt.UTF8));
     private static final String PERIOD = ".";
 
     private final SignKeys signKeys;
@@ -30,13 +32,14 @@ public class DeviceToken {
 
     public String signToken() {
         Payload payload = new Payload(this.challenge.getValue(), this.deviceId);
-        byte[] jwtPayload = SerializationUtils.serializeToString(payload).getBytes(SdcConstants.Jwt.UTF8);
+        byte[] jwtPayload =
+                SerializationUtils.serializeToString(payload).getBytes(SdcConstants.Jwt.UTF8);
 
-        String signable = JWT_HEADER
-                + PERIOD
-                + Base64.encodeBase64URLSafeString(jwtPayload);
+        String signable = JWT_HEADER + PERIOD + Base64.encodeBase64URLSafeString(jwtPayload);
 
-        byte[] signature = RSA.signSha256(this.signKeys.getPrivateKey(), signable.getBytes(SdcConstants.Jwt.UTF8));
+        byte[] signature =
+                RSA.signSha256(
+                        this.signKeys.getPrivateKey(), signable.getBytes(SdcConstants.Jwt.UTF8));
 
         String sig = Base64.encodeBase64URLSafeString(signature);
 

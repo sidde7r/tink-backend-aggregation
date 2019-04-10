@@ -12,24 +12,22 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class DanskeBankPasswordErrorHandler {
 
-    static void throwError(HttpResponseException hre) throws AuthenticationException, AuthorizationException {
+    static void throwError(HttpResponseException hre)
+            throws AuthenticationException, AuthorizationException {
         HttpResponse response = hre.getResponse();
         if (response.getStatus() >= 500) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
         FinalizeAuthenticationResponse finalizeAuthenticationResponse =
                 DanskeBankDeserializer.convertStringToObject(
-                        response.getBody(String.class),
-                        FinalizeAuthenticationResponse.class
-                );
+                        response.getBody(String.class), FinalizeAuthenticationResponse.class);
         switch (finalizeAuthenticationResponse.getSessionStatus()) {
-        case 519:
-            throw AuthorizationError.UNAUTHORIZED.exception();
-        case 520:
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        default:
-            throw hre;
+            case 519:
+                throw AuthorizationError.UNAUTHORIZED.exception();
+            case 520:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            default:
+                throw hre;
         }
     }
-
 }

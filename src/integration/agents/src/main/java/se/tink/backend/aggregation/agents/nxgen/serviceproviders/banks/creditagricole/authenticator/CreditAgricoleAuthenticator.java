@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.imageio.ImageIO;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -14,15 +11,14 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.CreditAgricoleConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.ErrorEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.SignInResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.rpc.StrongAuthenticationResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.DefaultResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.rpc.ErrorEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.utils.ImageRecognizer;
 
 public class CreditAgricoleAuthenticator implements Authenticator {
@@ -32,7 +28,8 @@ public class CreditAgricoleAuthenticator implements Authenticator {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
 
-    public CreditAgricoleAuthenticator(CreditAgricoleApiClient apiClient,
+    public CreditAgricoleAuthenticator(
+            CreditAgricoleApiClient apiClient,
             SessionStorage sessionStorage,
             PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
@@ -41,15 +38,18 @@ public class CreditAgricoleAuthenticator implements Authenticator {
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         String userAccountNumber = credentials.getField(StorageKey.USER_ACCOUNT_NUMBER);
         String userAccountCode = credentials.getField(StorageKey.USER_ACCOUNT_CODE);
         String appCode = credentials.getField(StorageKey.APP_CODE);
 
         String shuffledAccountCode = getShuffledAccountCode(apiClient.numberPad(), userAccountCode);
-        SignInResponse signInResponse = checkResponseErrors(apiClient.signIn(userAccountNumber, shuffledAccountCode));
+        SignInResponse signInResponse =
+                checkResponseErrors(apiClient.signIn(userAccountNumber, shuffledAccountCode));
 
-        // At this point we have authenticated the customer, and are safe to put details in persistent storage
+        // At this point we have authenticated the customer, and are safe to put details in
+        // persistent storage
         persistentStorage.put(StorageKey.USER_ACCOUNT_NUMBER, userAccountNumber);
         persistentStorage.put(StorageKey.USER_ACCOUNT_CODE, userAccountCode);
         persistentStorage.put(StorageKey.APP_CODE, appCode);
@@ -66,11 +66,11 @@ public class CreditAgricoleAuthenticator implements Authenticator {
 
         checkResponseErrors(apiClient.appCode(appCode));
 
-        StrongAuthenticationResponse strongAuthenticationResponse = checkResponseErrors(apiClient.strongAuthentication());
+        StrongAuthenticationResponse strongAuthenticationResponse =
+                checkResponseErrors(apiClient.strongAuthentication());
         String llToken = strongAuthenticationResponse.getLlToken();
         sessionStorage.put(StorageKey.LL_TOKEN, llToken);
     }
-
 
     /* HELPER METHODS */
 
@@ -92,7 +92,8 @@ public class CreditAgricoleAuthenticator implements Authenticator {
     private String getShuffledAccountCode(byte[] numberPadBytes, String accountCode) {
 
         int digits = 10;
-        String parsedDigits = ImageRecognizer.ocr(numberPadBytes, Color.WHITE).replaceAll("\\s","");
+        String parsedDigits =
+                ImageRecognizer.ocr(numberPadBytes, Color.WHITE).replaceAll("\\s", "");
 
         if (parsedDigits.length() != digits) {
             throw new RuntimeException("Couldn't parse numerical pad correctly.");
@@ -100,7 +101,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
 
         ArrayList<Integer> indices = new ArrayList<>(Collections.nCopies(digits, -1));
         for (int i = 0; i < parsedDigits.length(); i++) {
-            int digit = Integer.parseInt(parsedDigits.substring(i, i+1));
+            int digit = Integer.parseInt(parsedDigits.substring(i, i + 1));
             if (indices.get(digit) > -1) {
                 throw new RuntimeException("Couldn't parse numerical pad correctly.");
             }
@@ -109,7 +110,7 @@ public class CreditAgricoleAuthenticator implements Authenticator {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < accountCode.length(); i++) {
-            int digit = Integer.parseInt(accountCode.substring(i, i+1));
+            int digit = Integer.parseInt(accountCode.substring(i, i + 1));
             sb.append(indices.get(digit));
         }
 

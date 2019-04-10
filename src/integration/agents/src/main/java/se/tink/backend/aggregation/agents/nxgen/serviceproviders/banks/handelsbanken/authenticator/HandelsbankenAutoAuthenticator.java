@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
@@ -23,7 +24,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.ServerProfileValidator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.ValidateSignatureValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
     private final HandelsbankenApiClient client;
@@ -32,8 +32,10 @@ public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
     private final HandelsbankenSessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
 
-    public HandelsbankenAutoAuthenticator(HandelsbankenApiClient client,
-            HandelsbankenPersistentStorage persistentStorage, Credentials credentials,
+    public HandelsbankenAutoAuthenticator(
+            HandelsbankenApiClient client,
+            HandelsbankenPersistentStorage persistentStorage,
+            Credentials credentials,
             HandelsbankenSessionStorage sessionStorage,
             HandelsbankenConfiguration configuration) {
         this.client = client;
@@ -49,41 +51,48 @@ public class HandelsbankenAutoAuthenticator implements AutoAuthenticator {
 
         EntryPointResponse entrypoint = client.fetchEntryPoint();
 
-        HandshakeResponse handshake = client.handshake(entrypoint,
-                new HandshakeRequest()
-                        .setCnonce(tfa.generateNewClientNonce())
-                        .setHandshakePubKey(tfa.generateHandshakeAndGetPublicKey())
-        );
+        HandshakeResponse handshake =
+                client.handshake(
+                        entrypoint,
+                        new HandshakeRequest()
+                                .setCnonce(tfa.generateNewClientNonce())
+                                .setHandshakePubKey(tfa.generateHandshakeAndGetPublicKey()));
 
-        ServerProfileResponse serverProfile = client.serverProfile(handshake,
-                new ServerProfileRequest()
-                        .setEncUserCredentials(tfa.generateEncUserCredentials(handshake, UserCredentialsRequest.create(
-                                credentials.getField(Field.Key.USERNAME),
-                                credentials.getField(Field.Key.PASSWORD)
-                        )))
-                        .setProfileId(persistentStorage.getProfileId())
-        );
+        ServerProfileResponse serverProfile =
+                client.serverProfile(
+                        handshake,
+                        new ServerProfileRequest()
+                                .setEncUserCredentials(
+                                        tfa.generateEncUserCredentials(
+                                                handshake,
+                                                UserCredentialsRequest.create(
+                                                        credentials.getField(Field.Key.USERNAME),
+                                                        credentials.getField(Field.Key.PASSWORD))))
+                                .setProfileId(persistentStorage.getProfileId()));
 
         new ServerProfileValidator(serverProfile).validate();
 
-        ChallengeResponse challenge = client.challenge(serverProfile,
-                new ChallengeRequest()
-                        .setCnonce(tfa.generateNewClientNonce())
-        );
+        ChallengeResponse challenge =
+                client.challenge(
+                        serverProfile,
+                        new ChallengeRequest().setCnonce(tfa.generateNewClientNonce()));
 
         new ChallengeResponseValidator(credentials, challenge).validate();
 
-        ValidateSignatureResponse validateSignature = client.validateSignature(
-                challenge,
-                new ValidateSignatureRequest()
-                        .setPdeviceSignContainer(tfa.generatePDeviceSignContainer(challenge))
-        );
+        ValidateSignatureResponse validateSignature =
+                client.validateSignature(
+                        challenge,
+                        new ValidateSignatureRequest()
+                                .setPdeviceSignContainer(
+                                        tfa.generatePDeviceSignContainer(challenge)));
 
         new ValidateSignatureValidator(credentials, validateSignature).validate();
 
-        AuthorizeResponse authorize = configuration.toAuthorized(validateSignature, credentials, client);
+        AuthorizeResponse authorize =
+                configuration.toAuthorized(validateSignature, credentials, client);
 
-        ApplicationEntryPointResponse applicationEntryPoint = client.applicationEntryPoint(authorize);
+        ApplicationEntryPointResponse applicationEntryPoint =
+                client.applicationEntryPoint(authorize);
 
         persistentStorage.persist(authorize);
         sessionStorage.persist(applicationEntryPoint);

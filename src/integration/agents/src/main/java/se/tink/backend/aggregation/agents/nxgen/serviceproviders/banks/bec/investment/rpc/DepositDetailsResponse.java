@@ -11,6 +11,7 @@ public class DepositDetailsResponse {
     private int refreshRate;
     private int warningRate;
     private int maxRefreshTime;
+
     @JsonProperty("papers")
     private List<PortfolioEntity> portfolios;
 

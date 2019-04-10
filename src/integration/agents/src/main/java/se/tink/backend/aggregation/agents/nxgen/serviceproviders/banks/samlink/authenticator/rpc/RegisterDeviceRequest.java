@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RegisterDeviceRequest {
     @JsonProperty("security_key")
     private SecurityKeyEntity securityKey = new SecurityKeyEntity();
+
     @JsonProperty("device_id")
     private String deviceId;
 

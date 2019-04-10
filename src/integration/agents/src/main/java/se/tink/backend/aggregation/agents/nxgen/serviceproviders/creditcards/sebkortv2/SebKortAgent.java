@@ -27,7 +27,10 @@ public class SebKortAgent extends NextGenerationAgent {
     private final SebKortApiClient apiClient;
     private final SebKortConfiguration config;
 
-    protected SebKortAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    protected SebKortAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             SebKortConfiguration config) {
         super(request, context, signatureKeyPair);
 
@@ -45,7 +48,8 @@ public class SebKortAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.empty();
     }
 
@@ -78,7 +82,8 @@ public class SebKortAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

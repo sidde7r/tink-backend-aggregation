@@ -18,8 +18,7 @@ public class AmericanExpressCreditCardAccountFetcher implements AccountFetcher<C
     private final AmericanExpressConfiguration config;
 
     public AmericanExpressCreditCardAccountFetcher(
-            SessionStorage sessionStorage,
-            AmericanExpressConfiguration config) {
+            SessionStorage sessionStorage, AmericanExpressConfiguration config) {
         this.sessionStorage = sessionStorage;
         this.config = config;
     }
@@ -28,11 +27,8 @@ public class AmericanExpressCreditCardAccountFetcher implements AccountFetcher<C
     public Collection<CreditCardAccount> fetchAccounts() {
         List<CardEntity> cardEntities = getCardEntities();
 
-        return cardEntities
-                .stream()
-                .map(
-                        cardEntity ->
-                                cardEntity.toCreditCardAccount(config))
+        return cardEntities.stream()
+                .map(cardEntity -> cardEntity.toCreditCardAccount(config))
                 .collect(Collectors.toList());
     }
 

@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public abstract class CreditCardTransactionsResponse<CreditCard extends HandelsbankenCreditCard>
         extends BaseResponse implements PagableResponse {
-    public abstract List<CreditCardTransaction> tinkTransactions(CreditCard creditcard,
-            CreditCardAccount account);
+    public abstract List<CreditCardTransaction> tinkTransactions(
+            CreditCard creditcard, CreditCardAccount account);
 
     public abstract List<CreditCardTransaction> tinkTransactions(CreditCardAccount account);
 

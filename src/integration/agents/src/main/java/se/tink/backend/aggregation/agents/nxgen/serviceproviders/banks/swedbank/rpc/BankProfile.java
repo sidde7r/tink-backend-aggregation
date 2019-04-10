@@ -12,10 +12,10 @@ public class BankProfile {
     private EngagementOverviewResponse engagementOverViewResponse;
     private PaymentBaseinfoResponse paymentBaseinfoResponse;
 
-    public BankProfile() {
-    }
+    public BankProfile() {}
 
-    public BankProfile(BankEntity bank,
+    public BankProfile(
+            BankEntity bank,
             Map<String, MenuItemLinkEntity> menuItems,
             EngagementOverviewResponse engagementOverViewResponse,
             PaymentBaseinfoResponse paymentBaseinfoResponse) {

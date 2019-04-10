@@ -14,8 +14,10 @@ public class PaymentsEntity {
     private String urlDetail;
     private String accountFrom;
     private String accountTo;
+
     @JsonFormat(pattern = "y-M-d")
     private Date date;
+
     private String dateTxt;
     private double amount;
     private String amountTxt;

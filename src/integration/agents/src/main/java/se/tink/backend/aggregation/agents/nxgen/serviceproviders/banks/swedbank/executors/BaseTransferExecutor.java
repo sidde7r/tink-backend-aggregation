@@ -34,15 +34,16 @@ public class BaseTransferExecutor {
     protected final SwedbankDefaultApiClient apiClient;
     protected final SwedbankTransferHelper transferHelper;
 
-    protected BaseTransferExecutor(SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
+    protected BaseTransferExecutor(
+            SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
         this.apiClient = apiClient;
         this.transferHelper = transferHelper;
     }
 
     /**
-     * This method goes through all of the users profiles in order to find the source account of the transfer.
-     * If no source account is found an exception is thrown, otherwise the source account will be returned and the
-     * profile that the account belongs to will be selected.
+     * This method goes through all of the users profiles in order to find the source account of the
+     * transfer. If no source account is found an exception is thrown, otherwise the source account
+     * will be returned and the profile that the account belongs to will be selected.
      */
     protected String getSourceAccountIdAndSelectProfile(Transfer transfer) {
 
@@ -50,14 +51,16 @@ public class BaseTransferExecutor {
 
             PaymentBaseinfoResponse paymentBaseInfo = bankProfile.getPaymentBaseinfoResponse();
 
-            AccountIdentifier transferSourceAccount = SwedbankTransferHelper.getSourceAccount(transfer);
+            AccountIdentifier transferSourceAccount =
+                    SwedbankTransferHelper.getSourceAccount(transfer);
 
             Optional<TransferDestinationAccountEntity> transferDestinationAccountEntity =
                     paymentBaseInfo.getSourceAccount(transferSourceAccount);
 
             if (transferDestinationAccountEntity.isPresent()) {
-                String sourceAccountId = paymentBaseInfo.validateAndGetSourceAccountId(
-                        transferDestinationAccountEntity.get());
+                String sourceAccountId =
+                        paymentBaseInfo.validateAndGetSourceAccountId(
+                                transferDestinationAccountEntity.get());
                 apiClient.selectProfile(bankProfile);
 
                 return sourceAccountId;
@@ -80,7 +83,8 @@ public class BaseTransferExecutor {
 
             // Sign the transfer if needed.
             if (!confirmTransferLink.isPresent()) {
-                InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(links.getSignOrThrow());
+                InitiateSignTransferResponse initiateSignTransfer =
+                        apiClient.signExternalTransfer(links.getSignOrThrow());
                 links = transferHelper.collectBankId(initiateSignTransfer);
 
                 confirmTransferLink = Optional.ofNullable(links.getNext());
@@ -91,22 +95,27 @@ public class BaseTransferExecutor {
 
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                             .setMessage("No confirm transfer link found. Transfer failed.")
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage
+                                            .TRANSFER_CONFIRM_FAILED)
                             .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED)
                             .build();
                 }
             }
 
             // Confirm the transfer.
-            SwedbankTransferHelper.ensureLinksNotNull(links,
+            SwedbankTransferHelper.ensureLinksNotNull(
+                    links,
                     TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED,
                     SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED);
 
             confirmTransferResponse = apiClient.confirmTransfer(links.getNextOrThrow());
-            SwedbankTransferHelper.confirmSuccessfulTransfer(confirmTransferResponse,
+            SwedbankTransferHelper.confirmSuccessfulTransfer(
+                    confirmTransferResponse,
                     registeredTransfersResponse.getIdToConfirm().orElse(EMPTY_STRING));
         } catch (Exception e) {
-            if (confirmTransferResponse != null && !confirmTransferResponse.getRejectedTransactions().isEmpty()) {
+            if (confirmTransferResponse != null
+                    && !confirmTransferResponse.getRejectedTransactions().isEmpty()) {
                 deleteTransfers(confirmTransferResponse.getRejectedTransactions());
             } else {
                 deleteTransfers(registeredTransfersResponse.getRegisteredTransactions());
@@ -115,9 +124,11 @@ public class BaseTransferExecutor {
         }
     }
 
-    // convert HttpResponseException to TransferExecutionException if response indicates bad date for payment
+    // convert HttpResponseException to TransferExecutionException if response indicates bad date
+    // for payment
     // used by EInvoice and Payment
-    protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre) throws TransferExecutionException {
+    protected RuntimeException convertExceptionIfBadPaymentDate(HttpResponseException hre)
+            throws TransferExecutionException {
         HttpResponse httpResponse = hre.getResponse();
         // swedbank doesn't allow payment with due date today
         if (httpResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
@@ -125,17 +136,18 @@ public class BaseTransferExecutor {
 
             if (errorResponse.hasErrorField(SwedbankBaseConstants.ErrorField.DATE)) {
                 return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED).build();
+                        .setEndUserMessage(
+                                TransferExecutionException.EndUserMessage
+                                        .INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_REGISTER_FAILED)
+                        .build();
             }
         }
 
         return hre;
     }
 
-    /**
-     * Delete a set of transfer groups (used when cancelling injected transfers).
-     */
+    /** Delete a set of transfer groups (used when cancelling injected transfers). */
     private void deleteTransfers(List<TransferTransactionEntity> transferTransactions) {
         try {
             for (TransferTransactionEntity transferTransaction : transferTransactions) {
@@ -144,8 +156,10 @@ public class BaseTransferExecutor {
                 }
             }
         } catch (Exception deleteException) {
-            log.warn("Could not delete transfers in outbox. "
-                    + "If unsigned transfers are left here, user could end up in a deadlock.", deleteException);
+            log.warn(
+                    "Could not delete transfers in outbox. "
+                            + "If unsigned transfers are left here, user could end up in a deadlock.",
+                    deleteException);
         }
     }
 
@@ -155,7 +169,9 @@ public class BaseTransferExecutor {
         if (deleteResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             ErrorResponse errorResponse = deleteResponse.getBody(ErrorResponse.class);
             String errorMessages = errorResponse.getAllErrors();
-            log.warn(String.format("#Swedbank-v5 - Delete transfer - Error messages: %s", errorMessages));
+            log.warn(
+                    String.format(
+                            "#Swedbank-v5 - Delete transfer - Error messages: %s", errorMessages));
         }
     }
 }

@@ -78,17 +78,16 @@ public class EngagementTransactionsResponse implements TransactionKeyPaginatorRe
         }
 
         return transactions.stream()
-                        .map(TransactionEntity::toTinkTransaction)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList());
+                .map(TransactionEntity::toTinkTransaction)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     public List<Transaction> reservedTransactionsToTransactions() {
         if (reservedTransactions == null) {
             reservedTransactions = Collections.emptyList();
         }
-
 
         return reservedTransactions.stream()
                 .map(ReservedTransactionEntity::toTinkTransaction)

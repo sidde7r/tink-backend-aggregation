@@ -20,7 +20,9 @@ public class AccountInfoResponse extends BaseResponse {
     public Map<String, String> getValuesByLabel() {
         return Optional.ofNullable(items).orElse(Collections.emptyList()).stream()
                 .filter(lv -> !Strings.isNullOrEmpty(lv.getLabel()))
-                .collect(Collectors.toMap(lv -> lv.getLabel().toLowerCase(), LabelValueEntity::getValue));
+                .collect(
+                        Collectors.toMap(
+                                lv -> lv.getLabel().toLowerCase(), LabelValueEntity::getValue));
     }
 
     public String getHeading() {

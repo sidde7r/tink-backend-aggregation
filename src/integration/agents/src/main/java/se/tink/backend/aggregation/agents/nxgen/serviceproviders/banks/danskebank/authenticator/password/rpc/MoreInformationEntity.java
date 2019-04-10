@@ -8,28 +8,40 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class MoreInformationEntity {
     @JsonProperty("FinalStatus")
     private String finalStatus;
+
     @JsonProperty("SessionID")
     private String sessionId;
+
     @JsonProperty("SessionReturnCode")
     private String sessionReturnCode;
+
     @JsonProperty("BusinessStatus")
     private String businessStatus;
+
     @JsonProperty("SecurityLevelNeeded")
     private int securityLevelNeeded;
+
     @JsonProperty("Reason")
     private String reason;
+
     @JsonProperty("OtpChallenge")
     private String otpChallenge;
+
     @JsonProperty("OtpMultipleDevices")
     private boolean otpMultipleDevices;
+
     @JsonProperty("OtpDeviceCodesLeft")
     private int otpDeviceCodesLeft;
+
     @JsonProperty("OtpDeviceSerialNo")
     private String otpDeviceSerialNo;
+
     @JsonProperty("OtpDeviceType")
     private String otpDeviceType;
+
     @JsonProperty("EupToken")
     private String eupToken;
+
     @JsonProperty("SessionCookie")
     private String sessionCookie;
 

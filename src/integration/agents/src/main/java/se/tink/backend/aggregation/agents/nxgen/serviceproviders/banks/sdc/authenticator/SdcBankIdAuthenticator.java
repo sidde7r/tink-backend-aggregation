@@ -25,7 +25,8 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
     private final SdcSessionStorage sessionStorage;
     private final Credentials credentials;
 
-    public SdcBankIdAuthenticator(SdcApiClient bankClient, SdcSessionStorage sessionStorage, Credentials credentials) {
+    public SdcBankIdAuthenticator(
+            SdcApiClient bankClient, SdcSessionStorage sessionStorage, Credentials credentials) {
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
@@ -50,7 +51,8 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(String reference)
+            throws AuthenticationException, AuthorizationException {
         // SDC doesn't poll the bankID, if we try to fetch the agreements before the user has
         // signed we get a 500 response. We can't "poll" using the agreements endpoint, if we get
         // 500 in response that session is killed. Therefore added a super arbitrary sleep of 8 sec

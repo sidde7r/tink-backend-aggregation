@@ -35,9 +35,12 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, LinkEntity>, UpcomingTransactionFetcher<TransactionalAccount> {
-    private static final Logger log = LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
+public class SwedbankDefaultTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, LinkEntity>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
+    private static final Logger log =
+            LoggerFactory.getLogger(SwedbankDefaultTransactionalAccountFetcher.class);
 
     private final SwedbankDefaultApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -50,8 +53,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     private Map<String, Set<String>> pseudoKeysSeen = new HashMap<>();
     //
 
-    public SwedbankDefaultTransactionalAccountFetcher(SwedbankDefaultApiClient apiClient,
-            PersistentStorage persistentStorage) {
+    public SwedbankDefaultTransactionalAccountFetcher(
+            SwedbankDefaultApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
     }
@@ -65,23 +68,30 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
             EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
 
-            accounts.addAll(engagementOverviewResponse.getTransactionAccounts().stream()
-                    .map(account -> account.toTransactionalAccount(bankProfile))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
-            accounts.addAll(engagementOverviewResponse.getTransactionDisposalAccounts().stream()
-                    .map(account -> account.toTransactionalAccount(bankProfile))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
-            accounts.addAll(engagementOverviewResponse.getSavingAccounts().stream()
-                    // have not found any other way to filter out investment accounts from savings accounts
-                    .filter(account -> !getInvestmentAccountNumbers().contains(account.getFullyFormattedNumber()))
-                    .map(account -> account.toTransactionalAccount(bankProfile))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList()));
+            accounts.addAll(
+                    engagementOverviewResponse.getTransactionAccounts().stream()
+                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
+            accounts.addAll(
+                    engagementOverviewResponse.getTransactionDisposalAccounts().stream()
+                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
+            accounts.addAll(
+                    engagementOverviewResponse.getSavingAccounts().stream()
+                            // have not found any other way to filter out investment accounts from
+                            // savings accounts
+                            .filter(
+                                    account ->
+                                            !getInvestmentAccountNumbers()
+                                                    .contains(account.getFullyFormattedNumber()))
+                            .map(account -> account.toTransactionalAccount(bankProfile))
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toList()));
             investmentAccountNumbers = null;
         }
 
@@ -99,7 +109,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
                 String accountNumber = account.getAccountNumber();
 
                 BankProfile bankProfile =
-                        account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                        account.getFromTemporaryStorage(
+                                        SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
                                 .orElse(null);
 
                 String bankProfileId = "N/A";
@@ -107,8 +118,10 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
                     bankProfileId = bankProfile.getBank().getBankId();
                 }
 
-                log.info(String.format("Swedbank_multiprofile Account [%s], BankProfileId [%s]",
-                        accountNumber, bankProfileId));
+                log.info(
+                        String.format(
+                                "Swedbank_multiprofile Account [%s], BankProfileId [%s]",
+                                accountNumber, bankProfileId));
             }
         } catch (Exception e) {
             log.warn("Swedbank_multiprofile Failed to log info for multiprofile user");
@@ -116,9 +129,11 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         BankProfile bankProfile =
-                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                account.getFromTemporaryStorage(
+                                SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
                         .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
@@ -131,7 +146,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
             TransactionalAccount account, LinkEntity key) {
         BankProfile bankProfile =
-                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
+                account.getFromTemporaryStorage(
+                                SwedbankBaseConstants.StorageKey.PROFILE, BankProfile.class)
                         .orElseThrow(() -> new IllegalStateException("No bank profile specified"));
         apiClient.selectProfile(bankProfile);
 
@@ -140,7 +156,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         }
 
         LinkEntity nextLink =
-                account.getFromTemporaryStorage(SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class)
+                account.getFromTemporaryStorage(
+                                SwedbankBaseConstants.StorageKey.NEXT_LINK, LinkEntity.class)
                         .orElse(null);
 
         TransactionKeyPaginatorResponseImpl<LinkEntity> transactionKeyPaginatorResponse =
@@ -153,7 +170,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
         // Every time we fetch the transactions for an account we get all reserved transactions.
         // This is a hack to only get the reserved transactions from the first response.
-        EngagementTransactionsResponse engagementTransactionsResponse = fetchTransactions(account, nextLink);
+        EngagementTransactionsResponse engagementTransactionsResponse =
+                fetchTransactions(account, nextLink);
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.addAll(engagementTransactionsResponse.toTransactions());
@@ -165,8 +183,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return transactionKeyPaginatorResponse;
     }
 
-    private EngagementTransactionsResponse fetchTransactions(TransactionalAccount account,
-            LinkEntity key) {
+    private EngagementTransactionsResponse fetchTransactions(
+            TransactionalAccount account, LinkEntity key) {
         try {
             EngagementTransactionsResponse rawResponse = apiClient.engagementTransactions(key);
 
@@ -182,7 +200,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
             // PersistentStorage is used for setting mark
             if (key != null && response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // mark credential with PAGINATION_ERROR in persistent storage
-                persistentStorage.put(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
+                persistentStorage.put(
+                        SwedbankBaseConstants.PaginationError.PAGINATION_ERROR,
                         account.getAccountNumber());
                 // Log to notify we still have the problem
                 log.warn(SwedbankBaseConstants.PaginationError.PAGINATION_ERROR_MSG);
@@ -195,14 +214,16 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         }
     }
 
-    // fetch all account number from investment accounts BUT savings accounts, this is because we want savings accounts
+    // fetch all account number from investment accounts BUT savings accounts, this is because we
+    // want savings accounts
     // to be fetched by transactional fetcher to get any transactions
     private List<String> getInvestmentAccountNumbers() {
 
         if (investmentAccountNumbers == null) {
             String portfolioHoldingsString = apiClient.portfolioHoldings();
-            PortfolioHoldingsResponse portfolioHoldings = SerializationUtils
-                    .deserializeFromString(portfolioHoldingsString, PortfolioHoldingsResponse.class);
+            PortfolioHoldingsResponse portfolioHoldings =
+                    SerializationUtils.deserializeFromString(
+                            portfolioHoldingsString, PortfolioHoldingsResponse.class);
 
             investmentAccountNumbers = portfolioHoldings.investmentAccountNumbers();
         }
@@ -210,14 +231,13 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         return investmentAccountNumbers;
     }
 
-
     //
     // FIX for Swedbank pagination problems
     //
     // Remove when Swedbank has fixed the problem
     //
-    private EngagementTransactionsResponse filterTransactionDuplicates(TransactionalAccount account,
-            EngagementTransactionsResponse rawResponse) {
+    private EngagementTransactionsResponse filterTransactionDuplicates(
+            TransactionalAccount account, EngagementTransactionsResponse rawResponse) {
 
         // no need to filter non-existing data
         if (rawResponse.getTransactions() == null) {
@@ -231,10 +251,15 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
         Set<String> fetchedPseudoKeys = getfetchedPseudoKeys(account.getAccountNumber());
 
         List<TransactionEntity> filteredTransactions =
-                rawResponse.getTransactions()
-                        .stream()
-                        .filter(transaction -> checkIfNewAndStoreTransactionId(transaction, fetchedTransactionIds))
-                        .filter(transaction -> checkIfNewAndStorePseudoKey(transaction, fetchedPseudoKeys, newPseudoKeys))
+                rawResponse.getTransactions().stream()
+                        .filter(
+                                transaction ->
+                                        checkIfNewAndStoreTransactionId(
+                                                transaction, fetchedTransactionIds))
+                        .filter(
+                                transaction ->
+                                        checkIfNewAndStorePseudoKey(
+                                                transaction, fetchedPseudoKeys, newPseudoKeys))
                         .collect(Collectors.toList());
 
         // add all pseudo keys we have for this batch of transactions
@@ -268,7 +293,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
 
     // filter transactions to only allow new transaction ids
     // add transaction ids to seenTransaction ids
-    private boolean checkIfNewAndStoreTransactionId(TransactionEntity transaction, Set<String> seenTransactionIds) {
+    private boolean checkIfNewAndStoreTransactionId(
+            TransactionEntity transaction, Set<String> seenTransactionIds) {
         String txId = transaction.getId();
 
         // if transaction id is not set, we cannot filter, accept transaction
@@ -286,7 +312,8 @@ public class SwedbankDefaultTransactionalAccountFetcher implements AccountFetche
     // add new pseudo keys to tmp set during current batch and add them to seenPseudoKeys
     // after entire batch is done, this is to avoid removing non-duplicate transactions.
     // It is not unusual with identical transactions
-    private boolean checkIfNewAndStorePseudoKey(TransactionEntity transaction, Set<String> seenKeys, Set<String> newKeys) {
+    private boolean checkIfNewAndStorePseudoKey(
+            TransactionEntity transaction, Set<String> seenKeys, Set<String> newKeys) {
 
         // if transaction id is set we have decided it is not a duplicate
         if (!Strings.isNullOrEmpty(transaction.getId())) {

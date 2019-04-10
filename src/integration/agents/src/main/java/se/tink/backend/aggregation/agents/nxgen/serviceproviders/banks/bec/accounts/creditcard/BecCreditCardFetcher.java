@@ -20,14 +20,16 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(BecCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(BecCreditCardFetcher.class);
     private final BecApiClient apiClient;
 
     public BecCreditCardFetcher(BecApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    private static Predicate<AccountEntity> creditCardInAccountsList(CardDetailsResponse cardDetails) {
+    private static Predicate<AccountEntity> creditCardInAccountsList(
+            CardDetailsResponse cardDetails) {
         return account -> account.getAccountId().equalsIgnoreCase(cardDetails.getAccountNumber());
     }
 
@@ -46,19 +48,19 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                 .collect(Collectors.toList());
     }
 
-    private Optional<CreditCardAccount> createCreditCardAccount(FetchAccountResponse accounts,
-            CardDetailsResponse cardDetails) {
+    private Optional<CreditCardAccount> createCreditCardAccount(
+            FetchAccountResponse accounts, CardDetailsResponse cardDetails) {
         // Find root account for this card.
         // Filter out any accounts that do not have the correct currency.
-        Optional<AccountEntity> optionalAccount = accounts.stream()
-                .filter(creditCardInAccountsList(cardDetails))
-                .findFirst();
+        Optional<AccountEntity> optionalAccount =
+                accounts.stream().filter(creditCardInAccountsList(cardDetails)).findFirst();
         if (!optionalAccount.isPresent()) {
             return Optional.empty();
         }
         AccountEntity account = optionalAccount.get();
 
-        AccountDetailsResponse accountDetails = apiClient.fetchAccountDetails(cardDetails.getAccountNumber());
+        AccountDetailsResponse accountDetails =
+                apiClient.fetchAccountDetails(cardDetails.getAccountNumber());
         if (accountDetails.isUnknownType()) {
             // log unknown type
             logUnknownCardType(account, accountDetails, cardDetails);
@@ -68,25 +70,32 @@ public class BecCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
             return Optional.empty();
         }
 
-        if (Objects.isNull(accountDetails.getAccountHolder()) || Objects.isNull(cardDetails.getCardHolderName()) ||
-                !accountDetails.getAccountHolder().equalsIgnoreCase(cardDetails.getCardHolderName())) {
+        if (Objects.isNull(accountDetails.getAccountHolder())
+                || Objects.isNull(cardDetails.getCardHolderName())
+                || !accountDetails
+                        .getAccountHolder()
+                        .equalsIgnoreCase(cardDetails.getCardHolderName())) {
             return Optional.empty();
         }
 
         return Optional.of(
-                CreditCardAccount.builder(account.getAccountId(), account.getTinkBalance(),
-                        accountDetails.getTinkMaxAmount())
-                    .setAccountNumber(accountDetails.getAccountId())
-                    .setHolderName(new HolderName(accountDetails.getAccountHolder()))
-                    .setName(account.getAccountName())
-                    .build()
-        );
+                CreditCardAccount.builder(
+                                account.getAccountId(),
+                                account.getTinkBalance(),
+                                accountDetails.getTinkMaxAmount())
+                        .setAccountNumber(accountDetails.getAccountId())
+                        .setHolderName(new HolderName(accountDetails.getAccountHolder()))
+                        .setName(account.getAccountName())
+                        .build());
     }
 
-    private void logUnknownCardType(AccountEntity account, AccountDetailsResponse accountDetails,
+    private void logUnknownCardType(
+            AccountEntity account,
+            AccountDetailsResponse accountDetails,
             CardDetailsResponse cardDetails) {
         LOGGER.infoExtraLong(
-                String.format("Account: %s\nAccountDetails: %s\nCardDetails: %s",
+                String.format(
+                        "Account: %s\nAccountDetails: %s\nCardDetails: %s",
                         SerializationUtils.serializeToString(account),
                         SerializationUtils.serializeToString(accountDetails),
                         SerializationUtils.serializeToString(cardDetails)),

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.entities;
 
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class InstrumentDetailsEntity {
@@ -26,7 +26,7 @@ public class InstrumentDetailsEntity {
         if (instrumentGroup == null) {
             return Instrument.Type.OTHER;
         }
-        return CrossKeyConstants.INSTRUMENT_TYPES.getOrDefault(instrumentGroup.toLowerCase(),
-                Instrument.Type.OTHER);
+        return CrossKeyConstants.INSTRUMENT_TYPES.getOrDefault(
+                instrumentGroup.toLowerCase(), Instrument.Type.OTHER);
     }
 }

@@ -27,8 +27,7 @@ public class CardsResponse {
 
     public Map<String, CardAccountEntity> getCardAccountsHashMap() {
         final Map<String, CardAccountEntity> cardAccountsHashMap =
-                getCardAccounts()
-                        .stream()
+                getCardAccounts().stream()
                         .collect(Collectors.toMap(CardAccountEntity::getId, account -> account));
 
         return Optional.of(cardAccountsHashMap).orElse(Maps.newHashMap());

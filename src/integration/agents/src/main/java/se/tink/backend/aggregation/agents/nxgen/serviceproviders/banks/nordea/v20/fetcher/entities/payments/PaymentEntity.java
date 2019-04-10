@@ -169,7 +169,6 @@ public class PaymentEntity {
                 .add("statusCode", statusCode)
                 .add("toAccountId", maskString(toAccountId))
                 .toString();
-
     }
 
     private String maskString(String str) {

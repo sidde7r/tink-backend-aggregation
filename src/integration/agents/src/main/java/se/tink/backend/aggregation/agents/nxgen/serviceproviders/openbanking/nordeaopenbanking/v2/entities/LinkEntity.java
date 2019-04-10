@@ -19,8 +19,6 @@ public class LinkEntity {
 
     @JsonIgnore
     public boolean relMatches(String name) {
-        return Optional.ofNullable(name)
-                .map(n -> n.equalsIgnoreCase(rel))
-                .orElse(false);
+        return Optional.ofNullable(name).map(n -> n.equalsIgnoreCase(rel)).orElse(false);
     }
 }

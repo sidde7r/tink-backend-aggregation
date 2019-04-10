@@ -11,12 +11,15 @@ public class CreditCardTransactionEntity {
     @JsonProperty("withdrawnCode")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String withdrawnCode;
+
     @JsonProperty("purchasedate")
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date date;
+
     @JsonProperty("purchaseText")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String text;
+
     @JsonProperty("transactionAmount")
     private Amount amount;
 
@@ -41,6 +44,7 @@ public class CreditCardTransactionEntity {
         @JsonProperty("amountPart")
         @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
         private Double value;
+
         @JsonProperty("currencyCode")
         @JsonDeserialize(using = NordeaHashMapDeserializer.class)
         private String currency;

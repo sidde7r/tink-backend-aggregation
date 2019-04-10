@@ -15,8 +15,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-public class BecAccountTransactionsFetcher implements TransactionDatePaginator<TransactionalAccount>,
-        UpcomingTransactionFetcher<TransactionalAccount> {
+public class BecAccountTransactionsFetcher
+        implements TransactionDatePaginator<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final BecApiClient apiClient;
 
@@ -25,20 +26,26 @@ public class BecAccountTransactionsFetcher implements TransactionDatePaginator<T
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        Collection<? extends Transaction> transactions = Optional.of(
-                this.apiClient.fetchAccountTransactions(account, fromDate, toDate).getRecord())
-                .orElseThrow(() -> new IllegalStateException("No records")).stream()
-                .map(RecordEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                Optional.of(
+                                this.apiClient
+                                        .fetchAccountTransactions(account, fromDate, toDate)
+                                        .getRecord())
+                        .orElseThrow(() -> new IllegalStateException("No records")).stream()
+                        .map(RecordEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         // we are currently not fetching all upcoming payments, only the first batch
-        FetchUpcomingPaymentsResponse upcomingPaymentsResponse = this.apiClient.fetchAccountUpcomingTransactions(account);
+        FetchUpcomingPaymentsResponse upcomingPaymentsResponse =
+                this.apiClient.fetchAccountUpcomingTransactions(account);
         return upcomingPaymentsResponse.getTinkUpcomingTransactions();
     }
 }

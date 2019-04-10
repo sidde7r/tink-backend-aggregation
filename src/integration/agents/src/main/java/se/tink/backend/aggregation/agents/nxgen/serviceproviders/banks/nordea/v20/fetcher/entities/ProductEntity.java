@@ -15,41 +15,59 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 @JsonObject
 public class ProductEntity {
     private static final String personalAccountClearingNumber = "3300";
-    private static final Set<String> personalAccountCodes = Sets.newHashSet("SE0000", "SE0200", "SE0300");
+    private static final Set<String> personalAccountCodes =
+            Sets.newHashSet("SE0000", "SE0200", "SE0300");
 
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String cardGroup;
+
     private Map<String, Object> productId = new HashMap<>();
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productNumber;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String accountType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productTypeExtension;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String nickName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productCode;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double balance;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double fundsAvailable;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String branchId;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productRole;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String mtgLoanName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double nextPayment;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date nextPaymentDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String loanId;
 
@@ -131,7 +149,8 @@ public class ProductEntity {
         if (includeClearingNumber) {
             String accountTypeCode = productTypeExtension;
 
-            if (accountTypeCode != null && personalAccountCodes.contains(accountTypeCode.toUpperCase())
+            if (accountTypeCode != null
+                    && personalAccountCodes.contains(accountTypeCode.toUpperCase())
                     && accountNumber.length() == 10) {
                 return personalAccountClearingNumber + accountNumber;
             }

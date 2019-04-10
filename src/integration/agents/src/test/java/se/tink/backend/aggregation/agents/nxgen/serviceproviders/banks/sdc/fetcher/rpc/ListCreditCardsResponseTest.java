@@ -1,17 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
-import java.util.List;
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcCreditCardEntity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.entities.SdcCreditCardEntity;
 
 public class ListCreditCardsResponseTest {
     @Test
     public void listCreditCardResponse() throws Exception {
 
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataOneCreditCard();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData.getTestDataOneCreditCard();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 
@@ -20,7 +22,8 @@ public class ListCreditCardsResponseTest {
 
     @Test
     public void getCreditCardsForTwoCardsPerAccountPickFirst() throws Exception {
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickFirst();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickFirst();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 
@@ -30,7 +33,8 @@ public class ListCreditCardsResponseTest {
 
     @Test
     public void getCreditCardsForTwoCardsPerAccountPickSecond() throws Exception {
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickSecond();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountPickSecond();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 
@@ -40,7 +44,9 @@ public class ListCreditCardsResponseTest {
 
     @Test
     public void getCreditCardsForTwoCardsPerAccountFirstEndDateNull() throws Exception {
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountFirstEndDateNull();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData
+                        .getTestDataTwoCreditCardsForOneAccountFirstEndDateNull();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 
@@ -50,7 +56,9 @@ public class ListCreditCardsResponseTest {
 
     @Test
     public void getCreditCardsForTwoCardsPerAccountSecondEndDateNull() throws Exception {
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataTwoCreditCardsForOneAccountSecondEndDateNull();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData
+                        .getTestDataTwoCreditCardsForOneAccountSecondEndDateNull();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 
@@ -60,7 +68,8 @@ public class ListCreditCardsResponseTest {
 
     @Test
     public void getCreditCardsForTwoCardsAndTwoAccounts() throws Exception {
-        ListCreditCardsResponse response = ListCreditCardsResponseTestData.getTestDataTwoCreditCardsAndTwoAccounts();
+        ListCreditCardsResponse response =
+                ListCreditCardsResponseTestData.getTestDataTwoCreditCardsAndTwoAccounts();
         assertNotNull(response);
         List<SdcCreditCardEntity> creditCards = response.getCreditCards();
 

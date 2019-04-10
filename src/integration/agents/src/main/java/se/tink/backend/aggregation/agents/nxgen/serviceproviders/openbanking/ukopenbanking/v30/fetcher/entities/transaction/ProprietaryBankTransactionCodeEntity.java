@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProprietaryBankTransactionCodeEntity {
     @JsonProperty("Code")
     private String code;
+
     @JsonProperty("Issuer")
     private String issuer;
 }

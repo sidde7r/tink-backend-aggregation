@@ -20,11 +20,14 @@ public enum EuroInformationErrorCodes {
     }
 
     public static EuroInformationErrorCodes getByCodeNumber(String number) {
-        return Arrays.stream(EuroInformationErrorCodes.values()).filter(c -> c.codeNumber.equals(number)).findFirst()
-                .orElseGet(() -> {
-                    LOGGER.info("Unknown error message: " + number);
-                    return EuroInformationErrorCodes.NO_ENUM_VALUE;
-                });
+        return Arrays.stream(EuroInformationErrorCodes.values())
+                .filter(c -> c.codeNumber.equals(number))
+                .findFirst()
+                .orElseGet(
+                        () -> {
+                            LOGGER.info("Unknown error message: " + number);
+                            return EuroInformationErrorCodes.NO_ENUM_VALUE;
+                        });
     }
 
     public String getCodeNumber() {

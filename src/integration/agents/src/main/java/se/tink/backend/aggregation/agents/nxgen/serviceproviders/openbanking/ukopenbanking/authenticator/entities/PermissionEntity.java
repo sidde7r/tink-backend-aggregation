@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PermissionEntity {
-}
+public class PermissionEntity {}

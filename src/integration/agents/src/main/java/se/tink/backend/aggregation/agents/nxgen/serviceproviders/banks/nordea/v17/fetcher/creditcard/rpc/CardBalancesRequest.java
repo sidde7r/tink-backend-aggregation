@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class CardBalancesRequest extends HttpRequestImpl {
     public CardBalancesRequest(String cardNumber) {
-        super(HttpMethod.GET, Url.CARDS_BALANCES.queryParam(UrlParameter.CARD_BALANCES_PARAM, cardNumber));
+        super(
+                HttpMethod.GET,
+                Url.CARDS_BALANCES.queryParam(UrlParameter.CARD_BALANCES_PARAM, cardNumber));
     }
 }

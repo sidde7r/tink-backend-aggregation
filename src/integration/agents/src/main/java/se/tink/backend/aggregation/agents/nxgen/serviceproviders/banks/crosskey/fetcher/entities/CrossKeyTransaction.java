@@ -11,14 +11,19 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class CrossKeyTransaction {
     private double amount;
     private String currency;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date dueDate;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date bookingDate;
-    private boolean incoming; //unverified... Not seen coming from Finnish Ålandsbanken backend
-    private String ownNote; //unverified... Not seen coming from Finnish Ålandsbanken backend
+
+    private boolean incoming; // unverified... Not seen coming from Finnish Ålandsbanken backend
+    private String ownNote; // unverified... Not seen coming from Finnish Ålandsbanken backend
+
     @JsonProperty("recieverName") // Typo in their api
     private String receiverName;
+
     private String textCode;
     private String transactionId;
 

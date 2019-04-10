@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -13,10 +13,13 @@ public class AccountEntity implements IdentifiableAccount {
 
     @JsonProperty("AccountId")
     private String accountId;
+
     @JsonProperty("Currency")
     private String currency;
+
     @JsonProperty("Nickname")
     private String nickname;
+
     @JsonProperty("Account")
     private AccountIdentifierEntity identifierEntity;
 
@@ -34,8 +37,9 @@ public class AccountEntity implements IdentifiableAccount {
 
     public String getUniqueIdentifier() {
 
-        // In order to avoid account duplication we throw error if account does not have sort-code identifier.
-        if(!identifierEntity.isSortCode()) {
+        // In order to avoid account duplication we throw error if account does not have sort-code
+        // identifier.
+        if (!identifierEntity.isSortCode()) {
             throw new IllegalStateException("Sort-code identifier needed for unique identifier.");
         }
 
@@ -55,15 +59,13 @@ public class AccountEntity implements IdentifiableAccount {
         return accountId;
     }
 
-
-    public static TransactionalAccount toTransactionalAccount(AccountEntity account, AccountBalanceEntity balance) {
+    public static TransactionalAccount toTransactionalAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
         String accountNumber = account.getUniqueIdentifier();
         String accountName = account.getDisplayName();
 
-        return TransactionalAccount
-                .builder(account.getAccountType(),
-                        accountNumber,
-                        balance.getBalance())
+        return TransactionalAccount.builder(
+                        account.getAccountType(), accountNumber, balance.getBalance())
                 .setAccountNumber(accountNumber)
                 .setName(accountName)
                 .addIdentifier(account.toAccountIdentifier(accountName))
@@ -71,14 +73,17 @@ public class AccountEntity implements IdentifiableAccount {
                 .build();
     }
 
-    public static CreditCardAccount toCreditCardAccount(AccountEntity account, AccountBalanceEntity balance) {
+    public static CreditCardAccount toCreditCardAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
 
-        return CreditCardAccount
-                .builder(account.getUniqueIdentifier(),
+        return CreditCardAccount.builder(
+                        account.getUniqueIdentifier(),
                         balance.getBalance(),
                         balance.getAvailableCredit()
-                                .orElseThrow(() -> new IllegalStateException(
-                                        "CreditCardAccount has no credit.")))
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getDisplayName())

@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class UserIdLogin {
 
-  private boolean rememberMeFlag;
-  private String userId;
-  private String password;
-//  private String rememberMeToken;
+    private boolean rememberMeFlag;
+    private String userId;
+    private String password;
+    //  private String rememberMeToken;
 
     public UserIdLogin setRememberMeFlag(boolean rememberMeFlag) {
         this.rememberMeFlag = rememberMeFlag;
@@ -25,7 +25,7 @@ public class UserIdLogin {
         return this;
     }
 
-//    public void setRememberMeToken(String rememberMeToken) {
-//        this.rememberMeToken = rememberMeToken;
-//    }
+    //    public void setRememberMeToken(String rememberMeToken) {
+    //        this.rememberMeToken = rememberMeToken;
+    //    }
 }

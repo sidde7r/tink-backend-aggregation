@@ -29,9 +29,14 @@ public class HandelsbankenConstants {
 
     public static final SecureRandom RANDOM = new SecureRandom();
     public static final Base64 BASE64_CODEC = new Base64();
-    public static final Pattern BANKID_PATTERN = Pattern
-            .compile(Joiner.on("|").join("[0-9]{8,9}", "[0-9]{13}", "[0-9]{2}-[0-9]{6}-[0-9]{6}",
-                    "[0-9]{4}( \\*{4}){2} [0-9]{4}"));
+    public static final Pattern BANKID_PATTERN =
+            Pattern.compile(
+                    Joiner.on("|")
+                            .join(
+                                    "[0-9]{8,9}",
+                                    "[0-9]{13}",
+                                    "[0-9]{2}-[0-9]{6}-[0-9]{6}",
+                                    "[0-9]{4}( \\*{4}){2} [0-9]{4}"));
 
     public static final class URLS {
 
@@ -91,7 +96,6 @@ public class HandelsbankenConstants {
             public String getName() {
                 return this.name;
             }
-
         }
 
         public static final class KeepAlive {
@@ -130,23 +134,23 @@ public class HandelsbankenConstants {
 
     public static final class Authentication {
 
-        public static final List<DeviceInfoKeyValue> DEVICE_INFO_DATA = Lists.newArrayList(
-                new DeviceInfoKeyValue("app_version", "OC41LjA="),// 8.5.0
-                new DeviceInfoKeyValue("comp_ver", "Mg=="), // 2
-                // Jailbreak detection. Set manually to `0` in order to not set off any alarms (as of today it is OK to have
-                // these set to `1`).
-                new DeviceInfoKeyValue("i_jbd_001", "MA=="), // 0
-                new DeviceInfoKeyValue("i_jbd_002", "MA=="), // 0
-                new DeviceInfoKeyValue("i_jbd_101", "MA=="), // 0
-                new DeviceInfoKeyValue("i_model", "aVBob25l"), // iPhone
-                // This value looks to be static, could be application version specific.
-                new DeviceInfoKeyValue("i_sid", "sHM+0eLKRWSeFaeFxqKArA=="),
-                new DeviceInfoKeyValue("i_sid_f", "MA=="), // 0
-                new DeviceInfoKeyValue("os_name", "aU9T"), // iOS
-                new DeviceInfoKeyValue("os_version", "MTEuNC4x"), // 11.4.1
-                new DeviceInfoKeyValue("prof_trans_ver", "MQ==")
-        );
-
+        public static final List<DeviceInfoKeyValue> DEVICE_INFO_DATA =
+                Lists.newArrayList(
+                        new DeviceInfoKeyValue("app_version", "OC41LjA="), // 8.5.0
+                        new DeviceInfoKeyValue("comp_ver", "Mg=="), // 2
+                        // Jailbreak detection. Set manually to `0` in order to not set off any
+                        // alarms (as of today it is OK to have
+                        // these set to `1`).
+                        new DeviceInfoKeyValue("i_jbd_001", "MA=="), // 0
+                        new DeviceInfoKeyValue("i_jbd_002", "MA=="), // 0
+                        new DeviceInfoKeyValue("i_jbd_101", "MA=="), // 0
+                        new DeviceInfoKeyValue("i_model", "aVBob25l"), // iPhone
+                        // This value looks to be static, could be application version specific.
+                        new DeviceInfoKeyValue("i_sid", "sHM+0eLKRWSeFaeFxqKArA=="),
+                        new DeviceInfoKeyValue("i_sid_f", "MA=="), // 0
+                        new DeviceInfoKeyValue("os_name", "aU9T"), // iOS
+                        new DeviceInfoKeyValue("os_version", "MTEuNC4x"), // 11.4.1
+                        new DeviceInfoKeyValue("prof_trans_ver", "MQ=="));
     }
 
     public static final class DeviceAuthentication {
@@ -154,12 +158,18 @@ public class HandelsbankenConstants {
         public static final String CODE = "code";
 
         public enum OtherUserError {
-            WRONG_CARD(new LocalizableKey("Are you trying to use your charge card "
-                    + "to login? Please use your login card for BankID. The response should be 9 figures.")),
-            CODE_ACTIVATION_NEEDED(new LocalizableKey("You need to "
-                    + "activate your personal code for telephone and mobile services on the internet bank.")),
-            PINCODE_CREATION_NEEDED(new LocalizableKey("You need to activate your "
-                    + "mobile app credentials and generate a 4-digit pin code via the Handelsbanken app."));
+            WRONG_CARD(
+                    new LocalizableKey(
+                            "Are you trying to use your charge card "
+                                    + "to login? Please use your login card for BankID. The response should be 9 figures.")),
+            CODE_ACTIVATION_NEEDED(
+                    new LocalizableKey(
+                            "You need to "
+                                    + "activate your personal code for telephone and mobile services on the internet bank.")),
+            PINCODE_CREATION_NEEDED(
+                    new LocalizableKey(
+                            "You need to activate your "
+                                    + "mobile app credentials and generate a 4-digit pin code via the Handelsbanken app."));
 
             private final LocalizableKey key;
 
@@ -173,48 +183,71 @@ public class HandelsbankenConstants {
         }
 
         public enum BankCheckedUserError {
-            INCORRECT_CREDENTIALS(LoginError.INCORRECT_CREDENTIALS, new LocalizableKey("You have used "
-                    + "incorrect credentials. Please try again."), codePredicate("101")),
-            WRONG_ACTIVATION_CODE(LoginError.INCORRECT_CREDENTIALS, new LocalizableKey("Incorrect answer code. The "
-                    + "challenge code is only active for "
-                    + "four minutes. Press OK to restart."), codePredicate("102")),
-            TOO_MANY_ACTIVATED_APPS(AuthorizationError.ACCOUNT_BLOCKED, new LocalizableKey("The activation could not "
-                    + "be completed. It is not possible to "
-                    + "activate more than ten apps."), codePredicate("104")),
-            TEMP_BLOCKED_CARD(AuthorizationError.ACCOUNT_BLOCKED, new LocalizableKey("Too many incorrect tries. The "
-                    + "card has been locked for 60 minutes "
-                    + "for signing with the card reader without a cord. Contact Handelsbanken technical support for "
-                    + "more information."),
+            INCORRECT_CREDENTIALS(
+                    LoginError.INCORRECT_CREDENTIALS,
+                    new LocalizableKey(
+                            "You have used " + "incorrect credentials. Please try again."),
+                    codePredicate("101")),
+            WRONG_ACTIVATION_CODE(
+                    LoginError.INCORRECT_CREDENTIALS,
+                    new LocalizableKey(
+                            "Incorrect answer code. The "
+                                    + "challenge code is only active for "
+                                    + "four minutes. Press OK to restart."),
+                    codePredicate("102")),
+            TOO_MANY_ACTIVATED_APPS(
+                    AuthorizationError.ACCOUNT_BLOCKED,
+                    new LocalizableKey(
+                            "The activation could not "
+                                    + "be completed. It is not possible to "
+                                    + "activate more than ten apps."),
+                    codePredicate("104")),
+            TEMP_BLOCKED_CARD(
+                    AuthorizationError.ACCOUNT_BLOCKED,
+                    new LocalizableKey(
+                            "Too many incorrect tries. The "
+                                    + "card has been locked for 60 minutes "
+                                    + "for signing with the card reader without a cord. Contact Handelsbanken technical support for "
+                                    + "more information."),
                     codePredicate("103").and(messagePredicate("låst i 60 min för signering"))),
-            PERM_BLOCKED_CARD(AuthorizationError.ACCOUNT_BLOCKED, new LocalizableKey("The card you are using is "
-                    + "blocked. Please contact Handelsbanken "
-                    + "technical support or visit your local bank office to order a new login card."),
+            PERM_BLOCKED_CARD(
+                    AuthorizationError.ACCOUNT_BLOCKED,
+                    new LocalizableKey(
+                            "The card you are using is "
+                                    + "blocked. Please contact Handelsbanken "
+                                    + "technical support or visit your local bank office to order a new login card."),
                     codePredicate("103").and(messagePredicate("kortet är spärrat")));
 
             private final AgentError agentError;
             private final LocalizableKey key;
             private final Predicate<HandelsbankenValidator<BaseResponse>> isError;
 
-            BankCheckedUserError(AgentError agentError, LocalizableKey key, Predicate<HandelsbankenValidator<BaseResponse>> isError) {
+            BankCheckedUserError(
+                    AgentError agentError,
+                    LocalizableKey key,
+                    Predicate<HandelsbankenValidator<BaseResponse>> isError) {
                 this.agentError = agentError;
                 this.key = key;
                 this.isError = isError;
             }
 
-            private static Predicate<HandelsbankenValidator<BaseResponse>> codePredicate(String errorCode) {
+            private static Predicate<HandelsbankenValidator<BaseResponse>> codePredicate(
+                    String errorCode) {
                 return validator -> errorCode.equals(validator.getCode());
             }
 
-            private static Predicate<HandelsbankenValidator<BaseResponse>> messagePredicate(String s) {
+            private static Predicate<HandelsbankenValidator<BaseResponse>> messagePredicate(
+                    String s) {
                 return validator -> {
                     String message = validator.getMessage();
-                    return !Strings.isNullOrEmpty(message) && message.toLowerCase()
-                            .contains(s);
+                    return !Strings.isNullOrEmpty(message) && message.toLowerCase().contains(s);
                 };
             }
 
-            public static void throwException(HandelsbankenValidator<BaseResponse> validator,
-                    Supplier<RuntimeException> fallback) throws AuthenticationException, AuthorizationException {
+            public static void throwException(
+                    HandelsbankenValidator<BaseResponse> validator,
+                    Supplier<RuntimeException> fallback)
+                    throws AuthenticationException, AuthorizationException {
                 for (BankCheckedUserError error : values()) {
                     if (error.isError.test(validator)) {
                         error.throwException();
@@ -238,17 +271,17 @@ public class HandelsbankenConstants {
     public static final class AutoAuthentication {
 
         public enum UserError {
-            BLOCKED_DUE_TO_INACTIVITY(SessionError.SESSION_EXPIRED,
-                    new LocalizableKey("Handelsbanken is no longer active for the "
-                            + "specified user. "
-                            + "This could be due to that the Handelsbanken app for this device has not been active in 90 days. "
-                            + "To login again you need to activate the app again.")),
-            DEVICE_SECURITY_CONTEXT_ID_INVALID(SessionError.SESSION_EXPIRED,
-                    LoginError.INCORRECT_CREDENTIALS.userMessage()
-            ),
-            INCORRECT_CREDENTIALS(SessionError.SESSION_EXPIRED,
-                    LoginError.INCORRECT_CREDENTIALS.userMessage()
-            );
+            BLOCKED_DUE_TO_INACTIVITY(
+                    SessionError.SESSION_EXPIRED,
+                    new LocalizableKey(
+                            "Handelsbanken is no longer active for the "
+                                    + "specified user. "
+                                    + "This could be due to that the Handelsbanken app for this device has not been active in 90 days. "
+                                    + "To login again you need to activate the app again.")),
+            DEVICE_SECURITY_CONTEXT_ID_INVALID(
+                    SessionError.SESSION_EXPIRED, LoginError.INCORRECT_CREDENTIALS.userMessage()),
+            INCORRECT_CREDENTIALS(
+                    SessionError.SESSION_EXPIRED, LoginError.INCORRECT_CREDENTIALS.userMessage());
             private final AgentError agentError;
             private final LocalizableKey key;
 

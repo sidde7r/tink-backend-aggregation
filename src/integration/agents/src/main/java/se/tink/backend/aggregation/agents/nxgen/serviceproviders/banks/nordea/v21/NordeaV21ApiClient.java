@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v21.NordeaV21Constants.Payment;
@@ -35,7 +36,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.LogResponseFilter;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class NordeaV21ApiClient {
     // magic switch to toggle response logging, for beta
@@ -67,7 +67,10 @@ public class NordeaV21ApiClient {
     public boolean canViewTransactions(Account account) {
         return fetchInitialContext().getData().getProducts().stream()
                 .filter(ProductEntity::canView)
-                .anyMatch(pe -> Objects.equals(account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
+                .anyMatch(
+                        pe ->
+                                Objects.equals(
+                                        account.getBankIdentifier(), pe.getNordeaAccountIdV2()));
     }
 
     public List<ProductEntity> getAccountProductsOfTypes(String... productTypes) {
@@ -78,8 +81,10 @@ public class NordeaV21ApiClient {
         return request(new TransactionsRequest(accountId, continueKey), TransactionsResponse.class);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(String cardNumber, String continueKey) {
-        return request(new CreditCardTransactionsRequest(cardNumber, continueKey),
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            String cardNumber, String continueKey) {
+        return request(
+                new CreditCardTransactionsRequest(cardNumber, continueKey),
                 CreditCardTransactionsResponse.class);
     }
 
@@ -91,12 +96,14 @@ public class NordeaV21ApiClient {
         return request(new CardBalancesRequest(accountId), CardBalancesResponse.class);
     }
 
-    public LightLoginResponse passwordLogin(String username, String password) throws AuthenticationException,
-            AuthorizationException {
-        return authRequest(new LightLoginRequest(username, password, marketCode), LightLoginResponse.class);
+    public LightLoginResponse passwordLogin(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        return authRequest(
+                new LightLoginRequest(username, password, marketCode), LightLoginResponse.class);
     }
 
-    protected <T extends NordeaResponse> T request(HttpRequest request, Class<T> responseModel, boolean logResponse) {
+    protected <T extends NordeaResponse> T request(
+            HttpRequest request, Class<T> responseModel, boolean logResponse) {
         if (!logResponse) {
             return validate(client.request(responseModel, request));
         }
@@ -123,7 +130,8 @@ public class NordeaV21ApiClient {
         if (errorCode.isPresent()) {
             if (NordeaV21Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
                 throw NordeaV21Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
-            } else if (NordeaV21Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
+            } else if (NordeaV21Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(
+                    errorCode.get())) {
                 throw NordeaV21Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
             }
 
@@ -137,8 +145,9 @@ public class NordeaV21ApiClient {
         Optional<String> errorCode = response.getErrorCode();
 
         if (errorCode.isPresent()) {
-            throw new IllegalStateException(NordeaV21Constants.GENERAL_ERROR_MESSAGES_BY_CODE
-                    .getOrDefault(errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
+            throw new IllegalStateException(
+                    NordeaV21Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
+                            errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
         }
 
         return response;
@@ -149,11 +158,15 @@ public class NordeaV21ApiClient {
         PaymentsResponse response;
 
         if (status == Payment.StatusCode.CONFIRMED) {
-            response = client.request(ConfirmedPaymentsResponse.class,
-                    new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            ConfirmedPaymentsResponse.class,
+                            new ConfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else if (status == Payment.StatusCode.UNCONFIRMED) {
-            response = client.request(UnconfirmedPaymentsResponse.class,
-                    new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
+            response =
+                    client.request(
+                            UnconfirmedPaymentsResponse.class,
+                            new UnconfirmedPaymentsRequest(productEntity.getNordeaAccountIdV2()));
         } else {
             return null;
         }
@@ -161,12 +174,18 @@ public class NordeaV21ApiClient {
         List<PaymentEntity> payments = response.getPayments();
 
         return payments.stream()
-                .filter(pe -> pe.getFromAccountId() != null && Objects.equals(productEntity.getInternalId(), pe.getFromAccountId()))
+                .filter(
+                        pe ->
+                                pe.getFromAccountId() != null
+                                        && Objects.equals(
+                                                productEntity.getInternalId(),
+                                                pe.getFromAccountId()))
                 .collect(Collectors.toList());
     }
 
     public List<CustodyAccount> fetchCustodyAccounts() {
-        CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class);
+        CustodyAccountsResponse response =
+                request(new CustodyAccountsRequest(), CustodyAccountsResponse.class);
         return response.getCustodyAccounts();
     }
 }

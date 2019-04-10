@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -23,10 +24,11 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.agents.rpc.Credentials;
 
-public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SdcSmsOtpAuthenticator.class);
+public class SdcSmsOtpAuthenticator
+        implements SmsOtpAuthenticatorPassword<SdcSmsOtpAuthenticator.InitValues> {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SdcSmsOtpAuthenticator.class);
 
     private final SdcApiClient apiClient;
     private final SdcSessionStorage sessionStorage;
@@ -34,8 +36,12 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
     private final SdcConfiguration agentConfiguration;
     private final SdcPersistentStorage persistentStorage;
 
-    public SdcSmsOtpAuthenticator(SdcApiClient apiClient, SdcSessionStorage sessionStorage,
-            SdcConfiguration agentConfiguration, Credentials credentials, SdcPersistentStorage persistentStorage) {
+    public SdcSmsOtpAuthenticator(
+            SdcApiClient apiClient,
+            SdcSessionStorage sessionStorage,
+            SdcConfiguration agentConfiguration,
+            Credentials credentials,
+            SdcPersistentStorage persistentStorage) {
 
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
@@ -54,17 +60,20 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
 
             AgreementsResponse agreementsResponse = this.apiClient.pinLogon(username, password);
             if (agreementsResponse.isEmpty()) {
-                LOGGER.warnExtraLong("User was able to login, but has no agreements?", SdcConstants.Session.LOGIN);
+                LOGGER.warnExtraLong(
+                        "User was able to login, but has no agreements?",
+                        SdcConstants.Session.LOGIN);
             }
 
             SessionStorageAgreements agreements = agreementsResponse.toSessionStorageAgreements();
 
             // store phone number used during device pinning
-            SdcPhoneNumbersEntity phoneNumber = findPhoneNumber(agreements)
-                    .orElseThrow(() -> new IllegalStateException("Missing phone number"));
+            SdcPhoneNumbersEntity phoneNumber =
+                    findPhoneNumber(agreements)
+                            .orElseThrow(() -> new IllegalStateException("Missing phone number"));
 
-
-            HttpResponse response = this.apiClient.pinDevice(device, phoneNumber.toString(this.agentConfiguration));
+            HttpResponse response =
+                    this.apiClient.pinDevice(device, phoneNumber.toString(this.agentConfiguration));
             String transId = response.getHeaders().getFirst(SdcConstants.Headers.X_SDC_TRANS_ID);
             this.apiClient.sendOTPRequest(transId);
             this.sessionStorage.setAgreements(agreements);
@@ -73,15 +82,18 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
         } catch (HttpResponseException e) {
             // sdc responds with internal server error when bad credentials
 
-            Optional<InvalidPinResponse> invalidPin  = InvalidPinResponse.from(e);
+            Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
             if (invalidPin.isPresent()) {
                 throw invalidPin.get().exception();
             }
             if (SdcConstants.Authentication.isInternalError(e)) {
                 // errorMessage is null safe
-                String errorMessage = Optional
-                        .ofNullable(e.getResponse().getHeaders().getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
-                        .orElse("");
+                String errorMessage =
+                        Optional.ofNullable(
+                                        e.getResponse()
+                                                .getHeaders()
+                                                .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
+                                .orElse("");
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
                     throw LoginError.NOT_CUSTOMER.exception();
                 } else if (this.agentConfiguration.isLoginError(errorMessage)) {
@@ -101,9 +113,11 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
     }
 
     @Override
-    public void authenticate(String otp, InitValues initValues) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String otp, InitValues initValues)
+            throws AuthenticationException, AuthorizationException {
 
-        this.apiClient.signOTP(initValues.transId, otp, this.credentials.getField(Field.Key.PASSWORD));
+        this.apiClient.signOTP(
+                initValues.transId, otp, this.credentials.getField(Field.Key.PASSWORD));
         this.persistentStorage.putSignedDeviceId(initValues.device.getDeviceId());
 
         DeviceToken deviceToken = new DeviceToken(initValues.challenge, initValues.device);
@@ -113,12 +127,16 @@ public class SdcSmsOtpAuthenticator implements SmsOtpAuthenticatorPassword<SdcSm
     }
 
     private Optional<SdcPhoneNumbersEntity> findPhoneNumber(SessionStorageAgreements agreements) {
-        SessionStorageAgreement agreement = agreements.stream().findFirst().orElseThrow(() -> new IllegalStateException("No agreement found"));
+        SessionStorageAgreement agreement =
+                agreements.stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No agreement found"));
 
-        HttpResponse response = this.apiClient.internalSelectAgreement(new SelectAgreementRequest()
-                .setUserNumber(agreement.getUserNumber())
-                .setAgreementNumber(agreement.getAgreementId())
-        );
+        HttpResponse response =
+                this.apiClient.internalSelectAgreement(
+                        new SelectAgreementRequest()
+                                .setUserNumber(agreement.getUserNumber())
+                                .setAgreementNumber(agreement.getAgreementId()));
 
         return response.getBody(SdcAgreementServiceConfigurationResponse.class)
                 .findFirstPhoneNumber();

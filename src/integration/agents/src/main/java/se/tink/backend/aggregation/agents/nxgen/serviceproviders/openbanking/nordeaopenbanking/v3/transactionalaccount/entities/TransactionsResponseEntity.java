@@ -12,7 +12,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsResponseEntity {
     @JsonProperty("continuation_key")
     private String continuationKey;
+
     private List<TransactionEntity> transactions;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 

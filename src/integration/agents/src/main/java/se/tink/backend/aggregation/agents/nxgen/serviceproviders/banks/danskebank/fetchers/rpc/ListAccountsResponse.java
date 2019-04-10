@@ -28,18 +28,24 @@ public class ListAccountsResponse extends AbstractBankIdResponse {
         return this.accounts != null ? this.accounts : Collections.emptyList();
     }
 
-    public List<TransactionalAccount> toTinkCheckingAccounts(List<String> knownCheckingAccountProducts) {
+    public List<TransactionalAccount> toTinkCheckingAccounts(
+            List<String> knownCheckingAccountProducts) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
-                .filter(DanskeBankPredicates.knownCheckingAccountProducts(knownCheckingAccountProducts))
+                .filter(
+                        DanskeBankPredicates.knownCheckingAccountProducts(
+                                knownCheckingAccountProducts))
                 .map(AccountEntity::toCheckingAccount)
                 .collect(Collectors.toList());
     }
 
-    public List<TransactionalAccount> toTinkSavingsAccounts(List<String> knownSavingsAccountProducts) {
+    public List<TransactionalAccount> toTinkSavingsAccounts(
+            List<String> knownSavingsAccountProducts) {
         return this.accounts.stream()
                 .filter(DanskeBankPredicates.CREDIT_CARDS.negate())
-                .filter(DanskeBankPredicates.knownSavingsAccountProducts(knownSavingsAccountProducts))
+                .filter(
+                        DanskeBankPredicates.knownSavingsAccountProducts(
+                                knownSavingsAccountProducts))
                 .map(AccountEntity::toSavingsAccount)
                 .collect(Collectors.toList());
     }

@@ -6,5 +6,4 @@ public class BankdataTestConfig {
     public static final String PASSWORD = "";
     public static final String BANK_NO = "";
     public static final boolean DEBUG_OUTPUT = true;
-
 }

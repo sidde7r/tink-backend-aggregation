@@ -20,12 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class SdcTransactionFetcher extends SdcAgreementFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class SdcTransactionFetcher extends SdcAgreementFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
     private static final int ONE_WEEK_AGO_IN_DAYS = -7;
 
     private final SdcTransactionParser transactionParser;
 
-    public SdcTransactionFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
+    public SdcTransactionFetcher(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
             SdcTransactionParser transactionParser) {
         super(bankClient, sessionStorage);
 
@@ -33,24 +36,29 @@ public class SdcTransactionFetcher extends SdcAgreementFetcher implements Transa
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         SessionStorageAgreements agreements = getAgreements();
-        SessionStorageAgreement agreement = agreements.findAgreementForAccountBankId(account.getBankIdentifier());
+        SessionStorageAgreement agreement =
+                agreements.findAgreementForAccountBankId(account.getBankIdentifier());
 
-        Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+        Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity =
+                selectAgreement(agreement, agreements);
 
         if (!serviceConfigurationEntity.isPresent()) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        SearchTransactionsRequest searchTransactionsRequest = new SearchTransactionsRequest()
-                .setAccountId(account.getAccountNumber())
-                .setAgreementId(agreement.getAgreementId())
-                .setIncludeReservations(shouldIncludeReservations(toDate))
-                .setTransactionsFrom(formatDate(fromDate))
-                .setTransactionsTo(formatDate(toDate));
+        SearchTransactionsRequest searchTransactionsRequest =
+                new SearchTransactionsRequest()
+                        .setAccountId(account.getAccountNumber())
+                        .setAgreementId(agreement.getAgreementId())
+                        .setIncludeReservations(shouldIncludeReservations(toDate))
+                        .setTransactionsFrom(formatDate(fromDate))
+                        .setTransactionsTo(formatDate(toDate));
 
-        SearchTransactionsResponse response = bankClient.searchTransactions(searchTransactionsRequest);
+        SearchTransactionsResponse response =
+                bankClient.searchTransactions(searchTransactionsRequest);
 
         Collection<Transaction> transactions = response.getTinkTransactions(transactionParser);
         return PaginatorResponseImpl.create(transactions);

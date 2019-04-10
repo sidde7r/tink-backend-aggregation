@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @XmlRootElement
 public class InitialContextResponse extends NordeaResponse {
     private BankingServiceEntity bankingServiceResponse;
+
     @JsonProperty("getInitialContextOut")
     private InitialContextData data;
 
@@ -40,7 +41,8 @@ public class InitialContextResponse extends NordeaResponse {
         }
 
         // Need a more specific filter for fetching only credit cards since Nordea also return
-        // debit cards in the initial context response (which are handled when fetching transactional
+        // debit cards in the initial context response (which are handled when fetching
+        // transactional
         // accounts).
         if (types.length == 1 && Objects.equal(types[0], NordeaV21Constants.ProductType.CARD)) {
             return getData().getProducts().stream()
@@ -59,8 +61,9 @@ public class InitialContextResponse extends NordeaResponse {
     }
 
     private Predicate<ProductEntity> isCreditCardProduct() {
-        return pe -> Objects.equal(pe.getNordeaProductType().toLowerCase(), "card") &&
-                (Objects.equal(pe.getNordeaCardGroup().toLowerCase(), "credit") ||
-                        Objects.equal(pe.getNordeaCardGroup().toLowerCase(), "combine"));
+        return pe ->
+                Objects.equal(pe.getNordeaProductType().toLowerCase(), "card")
+                        && (Objects.equal(pe.getNordeaCardGroup().toLowerCase(), "credit")
+                                || Objects.equal(pe.getNordeaCardGroup().toLowerCase(), "combine"));
     }
 }

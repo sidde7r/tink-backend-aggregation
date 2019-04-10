@@ -51,165 +51,182 @@ public class CrossKeyApiClient {
     }
 
     public CrossKeyResponse initSession() {
-        return get(buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
-                .queryParam(CrossKeyConstants.Query.APP_ID,
-                    CrossKeyConstants.AutoAuthentication.APP_VERSION)
-                .queryParam(CrossKeyConstants.Query.LANGUAGE,
-                    CrossKeyConstants.AutoAuthentication.LANGUAGE),
-            CrossKeyResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
+                        .queryParam(
+                                CrossKeyConstants.Query.APP_ID,
+                                CrossKeyConstants.AutoAuthentication.APP_VERSION)
+                        .queryParam(
+                                CrossKeyConstants.Query.LANGUAGE,
+                                CrossKeyConstants.AutoAuthentication.LANGUAGE),
+                CrossKeyResponse.class);
     }
 
     public BankIdAutostartTokenResponse initBankId() {
-        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID),
-            BankIdAutostartTokenResponse.class,
-            null);
+        return post(
+                buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID),
+                BankIdAutostartTokenResponse.class,
+                null);
     }
 
     public LoginProvidersResponse getLoginProviders() {
-        return get(buildRequest(CrossKeyConstants.Url.GET_LOGIN_PROVIDERS),
-            LoginProvidersResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.GET_LOGIN_PROVIDERS),
+                LoginProvidersResponse.class);
     }
 
     public ContentResponse getContent() {
-        return get(buildRequest(CrossKeyConstants.Url.GET_CONTENT),
-            ContentResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.GET_CONTENT), ContentResponse.class);
     }
 
     public BankiIdResponse collectBankId() {
         HttpResponse post = null;
         try {
             post =
-                agentConfiguration
-                    .getAppVersion()
-                    .map(
-                        v ->
-                            post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
-                                HttpResponse.class,
-                                new BankiIdCollectRequest(v)))
-                    .orElseGet(
-                        () ->
-                            post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
-                                HttpResponse.class,
-                                null));
+                    agentConfiguration
+                            .getAppVersion()
+                            .map(
+                                    v ->
+                                            post(
+                                                    buildRequest(
+                                                            CrossKeyConstants.Url.COLLECT_BANKIID),
+                                                    HttpResponse.class,
+                                                    new BankiIdCollectRequest(v)))
+                            .orElseGet(
+                                    () ->
+                                            post(
+                                                    buildRequest(
+                                                            CrossKeyConstants.Url.COLLECT_BANKIID),
+                                                    HttpResponse.class,
+                                                    null));
         } catch (HttpResponseException ex) {
-            return deserializeResponse(BankiIdResponse.class, ex.getResponse().getBody(String.class));
+            return deserializeResponse(
+                    BankiIdResponse.class, ex.getResponse().getBody(String.class));
         }
 
         return deserializeResponse(BankiIdResponse.class, post.getBody(String.class));
     }
 
     public LoginWithoutTokenResponse loginUsernamePassword(LoginWithoutTokenRequest request) {
-        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_USERNAME_PASSWORD),
-            LoginWithoutTokenResponse.class,
-            request);
+        return post(
+                buildRequest(CrossKeyConstants.Url.LOGIN_WITH_USERNAME_PASSWORD),
+                LoginWithoutTokenResponse.class,
+                request);
     }
 
     public LoginWithTokenResponse loginWithToken(LoginWithTokenRequest loginRequest) {
-        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_TOKEN),
-            LoginWithTokenResponse.class,
-            loginRequest);
+        return post(
+                buildRequest(CrossKeyConstants.Url.LOGIN_WITH_TOKEN),
+                LoginWithTokenResponse.class,
+                loginRequest);
     }
 
     public ConfirmTanCodeResponse confirmTanCode(ConfirmTanCodeRequest request) {
-        return post(buildRequest(CrossKeyConstants.Url.CONFIRM_TAN_CODE),
-            ConfirmTanCodeResponse.class,
-            request);
+        return post(
+                buildRequest(CrossKeyConstants.Url.CONFIRM_TAN_CODE),
+                ConfirmTanCodeResponse.class,
+                request);
     }
 
     public AddDeviceResponse addDevice(AddDeviceRequest request) {
-        return post(buildRequest(CrossKeyConstants.Url.ADD_DEVICE),
-            AddDeviceResponse.class,
-            request);
+        return post(
+                buildRequest(CrossKeyConstants.Url.ADD_DEVICE), AddDeviceResponse.class, request);
     }
 
     public AccountsResponse fetchAccounts() {
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_ACCOUNTS)
-                .queryParam(CrossKeyConstants.Query.SHOW_HIDDEN,
-                    CrossKeyConstants.Query.VALUE_TRUE),
-            AccountsResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.FETCH_ACCOUNTS)
+                        .queryParam(
+                                CrossKeyConstants.Query.SHOW_HIDDEN,
+                                CrossKeyConstants.Query.VALUE_TRUE),
+                AccountsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(Account account, Date fromDate, Date toDate) {
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_TRANSACTIONS)
-                .queryParam(CrossKeyConstants.Query.ACCOUNT_ID, account.getApiIdentifier())
-                .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
-                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
-            TransactionsResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.FETCH_TRANSACTIONS)
+                        .queryParam(CrossKeyConstants.Query.ACCOUNT_ID, account.getApiIdentifier())
+                        .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
+                        .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
+                TransactionsResponse.class);
     }
 
     private static String format(Date date) {
-        return date != null ?
-                ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(date) :
-                "";
+        return date != null ? ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.format(date) : "";
     }
 
     public LogoutResponse logout() {
-        return get(buildRequest(CrossKeyConstants.Url.LOGOUT),
-            LogoutResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.LOGOUT), LogoutResponse.class);
     }
 
     public KeepAliveResponse keepAlive() {
-        return get(buildRequest(CrossKeyConstants.Url.KEEPALIVE),
-            KeepAliveResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.KEEPALIVE), KeepAliveResponse.class);
     }
 
     public LoanDetailsResponse fetchLoanDetails(CrossKeyAccount account) {
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_LOANDETAILS)
-                .queryParam(CrossKeyConstants.Query.LOAN_ACCOUNT_ID, account.getAccountId()),
-            LoanDetailsResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.FETCH_LOANDETAILS)
+                        .queryParam(
+                                CrossKeyConstants.Query.LOAN_ACCOUNT_ID, account.getAccountId()),
+                LoanDetailsResponse.class);
     }
 
     public CardsResponse fetchCards(CardsRequest request) {
-        return post(buildRequest(CrossKeyConstants.Url.FETCH_GETCARDS),
-            CardsResponse.class,
-            request);
+        return post(
+                buildRequest(CrossKeyConstants.Url.FETCH_GETCARDS), CardsResponse.class, request);
     }
 
     public CrossKeyCard fetchCard(String cardId) {
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_GETCARD)
-                .queryParam(CrossKeyConstants.Query.ID, cardId),
-            CrossKeyCard.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.FETCH_GETCARD)
+                        .queryParam(CrossKeyConstants.Query.ID, cardId),
+                CrossKeyCard.class);
     }
 
-    public List<CreditCardTransactionEntity> fetchCreditCardTransactions(String cardId,
-        Date fromDate, Date toDate) {
+    public List<CreditCardTransactionEntity> fetchCreditCardTransactions(
+            String cardId, Date fromDate, Date toDate) {
 
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_CARD_TRANSACTIONS)
-                .queryParam(CrossKeyConstants.Query.CARD_ID, cardId)
-                .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
-                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
-            CreditCardTransactionsResponse.class).getCreditTransactions();
+        return get(
+                        buildRequest(CrossKeyConstants.Url.FETCH_CARD_TRANSACTIONS)
+                                .queryParam(CrossKeyConstants.Query.CARD_ID, cardId)
+                                .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
+                                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
+                        CreditCardTransactionsResponse.class)
+                .getCreditTransactions();
     }
 
     public PortfolioResponse fetchPortfolio(String accountId) {
-        return post(buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
-            PortfolioResponse.class,
-            PortfolioRequest.withAccountId(accountId));
+        return post(
+                buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
+                PortfolioResponse.class,
+                PortfolioRequest.withAccountId(accountId));
     }
 
     public String fetchPortfolioAsString(String accountId) {
-        return post(buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
-            String.class,
-            PortfolioRequest.withAccountId(accountId));
+        return post(
+                buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
+                String.class,
+                PortfolioRequest.withAccountId(accountId));
     }
 
     public InstrumentDetailsResponse fetchInstrumentDetails(String isinCode, String marketPlace) {
-        return post(buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS),
-            InstrumentDetailsResponse.class,
-            InstrumentDetailsRequest.of(isinCode, marketPlace));
+        return post(
+                buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS),
+                InstrumentDetailsResponse.class,
+                InstrumentDetailsRequest.of(isinCode, marketPlace));
     }
 
     public FundInfoResponse fetchFundInfo(String fundCode) {
-        return get(buildRequest(CrossKeyConstants.Url.FETCH_FUND_INFO)
-                .queryParam(CrossKeyConstants.Query.FUND_CODE, fundCode),
-            FundInfoResponse.class);
+        return get(
+                buildRequest(CrossKeyConstants.Url.FETCH_FUND_INFO)
+                        .queryParam(CrossKeyConstants.Query.FUND_CODE, fundCode),
+                FundInfoResponse.class);
     }
 
     private RequestBuilder buildRequest(String path) {
-        return client
-            .request(CrossKeyConstants.Url.getUrl(agentConfiguration.getBaseUrl(), path))
-            .type(MediaType.APPLICATION_JSON_TYPE)
-            .accept(MediaType.APPLICATION_JSON_TYPE);
+        return client.request(CrossKeyConstants.Url.getUrl(agentConfiguration.getBaseUrl(), path))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
     private <T> T get(RequestBuilder request, Class<T> responseType) {
@@ -221,7 +238,7 @@ public class CrossKeyApiClient {
     private <T> T post(RequestBuilder request, Class<T> responseType, Object requestBody) {
         HttpResponse httpResponse = null;
 
-        if (requestBody!= null) {
+        if (requestBody != null) {
             httpResponse = request.post(HttpResponse.class, requestBody);
         } else {
             httpResponse = request.post(HttpResponse.class);

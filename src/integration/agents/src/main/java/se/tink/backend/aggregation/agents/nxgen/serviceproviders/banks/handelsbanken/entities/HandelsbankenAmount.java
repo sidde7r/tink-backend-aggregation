@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.DoubleDeserializer;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -14,8 +14,10 @@ public class HandelsbankenAmount {
 
     private String currency;
     private Double amount;
+
     @JsonDeserialize(using = DoubleDeserializer.class)
     private Double amountFormatted;
+
     private String unit;
 
     public Double asDouble() {

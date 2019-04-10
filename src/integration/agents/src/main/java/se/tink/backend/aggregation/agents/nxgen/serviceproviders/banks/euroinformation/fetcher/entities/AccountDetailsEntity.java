@@ -18,38 +18,56 @@ import se.tink.libraries.amount.Amount;
 public class AccountDetailsEntity {
     @XmlElement(name = "account_type")
     private String accountType;
+
     private String iban;
+
     @XmlElement(name = "account_number")
     private String accountNumber;
+
     @XmlElement(name = "devise")
     private String currency;
+
     @XmlElement(name = "intc")
     private String accountNameAndNumber;
+
     @XmlElement(name = "int")
     private String accountName;
+
     @XmlElement(name = "tit")
     private String title;
+
     private String codprod;
+
     @XmlElement(name = "category_code")
     private String categoryCode;
+
     @XmlElement(name = "category_name")
     private String categoryName;
+
     @XmlElement(name = "solde")
     private String amountToParse;
+
     @XmlElement(name = "transactions_to_come")
     private String transactionsToCome;
+
     @XmlElement(name = "webid")
     private String webId;
+
     private String contract;
     private String refprd;
+
     @XmlElement(name = "refctr_exi_val")
     private String refctrExiVal;
+
     @XmlElement(name = "refctr_inn_val")
     private String refctrInnVal;
+
     @XmlElement(name = "agreed_overdraft")
     private String agreedOverdraft;
+
     @XmlElement(name = "amount_available")
     private String amountAvailable;
+
     private String appcpt;
     private String isholder;
     private String checkingaccount;

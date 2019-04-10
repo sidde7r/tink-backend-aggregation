@@ -10,10 +10,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountPermissionResponse {
     @JsonProperty("Data")
     private AccountPermissionsDataResponseEntity data;
+
     @JsonProperty("Risk")
     private RiskEntity risk;
+
     @JsonProperty("Links")
     private Map<String, String> links;
+
     @JsonProperty("Meta")
     private Map<String, Object> meta;
 

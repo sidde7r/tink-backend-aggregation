@@ -20,8 +20,10 @@ public class CreditCalculation {
         final String testFilePath = "data/test/agents/ukob/balanceEntityTests.json";
         final File testFile = Paths.get(testFilePath).toFile();
 
-        Preconditions.checkState(testFile.canRead(),
-                String.format("Could not load %s. Is it missing from the BUILD file?", testFilePath));
+        Preconditions.checkState(
+                testFile.canRead(),
+                String.format(
+                        "Could not load %s. Is it missing from the BUILD file?", testFilePath));
 
         testCasesV11 = loadTestCases(testFile, AccountBalanceV11TestCollection.class);
         testCasesV20 = loadTestCases(testFile, AccountBalanceV20TestCollection.class);
@@ -29,8 +31,7 @@ public class CreditCalculation {
     }
 
     private <T> T loadTestCases(File file, Class<T> cls) {
-        return SerializationUtils
-                .deserializeFromString(file, cls);
+        return SerializationUtils.deserializeFromString(file, cls);
     }
 
     @Test

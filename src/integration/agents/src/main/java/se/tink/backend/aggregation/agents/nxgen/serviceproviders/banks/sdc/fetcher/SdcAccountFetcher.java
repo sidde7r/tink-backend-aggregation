@@ -13,10 +13,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetch
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFetcher<TransactionalAccount> {
+public class SdcAccountFetcher extends SdcAgreementFetcher
+        implements AccountFetcher<TransactionalAccount> {
     private final SdcConfiguration agentConfiguration;
 
-    public SdcAccountFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
+    public SdcAccountFetcher(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
             SdcConfiguration agentConfiguration) {
         super(bankClient, sessionStorage);
         this.agentConfiguration = agentConfiguration;
@@ -29,19 +32,22 @@ public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFet
         SessionStorageAgreements agreements = getAgreements();
 
         for (SessionStorageAgreement agreement : agreements) {
-            Optional<SdcServiceConfigurationEntity> serviceConfiguration = selectAgreement(agreement, agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfiguration =
+                    selectAgreement(agreement, agreements);
 
-            serviceConfiguration.ifPresent(configurationEntity -> {
-                if (configurationEntity.isAccounts()) {
-                    Collection<TransactionalAccount> agreementAccounts = fetchAgreementAccounts();
+            serviceConfiguration.ifPresent(
+                    configurationEntity -> {
+                        if (configurationEntity.isAccounts()) {
+                            Collection<TransactionalAccount> agreementAccounts =
+                                    fetchAgreementAccounts();
 
-                    for (TransactionalAccount account : agreementAccounts) {
-                        agreement.addAccountBankId(account.getBankIdentifier());
-                    }
+                            for (TransactionalAccount account : agreementAccounts) {
+                                agreement.addAccountBankId(account.getBankIdentifier());
+                            }
 
-                    accounts.addAll(agreementAccounts);
-                }
-            });
+                            accounts.addAll(agreementAccounts);
+                        }
+                    });
         }
 
         setAgreements(agreements);
@@ -50,11 +56,12 @@ public class SdcAccountFetcher extends SdcAgreementFetcher implements AccountFet
     }
 
     private Collection<TransactionalAccount> fetchAgreementAccounts() {
-        FilterAccountsRequest request = new FilterAccountsRequest()
-                .setIncludeCreditAccounts(true)
-                .setIncludeDebitAccounts(true)
-                .setOnlyFavorites(false)
-                .setOnlyQueryable(true);
+        FilterAccountsRequest request =
+                new FilterAccountsRequest()
+                        .setIncludeCreditAccounts(true)
+                        .setIncludeDebitAccounts(true)
+                        .setOnlyFavorites(false)
+                        .setOnlyQueryable(true);
 
         return bankClient.filterAccounts(request).getTinkAccounts(agentConfiguration);
     }

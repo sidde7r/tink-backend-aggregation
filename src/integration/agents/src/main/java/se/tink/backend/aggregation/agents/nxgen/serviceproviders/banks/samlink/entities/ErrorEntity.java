@@ -9,5 +9,4 @@ public class ErrorEntity {
     public String getCode() {
         return code;
     }
-
 }

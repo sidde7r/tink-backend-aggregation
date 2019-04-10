@@ -11,9 +11,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class NordeaBaseTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, LinkEntity> {
-    private static final Logger LOG = LoggerFactory.getLogger(
-            NordeaBaseTransactionFetcher.class);
+public class NordeaBaseTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, LinkEntity> {
+    private static final Logger LOG = LoggerFactory.getLogger(NordeaBaseTransactionFetcher.class);
 
     private final NordeaBaseApiClient apiClient;
     private final NordeaTransactionParser transactionParser;
@@ -24,41 +24,41 @@ public class NordeaBaseTransactionFetcher implements TransactionKeyPaginator<Tra
     private static final int MAX_TRANSACTION_FETCHES = 0;
     private int numFetches = 0;
 
-    public NordeaBaseTransactionFetcher(NordeaBaseApiClient apiClient, NordeaTransactionParser transactionParser) {
+    public NordeaBaseTransactionFetcher(
+            NordeaBaseApiClient apiClient, NordeaTransactionParser transactionParser) {
 
         this.apiClient = apiClient;
         this.transactionParser = transactionParser;
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(TransactionalAccount account, LinkEntity key) {
+    public TransactionKeyPaginatorResponse<LinkEntity> getTransactionsFor(
+            TransactionalAccount account, LinkEntity key) {
         // first fetch
         if (key == null) {
 
             // THIS IS ONLY FOR SANDBOX ENVIRONMENT REMOVE WHEN IN "REAL" ENV
             numFetches = 1;
 
-            String transactionPath = account
-                    .getFromTemporaryStorage(NordeaBaseConstants.Storage.TRANSACTIONS);
+            String transactionPath =
+                    account.getFromTemporaryStorage(NordeaBaseConstants.Storage.TRANSACTIONS);
 
             if (Strings.isNullOrEmpty(transactionPath)) {
                 LOG.info("No transactions link found, returning empty");
-                return new TransactionsResponse()
-                        .getPaginatorResponse(transactionParser);
+                return new TransactionsResponse().getPaginatorResponse(transactionParser);
             }
 
-            return apiClient.fetchTransactions(transactionPath)
+            return apiClient
+                    .fetchTransactions(transactionPath)
                     .getPaginatorResponse(transactionParser);
         }
 
         // THIS IS ONLY FOR SANDBOX ENVIRONMENT REMOVE WHEN IN "REAL" ENV
         if (MAX_TRANSACTION_FETCHES > 0 && numFetches > MAX_TRANSACTION_FETCHES) {
-            return new TransactionsResponse()
-                    .getPaginatorResponse(transactionParser);
+            return new TransactionsResponse().getPaginatorResponse(transactionParser);
         }
 
         numFetches++;
-        return apiClient.fetchTransactions(key.getHref())
-                .getPaginatorResponse(transactionParser);
+        return apiClient.fetchTransactions(key.getHref()).getPaginatorResponse(transactionParser);
     }
 }

@@ -8,5 +8,4 @@ public class BankIdAutostartTokenResponse extends CrossKeyResponse {
     }
 
     private String autoStartToken;
-
 }

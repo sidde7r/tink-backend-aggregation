@@ -2,5 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyResponse;
 
-public class KeepAliveResponse extends CrossKeyResponse {
-}
+public class KeepAliveResponse extends CrossKeyResponse {}

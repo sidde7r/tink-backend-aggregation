@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountResponse {
@@ -59,15 +59,15 @@ public class AccountResponse {
         return seized;
     }
 
-    public AccountTypes getType(){
+    public AccountTypes getType() {
         return AccountTypes.CHECKING;
     }
 
-    public Amount getTinkBalance(){
+    public Amount getTinkBalance() {
         return new Amount(currency, availableBalance);
     }
 
-    public TransactionalAccount toTransactionalAccount(){
+    public TransactionalAccount toTransactionalAccount() {
 
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
                 .setAccountNumber(getId())

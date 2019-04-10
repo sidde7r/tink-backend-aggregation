@@ -4,5 +4,4 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LoanResponseAccountEntity extends AbstractAccountEntity {
-}
+public class LoanResponseAccountEntity extends AbstractAccountEntity {}

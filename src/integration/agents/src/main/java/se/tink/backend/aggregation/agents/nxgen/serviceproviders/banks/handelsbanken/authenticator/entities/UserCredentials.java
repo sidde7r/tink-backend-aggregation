@@ -7,13 +7,10 @@ public class UserCredentials {
     private String code;
     private String personalId;
 
-    private UserCredentials() {
-    }
+    private UserCredentials() {}
 
     public static UserCredentials create(String userId, String code) {
-        return new UserCredentials()
-                .setCode(code)
-                .setPersonalId(userId);
+        return new UserCredentials().setCode(code).setPersonalId(userId);
     }
 
     private UserCredentials setCode(String code) {

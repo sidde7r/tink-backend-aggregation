@@ -5,14 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TimelineItemsEntity {
-  private String date;
-  private List<SubItemsEntity> subItems;
+    private String date;
+    private List<SubItemsEntity> subItems;
 
-  public String getDate() {
-    return date;
-  }
+    public String getDate() {
+        return date;
+    }
 
-  public List<SubItemsEntity> getSubItems() {
-    return subItems;
-  }
+    public List<SubItemsEntity> getSubItems() {
+        return subItems;
+    }
 }

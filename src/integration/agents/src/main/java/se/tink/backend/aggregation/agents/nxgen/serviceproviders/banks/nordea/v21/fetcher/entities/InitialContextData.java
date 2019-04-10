@@ -10,10 +10,10 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InitialContextData {
-    private final static TypeReference<List<ProductEntity>> LIST_TYPE_REFERENCE = new TypeReference<List<ProductEntity>>() {
-    };
+    private static final TypeReference<List<ProductEntity>> LIST_TYPE_REFERENCE =
+            new TypeReference<List<ProductEntity>>() {};
 
-    private final static ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @JsonProperty("product")
     private List<ProductEntity> products;
@@ -23,8 +23,9 @@ public class InitialContextData {
     }
 
     /**
-     * Nordea API is a bit weird and send items on different formats depending on the number of items. Multiple
-     * rows means that we will get an List of items and one row will not be typed as an array.
+     * Nordea API is a bit weird and send items on different formats depending on the number of
+     * items. Multiple rows means that we will get an List of items and one row will not be typed as
+     * an array.
      */
     public void setProduct(Object input) {
 

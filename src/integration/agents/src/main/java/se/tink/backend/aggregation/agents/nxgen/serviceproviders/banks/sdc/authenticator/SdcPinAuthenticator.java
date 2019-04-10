@@ -26,13 +26,16 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SdcPinAuthenticator implements PasswordAuthenticator {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SdcPinAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SdcPinAuthenticator.class);
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
     private final SdcConfiguration agentConfiguration;
 
-    public SdcPinAuthenticator(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
+    public SdcPinAuthenticator(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
             SdcConfiguration agentConfiguration) {
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
@@ -40,13 +43,15 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
         try {
             AgreementsResponse agreementsResponse = bankClient.pinLogon(username, password);
 
             if (agreementsResponse.isEmpty()) {
-                LOGGER.warnExtraLong("User was able to login, but has no agreements?",
+                LOGGER.warnExtraLong(
+                        "User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
             }
             sessionStorage.setAgreements(agreementsResponse.toSessionStorageAgreements());
@@ -56,15 +61,18 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
         } catch (HttpResponseException e) {
             // sdc responds with internal server error when bad credentials
 
-            Optional<InvalidPinResponse> invalidPin  = InvalidPinResponse.from(e);
+            Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
             if (invalidPin.isPresent()) {
                 throw invalidPin.get().exception();
             }
             if (isInternalError(e)) {
                 // errorMessage is null safe
-                String errorMessage = Optional
-                        .ofNullable(e.getResponse().getHeaders().getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
-                        .orElse("");
+                String errorMessage =
+                        Optional.ofNullable(
+                                        e.getResponse()
+                                                .getHeaders()
+                                                .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
+                                .orElse("");
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
                     throw LoginError.NOT_CUSTOMER.exception();
                 } else if (agentConfiguration.isLoginError(errorMessage)) {
@@ -81,7 +89,6 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
 
             throw e;
         }
-
     }
 
     private boolean isInternalError(Exception e) {
@@ -95,17 +102,19 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
     }
 
     /*
-        Check if device token is needed by backend or if session is expired. Called during logon.
-     */
+       Check if device token is needed by backend or if session is expired. Called during logon.
+    */
     private boolean tokenNeeded(SessionStorageAgreements agreements) throws SessionException {
-        SessionStorageAgreement agreement = agreements.stream()
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No agreement found"));
+        SessionStorageAgreement agreement =
+                agreements.stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No agreement found"));
 
-        HttpResponse response = bankClient.internalSelectAgreement(new SelectAgreementRequest()
-                .setUserNumber(agreement.getUserNumber())
-                .setAgreementNumber(agreement.getAgreementId())
-        );
+        HttpResponse response =
+                bankClient.internalSelectAgreement(
+                        new SelectAgreementRequest()
+                                .setUserNumber(agreement.getUserNumber())
+                                .setAgreementNumber(agreement.getAgreementId()));
 
         return tokenNeeded(response);
     }
@@ -118,8 +127,8 @@ public class SdcPinAuthenticator implements PasswordAuthenticator {
     // header field action code has any of the specified values
     private boolean hasActionCode(HttpResponse response, List<String> actionCodeValues) {
         MultivaluedMap<String, String> headers = response.getHeaders();
-        return headers.containsKey(SdcConstants.Headers.X_SDC_ACTION_CODE) &&
-                headers.get(SdcConstants.Headers.X_SDC_ACTION_CODE).stream()
+        return headers.containsKey(SdcConstants.Headers.X_SDC_ACTION_CODE)
+                && headers.get(SdcConstants.Headers.X_SDC_ACTION_CODE).stream()
                         .filter(headerValue -> (!Strings.isNullOrEmpty(headerValue)))
                         .map(String::toUpperCase)
                         .anyMatch(headerValue -> (actionCodeValues.contains(headerValue)));

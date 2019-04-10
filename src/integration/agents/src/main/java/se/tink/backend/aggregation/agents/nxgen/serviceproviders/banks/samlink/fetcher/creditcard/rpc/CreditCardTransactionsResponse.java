@@ -19,10 +19,13 @@ public class CreditCardTransactionsResponse extends LinksResponse {
     public Collection<CreditCardTransaction> toTinkTransactions(CreditCardAccount account) {
         return Optional.ofNullable(transactions)
                 .map(Collection::stream)
-                .map(transactions -> transactions
-                        .map(cardTransaction -> cardTransaction.toTinkTransaction(account))
-                        .collect(Collectors.toList())
-                )
+                .map(
+                        transactions ->
+                                transactions
+                                        .map(
+                                                cardTransaction ->
+                                                        cardTransaction.toTinkTransaction(account))
+                                        .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 

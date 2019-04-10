@@ -12,8 +12,10 @@ public class OperationListEntity {
 
     @XmlElement(name = "nb_operations_total")
     private String totalNumberOfOperations;
+
     @XmlElement(name = "nb_operations_page")
     private String numberOfReturnedOperations;
+
     @XmlElement(name = "operation")
     @XmlElementWrapper(name = "operations")
     private List<OperationEntity> transactions;

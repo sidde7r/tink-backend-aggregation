@@ -21,16 +21,17 @@ public class DanskeBankAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     @Before
-    public void setup(){
-        builder = new AgentIntegrationTest.Builder(DK_MARKET, DK_PROVIDER_NAME)
-                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true);
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder(DK_MARKET, DK_PROVIDER_NAME)
+                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
-    public void testRefresh() throws Exception{
+    public void testRefresh() throws Exception {
 
         builder.build().testRefresh();
     }

@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,20 +17,13 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62DateDeserializer;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 public class AmericanExpressV62DateDeserializerTest {
 
-    public static String CHARGE_DATE = "{"
-            + "\"formattedDate\": \"12 maj 2018\",\n"
-            + "\"rawValue\": 20180512\n"
-            + "}";
-    public static String WRONG_CHARGE_DATE = "{"
-            + "\"formattedDate\": \"12 maj 2018\",\n"
-            + "\"rawValue\": 99999999\n"
-            + "}";
+    public static String CHARGE_DATE =
+            "{" + "\"formattedDate\": \"12 maj 2018\",\n" + "\"rawValue\": 20180512\n" + "}";
+    public static String WRONG_CHARGE_DATE =
+            "{" + "\"formattedDate\": \"12 maj 2018\",\n" + "\"rawValue\": 99999999\n" + "}";
 
     private ObjectMapper mapper;
     private AmericanExpressV62DateDeserializer deserializer;
@@ -40,11 +37,8 @@ public class AmericanExpressV62DateDeserializerTest {
     @Test
     public void deserializeDate_properInput() throws IOException {
         Date deserializedDate = deserializeDate(CHARGE_DATE);
-        Date actualDate = new DateTime()
-                .withYear(2018)
-                .withMonthOfYear(5)
-                .withDayOfMonth(12)
-                .toDate();
+        Date actualDate =
+                new DateTime().withYear(2018).withMonthOfYear(5).withDayOfMonth(12).toDate();
         assertThat(deserializedDate, instanceOf(Date.class));
         assertTrue(DateUtils.isSameDay(actualDate, deserializedDate));
     }
@@ -60,5 +54,4 @@ public class AmericanExpressV62DateDeserializerTest {
     public void deserializeDate_wrongInput() throws IOException {
         deserializeDate(WRONG_CHARGE_DATE);
     }
-
 }

@@ -23,9 +23,15 @@ public class ErrorEntity {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("code: ").append(code).append("\n")
-                .append("message: ").append(message).append("\n")
-                .append("id: ").append(id).append("\n");
+        sb.append("code: ")
+                .append(code)
+                .append("\n")
+                .append("message: ")
+                .append(message)
+                .append("\n")
+                .append("id: ")
+                .append(id)
+                .append("\n");
         return sb.toString();
     }
 }

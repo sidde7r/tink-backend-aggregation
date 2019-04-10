@@ -19,13 +19,14 @@ public class EuroInformationSessionHandler implements SessionHandler {
     private final EuroInformationApiClient apiClient;
     private final EuroInformationConfiguration config;
 
-    private EuroInformationSessionHandler(EuroInformationApiClient apiClient, EuroInformationConfiguration config) {
+    private EuroInformationSessionHandler(
+            EuroInformationApiClient apiClient, EuroInformationConfiguration config) {
         this.apiClient = apiClient;
         this.config = config;
     }
 
-    public static EuroInformationSessionHandler create(EuroInformationApiClient apiClient,
-            EuroInformationConfiguration config) {
+    public static EuroInformationSessionHandler create(
+            EuroInformationApiClient apiClient, EuroInformationConfiguration config) {
         return new EuroInformationSessionHandler(apiClient, config);
     }
 
@@ -39,16 +40,25 @@ public class EuroInformationSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        Optional<String> returnCode = config.getInitEndpoint().map(endpoint -> {
-            PfmInitResponse response = apiClient.actionInit(EuroInformationConstants.Url.INIT);
-            return Optional.ofNullable(response).map(m -> m.getReturnCode());
-        }).orElseGet(() -> {
-            AccountSummaryResponse accountSummaryResponse = apiClient.requestAccounts();
-            return Optional.ofNullable(accountSummaryResponse).map(m -> m.getReturnCode());
-        });
+        Optional<String> returnCode =
+                config.getInitEndpoint()
+                        .map(
+                                endpoint -> {
+                                    PfmInitResponse response =
+                                            apiClient.actionInit(EuroInformationConstants.Url.INIT);
+                                    return Optional.ofNullable(response)
+                                            .map(m -> m.getReturnCode());
+                                })
+                        .orElseGet(
+                                () -> {
+                                    AccountSummaryResponse accountSummaryResponse =
+                                            apiClient.requestAccounts();
+                                    return Optional.ofNullable(accountSummaryResponse)
+                                            .map(m -> m.getReturnCode());
+                                });
 
-        returnCode.filter(EuroInformationUtils::isSuccess)
+        returnCode
+                .filter(EuroInformationUtils::isSuccess)
                 .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
-
     }
 }

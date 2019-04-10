@@ -11,19 +11,18 @@ public class ServerProfileValidator extends HandelsbankenValidator<BaseResponse>
         super(serverProfile);
     }
 
-    public void validate() throws SessionException  {
+    public void validate() throws SessionException {
 
-        if (HandelsbankenConstants.AutoAuthentication.Validation.INACTIVE_USER_PROFILE.equals(getCode())) {
+        if (HandelsbankenConstants.AutoAuthentication.Validation.INACTIVE_USER_PROFILE.equals(
+                getCode())) {
             if (getMessage().toLowerCase().contains("appen är inte längre aktiv")) {
-                throw HandelsbankenConstants.AutoAuthentication.UserError.BLOCKED_DUE_TO_INACTIVITY.exception();
+                throw HandelsbankenConstants.AutoAuthentication.UserError.BLOCKED_DUE_TO_INACTIVITY
+                        .exception();
             }
             throw new IllegalStateException(
                     String.format(
                             "#login-refactoring- SHB - Login failed (serverProfileResponse) with message %s, code %s, error message %s",
-                            getMessage(),
-                            getCode(),
-                            getFirstErrorMessage()));
+                            getMessage(), getCode(), getFirstErrorMessage()));
         }
     }
-
 }

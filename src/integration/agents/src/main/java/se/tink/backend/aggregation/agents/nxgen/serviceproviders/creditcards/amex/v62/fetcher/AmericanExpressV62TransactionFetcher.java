@@ -85,8 +85,7 @@ public class AmericanExpressV62TransactionFetcher
                         timeline.getCardList(), partnerCardEntities);
 
         List<String> pendingIdList =
-                Optional.ofNullable(timeline.getTimelineItems())
-                        .orElseGet(Collections::emptyList)
+                Optional.ofNullable(timeline.getTimelineItems()).orElseGet(Collections::emptyList)
                         .stream()
                         .map(item -> item.getSubItems().stream())
                         .flatMap(Function.identity())
@@ -96,14 +95,13 @@ public class AmericanExpressV62TransactionFetcher
 
         List<Transaction> pendingTransactionList = new ArrayList<>();
         pendingTransactionList.addAll(
-                pendingIdList
-                        .stream()
+                pendingIdList.stream()
                         .map(id -> timeline.getTransactionMap().get(id))
                         .filter(
                                 transaction ->
                                         !AmericanExpressV62Predicates
-                                                .checkIfTransactionsBelongsToPartnerCards.test(
-                                                transaction, partnerCards))
+                                                .checkIfTransactionsBelongsToPartnerCards
+                                                .test(transaction, partnerCards))
                         .map(t -> t.toTransaction(config, true))
                         .collect(Collectors.toList()));
 

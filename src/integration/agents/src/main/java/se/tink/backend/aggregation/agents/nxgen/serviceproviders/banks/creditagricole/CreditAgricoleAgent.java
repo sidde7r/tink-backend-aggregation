@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.authenticator.CreditAgricoleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.fetcher.transactionalaccounts.CreditAgricoleTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.creditagricole.filters.CreditAgricoleHttpFilter;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -18,13 +19,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class CreditAgricoleAgent extends NextGenerationAgent {
 
     private final CreditAgricoleApiClient apiClient;
 
-    public CreditAgricoleAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CreditAgricoleAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         persistentStorage.put(StorageKey.REGION_ID, request.getProvider().getPayload());
         apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
@@ -37,16 +38,20 @@ public class CreditAgricoleAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new CreditAgricoleAuthenticator(apiClient, sessionStorage,
-                persistentStorage);
+        return new CreditAgricoleAuthenticator(apiClient, sessionStorage, persistentStorage);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         CreditAgricoleTransactionalAccountsFetcher transactionalAccountsFetcher =
                 new CreditAgricoleTransactionalAccountsFetcher(apiClient);
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, transactionalAccountsFetcher, transactionalAccountsFetcher));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        transactionalAccountsFetcher,
+                        transactionalAccountsFetcher));
     }
 
     @Override
@@ -70,7 +75,8 @@ public class CreditAgricoleAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

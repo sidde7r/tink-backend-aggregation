@@ -12,9 +12,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class EuroInformationOperationsFetcher implements
-        TransactionKeyPaginator<TransactionalAccount, String> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EuroInformationOperationsFetcher.class);
+public class EuroInformationOperationsFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationOperationsFetcher.class);
     private final EuroInformationApiClient apiClient;
 
     private EuroInformationOperationsFetcher(EuroInformationApiClient apiClient) {
@@ -26,7 +27,8 @@ public class EuroInformationOperationsFetcher implements
     }
 
     @Override
-    public TransactionKeyPaginatorResponse getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse getTransactionsFor(
+            TransactionalAccount account, String key) {
         String webId = account.getFromTemporaryStorage(EuroInformationConstants.Tags.WEB_ID);
         return getOperationsForAccount(webId, key);
     }
@@ -35,8 +37,9 @@ public class EuroInformationOperationsFetcher implements
         OperationSummaryResponse operations = apiClient.getTransactionsWithPfm(webId, key);
         String returnCode = operations.getReturnCode();
         if (!EuroInformationUtils.isSuccess(operations.getReturnCode())) {
-            LOGGER.info(EuroInformationErrorCodes.getByCodeNumber(returnCode).toString() +
-                    SerializationUtils.serializeToString(operations));
+            LOGGER.info(
+                    EuroInformationErrorCodes.getByCodeNumber(returnCode).toString()
+                            + SerializationUtils.serializeToString(operations));
         }
         return operations;
     }

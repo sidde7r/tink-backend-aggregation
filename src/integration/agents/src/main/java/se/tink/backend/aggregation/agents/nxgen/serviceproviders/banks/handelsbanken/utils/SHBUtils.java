@@ -13,9 +13,10 @@ public class SHBUtils {
     }
 
     private static String cleanDescription(String input) {
-        // Sometimes the description of transactions in Handelsbanken has strange signs instead of letters.
+        // Sometimes the description of transactions in Handelsbanken has strange signs instead of
+        // letters.
         // It seems as each sign always represent a certain letter. We have found the ones bellow.
 
-        return input.replace("$","Å").replace("{","Ä").replace("@","Ö");
+        return input.replace("$", "Å").replace("{", "Ä").replace("@", "Ö");
     }
 }

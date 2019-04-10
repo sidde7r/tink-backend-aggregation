@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LightLoginResponse extends NordeaResponse {
     @JsonProperty("lightLoginResponse")
     private LightLoginEntity lightLoginEntity;
+
     private AuthenticationServiceFaultEntity authenticationServiceFault;
 
     public LightLoginEntity getLightLoginEntity() {
@@ -31,7 +32,8 @@ public class LightLoginResponse extends NordeaResponse {
             errorCode = lightLoginEntity.getErrorCode();
         }
 
-        // If "authenticationServiceFault" or "lightLoginEntity" doesn't contain any errors, check for default errors
+        // If "authenticationServiceFault" or "lightLoginEntity" doesn't contain any errors, check
+        // for default errors
         return errorCode.isPresent() ? errorCode : super.getErrorCode();
     }
 

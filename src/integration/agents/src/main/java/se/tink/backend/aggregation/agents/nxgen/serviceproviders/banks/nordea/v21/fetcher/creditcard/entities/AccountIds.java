@@ -10,12 +10,16 @@ public class AccountIds {
     @JsonProperty("accountID")
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String accountId;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String accountNumber;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String accountType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String bankCode;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String country;
 

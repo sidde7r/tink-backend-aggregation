@@ -56,14 +56,17 @@ public class CrossKeyResponse {
 
     public void validate(Supplier<? extends IllegalArgumentException> unexpectedFailure)
             throws AuthenticationException, AuthorizationException {
-        Optional<CrossKeyError> error = status.getErrors().stream()
-                .map(errorTag -> CrossKeyMessage.find(errorTag, unexpectedFailure))
-                .findFirst();
+        Optional<CrossKeyError> error =
+                status.getErrors().stream()
+                        .map(errorTag -> CrossKeyMessage.find(errorTag, unexpectedFailure))
+                        .findFirst();
 
-        if (error.isPresent()) { // can't throw non-RuntimeException from java.util.function.Consumer.
+        if (error.isPresent()) { // can't throw non-RuntimeException from
+            // java.util.function.Consumer.
             CrossKeyError crossKeyError = error.get();
             // Have to satisfy method signature...
-            AgentExceptionImpl exception = crossKeyError.getAgentError().exception(crossKeyError.getKey());
+            AgentExceptionImpl exception =
+                    crossKeyError.getAgentError().exception(crossKeyError.getKey());
             if (exception instanceof AuthenticationException) {
                 throw (AuthenticationException) exception;
             } else {
@@ -71,7 +74,7 @@ public class CrossKeyResponse {
             }
         }
 
-        //Don't know if there would ever be a status.success=false without a message.
+        // Don't know if there would ever be a status.success=false without a message.
         if (isFailure()) {
             throw unexpectedFailure.get();
         }

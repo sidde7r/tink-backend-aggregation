@@ -24,30 +24,41 @@ public class SearchTransactionsResponse {
     public Collection<Transaction> getTinkTransactions(SdcTransactionParser transactionParser) {
         List<Transaction> result = new ArrayList<>();
 
-        List<Transaction> nonPending = transactions.stream()
-                .map(transactionParser::parseTransaction)
-                .collect(Collectors.toList());
+        List<Transaction> nonPending =
+                transactions.stream()
+                        .map(transactionParser::parseTransaction)
+                        .collect(Collectors.toList());
         result.addAll(nonPending);
 
         if (reservations != null) {
-            List<Transaction> pending =  reservations.stream()
-                    .map(transactionParser::parseTransaction)
-                    .collect(Collectors.toList());
+            List<Transaction> pending =
+                    reservations.stream()
+                            .map(transactionParser::parseTransaction)
+                            .collect(Collectors.toList());
             result.addAll(pending);
         }
 
         return result;
     }
 
-    public Collection<CreditCardTransaction> getTinkCreditCardTransactions(CreditCardAccount creditCardAccount, SdcTransactionParser transactionParser) {
-        List<CreditCardTransaction> result = transactions.stream()
-                .map(transaction -> transactionParser.parseCreditCardTransaction(creditCardAccount, transaction))
-                .collect(Collectors.toList());
+    public Collection<CreditCardTransaction> getTinkCreditCardTransactions(
+            CreditCardAccount creditCardAccount, SdcTransactionParser transactionParser) {
+        List<CreditCardTransaction> result =
+                transactions.stream()
+                        .map(
+                                transaction ->
+                                        transactionParser.parseCreditCardTransaction(
+                                                creditCardAccount, transaction))
+                        .collect(Collectors.toList());
 
         if (reservations != null) {
-            List<CreditCardTransaction> pending =  reservations.stream()
-                    .map(reservation -> transactionParser.parseCreditCardTransaction(creditCardAccount, reservation))
-                    .collect(Collectors.toList());
+            List<CreditCardTransaction> pending =
+                    reservations.stream()
+                            .map(
+                                    reservation ->
+                                            transactionParser.parseCreditCardTransaction(
+                                                    creditCardAccount, reservation))
+                            .collect(Collectors.toList());
             result.addAll(pending);
         }
 

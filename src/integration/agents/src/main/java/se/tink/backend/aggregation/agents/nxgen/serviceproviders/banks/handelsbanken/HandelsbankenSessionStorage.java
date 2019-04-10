@@ -11,8 +11,8 @@ public class HandelsbankenSessionStorage {
     private final SessionStorage sessionStorage;
     private final HandelsbankenConfiguration configuration;
 
-    public HandelsbankenSessionStorage(SessionStorage sessionStorage,
-            HandelsbankenConfiguration configuration) {
+    public HandelsbankenSessionStorage(
+            SessionStorage sessionStorage, HandelsbankenConfiguration configuration) {
         this.sessionStorage = sessionStorage;
         this.configuration = configuration;
     }
@@ -26,7 +26,8 @@ public class HandelsbankenSessionStorage {
     }
 
     public Optional<ApplicationEntryPointResponse> applicationEntryPoint() {
-        return retrieve(HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT,
+        return retrieve(
+                HandelsbankenConstants.Storage.APPLICATION_ENTRY_POINT,
                 ApplicationEntryPointResponse.class);
     }
 
@@ -39,7 +40,8 @@ public class HandelsbankenSessionStorage {
     }
 
     public Optional<? extends AccountListResponse> accountList() {
-        return retrieve(HandelsbankenConstants.Storage.ACCOUNT_LIST,
+        return retrieve(
+                HandelsbankenConstants.Storage.ACCOUNT_LIST,
                 configuration.getAccountListResponse());
     }
 
@@ -47,8 +49,10 @@ public class HandelsbankenSessionStorage {
         persist(HandelsbankenConstants.Storage.CREDIT_CARDS, cards);
     }
 
-    public <CreditCard extends HandelsbankenCreditCard> Optional<CreditCardsResponse<CreditCard>> creditCards() {
-        return retrieve(HandelsbankenConstants.Storage.CREDIT_CARDS,
+    public <CreditCard extends HandelsbankenCreditCard>
+            Optional<CreditCardsResponse<CreditCard>> creditCards() {
+        return retrieve(
+                HandelsbankenConstants.Storage.CREDIT_CARDS,
                 configuration.getCreditCardsResponse());
     }
 

@@ -32,7 +32,8 @@ public class ProfileResponse {
 
     @JsonIgnore
     public LinkEntity getNext(String bankId) {
-        List<BankEntity> bankList = Optional.ofNullable(banks).orElseThrow(IllegalStateException::new);
+        List<BankEntity> bankList =
+                Optional.ofNullable(banks).orElseThrow(IllegalStateException::new);
         return bankList.stream()
                 .filter(SwedbankBasePredicates.filterBankId(bankId))
                 .map(BankEntity::getPrivateProfile)

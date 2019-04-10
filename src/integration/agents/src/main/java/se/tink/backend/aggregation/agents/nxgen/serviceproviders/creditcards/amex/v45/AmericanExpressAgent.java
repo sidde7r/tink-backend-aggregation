@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.AmericanExpressTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.session.AmericanExpressSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -21,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.strings.StringUtils;
 
 public class AmericanExpressAgent extends NextGenerationAgent {
@@ -29,7 +29,10 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     private final AmericanExpressApiClient apiClient;
     private final AmericanExpressConfiguration config;
 
-    protected AmericanExpressAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    protected AmericanExpressAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             AmericanExpressConfiguration config) {
         super(request, context, signatureKeyPair);
         generateDeviceId();
@@ -53,7 +56,7 @@ public class AmericanExpressAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) { }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -63,7 +66,7 @@ public class AmericanExpressAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         return Optional.empty();
     }
 
@@ -94,7 +97,7 @@ public class AmericanExpressAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

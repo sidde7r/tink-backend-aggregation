@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 
-//Session expiration sends xml, so JAXB annotations needed.
+// Session expiration sends xml, so JAXB annotations needed.
 @XmlRootElement(name = "response")
 public class KeepAliveResponse extends BaseResponse {
 
@@ -50,6 +50,5 @@ public class KeepAliveResponse extends BaseResponse {
         public boolean isAlive() {
             return false;
         }
-
     }
 }

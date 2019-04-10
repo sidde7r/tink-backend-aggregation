@@ -18,8 +18,10 @@ public class SdcCreditCardEntity {
     private String creditcardNumber;
     private String cardHolderName;
     private SdcCreditCardAccountEntity attachedAccount;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
+
     private String creditcardStatusType;
 
     @JsonIgnore
@@ -70,8 +72,10 @@ public class SdcCreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCard(SdcAccount creditCardAccount) {
-        return CreditCardAccount.builder(constructUniqueIdentifier(),
-                creditCardAccount.getAmount().toTinkAmount(), creditCardAccount.getAvailableAmount().toTinkAmount())
+        return CreditCardAccount.builder(
+                        constructUniqueIdentifier(),
+                        creditCardAccount.getAmount().toTinkAmount(),
+                        creditCardAccount.getAvailableAmount().toTinkAmount())
                 .setBankIdentifier(constructUniqueIdentifier())
                 .setAccountNumber(creditcardNumber.replaceAll(" ", ""))
                 .setName(creditCardAccount.getName())
@@ -79,7 +83,8 @@ public class SdcCreditCardEntity {
     }
 
     String constructUniqueIdentifier() {
-        String normalizedAccountNumber = attachedAccount.getEntityKey().getAccountId().replace(".","");
+        String normalizedAccountNumber =
+                attachedAccount.getEntityKey().getAccountId().replace(".", "");
         if (StringUtils.trimToNull(normalizedAccountNumber) == null) {
             throw new IllegalStateException("No account number present");
         }

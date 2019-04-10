@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InstrumentIdEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String isin;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String market;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
 

@@ -20,4 +20,3 @@ public class InstrumentIdEntity {
         return currency;
     }
 }
-

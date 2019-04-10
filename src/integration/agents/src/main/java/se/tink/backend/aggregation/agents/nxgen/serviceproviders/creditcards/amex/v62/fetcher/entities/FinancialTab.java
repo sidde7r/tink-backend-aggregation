@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FinancialTab {
 
-  private SummaryFieldEntity totalBalance;
+    private SummaryFieldEntity totalBalance;
 
-  public SummaryFieldEntity getTotalBalance() {
-    return totalBalance;
-  }
+    public SummaryFieldEntity getTotalBalance() {
+        return totalBalance;
+    }
 }

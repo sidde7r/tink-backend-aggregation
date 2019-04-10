@@ -8,9 +8,9 @@ public class TokenEntity {
     private String refreshToken;
     private long expiresIn;
 
-    public TokenEntity(){}
+    public TokenEntity() {}
 
-    public TokenEntity(String accessToken, String refreshToken, long expiresIn){
+    public TokenEntity(String accessToken, String refreshToken, long expiresIn) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;

@@ -15,14 +15,12 @@ public class SebKortConstants {
         private static final String SEBKORT_HOST = "https://secure.eurocard.se";
         static final URL SEBKORT_LOGIN = new URL(SEBKORT_HOST + "/sea/external/EidLogin");
         static final URL SEBKORT_LOGOUT = new URL(SEBKORT_HOST + "/pkmslogout");
-        static final URL SEBKORT_AUTH =
-                new URL(SEBKORT_HOST + "/nauth4/Authentication/Auth");
+        static final URL SEBKORT_AUTH = new URL(SEBKORT_HOST + "/nauth4/Authentication/Auth");
         static final URL BILLING_UNITS = new URL(SEBKORT_HOST + "/nis/m/sase/a/billingUnits");
         public static final URL SEBKORT_RESERVATIONS =
                 new URL(SEBKORT_HOST + "/api/common/reservations/v1/");
         public static final URL SEBKORT_TRANSACTIONS =
                 new URL(SEBKORT_HOST + "/api/common/transactions/v1/");
-
 
         private static final String BANKID_HOST = "https://id.signicat.com";
         static final URL BANK_ID_INIT = new URL(BANKID_HOST + "/std/method/seb");

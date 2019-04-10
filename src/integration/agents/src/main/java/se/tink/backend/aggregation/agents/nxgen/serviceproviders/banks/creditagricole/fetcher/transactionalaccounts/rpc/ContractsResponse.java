@@ -14,8 +14,10 @@ public class ContractsResponse extends DefaultResponse {
     private String lastOperationRetrievalDate;
     private String lastSynchronizationDateTime;
     private boolean echecSynthesePredica;
+
     @JsonProperty("account")
     private List<AccountEntity> accounts;
+
     private List<LifeInsuranceEntity> lifeInsurance;
     private List<IncomeEntity> income;
     private List<RetirementEntity> retirement;

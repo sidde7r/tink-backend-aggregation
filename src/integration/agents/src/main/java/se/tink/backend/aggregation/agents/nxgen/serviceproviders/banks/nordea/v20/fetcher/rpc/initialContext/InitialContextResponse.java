@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class InitialContextResponse extends NordeaResponse {
     private BankingServiceEntity bankingServiceResponse;
+
     @JsonProperty("getInitialContextOut")
     private InitialContextData data;
 

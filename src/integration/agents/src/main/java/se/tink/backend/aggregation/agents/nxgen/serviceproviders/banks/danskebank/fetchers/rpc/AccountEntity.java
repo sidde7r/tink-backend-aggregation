@@ -15,6 +15,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class AccountEntity {
     @JsonIgnore
     private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
+
     private String showCategory;
     private int sortValue;
     private boolean isFixedTermDeposit;
@@ -146,7 +147,8 @@ public class AccountEntity {
 
     public CreditCardAccount toCreditCardAccount() {
 
-        return CreditCardAccount.builder(accountNoInt, new Amount(currency, balance), calculateAvailableCredit())
+        return CreditCardAccount.builder(
+                        accountNoInt, new Amount(currency, balance), calculateAvailableCredit())
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
@@ -172,12 +174,14 @@ public class AccountEntity {
     }
 
     public void logLoanAccount() {
-        log.infoExtraLong(SerializationUtils.serializeToString(this),
+        log.infoExtraLong(
+                SerializationUtils.serializeToString(this),
                 DanskeBankConstants.LogTags.LOAN_ACCOUNT);
     }
 
     public void logTransactionalAccount() {
-        log.infoExtraLong(SerializationUtils.serializeToString(this),
+        log.infoExtraLong(
+                SerializationUtils.serializeToString(this),
                 DanskeBankConstants.LogTags.TRANSACTIONAL_ACCOUNT);
     }
 

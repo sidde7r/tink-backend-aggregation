@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ExchangeRateEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String rate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String time;
 

@@ -29,9 +29,7 @@ public class ErrorResponse {
     }
 
     public boolean hasError(SamlinkConstants.ServerError error) {
-        return errorsStream()
-                .map(ErrorEntity::getCode)
-                .anyMatch(error::hasCode);
+        return errorsStream().map(ErrorEntity::getCode).anyMatch(error::hasCode);
     }
 
     public List<String> getErrorCodes() {

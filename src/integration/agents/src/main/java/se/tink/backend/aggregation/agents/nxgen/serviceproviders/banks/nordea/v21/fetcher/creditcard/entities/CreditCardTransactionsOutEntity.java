@@ -15,7 +15,9 @@ public class CreditCardTransactionsOutEntity {
     }
 
     public List<CreditCardTransactionEntity> getTransactions() {
-        return transactionsEntity != null ? transactionsEntity.getTransactions() : Collections.emptyList();
+        return transactionsEntity != null
+                ? transactionsEntity.getTransactions()
+                : Collections.emptyList();
     }
 
     public String getContinuationKey() {

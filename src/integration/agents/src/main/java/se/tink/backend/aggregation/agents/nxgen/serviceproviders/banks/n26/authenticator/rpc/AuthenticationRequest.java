@@ -10,7 +10,7 @@ public class AuthenticationRequest {
     private String password;
     private String username;
 
-    public AuthenticationRequest(String username, String password){
+    public AuthenticationRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -33,6 +33,7 @@ public class AuthenticationRequest {
                 .append(N26Constants.Body.PASSWORD)
                 .append(URLEncoder.encode(password, "UTF-8"))
                 .append(N26Constants.Body.USERNAME)
-                .append(URLEncoder.encode(username, "UTF-8")).toString();
+                .append(URLEncoder.encode(username, "UTF-8"))
+                .toString();
     }
 }

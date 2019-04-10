@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import com.google.common.base.Strings;
 import java.util.Optional;
 import javax.ws.rs.core.MultivaluedMap;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -22,10 +23,10 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class SdcAutoAuthenticator implements AutoAuthenticator {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SdcAutoAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SdcAutoAuthenticator.class);
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -33,8 +34,12 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
     private final Credentials credentials;
     private final SdcPersistentStorage persistentStorage;
 
-    public SdcAutoAuthenticator(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
-            SdcConfiguration agentConfiguration, Credentials credentials, SdcPersistentStorage persistentStorage) {
+    public SdcAutoAuthenticator(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
+            SdcConfiguration agentConfiguration,
+            Credentials credentials,
+            SdcPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.sessionStorage = sessionStorage;
@@ -61,7 +66,8 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
             AgreementsResponse agreementsResponse = this.bankClient.pinLogon(username, password);
             SessionStorageAgreements agreements = agreementsResponse.toSessionStorageAgreements();
             if (agreements.isEmpty()) {
-                LOGGER.warnExtraLong("User was able to login, but has no agreements?",
+                LOGGER.warnExtraLong(
+                        "User was able to login, but has no agreements?",
                         SdcConstants.Session.LOGIN);
                 throw new IllegalStateException("No agreement found");
             }
@@ -79,16 +85,19 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
         } catch (HttpResponseException e) {
             // sdc responds with internal server error when bad credentials
 
-            Optional<InvalidPinResponse> invalidPin  = InvalidPinResponse.from(e);
+            Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
             if (invalidPin.isPresent()) {
                 this.persistentStorage.removeSignedDeviceId();
                 throw SessionError.SESSION_EXPIRED.exception();
             }
             if (SdcConstants.Authentication.isInternalError(e)) {
                 // errorMessage is null safe
-                String errorMessage = Optional
-                        .ofNullable(e.getResponse().getHeaders().getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
-                        .orElse("");
+                String errorMessage =
+                        Optional.ofNullable(
+                                        e.getResponse()
+                                                .getHeaders()
+                                                .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
+                                .orElse("");
                 if (this.agentConfiguration.isLoginError(errorMessage)) {
                     LOGGER.info(errorMessage);
 
@@ -99,18 +108,17 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
 
             throw e;
         }
-
     }
 
     /*
-        Check if device token is needed by backend or if session is expired. Called during logon.
-     */
+       Check if device token is needed by backend or if session is expired. Called during logon.
+    */
     private boolean signingNeeded(SessionStorageAgreement agreement) {
-        HttpResponse response = this.bankClient.internalSelectAgreement(
-                new SelectAgreementRequest()
-                .setUserNumber(agreement.getUserNumber())
-                .setAgreementNumber(agreement.getAgreementId())
-        );
+        HttpResponse response =
+                this.bankClient.internalSelectAgreement(
+                        new SelectAgreementRequest()
+                                .setUserNumber(agreement.getUserNumber())
+                                .setAgreementNumber(agreement.getAgreementId()));
 
         return signingNeeded(response);
     }
@@ -118,11 +126,10 @@ public class SdcAutoAuthenticator implements AutoAuthenticator {
     // header field action code indicates if we need to create/renew our device token
     private boolean signingNeeded(HttpResponse response) {
         MultivaluedMap<String, String> headers = response.getHeaders();
-        return headers.containsKey(SdcConstants.Headers.X_SDC_ACTION_CODE) &&
-                headers.get(SdcConstants.Headers.X_SDC_ACTION_CODE).stream()
+        return headers.containsKey(SdcConstants.Headers.X_SDC_ACTION_CODE)
+                && headers.get(SdcConstants.Headers.X_SDC_ACTION_CODE).stream()
                         .filter(headerValue -> !Strings.isNullOrEmpty(headerValue))
                         .map(String::toUpperCase)
                         .anyMatch(SdcConstants.Headers.ACTION_CODE_SIGNING_NEEDED::contains);
     }
-
 }

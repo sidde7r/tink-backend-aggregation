@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.sessionhandler.BankdataSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -26,12 +27,12 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class BankdataAgent extends NextGenerationAgent {
     private BankdataApiClient bankClient;
 
-    public BankdataAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BankdataAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         bankClient = new BankdataApiClient(client, request.getProvider());
@@ -44,53 +45,55 @@ public class BankdataAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new BankdataPinAuthenticator(bankClient)
-        );
+        return new PasswordAuthenticationController(new BankdataPinAuthenticator(bankClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         BankdataTransactionFetcher transactionFetcher = new BankdataTransactionFetcher(bankClient);
-        BankdataTransactionalAccountFetcher accountFetcher = new BankdataTransactionalAccountFetcher(bankClient);
+        BankdataTransactionalAccountFetcher accountFetcher =
+                new BankdataTransactionalAccountFetcher(bankClient);
 
-        TransactionPagePaginationController<TransactionalAccount> transactionPagePaginationController = new
-                TransactionPagePaginationController<>(
-                transactionFetcher,
-                BankdataConstants.Fetcher.START_PAGE
-        );
+        TransactionPagePaginationController<TransactionalAccount>
+                transactionPagePaginationController =
+                        new TransactionPagePaginationController<>(
+                                transactionFetcher, BankdataConstants.Fetcher.START_PAGE);
 
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        transactionPagePaginationController, transactionFetcher);
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        transactionPagePaginationController,
+                        transactionFetcher);
 
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController, accountFetcher,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
                         transactionFetcherController));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BankdataCreditCardAccountFetcher ccAccountFetcher = new BankdataCreditCardAccountFetcher(bankClient);
+        BankdataCreditCardAccountFetcher ccAccountFetcher =
+                new BankdataCreditCardAccountFetcher(bankClient);
         BankdataCreditCardTransactionFetcher ccTransactionFetcher =
                 new BankdataCreditCardTransactionFetcher(bankClient);
 
-        TransactionPagePaginationController<CreditCardAccount> ccTransactionPagePaginationController =
-                new TransactionPagePaginationController<>(
-                        ccTransactionFetcher,
-                        BankdataConstants.Fetcher.START_PAGE
-                );
+        TransactionPagePaginationController<CreditCardAccount>
+                ccTransactionPagePaginationController =
+                        new TransactionPagePaginationController<>(
+                                ccTransactionFetcher, BankdataConstants.Fetcher.START_PAGE);
 
         TransactionFetcherController<CreditCardAccount> ccTransactionFetcherController =
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        ccTransactionPagePaginationController
-                );
+                        transactionPaginationHelper, ccTransactionPagePaginationController);
 
         return Optional.of(
                 new CreditCardRefreshController(
                         metricRefreshController,
-                        updateController, 
+                        updateController,
                         ccAccountFetcher,
                         ccTransactionFetcherController));
     }
@@ -99,7 +102,9 @@ public class BankdataAgent extends NextGenerationAgent {
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         BankdataInvestmentFetcher investmentFetcher = new BankdataInvestmentFetcher(bankClient);
 
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher));
     }
 
     // have not found any loan data for this app
@@ -114,7 +119,8 @@ public class BankdataAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

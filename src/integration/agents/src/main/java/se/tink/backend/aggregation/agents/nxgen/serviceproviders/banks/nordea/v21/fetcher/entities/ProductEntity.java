@@ -25,8 +25,10 @@ public class ProductEntity {
     private Map<String, Object> productType = new HashMap<String, Object>();
     private Map<String, Object> productTypeExtension = new HashMap<String, Object>();
     private Map<String, Object> warningCode = new HashMap<String, Object>();
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String nickName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String productName;
 

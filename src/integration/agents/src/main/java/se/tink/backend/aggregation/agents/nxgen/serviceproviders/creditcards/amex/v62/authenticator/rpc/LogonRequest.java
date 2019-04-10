@@ -19,6 +19,5 @@ public class LogonRequest {
     public void setUsernameAndPassword(String username, String password) {
         this.loginCredentials = new LoginCredentials();
         this.loginCredentials.setUsernameAndPassword(username, password);
-
     }
 }

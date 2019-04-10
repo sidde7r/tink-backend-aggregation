@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FinalizeAuthenticationResponse {
     @JsonProperty("SecurityLevel")
     private int securityLevel;
+
     @JsonProperty("SessionStatus")
     private int sessionStatus;
+
     @JsonProperty("SessionID")
     private String sessionId;
+
     @JsonProperty("UserID")
     private String userId;
+
     @JsonProperty("UserInfo")
     private UserInfoEntity userInfo;
 

@@ -33,8 +33,13 @@ public class SamlinkSessionStorage {
     }
 
     public String getServicesEndpoint(String relKey) {
-        Links serviceEndpoints = sessionStorage.get(SamlinkConstants.Storage.SERVICES_ENDPOINTS, Links.class)
-                .orElseThrow(() -> new IllegalStateException("Samlink: Services endpoints has not been stored"));
+        Links serviceEndpoints =
+                sessionStorage
+                        .get(SamlinkConstants.Storage.SERVICES_ENDPOINTS, Links.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Samlink: Services endpoints has not been stored"));
 
         return serviceEndpoints.getLinkPath(relKey);
     }

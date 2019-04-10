@@ -23,12 +23,14 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class EuroInformationPasswordAuthenticator implements PasswordAuthenticator {
 
     public static final String PFM_ENABLED = "pfm_enabled";
-    private final Logger LOGGER = LoggerFactory.getLogger(EuroInformationPasswordAuthenticator.class);
+    private final Logger LOGGER =
+            LoggerFactory.getLogger(EuroInformationPasswordAuthenticator.class);
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final EuroInformationConfiguration config;
 
-    private EuroInformationPasswordAuthenticator(EuroInformationApiClient apiClient,
+    private EuroInformationPasswordAuthenticator(
+            EuroInformationApiClient apiClient,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config) {
         this.apiClient = apiClient;
@@ -36,47 +38,60 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
         this.config = config;
     }
 
-    public static EuroInformationPasswordAuthenticator create(EuroInformationApiClient apiClient,
-            SessionStorage sessionStorage, EuroInformationConfiguration config) {
+    public static EuroInformationPasswordAuthenticator create(
+            EuroInformationApiClient apiClient,
+            SessionStorage sessionStorage,
+            EuroInformationConfiguration config) {
         return new EuroInformationPasswordAuthenticator(apiClient, sessionStorage, config);
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         LoginResponse logon = apiClient.logon(username, password);
         if (!EuroInformationUtils.isSuccess(logon.getReturnCode())) {
             handleError(logon);
         }
 
-        config.getInitEndpoint().ifPresent(endpoint -> {
-            PfmInitResponse pfmInitResponse = apiClient.actionInit(endpoint);
-            Optional.ofNullable(pfmInitResponse).filter(m -> EuroInformationUtils.isSuccess(m.getReturnCode()))
-                    .map(v -> {
-                        sessionStorage.put(EuroInformationConstants.Tags.PFM_ENABLED, true);
-                        return v;
-                    })
-                    .orElseGet(() -> {
-                        LOGGER.info(
-                                "PFM initialization error: " + SerializationUtils
-                                        .serializeToString(pfmInitResponse));
-                        return null;
-                    });
-        });
+        config.getInitEndpoint()
+                .ifPresent(
+                        endpoint -> {
+                            PfmInitResponse pfmInitResponse = apiClient.actionInit(endpoint);
+                            Optional.ofNullable(pfmInitResponse)
+                                    .filter(m -> EuroInformationUtils.isSuccess(m.getReturnCode()))
+                                    .map(
+                                            v -> {
+                                                sessionStorage.put(
+                                                        EuroInformationConstants.Tags.PFM_ENABLED,
+                                                        true);
+                                                return v;
+                                            })
+                                    .orElseGet(
+                                            () -> {
+                                                LOGGER.info(
+                                                        "PFM initialization error: "
+                                                                + SerializationUtils
+                                                                        .serializeToString(
+                                                                                pfmInitResponse));
+                                                return null;
+                                            });
+                        });
     }
 
     public void handleError(LoginResponse logon) throws SessionException, LoginException {
-        EuroInformationErrorCodes errorCode = EuroInformationErrorCodes.getByCodeNumber(logon.getReturnCode());
+        EuroInformationErrorCodes errorCode =
+                EuroInformationErrorCodes.getByCodeNumber(logon.getReturnCode());
         switch (errorCode) {
-        case NOT_LOGGED_IN:
-            throw SessionError.SESSION_EXPIRED.exception();
-        case LOGIN_ERROR:
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        case TECHNICAL_PROBLEM:
-            throw new IllegalStateException(EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
-        case NO_ENUM_VALUE:
-            throw new IllegalArgumentException(
-                    "Unknown bank value code " + SerializationUtils.serializeToString(logon));
+            case NOT_LOGGED_IN:
+                throw SessionError.SESSION_EXPIRED.exception();
+            case LOGIN_ERROR:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            case TECHNICAL_PROBLEM:
+                throw new IllegalStateException(
+                        EuroInformationErrorCodes.TECHNICAL_PROBLEM.getCodeNumber());
+            case NO_ENUM_VALUE:
+                throw new IllegalArgumentException(
+                        "Unknown bank value code " + SerializationUtils.serializeToString(logon));
         }
     }
-
 }

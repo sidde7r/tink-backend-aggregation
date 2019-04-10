@@ -12,8 +12,8 @@ public class CrossKeyPersistentStorage {
     }
 
     public boolean readyForSingleFactor() {
-        return containsKey(CrossKeyConstants.Storage.DEVICE_ID) &&
-                containsKey(CrossKeyConstants.Storage.DEVICE_TOKEN);
+        return containsKey(CrossKeyConstants.Storage.DEVICE_ID)
+                && containsKey(CrossKeyConstants.Storage.DEVICE_TOKEN);
     }
 
     private boolean containsKey(String key) {

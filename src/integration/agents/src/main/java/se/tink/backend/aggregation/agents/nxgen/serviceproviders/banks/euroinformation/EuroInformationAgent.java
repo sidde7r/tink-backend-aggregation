@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.transactional.paginated.EuroInformationOperationsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.interfaces.EuroInformationApiClientFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.session.EuroInformationSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -28,50 +29,59 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public abstract class EuroInformationAgent extends NextGenerationAgent {
     protected final EuroInformationApiClient apiClient;
     private final EuroInformationConfiguration config;
 
-    protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    protected EuroInformationAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             EuroInformationConfiguration config) {
         super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
     }
 
-    protected EuroInformationAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
-            EuroInformationConfiguration config, EuroInformationApiClientFactory apiClientFactory) {
+    protected EuroInformationAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            EuroInformationConfiguration config,
+            EuroInformationApiClientFactory apiClientFactory) {
         super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = apiClientFactory.getApiClient(client, sessionStorage, config);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                EuroInformationPasswordAuthenticator.create(this.apiClient, this.sessionStorage, this.config));
+                EuroInformationPasswordAuthenticator.create(
+                        this.apiClient, this.sessionStorage, this.config));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         EuroInformationAccountFetcher.create(this.apiClient, this.sessionStorage),
-                        getTransactionFetcher()
-                ));
+                        getTransactionFetcher()));
     }
 
     private TransactionFetcher<TransactionalAccount> getTransactionFetcher() {
-        if (this.sessionStorage.get(EuroInformationConstants.Tags.PFM_ENABLED, Boolean.class).orElse(false)) {
-            return new TransactionFetcherController<>(transactionPaginationHelper,
+        if (this.sessionStorage
+                .get(EuroInformationConstants.Tags.PFM_ENABLED, Boolean.class)
+                .orElse(false)) {
+            return new TransactionFetcherController<>(
+                    transactionPaginationHelper,
                     new TransactionKeyPaginationController(
                             EuroInformationOperationsFetcher.create(this.apiClient)));
         }
@@ -80,21 +90,23 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                EuroInformationNoPfmCreditCardFetcher.create(this.apiClient, this.sessionStorage),
-                EuroInformationNoPfmCreditCardTransactionsFetcher.create(this.apiClient)
-        ));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        EuroInformationNoPfmCreditCardFetcher.create(
+                                this.apiClient, this.sessionStorage),
+                        EuroInformationNoPfmCreditCardTransactionsFetcher.create(this.apiClient)));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(
-                metricRefreshController,
-                updateController,
-                EuroInformationInvestmentAccountFetcher.create(this.apiClient, this.sessionStorage)
-        ));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        EuroInformationInvestmentAccountFetcher.create(
+                                this.apiClient, this.sessionStorage)));
     }
 
     @Override
@@ -108,7 +120,8 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

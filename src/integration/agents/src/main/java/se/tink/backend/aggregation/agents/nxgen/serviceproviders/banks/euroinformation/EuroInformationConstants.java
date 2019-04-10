@@ -39,14 +39,19 @@ public class EuroInformationConstants {
     }
 
     public static class LoggingTags {
-        public final static LogTag creditcardTransactionsTag = LogTag.from("euroinformation_creditcard_transactions");
-        public final static LogTag creditcardLogTag = LogTag.from("euroinformation_creditcard_accounts");
-        public final static LogTag loanAccountLogTag = LogTag.from("euroinformation_loan_accounts");
-        public final static LogTag unknownAccountTypesTag = LogTag.from("euroinformation_unknown_accounts");
-        public final static LogTag investmentLogTag = LogTag.from("euroinformation_investment_data");
+        public static final LogTag creditcardTransactionsTag =
+                LogTag.from("euroinformation_creditcard_transactions");
+        public static final LogTag creditcardLogTag =
+                LogTag.from("euroinformation_creditcard_accounts");
+        public static final LogTag loanAccountLogTag = LogTag.from("euroinformation_loan_accounts");
+        public static final LogTag unknownAccountTypesTag =
+                LogTag.from("euroinformation_unknown_accounts");
+        public static final LogTag investmentLogTag =
+                LogTag.from("euroinformation_investment_data");
     }
 
-    // Some of these values are for Targo bank, so probably will be moved when using this provider for other banks with same backend
+    // Some of these values are for Targo bank, so probably will be moved when using this provider
+    // for other banks with same backend
     public static class RequestBodyValues {
         public static final String USER = "_cm_user";
         public static final String PASSWORD = "_cm_pwd";
@@ -61,7 +66,7 @@ public class EuroInformationConstants {
         public static final String CATEGORIZE = "categorize";
         public static final String CATEGORIZE_VALUE = "1";
         public static final String WEB_ID = "webid";
-        //Pfm initialization
+        // Pfm initialization
         public static final String INIT = "init";
         public static final String ACTION = "action";
 

@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authe
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26AccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount.N26TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.session.N26SessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -21,35 +22,37 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class N26Agent extends NextGenerationAgent {
 
     private final N26ApiClient n26APiClient;
 
-    public N26Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public N26Agent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.n26APiClient = new N26ApiClient(this.client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new N26PasswordAuthenticator(n26APiClient));
+        return new PasswordAuthenticationController(new N26PasswordAuthenticator(n26APiClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new N26AccountFetcher(n26APiClient),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(new N26TransactionFetcher(n26APiClient)))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new N26AccountFetcher(n26APiClient),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new N26TransactionFetcher(n26APiClient)))));
     }
 
     @Override
@@ -73,7 +76,8 @@ public class N26Agent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

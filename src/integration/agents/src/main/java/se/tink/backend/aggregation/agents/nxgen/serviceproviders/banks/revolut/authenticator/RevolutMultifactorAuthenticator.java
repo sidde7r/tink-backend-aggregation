@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator;
 
 import com.google.common.base.Preconditions;
+import java.util.UUID;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -12,8 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.a
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import java.util.UUID;
 
 public class RevolutMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
     private final RevolutApiClient apiClient;

@@ -66,7 +66,10 @@ public abstract class SdcConfiguration {
     }
 
     public URL getCustodyContentUrl(SdcCustodyDetailsModel custodyDetails) {
-        return new URL(baseUrl + SdcConstants.Url.INVESTMENT_DEPOSITS_CONTENT_PATH + custodyDetails.getId());
+        return new URL(
+                baseUrl
+                        + SdcConstants.Url.INVESTMENT_DEPOSITS_CONTENT_PATH
+                        + custodyDetails.getId());
     }
 
     public URL getListLoansUrl() {
@@ -90,7 +93,6 @@ public abstract class SdcConfiguration {
     }
 
     public abstract boolean canRetrieveInvestmentData();
-
 
     // can be removed once we stop logging and start fetching
     public abstract LogTag getLoanLogTag();

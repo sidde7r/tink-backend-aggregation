@@ -26,14 +26,12 @@ public class SavingsSpaceEntity {
     }
 
     public TransactionalAccount toSavingsAccount() {
-        return SavingsAccount
-                .builder(getAccountId(), getAmount())
+        return SavingsAccount.builder(getAccountId(), getAmount())
                 .setAccountNumber(getAccountId())
                 .setName(getName())
                 .setBankIdentifier(getAccountId())
                 .putInTemporaryStorage(N26Constants.SPACE_ID, id)
                 .build();
-
     }
 
     public String getAccountId() {

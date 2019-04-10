@@ -23,7 +23,8 @@ public class UkOpenBankingUpcomingTransactionFetcher<ResponseType>
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
 
         return converter.toUpcomingTransactions(
                 apiClient.fetchUpcomingTransactions(account.getBankIdentifier(), responseType));

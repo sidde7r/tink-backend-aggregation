@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.entities.InstrumentGroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PortfolioResponse extends CrossKeyResponse {

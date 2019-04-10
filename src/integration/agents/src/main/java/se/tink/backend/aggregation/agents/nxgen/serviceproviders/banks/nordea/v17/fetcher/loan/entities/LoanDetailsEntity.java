@@ -14,45 +14,65 @@ import se.tink.libraries.amount.Amount;
 public class LoanDetailsEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date dueDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     @JsonProperty("dueAmount")
     private Double amount;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String paymentStatus;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String paymentStatusText;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String loanType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double interestRate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date nextDueDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date entryDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date maturityDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String interestType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String terminsPerYear;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String accountForRepayments;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String gracePeriod;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date gracePeriodEndDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String nickName;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double balance;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double fundsAvailable;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date interestDueDate;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.Date.class)
     private Date nextInstallment;
+
     private List<HashMap<String, Object>> accountRoles;
     private LoanData loanData;
     private LoanPaymentDetails followingPayment;

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
 
 public class FinalizeAuthenticationRequest {
-    @JsonIgnore
-    private static final String BANK_ID_USER_ID = "\"\"";
+    @JsonIgnore private static final String BANK_ID_USER_ID = "\"\"";
     private final String userId;
+
     @JsonProperty("LogonPackage")
     private final String logonPackage;
 
@@ -28,7 +28,8 @@ public class FinalizeAuthenticationRequest {
         LogonPackageEntity logonPackageEntity =
                 DanskeBankDeserializer.convertStringToObject(logonInfo, LogonPackageEntity.class);
 
-        return new FinalizeAuthenticationRequest(logonPackageEntity.getUserId(), logonPackageEntity.getLogonPackage());
+        return new FinalizeAuthenticationRequest(
+                logonPackageEntity.getUserId(), logonPackageEntity.getLogonPackage());
     }
 
     public String getUserId() {

@@ -10,8 +10,7 @@ public class ActivateProfileRequest {
     private PdeviceSignContainer pdeviceSignContainer;
     private String pubkey;
 
-    private ActivateProfileRequest() {
-    }
+    private ActivateProfileRequest() {}
 
     public static ActivateProfileRequest create(CreateProfileResponse createProfile, LibTFA tfa) {
         return new ActivateProfileRequest()

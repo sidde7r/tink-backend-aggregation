@@ -10,8 +10,7 @@ public class TransactionsRequest {
     private List<Integer> billingIndexList;
     private int sortedIndex;
 
-    @JsonIgnore
-    private boolean canStillFetch;
+    @JsonIgnore private boolean canStillFetch;
 
     public List<Integer> getBillingIndexList() {
         return billingIndexList;

@@ -9,12 +9,13 @@ public class N26PasswordAuthenticator implements PasswordAuthenticator {
 
     private final N26ApiClient n26ApiClient;
 
-    public N26PasswordAuthenticator(N26ApiClient client){
+    public N26PasswordAuthenticator(N26ApiClient client) {
         this.n26ApiClient = client;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         n26ApiClient.login(username, password);
     }
 }

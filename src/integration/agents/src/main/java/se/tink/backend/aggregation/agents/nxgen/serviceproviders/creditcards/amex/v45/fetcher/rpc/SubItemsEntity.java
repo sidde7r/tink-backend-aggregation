@@ -34,17 +34,16 @@ public class SubItemsEntity {
     public boolean belongToAccount(Integer cardIndex, TimelineEntity timeline) {
         Map<String, TransactionEntity> transactionEntityMap = timeline.getTransactionMap();
         /*
-            Amex timeline items shows the recent transactions and other account activities
-            such as bonus points
-            e.g. "Få upp till 18 000 Extrapoäng per godkänd ansökan!"
-            id of these timeline items contains strings.
-            this differs from the normal transaction that contains numeric id.
-         */
+           Amex timeline items shows the recent transactions and other account activities
+           such as bonus points
+           e.g. "Få upp till 18 000 Extrapoäng per godkänd ansökan!"
+           id of these timeline items contains strings.
+           this differs from the normal transaction that contains numeric id.
+        */
         if (!transactionEntityMap.containsKey(this.id)) {
             return false;
         }
         Integer suppIndex = Integer.valueOf(transactionEntityMap.get(this.id).getSuppIndex());
         return suppIndex.equals(cardIndex);
-
     }
 }

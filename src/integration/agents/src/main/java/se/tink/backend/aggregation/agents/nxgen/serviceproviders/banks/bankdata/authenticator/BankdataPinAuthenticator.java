@@ -25,15 +25,17 @@ public class BankdataPinAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         try {
             TimeTokenResponse timeTokenResponse = this.bankClient.getTimeToken();
             String timeToken = timeTokenResponse.getTimeToken();
-            LoginRequest loginRequest = new LoginRequest()
-                    .setTimeToken(timeToken)
-                    .setUserId(username)
-                    .setPinCode(password)
-                    .setLoginToken(calculateLoginToken(username, password, timeToken));
+            LoginRequest loginRequest =
+                    new LoginRequest()
+                            .setTimeToken(timeToken)
+                            .setUserId(username)
+                            .setPinCode(password)
+                            .setLoginToken(calculateLoginToken(username, password, timeToken));
             this.bankClient.pinLogin(loginRequest);
         } catch (HttpResponseException e) {
             checkErrorForBankserviceOffline(e);
@@ -41,11 +43,13 @@ public class BankdataPinAuthenticator implements PasswordAuthenticator {
         }
     }
 
-    private void checkErrorForBankserviceOffline(HttpResponseException e) throws BankServiceException {
+    private void checkErrorForBankserviceOffline(HttpResponseException e)
+            throws BankServiceException {
         HttpResponse response = e.getResponse();
         if (response.hasBody()) {
             LoginErrorResponse errorResponse = response.getBody(LoginErrorResponse.class);
-            if (errorResponse.getErrorCode() == BankdataConstants.Authentication.ERROR_CODE_BANK_SERVICE_OFFLINE) {
+            if (errorResponse.getErrorCode()
+                    == BankdataConstants.Authentication.ERROR_CODE_BANK_SERVICE_OFFLINE) {
                 throw BankServiceError.NO_BANK_SERVICE.exception();
             }
         }
@@ -54,8 +58,10 @@ public class BankdataPinAuthenticator implements PasswordAuthenticator {
     private String calculateLoginToken(String userId, String pinCode, String timeToken) {
         try {
             String message = timeToken + userId + pinCode;
-            SecretKeySpec keySpec = new SecretKeySpec(BankdataConstants.Authentication.LOGIN_SECRET.getBytes(),
-                    BankdataConstants.Authentication.ALGORITHM);
+            SecretKeySpec keySpec =
+                    new SecretKeySpec(
+                            BankdataConstants.Authentication.LOGIN_SECRET.getBytes(),
+                            BankdataConstants.Authentication.ALGORITHM);
             Mac sha256_HMAC = Mac.getInstance(BankdataConstants.Authentication.ALGORITHM);
             sha256_HMAC.init(keySpec);
             byte[] tokenBytes = sha256_HMAC.doFinal(message.getBytes());

@@ -19,7 +19,8 @@ public class BankdataCreditCardAccountFetcher implements AccountFetcher<CreditCa
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        List<MastercardAgreementEntity> mastercardAgreements = bankClient.getAccounts().getMastercardAgreements();
+        List<MastercardAgreementEntity> mastercardAgreements =
+                bankClient.getAccounts().getMastercardAgreements();
 
         if (mastercardAgreements == null) {
             return Collections.emptyList();

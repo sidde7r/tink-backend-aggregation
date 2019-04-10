@@ -8,18 +8,24 @@ import se.tink.libraries.strings.StringUtils;
 public class HoldingsEntity {
     private String marketValue;
     private String avgPurchasePrice;
+
     @JsonProperty("profitLoss")
     private String profit;
+
     private String quantity;
     private ExchangeRateEntity exchangeRate;
     private InstrumentEntity instrument;
 
     public Double getMarketValue() {
-        return marketValue == null || marketValue.isEmpty() ? null : StringUtils.parseAmount(marketValue);
+        return marketValue == null || marketValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(marketValue);
     }
 
     public Double getAvgPurchasePrice() {
-        return avgPurchasePrice == null || avgPurchasePrice.isEmpty() ? null : StringUtils.parseAmount(avgPurchasePrice);
+        return avgPurchasePrice == null || avgPurchasePrice.isEmpty()
+                ? null
+                : StringUtils.parseAmount(avgPurchasePrice);
     }
 
     public Double getProfit() {

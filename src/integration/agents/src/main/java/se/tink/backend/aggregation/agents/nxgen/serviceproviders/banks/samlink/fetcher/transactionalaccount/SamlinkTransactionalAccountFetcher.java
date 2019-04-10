@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class SamlinkTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, SamlinkTransactionalAccountFetcher.TransactionKey> {
+public class SamlinkTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<
+                        TransactionalAccount, SamlinkTransactionalAccountFetcher.TransactionKey> {
 
     private final SamlinkApiClient apiClient;
 
@@ -41,25 +43,26 @@ public class SamlinkTransactionalAccountFetcher implements AccountFetcher<Transa
 
     private TransactionKeyPaginatorResponseImpl<TransactionKey> fetchInitialTransactions(
             TransactionalAccount account) {
-        return apiClient.getTransactions(account)
-                .map(transactions ->
-                        createResponse(transactions, new TransactionKey(transactions))
-                )
+        return apiClient
+                .getTransactions(account)
+                .map(transactions -> createResponse(transactions, new TransactionKey(transactions)))
                 .orElseGet(TransactionKeyPaginatorResponseImpl::new);
     }
 
     private TransactionKeyPaginatorResponseImpl<TransactionKey> fetchNextTransactions(
             TransactionKey key) {
-        return apiClient.getTransactions(key.transactions, key.paginationOffSet)
-                .map(transactions ->
-                        createResponse(transactions, new TransactionKey(transactions, key))
-                )
+        return apiClient
+                .getTransactions(key.transactions, key.paginationOffSet)
+                .map(
+                        transactions ->
+                                createResponse(transactions, new TransactionKey(transactions, key)))
                 .orElseGet(TransactionKeyPaginatorResponseImpl::new);
     }
 
     private TransactionKeyPaginatorResponseImpl<TransactionKey> createResponse(
             TransactionsResponse transactions, TransactionKey key) {
-        TransactionKeyPaginatorResponseImpl<TransactionKey> response = new TransactionKeyPaginatorResponseImpl<>();
+        TransactionKeyPaginatorResponseImpl<TransactionKey> response =
+                new TransactionKeyPaginatorResponseImpl<>();
         response.setTransactions(transactions.toTinkTransactions(apiClient::getTransactionDetails));
         response.setNext(key);
         return response;
@@ -75,8 +78,7 @@ public class SamlinkTransactionalAccountFetcher implements AccountFetcher<Transa
             this.paginationOffSet = transactions.size();
         }
 
-        TransactionKey(TransactionsResponse transactions,
-                TransactionKey previousKey) {
+        TransactionKey(TransactionsResponse transactions, TransactionKey previousKey) {
             this.transactions = transactions;
             this.paginationOffSet = previousKey.paginationOffSet + transactions.size();
         }

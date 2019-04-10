@@ -21,5 +21,4 @@ public class TimelineEntity extends ResponseStatusEntity {
     public Map<String, TransactionEntity> getTransactionMap() {
         return transactionMap;
     }
-
 }

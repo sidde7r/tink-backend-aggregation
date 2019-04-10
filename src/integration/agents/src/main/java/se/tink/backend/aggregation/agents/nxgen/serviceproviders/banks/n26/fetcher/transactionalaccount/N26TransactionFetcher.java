@@ -10,17 +10,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
-public class N26TransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, String> {
+public class N26TransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final N26ApiClient n26ApiClient;
-    private static final AggregationLogger LOGGER = new AggregationLogger(N26TransactionFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(N26TransactionFetcher.class);
 
     public N26TransactionFetcher(N26ApiClient n26ApiClient) {
         this.n26ApiClient = n26ApiClient;
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
         try {
             String spaceId = account.getFromTemporaryStorage(N26Constants.SPACE_ID);
             if (Strings.isNullOrEmpty(spaceId)) {
@@ -30,7 +33,9 @@ public class N26TransactionFetcher implements TransactionKeyPaginator<Transactio
             }
         } catch (HttpClientException hce) {
             // N26 times out if you paginate too far back. Stop paginating if it does
-            LOGGER.warnExtraLong("N26 Transaction Pagination error:", N26Constants.Logging.TRANSACTION_PAGINATION_ERROR,
+            LOGGER.warnExtraLong(
+                    "N26 Transaction Pagination error:",
+                    N26Constants.Logging.TRANSACTION_PAGINATION_ERROR,
                     hce);
         }
         return new TransactionKeyPaginatorResponseImpl<>();

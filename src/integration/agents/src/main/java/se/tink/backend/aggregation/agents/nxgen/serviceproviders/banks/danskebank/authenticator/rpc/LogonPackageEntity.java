@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LogonPackageEntity {
     @JsonProperty("UserID")
     private String userId;
+
     @JsonProperty("LogonPackage")
     private String logonPackage;
 

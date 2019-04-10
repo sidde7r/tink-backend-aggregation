@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountPermissionRequest {
     @JsonProperty("Data")
     private AccountPermissionDataEntity data;
+
     @JsonProperty("Risk")
     private RiskEntity risk;
 

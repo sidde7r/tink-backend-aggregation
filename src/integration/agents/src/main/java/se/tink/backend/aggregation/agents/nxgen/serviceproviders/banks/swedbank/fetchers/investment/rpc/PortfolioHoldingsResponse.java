@@ -49,11 +49,12 @@ public class PortfolioHoldingsResponse {
     }
 
     public boolean hasInvestments() {
-        return (endowmentInsurances != null && !endowmentInsurances.isEmpty()) ||
-                (equityTraders != null && !equityTraders.isEmpty()) ||
-                (fundAccounts != null && !fundAccounts.isEmpty()) ||
-                (investmentSavings != null && !investmentSavings.isEmpty());
+        return (endowmentInsurances != null && !endowmentInsurances.isEmpty())
+                || (equityTraders != null && !equityTraders.isEmpty())
+                || (fundAccounts != null && !fundAccounts.isEmpty())
+                || (investmentSavings != null && !investmentSavings.isEmpty());
     }
+
     @JsonIgnore
     // extract all account numbers for the investment accounts,
     // i.e. not savings accounts.
@@ -64,10 +65,12 @@ public class PortfolioHoldingsResponse {
             return Collections.emptyList();
         }
 
-        return ImmutableList.of(Optional.ofNullable(fundAccounts),
-            Optional.ofNullable(endowmentInsurances),
-            Optional.ofNullable(equityTraders),
-            Optional.ofNullable(investmentSavings)).stream()
+        return ImmutableList.of(
+                        Optional.ofNullable(fundAccounts),
+                        Optional.ofNullable(endowmentInsurances),
+                        Optional.ofNullable(equityTraders),
+                        Optional.ofNullable(investmentSavings))
+                .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .flatMap(accounts -> accounts.stream())

@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.rpc;
 
-import java.util.List;
-import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import org.junit.Test;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class GetAccountsResponseTest {
 

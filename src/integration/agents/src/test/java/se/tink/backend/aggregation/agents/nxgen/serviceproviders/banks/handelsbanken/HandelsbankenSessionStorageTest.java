@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links.ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links.TRANSACTIONS;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.StorageTestHelper.createLinks;
+
 import java.util.Map;
 import java.util.Optional;
 import org.junit.Test;
@@ -10,16 +16,13 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links.ACCOUNTS;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Links.TRANSACTIONS;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.StorageTestHelper.createLinks;
 
 public class HandelsbankenSessionStorageTest {
 
-    public static final Map<String, Link> TRANSACTIONS_LINK = createLinks(TRANSACTIONS, "https://safe.transactions.com");
-    public static final Map<String, Link> ACCOUNTS_LINK = createLinks(ACCOUNTS, "http://unsafe.accounts.com");
+    public static final Map<String, Link> TRANSACTIONS_LINK =
+            createLinks(TRANSACTIONS, "https://safe.transactions.com");
+    public static final Map<String, Link> ACCOUNTS_LINK =
+            createLinks(ACCOUNTS, "http://unsafe.accounts.com");
     private HandelsbankenSessionStorage sessionStorage;
 
     @Test

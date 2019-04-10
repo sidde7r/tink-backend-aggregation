@@ -8,17 +8,16 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class SubPlacementEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(SubPlacementEntity.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(SubPlacementEntity.class);
 
     private String type;
     private String name;
@@ -49,7 +48,8 @@ public class SubPlacementEntity {
                 continue;
             }
 
-            FundMarketInfoResponse fundMarketInfoResponse = apiClient.fundMarketInfo(links.getNext());
+            FundMarketInfoResponse fundMarketInfoResponse =
+                    apiClient.fundMarketInfo(links.getNext());
 
             holding.toTinkFundInstrument(fundMarketInfoResponse.getIsincode())
                     .ifPresent(instruments::add);
@@ -66,26 +66,28 @@ public class SubPlacementEntity {
             }
 
             switch (this.type.toLowerCase()) {
-            case "equity":
-            case "equities":
-            case "subscription_right":
-            case "spax":
-            case "etf":
-            case "warrant":
-            case "fixed_income":
-            case "interestequity":
-                holding.toTinkInstrument(this.type).ifPresent(instruments::add);
-                break;
-            case "equityfund":
-            case "mixedfund":
-            case "interestfund":
-            case "alternativefund":
-                String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
-                holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
-                break;
-            default:
-                log.warn("Previously unknown subplacement type:[{}] - serializedResponse: {}",
-                        type, SerializationUtils.serializeToString(this));
+                case "equity":
+                case "equities":
+                case "subscription_right":
+                case "spax":
+                case "etf":
+                case "warrant":
+                case "fixed_income":
+                case "interestequity":
+                    holding.toTinkInstrument(this.type).ifPresent(instruments::add);
+                    break;
+                case "equityfund":
+                case "mixedfund":
+                case "interestfund":
+                case "alternativefund":
+                    String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
+                    holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
+                    break;
+                default:
+                    log.warn(
+                            "Previously unknown subplacement type:[{}] - serializedResponse: {}",
+                            type,
+                            SerializationUtils.serializeToString(this));
             }
         }
 

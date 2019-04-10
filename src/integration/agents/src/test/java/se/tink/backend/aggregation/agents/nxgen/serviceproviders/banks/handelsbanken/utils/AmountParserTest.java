@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.utils;
 
-import java.util.Optional;
-import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.Optional;
+import org.junit.Test;
 
 public class AmountParserTest {
 

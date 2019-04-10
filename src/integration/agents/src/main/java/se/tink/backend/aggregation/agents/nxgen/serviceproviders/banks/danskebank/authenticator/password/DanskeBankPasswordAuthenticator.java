@@ -17,34 +17,44 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthenticator implements PasswordAuthenticator {
-    private static final AggregationLogger log = new AggregationLogger(DanskeBankPasswordAuthenticator.class);
+public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthenticator
+        implements PasswordAuthenticator {
+    private static final AggregationLogger log =
+            new AggregationLogger(DanskeBankPasswordAuthenticator.class);
     private final DanskeBankApiClient apiClient;
     private final String deviceId;
     private final DanskeBankConfiguration configuration;
     private String dynamicLogonJavascript;
     private String finalizePackage;
 
-    public DanskeBankPasswordAuthenticator(DanskeBankApiClient apiClient, String deviceId,
-            DanskeBankConfiguration configuration) {
+    public DanskeBankPasswordAuthenticator(
+            DanskeBankApiClient apiClient, String deviceId, DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = configuration;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         // Get the dynamic logon javascript
-        HttpResponse getResponse = this.apiClient.collectDynamicLogonJavascript(
-                DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC, this.configuration.getBrand());
+        HttpResponse getResponse =
+                this.apiClient.collectDynamicLogonJavascript(
+                        DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC,
+                        this.configuration.getBrand());
 
         // Add the authorization header from the response
-        this.apiClient.addPersistentHeader("Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+        this.apiClient.addPersistentHeader(
+                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
 
         // Add method to return device information string
-        this.dynamicLogonJavascript = DanskeBankConstants.Javascript.getDeviceInfo(this.deviceId, this.configuration.getMarketCode(),
-                this.configuration.getAppName(), this.configuration.getAppVersion()) +
-                getResponse.getBody(String.class);
+        this.dynamicLogonJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                                this.deviceId,
+                                this.configuration.getMarketCode(),
+                                this.configuration.getAppName(),
+                                this.configuration.getAppVersion())
+                        + getResponse.getBody(String.class);
 
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
@@ -52,10 +62,12 @@ public class DanskeBankPasswordAuthenticator extends DanskeBankAbstractAuthentic
             driver = constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
-                    DanskeBankJavascriptStringFormatter.createLoginJavascript(this.dynamicLogonJavascript, username, password));
+                    DanskeBankJavascriptStringFormatter.createLoginJavascript(
+                            this.dynamicLogonJavascript, username, password));
 
             // Set the finalize package which will be used during finalization of the login
-            this.finalizePackage = driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
+            this.finalizePackage =
+                    driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
 
             // Finalize authentication
             finalizeAuthentication();

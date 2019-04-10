@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UserInfoEntity {
     @JsonProperty("AccessAgreement")
     private String accessAgreement;
+
     @JsonProperty("UserFirstname")
     private String firstName;
+
     @JsonProperty("UserLastname")
     private String lastname;
+
     @JsonProperty("UserSegment")
     private String segment;
+
     @JsonProperty("CustomerSegment")
     private String customerSegment;
 

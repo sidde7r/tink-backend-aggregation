@@ -12,13 +12,15 @@ import se.tink.libraries.amount.Amount;
 public class CardDetailsResponse {
 
     private AmountEntity availableCredit;
-    private AmountEntity creditLimit; // the app claims it could be present, I haven't seen it so far.
+    private AmountEntity
+            creditLimit; // the app claims it could be present, I haven't seen it so far.
 
-//    Fields probably unnecessary to keep:
+    //    Fields probably unnecessary to keep:
     private String cardId;
     private String name;
     private String type;
     private String number;
+
     @JsonFormat(pattern = "M/y")
     private Date expiration;
 
@@ -27,6 +29,7 @@ public class CardDetailsResponse {
             return Optional.empty();
         }
         logger.accept("Found an actual credit card!");
-        return Optional.of(Amount.inEUR(this.creditLimit.getAmount() - this.availableCredit.getAmount()));
+        return Optional.of(
+                Amount.inEUR(this.creditLimit.getAmount() - this.availableCredit.getAmount()));
     }
 }

@@ -58,14 +58,16 @@ public class AmericanExpressV62Predicates {
     We want to filter out this transaction.
     If it does not, even if it's not "main card" transaction, it's just a "subcard " transaction that we would like to keep
      */
-    public static BiPredicate<TransactionEntity, List<SubcardEntity>> checkIfTransactionsBelongsToPartnerCards =
-            (transaction, partnerCards) ->
-                    !partnerCards
-                            .stream()
-                            .map(card -> card.getSuppIndex())
-                            .filter(subIndex -> !subIndex.equals(transaction.getSuppIndex()))
-                            .collect(Collectors.toList())
-                            .isEmpty();
+    public static BiPredicate<TransactionEntity, List<SubcardEntity>>
+            checkIfTransactionsBelongsToPartnerCards =
+                    (transaction, partnerCards) ->
+                            !partnerCards.stream()
+                                    .map(card -> card.getSuppIndex())
+                                    .filter(
+                                            subIndex ->
+                                                    !subIndex.equals(transaction.getSuppIndex()))
+                                    .collect(Collectors.toList())
+                                    .isEmpty();
 
     public static BiPredicate<CardEntity, SubcardEntity> isPartnerCard =
             (cardEntity, subcardEntity) ->
@@ -80,8 +82,7 @@ public class AmericanExpressV62Predicates {
 
     public static BiPredicate<SubcardEntity, List<CardEntity>> checkIfSubcardIsParterCard =
             (subCard, partnerCardList) ->
-                    partnerCardList
-                            .stream()
+                    partnerCardList.stream()
                             .anyMatch(
                                     mainCard ->
                                             AmericanExpressV62Predicates.isPartnerCard.test(
@@ -101,8 +102,7 @@ public class AmericanExpressV62Predicates {
 
     public static List<SubcardEntity> getPartnerCardsFromSubcards(
             List<SubcardEntity> subcardList, List<CardEntity> partnerCardList) {
-        return subcardList
-                .stream()
+        return subcardList.stream()
                 .filter(subcard -> checkIfSubcardIsParterCard.test(subcard, partnerCardList))
                 .collect(Collectors.toList());
     }

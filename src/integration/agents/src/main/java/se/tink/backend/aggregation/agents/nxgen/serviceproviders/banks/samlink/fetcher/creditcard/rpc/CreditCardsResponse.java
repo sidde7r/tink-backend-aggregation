@@ -22,24 +22,32 @@ public class CreditCardsResponse extends LinksResponse {
             Function<CreditCard, Optional<CardDetailsResponse>> creditCardDetailsSupplier,
             Consumer<String> logger) {
         return Optional.ofNullable(cards)
-                .map(creditCards -> creditCards.stream()
-                        .map(creditCard -> creditCardDetailsSupplier.apply(creditCard)
-                                .flatMap(cardDetails -> cardDetails.calculateBalance(logger))
-                                .map(creditCard::toTinkAccount)
-                        )
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .collect(Collectors.toList())
-                )
+                .map(
+                        creditCards ->
+                                creditCards.stream()
+                                        .map(
+                                                creditCard ->
+                                                        creditCardDetailsSupplier
+                                                                .apply(creditCard)
+                                                                .flatMap(
+                                                                        cardDetails ->
+                                                                                cardDetails
+                                                                                        .calculateBalance(
+                                                                                                logger))
+                                                                .map(creditCard::toTinkAccount))
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 
     public Optional<CreditCard> find(CreditCardAccount account) {
         return Optional.ofNullable(cards)
                 .map(Collection::stream)
-                .flatMap(creditCards -> creditCards
-                        .filter(creditCard -> creditCard.hasCreated(account))
-                        .findFirst()
-                );
+                .flatMap(
+                        creditCards ->
+                                creditCards
+                                        .filter(creditCard -> creditCard.hasCreated(account))
+                                        .findFirst());
     }
 }

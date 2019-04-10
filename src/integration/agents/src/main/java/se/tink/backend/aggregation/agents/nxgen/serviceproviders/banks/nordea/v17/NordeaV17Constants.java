@@ -26,38 +26,68 @@ public class NordeaV17Constants {
         public static final String AUTHENTICATION = "Authentication" + SERVICE_VERSION;
     }
 
-    public static final Map<String, String> GENERAL_ERROR_MESSAGES_BY_CODE = ImmutableMap.<String, String>builder()
-            .put("MAS9001", "Unknown error (found occurrence--and frequently occurring--during LightLoginRequest)")
-            .put("MAS9098", "You are using an outdated version of the application. Please update your application in order to login")
-            .put("MAS9099", "Technical error, please try again")
-            .put("MBS9099", "A temporary error occurred")
-            .put("MBS0110", "Your holdings can't be displayed at the moment, please try again later")
-            .build();
+    public static final Map<String, String> GENERAL_ERROR_MESSAGES_BY_CODE =
+            ImmutableMap.<String, String>builder()
+                    .put(
+                            "MAS9001",
+                            "Unknown error (found occurrence--and frequently occurring--during LightLoginRequest)")
+                    .put(
+                            "MAS9098",
+                            "You are using an outdated version of the application. Please update your application in order to login")
+                    .put("MAS9099", "Technical error, please try again")
+                    .put("MBS9099", "A temporary error occurred")
+                    .put(
+                            "MBS0110",
+                            "Your holdings can't be displayed at the moment, please try again later")
+                    .build();
 
-    public static final Map<String, AuthorizationException> AUTHORIZATION_EXCEPTIONS_BY_CODE = ImmutableMap.<String, AuthorizationException>builder()
-            .put("MAS0010", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.CODE_BLOCKED.getKey()))
-            .put("MAS0002", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.CODE_BLOCKED.getKey()))
-            .put("MBS0908", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.NO_VALID_AGREEMENT.getKey()))
-            .build();
+    public static final Map<String, AuthorizationException> AUTHORIZATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthorizationException>builder()
+                    .put(
+                            "MAS0010",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MAS0002",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MBS0908",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.NO_VALID_AGREEMENT.getKey()))
+                    .build();
 
-    public static final Map<String, AuthenticationException> AUTHENTICATION_EXCEPTIONS_BY_CODE = ImmutableMap.<String, AuthenticationException>builder()
-            .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
-            .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
-            .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
-            .build();
+    public static final Map<String, AuthenticationException> AUTHENTICATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthenticationException>builder()
+                    .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .build();
 
-    public static final Map<String, BankServiceException> BANKSERVICE_EXCEPTIONS_BY_CODE = ImmutableMap.<String, BankServiceException>builder()
-            .put("MAS2720", BankServiceError.BANK_SIDE_FAILURE.exception(UserMessage.TOO_MANY_LOGINS.getKey()))
-            .build();
+    public static final Map<String, BankServiceException> BANKSERVICE_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, BankServiceException>builder()
+                    .put(
+                            "MAS2720",
+                            BankServiceError.BANK_SIDE_FAILURE.exception(
+                                    UserMessage.TOO_MANY_LOGINS.getKey()))
+                    .build();
 
     public static final LogTag HTTP_REQUEST_LOG_TAG = LogTag.from("#nordea_v17_http_request");
     public static final LogTag CREDITCARD_LOG_TAG = LogTag.from("#nordea_v17_creditcard");
 
     public enum UserMessage implements LocalizableEnum {
-        CODE_BLOCKED(new LocalizableKey("Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
-        NO_VALID_BANKID(new LocalizableKey("You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
-        NO_VALID_AGREEMENT(new LocalizableKey("We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking")),
-        TOO_MANY_LOGINS(new LocalizableKey("Message from bank: You have used the service too many times today, please try again tomorrow."));
+        CODE_BLOCKED(
+                new LocalizableKey(
+                        "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
+        NO_VALID_BANKID(
+                new LocalizableKey(
+                        "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
+        NO_VALID_AGREEMENT(
+                new LocalizableKey(
+                        "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking")),
+        TOO_MANY_LOGINS(
+                new LocalizableKey(
+                        "Message from bank: You have used the service too many times today, please try again tomorrow."));
 
         private LocalizableKey userMessage;
 
@@ -132,7 +162,6 @@ public class NordeaV17Constants {
         }
     }
 
-
     public static class HeaderKey {
         public static final String REQUEST_ID = "x-Request-Id";
         public static final String APP_COUNTRY = "x-App-Country";
@@ -173,7 +202,8 @@ public class NordeaV17Constants {
 
     public static class Payment {
         public enum StatusCode {
-            UNCONFIRMED("Unconfirmed"), CONFIRMED("Confirmed");
+            UNCONFIRMED("Unconfirmed"),
+            CONFIRMED("Confirmed");
 
             private String serializedValue;
 
@@ -187,8 +217,9 @@ public class NordeaV17Constants {
 
             public Predicate<PaymentEntity> predicateForType() {
                 final String serializedValue = getSerializedValue();
-                return paymentEntity -> paymentEntity != null &&
-                        serializedValue.equalsIgnoreCase(paymentEntity.getStatusCode());
+                return paymentEntity ->
+                        paymentEntity != null
+                                && serializedValue.equalsIgnoreCase(paymentEntity.getStatusCode());
             }
         }
     }

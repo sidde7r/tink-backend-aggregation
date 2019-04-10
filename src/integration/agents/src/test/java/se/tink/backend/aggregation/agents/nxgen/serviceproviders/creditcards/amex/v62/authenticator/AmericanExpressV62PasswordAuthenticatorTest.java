@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
 public class AmericanExpressV62PasswordAuthenticatorTest {
 
@@ -31,14 +32,17 @@ public class AmericanExpressV62PasswordAuthenticatorTest {
         sessionStorage = Mockito.mock(SessionStorage.class);
         persistentStorage = Mockito.mock(PersistentStorage.class);
         amexClient = Mockito.mock(AmericanExpressV62ApiClient.class);
-        authenticator = new AmericanExpressV62PasswordAuthenticator(amexClient, persistentStorage,
-                sessionStorage);
+        authenticator =
+                new AmericanExpressV62PasswordAuthenticator(
+                        amexClient, persistentStorage, sessionStorage);
     }
 
     @Test
-    public void excludeAccountsWithError() throws IOException, AuthenticationException, AuthorizationException {
-        LogonResponse logonResponse = mapper
-                .readValue(AmericanExpressV62PasswordAuthenticatorTestData.logonResponse,
+    public void excludeAccountsWithError()
+            throws IOException, AuthenticationException, AuthorizationException {
+        LogonResponse logonResponse =
+                mapper.readValue(
+                        AmericanExpressV62PasswordAuthenticatorTestData.logonResponse,
                         LogonResponse.class);
 
         Mockito.when(amexClient.logon(any())).thenReturn(logonResponse);

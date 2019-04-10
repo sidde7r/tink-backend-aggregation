@@ -17,7 +17,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountsResponse {
     @JsonProperty("group_header")
     private GroupHeaderEntity groupHeader;
+
     private AccountsResponseEntity response;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 
@@ -31,7 +33,10 @@ public class AccountsResponse {
         }
         return response.getAccounts().stream()
                 .filter(AccountEntity::isOpen)
-                .filter(account -> NordeaBaseConstants.ACCOUNT_TYPE.isTransactionalAccount(account.tinkAccountType()))
+                .filter(
+                        account ->
+                                NordeaBaseConstants.ACCOUNT_TYPE.isTransactionalAccount(
+                                        account.tinkAccountType()))
                 .map(accountParser::toTinkAccount)
                 .collect(Collectors.toList());
     }

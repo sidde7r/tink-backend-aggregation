@@ -14,6 +14,8 @@ public class CustodyAccountsResponse extends NordeaResponse {
     private CustodyAccountsEntity custodyAccountsEntity;
 
     public List<CustodyAccount> getCustodyAccounts() {
-        return custodyAccountsEntity != null ? custodyAccountsEntity.getCustodyAccounts() : Collections.emptyList();
+        return custodyAccountsEntity != null
+                ? custodyAccountsEntity.getCustodyAccounts()
+                : Collections.emptyList();
     }
 }

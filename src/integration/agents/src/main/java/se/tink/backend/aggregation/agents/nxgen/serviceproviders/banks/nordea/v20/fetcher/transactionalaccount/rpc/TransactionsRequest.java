@@ -8,7 +8,10 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class TransactionsRequest extends HttpRequestImpl {
     public TransactionsRequest(String accountId, String continueKey) {
-        super(HttpMethod.GET, Url.TRANSACTIONS.queryParam(UrlParameter.ACCOUNT_ID, accountId)
-                .queryParam(UrlParameter.CONTINUE_KEY, Strings.nullToEmpty(continueKey)));
+        super(
+                HttpMethod.GET,
+                Url.TRANSACTIONS
+                        .queryParam(UrlParameter.ACCOUNT_ID, accountId)
+                        .queryParam(UrlParameter.CONTINUE_KEY, Strings.nullToEmpty(continueKey)));
     }
 }

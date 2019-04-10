@@ -24,32 +24,56 @@ public class NordeaV20Constants {
         public static final String AUTHENTICATION = "Authentication" + SERVICE_VERSION;
     }
 
-    public static final Map<String, String> GENERAL_ERROR_MESSAGES_BY_CODE = ImmutableMap.<String, String>builder()
-            .put("MAS9001", "Unknown error (found occurrence--and frequently occurring--during LightLoginRequest)")
-            .put("MAS9098", "You are using an outdated version of the application. Please update your application in order to login")
-            .put("MAS9099", "Technical error, please try again")
-            .put("MBS9099", "A temporary error occurred")
-            .put("MBS0110", "Your holdings can't be displayed at the moment, please try again later")
-            .build();
+    public static final Map<String, String> GENERAL_ERROR_MESSAGES_BY_CODE =
+            ImmutableMap.<String, String>builder()
+                    .put(
+                            "MAS9001",
+                            "Unknown error (found occurrence--and frequently occurring--during LightLoginRequest)")
+                    .put(
+                            "MAS9098",
+                            "You are using an outdated version of the application. Please update your application in order to login")
+                    .put("MAS9099", "Technical error, please try again")
+                    .put("MBS9099", "A temporary error occurred")
+                    .put(
+                            "MBS0110",
+                            "Your holdings can't be displayed at the moment, please try again later")
+                    .build();
 
-    public static final Map<String, AuthorizationException> AUTHORIZATION_EXCEPTIONS_BY_CODE = ImmutableMap.<String, AuthorizationException>builder()
-            .put("MAS0010", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.CODE_BLOCKED.getKey()))
-            .put("MAS0002", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.CODE_BLOCKED.getKey()))
-            .put("MBS0908", AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.NO_VALID_AGREEMENT.getKey()))
-            .build();
+    public static final Map<String, AuthorizationException> AUTHORIZATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthorizationException>builder()
+                    .put(
+                            "MAS0010",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MAS0002",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.CODE_BLOCKED.getKey()))
+                    .put(
+                            "MBS0908",
+                            AuthorizationError.ACCOUNT_BLOCKED.exception(
+                                    UserMessage.NO_VALID_AGREEMENT.getKey()))
+                    .build();
 
-    public static final Map<String, AuthenticationException> AUTHENTICATION_EXCEPTIONS_BY_CODE = ImmutableMap.<String, AuthenticationException>builder()
-            .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
-            .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
-            .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
-            .build();
+    public static final Map<String, AuthenticationException> AUTHENTICATION_EXCEPTIONS_BY_CODE =
+            ImmutableMap.<String, AuthenticationException>builder()
+                    .put("MAS0031", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0030", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
+                    .build();
 
     public static final LogTag HTTP_REQUEST_LOG_TAG = LogTag.from("#nordea_v20_http_request");
 
     public enum UserMessage implements LocalizableEnum {
-        CODE_BLOCKED(new LocalizableKey("Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
-        NO_VALID_BANKID(new LocalizableKey("You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
-        NO_VALID_AGREEMENT(new LocalizableKey("We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"));
+        CODE_BLOCKED(
+                new LocalizableKey(
+                        "Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
+        NO_VALID_BANKID(
+                new LocalizableKey(
+                        "You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
+        NO_VALID_AGREEMENT(
+                new LocalizableKey(
+                        "We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"));
 
         private LocalizableKey userMessage;
 
@@ -68,7 +92,8 @@ public class NordeaV20Constants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymendId";
         public static final String CONTINUE_KEY = "continueKey";
-        public static final String CONTINUATION_KEY = "continuationKey"; // For credit card transaction paging
+        public static final String CONTINUATION_KEY =
+                "continuationKey"; // For credit card transaction paging
         public static final String MARKET_CODE = "marketCode";
         public static final String LOWER_CASE_MARKET_CODE = "lowerCaseMarketCode";
     }
@@ -84,7 +109,8 @@ public class NordeaV20Constants {
         REGISTER_DEVICE(getAuthenticationEndpoint("/RegisterDevice")),
         CUSTODY_ACCOUNTS(getSavingsEndpoint("/Savings/CustodyAccounts"));
 
-        public static final String BASE_URL = "https://{" + UrlParameter.LOWER_CASE_MARKET_CODE + "}.mobilebank.prod.nordea.com/";
+        public static final String BASE_URL =
+                "https://{" + UrlParameter.LOWER_CASE_MARKET_CODE + "}.mobilebank.prod.nordea.com/";
         private final URL url;
 
         Url(String url) {
@@ -122,7 +148,6 @@ public class NordeaV20Constants {
             return url.queryParam(key, value);
         }
     }
-
 
     public static class HeaderKey {
         public static final String REQUEST_ID = "x-Request-Id";
@@ -169,7 +194,8 @@ public class NordeaV20Constants {
 
     public static class Payment {
         public enum StatusCode {
-            UNCONFIRMED("Unconfirmed"), CONFIRMED("Confirmed");
+            UNCONFIRMED("Unconfirmed"),
+            CONFIRMED("Confirmed");
 
             private String serializedValue;
 
@@ -183,8 +209,9 @@ public class NordeaV20Constants {
 
             public Predicate<PaymentEntity> predicateForType() {
                 final String serializedValue = getSerializedValue();
-                return paymentEntity -> paymentEntity != null &&
-                        serializedValue.equalsIgnoreCase(paymentEntity.getStatusCode());
+                return paymentEntity ->
+                        paymentEntity != null
+                                && serializedValue.equalsIgnoreCase(paymentEntity.getStatusCode());
             }
         }
     }
@@ -211,5 +238,4 @@ public class NordeaV20Constants {
             public static final String DERIVATIVE = "derivative";
         }
     }
-
 }

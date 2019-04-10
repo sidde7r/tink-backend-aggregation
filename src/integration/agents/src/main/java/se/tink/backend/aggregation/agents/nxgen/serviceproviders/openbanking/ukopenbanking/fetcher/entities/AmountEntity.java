@@ -8,7 +8,8 @@ import se.tink.libraries.strings.StringUtils;
 @JsonObject
 public class AmountEntity extends Amount {
 
-    public AmountEntity(@JsonProperty("Currency") String currency, @JsonProperty("Amount") String value) {
+    public AmountEntity(
+            @JsonProperty("Currency") String currency, @JsonProperty("Amount") String value) {
         super(currency, StringUtils.parseAmount(value));
     }
 }

@@ -9,8 +9,8 @@ public interface AmericanExpressV62Configuration {
     public String getLocale();
 
     public String getAppId();
-    public String getUserAgent();
 
+    public String getUserAgent();
 
     // == Credit Card Account ==
     public String getBankId(CardEntity cardEntity);
@@ -19,5 +19,4 @@ public interface AmericanExpressV62Configuration {
 
     // == Timeline Api ==
     public TimelineRequest createTimelineRequest(Integer cardIndex);
-
 }

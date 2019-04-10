@@ -2,17 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.inve
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.BecConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class PortfolioEntity {
     @JsonProperty("paperType")
     private String instrumentsType;
+
     private String dataType;
     private double typeAmount;
     private String typeAmountTxt;
+
     @JsonProperty("papers")
     private List<InstrumentEntity> instruments;
 
@@ -36,7 +38,6 @@ public class PortfolioEntity {
         return instruments;
     }
 
-
     public boolean isInstrumentTypeKnown() {
         return BecConstants.INSTRUMENT_TYPES.containsKey(dataType);
     }
@@ -44,5 +45,4 @@ public class PortfolioEntity {
     public Instrument.Type toTinkType() {
         return BecConstants.INSTRUMENT_TYPES.getOrDefault(dataType, Instrument.Type.OTHER);
     }
-
 }

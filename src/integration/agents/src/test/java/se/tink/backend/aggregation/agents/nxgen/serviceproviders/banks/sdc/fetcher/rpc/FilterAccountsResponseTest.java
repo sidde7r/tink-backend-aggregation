@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.rpc;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,8 +10,6 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.SdcSeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class FilterAccountsResponseTest {
     private SdcConfiguration agentConfiguration;

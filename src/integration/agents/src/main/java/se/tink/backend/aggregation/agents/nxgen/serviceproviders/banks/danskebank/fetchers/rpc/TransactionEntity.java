@@ -102,14 +102,15 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction() {
-        Transaction.Builder transactionBuilder = Transaction.builder()
-                .setAmount(
-                        new Amount(currency, amount))
-                .setDescription(text)
-                .setPending(isPending());
+        Transaction.Builder transactionBuilder =
+                Transaction.builder()
+                        .setAmount(new Amount(currency, amount))
+                        .setDescription(text)
+                        .setPending(isPending());
 
         try {
-            transactionBuilder.setDate(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
+            transactionBuilder.setDate(
+                    ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
@@ -118,13 +119,14 @@ public class TransactionEntity {
     }
 
     public UpcomingTransaction toTinkUpcomingTransaction() {
-        UpcomingTransaction.Builder upcomingTransactionBuilder = UpcomingTransaction.builder()
-                .setAmount(
-                        new Amount(currency, amount))
-                .setDescription(text);
+        UpcomingTransaction.Builder upcomingTransactionBuilder =
+                UpcomingTransaction.builder()
+                        .setAmount(new Amount(currency, amount))
+                        .setDescription(text);
 
         try {
-            upcomingTransactionBuilder.setDate(ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
+            upcomingTransactionBuilder.setDate(
+                    ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(bookingDate));
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }

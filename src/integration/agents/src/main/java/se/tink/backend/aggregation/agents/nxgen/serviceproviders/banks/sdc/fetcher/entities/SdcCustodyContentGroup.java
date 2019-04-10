@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SdcCustodyContentGroup {

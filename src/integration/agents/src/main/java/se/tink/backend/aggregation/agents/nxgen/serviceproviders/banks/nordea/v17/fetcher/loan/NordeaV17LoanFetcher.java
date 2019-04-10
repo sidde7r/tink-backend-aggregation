@@ -20,7 +20,12 @@ public class NordeaV17LoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         return client.getAccountProductsOfTypes(NordeaV20Constants.ProductType.LOAN).stream()
-                .map(pe -> parser.parseLoanAccount(pe, client.fetchLoanDetails(pe.getNordeaAccountIdV2()).getLoanDetails()))
+                .map(
+                        pe ->
+                                parser.parseLoanAccount(
+                                        pe,
+                                        client.fetchLoanDetails(pe.getNordeaAccountIdV2())
+                                                .getLoanDetails()))
                 .collect(Collectors.toList());
     }
 }

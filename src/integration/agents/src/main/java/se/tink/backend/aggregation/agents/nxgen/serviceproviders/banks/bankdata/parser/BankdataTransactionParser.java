@@ -20,7 +20,8 @@ public class BankdataTransactionParser {
                 .build();
     }
 
-    public UpcomingTransaction parseUpcomingTransaction(BankdataTransactionEntity bankdataTransaction) {
+    public UpcomingTransaction parseUpcomingTransaction(
+            BankdataTransactionEntity bankdataTransaction) {
         return UpcomingTransaction.builder()
                 .setDescription(bankdataTransaction.getText())
                 .setDate(parseDate(bankdataTransaction.getTransactionDate()))
@@ -30,8 +31,10 @@ public class BankdataTransactionParser {
 
     private Date parseDate(String transactionDate) {
         // how do we do this correctly?? Is there a plan?
-        LocalDate localDate = LocalDate
-                .parse(transactionDate, DateTimeFormatter.ofPattern(BankdataConstants.Fetcher.DATE_FORMAT));
+        LocalDate localDate =
+                LocalDate.parse(
+                        transactionDate,
+                        DateTimeFormatter.ofPattern(BankdataConstants.Fetcher.DATE_FORMAT));
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

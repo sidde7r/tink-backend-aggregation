@@ -13,14 +13,16 @@ public class NordeaPersistentStorage {
     public String getClientId() {
         return persistentStorage.get(NordeaBaseConstants.Storage.CLIENT_ID);
     }
-    public void setClientId(String  clientId) {
+
+    public void setClientId(String clientId) {
         persistentStorage.put(NordeaBaseConstants.Storage.CLIENT_ID, clientId);
     }
 
     public String getClientsecret() {
         return persistentStorage.get(NordeaBaseConstants.Storage.CLIENT_SECRET);
     }
-    public void setClientSecret(String  clientSecret) {
+
+    public void setClientSecret(String clientSecret) {
         persistentStorage.put(NordeaBaseConstants.Storage.CLIENT_SECRET, clientSecret);
     }
 
