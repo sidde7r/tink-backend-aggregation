@@ -76,8 +76,7 @@ data:
 
     {{- if .Values.clients }}
     provisionClientsConfig:
-      clients:
-        {{ .Values.clients }}
+      clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}
     {{- end }}
 
 
