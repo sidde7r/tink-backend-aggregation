@@ -71,3 +71,5 @@ clients:
     aggregatorIdentifier: "Zimpler"
   zimpler-test:
     aggregatorIdentifier: "Zimpler"
+  evobanco-testing:
+    aggregatorIdentifier: "Evo Banco"
