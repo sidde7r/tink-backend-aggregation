@@ -62,11 +62,11 @@ spec:
             imagePullPolicy: Always
             resources:
               requests:
-                memory: {{ default "700Mi" .Values.podMemoryRequest }}
-                cpu: {{ default "500m" .Values.podCpuRequest }}
+                memory: 700Mi
+                cpu: 500m
               limits:
-                memory: {{ default "1Gi" .Values.podMemoryLimit }}
-                cpu: {{ default "1000m" .Values.podCpuLimit }}
+                memory: 1Gi
+                cpu: 1000m
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
