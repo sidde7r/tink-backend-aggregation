@@ -113,15 +113,15 @@ public class ICSApiClient {
     }
 
     public AccountSetupResponse setupAccount(OAuth2Token token) {
-        Date fromDate = ICSUtils.getFromDate();
-        Date toDate = ICSUtils.getToDate();
-        Date expirationDate = ICSUtils.getExpirationDate();
+        final Date fromDate = ICSUtils.getFromDate();
+        final Date toDate = ICSUtils.getToDate();
+        final Date expirationDate = ICSUtils.getExpirationDate();
 
-        AccountSetupRequest request =
+        final AccountSetupRequest request =
                 new AccountSetupRequest()
                         .setup(Permissions.ALL_READ_PERMISSIONS, fromDate, toDate, expirationDate);
 
-        String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
+        final String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
 
         return createRequestInSession(Urls.ACCOUNT_SETUP, token)
                 .header(HeaderKeys.X_JWS_SIGNATURE, ICSUtils.getJWSSignature(request))
