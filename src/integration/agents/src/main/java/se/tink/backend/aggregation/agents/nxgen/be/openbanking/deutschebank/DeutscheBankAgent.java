@@ -63,7 +63,9 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, new DeutscheBankAuthenticator(apiClient));
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new DeutscheBankAuthenticator(apiClient));
         return new AutoAuthenticationController(
                 request,
                 context,
