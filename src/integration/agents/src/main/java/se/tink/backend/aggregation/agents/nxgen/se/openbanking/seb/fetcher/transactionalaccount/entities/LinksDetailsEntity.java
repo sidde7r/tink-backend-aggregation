@@ -7,10 +7,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksDetailsEntity {
-  private String href;
+    private String href;
 
-  public boolean hasMore() {
-    return !Strings.isNullOrEmpty(href)
-        && StringUtils.containsIgnoreCase(href, SebConstants.QueryKeys.TRANSACTION_SEQUENCE_NUMBER);
-  }
+    public boolean hasMore() {
+        return !Strings.isNullOrEmpty(href)
+                && StringUtils.containsIgnoreCase(
+                        href, SebConstants.QueryKeys.TRANSACTION_SEQUENCE_NUMBER);
+    }
 }

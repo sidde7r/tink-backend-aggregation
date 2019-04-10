@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class JWTAuthPayload implements JWTPayload{
+public class JWTAuthPayload implements JWTPayload {
 
     private String scope;
     private IdTokenClaim claims;
@@ -13,8 +13,14 @@ public class JWTAuthPayload implements JWTPayload{
     private String nonce;
     private String clientId;
 
-    public JWTAuthPayload(String scope, IdTokenClaim claims, String iss, String redirectUri,
-        String state, String nonce, String clientId) {
+    public JWTAuthPayload(
+            String scope,
+            IdTokenClaim claims,
+            String iss,
+            String redirectUri,
+            String state,
+            String nonce,
+            String clientId) {
         this.scope = scope;
         this.claims = claims;
         this.iss = iss;

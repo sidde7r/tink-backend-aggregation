@@ -11,7 +11,7 @@ public class SignatureEntity {
     private final String xIngRequestId;
 
     public SignatureEntity(
-        String httpMethod, String reqPath, String date, String digest, String xIngRequestId) {
+            String httpMethod, String reqPath, String date, String digest, String xIngRequestId) {
         this.httpMethod = httpMethod;
         this.reqPath = reqPath;
         this.date = date;
@@ -22,17 +22,17 @@ public class SignatureEntity {
     @Override
     public String toString() {
         return IngConstants.Signature.SIGNING_STRING
-            + httpMethod
-            + " "
-            + reqPath
-            + System.lineSeparator()
-            + IngConstants.Signature.DATE
-            + date
-            + System.lineSeparator()
-            + IngConstants.Signature.DIGEST
-            + digest
-            + System.lineSeparator()
-            + IngConstants.Signature.X_ING_REQUEST_ID
-            + xIngRequestId;
+                + httpMethod
+                + " "
+                + reqPath
+                + System.lineSeparator()
+                + IngConstants.Signature.DATE
+                + date
+                + System.lineSeparator()
+                + IngConstants.Signature.DIGEST
+                + digest
+                + System.lineSeparator()
+                + IngConstants.Signature.X_ING_REQUEST_ID
+                + xIngRequestId;
     }
 }

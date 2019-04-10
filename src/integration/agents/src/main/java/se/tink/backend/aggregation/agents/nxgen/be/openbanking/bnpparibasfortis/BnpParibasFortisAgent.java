@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.BnpParibasFortisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.BnpParibasFortisTransactionalAccountFetcher;
@@ -31,45 +33,45 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent {
     private final BnpParibasFortisApiClient apiClient;
 
     public BnpParibasFortisAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BnpParibasFortisApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new BnpParibasFortisApiClient(client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BnpParibasFortisAuthenticator authenticator = new BnpParibasFortisAuthenticator(apiClient,
-            sessionStorage);
-        OAuth2AuthenticationController oAuth2AuthenticationController = new OAuth2AuthenticationController(
-            persistentStorage, supplementalInformationHelper, authenticator);
+        final BnpParibasFortisAuthenticator authenticator =
+                new BnpParibasFortisAuthenticator(apiClient, sessionStorage);
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, authenticator);
 
         return new AutoAuthenticationController(
-            request,
-            context,
-            new ThirdPartyAppAuthenticationController<>(oAuth2AuthenticationController,
-                supplementalInformationHelper),
-            oAuth2AuthenticationController);
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
-        BnpParibasFortisTransactionalAccountFetcher accountFetcher =
-            new BnpParibasFortisTransactionalAccountFetcher(apiClient);
+            constructTransactionalAccountRefreshController() {
+        final BnpParibasFortisTransactionalAccountFetcher accountFetcher =
+                new BnpParibasFortisTransactionalAccountFetcher(apiClient);
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionKeyPaginationController<>(accountFetcher))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(accountFetcher))));
     }
 
     @Override
@@ -77,30 +79,18 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
 
         final BnpParibasFortisConfiguration bnpParibasFortisConfiguration =
-            configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                    BnpParibasFortisConstants.Market.INTEGRATION_NAME,
-                    BnpParibasFortisConstants.Market.CLIENT_NAME,
-                    BnpParibasFortisConfiguration.class
-                )
-                .orElseThrow(
-                    () -> new IllegalStateException("BNP Paribas Fortis configuration missing."));
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                Market.INTEGRATION_NAME,
+                                Market.CLIENT_NAME,
+                                BnpParibasFortisConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.AUTH_BASE_URL,
-            bnpParibasFortisConfiguration.getAuthBaseUrl());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.CLIENT_ID,
-            bnpParibasFortisConfiguration.getClientId());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.REDIRECT_URI,
-            bnpParibasFortisConfiguration.getRedirectUri());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.CLIENT_SECRET,
-            bnpParibasFortisConfiguration.getClientSecret());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.ORGANIZATION_ID,
-            bnpParibasFortisConfiguration.getOrganisationId());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.OPENBANK_STET_VERSION,
-            bnpParibasFortisConfiguration.getOpenbankStetVersion());
-        persistentStorage.put(BnpParibasFortisConstants.StorageKeys.API_BASE_URL,
-            bnpParibasFortisConfiguration.getApiBaseUrl());
+        apiClient.setConfiguration(bnpParibasFortisConfiguration);
     }
 
     @Override
@@ -125,7 +115,7 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

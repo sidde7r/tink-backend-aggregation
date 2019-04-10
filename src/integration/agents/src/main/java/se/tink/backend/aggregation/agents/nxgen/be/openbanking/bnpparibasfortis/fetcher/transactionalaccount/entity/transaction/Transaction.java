@@ -1,20 +1,18 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction;
 
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
+import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
 
 @JsonObject
 public class Transaction {
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDate;
 
-    private String bookingDate;
     private String creditDebitIndicator;
     private String entryReference;
     private List<String> remittanceInformation;
@@ -22,26 +20,20 @@ public class Transaction {
     private TransactionAmount transactionAmount;
 
     public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkModel(
-        TransactionalAccount account) {
-        return se.tink.backend.aggregation.nxgen.core.transaction.Transaction
-            .builder()
-            .setAmount(getAmount())
-            .setDate(getDate())
-            .setPending(
-                status.equalsIgnoreCase(BnpParibasFortisConstants.Transactions.PENDING_STATUS))
-            .build();
+            TransactionalAccount account) {
+        return se.tink.backend.aggregation.nxgen.core.transaction.Transaction.builder()
+                .setAmount(getAmount())
+                .setDate(getDate())
+                .setPending(status.equalsIgnoreCase(Transactions.PENDING_STATUS))
+                .build();
     }
 
     private Date getDate() {
-        try {
-            return ThreadSafeDateFormat.FORMATTER_DAILY.parse(bookingDate);
-        } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse date", e);
-        }
+        return bookingDate;
     }
 
     private Amount getAmount() {
-        return new Amount(transactionAmount.getCurrency(),
-            Double.parseDouble(transactionAmount.getAmount()));
+        return new Amount(
+                transactionAmount.getCurrency(), Double.parseDouble(transactionAmount.getAmount()));
     }
 }

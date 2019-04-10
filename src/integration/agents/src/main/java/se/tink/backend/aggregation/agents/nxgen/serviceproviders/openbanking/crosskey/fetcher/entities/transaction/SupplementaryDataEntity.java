@@ -6,6 +6,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class SupplementaryDataEntity {
-
-}
+public class SupplementaryDataEntity {}

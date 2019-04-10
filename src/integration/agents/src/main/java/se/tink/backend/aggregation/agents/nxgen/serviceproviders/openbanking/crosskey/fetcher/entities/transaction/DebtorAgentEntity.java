@@ -12,5 +12,4 @@ public class DebtorAgentEntity {
     private String name;
     private PostalAddressEntity postalAddress;
     private String schemeName;
-
 }

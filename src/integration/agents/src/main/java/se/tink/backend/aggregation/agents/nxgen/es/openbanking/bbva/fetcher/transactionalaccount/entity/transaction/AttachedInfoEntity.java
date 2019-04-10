@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.transaction;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -10,5 +9,4 @@ public class AttachedInfoEntity {
     private String type;
     private Integer size;
     private String date;
-
 }

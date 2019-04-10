@@ -23,16 +23,16 @@ public final class JWTUtils {
         throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
-    public static String constructOIDCRequestObject(JWTHeader jwtHeader, JWTPayload jwtAuthPayload, String keyPath, String keyAlgorithm) {
+    public static String constructOIDCRequestObject(
+            JWTHeader jwtHeader, JWTPayload jwtAuthPayload, String keyPath, String keyAlgorithm) {
 
-        PrivateKey privateKey = JWTUtils
-            .readSigningKey(keyPath, keyAlgorithm);
+        PrivateKey privateKey = JWTUtils.readSigningKey(keyPath, keyAlgorithm);
 
         return JWTUtils.toOIDCRequestObject(jwtHeader, jwtAuthPayload, privateKey);
     }
 
-    public static String toOIDCRequestObject(JWTHeader jwtHeader, JWTPayload jwtPayload,
-        PrivateKey privateKey) {
+    public static String toOIDCRequestObject(
+            JWTHeader jwtHeader, JWTPayload jwtPayload, PrivateKey privateKey) {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -43,22 +43,25 @@ public final class JWTUtils {
             jwtHeaderJson = mapper.writeValueAsString(jwtHeader);
             jwtPayloadJson = mapper.writeValueAsString(jwtPayload);
 
-            String base64encodedHeader = com.amazonaws.util.Base64
-                .encodeAsString(jwtHeaderJson.getBytes());
-            String base64encodedPayload = com.amazonaws.util.Base64
-                .encodeAsString(jwtPayloadJson.getBytes());
+            String base64encodedHeader =
+                    com.amazonaws.util.Base64.encodeAsString(jwtHeaderJson.getBytes());
+            String base64encodedPayload =
+                    com.amazonaws.util.Base64.encodeAsString(jwtPayloadJson.getBytes());
 
-            String toBeSignedPayload = String
-                .format("%s.%s", base64encodedHeader, base64encodedPayload);
+            String toBeSignedPayload =
+                    String.format("%s.%s", base64encodedHeader, base64encodedPayload);
 
             byte[] signedPayload = toSHA256withRSA(privateKey, toBeSignedPayload);
 
-            String signedAndEncodedPayload = com.amazonaws.util.Base64
-                .encodeAsString(signedPayload);
+            String signedAndEncodedPayload =
+                    com.amazonaws.util.Base64.encodeAsString(signedPayload);
 
             return String.format("%s.%s", toBeSignedPayload, signedAndEncodedPayload);
 
-        } catch (JsonProcessingException | InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
+        } catch (JsonProcessingException
+                | InvalidKeyException
+                | NoSuchAlgorithmException
+                | SignatureException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -66,9 +69,9 @@ public final class JWTUtils {
     public static PrivateKey readSigningKey(String path, String algorithm) {
         try {
             return KeyFactory.getInstance(algorithm)
-                .generatePrivate(
-                    new PKCS8EncodedKeySpec(
-                        Base64.getDecoder().decode(new String(readFile(path)))));
+                    .generatePrivate(
+                            new PKCS8EncodedKeySpec(
+                                    Base64.getDecoder().decode(new String(readFile(path)))));
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -83,7 +86,7 @@ public final class JWTUtils {
     }
 
     public static byte[] toSHA256withRSA(PrivateKey privateKey, String input)
-        throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
+            throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
 
         Signature signer = Signature.getInstance("SHA256withRSA");
         signer.initSign(privateKey);
@@ -91,6 +94,4 @@ public final class JWTUtils {
         signer.update(input.getBytes());
         return signer.sign();
     }
-
-
 }

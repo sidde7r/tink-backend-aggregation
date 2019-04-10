@@ -18,13 +18,11 @@ public class AccountBalanceEntity {
     private String type;
 
     public boolean isInterimBooked() {
-         return type.equalsIgnoreCase(
-            AccountBalanceTypeEntity.BOOKED.getKey());
+        return type.equalsIgnoreCase(AccountBalanceTypeEntity.BOOKED.getKey());
     }
 
     public boolean isInterimAvailable() {
-        return type.equalsIgnoreCase(
-            AccountBalanceTypeEntity.AVAILABLE.getKey());
+        return type.equalsIgnoreCase(AccountBalanceTypeEntity.AVAILABLE.getKey());
     }
 
     public AmountEntity getAmount() {

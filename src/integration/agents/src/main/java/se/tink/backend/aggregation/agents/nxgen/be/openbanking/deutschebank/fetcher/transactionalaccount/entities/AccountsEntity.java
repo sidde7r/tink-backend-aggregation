@@ -12,13 +12,9 @@ import se.tink.libraries.amount.Amount;
 public class AccountsEntity {
 
     private String iban;
-
     private String currencyCode;
-
     private String accountType;
-
     private Number currentBalance;
-
     private String productDescription;
 
     public TransactionalAccount toTinkAccount(String owner) {

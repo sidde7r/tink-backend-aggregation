@@ -19,5 +19,4 @@ public class PostalAddressEntity {
     private String streetName;
     private String subDepartment;
     private String townName;
-
 }

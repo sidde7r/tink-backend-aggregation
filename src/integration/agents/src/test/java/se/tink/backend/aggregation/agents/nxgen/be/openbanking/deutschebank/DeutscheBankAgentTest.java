@@ -13,9 +13,9 @@ public class DeutscheBankAgentTest {
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("be", "be-deutschebank-oauth2")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                new AgentIntegrationTest.Builder("be", "be-deutschebank-oauth2")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
