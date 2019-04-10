@@ -4,7 +4,7 @@ metadata:
   name: provisioning-cronjob
   namespace: aggregation
 spec:
-  schedule: "0 9 * * mon-fri"
+  schedule: "*/5 * * * mon-fri"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
