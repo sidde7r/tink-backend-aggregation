@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.cli;
 import com.google.inject.Injector;
 import io.dropwizard.setup.Bootstrap;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.controllers.ProvisionClientController;
 import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfigurationsRepository;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigur
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 
 public class AddClientConfigurationsCommand extends AggregationServiceContextCommand<AggregationServiceConfiguration> {
+    private static final Logger log = LoggerFactory.getLogger(AddClientConfigurationsCommand.class);
 
     public AddClientConfigurationsCommand() {
         super("add-client-configuration", "Adds a new client to the configuration databases.");
@@ -19,6 +22,11 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
     @Override
     protected void run(Bootstrap<AggregationServiceConfiguration> bootstrap, Namespace namespace,
             AggregationServiceConfiguration configuration, Injector injector) throws Exception {
+
+        if (!configuration.shouldProvisionClients()) {
+            log.info("Provisioning not enabled for this cluster.");
+            return;
+        }
 
         AggregatorConfigurationsRepository aggregatorConfigurationsRepository = injector
                 .getInstance(AggregatorConfigurationsRepository.class);

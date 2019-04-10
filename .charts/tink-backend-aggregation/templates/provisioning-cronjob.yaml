@@ -1,0 +1,104 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: provisioning-cronjob
+  namespace: aggregation
+spec:
+  schedule: "*/5 * * * mon-fri"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: 300
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 300
+      backoffLimit: 6
+      template:
+        metadata:
+          labels:
+            app: provisioning-cronjob
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: tink-containers
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            fsGroup: 65535
+
+          initContainers:
+          # Script to replace placeholder passwords with the real passwords
+          - name: add-secrets-to-config-for-cronjob
+            command:
+              - "/mnt/scripts/add-secrets.sh"
+            image: gcr.io/tink-containers/debian:stretch
+            imagePullPolicy: Always
+            securityContext:
+              readOnlyRootFilesystem: true
+            volumeMounts:
+            - name: config-scripts
+              mountPath: /mnt/scripts
+            - name: aggregation-config
+              mountPath: /mnt/aggregation-config
+            - name: agents-config
+              mountPath: /mnt/agents-config
+            - name: altered-config-volume
+              mountPath: /mnt/altered-config-volume
+            env:
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aggregation-secrets
+                  key: keystore-password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aggregation-secrets
+                  key: aggregationdb-password
+          containers:
+          - name: tink-backend-aggregation-provisioning-cronjob
+            image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
+            imagePullPolicy: Always
+            resources:
+              requests:
+                memory: {{ default "700Mi" .Values.podMemoryRequest }}
+                cpu: {{ default "500m" .Values.podCpuRequest }}
+              limits:
+                memory: {{ default "1Gi" .Values.podMemoryLimit }}
+                cpu: {{ default "1000m" .Values.podCpuLimit }}
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+
+            command:
+            - "java"
+            - "-jar"
+            - "-Xmx{{ default "256m" .Values.heapSize }}"
+            - "-XX:-OmitStackTraceInFastThrow"
+            - "-Dnetworkaddress.cache.ttl=60"
+            - "-XX:+ExitOnOutOfMemoryError"
+            - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
+            - "add-client-configuration"
+            - "/etc/tink/config.yml"
+
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: altered-config-volume
+              mountPath: /etc/tink
+          volumes:
+          - name: config-scripts
+            configMap:
+              name: config-scripts
+              defaultMode: 0111
+          - name: aggregation-config
+            configMap:
+              name: aggregation-config
+          - name: agents-config
+            configMap:
+              name: agents-config
+          - name: altered-config-volume
+            emptyDir: {}
+          - name: tmp
+            emptyDir: {}

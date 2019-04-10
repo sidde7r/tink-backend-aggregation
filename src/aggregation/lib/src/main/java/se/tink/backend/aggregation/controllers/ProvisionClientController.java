@@ -28,7 +28,7 @@ public class ProvisionClientController {
     private ClusterConfigurationsRepository clusterConfigurationsRepository;
     private ClientConfigurationsRepository clientConfigurationsRepository;
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
-    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-production";
+    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-staging";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public ProvisionClientController(
