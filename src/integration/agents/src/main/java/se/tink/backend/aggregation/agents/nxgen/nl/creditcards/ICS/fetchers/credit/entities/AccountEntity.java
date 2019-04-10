@@ -39,8 +39,8 @@ public class AccountEntity {
     public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
         return CreditCardAccount.builder(
                         accountId,
-                        balanceResponse.getBalance(accountId),
-                        balanceResponse.getAvailableCredit(accountId))
+                        balanceResponse.getBalanceAsTinkAmount(accountId),
+                        balanceResponse.getAvailableCreditAsTinkAmount(accountId))
                 .setName(productEntity.getProductName())
                 .setAccountNumber(creditCardEntity.getCustomerNumber())
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
