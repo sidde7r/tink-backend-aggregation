@@ -17,7 +17,6 @@ public class ICSCreditCardFetcher implements TransactionPagePaginator<CreditCard
     // At this time they do not support pagination
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        return this.client.getTransactions(
-                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID));
+        return client.getTransactions(account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID));
     }
 }
