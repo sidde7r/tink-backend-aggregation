@@ -43,39 +43,48 @@ public class SparebankenSorApiClient {
     }
 
     public void fetchAppInformation() {
-        client.request(Url.APP_INFORMATION)
-                .accept(MediaType.WILDCARD)
-                .get(HttpResponse.class);
+        client.request(Url.APP_INFORMATION).accept(MediaType.WILDCARD).get(HttpResponse.class);
     }
 
     public VerifyCustomerResponse verifyCustomer(String nationalId, String mobilenumber) {
-        // There is a literal + sign in the url that Sor uses, so we can't use the parameter or queryParam
+        // There is a literal + sign in the url that Sor uses, so we can't use the parameter or
+        // queryParam
         // functions here because they url encode the values.
-        URL url = new URL(Url.SECESB_IDENTIFY_CUSTOMER + String.format(
-                "%s/mobile?number=+47%s&orgid=%s", nationalId, mobilenumber, StaticUrlValues.ORG_ID));
+        URL url =
+                new URL(
+                        Url.SECESB_IDENTIFY_CUSTOMER
+                                + String.format(
+                                        "%s/mobile?number=+47%s&orgid=%s",
+                                        nationalId, mobilenumber, StaticUrlValues.ORG_ID));
 
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(SparebankenSorConstants.Headers.NAME_CLIENTNAME, SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
+                .header(
+                        SparebankenSorConstants.Headers.NAME_CLIENTNAME,
+                        SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
                 .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
                 .get(VerifyCustomerResponse.class);
     }
 
     public void configureBankId(String nationalId, String mobilenumber) {
-        URL url = Url.CONFIGURE_BANKID
-                .queryParam(StaticUrlValuePairs.CONFIG_KEY.getKey(), StaticUrlValuePairs.CONFIG_KEY.getValue())
-                .queryParam(UrlQueryParameters.USER_ID, nationalId)
-                .queryParam(UrlQueryParameters.PHONE_NUMBER, mobilenumber);
+        URL url =
+                Url.CONFIGURE_BANKID
+                        .queryParam(
+                                StaticUrlValuePairs.CONFIG_KEY.getKey(),
+                                StaticUrlValuePairs.CONFIG_KEY.getValue())
+                        .queryParam(UrlQueryParameters.USER_ID, nationalId)
+                        .queryParam(UrlQueryParameters.PHONE_NUMBER, mobilenumber);
 
-        client.request(url)
-                .accept(MediaType.WILDCARD)
-                .get(HttpResponse.class);
+        client.request(url).accept(MediaType.WILDCARD).get(HttpResponse.class);
     }
 
     public String initBankId(InitBankIdBody initBankIdBody) {
-        URL url = new URL(Url.BANKID_MOBILE + jSessionId)
-                .queryParam(StaticUrlValuePairs.INIT_BANKID.getKey(), StaticUrlValuePairs.INIT_BANKID.getValue());
+        URL url =
+                new URL(Url.BANKID_MOBILE + jSessionId)
+                        .queryParam(
+                                StaticUrlValuePairs.INIT_BANKID.getKey(),
+                                StaticUrlValuePairs.INIT_BANKID.getValue());
 
         return client.request(url)
                 .header(SparebankenSorConstants.Headers.NAME_ORIGIN, Url.HOST)
@@ -89,15 +98,18 @@ public class SparebankenSorApiClient {
         return client.request(url)
                 .accept(MediaType.WILDCARD)
                 .header(SparebankenSorConstants.Headers.NAME_ORIGIN, Url.HOST)
-                .header(SparebankenSorConstants.Headers.NAME_REQUESTED_WITH,
+                .header(
+                        SparebankenSorConstants.Headers.NAME_REQUESTED_WITH,
                         SparebankenSorConstants.Headers.VALUE_REQUESTED_WITH)
                 .post(PollBankIdResponse.class);
     }
 
     public String finalizeBankId(FinalizeBankIdBody finalizeBankIdBody) {
-        URL url = new URL(Url.BANKID_MOBILE + jSessionId)
-                .queryParam(StaticUrlValuePairs.FINALIZE_BANKID.getKey(),
-                            StaticUrlValuePairs.FINALIZE_BANKID.getValue());
+        URL url =
+                new URL(Url.BANKID_MOBILE + jSessionId)
+                        .queryParam(
+                                StaticUrlValuePairs.FINALIZE_BANKID.getKey(),
+                                StaticUrlValuePairs.FINALIZE_BANKID.getValue());
 
         return client.request(url)
                 .header(SparebankenSorConstants.Headers.NAME_ORIGIN, Url.HOST)
@@ -110,19 +122,19 @@ public class SparebankenSorApiClient {
         return client.request(Url.LOGIN_FIRST_STEP)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(SparebankenSorConstants.Headers.NAME_CLIENTNAME, SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
+                .header(
+                        SparebankenSorConstants.Headers.NAME_CLIENTNAME,
+                        SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
                 .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
                 .post(FirstLoginResponse.class, firstLoginRequest);
     }
 
     public SecondLoginResponse loginSecondStep() {
-        return getRequestWithCommonHeaders(Url.LOGIN_SECOND_STEP)
-                .post(SecondLoginResponse.class);
+        return getRequestWithCommonHeaders(Url.LOGIN_SECOND_STEP).post(SecondLoginResponse.class);
     }
 
     public HttpResponse sendSms(SendSmsRequest sendSmsRequest) {
-        return getRequestWithCommonHeaders(Url.SEND_SMS)
-                .post(HttpResponse.class, sendSmsRequest);
+        return getRequestWithCommonHeaders(Url.SEND_SMS).post(HttpResponse.class, sendSmsRequest);
     }
 
     public List<AccountEntity> fetchAccounts() {
@@ -131,8 +143,8 @@ public class SparebankenSorApiClient {
             return accountList;
         }
 
-        AccountListResponse accountListResponse = getRequestWithCommonHeaders(Url.FETCH_ACCOUNTS)
-                .get(AccountListResponse.class);
+        AccountListResponse accountListResponse =
+                getRequestWithCommonHeaders(Url.FETCH_ACCOUNTS).get(AccountListResponse.class);
 
         List<AccountEntity> accountList = accountListResponse.getAccountList();
         this.accountList = accountList;
@@ -141,53 +153,52 @@ public class SparebankenSorApiClient {
     }
 
     public TransactionListResponse fetchTransactions(String transactionsPath) {
-        URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + transactionsPath)
-                .queryParam(StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getKey(),
-                        StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getValue())
-                .queryParam(StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
-                        StaticUrlValuePairs.RESERVED_TRANSACTIONS.getValue());
+        URL url =
+                new URL(SparebankenSorConstants.Url.BASE_PATH + transactionsPath)
+                        .queryParam(
+                                StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getKey(),
+                                StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getValue())
+                        .queryParam(
+                                StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
+                                StaticUrlValuePairs.RESERVED_TRANSACTIONS.getValue());
 
-        return getRequestWithCommonHeaders(url)
-                .get(TransactionListResponse.class);
+        return getRequestWithCommonHeaders(url).get(TransactionListResponse.class);
     }
 
     // just logging response
     public String fetchCreditCards() {
-        return getRequestWithCommonHeaders(Url.FETCH_CREDIT_CARDS)
-                .get(String.class);
+        return getRequestWithCommonHeaders(Url.FETCH_CREDIT_CARDS).get(String.class);
     }
 
     // For loan fetching
     public SoTokenResponse fetchSoToken(URL url) {
         return client.request(url)
                 .header(SparebankenSorConstants.Headers.NAME_ORIGIN, Url.HOST)
-                .header(SparebankenSorConstants.Headers.NAME_CLIENTNAME, SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
+                .header(
+                        SparebankenSorConstants.Headers.NAME_CLIENTNAME,
+                        SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
                 .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
                 .accept(MediaType.WILDCARD)
-                .header(SparebankenSorConstants.Headers.NAME_ACCESSTOKEN,
+                .header(
+                        SparebankenSorConstants.Headers.NAME_ACCESSTOKEN,
                         sessionStorage.get(SparebankenSorConstants.Storage.ACCESS_TOKEN))
                 .post(SoTokenResponse.class);
     }
 
     // For loan fetching
     public void transigoLogon(URL transigoLogonUrl) {
-        client.request(transigoLogonUrl)
-                .accept(MediaType.WILDCARD)
-                .get(HttpResponse.class);
+        client.request(transigoLogonUrl).accept(MediaType.WILDCARD).get(HttpResponse.class);
     }
 
     // Just logging response
     public String transigoAccounts(URL url) {
-        return client.request(url)
-                .accept(MediaType.WILDCARD)
-                .get(String.class);
+        return client.request(url).accept(MediaType.WILDCARD).get(String.class);
     }
 
     public String fetchLoanDetails(String detailsPath) {
         URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + detailsPath);
 
         return getRequestWithCommonHeaders(url).get(String.class);
-
     }
 
     private RequestBuilder getRequestWithCommonHeaders(URL url) {
@@ -195,19 +206,28 @@ public class SparebankenSorApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(SparebankenSorConstants.Headers.NAME_CLIENTNAME, SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
+                .header(
+                        SparebankenSorConstants.Headers.NAME_CLIENTNAME,
+                        SparebankenSorConstants.Headers.VALUE_CLIENTNAME)
                 .header(SparebankenSorConstants.Headers.NAME_REQUESTID, generateRequestId())
-                .header(SparebankenSorConstants.Headers.NAME_ACCESSTOKEN,
+                .header(
+                        SparebankenSorConstants.Headers.NAME_ACCESSTOKEN,
                         sessionStorage.get(SparebankenSorConstants.Storage.ACCESS_TOKEN));
     }
 
     public void setSessionIdForBankIdUrls() {
-        jSessionId = client.getCookies().stream()
-                .filter(cookie -> Objects.equals(cookie.getName().toLowerCase(), "jsessionid"))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(() -> new IllegalStateException(
-                        "JSESSIONID cookie not found, is needed for bankId authentication."));
+        jSessionId =
+                client.getCookies().stream()
+                        .filter(
+                                cookie ->
+                                        Objects.equals(
+                                                cookie.getName().toLowerCase(), "jsessionid"))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "JSESSIONID cookie not found, is needed for bankId authentication."));
     }
 
     private String generateRequestId() {

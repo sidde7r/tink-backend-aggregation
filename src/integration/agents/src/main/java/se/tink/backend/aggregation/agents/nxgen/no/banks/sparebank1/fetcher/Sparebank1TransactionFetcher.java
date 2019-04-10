@@ -22,14 +22,13 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
     }
 
     @Override
-    public void resetState() {
-
-    }
+    public void resetState() {}
 
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        Optional<LinkEntity> storedTransactionsLink = account.getFromTemporaryStorage(
-                Sparebank1Constants.Keys.TRANSACTIONS_LINK, LinkEntity.class);
+        Optional<LinkEntity> storedTransactionsLink =
+                account.getFromTemporaryStorage(
+                        Sparebank1Constants.Keys.TRANSACTIONS_LINK, LinkEntity.class);
 
         if (!storedTransactionsLink.isPresent()) {
             return PaginatorResponseImpl.createEmpty(false);
@@ -40,11 +39,10 @@ public class Sparebank1TransactionFetcher implements TransactionPaginator<Transa
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        List<Transaction> transactions = apiClient.fetchTransactions(transactionsLink.getHref())
-                .getTransactions()
-                .stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        List<Transaction> transactions =
+                apiClient.fetchTransactions(transactionsLink.getHref()).getTransactions().stream()
+                        .map(TransactionEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions, false);
     }

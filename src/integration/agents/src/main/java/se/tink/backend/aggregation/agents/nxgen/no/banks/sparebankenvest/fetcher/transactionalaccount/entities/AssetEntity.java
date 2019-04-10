@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AssetEntity {
     @JsonProperty("avtale")
     private Boolean agreement;
+
     @JsonProperty("betaling")
     private Boolean payment;
+
     @JsonProperty("tilgang")
     private Boolean asset;
+
     @JsonProperty("overfoereFra")
     private Boolean transferFrom;
+
     @JsonProperty("overfoereTil")
     private Boolean transferTo;
 

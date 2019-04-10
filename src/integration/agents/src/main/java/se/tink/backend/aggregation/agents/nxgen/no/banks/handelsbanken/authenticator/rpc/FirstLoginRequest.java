@@ -6,9 +6,13 @@ public class FirstLoginRequest {
 
     public static String build(String evryToken) {
         return "{\"credentials\":"
-                + "{\"token\":\"" + evryToken.replaceAll("/", "\\\\/") + "\",\"tokenType\":\"" + LogInRequestConstants
-                .TOKEN_TYPE + "\"},"
-                + "\"tokenProtocolVersions\":[\"" + LogInRequestConstants.TOKEN_PROTOCOL_VERSION + "\"]}";
+                + "{\"token\":\""
+                + evryToken.replaceAll("/", "\\\\/")
+                + "\",\"tokenType\":\""
+                + LogInRequestConstants.TOKEN_TYPE
+                + "\"},"
+                + "\"tokenProtocolVersions\":[\""
+                + LogInRequestConstants.TOKEN_PROTOCOL_VERSION
+                + "\"]}";
     }
-
 }

@@ -9,8 +9,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class MessageEntity {
     @JsonProperty("errormsg")
     private String errorMessage;
+
     @JsonProperty("usermsg")
     private String userMessage;
+
     private String applicationData;
 
     public String getErrorMessage() {

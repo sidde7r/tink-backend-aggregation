@@ -19,8 +19,10 @@ public class PaymentEntity {
     private String keyGuid;
     private String agreementId;
     private double amount;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date dueDate;
+
     private String note;
     private String cid;
     private String beneficiaryName;
@@ -43,8 +45,9 @@ public class PaymentEntity {
 
     @JsonIgnore
     private boolean isPaymentInactive() {
-        return isPaymentStopped &&
-                SparebankenVestConstants.Transactions.AGREEMENT_SUSPENDED.equalsIgnoreCase(statusDetailEnum);
+        return isPaymentStopped
+                && SparebankenVestConstants.Transactions.AGREEMENT_SUSPENDED.equalsIgnoreCase(
+                        statusDetailEnum);
     }
 
     public UpcomingTransaction toTinkUpcomingTransaction() {
@@ -63,5 +66,4 @@ public class PaymentEntity {
 
         return creditAccount;
     }
-
 }

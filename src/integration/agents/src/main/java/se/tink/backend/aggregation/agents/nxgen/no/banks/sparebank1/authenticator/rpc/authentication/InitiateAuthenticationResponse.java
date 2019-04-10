@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitiateAuthenticationResponse {
     private String publicB;
     private String salt;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

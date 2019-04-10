@@ -48,36 +48,47 @@ public final class DnbConstants {
 
         // Init
         public static final String INIT_LOGIN = BASE_URL + "/appo/logon/startmobile";
-        public static final String INSTRUMENT_INFO = BASE_URL + "/segp/appo/logon/service_instrumentinfo";
+        public static final String INSTRUMENT_INFO =
+                BASE_URL + "/segp/appo/logon/service_instrumentinfo";
         public static final String INIT_BANKID = BASE_URL + "/segp/appo/logon/service_bankid20init";
-        public static final String CHALLENGE = BASE_URL + "/segp/appo/logon/service_initmobilebankid";
+        public static final String CHALLENGE =
+                BASE_URL + "/segp/appo/logon/service_initmobilebankid";
 
         // Collect
-        public static final String COLLECT_BANKID = BASE_URL + "/segp/appo/logon/service_processmobilebankid";
-        public static final String FINALIZE_LOGON = BASE_URL + "/segp/appo/logon/finalizelogon/?instrument=MobileBankIDFromOther";
-        public static final String FIRST_REQUEST = BASE_URL + "/segp/ps/startsiden?firstrequestafterlogon=true";
+        public static final String COLLECT_BANKID =
+                BASE_URL + "/segp/appo/logon/service_processmobilebankid";
+        public static final String FINALIZE_LOGON =
+                BASE_URL + "/segp/appo/logon/finalizelogon/?instrument=MobileBankIDFromOther";
+        public static final String FIRST_REQUEST =
+                BASE_URL + "/segp/ps/startsiden?firstrequestafterlogon=true";
 
         // Fetcher
         public static final String FETCH_ACCOUNTS = BASE_URL + "/segp/apps/tep/tepgetaccounts";
-        public static final String FETCH_ACCOUNT_DETAILS = BASE_URL + "/segp/apps/nbp/konto/integration/accounts/transactions";
-        public static final String FETCH_TRANSACTIONS = BASE_URL + "/segp/apps/nbp/transaksjon/integration/transactions/detailref/%s";
+        public static final String FETCH_ACCOUNT_DETAILS =
+                BASE_URL + "/segp/apps/nbp/konto/integration/accounts/transactions";
+        public static final String FETCH_TRANSACTIONS =
+                BASE_URL + "/segp/apps/nbp/transaksjon/integration/transactions/detailref/%s";
 
         // Credit cards
         public static final String LIST_CARDS = BASE_URL + "/segp/apps/besok/cardlisting/list";
         public static final String GET_CARD = BASE_URL + "/segp/apps/kredittkort/rest/getCard/%s";
-        public static final String FETCH_CARD_TRANSACTIONS = BASE_URL + "/segp/apps/kredittkort/rest/transactionsGrouped/%s";
+        public static final String FETCH_CARD_TRANSACTIONS =
+                BASE_URL + "/segp/apps/kredittkort/rest/transactionsGrouped/%s";
 
         // OAuth
-        public static final String GET_REQUEST_TOKEN = BASE_URL + "/appo/logon/oauth/getRequestToken";
-        public static final String VERIFIER_SERVICE = BASE_URL + "/segp/apps/bidbest/oauth/verifierService";
+        public static final String GET_REQUEST_TOKEN =
+                BASE_URL + "/appo/logon/oauth/getRequestToken";
+        public static final String VERIFIER_SERVICE =
+                BASE_URL + "/segp/apps/bidbest/oauth/verifierService";
         public static final String GET_ACCESS_TOKEN = BASE_URL + "/appo/logon/oauth/getAccessToken";
         public static final String INIT_MY_WEALTH = BASE_URL + "/api/mywealth/A/public/v2/init";
 
         // Investment
-        public static final String GET_FUNDS_OVERVIEW = BASE_URL + "/api/mywealth/A/public/v2/fundoverview";
+        public static final String GET_FUNDS_OVERVIEW =
+                BASE_URL + "/api/mywealth/A/public/v2/fundoverview";
         public static final String GET_PENSION = BASE_URL + "/api/mywealth/A/public/ips/overview";
-        public static final URL GET_FUND_DETAIL = new URL(BASE_URL + "/api/mywealth/A/public/v2/productdetail/{system}/{id}");
-
+        public static final URL GET_FUND_DETAIL =
+                new URL(BASE_URL + "/api/mywealth/A/public/v2/productdetail/{system}/{id}");
     }
 
     public final class OAuth {
@@ -89,10 +100,12 @@ public final class DnbConstants {
     }
 
     public final class Messages {
-        public static final String GENERIC_BANKID_ERROR = "du har ikke tilgang til å logge på med bankid. ta kontakt med din administrator.";
+        public static final String GENERIC_BANKID_ERROR =
+                "du har ikke tilgang til å logge på med bankid. ta kontakt med din administrator.";
         public static final String BANKID_TIMEOUT = "feilkode c302";
         public static final String BANKID_ALREADY_IN_PROGRESS = "feilkode c293";
-        public static final String INCORRECT_PHONE_NUMER_OR_INACTIVATED_MOBILE_BANKID = "feilkode c161";
+        public static final String INCORRECT_PHONE_NUMER_OR_INACTIVATED_MOBILE_BANKID =
+                "feilkode c161";
         public static final String BANKID_BLOCKED_A = "feilkode c176";
         public static final String BANKID_BLOCKED_B = "feilkode c30e";
         public static final String BANKID_BLOCKED_C = "feilkode c30f";
@@ -105,7 +118,8 @@ public final class DnbConstants {
         public static final String ERROR_MOBILE_OPERATOR_F = "feilkode c308";
         public static final String ERROR_MOBILE_OPERATOR_G = "feilkode c302";
 
-        public static final String SSN_FORMAT_ERROR = "ukjent brukeridentitet eller feil format på brukeridentitet";
+        public static final String SSN_FORMAT_ERROR =
+                "ukjent brukeridentitet eller feil format på brukeridentitet";
     }
 
     public static class CardStatus {

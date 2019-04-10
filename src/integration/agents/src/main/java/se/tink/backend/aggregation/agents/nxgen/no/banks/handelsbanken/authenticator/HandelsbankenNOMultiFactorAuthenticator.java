@@ -39,14 +39,17 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
     private final Catalog catalog;
     private final EncapClient encapClient;
 
-    public final Logger log = LoggerFactory.getLogger(HandelsbankenNOMultiFactorAuthenticator.class);
+    public final Logger log =
+            LoggerFactory.getLogger(HandelsbankenNOMultiFactorAuthenticator.class);
 
     private int pollWaitCounter;
     private String mobileNumber;
 
     public HandelsbankenNOMultiFactorAuthenticator(
-            HandelsbankenNOApiClient apiClient, SessionStorage sessionStorage,
-            SupplementalInformationController supplementalInformationController, Catalog catalog,
+            HandelsbankenNOApiClient apiClient,
+            SessionStorage sessionStorage,
+            SupplementalInformationController supplementalInformationController,
+            Catalog catalog,
             EncapClient encapClient) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
@@ -73,8 +76,8 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         InitBankIdRequest initBankIdRequest = InitBankIdRequest.build(dob, this.mobileNumber);
         String initBankIdResponse = apiClient.initBankId(initBankIdRequest);
 
-        Element referenceWords = Jsoup.parse(initBankIdResponse)
-                .getElementsByClass(Tags.REFERENCE_WORD).first();
+        Element referenceWords =
+                Jsoup.parse(initBankIdResponse).getElementsByClass(Tags.REFERENCE_WORD).first();
 
         if (referenceWords == null) {
             throw new IllegalStateException("HB_bankID: No reference words found");
@@ -89,35 +92,41 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
         PollBankIdResponse pollBankIdResponse = apiClient.pollBankId();
         String pollStatus = pollBankIdResponse.getStatus();
 
-        if (pollStatus.equalsIgnoreCase(HandelsbankenNOConstants.BankIdAuthenticationStatus.COMPLETE)) {
+        if (pollStatus.equalsIgnoreCase(
+                HandelsbankenNOConstants.BankIdAuthenticationStatus.COMPLETE)) {
             executeLogin(getBankIdEvryToken());
             executeLogin(getActivateEvryToken());
             return BankIdStatus.DONE;
-        } else if (pollStatus.equalsIgnoreCase(HandelsbankenNOConstants.BankIdAuthenticationStatus.NONE)) {
+        } else if (pollStatus.equalsIgnoreCase(
+                HandelsbankenNOConstants.BankIdAuthenticationStatus.NONE)) {
             pollWaitCounter++;
             return BankIdStatus.WAITING;
-        } else if (pollStatus.equalsIgnoreCase(HandelsbankenNOConstants.BankIdAuthenticationStatus.ERROR)) {
+        } else if (pollStatus.equalsIgnoreCase(
+                HandelsbankenNOConstants.BankIdAuthenticationStatus.ERROR)) {
             if (pollWaitCounter > HandelsbankenNOConstants.AUTHENTICATION_TIMEOUT_COUNT) {
                 return BankIdStatus.TIMEOUT;
             }
         }
 
         log.error(
-                "unexpected state when polling for bank ID: " +
-                        SerializationUtils.serializeToString(pollBankIdResponse));
+                "unexpected state when polling for bank ID: "
+                        + SerializationUtils.serializeToString(pollBankIdResponse));
         return BankIdStatus.FAILED_UNKNOWN;
     }
 
     private String getBankIdEvryToken() {
         FinalizeBankIdRequest finalizeBankIdRequest = FinalizeBankIdRequest.build();
         String finalizedBankIdResponse = apiClient.finalizeBankId(finalizeBankIdRequest);
-        String evryToken = Jsoup.parse(finalizedBankIdResponse)
-                .getElementsByAttributeValue(Tags.NAME, Tags.EVRY_TOKEN_FIELD_VALUE)
-                .first().val();
+        String evryToken =
+                Jsoup.parse(finalizedBankIdResponse)
+                        .getElementsByAttributeValue(Tags.NAME, Tags.EVRY_TOKEN_FIELD_VALUE)
+                        .first()
+                        .val();
 
         if (evryToken == null) {
             throw new IllegalStateException(
-                    "can not retrieve every token, could it change field key? :" + finalizedBankIdResponse);
+                    "can not retrieve every token, could it change field key? :"
+                            + finalizedBankIdResponse);
         }
         return evryToken;
     }
@@ -129,15 +138,16 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
 
         if (smsResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             throw new IllegalStateException(
-                    "Handelsbanken No - SMS not send : " + smsResponse.getStatus()
-            );
+                    "Handelsbanken No - SMS not send : " + smsResponse.getStatus());
         }
 
-        Map<String, String> activationCodeResponse = supplementalInformationController.askSupplementalInformation(
-                getActivationCodeField());
+        Map<String, String> activationCodeResponse =
+                supplementalInformationController.askSupplementalInformation(
+                        getActivationCodeField());
 
-        String activateEvryToken = encapClient.activateAndAuthenticateUser(activationCodeResponse.get(
-                ActivationCodeFieldConstants.NAME));
+        String activateEvryToken =
+                encapClient.activateAndAuthenticateUser(
+                        activationCodeResponse.get(ActivationCodeFieldConstants.NAME));
 
         if (activateEvryToken == null) {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
@@ -154,16 +164,17 @@ public class HandelsbankenNOMultiFactorAuthenticator implements BankIdAuthentica
 
     private Field getActivationCodeField() {
         Field activationCodeField = new Field();
-        activationCodeField.setDescription(catalog.getString(ActivationCodeFieldConstants.DESCRIPTION));
+        activationCodeField.setDescription(
+                catalog.getString(ActivationCodeFieldConstants.DESCRIPTION));
         activationCodeField.setName(ActivationCodeFieldConstants.NAME);
         activationCodeField.setNumeric(true);
         activationCodeField.setMinLength(ActivationCodeFieldConstants.LENGTH);
         activationCodeField.setMaxLength(ActivationCodeFieldConstants.LENGTH);
         activationCodeField.setHint(StringUtils.repeat("N", ActivationCodeFieldConstants.LENGTH));
-        activationCodeField.setPattern(String.format("([0-9]{%d})", ActivationCodeFieldConstants.LENGTH));
+        activationCodeField.setPattern(
+                String.format("([0-9]{%d})", ActivationCodeFieldConstants.LENGTH));
         activationCodeField.setPatternError(ActivationCodeFieldConstants.PATTERN_ERROR);
 
         return activationCodeField;
     }
-
 }

@@ -11,22 +11,31 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountListResponse {
     private List<AccountEntity> accounts;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
+
     @JsonProperty("_savingsAccountaggregatedAmountFraction")
     private String savingsAccountaggregatedAmountFraction;
+
     @JsonProperty("_savingsAccountaggregatedAmountInteger")
     private String savingsAccountaggregatedAmountInteger;
+
     @JsonProperty("_currentAccountaggregatedAmountFraction")
     private String currentAccountaggregatedAmountFraction;
+
     @JsonProperty("_currentAccountaggregatedAmountInteger")
     private String currentAccountaggregatedAmountInteger;
+
     @JsonProperty("_currentAndSavingAccountaggregatedAmountFraction")
     private String currentAndSavingAccountaggregatedAmountFraction;
+
     @JsonProperty("_currentAndSavingAccountaggregatedAmountInteger")
     private String currentAndSavingAccountaggregatedAmountInteger;
+
     @JsonProperty("_disposableAccountaggregatedAmountFraction")
     private String disposableAccountaggregatedAmountFraction;
+
     @JsonProperty("_disposableAccountaggregatedAmountInteger")
     private String disposableAccountaggregatedAmountInteger;
 

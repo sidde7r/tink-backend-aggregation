@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.ent
 
 import com.google.common.base.Strings;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class HoldingsEntity {
@@ -21,7 +21,7 @@ public class HoldingsEntity {
     private String rateOfInvestPercentageFraction;
     private String sharesInteger;
     private String sharesFraction;
-    private Object periodicReportDTO; //Don't know what this is, only gotten empty object so far
+    private Object periodicReportDTO; // Don't know what this is, only gotten empty object so far
 
     public String getProductId() {
         return productId;
@@ -80,7 +80,8 @@ public class HoldingsEntity {
     }
 
     private Double getMarketValue() {
-        if (Strings.isNullOrEmpty(marketValueInteger) || Strings.isNullOrEmpty(marketValueFraction)) {
+        if (Strings.isNullOrEmpty(marketValueInteger)
+                || Strings.isNullOrEmpty(marketValueFraction)) {
             return 0.0;
         }
 
@@ -97,12 +98,13 @@ public class HoldingsEntity {
 
     private Double getProfit() {
         // totalRateOfInvestCurrency is the diff between totalMarketValue and totalCostPrice
-        if (Strings.isNullOrEmpty(rateOfInvestCurrencyInteger) ||
-                Strings.isNullOrEmpty(rateOfInvestCurrencyFraction)) {
+        if (Strings.isNullOrEmpty(rateOfInvestCurrencyInteger)
+                || Strings.isNullOrEmpty(rateOfInvestCurrencyFraction)) {
             return 0.0;
         }
 
-        return Sparebank1AmountUtils.constructDouble(rateOfInvestCurrencyInteger, rateOfInvestCurrencyFraction);
+        return Sparebank1AmountUtils.constructDouble(
+                rateOfInvestCurrencyInteger, rateOfInvestCurrencyFraction);
     }
 
     private Double getQuantity() {

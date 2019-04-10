@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
-public class SparebankenVestCreditCardTransactionFetcher  implements TransactionDatePaginator<CreditCardAccount> {
+public class SparebankenVestCreditCardTransactionFetcher
+        implements TransactionDatePaginator<CreditCardAccount> {
 
     private final SparebankenVestApiClient apiClient;
 
@@ -20,13 +21,14 @@ public class SparebankenVestCreditCardTransactionFetcher  implements Transaction
         this.apiClient = apiClient;
     }
 
-    public static SparebankenVestCreditCardTransactionFetcher create(SparebankenVestApiClient apiClient) {
+    public static SparebankenVestCreditCardTransactionFetcher create(
+            SparebankenVestApiClient apiClient) {
         return new SparebankenVestCreditCardTransactionFetcher(apiClient);
     }
 
-
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
         List<CreditCardTransaction> transactions = new ArrayList<>();
 
         BankIdentifier bankIdentifier = new BankIdentifier(account.getBankIdentifier());
@@ -39,7 +41,11 @@ public class SparebankenVestCreditCardTransactionFetcher  implements Transaction
         // transactions are batched within dates, batch(step) size in Constants
         while (transactionsResponse.hasMoreTransactions()) {
             transactionsResponse =
-                    apiClient.fetchCreditCardTransactions(bankIdentifier, fromDate, toDate, transactionsResponse.getNextStartOffset());
+                    apiClient.fetchCreditCardTransactions(
+                            bankIdentifier,
+                            fromDate,
+                            toDate,
+                            transactionsResponse.getNextStartOffset());
 
             transactions.addAll(transactionsResponse.getTinkTransactions());
         }

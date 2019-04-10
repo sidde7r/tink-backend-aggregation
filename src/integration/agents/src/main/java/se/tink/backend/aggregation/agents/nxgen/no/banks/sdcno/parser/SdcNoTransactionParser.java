@@ -32,7 +32,8 @@ public class SdcNoTransactionParser implements SdcTransactionParser {
 
     // convert sdc credit card transaction to Tink transaction for NO market
     @Override
-    public CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
+    public CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
         return CreditCardTransaction.builder()
                 .setAmount(bankTransaction.getAmount().toTinkAmount())
                 .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
@@ -40,8 +41,10 @@ public class SdcNoTransactionParser implements SdcTransactionParser {
                 .setCreditAccount(creditCardAccount)
                 .build();
     }
+
     @Override
-    public CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
+    public CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
         return CreditCardTransaction.builder()
                 .setAmount(bankReservation.getAmount().toTinkAmount())
                 .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))

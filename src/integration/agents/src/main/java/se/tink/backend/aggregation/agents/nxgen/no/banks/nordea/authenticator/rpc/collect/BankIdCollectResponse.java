@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.NordeaNoConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.entities.collect.PollBankIDSIMAuthenticationOutEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.rpc.NordeaResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class BankIdCollectResponse extends NordeaResponse {
@@ -28,24 +28,24 @@ public class BankIdCollectResponse extends NordeaResponse {
 
         if (errorCode.isPresent()) {
             switch (errorCode.get()) {
-            case NordeaNoConstants.BankIdStatus.CANCELLED:
-                return BankIdStatus.CANCELLED;
-            case NordeaNoConstants.BankIdStatus.TIMEOUT:
-                return BankIdStatus.TIMEOUT;
-            default:
-                return BankIdStatus.FAILED_UNKNOWN;
+                case NordeaNoConstants.BankIdStatus.CANCELLED:
+                    return BankIdStatus.CANCELLED;
+                case NordeaNoConstants.BankIdStatus.TIMEOUT:
+                    return BankIdStatus.TIMEOUT;
+                default:
+                    return BankIdStatus.FAILED_UNKNOWN;
             }
         }
 
         String rawStatus = pollBankIDSIMAuthenticationOutEntity.getProgressStatus();
         switch (rawStatus) {
-        case NordeaNoConstants.BankIdStatus.WAITING:
-            return BankIdStatus.WAITING;
-        case NordeaNoConstants.BankIdStatus.COMPLETE:
-            return BankIdStatus.DONE;
-        default:
-            log.error(String.format("Nordea (NO) - Unknown BankID status (%s)", rawStatus));
-            return BankIdStatus.FAILED_UNKNOWN;
+            case NordeaNoConstants.BankIdStatus.WAITING:
+                return BankIdStatus.WAITING;
+            case NordeaNoConstants.BankIdStatus.COMPLETE:
+                return BankIdStatus.DONE;
+            default:
+                log.error(String.format("Nordea (NO) - Unknown BankID status (%s)", rawStatus));
+                return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 
@@ -56,6 +56,8 @@ public class BankIdCollectResponse extends NordeaResponse {
 
     @Override
     public Optional<String> getErrorCode() {
-        return Objects.equals(getStatus(), BankIdStatus.FAILED_UNKNOWN) ? super.getErrorCode() : Optional.empty();
+        return Objects.equals(getStatus(), BankIdStatus.FAILED_UNKNOWN)
+                ? super.getErrorCode()
+                : Optional.empty();
     }
 }

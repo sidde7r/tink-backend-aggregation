@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RestRootResponse {
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
+
     @JsonProperty("_authorizationLevel")
     private Integer authorizationLevel;
 

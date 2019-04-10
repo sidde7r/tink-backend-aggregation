@@ -22,10 +22,12 @@ public class DnbCreditTransactionFetcher implements TransactionFetcher<CreditCar
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        String transactionType = account.getFromTemporaryStorage(DnbConstants.CreditCard.TRANSACTION_TYPE);
+        String transactionType =
+                account.getFromTemporaryStorage(DnbConstants.CreditCard.TRANSACTION_TYPE);
         boolean mainCard = DnbConstants.CreditCard.MAINHOLDER.equalsIgnoreCase(transactionType);
 
-        FetchCreditCardTransactionsResponse fetchResponse = apiClient.fetchCreditCardTransactions(account);
+        FetchCreditCardTransactionsResponse fetchResponse =
+                apiClient.fetchCreditCardTransactions(account);
 
         return fetchResponse.getTransactions().stream()
                 .map(TransactionsEntity::getTransactions)
@@ -39,10 +41,13 @@ public class DnbCreditTransactionFetcher implements TransactionFetcher<CreditCar
         // if main card filter out any coHolder card transactions.
         // transaction types included are ACCOUNT and MAINHOLDER
         if (isMainCard) {
-            return !DnbConstants.CreditCard.COHOLDER.equalsIgnoreCase(transaction.getTransactionItemType());
-            // if NOT main card filter out any non-coHolder card transactions (this is bank default behaviour)
+            return !DnbConstants.CreditCard.COHOLDER.equalsIgnoreCase(
+                    transaction.getTransactionItemType());
+            // if NOT main card filter out any non-coHolder card transactions (this is bank default
+            // behaviour)
         } else {
-            return DnbConstants.CreditCard.COHOLDER.equalsIgnoreCase(transaction.getTransactionItemType());
+            return DnbConstants.CreditCard.COHOLDER.equalsIgnoreCase(
+                    transaction.getTransactionItemType());
         }
     }
 }

@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetche
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class FundInvestmentEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(FundInvestmentEntity.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(FundInvestmentEntity.class);
 
     private double gevinst;
     private String isinnr;
@@ -48,7 +49,8 @@ public class FundInvestmentEntity {
         }
 
         // check if there are any other types than FUND and PENSION FUND
-        LOGGER.infoExtraLong("Unknown investment type: " + SerializationUtils.serializeToString(this),
+        LOGGER.infoExtraLong(
+                "Unknown investment type: " + SerializationUtils.serializeToString(this),
                 SparebankenVestConstants.LogTags.INVESTMENTS);
 
         return Instrument.Type.OTHER;
@@ -86,7 +88,8 @@ public class FundInvestmentEntity {
     }
 
     private boolean isPension() {
-        return SparebankenVestConstants.Investments.PENSION_PORTFOLIO_TYPE.equalsIgnoreCase(this.type);
+        return SparebankenVestConstants.Investments.PENSION_PORTFOLIO_TYPE.equalsIgnoreCase(
+                this.type);
     }
 
     private boolean isFund() {

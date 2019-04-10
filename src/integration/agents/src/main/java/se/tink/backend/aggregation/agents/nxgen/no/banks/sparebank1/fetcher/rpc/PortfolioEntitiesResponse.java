@@ -14,6 +14,7 @@ public class PortfolioEntitiesResponse {
     private Boolean hasNomineePortfolios;
     private Boolean hasVPSPortfolios;
     private Boolean hasASKPortfolio;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

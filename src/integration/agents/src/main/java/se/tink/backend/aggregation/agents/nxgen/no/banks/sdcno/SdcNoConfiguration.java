@@ -15,7 +15,6 @@ public class SdcNoConfiguration extends SdcConfiguration {
         }
     }
 
-
     @Override
     public boolean canRetrieveInvestmentData() {
         return true;

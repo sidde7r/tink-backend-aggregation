@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PositionsListEntity extends ArrayList<PositionEntity> {
-}
+public class PositionsListEntity extends ArrayList<PositionEntity> {}

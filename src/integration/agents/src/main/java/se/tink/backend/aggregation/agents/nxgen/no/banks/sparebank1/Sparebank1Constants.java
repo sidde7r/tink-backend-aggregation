@@ -9,21 +9,30 @@ public class Sparebank1Constants {
         public static final String BASE_LOGIN = "https://login.sparebank1.no/";
 
         public static final URL CMS = new URL(BASE + "personal/rest/cms");
-        public static final URL LOGIN_DISPATCHER = new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
-        public static final URL SELECT_MARKET_AND_AUTH_TYPE = new URL(
-                BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
+        public static final URL LOGIN_DISPATCHER =
+                new URL(BASE_LOGIN + "auth/pages/loginDispatcher.xhtml");
+        public static final URL SELECT_MARKET_AND_AUTH_TYPE =
+                new URL(BASE_LOGIN + "auth/pages/selectMarketAndAuthType.xhtml");
         public static final URL POLL_BANKID = new URL(BASE_LOGIN + "auth/api/bim/poll");
         public static final URL LOGIN_DONE = new URL(BASE_LOGIN + "auth/pages/loginDone.xhtml");
-        public static final URL CONTINUE_ACTIVATION = new URL(BASE + "personal/activation/continue-activation");
-        public static final URL AGREEMENTS = new URL(BASE + "{bankName}/nettbank-privat/avtale/rest/avtale");
+        public static final URL CONTINUE_ACTIVATION =
+                new URL(BASE + "personal/activation/continue-activation");
+        public static final URL AGREEMENTS =
+                new URL(BASE + "{bankName}/nettbank-privat/avtale/rest/avtale");
 
-        public static final URL ACCOUNTS = new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
-        public static final URL CREDITCARDS = new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
+        public static final URL ACCOUNTS =
+                new URL(BASE + "{bankName}/nettbank-privat/rest/accounts");
+        public static final URL CREDITCARDS =
+                new URL(BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit");
         public static final URL LOANS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans");
-        public static final URL LOAN_DETAILS = new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
-        public static final URL CREDITCARD_TRANSACTIONS = new URL(
-                BASE + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
-        public static final URL PORTFOLIOS = new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
+        public static final URL LOAN_DETAILS =
+                new URL(BASE + "{bankName}/nettbank-privat/rest/loans/{accountId}");
+        public static final URL CREDITCARD_TRANSACTIONS =
+                new URL(
+                        BASE
+                                + "{bankName}/nettbank-privat/kort/rest/cards/credit/{accountId}/transactions");
+        public static final URL PORTFOLIOS =
+                new URL(BASE + "{bankName}/nettbank-privat/sparing/rest/fond/portefoeljer");
     }
 
     public static class Parameters {
@@ -46,10 +55,12 @@ public class Sparebank1Constants {
     }
 
     public static class Headers {
-        public static final String USER_AGENT = "Mobilbank/4.5.2; mobileOS/iOS; iOSVersion/10.3.1; deviceManufacturer/Apple; deviceType/iPhone; deviceModel/iPhone-6s; requestType/rest";
+        public static final String USER_AGENT =
+                "Mobilbank/4.5.2; mobileOS/iOS; iOSVersion/10.3.1; deviceManufacturer/Apple; deviceType/iPhone; deviceModel/iPhone-6s; requestType/rest";
         public static final String ORIGIN = "Origin";
         public static final String REFERER = "Referer";
-        public static final String APPLICATION_JSON_CHARSET_UTF8 = "application/json; charset=utf-8";
+        public static final String APPLICATION_JSON_CHARSET_UTF8 =
+                "application/json; charset=utf-8";
         public static final String TEXT_HTML_APPLICATION_XHTML_XML =
                 "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String REFERER_FOR_FINISH_AGREEMENT_SESSION =

@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchLoansResponse extends ArrayList<LoanEntity> {
-}
+public class FetchLoansResponse extends ArrayList<LoanEntity> {}

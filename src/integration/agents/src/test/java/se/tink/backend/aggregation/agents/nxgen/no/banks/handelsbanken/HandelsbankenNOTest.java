@@ -7,15 +7,16 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 /**
- * This test makes use of an active handelsbanken session. Log in to the Handelsbanken app and go to the
- * last https://nettbank.handelsbanken.no/secesb/rest/era/accounts request. That request will contain the values
- * for the session storage. These values are only valid as long as the session is active.
+ * This test makes use of an active handelsbanken session. Log in to the Handelsbanken app and go to
+ * the last https://nettbank.handelsbanken.no/secesb/rest/era/accounts request. That request will
+ * contain the values for the session storage. These values are only valid as long as the session is
+ * active.
  */
 public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNOAgent> {
 
@@ -28,7 +29,8 @@ public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNO
     private final String SESSION_STAMP_FIELD_KEY = "SECESB_SESSION_STAMP";
     private final String SESSION_STAMP_KEY = "SECESB_SESSION_STAMP_VALUE";
 
-    // copy from account request 'X-EVRY-CLIENT-ACCESSTOKEN' field, it's a really long string (don't forget the periods!)
+    // copy from account request 'X-EVRY-CLIENT-ACCESSTOKEN' field, it's a really long string (don't
+    // forget the periods!)
     private final String EVRY_TOKEN_VALUE = "";
 
     // copy from account request, in cookie find the only 'SECESB_NONCE' field, only the value
@@ -67,7 +69,8 @@ public class HandelsbankenNOTest extends NextGenerationAgentTest<HandelsbankenNO
         return CurrencyConstants.NO.getCode();
     }
 
-    private Agent createAgent(RefreshInformationRequest refreshInformationRequest) throws Exception {
+    private Agent createAgent(RefreshInformationRequest refreshInformationRequest)
+            throws Exception {
         testContext = new AgentTestContext(refreshInformationRequest.getCredentials());
         testContext.setTestContext(true);
         return factory.create(cls, refreshInformationRequest, testContext);

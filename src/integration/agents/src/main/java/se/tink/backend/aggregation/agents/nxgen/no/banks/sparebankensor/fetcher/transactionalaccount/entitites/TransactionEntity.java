@@ -75,11 +75,12 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction() {
-        Transaction.Builder transactionBuilder = Transaction.builder()
-                .setDescription(description)
-                .setAmount(Amount.inNOK(amount))
-                .setDate(accountingDate)
-                .setPending(reserved);
+        Transaction.Builder transactionBuilder =
+                Transaction.builder()
+                        .setDescription(description)
+                        .setAmount(Amount.inNOK(amount))
+                        .setDate(accountingDate)
+                        .setPending(reserved);
 
         return transactionBuilder.build();
     }

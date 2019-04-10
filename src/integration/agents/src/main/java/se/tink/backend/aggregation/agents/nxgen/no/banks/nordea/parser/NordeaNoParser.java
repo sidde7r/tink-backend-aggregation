@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.parser;
 
 import com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -21,11 +25,6 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class NordeaNoParser extends NordeaV17Parser {
     public NordeaNoParser(TransactionParser parser) {
@@ -56,28 +55,49 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public LoanAccount parseLoanAccount(ProductEntity pe, LoanDetailsEntity loanDetails) {
-        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
-                pe.getBalanceAmount().orElse(loanDetails.getBalanceAmount()))
-                .setAccountNumber(pe.getAccountNumber(false))
-                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
-                .setBankIdentifier(pe.getNordeaAccountIdV2());
+        LoanAccount.Builder<?, ?> accountBuilder =
+                LoanAccount.builder(
+                                pe.getAccountNumber(false),
+                                pe.getBalanceAmount().orElse(loanDetails.getBalanceAmount()))
+                        .setAccountNumber(pe.getAccountNumber(false))
+                        .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
+                        .setBankIdentifier(pe.getNordeaAccountIdV2());
 
-        loanDetails.getLoanData().ifPresent(loanData -> accountBuilder.setInterestRate(loanData.getInterest())
-                .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getNordeaProductTypeExtension()))
-                        .setLoanNumber(loanData.getLocalNumber())
-                        .setNextDayOfTermsChange(loanData.getInterestTermEnds())
-                        .setMonthlyAmortization(new Amount(loanData.getCurrency(),
-                                loanDetails.getFollowingPayment().getAmortization()))
-                        .setInitialBalance(new Amount(loanData.getCurrency(), loanData.getGranted()))
-                        .build()));
+        loanDetails
+                .getLoanData()
+                .ifPresent(
+                        loanData ->
+                                accountBuilder
+                                        .setInterestRate(loanData.getInterest())
+                                        .setDetails(
+                                                LoanDetails.builder(
+                                                                AccountType.getLoanTypeForCode(
+                                                                        pe
+                                                                                .getNordeaProductTypeExtension()))
+                                                        .setLoanNumber(loanData.getLocalNumber())
+                                                        .setNextDayOfTermsChange(
+                                                                loanData.getInterestTermEnds())
+                                                        .setMonthlyAmortization(
+                                                                new Amount(
+                                                                        loanData.getCurrency(),
+                                                                        loanDetails
+                                                                                .getFollowingPayment()
+                                                                                .getAmortization()))
+                                                        .setInitialBalance(
+                                                                new Amount(
+                                                                        loanData.getCurrency(),
+                                                                        loanData.getGranted()))
+                                                        .build()));
 
         return accountBuilder.build();
     }
 
     @Override
     public TransactionalAccount parseTransactionalAccount(ProductEntity pe) {
-        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
-                pe.getBalanceAmount().orElse(Amount.inNOK(pe.getBalance())))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(pe),
+                        pe.getAccountNumber(false),
+                        pe.getBalanceAmount().orElse(Amount.inNOK(pe.getBalance())))
                 .setAccountNumber(pe.getAccountNumber(false))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -86,10 +106,12 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardsEntity cardsEntity) {
-        return CreditCardAccount.builder(pe.getAccountNumber(false),
-                pe.getNegativeBalanceAmount().orElse(Amount.inNOK(-1 * pe.getBalance())),
-                pe.getCurrency().map(c -> new Amount(c, cardsEntity.getFundsAvailable()))
-                        .orElse(Amount.inNOK(cardsEntity.getFundsAvailable())))
+        return CreditCardAccount.builder(
+                        pe.getAccountNumber(false),
+                        pe.getNegativeBalanceAmount().orElse(Amount.inNOK(-1 * pe.getBalance())),
+                        pe.getCurrency()
+                                .map(c -> new Amount(c, cardsEntity.getFundsAvailable()))
+                                .orElse(Amount.inNOK(cardsEntity.getFundsAvailable())))
                 .setAccountNumber(pe.getAccountNumber(false))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -98,8 +120,7 @@ public class NordeaNoParser extends NordeaV17Parser {
 
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount
-                .builder(custodyAccount.getAccountId())
+        return InvestmentAccount.builder(custodyAccount.getAccountId())
                 .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
                 .setCashBalance(Amount.inNOK(0))

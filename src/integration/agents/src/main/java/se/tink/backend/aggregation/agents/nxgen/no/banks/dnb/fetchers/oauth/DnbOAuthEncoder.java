@@ -20,8 +20,7 @@ public class DnbOAuthEncoder {
         ENCODING_RULES = Collections.unmodifiableMap(rules);
     }
 
-    public DnbOAuthEncoder() {
-    }
+    public DnbOAuthEncoder() {}
 
     private static String applyRule(String target, String key, String value) {
         return target.replaceAll(Pattern.quote(key), value);
@@ -36,7 +35,7 @@ public class DnbOAuthEncoder {
             throw new IllegalStateException("Charset not found while encoding string: UTF-8", e);
         }
 
-        for (Map.Entry<String, String> stringStringMap :  ENCODING_RULES.entrySet()) {
+        for (Map.Entry<String, String> stringStringMap : ENCODING_RULES.entrySet()) {
             target = applyRule(target, stringStringMap.getKey(), stringStringMap.getValue());
         }
 

@@ -84,7 +84,9 @@ public class TransactionEntity {
         try {
             return Transaction.builder()
                     .setAmount(Amount.inNOK(-selectAmount()))
-                    .setDate(ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDateAsString))
+                    .setDate(
+                            ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(
+                                    transactionDateAsString))
                     .setDescription(description)
                     .setPending(isReservation())
                     .build();
@@ -94,8 +96,10 @@ public class TransactionEntity {
     }
 
     private Double selectAmount() {
-        // creditAmount and debitAmount are mutually exclusive and we prefer them over currencyAmount since
-        // they represent the amount in the user's local currency. Using currencyAmount as a last resort.
+        // creditAmount and debitAmount are mutually exclusive and we prefer them over
+        // currencyAmount since
+        // they represent the amount in the user's local currency. Using currencyAmount as a last
+        // resort.
         if (creditAmount != null) {
             return creditAmount;
         } else if (debitAmount != null) {
@@ -104,6 +108,7 @@ public class TransactionEntity {
             return currencyAmount;
         }
 
-        throw new IllegalStateException("DNB - No valid amount value found, can't create transaction");
+        throw new IllegalStateException(
+                "DNB - No valid amount value found, can't create transaction");
     }
 }

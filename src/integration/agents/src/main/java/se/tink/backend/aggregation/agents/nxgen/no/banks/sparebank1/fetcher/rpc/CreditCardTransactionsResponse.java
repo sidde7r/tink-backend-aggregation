@@ -19,6 +19,7 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     private String cardNumberFormatted;
     private String productName;
     private Boolean creditCardAuthorizationsFailure;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

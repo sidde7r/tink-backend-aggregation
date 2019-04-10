@@ -38,8 +38,7 @@ public class HandelsbankenNOApiClient {
 
     private List<AccountEntity> accountList;
 
-    public HandelsbankenNOApiClient(TinkHttpClient client,
-            SessionStorage sessionStorage) {
+    public HandelsbankenNOApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
@@ -48,14 +47,18 @@ public class HandelsbankenNOApiClient {
         return client.request(url).header(Headers.USER_AGENT);
     }
 
-    private RequestBuilder requestInSession(URL url){
+    private RequestBuilder requestInSession(URL url) {
         return requestWithUserAgent(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header(Headers.X_EVRY_CLIENT_REQUESTID)
                 .header(Headers.X_EVRY_CLIENT)
-                .header(HandelsbankenNOConstants.Header.EVRY_TOKEN, sessionStorage.get(Tags.ACCESS_TOKEN))
-                .cookie(sessionStorage.get(Tags.SESSION_STAMP), sessionStorage.get(Tags.SESSION_STAMP_VALUE))
+                .header(
+                        HandelsbankenNOConstants.Header.EVRY_TOKEN,
+                        sessionStorage.get(Tags.ACCESS_TOKEN))
+                .cookie(
+                        sessionStorage.get(Tags.SESSION_STAMP),
+                        sessionStorage.get(Tags.SESSION_STAMP_VALUE))
                 .cookie(Tags.NONCE, sessionStorage.get(Tags.NONCE));
     }
 
@@ -76,20 +79,24 @@ public class HandelsbankenNOApiClient {
     }
 
     public void configureBankId(String nationalId, String mobileNumber) {
-        HttpResponse response = client.request(Url.CONFIGURE_BANKID.parameters(nationalId, mobileNumber))
-                .accept(MediaType.TEXT_HTML_TYPE)
-                .accept(MediaType.APPLICATION_XHTML_XML_TYPE)
-                .accept(MediaType.APPLICATION_XML_TYPE)
-                .get(HttpResponse.class);
+        HttpResponse response =
+                client.request(Url.CONFIGURE_BANKID.parameters(nationalId, mobileNumber))
+                        .accept(MediaType.TEXT_HTML_TYPE)
+                        .accept(MediaType.APPLICATION_XHTML_XML_TYPE)
+                        .accept(MediaType.APPLICATION_XML_TYPE)
+                        .get(HttpResponse.class);
 
-        String jSession = client.getCookies().stream()
-                .filter(cookie -> cookie.getName().equalsIgnoreCase(Tags.JSESSION_ID))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(() -> new IllegalStateException("JSessionID is not found during authentication"));
+        String jSession =
+                client.getCookies().stream()
+                        .filter(cookie -> cookie.getName().equalsIgnoreCase(Tags.JSESSION_ID))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "JSessionID is not found during authentication"));
 
         sessionStorage.put(Tags.JSESSION_ID, jSession);
-
     }
 
     public String initBankId(InitBankIdRequest initBankIdRequest) {
@@ -121,29 +128,45 @@ public class HandelsbankenNOApiClient {
     }
 
     public FirstLoginResponse loginFirstStep(String firstLoginRequest) {
-        FirstLoginResponse firstLoginResponse = client.request(Url.LOGIN_FIRST_STEP.get())
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(Headers.USER_AGENT)
-                .header(Headers.X_EVRY_CLIENT)
-                .post(FirstLoginResponse.class, firstLoginRequest);
+        FirstLoginResponse firstLoginResponse =
+                client.request(Url.LOGIN_FIRST_STEP.get())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(Headers.USER_AGENT)
+                        .header(Headers.X_EVRY_CLIENT)
+                        .post(FirstLoginResponse.class, firstLoginRequest);
 
         List<Cookie> cookies = client.getCookies();
 
-        String nonce = cookies.stream()
-                .filter(cookie -> cookie.getName().equalsIgnoreCase(Tags.NONCE))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(() -> new IllegalStateException("SECESB_NONCE is not found during authentication"));
+        String nonce =
+                cookies.stream()
+                        .filter(cookie -> cookie.getName().equalsIgnoreCase(Tags.NONCE))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "SECESB_NONCE is not found during authentication"));
 
-        Cookie sessionStampCookie = cookies.stream()
-                .filter(cookie -> cookie.getName().contains(HandelsbankenNOConstants.Tags.SESSION_STAMP))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("SESSSION_STAMP is not found during authentication"));
+        Cookie sessionStampCookie =
+                cookies.stream()
+                        .filter(
+                                cookie ->
+                                        cookie.getName()
+                                                .contains(
+                                                        HandelsbankenNOConstants.Tags
+                                                                .SESSION_STAMP))
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "SESSSION_STAMP is not found during authentication"));
 
         sessionStorage.put(HandelsbankenNOConstants.Tags.NONCE, nonce);
-        sessionStorage.put(HandelsbankenNOConstants.Tags.SESSION_STAMP, sessionStampCookie.getName());
-        sessionStorage.put(HandelsbankenNOConstants.Tags.SESSION_STAMP_VALUE, sessionStampCookie.getValue());
+        sessionStorage.put(
+                HandelsbankenNOConstants.Tags.SESSION_STAMP, sessionStampCookie.getName());
+        sessionStorage.put(
+                HandelsbankenNOConstants.Tags.SESSION_STAMP_VALUE, sessionStampCookie.getValue());
         return firstLoginResponse;
     }
 
@@ -153,13 +176,14 @@ public class HandelsbankenNOApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .header(Headers.USER_AGENT)
                 .header(Headers.X_EVRY_CLIENT)
-                .header(HandelsbankenNOConstants.Header.EVRY_TOKEN, sessionStorage.get(Tags.ACCESS_TOKEN))
+                .header(
+                        HandelsbankenNOConstants.Header.EVRY_TOKEN,
+                        sessionStorage.get(Tags.ACCESS_TOKEN))
                 .post(SecondLoginResponse.class);
     }
 
     public HttpResponse sendSms(SendSmsRequest sendSmsRequest) {
-        return requestInSession(Url.SEND_SMS.get())
-                .post(HttpResponse.class, sendSmsRequest);
+        return requestInSession(Url.SEND_SMS.get()).post(HttpResponse.class, sendSmsRequest);
     }
 
     public List<AccountEntity> fetchAccounts() {
@@ -167,8 +191,8 @@ public class HandelsbankenNOApiClient {
             return accountList;
         }
 
-        AccountFetchingResponse accountsResponse = requestInSession(Url.ACCOUNTS.get())
-                .get(AccountFetchingResponse.class);
+        AccountFetchingResponse accountsResponse =
+                requestInSession(Url.ACCOUNTS.get()).get(AccountFetchingResponse.class);
 
         List<AccountEntity> accountList = accountsResponse.getAccounts();
         this.accountList = accountList;
@@ -178,65 +202,86 @@ public class HandelsbankenNOApiClient {
 
     public HttpResponse fetchTransactions(String uri, int number, int index) {
         URL url = Url.TRANSACTIONS.parameters(uri, String.valueOf(number), String.valueOf(index));
-        return requestInSession(url)
-                .get(HttpResponse.class);
+        return requestInSession(url).get(HttpResponse.class);
     }
 
     public HttpResponse extendSession() {
         return requestInSession(Url.KEEP_ALIVE.get())
-                .queryParam(HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getKey(),
+                .queryParam(
+                        HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getKey(),
                         HandelsbankenNOConstants.QueryParamPairs.KEEP_ALIVE.getValue())
                 .post(HttpResponse.class);
     }
 
     public InitInvestmentsLoginResponse initInvestmentLogin() {
-        return requestInSession(Url.INIT_INVESTOR_LOGIN
-                .queryParam(HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT.getKey(),
-                        HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT.getValue()))
+        return requestInSession(
+                        Url.INIT_INVESTOR_LOGIN.queryParam(
+                                HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT
+                                        .getKey(),
+                                HandelsbankenNOConstants.QueryParamPairs.SHIBBOLETH_ENDPOINT
+                                        .getValue()))
                 .post(InitInvestmentsLoginResponse.class);
     }
 
     public String investorCustomerPortalLogin(String so) {
-        URL url = HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN.get()
-                .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
-                .queryParam(HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID.getKey(),
-                        HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID.getValue())
-                .queryParam(HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getKey(),
-                        HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getValue());
+        URL url =
+                HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN
+                        .get()
+                        .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
+                        .queryParam(
+                                HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID
+                                        .getKey(),
+                                HandelsbankenNOConstants.QueryParamPairs.INVESTOR_PROVIDER_ID
+                                        .getValue())
+                        .queryParam(
+                                HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getKey(),
+                                HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET
+                                        .getValue());
 
         return requestInSession(url).get(String.class);
     }
 
     public String aksjerCustomerPortalLogin(String so) {
-        URL url = HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN.get()
-                .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
-                .queryParam(HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID.getKey(),
-                        HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID.getValue());
+        URL url =
+                HandelsbankenNOConstants.Url.CUSTOMER_PORTAL_LOGIN
+                        .get()
+                        .queryParam(HandelsbankenNOConstants.QueryParams.SO, so)
+                        .queryParam(
+                                HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID
+                                        .getKey(),
+                                HandelsbankenNOConstants.QueryParamPairs.AKSJER_PROVIDER_ID
+                                        .getValue());
 
         return requestInSession(url).get(String.class);
     }
 
     public void finalizeInvestorLogin(String samlResponse) {
-        HttpResponse response = requestWithUserAgent(HandelsbankenNOConstants.Url.INVESTOR_LOGIN.get())
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(HttpResponse.class, new FinalizeInvestorLoginRequest(samlResponse));
+        HttpResponse response =
+                requestWithUserAgent(HandelsbankenNOConstants.Url.INVESTOR_LOGIN.get())
+                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .post(HttpResponse.class, new FinalizeInvestorLoginRequest(samlResponse));
 
-        Preconditions.checkState(response.getStatus() == HttpStatus.SC_OK,
+        Preconditions.checkState(
+                response.getStatus() == HttpStatus.SC_OK,
                 "Login to investor unsuccessful, could not fetch investment accounts.");
     }
 
     public void finalizeAksjerLogin(String samlResponse) {
-        HttpResponse response = requestWithUserAgent(Url.AKSJER_LOGIN.get())
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(HttpResponse.class, new FinalizeAksjerLoginRequest(samlResponse));
+        HttpResponse response =
+                requestWithUserAgent(Url.AKSJER_LOGIN.get())
+                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .post(HttpResponse.class, new FinalizeAksjerLoginRequest(samlResponse));
 
-        Preconditions.checkState(response.getStatus() == HttpStatus.SC_OK,
+        Preconditions.checkState(
+                response.getStatus() == HttpStatus.SC_OK,
                 "Login to stock portal unsuccessful, could not fetch investment accounts.");
     }
 
     public InvestmentsOverviewResponse fetchInvestmentsOverview(String username) {
-        return requestWithUserAgent(HandelsbankenNOConstants.Url.INVESTMENTS_OVERVIEW.get()
-                    .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username))
+        return requestWithUserAgent(
+                        HandelsbankenNOConstants.Url.INVESTMENTS_OVERVIEW
+                                .get()
+                                .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username))
                 .get(InvestmentsOverviewResponse.class);
     }
 
@@ -246,16 +291,25 @@ public class HandelsbankenNOApiClient {
     }
 
     public AvailableBalanceResponse getAksjerAvailableBalance(String username, String customerId) {
-        return requestWithUserAgent(HandelsbankenNOConstants.Url.AKSJER_AVAILABLE_BALANCE.get()
-                    .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username)
-                    .parameter(HandelsbankenNOConstants.UrlParameters.CUSTOMER_ID, customerId))
+        return requestWithUserAgent(
+                        HandelsbankenNOConstants.Url.AKSJER_AVAILABLE_BALANCE
+                                .get()
+                                .parameter(HandelsbankenNOConstants.UrlParameters.DOB, username)
+                                .parameter(
+                                        HandelsbankenNOConstants.UrlParameters.CUSTOMER_ID,
+                                        customerId))
                 .get(AvailableBalanceResponse.class);
     }
 
     public PositionsListEntity getPositions(String csdAccountNumber) {
-        return requestWithUserAgent(HandelsbankenNOConstants.Url.POSITIONS.get()
-                    .parameter(HandelsbankenNOConstants.UrlParameters.ACCOUNT_NUMBER, csdAccountNumber))
-                .queryParam(HandelsbankenNOConstants.QueryParams.DATE,
+        return requestWithUserAgent(
+                        HandelsbankenNOConstants.Url.POSITIONS
+                                .get()
+                                .parameter(
+                                        HandelsbankenNOConstants.UrlParameters.ACCOUNT_NUMBER,
+                                        csdAccountNumber))
+                .queryParam(
+                        HandelsbankenNOConstants.QueryParams.DATE,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(DateUtils.getToday()))
                 .get(PositionsListEntity.class);
     }

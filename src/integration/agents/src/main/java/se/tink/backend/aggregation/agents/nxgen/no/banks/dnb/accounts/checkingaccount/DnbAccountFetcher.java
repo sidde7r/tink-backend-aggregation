@@ -22,7 +22,11 @@ public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
         AccountListResponse accountListResponse = apiClient.fetchAccounts();
 
         return accountListResponse.getAccountList().stream()
-                .filter(account -> !Objects.equals(account.getProductNumber(), DnbConstants.ProductNumber.StockAccount))
+                .filter(
+                        account ->
+                                !Objects.equals(
+                                        account.getProductNumber(),
+                                        DnbConstants.ProductNumber.StockAccount))
                 .map(AccountDetailsEntity::toTransactionalAccount)
                 .collect(Collectors.toList());
     }

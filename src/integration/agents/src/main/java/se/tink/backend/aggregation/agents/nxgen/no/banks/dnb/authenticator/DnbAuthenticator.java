@@ -30,7 +30,8 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
     }
 
     @Override
-    public String init(String nationalId, String dob, String mobilenumber) throws BankIdException, LoginException {
+    public String init(String nationalId, String dob, String mobilenumber)
+            throws BankIdException, LoginException {
         // We need this to fetch the cookies before doing the post request
         apiClient.getStartMobile();
 
@@ -40,8 +41,10 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         bankIdReferer = startMobileResponse.getLocation();
 
         if (bankIdReferer == null) {
-            if (startMobileResponse.hasBody() &&
-                    startMobileResponse.getBody(String.class).toLowerCase()
+            if (startMobileResponse.hasBody()
+                    && startMobileResponse
+                            .getBody(String.class)
+                            .toLowerCase()
                             .contains(DnbConstants.Messages.SSN_FORMAT_ERROR)) {
                 throw BankIdError.USER_VALIDATION_ERROR.exception();
             }
@@ -60,80 +63,95 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
         InitiateBankIdResponse initiateBankIdResponse = apiClient.getInitiateBankId(bankIdReferer);
 
         if (!initiateBankIdResponse.isSuccess()) {
-            throw new IllegalStateException(String.format("error msg: %s, user msg: %s",
-                    initiateBankIdResponse.getMessage().getErrorMessage(),
-                    initiateBankIdResponse.getMessage().getUserMessage()));
+            throw new IllegalStateException(
+                    String.format(
+                            "error msg: %s, user msg: %s",
+                            initiateBankIdResponse.getMessage().getErrorMessage(),
+                            initiateBankIdResponse.getMessage().getUserMessage()));
         }
 
-        CollectChallengeResponse collectChallengeResponse = apiClient.postCollectChallenge(bankIdReferer, mobilenumber);
+        CollectChallengeResponse collectChallengeResponse =
+                apiClient.postCollectChallenge(bankIdReferer, mobilenumber);
 
         if (collectChallengeResponse.isSuccess()) {
             return collectChallengeResponse.getMessage().getApplicationData();
         }
 
-
         String userMessage = collectChallengeResponse.getMessage().getUserMessage().toLowerCase();
-        if (Objects.equals(
-                DnbConstants.Messages.GENERIC_BANKID_ERROR, userMessage)) {
-            throw BankIdError.BLOCKED
-                    .exception(new LocalizableKey("Have you received a new mobile phone, made changes to your mobile subscription "
-                            + "or have a new SIM card? In that case, you must delete BankID Mobile and re-enable the service."));
+        if (Objects.equals(DnbConstants.Messages.GENERIC_BANKID_ERROR, userMessage)) {
+            throw BankIdError.BLOCKED.exception(
+                    new LocalizableKey(
+                            "Have you received a new mobile phone, made changes to your mobile subscription "
+                                    + "or have a new SIM card? In that case, you must delete BankID Mobile and re-enable the service."));
         }
         String errorCode;
         Matcher matcher = BANKID_ERROR_PATTERN.matcher(userMessage);
         if (!matcher.find()) {
             throw new IllegalStateException(
-                    String.format("could not initiate bankid, user message: %s, error message: %s",
+                    String.format(
+                            "could not initiate bankid, user message: %s, error message: %s",
                             collectChallengeResponse.getMessage().getUserMessage(),
                             collectChallengeResponse.getMessage().getErrorMessage()));
         } else {
-           errorCode = matcher.group(0);
+            errorCode = matcher.group(0);
         }
 
         switch (errorCode) {
-        case DnbConstants.Messages.BANKID_ALREADY_IN_PROGRESS:
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        case DnbConstants.Messages.INCORRECT_PHONE_NUMER_OR_INACTIVATED_MOBILE_BANKID:
-            throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception(new LocalizableKey(
-                    "Error Code: C161. " + LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.userMessage().get()));
-        case DnbConstants.Messages.BANKID_BLOCKED_A:
-            throw BankIdError.BLOCKED
-                .exception(new LocalizableKey("Error Code C176. " + BankIdError.BLOCKED.userMessage().get()));
-        case DnbConstants.Messages.BANKID_BLOCKED_B:
-        case DnbConstants.Messages.BANKID_BLOCKED_C:
-            throw BankIdError.BLOCKED
-                    .exception(new LocalizableKey("Error Code C30F. " + BankIdError.BLOCKED.userMessage().get()));
-        case DnbConstants.Messages.BANKID_BLOCKED_D:
-            throw BankIdError.BLOCKED
-                    .exception(new LocalizableKey("Error Code C307. Your BankID is blocked due to incorrect PIN" +
-                            "Log in to the internet bank in another way and reset BankID on mobile."));
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_A:
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_B:
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_C:
-            throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
-                    new LocalizableKey("Error Code C202. " + LoginError.ERROR_WITH_MOBILE_OPERATOR.userMessage().get()));
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_D:
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_E:
-            throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
-                    new LocalizableKey(
-                            "Error Code C131. This error indicates that your mobile operator has trouble or a process is"
-                                    + " running on your phone number. Restart your phone and try again in 5 minutes."));
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_F:
-            throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
-                    new LocalizableKey(
-                            "Error code C308. There was a timeout due to slow response time. This can happen if there"
-                                    + " are weak or unstable signals or if the mobile operator is having trouble."
-                                    + " Please try again in 5 minutes."));
-        case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_G:
-            throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
-                    new LocalizableKey(
-                            "Error code C302. This error occurs when you have switched mobile networks, for example,"
-                                    + " if you have just been abroad. Restart your phone and try again."));
-        default:
-            throw new IllegalStateException(
-                    String.format("could not initiate bankid, user message: %s, error message: %s",
-                            collectChallengeResponse.getMessage().getUserMessage(),
-                            collectChallengeResponse.getMessage().getErrorMessage()));
+            case DnbConstants.Messages.BANKID_ALREADY_IN_PROGRESS:
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            case DnbConstants.Messages.INCORRECT_PHONE_NUMER_OR_INACTIVATED_MOBILE_BANKID:
+                throw LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE.exception(
+                        new LocalizableKey(
+                                "Error Code: C161. "
+                                        + LoginError.WRONG_PHONENUMBER_OR_INACTIVATED_SERVICE
+                                                .userMessage()
+                                                .get()));
+            case DnbConstants.Messages.BANKID_BLOCKED_A:
+                throw BankIdError.BLOCKED.exception(
+                        new LocalizableKey(
+                                "Error Code C176. " + BankIdError.BLOCKED.userMessage().get()));
+            case DnbConstants.Messages.BANKID_BLOCKED_B:
+            case DnbConstants.Messages.BANKID_BLOCKED_C:
+                throw BankIdError.BLOCKED.exception(
+                        new LocalizableKey(
+                                "Error Code C30F. " + BankIdError.BLOCKED.userMessage().get()));
+            case DnbConstants.Messages.BANKID_BLOCKED_D:
+                throw BankIdError.BLOCKED.exception(
+                        new LocalizableKey(
+                                "Error Code C307. Your BankID is blocked due to incorrect PIN"
+                                        + "Log in to the internet bank in another way and reset BankID on mobile."));
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_A:
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_B:
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_C:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error Code C202. "
+                                        + LoginError.ERROR_WITH_MOBILE_OPERATOR
+                                                .userMessage()
+                                                .get()));
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_D:
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_E:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error Code C131. This error indicates that your mobile operator has trouble or a process is"
+                                        + " running on your phone number. Restart your phone and try again in 5 minutes."));
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_F:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error code C308. There was a timeout due to slow response time. This can happen if there"
+                                        + " are weak or unstable signals or if the mobile operator is having trouble."
+                                        + " Please try again in 5 minutes."));
+            case DnbConstants.Messages.ERROR_MOBILE_OPERATOR_G:
+                throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception(
+                        new LocalizableKey(
+                                "Error code C302. This error occurs when you have switched mobile networks, for example,"
+                                        + " if you have just been abroad. Restart your phone and try again."));
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "could not initiate bankid, user message: %s, error message: %s",
+                                collectChallengeResponse.getMessage().getUserMessage(),
+                                collectChallengeResponse.getMessage().getErrorMessage()));
         }
     }
 
@@ -151,7 +169,11 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
             return BankIdStatus.WAITING;
         }
 
-        if (collectBankId.getMessage().getUserMessage().toLowerCase().contains(DnbConstants.Messages.BANKID_TIMEOUT)) {
+        if (collectBankId
+                .getMessage()
+                .getUserMessage()
+                .toLowerCase()
+                .contains(DnbConstants.Messages.BANKID_TIMEOUT)) {
             return BankIdStatus.TIMEOUT;
         }
 
@@ -161,7 +183,10 @@ public class DnbAuthenticator implements BankIdAuthenticatorNO {
             return BankIdStatus.FAILED_UNKNOWN;
         }
 
-        throw new IllegalStateException(String.format("user message: %s, error message: %s",
-                collectBankId.getMessage().getUserMessage(), collectBankId.getMessage().getErrorMessage()));
+        throw new IllegalStateException(
+                String.format(
+                        "user message: %s, error message: %s",
+                        collectBankId.getMessage().getUserMessage(),
+                        collectBankId.getMessage().getErrorMessage()));
     }
 }

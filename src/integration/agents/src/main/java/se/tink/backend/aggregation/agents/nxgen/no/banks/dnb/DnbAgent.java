@@ -33,7 +33,8 @@ public class DnbAgent extends NextGenerationAgent {
     private final DnbCreditCardFetcher creditCardFetcher;
     private final DnbCreditTransactionFetcher creditTransactionFetcher;
 
-    public DnbAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DnbAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new DnbApiClient(client);
         this.authenticator = new DnbAuthenticator(apiClient);
@@ -54,16 +55,25 @@ public class DnbAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                accountFetcher, new TransactionFetcherController<>(
-                        new TransactionPaginationHelper(request), transactionFetcher)));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                new TransactionPaginationHelper(request), transactionFetcher)));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController, creditCardFetcher,
-                creditTransactionFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        creditTransactionFetcher));
     }
 
     @Override
@@ -71,8 +81,10 @@ public class DnbAgent extends NextGenerationAgent {
 
         // Disabling investments as our current code doesn't work as expected.
 
-        // DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient, credentials);
-        // return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController, investementFetcher));
+        // DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient,
+        // credentials);
+        // return Optional.of(new InvestmentRefreshController(metricRefreshController,
+        // updateController, investementFetcher));
 
         return Optional.empty();
     }
@@ -88,7 +100,8 @@ public class DnbAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

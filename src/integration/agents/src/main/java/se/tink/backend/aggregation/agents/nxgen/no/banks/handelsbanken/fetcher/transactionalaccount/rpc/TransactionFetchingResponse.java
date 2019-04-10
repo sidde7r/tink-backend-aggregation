@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionFetchingResponse {
     private List<TransactionEntity> list;
 
-    public List<Transaction> toTinkTransactions(){
+    public List<Transaction> toTinkTransactions() {
         return getList().stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
@@ -21,4 +21,3 @@ public class TransactionFetchingResponse {
         return this.list == null ? Collections.emptyList() : this.list;
     }
 }
-

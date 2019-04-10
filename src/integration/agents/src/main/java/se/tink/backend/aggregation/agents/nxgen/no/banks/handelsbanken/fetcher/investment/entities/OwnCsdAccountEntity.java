@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class OwnCsdAccountEntity {
@@ -106,13 +106,14 @@ public class OwnCsdAccountEntity {
     }
 
     @JsonIgnore
-    public InvestmentAccount toTinkAccount(List<PositionEntity> positions,
+    public InvestmentAccount toTinkAccount(
+            List<PositionEntity> positions,
             HashMap<String, Double> availableBalanceByCsdAccountNumber) {
 
         double totalMarketValue = getTotalMarketValue(positions);
 
-        Portfolio portfolio = toPortfolio(positions, totalMarketValue,
-                availableBalanceByCsdAccountNumber);
+        Portfolio portfolio =
+                toPortfolio(positions, totalMarketValue, availableBalanceByCsdAccountNumber);
 
         return InvestmentAccount.builder(csdAccountNumber)
                 .setAccountNumber(csdAccountNumber)
@@ -123,7 +124,9 @@ public class OwnCsdAccountEntity {
     }
 
     @JsonIgnore
-    private Portfolio toPortfolio(List<PositionEntity> positions, double totalMarketValue,
+    private Portfolio toPortfolio(
+            List<PositionEntity> positions,
+            double totalMarketValue,
             HashMap<String, Double> availableBalanceByCsdAccountNumber) {
 
         Portfolio portfolio = new Portfolio();
@@ -140,9 +143,7 @@ public class OwnCsdAccountEntity {
 
     @JsonIgnore
     private List<Instrument> getInstruments(List<PositionEntity> positions) {
-        return positions.stream()
-                .map(PositionEntity::toInstrument)
-                .collect(Collectors.toList());
+        return positions.stream().map(PositionEntity::toInstrument).collect(Collectors.toList());
     }
 
     @JsonIgnore
@@ -156,7 +157,8 @@ public class OwnCsdAccountEntity {
     }
 
     @JsonIgnore
-    private Double setCashValueIfExists(HashMap<String, Double> availableBalanceByCsdAccountNumber) {
+    private Double setCashValueIfExists(
+            HashMap<String, Double> availableBalanceByCsdAccountNumber) {
         // Cash value is only present for stock accounts, null for funds.
         Double cashValue = availableBalanceByCsdAccountNumber.get(csdAccountNumber);
         return cashValue != null ? cashValue : 0;

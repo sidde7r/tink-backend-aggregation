@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LinkEntity {
     private String href;
+
     @JsonProperty("verbs")
     private List<String> methods;
 

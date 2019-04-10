@@ -14,14 +14,19 @@ public class CrecitCardTransactionEntity {
     private String transtype;
     private String kundenummer;
     private String kortKontonummer;
+
     @JsonProperty("bokfoeringsdato")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date accountingDate;
+
     private String valutadato;
+
     @JsonProperty("belop")
     private double amount;
+
     @JsonProperty("alfareferanse")
     private String description;
+
     private String valuta;
     private double basisBelop;
     private String kategori;

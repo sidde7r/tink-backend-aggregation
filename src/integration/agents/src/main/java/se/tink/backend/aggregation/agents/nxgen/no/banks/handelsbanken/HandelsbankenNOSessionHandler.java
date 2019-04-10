@@ -8,12 +8,11 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public class HandelsbankenNOSessionHandler implements SessionHandler {
     private final HandelsbankenNOApiClient apiClient;
 
-    public HandelsbankenNOSessionHandler(
-            HandelsbankenNOApiClient apiClient) {
+    public HandelsbankenNOSessionHandler(HandelsbankenNOApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    //TODO implement logout action
+    // TODO implement logout action
     @Override
     public void logout() {
         // no operation

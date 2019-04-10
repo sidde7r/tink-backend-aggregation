@@ -17,6 +17,7 @@ public class UserEntity {
     private Boolean adult;
     private Boolean child;
     private String bank;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

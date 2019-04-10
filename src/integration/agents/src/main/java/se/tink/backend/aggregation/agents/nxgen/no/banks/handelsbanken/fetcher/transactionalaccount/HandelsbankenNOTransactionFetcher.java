@@ -13,30 +13,35 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
-public class HandelsbankenNOTransactionFetcher implements TransactionIndexPaginator<TransactionalAccount> {
+public class HandelsbankenNOTransactionFetcher
+        implements TransactionIndexPaginator<TransactionalAccount> {
 
     private final HandelsbankenNOApiClient apiClient;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public HandelsbankenNOTransactionFetcher(
-            HandelsbankenNOApiClient apiClient) {
+    public HandelsbankenNOTransactionFetcher(HandelsbankenNOApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
-            int startIndex) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, int numberOfTransactions, int startIndex) {
 
         String transactionUrlForAccount = account.getBankIdentifier();
-        HttpResponse response = apiClient.fetchTransactions(transactionUrlForAccount, numberOfTransactions, startIndex);
+        HttpResponse response =
+                apiClient.fetchTransactions(
+                        transactionUrlForAccount, numberOfTransactions, startIndex);
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
-            log.warn("Traffic error during fetching transaction: %s: %s", response.getStatus(),
-                    response.getBody(String.class));
+            log.warn(
+                    "Traffic error during fetching transaction: %s: %s",
+                    response.getStatus(), response.getBody(String.class));
             return PaginatorResponseImpl.createEmpty();
         }
-        TransactionFetchingResponse transactionFetchingResponse = response.getBody(TransactionFetchingResponse.class);
+        TransactionFetchingResponse transactionFetchingResponse =
+                response.getBody(TransactionFetchingResponse.class);
 
-        Collection<? extends Transaction> transactions = transactionFetchingResponse.toTinkTransactions();
+        Collection<? extends Transaction> transactions =
+                transactionFetchingResponse.toTinkTransactions();
         return PaginatorResponseImpl.create(transactions);
     }
 }

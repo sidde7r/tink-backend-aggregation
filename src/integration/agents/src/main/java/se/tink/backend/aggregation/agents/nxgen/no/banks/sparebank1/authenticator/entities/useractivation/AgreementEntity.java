@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AgreementEntity {
     private String agreementId;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

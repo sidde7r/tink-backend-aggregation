@@ -14,7 +14,8 @@ public class AddRefererFilter extends Filter {
     private String lastUsedRefererUri;
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
 
         if (!Strings.isNullOrEmpty(previousRequestUri)) {
             final String nextReferer;

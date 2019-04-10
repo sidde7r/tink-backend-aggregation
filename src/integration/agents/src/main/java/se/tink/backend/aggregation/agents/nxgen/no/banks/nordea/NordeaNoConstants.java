@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class NordeaNoConstants {
     public static final String MARKET_CODE = "NO";
@@ -214,7 +214,8 @@ public class NordeaNoConstants {
 
             addAccountType("SE4000", "Spara Kapital", AccountTypes.SAVINGS);
             addAccountType("SE4300", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
-            // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0), guess it might be a
+            // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0),
+            // guess it might be a
             // mistake that SE4309 is actually SE4300.
             addAccountType("SE4309", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
             addAccountType("SE4400", "Skatteutjämningskonto", AccountTypes.SAVINGS);
@@ -281,7 +282,6 @@ public class NordeaNoConstants {
             addAccountType("SE7901", "Belastningsnummer", AccountTypes.SAVINGS);
             addAccountType("SE8001", "Business Gold", AccountTypes.CREDIT_CARD);
             addAccountType("SE8002", "First card", AccountTypes.CREDIT_CARD);
-
 
             addAccountType("SE46100601", "Bonuskonto 2006 utgåva 1", AccountTypes.CHECKING);
             addAccountType("SE46100602", "Bonuskonto 2006 utgåva 2", AccountTypes.CHECKING);
@@ -374,7 +374,11 @@ public class NordeaNoConstants {
             addAccountType("SE00020", "Studentlån", AccountTypes.LOAN, LoanDetails.Type.STUDENT);
             addAccountType("SE00021", "Startlån", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
             addAccountType("SE00022", "Privatlån", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
-            addAccountType("SE00090", "Låna person, utan säkerhet", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
+            addAccountType(
+                    "SE00090",
+                    "Låna person, utan säkerhet",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.BLANCO);
             addAccountType("SE00091", "Låna spar", AccountTypes.LOAN);
             addAccountType("SE00092", "Låna bostad", AccountTypes.LOAN, LoanDetails.Type.MORTGAGE);
             addAccountType("SE00093", "Låna person, med säkerhet", AccountTypes.LOAN);
@@ -403,17 +407,61 @@ public class NordeaNoConstants {
             addAccountType("SE00913", "Kreditgaranti", AccountTypes.LOAN);
             addAccountType("SE00915", "Garanti", AccountTypes.LOAN);
             addAccountType("SE00919", "Garantifondförbindelse", AccountTypes.LOAN);
-            addAccountType("SE10102", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10103", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10104", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10105", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10302", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10304", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10305", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10401", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10402", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10403", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10404", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10102",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10103",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10104",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10105",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10302",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10304",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10305",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10401",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10402",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10403",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10404",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
             addAccountType("SE30101", "Reverslån, Nordea finans", AccountTypes.LOAN);
             addAccountType("SE30103", "Reverslån, Nordea finans", AccountTypes.LOAN);
             addAccountType("SE30104", "Reverslån, Nordea finans", AccountTypes.LOAN);
@@ -437,15 +485,20 @@ public class NordeaNoConstants {
             ACCOUNT_NAMES_BY_CODE.put(code, name);
         }
 
-        private static void addAccountType(String code, String name, AccountTypes type, LoanDetails.Type loanType) {
+        private static void addAccountType(
+                String code, String name, AccountTypes type, LoanDetails.Type loanType) {
             addAccountType(code, name, type);
             LOAN_TYPES_BY_CODE.put(code, loanType);
         }
     }
 
     public enum Url implements UrlEnum {
-        BANKID_INIT(NordeaV17Constants.Url.getBankingEndpoint("/Authentication/BankID/performBankIDSIMInit")),
-        BANKID_POLL(NordeaV17Constants.Url.getBankingEndpoint("/Authentication/BankID/pollBankIDSIMAuthentication"));
+        BANKID_INIT(
+                NordeaV17Constants.Url.getBankingEndpoint(
+                        "/Authentication/BankID/performBankIDSIMInit")),
+        BANKID_POLL(
+                NordeaV17Constants.Url.getBankingEndpoint(
+                        "/Authentication/BankID/pollBankIDSIMAuthentication"));
 
         private URL url;
 
@@ -472,9 +525,12 @@ public class NordeaNoConstants {
     public static class BankIdStatus {
         public static final String COMPLETE = "COMPLETE";
         public static final String WAITING = "INPROGRESS";
-        public static final String TIMEOUT = "TIMEMOUTCODE"; // TODO - Replace with correct error-code
-        public static final String CANCELLED = "CANCELLEDCODE"; // TODO - Replace with correct error-code
-        public static final String ALREADY_IN_PROGRESS = "ALREADYINPROGRESSCODE"; // TODO - Replace with correct error-code
+        public static final String TIMEOUT =
+                "TIMEMOUTCODE"; // TODO - Replace with correct error-code
+        public static final String CANCELLED =
+                "CANCELLEDCODE"; // TODO - Replace with correct error-code
+        public static final String ALREADY_IN_PROGRESS =
+                "ALREADYINPROGRESSCODE"; // TODO - Replace with correct error-code
     }
 
     public static class BankIdOperation {

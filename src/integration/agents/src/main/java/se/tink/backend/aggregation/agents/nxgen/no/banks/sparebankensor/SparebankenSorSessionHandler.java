@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 public class SparebankenSorSessionHandler implements SessionHandler {
     @Override
     public void logout() {
-        //NO OP
+        // NO OP
     }
 
     @Override

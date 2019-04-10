@@ -14,7 +14,8 @@ public class SparebankenVestCreditCardAccountFetcher implements AccountFetcher<C
         this.apiClient = apiClient;
     }
 
-    public static SparebankenVestCreditCardAccountFetcher create(SparebankenVestApiClient apiClient) {
+    public static SparebankenVestCreditCardAccountFetcher create(
+            SparebankenVestApiClient apiClient) {
         return new SparebankenVestCreditCardAccountFetcher(apiClient);
     }
 

@@ -31,14 +31,17 @@ public class CreditCardTransactionEntity {
     private Boolean disputeAllowed;
     private Boolean fraudClaimed;
     private Boolean authorization;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
+
     private String externalAccountNo;
 
     @JsonIgnore
     public CreditCardTransaction toTinkTransaction() {
         return CreditCardTransaction.builder()
-                .setAmount(Sparebank1AmountUtils.constructAmount(billingAmount, billingAmountFraction))
+                .setAmount(
+                        Sparebank1AmountUtils.constructAmount(billingAmount, billingAmountFraction))
                 .setDate(DateUtils.parseDate(postingDate == null ? transactionDate : postingDate))
                 .setDescription(transactionText)
                 .setPending(postingDate == null)

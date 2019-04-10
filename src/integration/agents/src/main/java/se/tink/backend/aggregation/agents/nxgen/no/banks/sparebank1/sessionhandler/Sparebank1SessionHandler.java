@@ -12,19 +12,25 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class Sparebank1SessionHandler implements SessionHandler {
-    private static final AggregationLogger log = new AggregationLogger(Sparebank1SessionHandler.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(Sparebank1SessionHandler.class);
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
 
-    public Sparebank1SessionHandler(Sparebank1ApiClient apiClient, RestRootResponse restRootResponse) {
+    public Sparebank1SessionHandler(
+            Sparebank1ApiClient apiClient, RestRootResponse restRootResponse) {
         this.apiClient = apiClient;
         this.restRootResponse = restRootResponse;
     }
 
     @Override
     public void logout() {
-        HttpResponse response = apiClient.logout(restRootResponse.getLinks()
-                .get(Sparebank1Constants.Keys.LOGOUT_KEY).getHref());
+        HttpResponse response =
+                apiClient.logout(
+                        restRootResponse
+                                .getLinks()
+                                .get(Sparebank1Constants.Keys.LOGOUT_KEY)
+                                .getHref());
         if (response.getStatus() != HttpStatusCodes.STATUS_CODE_NO_CONTENT) {
             log.warn(String.format("Logout failed with status: %d", response.getStatus()));
         }
@@ -33,9 +39,13 @@ public class Sparebank1SessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            HttpResponse response = apiClient
-                    .get(restRootResponse.getLinks()
-                            .get(Sparebank1Constants.Keys.KEEP_ALIVE_KEY).getHref(), HttpResponse.class);
+            HttpResponse response =
+                    apiClient.get(
+                            restRootResponse
+                                    .getLinks()
+                                    .get(Sparebank1Constants.Keys.KEEP_ALIVE_KEY)
+                                    .getHref(),
+                            HttpResponse.class);
 
             if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
                 throw SessionError.SESSION_EXPIRED.exception();

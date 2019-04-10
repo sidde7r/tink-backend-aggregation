@@ -76,23 +76,23 @@ public class TransactionEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        Transaction.Builder transactionBuilder = Transaction.builder()
-                .setDescription(getTinkFormattedDescription(description.trim()))
-                .setAmount(new Amount(this.amounts.getExecuted().getCurrency(),this.amount))
-                .setDate(accountingDate)
-                .setPending(reserved);
+        Transaction.Builder transactionBuilder =
+                Transaction.builder()
+                        .setDescription(getTinkFormattedDescription(description.trim()))
+                        .setAmount(
+                                new Amount(this.amounts.getExecuted().getCurrency(), this.amount))
+                        .setDate(accountingDate)
+                        .setPending(reserved);
 
         return transactionBuilder.build();
     }
 
     /**
-     * Pattern: <date> <Actual merchant name>
-     * Example: 01.01 Spotify
-     * Formatted: Spotify
+     * Pattern: <date> <Actual merchant name> Example: 01.01 Spotify Formatted: Spotify
      *
-     * Pattern: *<last four digits of cardnumber> <date> <currency> <amount> <Actual merchant name> Kurs: <exchange rate>
-     * Example: *1234 01.01 SEK 99.00 Spotify Kurs: 1.0000
-     * Formatted: Spotify
+     * <p>Pattern: *<last four digits of cardnumber> <date> <currency> <amount> <Actual merchant
+     * name> Kurs: <exchange rate> Example: *1234 01.01 SEK 99.00 Spotify Kurs: 1.0000 Formatted:
+     * Spotify
      */
     @JsonIgnore
     public static String getTinkFormattedDescription(String rawDescription) {

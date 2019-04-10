@@ -11,12 +11,16 @@ public class TransactionEntity {
     private String id;
     private String accountNumber;
     private String prettyDescription;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date postingDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date accountingDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date valueDate;
+
     private Double amount;
     private String archiveRef;
     private Integer serialNo;

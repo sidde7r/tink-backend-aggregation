@@ -8,18 +8,25 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AuthenticationTokenEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String token;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String authLevel;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String serviceType;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String loginTime;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String notAfter;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String sessionMaxLength;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String tokenMaxAge;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String profileId;
 

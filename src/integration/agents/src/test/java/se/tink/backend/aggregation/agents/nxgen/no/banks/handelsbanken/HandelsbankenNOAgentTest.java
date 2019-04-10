@@ -10,13 +10,13 @@ public class HandelsbankenNOAgentTest {
 
     @Test
     public void testRegisterAndRefresh() throws Exception {
-        AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("no", "no-handelsbanken-bankid")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.MOBILENUMBER, MOBILENUMBER)
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true);
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("no", "no-handelsbanken-bankid")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .addCredentialField(Field.Key.MOBILENUMBER, MOBILENUMBER)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
 
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
 }

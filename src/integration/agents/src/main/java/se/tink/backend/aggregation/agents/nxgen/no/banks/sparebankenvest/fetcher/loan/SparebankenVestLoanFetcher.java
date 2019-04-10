@@ -13,7 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SparebankenVestLoanFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SparebankenVestLoanFetcher.class);
 
     private final SparebankenVestApiClient apiClient;
 
@@ -31,14 +32,18 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
             FetchLoansResponse loansResponse = apiClient.fetchLoans();
             if (loansResponse != null) {
                 return loansResponse.stream()
-                        .filter(loanEntity -> {
-                            if (loanEntity.isCurrencyLoan()) {
-                                fetchAndLogCurrencyLoanDetails(loanEntity);
-                                return false;
-                            }
-                            return true;
-                        })
-                        .map(loanEntity -> loanEntity.toTinkLoan(apiClient.fetchLoanDetails(loanEntity)))
+                        .filter(
+                                loanEntity -> {
+                                    if (loanEntity.isCurrencyLoan()) {
+                                        fetchAndLogCurrencyLoanDetails(loanEntity);
+                                        return false;
+                                    }
+                                    return true;
+                                })
+                        .map(
+                                loanEntity ->
+                                        loanEntity.toTinkLoan(
+                                                apiClient.fetchLoanDetails(loanEntity)))
                         .collect(Collectors.toList());
             }
         } catch (Exception e) {
@@ -50,11 +55,17 @@ public class SparebankenVestLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private void fetchAndLogCurrencyLoanDetails(LoanEntity loanEntity) {
         try {
-            LOGGER.infoExtraLong("LOAN: " + SerializationUtils.serializeToString(loanEntity), SparebankenVestConstants.LogTags.LOANS);
-            String loanDetails = "(currency loan) " + apiClient.fetchCurrencyLoanDetails(loanEntity);
-            LOGGER.infoExtraLong("LOAN DETAILS: " + loanDetails, SparebankenVestConstants.LogTags.LOANS);
+            LOGGER.infoExtraLong(
+                    "LOAN: " + SerializationUtils.serializeToString(loanEntity),
+                    SparebankenVestConstants.LogTags.LOANS);
+            String loanDetails =
+                    "(currency loan) " + apiClient.fetchCurrencyLoanDetails(loanEntity);
+            LOGGER.infoExtraLong(
+                    "LOAN DETAILS: " + loanDetails, SparebankenVestConstants.LogTags.LOANS);
         } catch (Exception e) {
-            LOGGER.infoExtraLong("DETAILS: Failed to fetch details: " + e.getMessage(), SparebankenVestConstants.LogTags.LOANS);
+            LOGGER.infoExtraLong(
+                    "DETAILS: Failed to fetch details: " + e.getMessage(),
+                    SparebankenVestConstants.LogTags.LOANS);
         }
     }
 }

@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class Sparebank1CreditCardTransactionFetcher implements TransactionKeyPaginator<CreditCardAccount, String> {
+public class Sparebank1CreditCardTransactionFetcher
+        implements TransactionKeyPaginator<CreditCardAccount, String> {
     private final Sparebank1ApiClient apiClient;
 
     public Sparebank1CreditCardTransactionFetcher(Sparebank1ApiClient apiClient) {
@@ -14,8 +15,10 @@ public class Sparebank1CreditCardTransactionFetcher implements TransactionKeyPag
     }
 
     @Override
-    public CreditCardTransactionsResponse getTransactionsFor(CreditCardAccount account, String key) {
-        // The key is the url for fetching more transactions, which is provided in the response from the bank
+    public CreditCardTransactionsResponse getTransactionsFor(
+            CreditCardAccount account, String key) {
+        // The key is the url for fetching more transactions, which is provided in the response from
+        // the bank
         // as long as there are more transactions to fetch.
         if (Strings.isNullOrEmpty(key)) {
             return apiClient.fetchCreditCardTransactions(account.getBankIdentifier());

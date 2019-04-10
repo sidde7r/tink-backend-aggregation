@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmen
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class FundAccountEntity {
@@ -23,8 +23,7 @@ public class FundAccountEntity {
     private boolean ask;
     private boolean ips;
 
-    @JsonIgnore
-    private double accountBalance;
+    @JsonIgnore private double accountBalance;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -95,7 +94,6 @@ public class FundAccountEntity {
         portfolio.setUniqueIdentifier(accountNumber);
 
         return portfolio;
-
     }
 
     public InvestmentAccount toInvestmentAccount() {

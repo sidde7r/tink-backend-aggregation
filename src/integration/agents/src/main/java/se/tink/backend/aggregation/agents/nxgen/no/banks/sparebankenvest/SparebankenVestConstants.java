@@ -16,15 +16,26 @@ public class SparebankenVestConstants {
 
         static final URL LOGIN = new URL(HOST + "/mobil/innlogget/");
         static final URL AUTHENTICATE =
-                new URL(HOST_SECURITY + "/Innlogging/privat-mobil/LoginServiceSAMobile2/Lsam/Authenticated");
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/Lsam/Authenticated");
         static final URL STS_PRIVATE_WEB = new URL(HOST_SECURITY + "/STS/privat-web/Default.aspx");
         static final URL ACCOUNTS = new URL(HOST + "/konto/api/konto/konti/");
         static final URL TRANSACTIONS = new URL(HOST + "/konto/api/DepositMovement/find/");
-        static final URL CREDIT_CARD_TRANSACTIONS = new URL(HOST + "/konto/api/transactionsearch/search/");
+        static final URL CREDIT_CARD_TRANSACTIONS =
+                new URL(HOST + "/konto/api/transactionsearch/search/");
         static final URL DUE_PAYMENTS = new URL(HOST + "/betaling/api/Payment/findDuePayments/");
         static final URL LOANS = new URL(HOST + "/laan/api/LoanList");
-        static final URL LOAN_DETAILS = new URL(HOST + "/laan/api/loanlist/{" + LOAN_TYPE_PARAM + "}/{" + LOAN_NUMBER_GUID_PARAM + "}");
-        static final URL CURRENCY_LOAN_DETAILS = new URL(HOST + "/laan/api/currencyloan/{" + LOAN_NUMBER_GUID_PARAM + "}");
+        static final URL LOAN_DETAILS =
+                new URL(
+                        HOST
+                                + "/laan/api/loanlist/{"
+                                + LOAN_TYPE_PARAM
+                                + "}/{"
+                                + LOAN_NUMBER_GUID_PARAM
+                                + "}");
+        static final URL CURRENCY_LOAN_DETAILS =
+                new URL(HOST + "/laan/api/currencyloan/{" + LOAN_NUMBER_GUID_PARAM + "}");
 
         static final URL CREDIT_CARD_ACCOUNTS = new URL(HOST + "/kort/api/kreditt/");
         static final URL INVESTMENTS = new URL(HOST + "/verdipapir/api/FondPlasseringer");
@@ -47,11 +58,12 @@ public class SparebankenVestConstants {
         static final String KID_GUID_KEY = "kidGuid";
         static final String FROM_DATE_KEY = "fromDate";
         static final String TO_DATE_KEY = "toDate";
-        public static final ThreadSafeDateFormat DATE_FORMATTER = new ThreadSafeDateFormat
-                .ThreadSafeDateFormatBuilder(
-                        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                new Locale("sv", "SE"),
-                TimeZone.getTimeZone("UTC")).build();
+        public static final ThreadSafeDateFormat DATE_FORMATTER =
+                new ThreadSafeDateFormat.ThreadSafeDateFormatBuilder(
+                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                                new Locale("sv", "SE"),
+                                TimeZone.getTimeZone("UTC"))
+                        .build();
     }
 
     public static class Investments {
@@ -98,7 +110,8 @@ public class SparebankenVestConstants {
     }
 
     public static class LogTags {
-        public static final LogTag UPCOMING_TRANSACTIONS = LogTag.from("#SparebankenVest_upcoming_transactions");
+        public static final LogTag UPCOMING_TRANSACTIONS =
+                LogTag.from("#SparebankenVest_upcoming_transactions");
         public static final LogTag LOANS = LogTag.from("#SparebankenVest_loans");
         public static final LogTag INVESTMENTS = LogTag.from("#SparebankenVest_investments");
     }

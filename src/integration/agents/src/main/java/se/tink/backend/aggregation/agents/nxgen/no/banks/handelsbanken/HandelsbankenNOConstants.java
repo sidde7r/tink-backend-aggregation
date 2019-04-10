@@ -6,30 +6,53 @@ import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 
 public class HandelsbankenNOConstants {
 
-    public static final int AUTHENTICATION_TIMEOUT_COUNT = 15;  // set to 15 currently same as SparebankenSor
+    public static final int AUTHENTICATION_TIMEOUT_COUNT =
+            15; // set to 15 currently same as SparebankenSor
 
     public enum Url implements UrlEnum {
         APP_INFORMATION(getNetbankEndpoint("/smbmobile/9055/appversion_ios.json")),
-        VERIFY_CUSTOMER(getNetbankEndpoint("/secesb/rest/era/era/public/customers/%s/mobile?number=+47%s&orgid=9055")),
-        CONFIGURE_BANKID(getNetbankEndpoint("/authenticate/login/bankidmobile?configKey=smbmactivate9055&userid=%s&phoneNumber=%s")),
-        BANKID_1(getNetbankEndpoint("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s1")),
-        BANKID_2(getNetbankEndpoint("/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s2")),
-        POLL_BANK(getNetbankEndpoint("/authenticate/login/rest/bankidmobilestatus.json;jsessionid=%s")),
+        VERIFY_CUSTOMER(
+                getNetbankEndpoint(
+                        "/secesb/rest/era/era/public/customers/%s/mobile?number=+47%s&orgid=9055")),
+        CONFIGURE_BANKID(
+                getNetbankEndpoint(
+                        "/authenticate/login/bankidmobile?configKey=smbmactivate9055&userid=%s&phoneNumber=%s")),
+        BANKID_1(
+                getNetbankEndpoint(
+                        "/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s1")),
+        BANKID_2(
+                getNetbankEndpoint(
+                        "/authenticate/login/bankidmobile;jsessionid=%s?execution=e1s2")),
+        POLL_BANK(
+                getNetbankEndpoint(
+                        "/authenticate/login/rest/bankidmobilestatus.json;jsessionid=%s")),
         LOGIN_FIRST_STEP(getNetbankEndpoint("/secesb/rest/esb/v1/login")),
         LOGIN_SECOND_STEP(getNetbankEndpoint("/secesb/rest/era/login")),
         SEND_SMS(getNetbankEndpoint("/secesb/rest/era/sam/sms")),
         ACCOUNTS(getNetbankEndpoint("/secesb/rest/era/accounts")),
-        TRANSACTIONS(getNetbankEndpoint("/secesb/rest/era%s?number=%s&include_authorizations=true&index=%s")),
+        TRANSACTIONS(
+                getNetbankEndpoint(
+                        "/secesb/rest/era%s?number=%s&include_authorizations=true&index=%s")),
         KEEP_ALIVE(getNetbankEndpoint("/secesb/rest/esb/v1/keepalive")),
         INIT_INVESTOR_LOGIN(getNetbankEndpoint("/secesb/rest/era/ssotoken/so")),
         CUSTOMER_PORTAL_LOGIN(getCustomerPortalEndpoint("/idp/profile/SAML2/Unsolicited/SSO")),
         INVESTOR_LOGIN(getInvestorEndpoint("/saml/sp/profile/post/acs")),
-        INVESTMENTS_OVERVIEW(getInvestorEndpoint("/vip/json/0/investors/{" + UrlParameters.DOB + "}")),
-        POSITIONS(getInvestorEndpoint("/vip/json/0/positions/csdAccounts/{" + UrlParameters.ACCOUNT_NUMBER + "}")),
+        INVESTMENTS_OVERVIEW(
+                getInvestorEndpoint("/vip/json/0/investors/{" + UrlParameters.DOB + "}")),
+        POSITIONS(
+                getInvestorEndpoint(
+                        "/vip/json/0/positions/csdAccounts/{"
+                                + UrlParameters.ACCOUNT_NUMBER
+                                + "}")),
         AKSJER_LOGIN(getAksjerEndpoint("/server/rest/auth/login/saml")),
         AKSJER_OVERVIEW(getAksjerEndpoint("/server/rest/me")),
-        AKSJER_AVAILABLE_BALANCE(getAksjerEndpoint("/server/rest/customers/{" + UrlParameters.DOB + "}/balance/{"
-                + UrlParameters.CUSTOMER_ID + "}"));
+        AKSJER_AVAILABLE_BALANCE(
+                getAksjerEndpoint(
+                        "/server/rest/customers/{"
+                                + UrlParameters.DOB
+                                + "}/balance/{"
+                                + UrlParameters.CUSTOMER_ID
+                                + "}"));
 
         private URL url;
 
@@ -120,7 +143,8 @@ public class HandelsbankenNOConstants {
         ORIGIN("Origin", UrlParameters.HB_NETBANK_HOST),
         REQUEST_WITH("X-Requested-With", "XMLHttpRequest"),
         X_EVRY_CLIENT("X-EVRY-CLIENT-CLIENTNAME", "SMARTbankMobile"),
-        // at this moment, any random 8 numeric/alphabets works as requestId, but they might change later
+        // at this moment, any random 8 numeric/alphabets works as requestId, but they might change
+        // later
         X_EVRY_CLIENT_REQUESTID("X-EVRY-CLIENT-REQUESTID", "11111111"),
         USER_AGENT("User-Agent", "MB 1.20.1 9055 iPhone 6s iOS 10.2");
 
@@ -229,8 +253,7 @@ public class HandelsbankenNOConstants {
 
         public static final String appId = "com.evry.mobilebanken.handelsbanken";
 
-        public static final String
-                rsaPubKeyString =
+        public static final String rsaPubKeyString =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3maOiHUOhZR75rlXiyic"
                         + "csi5mp5OEdkamnC1oRO1o71eP2u7v3i3sEIHQ9jHaIw6kHCrHqFCPvgjvbzcM8vC"
                         + "uHZF3xafYCxShUH6Kb5AU7of6L7dTqXJDwyK6EJ1sGX1qIrlqVdYzDtfEES7NZb4"

@@ -12,8 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.SparebankenSorTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.filters.AddRefererFilter;
-import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.encoding.messagebodywriter.NoEscapeOfBackslashMessageBodyWriter;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -28,25 +29,22 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 /**
- * WIP!
- * This provider is dependant on us being able to trigger supplemental information twice, which doesn't work
- * with the current version of the app. Haven't added the provider to the provider config just to be certain that
- * it doesn't accidentally end up in the app.
+ * WIP! This provider is dependant on us being able to trigger supplemental information twice, which
+ * doesn't work with the current version of the app. Haven't added the provider to the provider
+ * config just to be certain that it doesn't accidentally end up in the app.
  *
- * Things left to do before it can be used in production:
- *  - Assert that registration works (activation flow)
- *  - Assert that registered user can log in (authentication flow)
- *  - Investigate investment fetching, 2018-02-13 they seemed to route to the netbank
- *  - Add provider to provider config
- *  - Add rules to appstore monitor
+ * <p>Things left to do before it can be used in production: - Assert that registration works
+ * (activation flow) - Assert that registered user can log in (authentication flow) - Investigate
+ * investment fetching, 2018-02-13 they seemed to route to the netbank - Add provider to provider
+ * config - Add rules to appstore monitor
  */
 public class SparebankenSorAgent extends NextGenerationAgent {
     private final SparebankenSorApiClient apiClient;
 
-    public SparebankenSorAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SparebankenSorAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
     }
@@ -62,37 +60,58 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         SparebankenSorEncapConfiguration configuration = new SparebankenSorEncapConfiguration();
-        EncapClient encapClient = new EncapClient(configuration, persistentStorage, client, true,
-                credentials.getField(Field.Key.USERNAME));
+        EncapClient encapClient =
+                new EncapClient(
+                        configuration,
+                        persistentStorage,
+                        client,
+                        true,
+                        credentials.getField(Field.Key.USERNAME));
 
         SparebankenSorMultiFactorAuthenticator multiFactorAuthenticator =
-                new SparebankenSorMultiFactorAuthenticator(apiClient, encapClient, supplementalInformationHelper,
-                        catalog, sessionStorage, credentials.getField(Field.Key.MOBILENUMBER));
+                new SparebankenSorMultiFactorAuthenticator(
+                        apiClient,
+                        encapClient,
+                        supplementalInformationHelper,
+                        catalog,
+                        sessionStorage,
+                        credentials.getField(Field.Key.MOBILENUMBER));
 
-        SparebankenSorAutoAuthenticator autoAuthenticator = new SparebankenSorAutoAuthenticator(
-                apiClient, encapClient, sessionStorage);
+        SparebankenSorAutoAuthenticator autoAuthenticator =
+                new SparebankenSorAutoAuthenticator(apiClient, encapClient, sessionStorage);
 
-        return new AutoAuthenticationController(request, systemUpdater,
-                new BankIdAuthenticationControllerNO(supplementalRequester, multiFactorAuthenticator),
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new BankIdAuthenticationControllerNO(
+                        supplementalRequester, multiFactorAuthenticator),
                 autoAuthenticator);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
                         new SparebankenSorTransactionalAccountFetcher(apiClient),
                         new SparebankenSorTransactionFetcher(apiClient)));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        SparebankenSorCreditCardAccountFetcher ccAccountFetcher = new SparebankenSorCreditCardAccountFetcher(apiClient);
+        SparebankenSorCreditCardAccountFetcher ccAccountFetcher =
+                new SparebankenSorCreditCardAccountFetcher(apiClient);
         SparebankenSorCreditCardTransactionFetcher ccTransactionFetcher =
                 new SparebankenSorCreditCardTransactionFetcher();
 
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController, ccAccountFetcher,
-                ccTransactionFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        ccAccountFetcher,
+                        ccTransactionFetcher));
     }
 
     @Override
@@ -103,7 +122,8 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
+        return Optional.of(
+                new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
     }
 
     @Override
@@ -112,7 +132,8 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

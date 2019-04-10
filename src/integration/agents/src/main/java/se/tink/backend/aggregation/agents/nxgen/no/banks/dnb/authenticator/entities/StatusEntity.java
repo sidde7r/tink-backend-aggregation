@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusEntity {
     private boolean error;
+
     @JsonProperty("usererror")
     private boolean userError;
 

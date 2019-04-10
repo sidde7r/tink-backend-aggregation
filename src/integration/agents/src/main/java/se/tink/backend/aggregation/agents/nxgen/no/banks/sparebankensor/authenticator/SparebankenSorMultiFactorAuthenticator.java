@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -31,7 +31,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.Catalog;
 
 public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticatorNO {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SparebankenSorMultiFactorAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SparebankenSorMultiFactorAuthenticator.class);
     private static final String ACTIVATION_CODE_FIELD_KEY = "activationCode";
     private static final int ACTIVATION_CODE_LENGTH = 8;
 
@@ -43,9 +44,13 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
     private final String mobilenumber;
     private int pollWaitCounter;
 
-    public SparebankenSorMultiFactorAuthenticator(SparebankenSorApiClient apiClient, EncapClient encapClient,
-            SupplementalInformationHelper supplementalInformationHelper, Catalog catalog,
-            SessionStorage sessionStorage, String mobilenumber) {
+    public SparebankenSorMultiFactorAuthenticator(
+            SparebankenSorApiClient apiClient,
+            EncapClient encapClient,
+            SupplementalInformationHelper supplementalInformationHelper,
+            Catalog catalog,
+            SessionStorage sessionStorage,
+            String mobilenumber) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -59,9 +64,11 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
             throws AuthenticationException, AuthorizationException {
         pollWaitCounter = 0;
 
-        apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this cookie for later use in the first login request
+        apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
+        // cookie for later use in the first login request
 
-        // TODO: Sor returns a 500 for incorrect nationalId, have to verify with check digits before this request.
+        // TODO: Sor returns a 500 for incorrect nationalId, have to verify with check digits before
+        // this request.
         VerifyCustomerResponse response = apiClient.verifyCustomer(nationalId, mobilenumber);
         if (!response.isValid()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
@@ -77,9 +84,10 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         Element referenceWordsElement = doc.getElementsByClass("bidm_ref-word").first();
 
         if (referenceWordsElement == null) {
-            throw new IllegalStateException(String.format(
-                    "%s: No reference words found. Could not initiate bankId",
-                    SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+            throw new IllegalStateException(
+                    String.format(
+                            "%s: No reference words found. Could not initiate bankId",
+                            SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
         }
 
         return referenceWordsElement.text();
@@ -93,25 +101,30 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         if (Objects.equals(pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.NONE)) {
             pollWaitCounter++;
             return BankIdStatus.WAITING;
-        } else if (Objects.equals(pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.COMPLETED)) {
+        } else if (Objects.equals(
+                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.COMPLETED)) {
             continueActivation();
             return BankIdStatus.DONE;
-        } else if (Objects.equals(pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.ERROR)) {
-            // Sparebanken Sor keeps on polling until error status is returned even if user cancels bankId.
+        } else if (Objects.equals(
+                pollStatus.toLowerCase(), SparebankenSorConstants.BankIdStatus.ERROR)) {
+            // Sparebanken Sor keeps on polling until error status is returned even if user cancels
+            // bankId.
             if (pollWaitCounter > 15) {
                 return BankIdStatus.TIMEOUT;
             } else {
-                LOGGER.info(String.format(
-                        "%s: Received error status when polling bankId",
-                        SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
+                LOGGER.info(
+                        String.format(
+                                "%s: Received error status when polling bankId",
+                                SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString()));
                 return BankIdStatus.FAILED_UNKNOWN;
             }
         } else {
-            LOGGER.info(String.format(
-                    "%s: Unknown poll status: %s. Number of polls: %s",
-                    SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
-                    pollStatus,
-                    pollWaitCounter));
+            LOGGER.info(
+                    String.format(
+                            "%s: Unknown poll status: %s. Number of polls: %s",
+                            SparebankenSorConstants.LogTags.BANKID_LOG_TAG.toString(),
+                            pollStatus,
+                            pollWaitCounter));
             return BankIdStatus.FAILED_UNKNOWN;
         }
     }
@@ -128,11 +141,12 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                     "Sparebanken Sor - Something went wrong when sending request for getting activation code via sms");
         }
 
-        Map<String, String> activationCodeResponse = supplementalInformationHelper.askSupplementalInformation(
-                getActivationCodeField());
+        Map<String, String> activationCodeResponse =
+                supplementalInformationHelper.askSupplementalInformation(getActivationCodeField());
 
-        evryToken = encapClient.activateAndAuthenticateUser(
-                activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
+        evryToken =
+                encapClient.activateAndAuthenticateUser(
+                        activationCodeResponse.get(ACTIVATION_CODE_FIELD_KEY));
         executeLogin(evryToken);
     }
 
@@ -140,9 +154,12 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         FirstLoginRequest firstLoginRequest = FirstLoginRequest.build(evryToken);
         FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(firstLoginRequest);
 
-        sessionStorage.put(SparebankenSorConstants.Storage.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
-        // We might want to add some check on the second login response. Not doing it now since I don't know
-        // what fields/values that signal an error. But if we get errors here we should add a check for it.
+        sessionStorage.put(
+                SparebankenSorConstants.Storage.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
+        // We might want to add some check on the second login response. Not doing it now since I
+        // don't know
+        // what fields/values that signal an error. But if we get errors here we should add a check
+        // for it.
         apiClient.loginSecondStep();
     }
 

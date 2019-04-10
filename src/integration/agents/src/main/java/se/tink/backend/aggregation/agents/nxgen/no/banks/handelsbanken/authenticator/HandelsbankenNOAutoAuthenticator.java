@@ -16,7 +16,9 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     private final EncapClient encapClient;
     private final SessionStorage sessionStorage;
 
-    public HandelsbankenNOAutoAuthenticator(HandelsbankenNOApiClient apiClient, EncapClient encapClient,
+    public HandelsbankenNOAutoAuthenticator(
+            HandelsbankenNOApiClient apiClient,
+            EncapClient encapClient,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
@@ -24,7 +26,7 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException{
+    public void autoAuthenticate() throws SessionException {
         apiClient.fetchAppInformation();
 
         String evryToken = encapClient.authenticateUser();
@@ -35,9 +37,11 @@ public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     }
 
     private void executeLogin(String evryToken) throws HttpResponseException {
-        FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(FirstLoginRequest.build(evryToken));
+        FirstLoginResponse firstLoginResponse =
+                apiClient.loginFirstStep(FirstLoginRequest.build(evryToken));
 
-        sessionStorage.put(HandelsbankenNOConstants.Tags.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
+        sessionStorage.put(
+                HandelsbankenNOConstants.Tags.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
 
         apiClient.loginSecondStep();
     }
