@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.contexts;
 
 import java.util.List;
-import java.util.Optional;
 import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.customerinfo.CustomerInfo;
 
 public interface FinancialDataCacher {
 
@@ -38,18 +36,4 @@ public interface FinancialDataCacher {
             cacheAccount(account);
         }
     }
-
-    /**
-     * Caches {@code customerInfo}, making {@code customerInfo} retrievable via {@code
-     * FinancialDataCacher::getCustomerInfo} after this method has been executed.
-     *
-     * @param customerInfo Customer identity data
-     */
-    void updateCustomerInfo(CustomerInfo customerInfo);
-
-    /**
-     * @return The customer identity data previously stored using {@code
-     *     FinancialDataCacher::updateCustomerInfo}, or Optional.empty() if none exists
-     */
-    Optional<CustomerInfo> getCustomerInfo();
 }
