@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.authenticator.BecAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.configuration.BecConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
@@ -23,6 +24,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BecAgent extends NextGenerationAgent {
+
+    private final String clientName;
     private final BecApiClient apiClient;
 
     public BecAgent(
@@ -30,26 +33,26 @@ public final class BecAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
 
         apiClient = new BecApiClient(client, sessionStorage, persistentStorage);
+        clientName = request.getProvider().getPayload();
     }
+
+    @Override
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final BecConfiguration becConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                BecConstants.Market.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
-                                BecConfiguration.class)
-                        .orElseThrow(() -> new IllegalStateException("Bec configuration missing."));
-
-        persistentStorage.put(BecConstants.StorageKeys.CLIENT_ID, becConfiguration.getClientId());
+        apiClient.setConfiguration(getClientConfiguration());
     }
 
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    private BecConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        BecConstants.INTEGRATION_NAME, clientName, BecConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {

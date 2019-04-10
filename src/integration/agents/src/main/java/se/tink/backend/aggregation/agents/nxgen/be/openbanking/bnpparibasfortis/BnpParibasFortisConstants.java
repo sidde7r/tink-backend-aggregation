@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BnpParibasFortisConstants {
 
+    public static final String INTEGRATION_NAME = "bnpparibasfortis";
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CACC")
@@ -34,11 +36,6 @@ public abstract class BnpParibasFortisConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "aisp";
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "bnpparibasfortis";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class HeaderKeys {
