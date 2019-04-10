@@ -12,16 +12,12 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
-    public NordeaSeApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
-        super(client, sessionStorage, persistentStorage);
+    public NordeaSeApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+        super(client, sessionStorage);
     }
 
     private RequestBuilder createRequestWithTppToken(URL url) {

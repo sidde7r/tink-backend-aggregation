@@ -5,6 +5,7 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -12,33 +13,38 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordeaBaseApiClient {
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
-    protected final PersistentStorage persistentStorage;
+    protected NordeaBaseConfiguration configuration;
 
-    public NordeaBaseApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public NordeaBaseApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
+    }
+
+    public NordeaBaseConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        NordeaBaseConstants.ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(NordeaBaseConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     protected RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(
-                        NordeaBaseConstants.QueryKeys.X_CLIENT_ID,
-                        persistentStorage.get(NordeaBaseConstants.StorageKeys.CLIENT_ID))
+                .header(NordeaBaseConstants.QueryKeys.X_CLIENT_ID, configuration.getClientId())
                 .header(
                         NordeaBaseConstants.QueryKeys.X_CLIENT_SECRET,
-                        persistentStorage.get(NordeaBaseConstants.StorageKeys.CLIENT_SECRET));
+                        configuration.getClientSecret());
     }
 
     private RequestBuilder createRequestInSession(URL url) {
@@ -58,8 +64,7 @@ public class NordeaBaseApiClient {
                         NordeaBaseConstants.Urls.AUTHORIZE
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.CLIENT_ID,
-                                        persistentStorage.get(
-                                                NordeaBaseConstants.StorageKeys.CLIENT_ID))
+                                        configuration.getClientId())
                                 .queryParam(NordeaBaseConstants.QueryKeys.STATE, state)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.DURATION,
@@ -70,8 +75,7 @@ public class NordeaBaseApiClient {
                                         NordeaBaseConstants.QueryValues.SCOPE)
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.REDIRECT_URI,
-                                        persistentStorage.get(
-                                                NordeaBaseConstants.StorageKeys.REDIRECT_URI)))
+                                        configuration.getRedirectUrl()))
                 .getUrl();
     }
 

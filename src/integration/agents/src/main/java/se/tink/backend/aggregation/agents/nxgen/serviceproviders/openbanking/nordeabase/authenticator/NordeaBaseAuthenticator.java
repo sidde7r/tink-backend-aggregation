@@ -9,21 +9,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
     protected final NordeaBaseApiClient apiClient;
     protected final SessionStorage sessionStorage;
-    protected final PersistentStorage persistentStorage;
 
-    public NordeaBaseAuthenticator(
-            NordeaBaseApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public NordeaBaseAuthenticator(NordeaBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -35,8 +29,7 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
                 GetTokenForm.builder()
                         .setCode(code)
                         .setGrantType(NordeaBaseConstants.FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(
-                                persistentStorage.get(NordeaBaseConstants.StorageKeys.REDIRECT_URI))
+                        .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                         .build();
 
         return apiClient.getToken(form);
@@ -50,8 +43,7 @@ public abstract class NordeaBaseAuthenticator implements OAuth2Authenticator {
                 RefreshTokenForm.builder()
                         .setRefreshToken(refreshToken)
                         .setGrantType(NordeaBaseConstants.FormValues.AUTHORIZATION_CODE)
-                        .setRedirectUri(
-                                persistentStorage.get(NordeaBaseConstants.StorageKeys.REDIRECT_URI))
+                        .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                         .build();
 
         OAuth2Token token = apiClient.refreshToken(form);

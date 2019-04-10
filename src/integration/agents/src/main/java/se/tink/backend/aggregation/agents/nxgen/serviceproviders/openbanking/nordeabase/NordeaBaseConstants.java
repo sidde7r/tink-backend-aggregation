@@ -35,9 +35,6 @@ public final class NordeaBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String CLIENT_ID = "clientId";
-        public static final String CLIENT_SECRET = "clientSecret";
-        public static final String REDIRECT_URI = "redirectUri";
         public static final String ACCOUNT_ID = "account_id";
         public static final String ACCESS_TOKEN = "accessToken";
     }
@@ -77,5 +74,9 @@ public final class NordeaBaseConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+    }
+
+    public static final class ErrorMessages {
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }

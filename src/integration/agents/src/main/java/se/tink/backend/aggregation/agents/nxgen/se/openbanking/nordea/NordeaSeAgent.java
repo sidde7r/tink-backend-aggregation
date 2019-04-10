@@ -15,24 +15,23 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NordeaSeAgent extends NordeaBaseAgent {
-    private NordeaSeApiClient apiClient;
 
     public NordeaSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new NordeaSeApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new NordeaSeApiClient(client, sessionStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new NordeaSeAuthenticator(apiClient, sessionStorage, persistentStorage);
+        return new NordeaSeAuthenticator((NordeaSeApiClient) apiClient, sessionStorage);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaSeTransactionalAccountFetcher(apiClient);
+                new NordeaSeTransactionalAccountFetcher((NordeaSeApiClient) apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

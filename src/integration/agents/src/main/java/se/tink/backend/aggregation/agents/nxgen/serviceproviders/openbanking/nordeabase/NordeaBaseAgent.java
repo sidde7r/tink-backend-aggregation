@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
+    protected NordeaBaseApiClient apiClient;
 
     public NordeaBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -39,15 +41,8 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "NordeaBase configuration missing."));
-
-        persistentStorage.put(
-                NordeaBaseConstants.StorageKeys.CLIENT_ID, nordeaConfiguration.getClientId());
-        persistentStorage.put(
-                NordeaBaseConstants.StorageKeys.CLIENT_SECRET,
-                nordeaConfiguration.getClientSecret());
-        persistentStorage.put(
-                NordeaBaseConstants.StorageKeys.REDIRECT_URI, nordeaConfiguration.getRedirectUrl());
+                                                ErrorMessages.MISSING_CONFIGURATION));
+        apiClient.setConfiguration(nordeaConfiguration);
     }
 
     @Override

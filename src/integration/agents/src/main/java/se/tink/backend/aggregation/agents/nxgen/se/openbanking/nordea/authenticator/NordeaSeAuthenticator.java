@@ -13,21 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordeaSeAuthenticator implements Authenticator {
     private final NordeaSeApiClient apiClient;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
 
-    public NordeaSeAuthenticator(
-            NordeaSeApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public NordeaSeAuthenticator(NordeaSeApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -52,7 +46,7 @@ public class NordeaSeAuthenticator implements Authenticator {
         return GetTokenForm.builder()
                 .setCode(getCodeResponse.getResponse().getCode())
                 .setGrantType(NordeaBaseConstants.FormValues.AUTHORIZATION_CODE)
-                .setRedirectUri(persistentStorage.get(NordeaBaseConstants.StorageKeys.REDIRECT_URI))
+                .setRedirectUri(apiClient.getConfiguration().getRedirectUrl())
                 .build();
     }
 
@@ -60,7 +54,7 @@ public class NordeaSeAuthenticator implements Authenticator {
         return new AuthorizeRequest(
                 NordeaSeConstants.FormValues.DURATION,
                 NordeaSeConstants.FormValues.PSU_ID,
-                persistentStorage.get(NordeaBaseConstants.StorageKeys.REDIRECT_URI),
+                apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
                 Arrays.asList(
                         NordeaSeConstants.FormValues.ACCOUNTS_BALANCES,

@@ -19,18 +19,17 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class NordeaFiAgent extends NordeaBaseAgent {
-    private NordeaFiApiClient apiClient;
 
     public NordeaFiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new NordeaFiApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new NordeaFiApiClient(client, sessionStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         NordeaBaseAuthenticator authenticator =
-                new NordeaFiAuthenticator(apiClient, sessionStorage, persistentStorage);
+                new NordeaFiAuthenticator((NordeaFiApiClient) apiClient, sessionStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);
@@ -46,7 +45,7 @@ public final class NordeaFiAgent extends NordeaBaseAgent {
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         NordeaBaseTransactionalAccountFetcher accountFetcher =
-                new NordeaFiTransactionalAccountFetcher(apiClient);
+                new NordeaFiTransactionalAccountFetcher((NordeaFiApiClient) apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
