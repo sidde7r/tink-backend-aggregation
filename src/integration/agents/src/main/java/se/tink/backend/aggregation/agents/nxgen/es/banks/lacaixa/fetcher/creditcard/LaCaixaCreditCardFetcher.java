@@ -20,8 +20,8 @@ public class LaCaixaCreditCardFetcher
 
     private final LaCaixaApiClient apiClient;
 
-    public LaCaixaCreditCardFetcher(LaCaixaApiClient bankApi) {
-        this.apiClient = bankApi;
+    public LaCaixaCreditCardFetcher(LaCaixaApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override

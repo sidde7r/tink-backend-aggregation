@@ -136,6 +136,11 @@ public class LaCaixaConstants {
 
     public static class UserData {
         public static final String FULL_HOLDER_NAME = "linkNombreEmp";
+        public static final String DNI = "linkDNI";
+        public static final String DATE_OF_BIRTH = "linkDatnac";
+        public static final String FIRST_NAME = "linkNomper";
+        public static final String FIRST_SUR_NAME = "linkPriape";
+        public static final String SECOND_SUR_NAME = "linkSegape";
     }
 
     public static class TransactionDescriptions {

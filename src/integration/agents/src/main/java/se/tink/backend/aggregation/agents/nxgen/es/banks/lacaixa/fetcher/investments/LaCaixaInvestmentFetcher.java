@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstant
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundsListResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -35,7 +35,7 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        UserDataResponse userDataResponse = apiClient.fetchUserData();
+        UserDataResponse userDataResponse = apiClient.fetchIdentityData();
         EngagementResponse engagements = apiClient
                 .fetchEngagements(LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_P);
 

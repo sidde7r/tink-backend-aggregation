@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants.UserData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
@@ -23,8 +25,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rp
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanListResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -34,6 +36,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public class LaCaixaApiClient {
 
     private final TinkHttpClient client;
+
+    private UserDataResponse userDataCache;
 
     public LaCaixaApiClient(TinkHttpClient client) {
 
@@ -82,12 +86,25 @@ public class LaCaixaApiClient {
                 .get(ListAccountsResponse.class);
     }
 
-    public UserDataResponse fetchUserData() {
+    public UserDataResponse fetchIdentityData() {
+        if (userDataCache != null) {
+            return userDataCache;
+        }
 
-        UserDataRequest request = new UserDataRequest(LaCaixaConstants.UserData.FULL_HOLDER_NAME);
+        UserDataRequest request =
+                new UserDataRequest(
+                        LaCaixaConstants.UserData.FULL_HOLDER_NAME,
+                        LaCaixaConstants.UserData.DNI,
+                        UserData.DATE_OF_BIRTH,
+                        UserData.FIRST_NAME,
+                        UserData.FIRST_SUR_NAME,
+                        UserData.SECOND_SUR_NAME);
 
-        return createRequest(LaCaixaConstants.Urls.FETCH_USER_DATA)
+        UserDataResponse userDataResponse = createRequest(Urls.FETCH_USER_DATA)
                 .post(UserDataResponse.class, request);
+
+        userDataCache = userDataResponse;
+        return userDataResponse;
     }
 
     public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin) {

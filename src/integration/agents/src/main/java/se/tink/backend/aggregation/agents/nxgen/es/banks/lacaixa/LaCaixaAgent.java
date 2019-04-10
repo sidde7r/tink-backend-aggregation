@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.LaCaixaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.LaCaixaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.LaCaixaAccountFetcher;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -28,11 +30,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LaCaixaAgent extends NextGenerationAgent {
 
-    private final LaCaixaApiClient bankClient;
+    private final LaCaixaApiClient apiClient;
 
     public LaCaixaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        bankClient = new LaCaixaApiClient(client);
+        apiClient = new LaCaixaApiClient(client);
     }
 
     @Override
@@ -42,14 +44,14 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new LaCaixaPasswordAuthenticator(bankClient)
+                new LaCaixaPasswordAuthenticator(apiClient)
         );
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        LaCaixaAccountFetcher accountFetcher = new LaCaixaAccountFetcher(bankClient);
-        LaCaixaTransactionFetcher transactionFetcher = new LaCaixaTransactionFetcher(bankClient);
+        LaCaixaAccountFetcher accountFetcher = new LaCaixaAccountFetcher(apiClient);
+        LaCaixaTransactionFetcher transactionFetcher = new LaCaixaTransactionFetcher(apiClient);
 
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
                 updateController,
@@ -61,7 +63,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        LaCaixaCreditCardFetcher creditCardFetcher = new LaCaixaCreditCardFetcher(bankClient);
+        LaCaixaCreditCardFetcher creditCardFetcher = new LaCaixaCreditCardFetcher(apiClient);
         return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
                 creditCardFetcher, new TransactionFetcherController<>(this.transactionPaginationHelper,
                 new TransactionPagePaginationController<>(creditCardFetcher, 0))));
@@ -69,7 +71,7 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(bankClient);
+        LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         return Optional.of(
                 new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher)
         );
@@ -78,7 +80,8 @@ public class LaCaixaAgent extends NextGenerationAgent {
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController, new LaCaixaLoanFetcher(bankClient))
+                new LoanRefreshController(metricRefreshController, updateController, new LaCaixaLoanFetcher(
+                        apiClient))
         );
     }
 
@@ -94,11 +97,16 @@ public class LaCaixaAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new LaCaixaSessionHandler(bankClient);
+        return new LaCaixaSessionHandler(apiClient);
     }
 
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    protected Optional<CustomerInfoFetcher> constructCustomerInfoFetcher() {
+        return Optional.of(new LaCaixaIdentityDataFetcher(apiClient));
     }
 }
