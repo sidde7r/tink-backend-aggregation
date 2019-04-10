@@ -38,6 +38,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
         apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
     }
 
@@ -49,22 +50,21 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final CrosskeyBaseConfiguration crosskeyBaseConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                getIntegrationName(),
-                                getClientName(),
-                                CrosskeyBaseConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+        final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
 
         apiClient.setConfiguration(crosskeyBaseConfiguration);
+
         client.setSslClientCertificate(
                 JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
                 crosskeyBaseConfiguration.getClientKeyStorePassword());
+    }
+
+    private CrosskeyBaseConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        getIntegrationName(), getClientName(), CrosskeyBaseConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -72,10 +72,11 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final CrosskeyBaseAuthenticator authenticator = new CrosskeyBaseAuthenticator(apiClient);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new CrosskeyBaseAuthenticator(apiClient));
 
         return new AutoAuthenticationController(
                 request,
@@ -88,37 +89,28 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final TransactionalAccountAccountFetcher accountFetcher =
-                new TransactionalAccountAccountFetcher(apiClient);
-
-        final TransactionalAccountTransactionFetcher transactionFetcher =
-                new TransactionalAccountTransactionFetcher(apiClient);
-
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
-                        accountFetcher,
+                        new TransactionalAccountAccountFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+                                new TransactionDatePaginationController<>(
+                                        new TransactionalAccountTransactionFetcher(apiClient)))));
     }
 
     @Override
     public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        final CreditCardAccountFetcher accountFetcher = new CreditCardAccountFetcher(apiClient);
-
-        final CreditCardTransactionFetcher transactionFetcher =
-                new CreditCardTransactionFetcher(apiClient);
-
         return Optional.of(
                 new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
-                        accountFetcher,
+                        new CreditCardAccountFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+                                new TransactionDatePaginationController<>(
+                                        new CreditCardTransactionFetcher(apiClient)))));
     }
 
     @Override

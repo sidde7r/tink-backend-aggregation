@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 public abstract class CrosskeyBaseConstants {
 
+    public static final String INTEGRATION_NAME = "crosskey";
+
     public static class Urls {
         public static final String TOKEN = "/oidc/v1.0/token";
         public static final String OAUTH = "/oidc/auth";
