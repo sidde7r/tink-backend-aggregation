@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.OAuthGrantTypes;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.Permissions;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryValues;
@@ -38,7 +39,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
             4. Fetch OAUTH2 token
             5. Fetch accounts & transactions
 */
-
 public class ICSApiClient {
 
     private final TinkHttpClient client;
@@ -75,23 +75,23 @@ public class ICSApiClient {
         final String url = Urls.AUTH_BASE + Urls.OAUTH_AUTHORIZE;
 
         return createRequest(url)
-            .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
-            .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-            .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
-            .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
-            .queryParam(QueryKeys.STATE, state)
-            .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
-            .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
+                .queryParam(QueryKeys.GRANT_TYPE, OAuthGrantTypes.AUTHORIZATION_CODE.toString())
+                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
+                .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
     }
 
-    private RequestBuilder createTokenRequest(String grantType) {
+    private RequestBuilder createTokenRequest(OAuthGrantTypes grantType) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
 
         return createRequest(Urls.OAUTH_TOKEN)
-            .queryParam(QueryKeys.GRANT_TYPE, grantType)
-            .queryParam(QueryKeys.CLIENT_ID, clientId)
-            .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
+                .queryParam(QueryKeys.GRANT_TYPE, grantType.toString())
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
     }
 
     private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
@@ -102,14 +102,14 @@ public class ICSApiClient {
         final String xInteractionId = ICSUtils.getInteractionId();
 
         return createRequest(url)
-            .addBearerToken(token)
-            .header(HeaderKeys.CLIENT_ID, clientId)
-            .header(HeaderKeys.CLIENT_SECRET, clientSecret)
-            .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
-            .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
-            .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+                .addBearerToken(token)
+                .header(HeaderKeys.CLIENT_ID, clientId)
+                .header(HeaderKeys.CLIENT_SECRET, clientSecret)
+                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
+                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
+                .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     }
 
     public AccountSetupResponse accountSetup(OAuth2Token token) {
@@ -130,7 +130,7 @@ public class ICSApiClient {
     }
 
     public ClientCredentialTokenResponse getTokenWithClientCredential() {
-        return createTokenRequest(QueryValues.GRANT_TYPE_CLIENT_CREDENTIALS)
+        return createTokenRequest(OAuthGrantTypes.CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .get(ClientCredentialTokenResponse.class);
     }
@@ -159,7 +159,7 @@ public class ICSApiClient {
                         .filter(not(Strings::isNullOrEmpty))
                         .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_STATE));
 
-        return createTokenRequest(QueryValues.GRANT_TYPE_AUTH_CODE)
+        return createTokenRequest(OAuthGrantTypes.AUTHORIZATION_CODE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.AUTH_CODE, authCode)
                 .queryParam(QueryKeys.STATE, state)
@@ -168,7 +168,7 @@ public class ICSApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createTokenRequest(QueryValues.GRANT_TYPE_REFRESH_TOKEN)
+        return createTokenRequest(OAuthGrantTypes.REFRESH_TOKEN)
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .get(OAuth2Token.class);
     }

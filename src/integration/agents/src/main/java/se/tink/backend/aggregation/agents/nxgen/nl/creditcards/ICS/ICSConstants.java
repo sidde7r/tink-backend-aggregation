@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import java.text.SimpleDateFormat;
 
@@ -34,10 +35,16 @@ public class ICSConstants {
 
     public static final class QueryValues {
         public static final String SCOPE_ACCOUNTS = "accounts";
-        public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
-        public static final String GRANT_TYPE_AUTH_CODE = "authorization_code";
-        public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
         public static final String RESPONSE_TYPE_CODE = "code";
+    }
+
+    public enum OAuthGrantTypes {
+        @JsonProperty("client_credentials")
+        CLIENT_CREDENTIALS,
+        @JsonProperty("authorization_code")
+        AUTHORIZATION_CODE,
+        @JsonProperty("refresh_token")
+        REFRESH_TOKEN,
     }
 
     public static final class HeaderKeys {
