@@ -7,7 +7,7 @@ import java.io.IOException;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 
 public class ProvisionConfigurationParser {
-    private static final String PROVISION_CLIENT_CONFIGURATION_FILE = "data/provision/clients/config.yaml";
+    private static final String PROVISION_CLIENT_CONFIGURATION_FILE = "data/provision/clients/oxford-staging.yaml";
     private static final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
     public static ProvisionClientsConfig parse() throws IOException {

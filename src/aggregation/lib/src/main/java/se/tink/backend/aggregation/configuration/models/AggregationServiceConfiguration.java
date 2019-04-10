@@ -39,6 +39,9 @@ public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty
     private boolean isMultiClientDevelopment = false;
 
+    @JsonProperty
+    private boolean shouldProvisionClients = false;
+
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;
     }
@@ -85,5 +88,9 @@ public class AggregationServiceConfiguration extends Configuration {
 
     public boolean isMultiClientDevelopment() {
         return isMultiClientDevelopment;
+    }
+
+    public boolean shouldProvisionClients() {
+        return shouldProvisionClients;
     }
 }

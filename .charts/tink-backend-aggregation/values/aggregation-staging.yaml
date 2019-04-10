@@ -23,3 +23,5 @@ agents:
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: false
+
+shouldProvisionClients: true
