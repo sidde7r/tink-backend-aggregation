@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
@@ -26,17 +25,16 @@ public class OpenbankTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient
-                .getAccounts()
-                .stream()
+                .fetchAccounts()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
-                .collect(Collectors.toList());
+                .toJavaList();
     }
 
     @Override
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
             TransactionalAccount account, URL nextUrl) {
-        AccountTransactionsRequestQueryParams queryParams =
+        final AccountTransactionsRequestQueryParams queryParams =
                 new AccountTransactionsRequestQueryParams.Builder()
                         .withProductCode(
                                 account.getFromTemporaryStorage(
@@ -47,9 +45,9 @@ public class OpenbankTransactionalAccountFetcher
                         .build();
 
         if (nextUrl == null) {
-            return apiClient.getTransactions(queryParams);
+            return apiClient.fetchTransactions(queryParams);
         }
 
-        return apiClient.getTransactionsForNextUrl(queryParams, nextUrl);
+        return apiClient.fetchTransactionsForNextUrl(nextUrl);
     }
 }

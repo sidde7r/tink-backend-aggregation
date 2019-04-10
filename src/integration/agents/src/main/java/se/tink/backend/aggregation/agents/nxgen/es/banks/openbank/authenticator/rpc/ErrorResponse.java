@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import java.util.Objects;
-import java.util.Optional;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import static io.vavr.Predicates.not;
 
 @JsonObject
 public class ErrorResponse {
@@ -13,35 +12,23 @@ public class ErrorResponse {
     @JsonProperty("error_description")
     private String errorDescription;
 
-    public static ErrorResponse empty() {
-        return new ErrorResponse();
-    }
-
     public boolean hasError() {
-        return Objects.nonNull(error) && !Strings.isNullOrEmpty(error);
+        return getError().filter(not(String::isEmpty)).isDefined();
     }
 
     public boolean hasErrorCode(String errorCode) {
-        return Objects.nonNull(error) && error.equalsIgnoreCase(errorCode);
+        return getError().filter(e -> e.equalsIgnoreCase(errorCode)).isDefined();
     }
 
     public boolean hasErrorDescription() {
-        return Objects.nonNull(error) && !Strings.isNullOrEmpty(error);
+        return getErrorDescription().filter(not(String::isEmpty)).isDefined();
     }
 
-    public Optional<String> getError() {
-        if (!hasError()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(error);
+    public Option<String> getError() {
+        return Option.of(error);
     }
 
-    public Optional<String> getErrorDescription() {
-        if (!hasErrorDescription()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(errorDescription);
+    public Option<String> getErrorDescription() {
+        return Option.of(errorDescription);
     }
 }

@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 
-import java.util.Collections;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
@@ -58,34 +57,33 @@ public final class OpenbankApiClient {
         return createRequest(OpenbankConstants.Urls.LOGIN).post(LoginResponse.class, loginRequest);
     }
 
-    public void keepAlive() {
-        createRequestInSession(OpenbankConstants.Urls.KEEP_ALIVE).get(String.class);
+    public String keepAlive() {
+        return createRequestInSession(OpenbankConstants.Urls.KEEP_ALIVE).get(String.class);
     }
 
     public LogoutResponse logout() {
         return createRequestInSession(OpenbankConstants.Urls.LOGOUT).post(LogoutResponse.class);
     }
 
-    public UserDataResponse getUserData() {
+    public UserDataResponse fetchUserData() {
         return createRequestInSession(OpenbankConstants.Urls.USER_DATA).get(UserDataResponse.class);
     }
 
-    public List<AccountEntity> getAccounts() {
-        return Optional.ofNullable(getUserData().getAccounts()).orElse(Collections.emptyList());
+    public List<AccountEntity> fetchAccounts() {
+        return Option.of(fetchUserData()).map(UserDataResponse::getAccounts).getOrElse(List::empty);
     }
 
-    public AccountTransactionsResponse getTransactions(
+    public AccountTransactionsResponse fetchTransactions(
             AccountTransactionsRequestQueryParams queryParams) {
         return createTransactionsRequestInSession(queryParams)
                 .get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionsForNextUrl(
-            AccountTransactionsRequestQueryParams queryParams, URL nextUrl) {
+    public AccountTransactionsResponse fetchTransactionsForNextUrl(URL nextUrl) {
         return createRequestInSession(nextUrl).get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionsFor(
+    public AccountTransactionsResponse fetchTransactionsFor(
             AccountTransactionsRequestQueryParams queryParams, Date fromDate, Date toDate) {
         return createTransactionsRequestInSession(queryParams)
                 .queryParam(
@@ -97,7 +95,7 @@ public final class OpenbankApiClient {
                 .get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionDetails(
+    public AccountTransactionsResponse fetchTransactionDetails(
             AccountTransactionDetailsRequestQueryParams queryParams) {
         return client.request(OpenbankConstants.Urls.ACCOUNT_TRANSACTIONS)
                 .queryParam(
@@ -128,11 +126,11 @@ public final class OpenbankApiClient {
                 .get(AccountTransactionsResponse.class);
     }
 
-    public List<CardEntity> getCards() {
-        return Optional.ofNullable(getUserData().getCards()).orElse(Collections.emptyList());
+    public List<CardEntity> fetchCards() {
+        return Option.of(fetchUserData()).map(UserDataResponse::getCards).getOrElse(List::empty);
     }
 
-    public CardTransactionsResponse getCardTransactions(CardTransactionsRequest request) {
+    public CardTransactionsResponse fetchCardTransactions(CardTransactionsRequest request) {
         return createRequestInSession(OpenbankConstants.Urls.CARD_TRANSACTIONS)
                 .body(request)
                 .post(CardTransactionsResponse.class);

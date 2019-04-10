@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.session;
 
+import io.vavr.control.Try;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiClient;
@@ -19,10 +20,6 @@ public final class OpenbankSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            apiClient.keepAlive();
-        } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
-        }
+        Try.of(apiClient::keepAlive).getOrElseThrow(e -> SessionError.SESSION_EXPIRED.exception());
     }
 }

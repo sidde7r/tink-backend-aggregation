@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.ACCOUNT_TYPE_MAPPER;
 
 @JsonObject
 public class CardEntity {
@@ -139,17 +139,15 @@ public class CardEntity {
     }
 
     public boolean isCreditCardAccount() {
-        return OpenbankConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(contract.getProductCode());
+        return ACCOUNT_TYPE_MAPPER.isCreditCardAccount(contract.getProductCode());
     }
 
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType =
-                OpenbankConstants.ACCOUNT_TYPE_MAPPER.translate(contract.getProductCode());
-        return accountType.orElse(AccountTypes.OTHER);
+        return ACCOUNT_TYPE_MAPPER.translate(contract.getProductCode()).orElse(AccountTypes.OTHER);
     }
 
     public CreditCardAccount toTinkAccount() {
-        String accountNumber = contract.getProductCode() + contract.getContractNumber();
+        final String accountNumber = contract.getProductCode() + contract.getContractNumber();
 
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
                 .setAccountNumber(accountNumber)

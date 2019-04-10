@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.credi
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.entities.CardTransactionEntity;
@@ -26,17 +25,16 @@ public class OpenbankCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient
-                .getCards()
-                .stream()
+                .fetchCards()
                 .filter(CardEntity::isCreditCardAccount)
                 .map(CardEntity::toTinkAccount)
-                .collect(Collectors.toList());
+                .toJavaList();
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
             CreditCardAccount account, Date fromDate, Date toDate) {
-        CardTransactionsRequest request = new CardTransactionsRequest();
+        final CardTransactionsRequest request = new CardTransactionsRequest();
         request.setCardNumber(
                 account.getFromTemporaryStorage(OpenbankConstants.Storage.CARD_NUMBER));
         request.setProductCode(
@@ -46,13 +44,12 @@ public class OpenbankCreditCardFetcher
         request.setFromDate(fromDate);
         request.setToDate(toDate);
 
-        Collection<? extends Transaction> transactions =
+        final Collection<? extends Transaction> transactions =
                 apiClient
-                        .getCardTransactions(request)
+                        .fetchCardTransactions(request)
                         .getCardTransactions()
-                        .stream()
                         .map(CardTransactionEntity::toTinkTransaction)
-                        .collect(Collectors.toList());
+                        .toJavaList();
 
         return PaginatorResponseImpl.create(transactions);
     }

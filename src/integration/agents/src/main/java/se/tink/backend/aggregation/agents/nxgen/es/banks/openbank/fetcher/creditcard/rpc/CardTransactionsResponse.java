@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import io.vavr.collection.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.entities.CardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.entities.RepoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.PaginationEntity;
@@ -30,10 +30,6 @@ public class CardTransactionsResponse {
 
     @JsonProperty("nombreTitular")
     private String accountHolder;
-
-    public static CardTransactionsResponse empty() {
-        return new CardTransactionsResponse();
-    }
 
     public List<CardTransactionEntity> getCardTransactions() {
         return cardTransactionsList.cardTransactions;
