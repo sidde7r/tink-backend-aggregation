@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PartnersEntity {
 
     private String partnerType;
-
     private NatuarlPersonEntity naturalPerson;
 
     public boolean isNatural() {

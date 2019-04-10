@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountEntity {
+
     private List<AccountDetailsEntity> accounts;
     private String accountId;
     private String accountSubType;

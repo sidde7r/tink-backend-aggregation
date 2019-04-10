@@ -10,5 +10,4 @@ public class ServicerEntity {
 
     private String identification;
     private String schemeName;
-
 }

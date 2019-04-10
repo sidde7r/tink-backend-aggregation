@@ -10,21 +10,21 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class SebTransactionalAccountFetcher
-    implements AccountFetcher<TransactionalAccount>,
-        TransactionPagePaginator<TransactionalAccount> {
-  private final SebApiClient apiClient;
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPagePaginator<TransactionalAccount> {
+    private final SebApiClient apiClient;
 
-  public SebTransactionalAccountFetcher(SebApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
+    public SebTransactionalAccountFetcher(SebApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-  @Override
-  public Collection<TransactionalAccount> fetchAccounts() {
-    return apiClient.fetchAccounts().toTinkAccounts();
-  }
+    @Override
+    public Collection<TransactionalAccount> fetchAccounts() {
+        return apiClient.fetchAccounts().toTinkAccounts();
+    }
 
-  @Override
-  public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-    return apiClient.fetchTransactions(account, page);
-  }
+    @Override
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+        return apiClient.fetchTransactions(account, page);
+    }
 }

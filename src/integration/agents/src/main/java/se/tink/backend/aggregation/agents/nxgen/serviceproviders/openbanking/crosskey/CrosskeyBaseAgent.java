@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
@@ -35,10 +36,9 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     protected final CrosskeyBaseApiClient apiClient;
 
     public CrosskeyBaseAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new CrosskeyBaseApiClient(client, sessionStorage, persistentStorage);
-
+        apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
     }
 
     protected abstract String getIntegrationName();
@@ -49,110 +49,76 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final CrosskeyBaseConfiguration crosskeyBaseConfiguration;
-        crosskeyBaseConfiguration = configuration
-            .getIntegrations()
-            .getClientConfiguration(
-                getIntegrationName(),
-                getClientName(),
-                CrosskeyBaseConfiguration.class)
-            .orElseThrow(
-                () -> new IllegalStateException(
-                    CrosskeyBaseConstants.Exceptions.MISSING_CONFIGURATION));
-        if (!crosskeyBaseConfiguration.isValid()) {
-            throw new IllegalStateException(CrosskeyBaseConstants.Exceptions.INVALID_CONFIGURATION);
-        }
+        final CrosskeyBaseConfiguration crosskeyBaseConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                getIntegrationName(),
+                                getClientName(),
+                                CrosskeyBaseConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.BASE_AUTH_URL,
-                crosskeyBaseConfiguration.getBaseAuthUrl());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.BASE_API_URL,
-                crosskeyBaseConfiguration.getBaseAPIUrl());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.CLIENT_ID,
-                crosskeyBaseConfiguration.getClientId());
-        persistentStorage.put(
-            CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET,
-            crosskeyBaseConfiguration.getClientSecret());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.REDIRECT_URI,
-                crosskeyBaseConfiguration.getRedirectUrl());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.CERTIFICATE_PATH,
-                crosskeyBaseConfiguration.getClientSigningCertificatePath());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.KEY_PATH,
-                crosskeyBaseConfiguration.getClientSigningKeyPath());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.KEY_STORE_PWD,
-                crosskeyBaseConfiguration.getClientKeyStorePassword());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.KEY_STORE_PATH,
-                crosskeyBaseConfiguration.getClientKeyStorePath());
-        persistentStorage
-            .put(CrosskeyBaseConstants.StorageKeys.X_FAPI_FINANCIAL_ID,
-                crosskeyBaseConfiguration.getXFapiFinancialId());
-
+        apiClient.setConfiguration(crosskeyBaseConfiguration);
         client.setSslClientCertificate(
-            JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
-            crosskeyBaseConfiguration.getClientKeyStorePassword());
+                JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
+                crosskeyBaseConfiguration.getClientKeyStorePassword());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) { }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final CrosskeyBaseAuthenticator authenticator = new CrosskeyBaseAuthenticator(apiClient);
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, authenticator);
 
-        CrosskeyBaseAuthenticator authenticator = new CrosskeyBaseAuthenticator(apiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-            new OAuth2AuthenticationController(
-                persistentStorage, supplementalInformationHelper, authenticator);
         return new AutoAuthenticationController(
-            request,
-            context,
-            new ThirdPartyAppAuthenticationController<>(
-                oAuth2AuthenticationController, supplementalInformationHelper),
-            oAuth2AuthenticationController);
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
-        TransactionalAccountAccountFetcher accountFetcher =
-            new TransactionalAccountAccountFetcher(apiClient);
+            constructTransactionalAccountRefreshController() {
+        final TransactionalAccountAccountFetcher accountFetcher =
+                new TransactionalAccountAccountFetcher(apiClient);
 
-        TransactionalAccountTransactionFetcher transactionFetcher =
-            new TransactionalAccountTransactionFetcher(apiClient);
+        final TransactionalAccountTransactionFetcher transactionFetcher =
+                new TransactionalAccountTransactionFetcher(apiClient);
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(transactionFetcher))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
     public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+        final CreditCardAccountFetcher accountFetcher = new CreditCardAccountFetcher(apiClient);
 
-        CreditCardAccountFetcher accountFetcher =
-            new CreditCardAccountFetcher(apiClient);
-
-        CreditCardTransactionFetcher transactionFetcher =
-            new CreditCardTransactionFetcher(apiClient);
+        final CreditCardTransactionFetcher transactionFetcher =
+                new CreditCardTransactionFetcher(apiClient);
 
         return Optional.of(
-            new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(transactionFetcher))));
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
@@ -172,7 +138,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -185,6 +151,4 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
-
-
 }

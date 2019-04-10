@@ -17,10 +17,10 @@ public class TokenRequest {
 
     public String toData() {
         return Form.builder()
-            .put(DeutscheBankConstants.FormKeys.GRANT_TYPE, grantType)
-            .put(DeutscheBankConstants.FormKeys.CODE, code)
-            .put(DeutscheBankConstants.FormKeys.REDIRECT_URI, redirectUri)
-            .build()
-            .serialize();
+                .put(DeutscheBankConstants.FormKeys.GRANT_TYPE, grantType)
+                .put(DeutscheBankConstants.FormKeys.CODE, code)
+                .put(DeutscheBankConstants.FormKeys.REDIRECT_URI, redirectUri)
+                .build()
+                .serialize();
     }
 }
