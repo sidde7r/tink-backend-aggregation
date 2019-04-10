@@ -86,6 +86,7 @@ import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.seb.model.InitiateRequest;
+import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceAccountEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InsuranceHoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.InvestmentDataRequest;
@@ -134,6 +135,7 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
@@ -456,7 +458,45 @@ public class SEBApiAgent extends AbstractAgent
 
                     insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
                 });
+
+        List<InsuranceAccountEntity> insuranceAccountEntities =
+                insuranceResponse.d.VODB.getInsuranceAccountEntities();
+
+        insuranceAccountEntities.forEach(
+                insuranceAccountEntity -> {
+                    Account account = insuranceAccountEntity.toAccount();
+
+                    Portfolio portfolio = insuranceAccountEntity.toPortfolio();
+                    tryFetchAndLogInsuranceAccountInstruments(
+                            insuranceAccountEntity.getDetailUrl());
+
+                    insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                });
+
         return insuranceAccounts;
+    }
+
+    private void tryFetchAndLogInsuranceAccountInstruments(String detailUrl) {
+        if (Strings.isNullOrEmpty(detailUrl)) {
+            log.warn("SEB insurance account instruments: detail url not present.");
+            return;
+        }
+
+        try {
+            RequestWrappingEntity requestWrappingEntity = new RequestWrappingEntity();
+            requestWrappingEntity.setServiceInput(
+                    Collections.singletonList(
+                            new ServiceInput("DETAIL_URL", detailUrl)));
+
+            InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
+            investmentDataRequest.setRequest(requestWrappingEntity);
+
+            String response = postAsJSON(INSURANCE_DETAIL, investmentDataRequest, String.class);
+            log.infoExtraLong(response, LogTag.from("SEB insurance account instruments response"));
+
+        } catch (Exception e) {
+            log.warn("SEB insurance account instruments: Fetching of instruments failed.");
+        }
     }
 
     private List<Instrument> getInsuranceInstruments(String detailUrl) {
