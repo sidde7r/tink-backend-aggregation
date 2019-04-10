@@ -62,11 +62,11 @@ spec:
             imagePullPolicy: Always
             resources:
               requests:
-                memory: 700Mi
-                cpu: 500m
+                memory: "700Mi"
+                cpu: "500m"
               limits:
-                memory: 1Gi
-                cpu: 1000m
+                memory: "1Gi"
+                cpu: "1000m"
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
