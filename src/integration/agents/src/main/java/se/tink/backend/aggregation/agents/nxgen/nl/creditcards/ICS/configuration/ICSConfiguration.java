@@ -46,7 +46,6 @@ public class ICSConfiguration implements ClientConfiguration {
     }
 
     public boolean isValid() {
-
         if (!Strings.isNullOrEmpty(clientId)
                 && !Strings.isNullOrEmpty(clientSecret)
                 && !Strings.isNullOrEmpty(clientSSLCertificate)
