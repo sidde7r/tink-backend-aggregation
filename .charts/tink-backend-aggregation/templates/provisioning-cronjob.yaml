@@ -60,6 +60,13 @@ spec:
           - name: tink-backend-aggregation-provisioning-cronjob
             image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
             imagePullPolicy: Always
+            resources:
+              requests:
+                memory: {{ default "700Mi" .Values.podMemoryRequest }}
+                cpu: {{ default "500m" .Values.podCpuRequest }}
+              limits:
+                memory: {{ default "1Gi" .Values.podMemoryLimit }}
+                cpu: {{ default "1000m" .Values.podCpuLimit }}
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
