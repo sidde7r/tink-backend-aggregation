@@ -62,8 +62,9 @@ public final class SpareBank1Agent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        SpareBank1TransactionalAccountFetcher accountFetcher =
+        final SpareBank1TransactionalAccountFetcher accountFetcher =
                 new SpareBank1TransactionalAccountFetcher(apiClient);
+
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController, updateController, accountFetcher, accountFetcher));
