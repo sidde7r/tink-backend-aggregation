@@ -73,3 +73,6 @@ clients:
     aggregatorIdentifier: "Zimpler"
   evobanco-testing:
     aggregatorIdentifier: "Evo Banco"
+  middelfart-testing:
+    aggregatorIdentifier: "Middelfart Sparekasse"
+
