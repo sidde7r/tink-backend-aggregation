@@ -5,15 +5,14 @@ import java.util.Random;
 public class DnbTimestampUtil {
     private DnbTimestampUtil.Timer timer = new DnbTimestampUtil.Timer();
 
-    public DnbTimestampUtil() {
-    }
+    public DnbTimestampUtil() {}
 
     private Long getTimestamp() {
         return this.timer.getMilis() / 1000L;
     }
 
     public String getNonce() {
-        return String.valueOf(this.getTimestamp() + (long)this.timer.getRandomInteger());
+        return String.valueOf(this.getTimestamp() + (long) this.timer.getRandomInteger());
     }
 
     public String getTimestampInSeconds() {
@@ -27,8 +26,7 @@ public class DnbTimestampUtil {
     static class Timer {
         private final Random rand = new Random();
 
-        Timer() {
-        }
+        Timer() {}
 
         Long getMilis() {
             return System.currentTimeMillis();
@@ -39,4 +37,3 @@ public class DnbTimestampUtil {
         }
     }
 }
-

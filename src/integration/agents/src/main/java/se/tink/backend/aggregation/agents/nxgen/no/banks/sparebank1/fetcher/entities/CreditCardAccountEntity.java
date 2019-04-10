@@ -36,14 +36,18 @@ public class CreditCardAccountEntity {
     private boolean statusBlocked;
     private boolean statusBlockedAndReplaced;
     private boolean statusClosed;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
     public CreditCardAccount toAccount() {
-        return CreditCardAccount.builder(formattedNumber,
-                Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction),
-                Sparebank1AmountUtils.constructAmount(creditLimitInteger, creditLimitFraction))
+        return CreditCardAccount.builder(
+                        formattedNumber,
+                        Sparebank1AmountUtils.constructAmount(
+                                balanceAmountInteger, balanceAmountFraction),
+                        Sparebank1AmountUtils.constructAmount(
+                                creditLimitInteger, creditLimitFraction))
                 .setAccountNumber(formattedNumber)
                 .setName(name)
                 .setBankIdentifier(id)

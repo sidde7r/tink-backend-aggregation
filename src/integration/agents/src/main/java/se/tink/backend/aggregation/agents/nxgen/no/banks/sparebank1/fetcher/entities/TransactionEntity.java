@@ -20,6 +20,7 @@ public class TransactionEntity {
     private String date;
     private String interestDate;
     private Boolean incoming;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 
@@ -128,8 +129,7 @@ public class TransactionEntity {
         return links;
     }
 
-    public void setLinks(
-            HashMap<String, LinkEntity> links) {
+    public void setLinks(HashMap<String, LinkEntity> links) {
         this.links = links;
     }
 }

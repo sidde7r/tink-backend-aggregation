@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class SparebankenSorCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SparebankenSorCreditCardAccountFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SparebankenSorCreditCardAccountFetcher.class);
 
     private final SparebankenSorApiClient apiClient;
 
@@ -23,7 +24,8 @@ public class SparebankenSorCreditCardAccountFetcher implements AccountFetcher<Cr
             String response = apiClient.fetchCreditCards();
             LOGGER.infoExtraLong(response, SparebankenSorConstants.LogTags.CREDIT_CARD_LOG_TAG);
         } catch (Exception e) {
-            LOGGER.infoExtraLong("Failed to retrieve credit cards",
+            LOGGER.infoExtraLong(
+                    "Failed to retrieve credit cards",
                     SparebankenSorConstants.LogTags.CREDIT_CARD_LOG_TAG);
         }
         return Collections.emptyList();

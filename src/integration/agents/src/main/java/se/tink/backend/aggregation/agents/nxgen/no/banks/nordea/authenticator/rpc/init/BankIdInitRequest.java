@@ -7,7 +7,9 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequestImpl;
 
 public class BankIdInitRequest extends HttpRequestImpl {
     public BankIdInitRequest(String dob, String mobileNumber) {
-        super(HttpMethod.POST, NordeaNoConstants.Url.BANKID_INIT.get(),
+        super(
+                HttpMethod.POST,
+                NordeaNoConstants.Url.BANKID_INIT.get(),
                 new BankIdInitRequestBody(dob, mobileNumber, BankIdOperation.AUTHENTICATION));
     }
 }

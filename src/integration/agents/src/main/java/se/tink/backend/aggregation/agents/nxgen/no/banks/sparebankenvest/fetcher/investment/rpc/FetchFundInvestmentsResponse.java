@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.investment.entities.FundInvestmentEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity> {
@@ -20,8 +20,9 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
     public Collection<InvestmentAccount> getTinkInvestmentAccounts() {
         HashMap<String, TmpAccount> tmpMap = new HashMap<>();
         for (FundInvestmentEntity investmentEntity : this) {
-            TmpAccount tmpAccount = tmpMap
-                    .getOrDefault(investmentEntity.getKontonummer(), new TmpAccount(investmentEntity));
+            TmpAccount tmpAccount =
+                    tmpMap.getOrDefault(
+                            investmentEntity.getKontonummer(), new TmpAccount(investmentEntity));
             if (!tmpMap.containsKey(investmentEntity.getKontonummer())) {
                 tmpMap.put(investmentEntity.getKontonummer(), tmpAccount);
             }
@@ -32,15 +33,15 @@ public class FetchFundInvestmentsResponse extends ArrayList<FundInvestmentEntity
         }
 
         return tmpMap.values().stream()
-                .map(investmentItem -> {
-                    Portfolio portfolio = createPortfolio(investmentItem);
-                    return createAccount(investmentItem, portfolio);
-                })
+                .map(
+                        investmentItem -> {
+                            Portfolio portfolio = createPortfolio(investmentItem);
+                            return createAccount(investmentItem, portfolio);
+                        })
                 .collect(Collectors.toList());
     }
 
-    private InvestmentAccount createAccount(TmpAccount investmentItem,
-            Portfolio portfolio) {
+    private InvestmentAccount createAccount(TmpAccount investmentItem, Portfolio portfolio) {
         return InvestmentAccount.builder(investmentItem.accountNumber)
                 .setAccountNumber(investmentItem.accountNumber)
                 .setName(investmentItem.accountName)

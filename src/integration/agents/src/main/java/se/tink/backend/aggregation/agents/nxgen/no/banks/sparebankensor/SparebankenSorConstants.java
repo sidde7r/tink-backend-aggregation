@@ -11,18 +11,23 @@ public class SparebankenSorConstants {
         private static final String AUTHENTICATE_LOGIN_PATH = HOST + "/authenticate/login";
         public static final String BASE_PATH = SECESB_REST_PATH + "/era";
 
-        public static final URL APP_INFORMATION = new URL(
-                HOST + "/smbmobile/" + StaticUrlValues.ORG_ID + "/appversion_ios.json");
-        public static final URL CONFIGURE_BANKID = new URL(AUTHENTICATE_LOGIN_PATH + "/bankidmobile");
+        public static final URL APP_INFORMATION =
+                new URL(HOST + "/smbmobile/" + StaticUrlValues.ORG_ID + "/appversion_ios.json");
+        public static final URL CONFIGURE_BANKID =
+                new URL(AUTHENTICATE_LOGIN_PATH + "/bankidmobile");
         static final URL LOGIN_FIRST_STEP = new URL(SECESB_REST_PATH + "/esb/v1/login");
         static final URL LOGIN_SECOND_STEP = new URL(SECESB_REST_PATH + "/era/login");
         static final URL SEND_SMS = new URL(SECESB_REST_PATH + "/era/sam/sms");
         public static final URL FETCH_ACCOUNTS = new URL(SECESB_REST_PATH + "/era/accounts");
-        public static final URL FETCH_CREDIT_CARDS = new URL(SECESB_REST_PATH + "/era/creditcardaccounts");
+        public static final URL FETCH_CREDIT_CARDS =
+                new URL(SECESB_REST_PATH + "/era/creditcardaccounts");
 
-        public static final String SECESB_IDENTIFY_CUSTOMER = SECESB_REST_PATH + "/era/era/public/customers/";
-        public static final String BANKID_MOBILE = AUTHENTICATE_LOGIN_PATH + "/bankidmobile;jsessionid=";
-        public static final String POLL_BANKID = AUTHENTICATE_LOGIN_PATH + "/rest/bankidmobilestatus.json;jsessionid=";
+        public static final String SECESB_IDENTIFY_CUSTOMER =
+                SECESB_REST_PATH + "/era/era/public/customers/";
+        public static final String BANKID_MOBILE =
+                AUTHENTICATE_LOGIN_PATH + "/bankidmobile;jsessionid=";
+        public static final String POLL_BANKID =
+                AUTHENTICATE_LOGIN_PATH + "/rest/bankidmobilestatus.json;jsessionid=";
     }
 
     public static final class UrlQueryParameters {
@@ -45,6 +50,7 @@ public class SparebankenSorConstants {
         public static final String NAME_REQUESTED_WITH = "X-Requested-With";
         public static final String VALUE_REQUESTED_WITH = "XMLHttpRequest";
     }
+
     public enum StaticUrlValuePairs {
         CONFIG_KEY("configKey", "smbmactivate" + StaticUrlValues.ORG_ID),
         INIT_BANKID("execution", StaticUrlValues.E1S1),

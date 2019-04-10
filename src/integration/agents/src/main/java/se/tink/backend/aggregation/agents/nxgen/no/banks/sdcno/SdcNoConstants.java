@@ -19,6 +19,7 @@ public class SdcNoConstants {
 
     public static class Authentication {
         // test Storebrand does not support SMS pinning of devices
-        public static final ImmutableList<String> BANKS_WITH_PIN_AUTHENTICATION = ImmutableList.of("9680");
+        public static final ImmutableList<String> BANKS_WITH_PIN_AUTHENTICATION =
+                ImmutableList.of("9680");
     }
 }

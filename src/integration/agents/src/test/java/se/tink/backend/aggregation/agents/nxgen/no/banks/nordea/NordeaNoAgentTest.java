@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.nordea;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 
 public class NordeaNoAgentTest extends NextGenerationAgentTest<NordeaNoAgent> {
     private static final String USERNAME = "username";

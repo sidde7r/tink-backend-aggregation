@@ -41,7 +41,8 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        // The investor portal contains both fund and stock accounts. Current assumption is that for users without
+        // The investor portal contains both fund and stock accounts. Current assumption is that for
+        // users without
         // investment we get 401 in response. Returning en empty list if that's the case.
         InvestmentsOverviewResponse investmentsOverviewResponse;
 
@@ -55,8 +56,10 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
             throw e;
         }
 
-        // Handelsbanken's own stock portal contains information about available balance for the stock accounts
-        // which is not available from the investor portal. Wrapped with try catch since it's only used for setting
+        // Handelsbanken's own stock portal contains information about available balance for the
+        // stock accounts
+        // which is not available from the investor portal. Wrapped with try catch since it's only
+        // used for setting
         // cashValue, if something goes wrong still want to return parsed investment accounts.
         try {
             populateAvailableBalanceMap();
@@ -73,8 +76,10 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
     private InvestmentsOverviewResponse getInvestmentsOverview() {
         String so = getSoToken(HandelsbankenNOConstants.InvestmentConstants.INVESTOR_PORTAL);
         String htmlResponse = apiClient.investorCustomerPortalLogin(so);
-        apiClient.finalizeInvestorLogin(parseSamlResponse(htmlResponse,
-                HandelsbankenNOConstants.InvestmentConstants.INVESTOR_PORTAL));
+        apiClient.finalizeInvestorLogin(
+                parseSamlResponse(
+                        htmlResponse,
+                        HandelsbankenNOConstants.InvestmentConstants.INVESTOR_PORTAL));
 
         return apiClient.fetchInvestmentsOverview(username);
     }
@@ -83,15 +88,19 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
         availableBalanceByCsdAccountNumber = Maps.newHashMap();
         AksjerOverviewResponse aksjerOverviewResponse = getAksjerOverview();
 
-        aksjerOverviewResponse.getData().getCustomerData().getAccounts()
+        aksjerOverviewResponse
+                .getData()
+                .getCustomerData()
+                .getAccounts()
                 .forEach(this::setBalanceMapValues);
     }
 
     private AksjerOverviewResponse getAksjerOverview() {
         String so = getSoToken(HandelsbankenNOConstants.InvestmentConstants.STOCK_PORTAL);
         String htmlResponse = apiClient.aksjerCustomerPortalLogin(so);
-        apiClient.finalizeAksjerLogin(parseSamlResponse(htmlResponse,
-                HandelsbankenNOConstants.InvestmentConstants.STOCK_PORTAL));
+        apiClient.finalizeAksjerLogin(
+                parseSamlResponse(
+                        htmlResponse, HandelsbankenNOConstants.InvestmentConstants.STOCK_PORTAL));
 
         return apiClient.getAksjerOverview();
     }
@@ -99,32 +108,44 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
     private String getSoToken(String portalType) {
         InitInvestmentsLoginResponse initInvestmentLoginResponse = apiClient.initInvestmentLogin();
         String so = initInvestmentLoginResponse.getSo();
-        Preconditions.checkState(!Strings.isNullOrEmpty(so),
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(so),
                 String.format("Login to %s unsuccessful, did not receive so token.", portalType));
 
         return so;
     }
 
     private String parseSamlResponse(String htmlResponse, String portalType) {
-        String samlResponse = Jsoup.parse(htmlResponse).getElementsByAttributeValue(
-                HandelsbankenNOConstants.Tags.NAME, HandelsbankenNOConstants.Tags.SAML_RESPONSE ).first().val();
-        Preconditions.checkState(!Strings.isNullOrEmpty(samlResponse),
-                String.format("Login to %s unsuccessful, could not parse saml response from html page.", portalType));
+        String samlResponse =
+                Jsoup.parse(htmlResponse)
+                        .getElementsByAttributeValue(
+                                HandelsbankenNOConstants.Tags.NAME,
+                                HandelsbankenNOConstants.Tags.SAML_RESPONSE)
+                        .first()
+                        .val();
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(samlResponse),
+                String.format(
+                        "Login to %s unsuccessful, could not parse saml response from html page.",
+                        portalType));
 
         return samlResponse;
     }
 
     private void setBalanceMapValues(AksjerAccountEntity account) {
         Preconditions.checkNotNull(account.getCustomerId()); // null check before api call
-        AvailableBalanceResponse response = apiClient.getAksjerAvailableBalance(username, account.getCustomerId());
-        availableBalanceByCsdAccountNumber.put(account.getVpsAccountNo(), response.getData().getBalance());
+        AvailableBalanceResponse response =
+                apiClient.getAksjerAvailableBalance(username, account.getCustomerId());
+        availableBalanceByCsdAccountNumber.put(
+                account.getVpsAccountNo(), response.getData().getBalance());
     }
 
     private InvestmentAccount convertToTinkAccount(OwnCsdAccountEntity csdAccount) {
         PositionsListEntity positions = apiClient.getPositions(csdAccount.getCsdAccountNumber());
-        List<PositionEntity> filteredPositionList = positions.stream()
-                .filter(positionEntity -> positionEntity.getVolume() != 0)
-                .collect(Collectors.toList());
+        List<PositionEntity> filteredPositionList =
+                positions.stream()
+                        .filter(positionEntity -> positionEntity.getVolume() != 0)
+                        .collect(Collectors.toList());
 
         return csdAccount.toTinkAccount(filteredPositionList, availableBalanceByCsdAccountNumber);
     }

@@ -14,13 +14,14 @@ public class SparebankenVestAutoAuthenticator implements AutoAuthenticator {
     private final SparebankenVestApiClient apiClient;
     private final EncapClient encapClient;
 
-    private SparebankenVestAutoAuthenticator(SparebankenVestApiClient apiClient, EncapClient encapClient) {
+    private SparebankenVestAutoAuthenticator(
+            SparebankenVestApiClient apiClient, EncapClient encapClient) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
     }
 
-    public static SparebankenVestAutoAuthenticator create(SparebankenVestApiClient apiClient,
-            EncapClient encapClient) {
+    public static SparebankenVestAutoAuthenticator create(
+            SparebankenVestApiClient apiClient, EncapClient encapClient) {
         return new SparebankenVestAutoAuthenticator(apiClient, encapClient);
     }
 
@@ -29,17 +30,21 @@ public class SparebankenVestAutoAuthenticator implements AutoAuthenticator {
         apiClient.initLogin();
 
         try {
-            DeviceAuthenticationResponse deviceAuthenticationResponse = encapClient.authenticateDevice(
-                    AuthenticationMethod.DEVICE_AND_PIN);
+            DeviceAuthenticationResponse deviceAuthenticationResponse =
+                    encapClient.authenticateDevice(AuthenticationMethod.DEVICE_AND_PIN);
 
-            String htmlResponseString = apiClient.authenticate(
-                    deviceAuthenticationResponse.getDeviceToken(), deviceAuthenticationResponse.getHardwareId());
+            String htmlResponseString =
+                    apiClient.authenticate(
+                            deviceAuthenticationResponse.getDeviceToken(),
+                            deviceAuthenticationResponse.getHardwareId());
 
             SecurityParamsRequestBody securityParamsRequestBody =
                     SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
-            htmlResponseString = apiClient.postSecurityParamsAuthentication(securityParamsRequestBody);
+            htmlResponseString =
+                    apiClient.postSecurityParamsAuthentication(securityParamsRequestBody);
 
-            securityParamsRequestBody = SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
+            securityParamsRequestBody =
+                    SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
             apiClient.finalizeLogin(securityParamsRequestBody);
         } finally {
             encapClient.saveDevice();

@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BankIdCollectRequestBody {
-    private PollBankIDSIMAuthenticationInEntity pollBankIDSIMAuthenticationInEntity = new PollBankIDSIMAuthenticationInEntity();
+    private PollBankIDSIMAuthenticationInEntity pollBankIDSIMAuthenticationInEntity =
+            new PollBankIDSIMAuthenticationInEntity();
 
     public BankIdCollectRequestBody(String sessionId) {
         pollBankIDSIMAuthenticationInEntity.setId(sessionId);

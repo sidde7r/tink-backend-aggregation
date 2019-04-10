@@ -147,12 +147,15 @@ public class GetCardResponse {
     }
 
     public CreditCardAccount toTinkCard(String cardId) {
-        return CreditCardAccount.builder(StringUtils.hashAsStringSHA1(cardNumber), getCardBalance(),
-                Amount.inNOK(availableAmount))
+        return CreditCardAccount.builder(
+                        StringUtils.hashAsStringSHA1(cardNumber),
+                        getCardBalance(),
+                        Amount.inNOK(availableAmount))
                 .setAccountNumber(cardNumber.replaceAll(" ", ""))
                 .setName(productName)
                 .setBankIdentifier(cardId)
-                .putInTemporaryStorage(DnbConstants.CreditCard.TRANSACTION_TYPE, getTransactionType())
+                .putInTemporaryStorage(
+                        DnbConstants.CreditCard.TRANSACTION_TYPE, getTransactionType())
                 .build();
     }
 

@@ -7,7 +7,7 @@ public class CredentialsEntity {
     private String token;
     private String tokenType;
 
-    private CredentialsEntity(String token, String tokenType){
+    private CredentialsEntity(String token, String tokenType) {
         this.token = token;
         this.tokenType = tokenType;
     }
@@ -16,5 +16,4 @@ public class CredentialsEntity {
         String escapedEvryToken = evryToken.replaceAll("/", "\\\\/");
         return new CredentialsEntity(escapedEvryToken, tokenType);
     }
-
 }

@@ -25,7 +25,8 @@ public class SparebankenSorTransactionFetcher implements TransactionFetcher {
     public List<AggregationTransaction> fetchTransactionsFor(Account account) {
 
         Optional<HashMap<String, LinkEntity>> storedLinks =
-                account.getFromTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS,
+                account.getFromTemporaryStorage(
+                        SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS,
                         new TypeReference<HashMap<String, LinkEntity>>() {});
 
         // if no transactions link, return empty
@@ -33,12 +34,15 @@ public class SparebankenSorTransactionFetcher implements TransactionFetcher {
             return Collections.emptyList();
         }
 
-        HashMap<String, LinkEntity>links = storedLinks.get();
+        HashMap<String, LinkEntity> links = storedLinks.get();
 
-        List<TransactionEntity> transactions = apiClient.
-                fetchTransactions(links.get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref()).getTransactions();
+        List<TransactionEntity> transactions =
+                apiClient
+                        .fetchTransactions(
+                                links.get(SparebankenSorConstants.Storage.TRANSACTIONS).getHref())
+                        .getTransactions();
 
-        if (transactions == null){
+        if (transactions == null) {
             return Collections.emptyList();
         }
 

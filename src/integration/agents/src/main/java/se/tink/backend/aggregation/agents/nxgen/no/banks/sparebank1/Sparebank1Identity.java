@@ -16,7 +16,7 @@ import se.tink.libraries.strings.StringUtils;
 public class Sparebank1Identity {
     private static final String STORAGE_KEY_DEVICEID = "deviceId";
     private static final String STORAGE_KEY_KEY_PAIR = "keyPair";
-    private static final String STORAGE_KEY_SALT= "salt";
+    private static final String STORAGE_KEY_SALT = "salt";
     private static final String STORAGE_KEY_USERNAME = "userName";
     private static final String STORAGE_KEY_PASSWORD = "password";
     private static final String STORAGE_KEY_VERIFICATOR = "verificator";
@@ -134,7 +134,9 @@ public class Sparebank1Identity {
             identity.setDeviceId(persistentStorage.get(STORAGE_KEY_DEVICEID));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_KEY_PAIR)) {
-            identity.setKeyPair(SerializationUtils.deserializeKeyPair(persistentStorage.get(STORAGE_KEY_KEY_PAIR)));
+            identity.setKeyPair(
+                    SerializationUtils.deserializeKeyPair(
+                            persistentStorage.get(STORAGE_KEY_KEY_PAIR)));
         }
         if (persistentStorage.containsKey(STORAGE_KEY_SALT)) {
             identity.setSalt(new BigInteger(persistentStorage.get(STORAGE_KEY_SALT)));

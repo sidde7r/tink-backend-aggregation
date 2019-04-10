@@ -12,8 +12,10 @@ public class InitiateBankIdResponse {
     private boolean success;
     private boolean restartLogon;
     private String appletTag;
+
     @JsonProperty("devicename")
     private String deviceName;
+
     private boolean retry;
     private StatusEntity status;
     private MessageEntity message;

@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmen
 
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PensionDataEntity {
@@ -89,5 +89,4 @@ public class PensionDataEntity {
                 .setPortfolios(Collections.singletonList(toTinkPortfolio()))
                 .build();
     }
-
 }

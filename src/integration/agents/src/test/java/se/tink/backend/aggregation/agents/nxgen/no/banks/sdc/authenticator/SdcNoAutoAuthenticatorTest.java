@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sdc.authenticator;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -10,9 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authe
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import static org.junit.Assert.assertNotNull;
 
 public class SdcNoAutoAuthenticatorTest {
 
@@ -34,15 +35,10 @@ public class SdcNoAutoAuthenticatorTest {
 
         SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(), configuration);
 
-       new SdcAutoAuthenticator(
-                apiClient,
-                sessionStorage,
-                configuration,
-                credentials,
-                persistentStorage
-        ).autoAuthenticate();
+        new SdcAutoAuthenticator(
+                        apiClient, sessionStorage, configuration, credentials, persistentStorage)
+                .autoAuthenticate();
 
         assertNotNull(sessionStorage.getAgreements());
     }
-
 }

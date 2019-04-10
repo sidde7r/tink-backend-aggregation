@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.Handelsba
 public class FinalizeInvestorLoginRequest extends MultivaluedMapImpl {
 
     public FinalizeInvestorLoginRequest(String samlResponse) {
-        add(HandelsbankenNOConstants.FinalizeInvestorLoginForm.RELAY_STATE,
+        add(
+                HandelsbankenNOConstants.FinalizeInvestorLoginForm.RELAY_STATE,
                 HandelsbankenNOConstants.QueryParamPairs.INVESTOR_TARGET.getValue());
         add(HandelsbankenNOConstants.FinalizeInvestorLoginForm.SAML_RESPONSE, samlResponse);
     }

@@ -26,8 +26,10 @@ public class CsdAccountRightsEntity {
     private String lastName;
     private String text;
     private String currencyCode;
+
     @JsonProperty("class")
     private String rightsClass;
+
     private String country;
     private long rightAmount;
     private String pledgeSequenceNumber;

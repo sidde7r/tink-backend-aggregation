@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class BankIdentifierTest {
     @Test
@@ -10,6 +11,7 @@ public class BankIdentifierTest {
 
         assertEquals("cardNumberGuid\nkidGuid", bankIdentifier.getBankIdentifier());
     }
+
     @Test
     public void testParseBankIdentifier() throws Exception {
         BankIdentifier bankIdentifier = new BankIdentifier("cardNumberGuid\nkidGuid");

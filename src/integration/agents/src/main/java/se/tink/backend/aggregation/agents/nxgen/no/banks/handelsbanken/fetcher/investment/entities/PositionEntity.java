@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.entities;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class PositionEntity {
@@ -106,7 +106,8 @@ public class PositionEntity {
     public Instrument toInstrument() {
         Instrument instrument = new Instrument();
 
-        instrument.setUniqueIdentifier(security.getIsin() + HandelsbankenNOConstants.InvestmentConstants.HB_NORWAY);
+        instrument.setUniqueIdentifier(
+                security.getIsin() + HandelsbankenNOConstants.InvestmentConstants.HB_NORWAY);
         instrument.setIsin(security.getIsin());
         instrument.setTicker(security.getSecurityTicker());
         instrument.setName(security.getSecurityName());
@@ -123,12 +124,12 @@ public class PositionEntity {
 
     private Instrument.Type getTinkSecurityType() {
         switch (security.getSecurityType().toLowerCase()) {
-        case "stock":
-            return Instrument.Type.STOCK;
-        case "equityfund":
-            return Instrument.Type.FUND;
-        default:
-            return Instrument.Type.OTHER;
+            case "stock":
+                return Instrument.Type.STOCK;
+            case "equityfund":
+                return Instrument.Type.FUND;
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 }

@@ -12,19 +12,19 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DanskeBankNOAgent extends DanskeBankAgent {
-    public DanskeBankNOAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DanskeBankNOAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankNOConfiguration());
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(TinkHttpClient client, DanskeBankConfiguration configuration) {
+    protected DanskeBankApiClient createApiClient(
+            TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankNOApiClient(client, (DanskeBankNOConfiguration) configuration);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

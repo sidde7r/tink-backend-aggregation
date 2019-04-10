@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionEntityTest {
 
@@ -20,31 +21,38 @@ public class TransactionEntityTest {
 
     @Test
     public void ensureThatDescriptionIsFormattedCorrectly_case3() {
-        TransactionEntity te = getTransactionEntityWithDescription("*1234 01.01 SEK 10.00 MERCHANT Kurs: 1.0000");
+        TransactionEntity te =
+                getTransactionEntityWithDescription("*1234 01.01 SEK 10.00 MERCHANT Kurs: 1.0000");
         assertThat(te.toTinkTransaction().getDescription()).isEqualTo("MERCHANT");
     }
 
     @Test
     public void ensureThatDescriptionIsFormattedCorrectly_case4() {
-        TransactionEntity te = getTransactionEntityWithDescription("*1234 01.01 SEK 10.00 MERCHANT LOCATION Kurs: 1.0000");
+        TransactionEntity te =
+                getTransactionEntityWithDescription(
+                        "*1234 01.01 SEK 10.00 MERCHANT LOCATION Kurs: 1.0000");
         assertThat(te.toTinkTransaction().getDescription()).isEqualTo("MERCHANT LOCATION");
     }
 
     @Test
     public void ensureThatDescriptionIsFormattedCorrectly_case5() {
-        TransactionEntity te = getTransactionEntityWithDescription("*1234 01.01 SEK 100.00 MERCHANT LOCATION Kurs: 1.0000");
+        TransactionEntity te =
+                getTransactionEntityWithDescription(
+                        "*1234 01.01 SEK 100.00 MERCHANT LOCATION Kurs: 1.0000");
         assertThat(te.toTinkTransaction().getDescription()).isEqualTo("MERCHANT LOCATION");
     }
 
     @Test
     public void ensureThatDescriptionIsFormattedCorrectly_case6() {
-        TransactionEntity te = getTransactionEntityWithDescription("*1234 01.01 NOK 10.00 MERCHANT Kurs: 1.0000");
+        TransactionEntity te =
+                getTransactionEntityWithDescription("*1234 01.01 NOK 10.00 MERCHANT Kurs: 1.0000");
         assertThat(te.toTinkTransaction().getDescription()).isEqualTo("MERCHANT");
     }
 
     @Test
     public void ensureThatDescriptionIsFormattedCorrectly_case7() {
-        TransactionEntity te = getTransactionEntityWithDescription("*1234 01.01 NOK 10.00 MERCHANT Kurs: 10.0000");
+        TransactionEntity te =
+                getTransactionEntityWithDescription("*1234 01.01 NOK 10.00 MERCHANT Kurs: 10.0000");
         assertThat(te.toTinkTransaction().getDescription()).isEqualTo("MERCHANT");
     }
 
@@ -90,7 +98,4 @@ public class TransactionEntityTest {
         te.setAmountFraction("10");
         return te;
     }
-
-
-
 }

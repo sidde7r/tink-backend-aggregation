@@ -37,6 +37,7 @@ public class LoanDetailsEntity {
     private Boolean transferFromEnabled;
     private Boolean transferToEnabled;
     private Boolean paymentFromEnabled;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 
@@ -150,7 +151,8 @@ public class LoanDetailsEntity {
 
     @JsonIgnore
     public Double getInterestRate() {
-        return AgentParsingUtils.parsePercentageFormInterest(interestRateInteger + "," + interestRateFraction);
+        return AgentParsingUtils.parsePercentageFormInterest(
+                interestRateInteger + "," + interestRateFraction);
     }
 
     @JsonIgnore

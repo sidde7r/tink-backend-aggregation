@@ -27,7 +27,7 @@ public class SecurityEntity {
     }
 
     public String getSecurityTicker() {
-        return Strings.isNullOrEmpty(securityTicker) ? null: securityTicker;
+        return Strings.isNullOrEmpty(securityTicker) ? null : securityTicker;
     }
 
     public String getSecurityName() {

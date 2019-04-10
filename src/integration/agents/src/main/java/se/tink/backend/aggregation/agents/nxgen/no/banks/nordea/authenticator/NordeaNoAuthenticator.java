@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.authenticator.NordeaV17Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
 
-public class NordeaNoAuthenticator extends NordeaV17Authenticator<NordeaNoApiClient> implements BankIdAuthenticatorNO {
+public class NordeaNoAuthenticator extends NordeaV17Authenticator<NordeaNoApiClient>
+        implements BankIdAuthenticatorNO {
     private String sessionId;
 
     public NordeaNoAuthenticator(NordeaNoApiClient client) {
@@ -19,8 +20,8 @@ public class NordeaNoAuthenticator extends NordeaV17Authenticator<NordeaNoApiCli
     }
 
     @Override
-    public String init(String nationalId, String dob, String mobilenumber) throws AuthenticationException,
-            AuthorizationException {
+    public String init(String nationalId, String dob, String mobilenumber)
+            throws AuthenticationException, AuthorizationException {
         BankIdInitResponse bankIdInitResponse = client.initiateBankId(dob, mobilenumber);
 
         if (bankIdInitResponse.isAlreadyInProgress()) {

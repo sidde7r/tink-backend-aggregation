@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkinga
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -19,14 +19,20 @@ public class AccountDetailsEntity {
     private String ownerName;
     private String property;
     private double availableBalance;
+
     @JsonProperty("availableBalanceNOK")
     private double availableBalanceNok;
+
     private double bookBalance;
+
     @JsonProperty("bookBalanceNOK")
     private double bookBalanceNok;
+
     private double granting;
+
     @JsonProperty("grantingNOK")
     private double grantingNok;
+
     private boolean payFrom;
     private boolean delinquent;
     private boolean loan;
@@ -165,4 +171,3 @@ public class AccountDetailsEntity {
         return alias != null ? alias : name;
     }
 }
-

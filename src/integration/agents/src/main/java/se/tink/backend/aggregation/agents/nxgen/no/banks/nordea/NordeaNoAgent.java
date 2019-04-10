@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.parser.NordeaNoT
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.rpc.filter.NordeaNoFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Agent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17ApiClient;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -17,19 +18,24 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class NordeaNoAgent extends NordeaV17Agent {
     private NordeaNoApiClient nordeaClient;
 
-    public NordeaNoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair,
+    public NordeaNoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(
+                request,
+                context,
+                signatureKeyPair,
                 new NordeaNoParser(new NordeaNoTransactionParser()));
     }
 
     @Override
     protected NordeaV17ApiClient constructNordeaClient() {
-        return nordeaClient = new NordeaNoApiClient(client, request.getCredentials(), NordeaNoConstants.MARKET_CODE);
+        return nordeaClient =
+                new NordeaNoApiClient(
+                        client, request.getCredentials(), NordeaNoConstants.MARKET_CODE);
     }
 
     @Override
@@ -52,7 +58,8 @@ public class NordeaNoAgent extends NordeaV17Agent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

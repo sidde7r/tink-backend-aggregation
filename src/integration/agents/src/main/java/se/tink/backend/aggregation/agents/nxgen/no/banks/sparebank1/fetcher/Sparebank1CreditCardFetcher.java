@@ -18,7 +18,9 @@ public class Sparebank1CreditCardFetcher implements AccountFetcher<CreditCardAcc
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.getAccounts(Sparebank1Constants.Urls.CREDITCARDS, CreditCardAccountsListResponse.class)
+        return apiClient
+                .getAccounts(
+                        Sparebank1Constants.Urls.CREDITCARDS, CreditCardAccountsListResponse.class)
                 .getCreditCards().stream()
                 .filter(creditCardAccountEntity -> !creditCardAccountEntity.isAccountClosed())
                 .map(CreditCardAccountEntity::toAccount)

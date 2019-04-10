@@ -18,7 +18,7 @@ public class SparebankenVestSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        //NOP
+        // NOP
     }
 
     @Override

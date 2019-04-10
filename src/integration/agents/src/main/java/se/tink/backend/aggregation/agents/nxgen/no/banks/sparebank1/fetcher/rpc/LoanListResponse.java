@@ -11,10 +11,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoanListResponse {
     private List<LoanEntity> loans;
+
     @JsonProperty("_aggregatedAmountFraction")
     private String aggregatedAmountFraction;
+
     @JsonProperty("_aggregatedAmountInteger")
     private String aggregatedAmountInteger;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

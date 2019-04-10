@@ -28,24 +28,30 @@ public class SparebankenVestApiClient {
     }
 
     public void initLogin() {
-        this.client.request(SparebankenVestConstants.Urls.LOGIN)
-                .queryParam(SparebankenVestConstants.QueryParams.NO_CACHE_KEY,
+        this.client
+                .request(SparebankenVestConstants.Urls.LOGIN)
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.NO_CACHE_KEY,
                         SparebankenVestConstants.QueryParams.NO_CACHE_VALUE)
                 .get(HttpResponse.class);
     }
 
     public String activate(String securityToken) {
-        return this.client.request(SparebankenVestConstants.Urls.AUTHENTICATE)
+        return this.client
+                .request(SparebankenVestConstants.Urls.AUTHENTICATE)
                 .queryParam(SparebankenVestConstants.QueryParams.SO_KEY, securityToken)
-                .queryParam(SparebankenVestConstants.QueryParams.IS_NEW_ACTIVATION_KEY,
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.IS_NEW_ACTIVATION_KEY,
                         SparebankenVestConstants.QueryParams.IS_NEW_ACTIVATION_VALUE)
-                .cookie(SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_KEY,
+                .cookie(
+                        SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_KEY,
                         SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_VALUE)
                 .get(String.class);
     }
 
     public String authenticate(String securityToken, String hardwareId) {
-        return this.client.request(SparebankenVestConstants.Urls.AUTHENTICATE)
+        return this.client
+                .request(SparebankenVestConstants.Urls.AUTHENTICATE)
                 .queryParam(SparebankenVestConstants.QueryParams.SO_KEY, securityToken)
                 .queryParam(SparebankenVestConstants.QueryParams.HARDWARE_ID_KEY, hardwareId)
                 .get(String.class);
@@ -53,26 +59,26 @@ public class SparebankenVestApiClient {
 
     public String postSecurityParamsActivation(SecurityParamsRequestBody loginRequestBody) {
         return getPostSecurityParamsRequest()
-                .cookie(SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_KEY,
+                .cookie(
+                        SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_KEY,
                         SparebankenVestConstants.Headers.MOBILE_NAME_COOKIE_VALUE)
                 .post(String.class, loginRequestBody);
     }
 
     public String postSecurityParamsAuthentication(SecurityParamsRequestBody loginRequestBody) {
-        return getPostSecurityParamsRequest()
-                .post(String.class, loginRequestBody);
+        return getPostSecurityParamsRequest().post(String.class, loginRequestBody);
     }
 
     public void finalizeLogin(SecurityParamsRequestBody loginRequestBody) {
         getRequest(SparebankenVestConstants.Urls.LOGIN)
-                .header(SparebankenVestConstants.Headers.ORIGIN_KEY,
+                .header(
+                        SparebankenVestConstants.Headers.ORIGIN_KEY,
                         SparebankenVestConstants.Urls.HOST_SECURITY)
                 .post(HttpResponse.class, loginRequestBody);
     }
 
     public AccountsListResponse fetchAccounts() {
-        return getRequest(SparebankenVestConstants.Urls.ACCOUNTS)
-                .get(AccountsListResponse.class);
+        return getRequest(SparebankenVestConstants.Urls.ACCOUNTS).get(AccountsListResponse.class);
     }
 
     public TransactionsListResponse fetchTransactions(String accountId, String range) {
@@ -89,8 +95,7 @@ public class SparebankenVestApiClient {
     }
 
     public FetchLoansResponse fetchLoans() {
-        return getRequest(SparebankenVestConstants.Urls.LOANS)
-                .get(FetchLoansResponse.class);
+        return getRequest(SparebankenVestConstants.Urls.LOANS).get(FetchLoansResponse.class);
     }
 
     public FetchCreditCardsResponse fetchCreditCardAccounts() {
@@ -99,28 +104,45 @@ public class SparebankenVestApiClient {
     }
 
     public LoanDetailsResponse fetchLoanDetails(LoanEntity loanEntity) {
-        return getRequest(SparebankenVestConstants.Urls.LOAN_DETAILS
-                .parameter(SparebankenVestConstants.Urls.LOAN_TYPE_PARAM, String.valueOf(loanEntity.getType()))
-                .parameter(SparebankenVestConstants.Urls.LOAN_NUMBER_GUID_PARAM, String.valueOf(loanEntity.getLoanNumberGuid()))
-        ).get(LoanDetailsResponse.class);
+        return getRequest(
+                        SparebankenVestConstants.Urls.LOAN_DETAILS
+                                .parameter(
+                                        SparebankenVestConstants.Urls.LOAN_TYPE_PARAM,
+                                        String.valueOf(loanEntity.getType()))
+                                .parameter(
+                                        SparebankenVestConstants.Urls.LOAN_NUMBER_GUID_PARAM,
+                                        String.valueOf(loanEntity.getLoanNumberGuid())))
+                .get(LoanDetailsResponse.class);
     }
 
     public String fetchCurrencyLoanDetails(LoanEntity loanEntity) {
-        return getRequest(SparebankenVestConstants.Urls.CURRENCY_LOAN_DETAILS
-                .parameter(SparebankenVestConstants.Urls.LOAN_NUMBER_GUID_PARAM, String.valueOf(loanEntity.getLoanNumberGuid()))
-        ).get(String.class);
+        return getRequest(
+                        SparebankenVestConstants.Urls.CURRENCY_LOAN_DETAILS.parameter(
+                                SparebankenVestConstants.Urls.LOAN_NUMBER_GUID_PARAM,
+                                String.valueOf(loanEntity.getLoanNumberGuid())))
+                .get(String.class);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(BankIdentifier bankIdentifier, Date fromDate, Date toDate,
-            int startIndex) {
-        int endIndex = startIndex + SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH - 1;
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            BankIdentifier bankIdentifier, Date fromDate, Date toDate, int startIndex) {
+        int endIndex =
+                startIndex + SparebankenVestConstants.PagePagination.MAX_TRANSACTIONS_IN_BATCH - 1;
 
         return getRequest(SparebankenVestConstants.Urls.CREDIT_CARD_TRANSACTIONS)
-                .queryParam(SparebankenVestConstants.QueryParams.CARD_NUMBER_GUID_KEY, bankIdentifier.getCardNumberGuid())
-                .queryParam(SparebankenVestConstants.QueryParams.KID_GUID_KEY, bankIdentifier.getKidGuid())
-                .queryParam(SparebankenVestConstants.QueryParams.FROM_DATE_KEY, jsonFormatDate(fromDate))
-                .queryParam(SparebankenVestConstants.QueryParams.TO_DATE_KEY, jsonFormatDate(toDate))
-                .header(SparebankenVestConstants.Headers.RANGE_KEY, String.format("items=%d-%d", startIndex, endIndex))
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.CARD_NUMBER_GUID_KEY,
+                        bankIdentifier.getCardNumberGuid())
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.KID_GUID_KEY,
+                        bankIdentifier.getKidGuid())
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.FROM_DATE_KEY,
+                        jsonFormatDate(fromDate))
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.TO_DATE_KEY, jsonFormatDate(toDate))
+                .header(
+                        SparebankenVestConstants.Headers.RANGE_KEY,
+                        String.format("items=%d-%d", startIndex, endIndex))
                 .get(CreditCardTransactionsResponse.class);
     }
 
@@ -134,30 +156,38 @@ public class SparebankenVestApiClient {
     }
 
     public boolean keepAlive() {
-        return this.client.request(SparebankenVestConstants.Urls.KEEP_ALIVE)
-                .queryParam(SparebankenVestConstants.QueryParams.PREVENT_CACHE_KEY,
+        return this.client
+                .request(SparebankenVestConstants.Urls.KEEP_ALIVE)
+                .queryParam(
+                        SparebankenVestConstants.QueryParams.PREVENT_CACHE_KEY,
                         String.valueOf(System.currentTimeMillis()))
                 .get(boolean.class);
     }
 
     private RequestBuilder getPostSecurityParamsRequest() {
-        return this.client.request(SparebankenVestConstants.Urls.STS_PRIVATE_WEB)
-                .header(SparebankenVestConstants.Headers.ORIGIN_KEY,
+        return this.client
+                .request(SparebankenVestConstants.Urls.STS_PRIVATE_WEB)
+                .header(
+                        SparebankenVestConstants.Headers.ORIGIN_KEY,
                         SparebankenVestConstants.Urls.HOST_SECURITY);
     }
 
     private RequestBuilder getRequest(URL url) {
-        return this.client.request(url)
-                .type(MediaType.APPLICATION_FORM_URLENCODED);
+        return this.client.request(url).type(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     private String getCsrfTokenCookieValue() {
         return this.client.getCookies().stream()
-                .filter(cookie ->
-                        Objects.equals(cookie.getName().toLowerCase(), SparebankenVestConstants.Cookies.CSRFTOKEN))
+                .filter(
+                        cookie ->
+                                Objects.equals(
+                                        cookie.getName().toLowerCase(),
+                                        SparebankenVestConstants.Cookies.CSRFTOKEN))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new IllegalStateException(
-                        "CsrfToken is not found, it's needed for fetching upcoming transactions."));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "CsrfToken is not found, it's needed for fetching upcoming transactions."));
     }
 }

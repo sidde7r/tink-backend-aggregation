@@ -22,20 +22,27 @@ public class LoanEntity {
     private Boolean balancePreferred;
     private Boolean transferFromEnabled;
     private Boolean transferToEnabled;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 
     @JsonIgnore
     public LoanAccount toTinkLoan(LoanDetailsEntity loanDetails) {
-        return LoanAccount.builder(formattedNumber,
-                Sparebank1AmountUtils.constructAmount(balanceAmountInteger, balanceAmountFraction))
+        return LoanAccount.builder(
+                        formattedNumber,
+                        Sparebank1AmountUtils.constructAmount(
+                                balanceAmountInteger, balanceAmountFraction))
                 .setAccountNumber(formattedNumber)
-                .setName(Strings.isNullOrEmpty(loanDetails.getName()) ? getName() : loanDetails.getName())
+                .setName(
+                        Strings.isNullOrEmpty(loanDetails.getName())
+                                ? getName()
+                                : loanDetails.getName())
                 .setInterestRate(loanDetails.getInterestRate())
-                .setDetails(LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
-                        .setInitialBalance(loanDetails.getInitialBalance())
-                        .setSecurity(loanDetails.getCollateral())
-                        .build())
+                .setDetails(
+                        LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                                .setInitialBalance(loanDetails.getInitialBalance())
+                                .setSecurity(loanDetails.getCollateral())
+                                .build())
                 .build();
     }
 

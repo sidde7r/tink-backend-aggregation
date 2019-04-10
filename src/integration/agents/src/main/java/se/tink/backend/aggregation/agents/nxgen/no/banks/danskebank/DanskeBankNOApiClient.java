@@ -4,7 +4,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class DanskeBankNOApiClient extends DanskeBankApiClient {
-    protected DanskeBankNOApiClient(TinkHttpClient client, DanskeBankNOConfiguration configuration) {
+    protected DanskeBankNOApiClient(
+            TinkHttpClient client, DanskeBankNOConfiguration configuration) {
         super(client, configuration);
     }
 }

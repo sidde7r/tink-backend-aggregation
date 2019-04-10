@@ -38,17 +38,18 @@ public class SparebankenVestAgent extends NextGenerationAgent {
     private final SparebankenVestApiClient apiClient;
     private final EncapClient encapClient;
 
-    public SparebankenVestAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SparebankenVestAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new SparebankenVestApiClient(client);
-        this.encapClient = new EncapClient(
-                context,
-                request,
-                signatureKeyPair,
-                persistentStorage,
-                new SparebankenVestEncapConfiguration(),
-                DeviceProfileConfiguration.IOS_STABLE
-        );
+        this.encapClient =
+                new EncapClient(
+                        context,
+                        request,
+                        signatureKeyPair,
+                        persistentStorage,
+                        new SparebankenVestEncapConfiguration(),
+                        DeviceProfileConfiguration.IOS_STABLE);
     }
 
     @Override
@@ -58,14 +59,18 @@ public class SparebankenVestAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, systemUpdater,
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
                 new OneTimeActivationCodeAuthenticationController(
-                        SparebankenVestOneTimeActivationCodeAuthenticator.create(apiClient, encapClient)),
+                        SparebankenVestOneTimeActivationCodeAuthenticator.create(
+                                apiClient, encapClient)),
                 SparebankenVestAutoAuthenticator.create(apiClient, encapClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         SparebankenVestTransactionFetcher transactionFetcher =
                 SparebankenVestTransactionFetcher.create(apiClient, credentials);
 
@@ -78,7 +83,9 @@ public class SparebankenVestAgent extends NextGenerationAgent {
                         transactionFetcher);
 
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
                         SparebankenVestTransactionalAccountFetcher.create(apiClient, credentials),
                         transactionFetcherController));
     }
@@ -87,25 +94,34 @@ public class SparebankenVestAgent extends NextGenerationAgent {
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
         TransactionFetcher<CreditCardAccount> transactionFetcher =
-                new TransactionFetcherController<CreditCardAccount>(transactionPaginationHelper,
+                new TransactionFetcherController<CreditCardAccount>(
+                        transactionPaginationHelper,
                         new TransactionDatePaginationController<CreditCardAccount>(
                                 SparebankenVestCreditCardTransactionFetcher.create(apiClient)));
 
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                        SparebankenVestCreditCardAccountFetcher.create(apiClient), transactionFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        SparebankenVestCreditCardAccountFetcher.create(apiClient),
+                        transactionFetcher));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(
-                new InvestmentRefreshController(metricRefreshController, updateController,
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
                         SparebankenVestInvestmentsFetcher.create(apiClient)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController,
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
                         SparebankenVestLoanFetcher.create(apiClient)));
     }
 
@@ -115,7 +131,8 @@ public class SparebankenVestAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

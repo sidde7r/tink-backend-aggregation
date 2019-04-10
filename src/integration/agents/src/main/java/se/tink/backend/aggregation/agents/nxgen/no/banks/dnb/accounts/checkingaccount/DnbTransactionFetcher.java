@@ -45,8 +45,10 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
         List<TransactionEntity> transactionEntityList;
         try {
             HttpResponse httpResponse = apiClient.fetchTransactions(account, transactionsToFetch);
-            // In practice, it will eventually return 400 Bad Request when fetching around 20 times in a roll.
-            // By adding a delay of 400 ms solves the issue. This delay is tested with 2000 times of fetch.
+            // In practice, it will eventually return 400 Bad Request when fetching around 20 times
+            // in a roll.
+            // By adding a delay of 400 ms solves the issue. This delay is tested with 2000 times of
+            // fetch.
             Uninterruptibles.sleepUninterruptibly(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
 
             transactionResponse = httpResponse.getBody(TransactionResponse.class);
@@ -55,30 +57,38 @@ public class DnbTransactionFetcher implements TransactionPaginator<Transactional
                 resetState();
                 return PaginatorResponseImpl.createEmpty(canFetchMore);
             }
-            List<Transaction> transactions = transactionEntityList
-                    .subList(transactionsToFetch - DEFAULT_COUNT_INCREMENT,
-                            transactionsToFetch > transactionEntityList.size() ?
-                                    transactionEntityList.size() : transactionsToFetch).stream()
-                    .map(TransactionEntity::toTinkTransaction)
-                    .collect(Collectors.toList());
+            List<Transaction> transactions =
+                    transactionEntityList
+                            .subList(
+                                    transactionsToFetch - DEFAULT_COUNT_INCREMENT,
+                                    transactionsToFetch > transactionEntityList.size()
+                                            ? transactionEntityList.size()
+                                            : transactionsToFetch)
+                            .stream()
+                            .map(TransactionEntity::toTinkTransaction)
+                            .collect(Collectors.toList());
 
             canFetchMore =
-                    transactionResponse.getPosition() != null && transactionsToFetch != MAXIMUM_TRANSACTIONS_TO_FETCH;
+                    transactionResponse.getPosition() != null
+                            && transactionsToFetch != MAXIMUM_TRANSACTIONS_TO_FETCH;
 
             return PaginatorResponseImpl.create(transactions, canFetchMore);
         } catch (HttpResponseException e) {
-            // Even it return 400, we bypass it as a temporary error and increase the delay progressively.
+            // Even it return 400, we bypass it as a temporary error and increase the delay
+            // progressively.
             if (e.getResponse().getStatus() != BAD_REQUEST_CODE) {
                 resetState();
                 throw e;
             } else {
                 if (badRequestCounter >= BAD_REQUEST_MAX_TRY_COUNTER) {
                     resetState();
-                    throw new IllegalStateException("Fetch Transaction caused bad request for more than max trials", e);
+                    throw new IllegalStateException(
+                            "Fetch Transaction caused bad request for more than max trials", e);
                 }
                 // Preventive & experimental code, check if dnb will recover a 400 if sleep a while
                 badRequestCounter += 1;
-                Uninterruptibles.sleepUninterruptibly(DELAY_MILLISECONDS + (badRequestCounter * DELAY_MILLISECONDS),
+                Uninterruptibles.sleepUninterruptibly(
+                        DELAY_MILLISECONDS + (badRequestCounter * DELAY_MILLISECONDS),
                         TimeUnit.MILLISECONDS);
                 transactionsToFetch -= DEFAULT_COUNT_INCREMENT;
                 return PaginatorResponseImpl.createEmpty(canFetchMore);

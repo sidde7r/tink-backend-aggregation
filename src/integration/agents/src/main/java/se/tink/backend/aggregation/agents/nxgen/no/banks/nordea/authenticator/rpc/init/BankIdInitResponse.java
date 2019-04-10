@@ -21,7 +21,8 @@ public class BankIdInitResponse extends NordeaResponse {
 
     @JsonIgnore
     public boolean isAlreadyInProgress() {
-        return getErrorCode().isPresent() && Objects.equals(getErrorCode().get(), BankIdStatus.ALREADY_IN_PROGRESS);
+        return getErrorCode().isPresent()
+                && Objects.equals(getErrorCode().get(), BankIdStatus.ALREADY_IN_PROGRESS);
     }
 
     @JsonIgnore

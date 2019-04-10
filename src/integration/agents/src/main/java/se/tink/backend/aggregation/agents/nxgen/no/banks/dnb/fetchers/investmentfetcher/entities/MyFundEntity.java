@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MyFundEntity {
@@ -136,30 +136,34 @@ public class MyFundEntity {
 
         Map<Instrument, String> instrumentAccountMap = new HashMap<>();
 
-        fundAccounts.stream().forEach(fundAccountInMyFundEntity -> {
+        fundAccounts.stream()
+                .forEach(
+                        fundAccountInMyFundEntity -> {
 
-            // NOTE: Since for dnb, One instrument can be shared among multiple portfolio accounts, make it infeasible to
-            // trace some data on portfolio accounts level, e.g. profit, quantity etc. So those fields are not set here
-            // to avoid wrong information.
-            Instrument instrument = new Instrument();
-            instrument.setName(name);
-            instrument.setType(Instrument.Type.FUND);
-            instrument.setPrice(price);
-            instrument.setRawType(productSystem + "-" + productId);
-            instrument.setMarketValue(fundAccountInMyFundEntity.getSum());
-            Preconditions.checkArgument(shares > 0);
-            instrument.setAverageAcquisitionPrice(costPrice / shares);
+                            // NOTE: Since for dnb, One instrument can be shared among multiple
+                            // portfolio accounts, make it infeasible to
+                            // trace some data on portfolio accounts level, e.g. profit, quantity
+                            // etc. So those fields are not set here
+                            // to avoid wrong information.
+                            Instrument instrument = new Instrument();
+                            instrument.setName(name);
+                            instrument.setType(Instrument.Type.FUND);
+                            instrument.setPrice(price);
+                            instrument.setRawType(productSystem + "-" + productId);
+                            instrument.setMarketValue(fundAccountInMyFundEntity.getSum());
+                            Preconditions.checkArgument(shares > 0);
+                            instrument.setAverageAcquisitionPrice(costPrice / shares);
 
-            instrument.setUniqueIdentifier(isin + "-DNB-NORWAY");
-            instrument.setIsin(isin);
+                            instrument.setUniqueIdentifier(isin + "-DNB-NORWAY");
+                            instrument.setIsin(isin);
 
-            instrumentAccountMap.put(instrument, fundAccountInMyFundEntity.getAccountNumber());
-        });
+                            instrumentAccountMap.put(
+                                    instrument, fundAccountInMyFundEntity.getAccountNumber());
+                        });
         return instrumentAccountMap;
     }
 
     public void setIsin(String isin) {
         this.isin = isin;
     }
-
 }

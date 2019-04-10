@@ -12,6 +12,7 @@ public class FinancialInstitutionEntity {
     private PhoneNumberEntity phoneNumber;
     private String email;
     private String openingHours;
+
     @JsonProperty("_links")
     private HashMap<String, LinkEntity> links;
 

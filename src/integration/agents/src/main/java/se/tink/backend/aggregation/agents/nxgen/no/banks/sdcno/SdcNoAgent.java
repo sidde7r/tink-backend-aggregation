@@ -10,12 +10,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcPinAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.SdcSmsOtpAuthenticator;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 /*
  * Configure market specific client, this is NO
@@ -23,15 +23,20 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public class SdcNoAgent extends SdcAgent {
     private static Logger LOG = LoggerFactory.getLogger(SdcNoAgent.class);
 
-    public SdcNoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair,
+    public SdcNoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(
+                request,
+                context,
+                signatureKeyPair,
                 new SdcNoConfiguration(request.getProvider()),
                 new SdcNoTransactionParser());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION.contains(agentConfiguration.getBankCode())) {
+        if (SdcNoConstants.Authentication.BANKS_WITH_PIN_AUTHENTICATION.contains(
+                agentConfiguration.getBankCode())) {
             return constructPinAuthenticator();
         } else {
             return constructSmsAuthenticator();
@@ -40,23 +45,34 @@ public class SdcNoAgent extends SdcAgent {
 
     private Authenticator constructSmsAuthenticator() {
         LOG.info("SDC bank using SMS authentication");
-        SdcAutoAuthenticator noAutoAuthenticator = new SdcAutoAuthenticator(bankClient,
-                sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
-        SdcSmsOtpAuthenticator noSmsOtpAuthenticator = new SdcSmsOtpAuthenticator(bankClient,
-                sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
+        SdcAutoAuthenticator noAutoAuthenticator =
+                new SdcAutoAuthenticator(
+                        bankClient,
+                        sdcSessionStorage,
+                        agentConfiguration,
+                        credentials,
+                        sdcPersistentStorage);
+        SdcSmsOtpAuthenticator noSmsOtpAuthenticator =
+                new SdcSmsOtpAuthenticator(
+                        bankClient,
+                        sdcSessionStorage,
+                        agentConfiguration,
+                        credentials,
+                        sdcPersistentStorage);
 
-        SmsOtpAuthenticationPasswordController smsOtpController = new SmsOtpAuthenticationPasswordController(catalog,
-                supplementalInformationHelper, noSmsOtpAuthenticator);
+        SmsOtpAuthenticationPasswordController smsOtpController =
+                new SmsOtpAuthenticationPasswordController(
+                        catalog, supplementalInformationHelper, noSmsOtpAuthenticator);
 
-        return new AutoAuthenticationController(request, context, smsOtpController,
-                noAutoAuthenticator);
+        return new AutoAuthenticationController(
+                request, context, smsOtpController, noAutoAuthenticator);
     }
 
     private Authenticator constructPinAuthenticator() {
         LOG.info("SDC bank using pin authentication");
 
-        SdcPinAuthenticator dkAuthenticator = new SdcPinAuthenticator(bankClient,
-                sdcSessionStorage, agentConfiguration);
+        SdcPinAuthenticator dkAuthenticator =
+                new SdcPinAuthenticator(bankClient, sdcSessionStorage, agentConfiguration);
         return new PasswordAuthenticationController(dkAuthenticator);
     }
 

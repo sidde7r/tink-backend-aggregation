@@ -14,8 +14,9 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
     private final EncapClient encapClient;
     private final SessionStorage sessionStorage;
 
-
-    public SparebankenSorAutoAuthenticator(SparebankenSorApiClient apiClient, EncapClient encapClient,
+    public SparebankenSorAutoAuthenticator(
+            SparebankenSorApiClient apiClient,
+            EncapClient encapClient,
             SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
@@ -24,7 +25,8 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this cookie for later use in the first login request
+        apiClient.fetchAppInformation(); // only for getting a cookie, possible we must save this
+        // cookie for later use in the first login request
 
         String evryToken = encapClient.authenticateUser();
         executeLogin(evryToken);
@@ -34,9 +36,12 @@ public class SparebankenSorAutoAuthenticator implements AutoAuthenticator {
         FirstLoginRequest firstLoginRequest = FirstLoginRequest.build(evryToken);
         FirstLoginResponse firstLoginResponse = apiClient.loginFirstStep(firstLoginRequest);
 
-        sessionStorage.put(SparebankenSorConstants.Storage.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
-        // We might want to add some check on the second login response. Not doing it now since because I don't know
-        // what fields/values that signal an error. But if we get errors here we should add a check for it.
+        sessionStorage.put(
+                SparebankenSorConstants.Storage.ACCESS_TOKEN, firstLoginResponse.getAccessToken());
+        // We might want to add some check on the second login response. Not doing it now since
+        // because I don't know
+        // what fields/values that signal an error. But if we get errors here we should add a check
+        // for it.
         apiClient.loginSecondStep();
     }
 }

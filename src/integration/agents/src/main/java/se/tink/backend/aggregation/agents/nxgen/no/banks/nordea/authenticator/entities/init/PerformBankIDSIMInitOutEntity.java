@@ -14,10 +14,13 @@ public class PerformBankIDSIMInitOutEntity {
 
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String merchantReference;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String cancelUrl;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String verifyUrl;
+
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String callbackUrl;
 
