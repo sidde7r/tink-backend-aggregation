@@ -590,7 +590,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public Identity sendIdentityToUpdateService(String uniqueId) {
         // TODO: implement sending identity data
-        return null;
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest updateIdentityDataRequest =
+                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest();
+
+        updateIdentityDataRequest.setName("Test name");
+        updateIdentityDataRequest.setSsn("123-45-yu-89");
+
+        Identity updatedIdentity;
+
+        try {
+            updatedIdentity = controllerWrapper.updateIdentityData(updateIdentityDataRequest);
+        }
+        catch(UniformInterfaceException e) {
+            log.error("Identity update request failed, response: " +
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            throw e;
+        }
+
+        return updatedIdentity;
     }
 
 }

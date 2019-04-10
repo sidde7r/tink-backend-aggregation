@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.common.base.Preconditions;
 import javax.ws.rs.core.Response;
+
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -14,6 +16,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountReq
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
@@ -107,5 +110,9 @@ public class ControllerWrapper {
 
     public Response checkConnectivity() {
         return client.checkConnectivity(configuration);
+    }
+
+    public Identity updateIdentityData(UpdateIdentityDataRequest request) {
+        return client.updateIdentity(configuration, request);
     }
 }
