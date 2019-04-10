@@ -27,7 +27,7 @@ public class DeutscheBankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
-        throws BankServiceException, SessionException {
+            throws BankServiceException, SessionException {
         OAuth2Token token = apiClient.refreshToken(refreshToken);
         apiClient.setTokenToSession(token);
         return token;

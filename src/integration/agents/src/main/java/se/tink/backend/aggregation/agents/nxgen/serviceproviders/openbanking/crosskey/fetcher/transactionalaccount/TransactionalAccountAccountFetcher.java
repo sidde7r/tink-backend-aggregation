@@ -16,6 +16,7 @@ import se.tink.libraries.account.identifiers.TinkIdentifier;
 import se.tink.libraries.amount.Amount;
 
 public class TransactionalAccountAccountFetcher implements AccountFetcher<TransactionalAccount> {
+
     private final CrosskeyBaseApiClient apiClient;
 
     public TransactionalAccountAccountFetcher(CrosskeyBaseApiClient apiClient) {

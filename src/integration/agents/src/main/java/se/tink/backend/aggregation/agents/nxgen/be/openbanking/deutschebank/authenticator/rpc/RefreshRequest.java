@@ -11,7 +11,7 @@ public class RefreshRequest {
     private final String refreshToken;
 
     public RefreshRequest(
-        String grantType, String clientId, String clientSecret, String refreshToken) {
+            String grantType, String clientId, String clientSecret, String refreshToken) {
         this.grantType = grantType;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -20,11 +20,11 @@ public class RefreshRequest {
 
     public String toData() {
         return Form.builder()
-            .put(DeutscheBankConstants.FormKeys.GRANT_TYPE, grantType)
-            .put(DeutscheBankConstants.FormKeys.CLIENT_ID, clientId)
-            .put(DeutscheBankConstants.FormKeys.CLIENT_SECRET, clientSecret)
-            .put(DeutscheBankConstants.FormKeys.REFRESH_TOKEN, refreshToken)
-            .build()
-            .serialize();
+                .put(DeutscheBankConstants.FormKeys.GRANT_TYPE, grantType)
+                .put(DeutscheBankConstants.FormKeys.CLIENT_ID, clientId)
+                .put(DeutscheBankConstants.FormKeys.CLIENT_SECRET, clientSecret)
+                .put(DeutscheBankConstants.FormKeys.REFRESH_TOKEN, refreshToken)
+                .build()
+                .serialize();
     }
 }

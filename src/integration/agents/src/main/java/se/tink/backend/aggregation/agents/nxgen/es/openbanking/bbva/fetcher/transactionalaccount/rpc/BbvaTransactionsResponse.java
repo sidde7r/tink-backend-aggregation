@@ -1,6 +1,4 @@
-
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.rpc;
-
 
 import java.util.Collection;
 import java.util.Optional;
@@ -14,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class BBVATransactionsResponse implements PaginatorResponse {
+public class BbvaTransactionsResponse implements PaginatorResponse {
 
     private ResultEntity result;
     private TransactionDataEntity data;
@@ -22,17 +20,13 @@ public class BBVATransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return data.getAccountTransactions()
-            .stream().map(AccountTransactionEntity::toTinkTransaction)
-            .collect(Collectors.toList());
+        return data.getAccountTransactions().stream()
+                .map(AccountTransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        if (pagination == null) {
-            return Optional.of(false);
-        }
-
-        return Optional.of(pagination.getPage() < pagination.getNumPages());
+        return Optional.ofNullable(pagination).map(p -> p.getPage() < p.getNumPages());
     }
 }

@@ -15,10 +15,10 @@ public class CustomerTokenRequest {
 
     public String toData() {
         return Form.builder()
-            .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.AUTHORIZATION_CODE)
-            .put(IngConstants.FormKeys.CODE, code)
-            .put(IngConstants.FormKeys.REDIRECT_URI, redirectUri)
-            .build()
-            .serialize();
+                .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.AUTHORIZATION_CODE)
+                .put(IngConstants.FormKeys.CODE, code)
+                .put(IngConstants.FormKeys.REDIRECT_URI, redirectUri)
+                .build()
+                .serialize();
     }
 }

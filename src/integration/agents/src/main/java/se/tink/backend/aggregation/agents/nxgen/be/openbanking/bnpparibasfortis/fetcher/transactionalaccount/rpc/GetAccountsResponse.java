@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +13,6 @@ public class GetAccountsResponse {
     private Links links;
 
     private List<Account> accounts;
-
     private String connectedPsu;
 
     public Links getLinks() {

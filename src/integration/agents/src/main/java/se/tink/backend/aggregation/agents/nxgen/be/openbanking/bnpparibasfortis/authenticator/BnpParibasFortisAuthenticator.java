@@ -9,14 +9,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-
 public class BnpParibasFortisAuthenticator implements OAuth2Authenticator {
 
     private final BnpParibasFortisApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public BnpParibasFortisAuthenticator(BnpParibasFortisApiClient apiClient,
-        SessionStorage sessionStorage) {
+    public BnpParibasFortisAuthenticator(
+            BnpParibasFortisApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -33,8 +32,8 @@ public class BnpParibasFortisAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
-        throws SessionException, BankServiceException {
-        OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
+            throws SessionException, BankServiceException {
+        final OAuth2Token accessToken = apiClient.refreshToken(refreshToken);
         sessionStorage.put(BnpParibasFortisConstants.StorageKeys.OAUTH_TOKEN, accessToken);
         return accessToken;
     }

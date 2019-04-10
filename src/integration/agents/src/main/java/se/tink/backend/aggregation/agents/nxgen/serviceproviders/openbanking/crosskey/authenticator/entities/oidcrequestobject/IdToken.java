@@ -10,8 +10,6 @@ public class IdToken {
     private OpenbankingIntentId openbankingIntentId;
 
     public IdToken(String value, Boolean essential) {
-
         openbankingIntentId = new OpenbankingIntentId(value, essential);
     }
-
 }
