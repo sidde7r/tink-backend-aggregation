@@ -33,9 +33,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBank
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IcaBankenExecutorHelper {

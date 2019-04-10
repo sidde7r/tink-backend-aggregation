@@ -11,10 +11,12 @@ public abstract class TransferableResponse extends BaseResponse implements Trans
 
     @Override
     public Creatable toCreatable(ExecutorExceptionResolver exceptionResolver) {
-        return () -> searchLink(HandelsbankenConstants.URLS.Links.CREATE).orElseThrow(() ->
-                exceptionResolver.asException(
-                        HandelsbankenSEConstants.Executor.ExceptionMessages.INVALID_DESTINATION_ACCOUNT
-                ));
+        return () ->
+                searchLink(HandelsbankenConstants.URLS.Links.CREATE)
+                        .orElseThrow(
+                                () ->
+                                        exceptionResolver.asException(
+                                                HandelsbankenSEConstants.Executor.ExceptionMessages
+                                                        .INVALID_DESTINATION_ACCOUNT));
     }
-
 }

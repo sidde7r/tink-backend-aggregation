@@ -15,17 +15,19 @@ public class DanskeBankSEApiClient extends DanskeBankApiClient {
     }
 
     public InitResponse initiateBankIdLogin(String logonPackage) {
-        String response = client.request(DanskeBankConstants.Url.BANKID_INIT_LOGON)
-                .header("Referer", DanskeBankConstants.Url.BANKID_INIT_LOGON)
-                .post(String.class, InitRequest.createFromMessage(logonPackage));
+        String response =
+                client.request(DanskeBankConstants.Url.BANKID_INIT_LOGON)
+                        .header("Referer", DanskeBankConstants.Url.BANKID_INIT_LOGON)
+                        .post(String.class, InitRequest.createFromMessage(logonPackage));
 
         return DanskeBankDeserializer.convertStringToObject(response, InitResponse.class);
     }
 
     public PollResponse pollBankId(String reference) {
-        String response = client.request(DanskeBankConstants.Url.BANKID_POLL)
-                .header("Referer", DanskeBankConstants.Url.BANKID_POLL)
-                .post(String.class, PollRequest.createFromReference(reference));
+        String response =
+                client.request(DanskeBankConstants.Url.BANKID_POLL)
+                        .header("Referer", DanskeBankConstants.Url.BANKID_POLL)
+                        .post(String.class, PollRequest.createFromReference(reference));
 
         return DanskeBankDeserializer.convertStringToObject(response, PollResponse.class);
     }

@@ -13,10 +13,10 @@ public class NordeaSEAgentTest {
     public void testRefresh() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("se", "se-nordea-openbanking")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
-                .addCredentialField(Field.Key.USERNAME, SANDBOX_SE_TEST_USER)
-                .expectLoggedIn(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true)
+                        .addCredentialField(Field.Key.USERNAME, SANDBOX_SE_TEST_USER)
+                        .expectLoggedIn(false);
 
         builder.build().testRefresh();
     }

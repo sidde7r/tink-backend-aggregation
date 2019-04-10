@@ -9,8 +9,9 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 
 @JsonObject
-public class HandelsbankenSEPaymentAccount implements TransferSpecificationRequest.AmountableSource,
-        TransferSpecificationRequest.AmountableDestination {
+public class HandelsbankenSEPaymentAccount
+        implements TransferSpecificationRequest.AmountableSource,
+                TransferSpecificationRequest.AmountableDestination {
     private String number;
     private String numberFormatted;
     private String name;

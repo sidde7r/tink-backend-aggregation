@@ -8,7 +8,7 @@ public class CurrencyEntity {
     @JsonProperty("Code")
     private String code;
 
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 }

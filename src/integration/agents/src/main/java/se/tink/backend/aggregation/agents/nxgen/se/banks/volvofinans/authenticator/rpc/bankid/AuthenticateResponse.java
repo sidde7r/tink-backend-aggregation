@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AuthenticateResponse extends AbstractBankIdResponse {
 
     private String bearerToken;
+
     @JsonProperty("identifieringsId")
     private String identificationId;
 
@@ -17,5 +18,4 @@ public class AuthenticateResponse extends AbstractBankIdResponse {
     public String getIdentificationId() {
         return identificationId;
     }
-
 }

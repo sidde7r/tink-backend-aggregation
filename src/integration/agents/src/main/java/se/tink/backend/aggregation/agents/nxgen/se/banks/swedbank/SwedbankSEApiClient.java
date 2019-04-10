@@ -8,9 +8,11 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SwedbankSEApiClient extends SwedbankDefaultApiClient {
-    public SwedbankSEApiClient(TinkHttpClient client,
+    public SwedbankSEApiClient(
+            TinkHttpClient client,
             SwedbankConfiguration configuration,
-            String username, SessionStorage sessionStorage) {
+            String username,
+            SessionStorage sessionStorage) {
         super(client, configuration, username, sessionStorage);
     }
 

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public abstract class BaseResponse<T> {
     @JsonProperty("Body")
     private T body;
+
     @JsonProperty("ResponseStatus")
     private ResponseStatusEntity responseStatus;
 
@@ -18,6 +19,7 @@ public abstract class BaseResponse<T> {
 
     public T getBody() {
         return Optional.ofNullable(body)
-                .orElseThrow(() -> new IllegalStateException("Expected a body object but it was null"));
+                .orElseThrow(
+                        () -> new IllegalStateException("Expected a body object but it was null"));
     }
 }

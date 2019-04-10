@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FundTradingHoursEntity {
     @JsonProperty("TradingHours")
     private TradingHoursEntity tradingHours;
+
     @JsonProperty("GeneralInfo")
     private List<String> generalInfo;
 

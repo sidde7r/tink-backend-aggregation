@@ -2,5 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenti
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 
-public class CheckAgreementResponse extends BaseResponse {
-}
+public class CheckAgreementResponse extends BaseResponse {}

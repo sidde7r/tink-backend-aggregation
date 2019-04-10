@@ -10,5 +10,4 @@ public class EmptyBodyEntity {
     public String toString() {
         return MoreObjects.toStringHelper(this).toString();
     }
-
 }

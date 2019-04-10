@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
@@ -34,12 +34,14 @@ public class SELoanProperty {
 
     public Date asDate() {
         if (value == null) {
-            throw new IllegalStateException("Was not able to return next date of terms change because of null");
+            throw new IllegalStateException(
+                    "Was not able to return next date of terms change because of null");
         }
         try {
             return ThreadSafeDateFormat.FORMATTER_DAILY.parse(value);
         } catch (ParseException e) {
-            throw new IllegalStateException("Was not able to parse next date of terms change of SHB loan.", e);
+            throw new IllegalStateException(
+                    "Was not able to parse next date of terms change of SHB loan.", e);
         }
     }
 

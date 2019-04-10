@@ -24,15 +24,16 @@ public class HandelsbankenSEAccountContext {
         if (ownAccount.isPresent()) {
             return ownAccount;
         }
-        return findAccountHaving(HandelsbankenSEAccountGroup::isOtherRecipientAccount).flatMap(toDestination(transfer));
+        return findAccountHaving(HandelsbankenSEAccountGroup::isOtherRecipientAccount)
+                .flatMap(toDestination(transfer));
     }
 
     private Optional<HandelsbankenSEPaymentAccount> findOwnDestination(Transfer transfer) {
         return findOwnAccount().flatMap(toDestination(transfer));
     }
 
-    private Function<HandelsbankenSEAccountGroup, Optional<HandelsbankenSEPaymentAccount>> toDestination(
-            Transfer transfer) {
+    private Function<HandelsbankenSEAccountGroup, Optional<HandelsbankenSEPaymentAccount>>
+            toDestination(Transfer transfer) {
         return accountGroup -> accountGroup.findDestinationAccount(transfer);
     }
 
@@ -40,12 +41,11 @@ public class HandelsbankenSEAccountContext {
         return findAccountHaving(HandelsbankenSEAccountGroup::isOwnAccount);
     }
 
-    private Optional<HandelsbankenSEAccountGroup> findAccountHaving(Predicate<HandelsbankenSEAccountGroup> predicate) {
+    private Optional<HandelsbankenSEAccountGroup> findAccountHaving(
+            Predicate<HandelsbankenSEAccountGroup> predicate) {
         return Optional.ofNullable(accountGroups)
                 .map(Collection::stream)
-                .flatMap(groups -> groups
-                        .filter(predicate)
-                        .findFirst());
+                .flatMap(groups -> groups.filter(predicate).findFirst());
     }
 
     public boolean destinationIsOwned(Transfer transfer) {
@@ -55,19 +55,25 @@ public class HandelsbankenSEAccountContext {
     public Optional<List<GeneralAccountEntity>> asOwnedAccountEntities() {
         return Optional.ofNullable(accountGroups)
                 .map(Collection::stream)
-                .map(accountGroups -> accountGroups
-                        .filter(HandelsbankenSEAccountGroup::isOwnAccount)
-                        .flatMap(HandelsbankenSEAccountGroup::asGeneralAccountEntities)
-                        .collect(Collectors.toList())
-                );
+                .map(
+                        accountGroups ->
+                                accountGroups
+                                        .filter(HandelsbankenSEAccountGroup::isOwnAccount)
+                                        .flatMap(
+                                                HandelsbankenSEAccountGroup
+                                                        ::asGeneralAccountEntities)
+                                        .collect(Collectors.toList()));
     }
 
     public Optional<List<GeneralAccountEntity>> asGeneralAccountEntities() {
         return Optional.ofNullable(accountGroups)
                 .map(Collection::stream)
-                .map(accountGroups -> accountGroups
-                        .flatMap(HandelsbankenSEAccountGroup::asGeneralAccountEntities)
-                        .collect(Collectors.toList())
-                );
+                .map(
+                        accountGroups ->
+                                accountGroups
+                                        .flatMap(
+                                                HandelsbankenSEAccountGroup
+                                                        ::asGeneralAccountEntities)
+                                        .collect(Collectors.toList()));
     }
 }

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public final class InitRequest {
     @JsonProperty("channel")
     private static final String CHANNEL = "O";
+
     @JsonProperty("package")
     private final String logonPackage;
 

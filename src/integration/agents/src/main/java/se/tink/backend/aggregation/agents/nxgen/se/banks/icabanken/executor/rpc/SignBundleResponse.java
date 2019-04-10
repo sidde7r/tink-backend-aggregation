@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseRespo
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class SignBundleResponse extends BaseResponse<SignBundleBodyEntity> {
-
-}
+public class SignBundleResponse extends BaseResponse<SignBundleBodyEntity> {}

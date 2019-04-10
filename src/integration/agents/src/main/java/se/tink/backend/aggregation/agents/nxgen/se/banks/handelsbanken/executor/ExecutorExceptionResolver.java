@@ -4,9 +4,9 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class ExecutorExceptionResolver {
     private final Catalog catalog;
@@ -39,27 +39,32 @@ public class ExecutorExceptionResolver {
     }
 
     public TransferExecutionException asException(Messageable messageable) {
-        return asException(new ExceptionMessage() {
-            private LocalizableKey errorMessage = new LocalizableKey(messageable.getFirstErrorMessage().orElse(
-                    Optional.ofNullable(messageable.getStatus())
-                            .orElse("Something went wrong.")
-            ).replaceAll("\n", ""));
+        return asException(
+                new ExceptionMessage() {
+                    private LocalizableKey errorMessage =
+                            new LocalizableKey(
+                                    messageable
+                                            .getFirstErrorMessage()
+                                            .orElse(
+                                                    Optional.ofNullable(messageable.getStatus())
+                                                            .orElse("Something went wrong."))
+                                            .replaceAll("\n", ""));
 
-            @Override
-            public SignableOperationStatuses getStatus() {
-                return toStatus(messageable);
-            }
+                    @Override
+                    public SignableOperationStatuses getStatus() {
+                        return toStatus(messageable);
+                    }
 
-            @Override
-            public LocalizableKey getEndUserMessage() {
-                return errorMessage;
-            }
+                    @Override
+                    public LocalizableKey getEndUserMessage() {
+                        return errorMessage;
+                    }
 
-            @Override
-            public LocalizableKey getUserMessage() {
-                return errorMessage;
-            }
-        });
+                    @Override
+                    public LocalizableKey getUserMessage() {
+                        return errorMessage;
+                    }
+                });
     }
 
     private SignableOperationStatuses toStatus(Messageable messageable) {
@@ -68,12 +73,12 @@ public class ExecutorExceptionResolver {
             return SignableOperationStatuses.FAILED;
         }
         switch (code) {
-        case "1010":// "The transfer amount exceeds the available amount on the account"
-        case "11041"://  "Payment exceeds the allowed maximum"
-        case "6242": // "The payment date is too soon or not a business day"
-            return SignableOperationStatuses.CANCELLED;
-        default:
-            return SignableOperationStatuses.FAILED;
+            case "1010": // "The transfer amount exceeds the available amount on the account"
+            case "11041": //  "Payment exceeds the allowed maximum"
+            case "6242": // "The payment date is too soon or not a business day"
+                return SignableOperationStatuses.CANCELLED;
+            default:
+                return SignableOperationStatuses.FAILED;
         }
     }
 

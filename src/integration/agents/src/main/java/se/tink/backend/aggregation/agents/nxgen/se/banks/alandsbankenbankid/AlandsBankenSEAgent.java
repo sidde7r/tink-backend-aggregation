@@ -10,7 +10,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AlandsBankenSEAgent extends CrossKeyAgent {
 
-    public AlandsBankenSEAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AlandsBankenSEAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AlandsBankenSEConfiguration());
     }
 
@@ -18,7 +19,8 @@ public class AlandsBankenSEAgent extends CrossKeyAgent {
     protected Authenticator constructAuthenticator() {
 
         return new BankIdAuthenticationController<>(
-            supplementalRequester,
-            new CrossKeyBankIdAuthenticator(apiClient, agentConfiguration, sessionStorage, credentials));
+                supplementalRequester,
+                new CrossKeyBankIdAuthenticator(
+                        apiClient, agentConfiguration, sessionStorage, credentials));
     }
 }

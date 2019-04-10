@@ -8,6 +8,7 @@ public class SecurityIdentifier {
     private String isinCode;
     private String currency;
     private String country;
+
     @JsonProperty("mic")
     private String market;
 

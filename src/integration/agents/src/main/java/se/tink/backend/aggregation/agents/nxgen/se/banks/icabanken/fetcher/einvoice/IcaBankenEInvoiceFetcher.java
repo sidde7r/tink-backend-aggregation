@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einv
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceFetcher;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IcaBankenEInvoiceFetcher implements EInvoiceFetcher {
     public final Catalog catalog;

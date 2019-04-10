@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FinishEInvoiceSignRequest {
     @JsonProperty("RequestId")
     private String requestId;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 
@@ -26,5 +27,4 @@ public class FinishEInvoiceSignRequest {
     public String getRequestId() {
         return requestId;
     }
-
 }

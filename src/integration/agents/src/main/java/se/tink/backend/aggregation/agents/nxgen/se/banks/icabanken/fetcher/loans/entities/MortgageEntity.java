@@ -15,15 +15,17 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 public class MortgageEntity {
     @JsonProperty("Deeds")
     private String deeds;
+
     @JsonProperty("MortgageDetails")
     private List<Map<String, String>> mortgageDetails;
+
     @JsonProperty("MortgageNumber")
     private String mortgageNumber;
+
     @JsonProperty("PresentDebt")
     private String presentDebt;
 
-    @JsonIgnore
-    private Map<String, String> transformedMortgageDetails;
+    @JsonIgnore private Map<String, String> transformedMortgageDetails;
 
     public void setMortgageDetails(List<Map<String, String>> mortgageDetails) {
         this.mortgageDetails = mortgageDetails;
@@ -51,7 +53,8 @@ public class MortgageEntity {
         Map<String, String> map = Maps.newHashMap();
 
         for (Map<String, String> keyValuePair : mortgageDetails) {
-            map.put(keyValuePair.get(IcaBankenConstants.IdTags.KEY_TAG).toLowerCase().trim(),
+            map.put(
+                    keyValuePair.get(IcaBankenConstants.IdTags.KEY_TAG).toLowerCase().trim(),
                     keyValuePair.get(IcaBankenConstants.IdTags.VALUE_TAG));
         }
 
@@ -60,7 +63,8 @@ public class MortgageEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoan() {
-        IcaBankenLoanParsingHelper loanParsingHelper = new IcaBankenLoanParsingHelper(transformedMortgageDetails);
+        IcaBankenLoanParsingHelper loanParsingHelper =
+                new IcaBankenLoanParsingHelper(transformedMortgageDetails);
 
         return LoanAccount.builder(mortgageNumber, loanParsingHelper.getBalance(presentDebt))
                 .setAccountNumber(mortgageNumber)
@@ -86,5 +90,3 @@ public class MortgageEntity {
                 .build();
     }
 }
-
-

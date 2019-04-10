@@ -9,12 +9,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DetailsEntity {
     @JsonProperty("ID")
     private String id;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Value")
     private String value;
 
-   @JsonIgnore
+    @JsonIgnore
     public String getIdLowerCase() {
         return Optional.ofNullable(id).orElse("").toLowerCase();
     }

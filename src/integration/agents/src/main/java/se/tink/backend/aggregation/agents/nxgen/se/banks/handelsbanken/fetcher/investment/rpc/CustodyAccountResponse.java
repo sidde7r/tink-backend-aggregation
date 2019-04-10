@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenPerformance;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class CustodyAccountResponse extends BaseResponse {
 
@@ -52,8 +52,7 @@ public class CustodyAccountResponse extends BaseResponse {
         portfolio.setTotalProfit(
                 Optional.ofNullable(performance)
                         .flatMap(HandelsbankenPerformance::asDouble)
-                        .orElse(null)
-        );
+                        .orElse(null));
         portfolio.setTotalValue(toMarketValue());
         portfolio.setUniqueIdentifier(getAccountNumberBasedOnInvestmentType());
         portfolio.setInstruments(toInstruments(client));
@@ -66,9 +65,7 @@ public class CustodyAccountResponse extends BaseResponse {
             return Collections.emptyList();
         }
         return holdingLists.stream()
-                .flatMap(securityHoldingList ->
-                        securityHoldingList.toInstruments(client)
-                )
+                .flatMap(securityHoldingList -> securityHoldingList.toInstruments(client))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SessionEntity {
     @JsonProperty("SessionId")
     private String sessionId;
+
     @JsonProperty("ClientSessionTimeToLive")
     private int clientSessionTimeToLive;
+
     @JsonProperty("HeartbeatInterval")
     private int heartbeatInterval;
 

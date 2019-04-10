@@ -9,7 +9,8 @@ public class TransactionsRequest {
     private int accountType;
     private int fromYear;
 
-    public static TransactionsRequest create(int maxNrOfTransactions, int accountType, int fromYear) {
+    public static TransactionsRequest create(
+            int maxNrOfTransactions, int accountType, int fromYear) {
         TransactionsRequest request = new TransactionsRequest();
 
         request.maxNrOfTransactions = maxNrOfTransactions;

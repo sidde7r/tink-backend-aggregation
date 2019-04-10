@@ -50,11 +50,14 @@ public class PaymentRecipient {
         return reference
                 .filter(HandelsbankenSEConstants.Fetcher.Transfers.PATTERN_BG_RECIPIENT)
                 .map(referenceIgnored -> bankGiroIdentifier())
-                .orElseGet(() -> reference
-                        .filter(HandelsbankenSEConstants.Fetcher.Transfers.PATTERN_PG_RECIPIENT)
-                        .map(referenceIgnored -> plusGiroIdentifier())
-                        .orElseGet(() -> nonValidIdentifier())
-                );
+                .orElseGet(
+                        () ->
+                                reference
+                                        .filter(
+                                                HandelsbankenSEConstants.Fetcher.Transfers
+                                                        .PATTERN_PG_RECIPIENT)
+                                        .map(referenceIgnored -> plusGiroIdentifier())
+                                        .orElseGet(() -> nonValidIdentifier()));
     }
 
     private AccountIdentifier bankGiroIdentifier() {
@@ -72,5 +75,4 @@ public class PaymentRecipient {
     private AccountIdentifier nonValidIdentifier() {
         return new NonValidIdentifier(this.id);
     }
-
 }

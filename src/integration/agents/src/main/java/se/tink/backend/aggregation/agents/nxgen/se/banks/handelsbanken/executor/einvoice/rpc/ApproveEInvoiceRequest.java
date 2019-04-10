@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.einvoice.rpc;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

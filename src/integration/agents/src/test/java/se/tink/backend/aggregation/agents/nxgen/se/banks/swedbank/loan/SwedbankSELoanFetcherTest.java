@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.argThat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.argThat;
 
 public class SwedbankSELoanFetcherTest {
 
@@ -33,25 +34,35 @@ public class SwedbankSELoanFetcherTest {
     @Test
     public void fetchLoans_parseMembershipLoan() {
         Mockito.when(apiClient.engagementOverview())
-                .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
-                        EngagementOverviewResponse.class));
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
+                                EngagementOverviewResponse.class));
 
-        LoanOverviewResponse loanOverviewResponse = SerializationUtils
-                .deserializeFromString(SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
+        LoanOverviewResponse loanOverviewResponse =
+                SerializationUtils.deserializeFromString(
+                        SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
                         LoanOverviewResponse.class);
 
-        Mockito.when(apiClient
-                .loadDetailsEntity(argThat(a -> Optional.ofNullable(a.getUri()).orElse("").contains("MEMBERSHIPLOAN"))))
-                .thenReturn(SerializationUtils
-                        .deserializeFromString(SwedBankSELoansFetcherTestData.MAMBERSHIP_CONSUMTION_LOAN_DETAILS,
+        Mockito.when(
+                        apiClient.loadDetailsEntity(
+                                argThat(
+                                        a ->
+                                                Optional.ofNullable(a.getUri())
+                                                        .orElse("")
+                                                        .contains("MEMBERSHIPLOAN"))))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                SwedBankSELoansFetcherTestData.MAMBERSHIP_CONSUMTION_LOAN_DETAILS,
                                 DetailedLoanResponse.class));
 
         ArrayList<LoanAccount> loanAccounts = new ArrayList<>();
         fetcher.fetchLoans(loanAccounts, loanOverviewResponse);
 
-        List<LoanAccount> membershipLoans = loanAccounts.stream()
-                .filter(l -> LoanDetails.Type.MEMBERSHIP.equals(l.getDetails().getType()))
-                .collect(Collectors.toList());
+        List<LoanAccount> membershipLoans =
+                loanAccounts.stream()
+                        .filter(l -> LoanDetails.Type.MEMBERSHIP.equals(l.getDetails().getType()))
+                        .collect(Collectors.toList());
 
         assertEquals(1, membershipLoans.size());
         LoanAccount membershipLoan = membershipLoans.get(0);
@@ -67,28 +78,42 @@ public class SwedbankSELoanFetcherTest {
     @Test
     public void fetchLoans_parseMortgage() {
         Mockito.when(apiClient.engagementOverview())
-                .thenReturn(SerializationUtils.deserializeFromString(SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
-                        EngagementOverviewResponse.class));
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                SwedBankSELoansFetcherTestData.ENGAGEMENT_OVERVIEW,
+                                EngagementOverviewResponse.class));
 
-        LoanOverviewResponse loanOverviewResponse = SerializationUtils
-                .deserializeFromString(SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
+        LoanOverviewResponse loanOverviewResponse =
+                SerializationUtils.deserializeFromString(
+                        SwedBankSELoansFetcherTestData.OVERVIEW_OF_LOANS,
                         LoanOverviewResponse.class);
 
-        Mockito.when(apiClient
-                .loadDetailsEntity(argThat(a -> Optional.ofNullable(a.getUri()).orElse("").contains("MORTGAGE"))))
-                .thenReturn(SerializationUtils
-                        .deserializeFromString(SwedBankSELoansFetcherTestData.MOTGAGE_DETAILS,
+        Mockito.when(
+                        apiClient.loadDetailsEntity(
+                                argThat(
+                                        a ->
+                                                Optional.ofNullable(a.getUri())
+                                                        .orElse("")
+                                                        .contains("MORTGAGE"))))
+                .thenReturn(
+                        SerializationUtils.deserializeFromString(
+                                SwedBankSELoansFetcherTestData.MOTGAGE_DETAILS,
                                 DetailedLoanResponse.class));
 
         ArrayList<LoanAccount> loanAccounts = new ArrayList<>();
         fetcher.fetchLoans(loanAccounts, loanOverviewResponse);
 
-        List<LoanAccount> mortageList = loanAccounts.stream()
-                .filter(l -> LoanDetails.Type.MORTGAGE.equals(l.getDetails().getType())).collect(Collectors.toList());
+        List<LoanAccount> mortageList =
+                loanAccounts.stream()
+                        .filter(l -> LoanDetails.Type.MORTGAGE.equals(l.getDetails().getType()))
+                        .collect(Collectors.toList());
 
         assertEquals(5, mortageList.size());
-        LoanAccount mortgage = mortageList.stream().filter(l -> !l.getDetails().getApplicants().isEmpty())
-                .findFirst().get();
+        LoanAccount mortgage =
+                mortageList.stream()
+                        .filter(l -> !l.getDetails().getApplicants().isEmpty())
+                        .findFirst()
+                        .get();
 
         assertEquals(Double.valueOf(-333000.0d), mortgage.getBalance().getValue());
         assertEquals("SEK", mortgage.getBalance().getCurrency());

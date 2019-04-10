@@ -9,8 +9,7 @@ public class TransferAmount {
     private String numberFormatted;
     private String name;
 
-    private TransferAmount() {
-    }
+    private TransferAmount() {}
 
     public static TransferAmount from(String number, String numberFormatted, String name) {
         TransferAmount transferAmount = new TransferAmount();

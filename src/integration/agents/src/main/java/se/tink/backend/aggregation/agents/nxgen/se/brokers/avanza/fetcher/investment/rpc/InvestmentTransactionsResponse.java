@@ -23,8 +23,7 @@ public class InvestmentTransactionsResponse {
 
     public IsinMap toIsinMap() {
         return new IsinMap(
-                getOrderbooks()
-                        .stream()
+                getOrderbooks().stream()
                         .collect(
                                 Collectors.toMap(
                                         OrderbookEntity::getName,

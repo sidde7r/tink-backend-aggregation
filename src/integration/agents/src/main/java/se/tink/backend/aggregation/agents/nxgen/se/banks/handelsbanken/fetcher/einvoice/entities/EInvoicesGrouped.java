@@ -10,8 +10,10 @@ public class EInvoicesGrouped {
     private String type;
     private String name;
     private String number;
+
     @JsonProperty("eInvoiceDTO")
     private List<EInvoice> eInvoices;
+
     private boolean mapped;
     private boolean empty;
 

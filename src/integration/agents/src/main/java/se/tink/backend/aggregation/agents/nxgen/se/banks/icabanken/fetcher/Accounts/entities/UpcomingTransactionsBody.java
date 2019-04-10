@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UpcomingTransactionsBody {
     @JsonProperty("Assignments")
     private List<UpcomingTransactionEntity> upcomingTransactions;
+
     @JsonProperty("CurrentMonthTotalAmount")
     private double currentMonthTotalAmount;
+
     @JsonProperty("TotalAmount")
     private double totalAmount;
 

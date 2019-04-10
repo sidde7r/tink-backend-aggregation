@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator;
 
 import java.util.Map;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -24,8 +26,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.CommitProfileResponseValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthenticator {
 
@@ -35,7 +35,8 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
     private final HandelsbankenConfiguration configuration;
     private final HandelsbankenAutoAuthenticator autoAuthenticator;
 
-    public HandelsbankenSECardDeviceAuthenticator(HandelsbankenSEApiClient client,
+    public HandelsbankenSECardDeviceAuthenticator(
+            HandelsbankenSEApiClient client,
             HandelsbankenPersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
             HandelsbankenConfiguration configuration,
@@ -53,18 +54,18 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         LibTFA tfa = new LibTFA();
 
         EntryPointResponse entryPoint = client.fetchEntryPoint();
 
-        InitNewProfileResponse initNewProfile = client.initNewProfile(
-                entryPoint,
-                InitNewProfileRequest.create(configuration, tfa)
-        );
+        InitNewProfileResponse initNewProfile =
+                client.initNewProfile(entryPoint, InitNewProfileRequest.create(configuration, tfa));
 
-        Map<String, String> supplementalInformation = supplementalInformationController
-                .askSupplementalInformation(challengeField(initNewProfile), responseField());
+        Map<String, String> supplementalInformation =
+                supplementalInformationController.askSupplementalInformation(
+                        challengeField(initNewProfile), responseField());
 
         String code = supplementalInformation.get(HandelsbankenConstants.DeviceAuthentication.CODE);
         if (code.length() == 8) {
@@ -72,18 +73,18 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
             HandelsbankenConstants.DeviceAuthentication.OtherUserError.WRONG_CARD.throwException();
         }
 
-        CreateProfileResponse createProfile = client.createProfile(
-                initNewProfile,
-                EncryptedUserCredentialsRequest.create(
+        CreateProfileResponse createProfile =
+                client.createProfile(
                         initNewProfile,
-                        UserCredentialsRequest.create(credentials.getField(Field.Key.USERNAME), code),
-                        tfa)
-        );
+                        EncryptedUserCredentialsRequest.create(
+                                initNewProfile,
+                                UserCredentialsRequest.create(
+                                        credentials.getField(Field.Key.USERNAME), code),
+                                tfa));
 
-        ActivateProfileResponse activateProfile = client.activateProfile(
-                createProfile,
-                ActivateProfileRequest.create(createProfile, tfa)
-        );
+        ActivateProfileResponse activateProfile =
+                client.activateProfile(
+                        createProfile, ActivateProfileRequest.create(createProfile, tfa));
 
         CommitProfileResponse commitProfile = client.commitProfile(activateProfile);
 
@@ -105,9 +106,10 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
         field.setDescription("Kontrollkod");
         field.setValue(initNewProfile.getChallenge());
         field.setName("challenge");
-        field.setHelpText("Sätt i ditt inloggningskort i kortläsaren och tryck på knappen SIGN. "
-                + "Knappa därefter in kontrollkoden och din PIN-kod till kortet i kortläsaren. "
-                + "Skriv in svarskoden i fältet nedan.");
+        field.setHelpText(
+                "Sätt i ditt inloggningskort i kortläsaren och tryck på knappen SIGN. "
+                        + "Knappa därefter in kontrollkoden och din PIN-kod till kortet i kortläsaren. "
+                        + "Skriv in svarskoden i fältet nedan.");
         return field;
     }
 
@@ -118,7 +120,8 @@ public class HandelsbankenSECardDeviceAuthenticator implements MultiFactorAuthen
         field.setNumeric(true);
         field.setHint("NNN NNN NNN");
         field.setMaxLength(9);
-        field.setMinLength(8); // Allow 8 digits, to be able to return a helpful error message for that case.
+        field.setMinLength(
+                8); // Allow 8 digits, to be able to return a helpful error message for that case.
         field.setPattern("([0-9]{8,9})");
         return field;
     }

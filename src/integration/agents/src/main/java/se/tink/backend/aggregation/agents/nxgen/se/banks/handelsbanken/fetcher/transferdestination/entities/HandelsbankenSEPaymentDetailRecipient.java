@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.StringCleaningDeserializer;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class HandelsbankenSEPaymentDetailRecipient {
@@ -19,6 +19,7 @@ public class HandelsbankenSEPaymentDetailRecipient {
 
     @JsonDeserialize(using = StringCleaningDeserializer.class)
     private String name;
+
     private String reference;
     private String id;
 

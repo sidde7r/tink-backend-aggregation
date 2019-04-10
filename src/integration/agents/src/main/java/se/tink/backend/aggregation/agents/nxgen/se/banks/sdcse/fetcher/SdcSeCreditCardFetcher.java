@@ -21,8 +21,11 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class SdcSeCreditCardFetcher extends SdcCreditCardFetcher {
     private static final Logger log = LoggerFactory.getLogger(SdcSeCreditCardFetcher.class);
 
-    public SdcSeCreditCardFetcher(SdcApiClient bankClient, SdcSessionStorage sessionStorage,
-            SdcTransactionParser transactionParser, SdcConfiguration agentConfiguration) {
+    public SdcSeCreditCardFetcher(
+            SdcApiClient bankClient,
+            SdcSessionStorage sessionStorage,
+            SdcTransactionParser transactionParser,
+            SdcConfiguration agentConfiguration) {
         super(bankClient, sessionStorage, transactionParser, agentConfiguration);
     }
 
@@ -32,15 +35,19 @@ public class SdcSeCreditCardFetcher extends SdcCreditCardFetcher {
 
         SessionStorageAgreements agreements = getAgreements();
         for (SessionStorageAgreement agreement : agreements) {
-            Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity = selectAgreement(agreement, agreements);
+            Optional<SdcServiceConfigurationEntity> serviceConfigurationEntity =
+                    selectAgreement(agreement, agreements);
 
-            serviceConfigurationEntity.ifPresent(configurationEntity -> {
-                // SparbankenSyd accounts (of type KKPD)
-                getCreditCardFromAccounts(creditCards, agreement);
-                if (creditCards.size() > 0) {
-                    log.info("Fetch credit cards using: getCreditCardFromAccounts: " + creditCards.size());
-                }
-            });
+            serviceConfigurationEntity.ifPresent(
+                    configurationEntity -> {
+                        // SparbankenSyd accounts (of type KKPD)
+                        getCreditCardFromAccounts(creditCards, agreement);
+                        if (creditCards.size() > 0) {
+                            log.info(
+                                    "Fetch credit cards using: getCreditCardFromAccounts: "
+                                            + creditCards.size());
+                        }
+                    });
         }
 
         // store updated agreements
@@ -49,24 +56,27 @@ public class SdcSeCreditCardFetcher extends SdcCreditCardFetcher {
         return creditCards;
     }
 
-    private void getCreditCardFromAccounts(List<CreditCardAccount> creditCards,
-            SessionStorageAgreement agreement) {
+    private void getCreditCardFromAccounts(
+            List<CreditCardAccount> creditCards, SessionStorageAgreement agreement) {
         FilterAccountsResponse accounts = retrieveAccounts();
 
         // Convert accounts of type credit card to credit card
         accounts.stream()
                 .filter(SdcAccount::isCreditCardAccount)
-                .forEach(account -> {
-                    CreditCardAccount creditCardAccount = account.toTinkCreditCardAccount(this.agentConfiguration);
+                .forEach(
+                        account -> {
+                            CreditCardAccount creditCardAccount =
+                                    account.toTinkCreditCardAccount(this.agentConfiguration);
 
-                    // return value
-                    creditCards.add(creditCardAccount);
+                            // return value
+                            creditCards.add(creditCardAccount);
 
-                    String creditCardAccountId = creditCardAccount.getBankIdentifier();
-                    // keep BankIdentifier to be able to fetch transactions
-                    this.creditCardAccounts.put(creditCardAccountId, account.getEntityKey());
-                    // add credit card bankId to agreement for fetching transactions later
-                    agreement.addAccountBankId(creditCardAccountId);
-                });
+                            String creditCardAccountId = creditCardAccount.getBankIdentifier();
+                            // keep BankIdentifier to be able to fetch transactions
+                            this.creditCardAccounts.put(
+                                    creditCardAccountId, account.getEntityKey());
+                            // add credit card bankId to agreement for fetching transactions later
+                            agreement.addAccountBankId(creditCardAccountId);
+                        });
     }
 }

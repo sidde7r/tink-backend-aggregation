@@ -12,10 +12,13 @@ import se.tink.libraries.date.DateUtils;
 public class TransactionsBodyEntity {
     @JsonProperty("Transactions")
     private List<TransactionEntity> transactions;
+
     @JsonProperty("NoMoreTransactions")
     private boolean noMoreTransactions;
+
     @JsonProperty("FromDate")
     private String fromDate;
+
     @JsonProperty("ToDate")
     private String toDate;
 

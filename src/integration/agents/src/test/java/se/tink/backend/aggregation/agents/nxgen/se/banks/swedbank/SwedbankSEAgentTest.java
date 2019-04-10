@@ -9,12 +9,12 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 public class SwedbankSEAgentTest {
     @Test
     public void testRegisterAndRefresh() throws Exception {
-        AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("se", "swedbank-bankid")
-                .addCredentialField(Field.Key.USERNAME, "yyyyMMddnnnn")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true);
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("se", "swedbank-bankid")
+                        .addCredentialField(Field.Key.USERNAME, "yyyyMMddnnnn")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
 
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
 }

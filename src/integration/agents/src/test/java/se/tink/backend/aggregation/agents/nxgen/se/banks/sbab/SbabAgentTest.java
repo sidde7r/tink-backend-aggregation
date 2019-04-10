@@ -13,15 +13,16 @@ public class SbabAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     @Before
-    public void setup(){
-        builder = new AgentIntegrationTest.Builder("se", "se-sbab_sandbox-oauth2")
-                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(false);
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder("se", "se-sbab_sandbox-oauth2")
+                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
-    public void testRefresh() throws Exception{
+    public void testRefresh() throws Exception {
         builder.build().testRefresh();
     }
 }

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Parameters.GIRO_NUMBER;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -53,7 +55,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants.URLS.Parameters.GIRO_NUMBER;
 
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
@@ -253,8 +254,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public Optional<HandelsbankenSEFundAccountHoldingDetail> fundHoldingDetail(
             SecurityHolding fund) {
-        return fund
-                .toFundHoldingDetail()
+        return fund.toFundHoldingDetail()
                 .map(url -> createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
     }
 

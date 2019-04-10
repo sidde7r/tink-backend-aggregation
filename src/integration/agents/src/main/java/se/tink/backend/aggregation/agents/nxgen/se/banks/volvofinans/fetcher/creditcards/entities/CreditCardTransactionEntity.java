@@ -10,17 +10,23 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class CreditCardTransactionEntity {
     private String transaktionsId;
+
     @JsonProperty("text")
     private String description;
+
     @JsonProperty("belopp")
     private double amount;
+
     @JsonProperty("datum")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     private boolean harDetaljer;
     private String tankningsId;
+
     @JsonProperty("ejBokford")
     private boolean pending;
+
     private boolean beloppInkuderarAndraKategorier;
 
     public CreditCardTransaction toTinkTransaction() {

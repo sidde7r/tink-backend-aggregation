@@ -15,17 +15,18 @@ public class CheckAgreementResponseValidator extends HandelsbankenValidator<Base
     public void validate() throws AuthenticationException {
         String result = getResult();
         if ("NOT EXIST".equalsIgnoreCase(result)) {
-            HandelsbankenConstants.DeviceAuthentication.OtherUserError.CODE_ACTIVATION_NEEDED.throwException();
+            HandelsbankenConstants.DeviceAuthentication.OtherUserError.CODE_ACTIVATION_NEEDED
+                    .throwException();
         } else if (!"EXIST".equalsIgnoreCase(result)) {
             throw new IllegalStateException(
                     String.format(
-                            "#" + HandelsbankenSEConstants.Authentication.SE_LOGIN_REFACTORING
+                            "#"
+                                    + HandelsbankenSEConstants.Authentication.SE_LOGIN_REFACTORING
                                     + " - Login failed (checkAgreementResponse) with message %s, code %s, error message %s, result %s",
                             getMessage(),
                             getCode(),
                             getFirstErrorMessage(),
                             getResult()));
         }
-
     }
 }

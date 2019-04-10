@@ -9,14 +9,17 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 
 public class IcaBankenFormatUtils {
 
-    public static final Splitter AND_SPLITTER = Splitter.on(IcaBankenConstants.IdTags.SWEDISH_AND_SEPARATOR)
-            .trimResults();
+    public static final Splitter AND_SPLITTER =
+            Splitter.on(IcaBankenConstants.IdTags.SWEDISH_AND_SEPARATOR).trimResults();
 
-    public static final Splitter WHITESPACE_SPLITTER = Splitter.on(CharMatcher.breakingWhitespace());
+    public static final Splitter WHITESPACE_SPLITTER =
+            Splitter.on(CharMatcher.breakingWhitespace());
 
-    public static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    public static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
-    public static final AccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER = new IcaBankenAccountIdentifierFormatter();
+    public static final AccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER =
+            new IcaBankenAccountIdentifierFormatter();
 
     public static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
             TransferMessageLengthConfig.createWithMaxLength(

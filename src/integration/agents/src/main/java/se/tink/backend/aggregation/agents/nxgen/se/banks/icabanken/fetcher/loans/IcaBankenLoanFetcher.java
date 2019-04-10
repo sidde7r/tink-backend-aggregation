@@ -23,13 +23,15 @@ public class IcaBankenLoanFetcher implements AccountFetcher<LoanAccount> {
 
         LoansBodyEntity loansBodyEntity = apiClient.fetchLoanOverview();
 
-        Collection<LoanAccount> loanAccounts = loansBodyEntity.getLoanList().getLoans().stream()
-                .map(LoanEntity::toTinkLoan)
-                .collect(Collectors.toList());
+        Collection<LoanAccount> loanAccounts =
+                loansBodyEntity.getLoanList().getLoans().stream()
+                        .map(LoanEntity::toTinkLoan)
+                        .collect(Collectors.toList());
 
-        List<LoanAccount> mortgageAccounts = loansBodyEntity.getMortgageList().getMortgages().stream()
-                .map(MortgageEntity::toTinkLoan)
-                .collect(Collectors.toList());
+        List<LoanAccount> mortgageAccounts =
+                loansBodyEntity.getMortgageList().getMortgages().stream()
+                        .map(MortgageEntity::toTinkLoan)
+                        .collect(Collectors.toList());
 
         loanAccounts.addAll(mortgageAccounts);
 

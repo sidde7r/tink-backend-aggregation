@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SettingsEntity {
     @JsonProperty("QuickBalanceBalanceOnly")
     private boolean quickBalanceBalanceOnly;
+
     @JsonProperty("NotificationSubscription")
     private NotificationSubscriptionEntity notificationSubscription;
 

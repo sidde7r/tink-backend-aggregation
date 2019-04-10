@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class SdcSeConstants {
 
@@ -18,12 +18,12 @@ public class SdcSeConstants {
 
     // do we really need this?
     public enum SdcSeTransactionType {
-        CREDIT_CARD        ("Kortköp ", 8, TransactionTypes.CREDIT_CARD),
-        CASH_WITHDRAWAL    ("Kontantuttag ", 13, TransactionTypes.WITHDRAWAL),
-        AUTOGIRO           ("Autogiro ", 9, TransactionTypes.PAYMENT),
-        DEPOSIT_OTHER_BANK ("Insättning från annan bank ", 27, TransactionTypes.DEFAULT),
-        DEPOSIT            ("Insättning ", 11, TransactionTypes.DEFAULT),
-        CHARGEBACK         ("Återbetalning ", 14, TransactionTypes.DEFAULT);
+        CREDIT_CARD("Kortköp ", 8, TransactionTypes.CREDIT_CARD),
+        CASH_WITHDRAWAL("Kontantuttag ", 13, TransactionTypes.WITHDRAWAL),
+        AUTOGIRO("Autogiro ", 9, TransactionTypes.PAYMENT),
+        DEPOSIT_OTHER_BANK("Insättning från annan bank ", 27, TransactionTypes.DEFAULT),
+        DEPOSIT("Insättning ", 11, TransactionTypes.DEFAULT),
+        CHARGEBACK("Återbetalning ", 14, TransactionTypes.DEFAULT);
 
         private final String label;
         private final int length;

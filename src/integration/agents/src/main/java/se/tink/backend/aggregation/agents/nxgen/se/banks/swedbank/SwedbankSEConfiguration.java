@@ -8,7 +8,9 @@ public class SwedbankSEConfiguration implements SwedbankConfiguration {
     private final ProfileParameters profileParameters;
 
     public SwedbankSEConfiguration(String bankProviderPayload) {
-        this.profileParameters = Preconditions.checkNotNull(SwedbankSEConstants.PROFILE_PARAMETERS.get(bankProviderPayload));
+        this.profileParameters =
+                Preconditions.checkNotNull(
+                        SwedbankSEConstants.PROFILE_PARAMETERS.get(bankProviderPayload));
     }
 
     @Override

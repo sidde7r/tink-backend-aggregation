@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PollRequest {
     @JsonProperty("package")
     private String reference;
+
     @JsonProperty("channel")
     private static final String CHANNEL = "O";
 

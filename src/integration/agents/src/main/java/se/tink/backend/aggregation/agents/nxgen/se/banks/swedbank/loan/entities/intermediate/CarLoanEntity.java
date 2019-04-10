@@ -15,7 +15,8 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
         super(loan);
     }
 
-    protected static CarLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static CarLoanEntity create(
+            LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new CarLoanEntity(loanDetails, loanOverview);
     }
 
@@ -33,7 +34,6 @@ public class CarLoanEntity extends BaseAbstractLoanEntity {
     }
 
     private LoanDetails buildLoanDetails() {
-        return LoanDetails.builder(LoanDetails.Type.VEHICLE)
-                .build();
+        return LoanDetails.builder(LoanDetails.Type.VEHICLE).build();
     }
 }

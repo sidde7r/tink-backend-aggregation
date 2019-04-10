@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
-import java.util.Optional;
-import org.junit.Before;
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.models.Instrument;
 import static java.util.Optional.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Optional;
+import org.junit.Before;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 public class SecurityHoldingContainerTest {
 

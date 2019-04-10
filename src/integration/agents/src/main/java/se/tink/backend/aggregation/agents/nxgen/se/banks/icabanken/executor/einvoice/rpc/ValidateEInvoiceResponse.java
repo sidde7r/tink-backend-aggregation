@@ -11,13 +11,14 @@ public class ValidateEInvoiceResponse extends BaseResponse<EmptyBodyEntity> {
 
     private boolean isDateInvalidButChanged() {
         ResponseStatusEntity responseStatus = getResponseStatus();
-        // The response below will also return HTTP 409. I feel like the check below is specific enough.
+        // The response below will also return HTTP 409. I feel like the check below is specific
+        // enough.
         // Simply relying on the server message is a bit too vague. Looks at client message too.
-        return responseStatus.getCode() == IcaBankenConstants.Transfers.EINVOICE_VALIDATE_ERROR_CODE &&
-                IcaBankenConstants.Transfers.EINVOICE_VALIDATE_ERROR_MSG
-                        .equalsIgnoreCase(responseStatus.getServerMessage()) &&
-                IcaBankenConstants.Transfers.EINVOICE_DATE_CHANGED_MSG
-                        .equalsIgnoreCase(responseStatus.getClientMessage());
+        return responseStatus.getCode() == IcaBankenConstants.Transfers.EINVOICE_VALIDATE_ERROR_CODE
+                && IcaBankenConstants.Transfers.EINVOICE_VALIDATE_ERROR_MSG.equalsIgnoreCase(
+                        responseStatus.getServerMessage())
+                && IcaBankenConstants.Transfers.EINVOICE_DATE_CHANGED_MSG.equalsIgnoreCase(
+                        responseStatus.getClientMessage());
     }
 
     public boolean dateInvalidButIcaBankenCorrectedIt() {
@@ -25,7 +26,7 @@ public class ValidateEInvoiceResponse extends BaseResponse<EmptyBodyEntity> {
     }
 
     public boolean isValidationError() {
-        return getResponseStatus().getCode() !=
-                IcaBankenConstants.Transfers.EINVOICE_VALIDATE_SUCCESS_CODE;
+        return getResponseStatus().getCode()
+                != IcaBankenConstants.Transfers.EINVOICE_VALIDATE_SUCCESS_CODE;
     }
 }

@@ -29,7 +29,8 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     private final VolvoFinansApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient, SessionStorage sessionStorage) {
+    public VolvoFinansBankIdAutenticator(
+            VolvoFinansApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -38,7 +39,10 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     public String init(String ssn) throws BankIdException {
         try {
             HttpResponse httpResponse = apiClient.loginBankIdInit(new InitBankIdRequest(ssn));
-            String location = httpResponse.getHeaders().getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
+            String location =
+                    httpResponse
+                            .getHeaders()
+                            .getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
             return location.substring(location.lastIndexOf('/') + 1);
         } catch (HttpResponseException hre) {
             HttpResponse httpResponse = hre.getResponse();
@@ -105,11 +109,10 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
             throw hre;
         }
 
-        Optional<String> accountId = Optional.ofNullable(savingsAccounts)
-                .orElse(new SavingsAccountsResponse())
-                .stream()
-                .map(SavingsAccountEntity::getAccountId)
-                .findFirst();
+        Optional<String> accountId =
+                Optional.ofNullable(savingsAccounts).orElse(new SavingsAccountsResponse()).stream()
+                        .map(SavingsAccountEntity::getAccountId)
+                        .findFirst();
 
         return tryFetchTransactions(true, accountId);
     }
@@ -117,16 +120,16 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     private boolean canFetchCardTransactions() throws AuthenticationException {
         CreditCardsResponse creditCards = apiClient.creditCardAccounts();
 
-        Optional<String> accountId = Optional.ofNullable(creditCards)
-                .orElse(new CreditCardsResponse())
-                .stream()
-                .map(CreditCardEntity::getAccountId)
-                .findFirst();
+        Optional<String> accountId =
+                Optional.ofNullable(creditCards).orElse(new CreditCardsResponse()).stream()
+                        .map(CreditCardEntity::getAccountId)
+                        .findFirst();
 
         return tryFetchTransactions(false, accountId);
     }
 
-    private boolean tryFetchTransactions(boolean savings, Optional<String> accountId) throws AuthenticationException {
+    private boolean tryFetchTransactions(boolean savings, Optional<String> accountId)
+            throws AuthenticationException {
         LocalDate toDate = LocalDate.now();
         LocalDate fromDate = LocalDate.now().minusDays(30);
 
@@ -136,16 +139,25 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
 
         try {
             if (savings) {
-                apiClient.savingsAccountTransactions(accountId.get(), fromDate, toDate,
-                        VolvoFinansConstants.Pagination.LIMIT, 0);
+                apiClient.savingsAccountTransactions(
+                        accountId.get(),
+                        fromDate,
+                        toDate,
+                        VolvoFinansConstants.Pagination.LIMIT,
+                        0);
             } else {
-                apiClient.creditCardAccountTransactions(accountId.get(), fromDate, toDate,
-                        VolvoFinansConstants.Pagination.LIMIT, 0);
+                apiClient.creditCardAccountTransactions(
+                        accountId.get(),
+                        fromDate,
+                        toDate,
+                        VolvoFinansConstants.Pagination.LIMIT,
+                        0);
             }
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
             if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-                if (response.hasBody() && response.getBody(ErrorStatusResponse.class).isBankServiceClosed()) {
+                if (response.hasBody()
+                        && response.getBody(ErrorStatusResponse.class).isBankServiceClosed()) {
                     throw BankServiceError.NO_BANK_SERVICE.exception();
                 }
             }

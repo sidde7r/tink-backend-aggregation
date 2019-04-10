@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FeesEntity {
     @JsonProperty("Administration")
     private double administration;
+
     @JsonProperty("Buy")
     private double buy;
+
     @JsonProperty("Sell")
     private double sell;
+
     @JsonProperty("Norman")
     private int norman;
+
     @JsonProperty("YearlyFee")
     private double yearlyFee;
 

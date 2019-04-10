@@ -7,48 +7,70 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DetailsEntity {
     @JsonProperty("RecipientName")
     private String recipientName;
+
     @JsonProperty("RecipientAccountNumber")
     private String recipientAccountNumber;
+
     @JsonProperty("RecipientType")
     private String recipientType;
+
     @JsonProperty("ReferenceType")
     private String referenceType;
+
     @JsonProperty("Reference")
     private String reference;
+
     @JsonProperty("HasEgiroInvoice")
     private boolean hasEgiroInvoice;
+
     @JsonProperty("EgiroUniqueId")
     private String egiroUniqueId;
+
     @JsonProperty("SwishAmount")
     private double swishAmount;
+
     @JsonProperty("HasCurrencyExchangeFee")
     private boolean hasCurrencyExchangeFee;
+
     @JsonProperty("SourceSystemDate")
     private String sourceSystemDate;
+
     @JsonProperty("TrnAmount")
     private String trnAmount;
+
     @JsonProperty("CurrencyCode")
     private String currencyCode;
+
     @JsonProperty("FormatedRate")
     private String formatedRate;
+
     @JsonProperty("Rate")
     private double rate;
+
     @JsonProperty("MerchantCity")
     private String merchantCity;
+
     @JsonProperty("MerchantName")
     private String merchantName;
+
     @JsonProperty("CurrencyExchangeFee")
     private String currencyExchangeFee;
+
     @JsonProperty("BankName")
     private String bankName;
+
     @JsonProperty("SwishReferenceId")
     private String swishReferenceId;
+
     @JsonProperty("SwishRecipientDescription")
     private String swishRecipientDescription;
+
     @JsonProperty("SwishSenderDescription")
     private String swishSenderDescription;
+
     @JsonProperty("SwishMessage")
     private String swishMessage;
+
     @JsonProperty("SwishTime")
     private String swishTime;
 

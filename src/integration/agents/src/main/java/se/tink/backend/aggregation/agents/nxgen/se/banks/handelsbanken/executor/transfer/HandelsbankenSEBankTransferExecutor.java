@@ -24,8 +24,10 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
     private final ExecutorExceptionResolver exceptionResolver;
     private final TransferMessageFormatter transferMessageFormatter;
 
-    public HandelsbankenSEBankTransferExecutor(HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage, ExecutorExceptionResolver exceptionResolver,
+    public HandelsbankenSEBankTransferExecutor(
+            HandelsbankenSEApiClient client,
+            HandelsbankenSessionStorage sessionStorage,
+            ExecutorExceptionResolver exceptionResolver,
             TransferMessageFormatter transferMessageFormatter) {
         this.client = client;
         this.sessionStorage = sessionStorage;
@@ -35,78 +37,104 @@ public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
-        exceptionResolver
-                .throwIf(transfer.getAmount().getValue() < 1,
-                        HandelsbankenSEConstants.Executor.ExceptionMessages.TRANSFER_AMOUNT_TOO_SMALL);
+        exceptionResolver.throwIf(
+                transfer.getAmount().getValue() < 1,
+                HandelsbankenSEConstants.Executor.ExceptionMessages.TRANSFER_AMOUNT_TOO_SMALL);
 
-        sessionStorage.applicationEntryPoint().ifPresent(applicationEntryPoint -> {
-            HandelsbankenSETransferContext transferContext = client.transferContext(applicationEntryPoint);
+        sessionStorage
+                .applicationEntryPoint()
+                .ifPresent(
+                        applicationEntryPoint -> {
+                            HandelsbankenSETransferContext transferContext =
+                                    client.transferContext(applicationEntryPoint);
 
-            HandelsbankenSEPaymentAccount sourceAccount = getSourceAccount(transfer, transferContext);
+                            HandelsbankenSEPaymentAccount sourceAccount =
+                                    getSourceAccount(transfer, transferContext);
 
-            AmountableDestination destinationAccount = getDestinationAccount(transfer, transferContext);
+                            AmountableDestination destinationAccount =
+                                    getDestinationAccount(transfer, transferContext);
 
-            TransferSpecificationResponse transferSpecification =
-                    getTransferSpecification(transfer, transferContext, sourceAccount, destinationAccount);
+                            TransferSpecificationResponse transferSpecification =
+                                    getTransferSpecification(
+                                            transfer,
+                                            transferContext,
+                                            sourceAccount,
+                                            destinationAccount);
 
-            TransferSignatureResponse transferSignature = signTransfer(transferSpecification);
+                            TransferSignatureResponse transferSignature =
+                                    signTransfer(transferSpecification);
 
-            transferSignature.validateState(exceptionResolver);
-        });
+                            transferSignature.validateState(exceptionResolver);
+                        });
         return Optional.empty();
     }
 
-    private HandelsbankenSEPaymentAccount getSourceAccount(Transfer transfer,
-            HandelsbankenSETransferContext transferContext) {
-        return transferContext.findSourceAccount(transfer)
-                .orElseThrow(() ->
-                        exceptionResolver.asException(
-                                HandelsbankenSEConstants.Executor.ExceptionMessages.SOURCE_ACCOUNT_NOT_FOUND));
+    private HandelsbankenSEPaymentAccount getSourceAccount(
+            Transfer transfer, HandelsbankenSETransferContext transferContext) {
+        return transferContext
+                .findSourceAccount(transfer)
+                .orElseThrow(
+                        () ->
+                                exceptionResolver.asException(
+                                        HandelsbankenSEConstants.Executor.ExceptionMessages
+                                                .SOURCE_ACCOUNT_NOT_FOUND));
     }
 
-    private AmountableDestination getDestinationAccount(Transfer transfer,
-            HandelsbankenSETransferContext transferContext) {
+    private AmountableDestination getDestinationAccount(
+            Transfer transfer, HandelsbankenSETransferContext transferContext) {
         return transferContext
                 .findDestinationAccount(transfer)
                 .map(HandelsbankenSEPaymentAccount::asAmountableDestination)
-                .orElseGet(() -> client.validateRecipient(transferContext,
-                        ValidateRecipientRequest.create(transfer)
-                ));
+                .orElseGet(
+                        () ->
+                                client.validateRecipient(
+                                        transferContext,
+                                        ValidateRecipientRequest.create(transfer)));
     }
 
-    private TransferSpecificationResponse getTransferSpecification(Transfer transfer,
-            HandelsbankenSETransferContext transferContext, HandelsbankenSEPaymentAccount sourceAccount,
+    private TransferSpecificationResponse getTransferSpecification(
+            Transfer transfer,
+            HandelsbankenSETransferContext transferContext,
+            HandelsbankenSEPaymentAccount sourceAccount,
             AmountableDestination destinationAccount) {
         Transferable transferable = chooseTransferable(transferContext, destinationAccount);
-        return client
-                .createTransfer(transferable.toCreatable(exceptionResolver),
-                        TransferSpecificationRequest.create(
-                                transfer, sourceAccount, destinationAccount,
-                                generateTransferMessages(transfer, transferContext, destinationAccount)
-                        ));
+        return client.createTransfer(
+                transferable.toCreatable(exceptionResolver),
+                TransferSpecificationRequest.create(
+                        transfer,
+                        sourceAccount,
+                        destinationAccount,
+                        generateTransferMessages(transfer, transferContext, destinationAccount)));
     }
 
     private Transferable chooseTransferable(
             HandelsbankenSETransferContext transferContext,
             AmountableDestination destinationAccount) {
-        return destinationAccount instanceof Transferable ?
-                (Transferable) destinationAccount : transferContext;
+        return destinationAccount instanceof Transferable
+                ? (Transferable) destinationAccount
+                : transferContext;
     }
 
-    private TransferSignatureResponse signTransfer(TransferSpecificationResponse transferSpecificationResponse) {
+    private TransferSignatureResponse signTransfer(
+            TransferSpecificationResponse transferSpecificationResponse) {
         return client.signTransfer(transferSpecificationResponse.toSignable(exceptionResolver));
     }
 
-    private TransferMessageFormatter.Messages generateTransferMessages(Transfer transfer,
+    private TransferMessageFormatter.Messages generateTransferMessages(
+            Transfer transfer,
             HandelsbankenSETransferContext transferContext,
             AmountableDestination destinationAccount) {
-        return transferMessageFormatter
-                .getMessages(transfer, isTransferBetweenSameUserAccounts(transfer, transferContext, destinationAccount));
+        return transferMessageFormatter.getMessages(
+                transfer,
+                isTransferBetweenSameUserAccounts(transfer, transferContext, destinationAccount));
     }
 
-    private boolean isTransferBetweenSameUserAccounts(Transfer transfer, HandelsbankenSETransferContext transferContext,
+    private boolean isTransferBetweenSameUserAccounts(
+            Transfer transfer,
+            HandelsbankenSETransferContext transferContext,
             AmountableDestination destinationAccount) {
-        return destinationAccount.isKnownDestination() && transferContext.destinationIsOwned(transfer);
+        return destinationAccount.isKnownDestination()
+                && transferContext.destinationIsOwned(transfer);
     }
 
     public interface Transferable {

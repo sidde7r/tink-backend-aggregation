@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PaymentNameBodyEntity {
     @JsonProperty("Found")
     private boolean found;
+
     @JsonProperty("OnAlertList")
     private boolean onAlertList;
+
     @JsonProperty("Name")
     private String name;
 

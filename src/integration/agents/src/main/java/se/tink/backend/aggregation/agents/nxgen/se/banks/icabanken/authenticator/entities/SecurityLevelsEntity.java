@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SecurityLevelsEntity {
     @JsonProperty("Id")
     private String id;
+
     @JsonProperty("Permissions")
     private PermissionsEntity permissions;
 

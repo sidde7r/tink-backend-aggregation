@@ -17,12 +17,12 @@ public abstract class AbstractBankIdResponse {
     public BankIdStatus getBankIdStatus() {
         Preconditions.checkState(status != null, "BankID status was null");
         switch (status.toUpperCase()) {
-        case VolvoFinansConstants.BankIdStatus.DONE:
-            return BankIdStatus.DONE;
-        case VolvoFinansConstants.BankIdStatus.WAITING:
-            return BankIdStatus.WAITING;
-        default:
-            return BankIdStatus.FAILED_UNKNOWN;
+            case VolvoFinansConstants.BankIdStatus.DONE:
+                return BankIdStatus.DONE;
+            case VolvoFinansConstants.BankIdStatus.WAITING:
+                return BankIdStatus.WAITING;
+            default:
+                return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 }

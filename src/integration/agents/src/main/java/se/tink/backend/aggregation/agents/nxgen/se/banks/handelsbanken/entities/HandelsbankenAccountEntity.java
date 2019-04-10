@@ -24,9 +24,9 @@ public class HandelsbankenAccountEntity implements GeneralAccountEntity {
     public String generalGetBank() {
         return bankName;
     }
+
     @Override
     public String generalGetName() {
         return name;
     }
-
 }

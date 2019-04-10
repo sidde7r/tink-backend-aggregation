@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public abstract class AbstractBankIdResponse {
     @JsonProperty("AutostartToken")
     private String autostartToken;
+
     @JsonProperty("OrderRef")
     private String orderReference;
+
     @JsonProperty("Status")
     private String status;
 

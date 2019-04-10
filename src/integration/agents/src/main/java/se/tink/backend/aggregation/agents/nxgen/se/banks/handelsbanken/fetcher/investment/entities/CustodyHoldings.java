@@ -29,20 +29,21 @@ public class CustodyHoldings {
         instrument.setUniqueIdentifier(isin + market);
         instrument.setCurrency(securityIdentifier.getCurrency());
         instrument.setQuantity(holdingQuantity.asDouble().orElse(null));
-        instrument.setAverageAcquisitionPrice(HandelsbankenAmount.asDoubleOrElseNull(averagePurchasePrice));
+        instrument.setAverageAcquisitionPrice(
+                HandelsbankenAmount.asDoubleOrElseNull(averagePurchasePrice));
         instrument.setMarketValue(HandelsbankenAmount.asDoubleOrElseNull(marketValue));
         instrument.setPrice(HandelsbankenAmount.asDoubleOrElseNull(marketPrice));
-        instrument.setProfit(Optional.ofNullable(performance)
-                .flatMap(HandelsbankenPerformance::asDouble)
-                .orElse(null)
-        );
+        instrument.setProfit(
+                Optional.ofNullable(performance)
+                        .flatMap(HandelsbankenPerformance::asDouble)
+                        .orElse(null));
         return instrument;
     }
 
     public boolean hasNoValue() {
-        return holdingQuantity == null ||
-                securityIdentifier == null ||
-                holdingQuantity.hasNoValue();
+        return holdingQuantity == null
+                || securityIdentifier == null
+                || holdingQuantity.hasNoValue();
     }
 
     @VisibleForTesting
@@ -51,8 +52,7 @@ public class CustodyHoldings {
     }
 
     @VisibleForTesting
-    void setSecurityIdentifier(
-            SecurityIdentifier securityIdentifier) {
+    void setSecurityIdentifier(SecurityIdentifier securityIdentifier) {
         this.securityIdentifier = securityIdentifier;
     }
 }

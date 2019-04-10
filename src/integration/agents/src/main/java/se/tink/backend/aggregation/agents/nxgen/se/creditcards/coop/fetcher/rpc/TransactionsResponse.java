@@ -20,13 +20,15 @@ public class TransactionsResponse {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        List<TransactionEntity> mostRecentTransactions = transactions.subList(offset, transactions.size());
+        List<TransactionEntity> mostRecentTransactions =
+                transactions.subList(offset, transactions.size());
 
-        return PaginatorResponseImpl.create(mostRecentTransactions.stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList()),
+        return PaginatorResponseImpl.create(
+                mostRecentTransactions.stream()
+                        .map(TransactionEntity::toTinkTransaction)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList()),
                 transactions.size() >= batchSize);
     }
 }

@@ -21,8 +21,10 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     public CreditCardAccount toTinkCreditAccount(HandelsbankenSEApiClient client) {
         CreditCardSETransactionsResponse cardTransactions = client.creditCardTransactions(this);
 
-        return CreditCardAccount.builder(numberMasked, Amount.inSEK(cardTransactions.findUsedCredit(balance)),
-                Amount.inSEK(cardTransactions.findSpendable(amountAvailable)))
+        return CreditCardAccount.builder(
+                        numberMasked,
+                        Amount.inSEK(cardTransactions.findUsedCredit(balance)),
+                        Amount.inSEK(cardTransactions.findSpendable(amountAvailable)))
                 .setAccountNumber(numberMasked)
                 .setName(name)
                 .setBankIdentifier(numberMasked)
@@ -36,16 +38,19 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     // SHB sends all cards of the user, not 'just' the credit cards.
     // Also sends cards that are "accounts" (typeCode "A")
     public boolean isCreditCard() {
-        return !HandelsbankenSEConstants.Fetcher.CREDIT_CARD_IGNORE_TYPE.equalsIgnoreCase(typeCode) &&
-                searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
+        return !HandelsbankenSEConstants.Fetcher.CREDIT_CARD_IGNORE_TYPE.equalsIgnoreCase(typeCode)
+                && searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
     }
 
     @Override
     public boolean is(Account account) {
-        return isCreditCard() && numberMasked != null && numberMasked.equals(account.getBankIdentifier());
+        return isCreditCard()
+                && numberMasked != null
+                && numberMasked.equals(account.getBankIdentifier());
     }
 
     public boolean hasInvertedTransactions() {
-        return HandelsbankenSEConstants.Fetcher.PROVIDERS_WITH_INVERTED_TRANSACTIONS.contains(typeCode);
+        return HandelsbankenSEConstants.Fetcher.PROVIDERS_WITH_INVERTED_TRANSACTIONS.contains(
+                typeCode);
     }
 }

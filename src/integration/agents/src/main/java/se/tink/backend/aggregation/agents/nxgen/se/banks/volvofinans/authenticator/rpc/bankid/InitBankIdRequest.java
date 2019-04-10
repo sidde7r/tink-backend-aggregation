@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitBankIdRequest {
 
     @JsonProperty("identitet")
-    private String  ssn;
+    private String ssn;
 
     public InitBankIdRequest(String ssn) {
         this.ssn = ssn;

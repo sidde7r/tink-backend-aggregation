@@ -10,13 +10,17 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class AccountTransactionEntity {
     private String transaktionsId;
+
     @JsonProperty("text")
     private String description;
+
     @JsonProperty("belopp")
     private double amount;
+
     @JsonProperty("datum")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     private boolean harDetaljer;
     private double saldo;
 

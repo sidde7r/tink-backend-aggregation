@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoansBodyEntity {
     @JsonProperty("LoanList")
     private LoanListEntity loanList;
+
     @JsonProperty("MortgageList")
     private MortgageListEntity mortgageList;
 

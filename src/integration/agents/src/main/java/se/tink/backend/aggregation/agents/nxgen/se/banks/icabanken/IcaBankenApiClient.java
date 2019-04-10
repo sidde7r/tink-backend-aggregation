@@ -61,7 +61,9 @@ public class IcaBankenApiClient {
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icabankenPersistentStorage;
 
-    public IcaBankenApiClient(TinkHttpClient client, IcaBankenSessionStorage icaBankenSessionStorage,
+    public IcaBankenApiClient(
+            TinkHttpClient client,
+            IcaBankenSessionStorage icaBankenSessionStorage,
             IcabankenPersistentStorage icabankenPersistentStorage) {
         this.client = client;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
@@ -92,14 +94,16 @@ public class IcaBankenApiClient {
 
     public BankIdBodyEntity initBankId(String ssn) {
         return createPostRequest(
-                IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
+                        IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
+                                IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
                 .post(BankIdResponse.class)
                 .getBody();
     }
 
     public BankIdBodyEntity initEInvoiceBankId(String invoiceId) {
-        return createPostRequest(IcaBankenConstants.Urls.INIT_EINVOICE_SIGN
-                .parameter(IcaBankenConstants.IdTags.INVOICE_ID_TAG, invoiceId))
+        return createPostRequest(
+                        IcaBankenConstants.Urls.INIT_EINVOICE_SIGN.parameter(
+                                IcaBankenConstants.IdTags.INVOICE_ID_TAG, invoiceId))
                 .post(BankIdResponse.class)
                 .getBody();
     }
@@ -111,20 +115,23 @@ public class IcaBankenApiClient {
     }
 
     public BankIdResponse pollBankId(String reference) {
-        return createRequest(IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
-                IcaBankenConstants.IdTags.IDENTIFIER_TAG, reference))
+        return createRequest(
+                        IcaBankenConstants.Urls.LOGIN_BANKID.parameter(
+                                IcaBankenConstants.IdTags.IDENTIFIER_TAG, reference))
                 .get(BankIdResponse.class);
     }
 
     public BankIdResponse pollTransferBankId(String requestId) {
-        return createRequest(IcaBankenConstants.Urls.SIGN_TRANSFER_COLLECT_URL
-                .parameter(IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId))
+        return createRequest(
+                        IcaBankenConstants.Urls.SIGN_TRANSFER_COLLECT_URL.parameter(
+                                IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId))
                 .get(BankIdResponse.class);
     }
 
     public SessionBodyEntity fetchSessionInfo() {
         return createRequest(IcaBankenConstants.Urls.SESSION)
-                .queryParam(IcaBankenConstants.IdTags.DEVICE_APPLICATION_ID,
+                .queryParam(
+                        IcaBankenConstants.IdTags.DEVICE_APPLICATION_ID,
                         icabankenPersistentStorage.getDeviceApplicationId())
                 .get(SessionInfoResponse.class)
                 .getBody();
@@ -133,32 +140,39 @@ public class IcaBankenApiClient {
     public AccountsEntity fetchAccounts() {
         return createRequest(IcaBankenConstants.Urls.ACCOUNTS)
                 .get(AccountsResponse.class)
-                .getBody().getAccounts();
+                .getBody()
+                .getAccounts();
     }
 
     public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {
-        return createRequest(IcaBankenConstants.Urls.TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                account.getBankIdentifier())
-                .queryParam(IcaBankenConstants.IdTags.TO_DATE_TAG,
-                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)))
+        return createRequest(
+                        IcaBankenConstants.Urls.TRANSACTIONS
+                                .parameter(
+                                        IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                                        account.getBankIdentifier())
+                                .queryParam(
+                                        IcaBankenConstants.IdTags.TO_DATE_TAG,
+                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate)))
                 .get(TransactionsResponse.class)
                 .getBody();
     }
 
     public TransactionsBodyEntity fetchTransactions(Account account) {
-        return createRequest(IcaBankenConstants.Urls.TRANSACTIONS.parameter(
-                IcaBankenConstants.IdTags.IDENTIFIER_TAG, account.getBankIdentifier()))
+        return createRequest(
+                        IcaBankenConstants.Urls.TRANSACTIONS.parameter(
+                                IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                                account.getBankIdentifier()))
                 .get(TransactionsResponse.class)
                 .getBody();
     }
 
     public TransactionsBodyEntity fetchReservedTransactions(Account account) {
         return createRequest(
-                IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG,
-                        account.getBankIdentifier()))
+                        IcaBankenConstants.Urls.RESERVED_TRANSACTIONS.parameter(
+                                IcaBankenConstants.IdTags.IDENTIFIER_TAG,
+                                account.getBankIdentifier()))
                 .get(TransactionsResponse.class)
                 .getBody();
-
     }
 
     public List<UpcomingTransactionEntity> fetchUpcomingTransactions() {
@@ -175,17 +189,19 @@ public class IcaBankenApiClient {
     }
 
     public List<DepotEntity> getInvestments() {
-        List<DepotEntity> depots = createRequest(IcaBankenConstants.Urls.DEPOTS)
-                .get(InvestmentAccountResponse.class)
-                .getBody()
-                .getDepots();
+        List<DepotEntity> depots =
+                createRequest(IcaBankenConstants.Urls.DEPOTS)
+                        .get(InvestmentAccountResponse.class)
+                        .getBody()
+                        .getDepots();
 
         return Optional.ofNullable(depots).orElse(Collections.emptyList());
     }
 
     public FundDetailsBodyEntity getFundDetails(String fundId) {
-        return createRequest(IcaBankenConstants.Urls.FUND_DETAILS
-                .parameter(IcaBankenConstants.IdTags.FUND_ID_TAG, fundId))
+        return createRequest(
+                        IcaBankenConstants.Urls.FUND_DETAILS.parameter(
+                                IcaBankenConstants.IdTags.FUND_ID_TAG, fundId))
                 .get(InstrumentResponse.class)
                 .getBody();
     }
@@ -201,21 +217,24 @@ public class IcaBankenApiClient {
     }
 
     public SignedAssignmentListEntity getSignedAssignments(String requestId) {
-        return createPostRequest(IcaBankenConstants.Urls.SIGNED_ASSIGNMENTS
-                .queryParam(IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId))
+        return createPostRequest(
+                        IcaBankenConstants.Urls.SIGNED_ASSIGNMENTS.queryParam(
+                                IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId))
                 .post(SignBundleResponse.class)
                 .getBody()
                 .getSignedAssignmentList();
     }
 
     public void deleteUnsignedTransfer(String transferId) {
-        createRequest(IcaBankenConstants.Urls.DELETE_UNSIGNED_TRANSFER.parameter(
-                IcaBankenConstants.IdTags.TRANSFER_ID_TAG, transferId))
+        createRequest(
+                        IcaBankenConstants.Urls.DELETE_UNSIGNED_TRANSFER.parameter(
+                                IcaBankenConstants.IdTags.TRANSFER_ID_TAG, transferId))
                 .delete();
     }
 
     public List<RecipientEntity> fetchDestinationAccounts() {
-        return createRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS).get(RecipientsResponse.class)
+        return createRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS)
+                .get(RecipientsResponse.class)
                 .getBody()
                 .getRecipients();
     }
@@ -226,10 +245,11 @@ public class IcaBankenApiClient {
     }
 
     public List<AssignmentEntity> fetchUnsignedTransfers() {
-        AssignmentsBodyEntity bodyEntity = createRequest(IcaBankenConstants.Urls.UNSIGNED_TRANSFERS)
-                .type(MediaType.APPLICATION_JSON)
-                .get(AssignmentsResponse.class)
-                .getBody();
+        AssignmentsBodyEntity bodyEntity =
+                createRequest(IcaBankenConstants.Urls.UNSIGNED_TRANSFERS)
+                        .type(MediaType.APPLICATION_JSON)
+                        .get(AssignmentsResponse.class)
+                        .getBody();
 
         return Optional.ofNullable(bodyEntity.getAssignments()).orElse(Collections.emptyList());
     }
@@ -256,17 +276,21 @@ public class IcaBankenApiClient {
     }
 
     public List<TransferBankEntity> fetchTransferBanks() {
-        TransferBanksBodyEntity bodyEntity = createRequest(IcaBankenConstants.Urls.TRANSFER_BANKS)
-                .get(TransferBanksResponse.class).getBody();
+        TransferBanksBodyEntity bodyEntity =
+                createRequest(IcaBankenConstants.Urls.TRANSFER_BANKS)
+                        .get(TransferBanksResponse.class)
+                        .getBody();
 
         return Optional.ofNullable(bodyEntity.getTransferBanks()).orElse(Collections.emptyList());
     }
 
     public Optional<String> fetchPaymentDestinationName(String giroNumber) {
-        PaymentNameBodyEntity bodyEntity = createRequest(IcaBankenConstants.Urls.GIRO_DESTINATION_NAME
-                .parameter(IcaBankenConstants.IdTags.GIRO_NUMBER_TAG, giroNumber))
-                .get(PaymentNameResponse.class)
-                .getBody();
+        PaymentNameBodyEntity bodyEntity =
+                createRequest(
+                                IcaBankenConstants.Urls.GIRO_DESTINATION_NAME.parameter(
+                                        IcaBankenConstants.IdTags.GIRO_NUMBER_TAG, giroNumber))
+                        .get(PaymentNameResponse.class)
+                        .getBody();
 
         return Optional.ofNullable(bodyEntity.getName());
     }

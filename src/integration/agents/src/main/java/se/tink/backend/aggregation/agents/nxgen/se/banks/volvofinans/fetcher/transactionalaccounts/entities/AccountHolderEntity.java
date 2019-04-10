@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountHolderEntity {
     @JsonProperty("identitet")
     private String identity;
+
     @JsonProperty("namn")
     private String name;
+
     @JsonProperty("roll")
     private String role;
 

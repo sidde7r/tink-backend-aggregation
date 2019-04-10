@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BanksResponse extends Response<BanksResponseBody> {
-
-}
+public class BanksResponse extends Response<BanksResponseBody> {}

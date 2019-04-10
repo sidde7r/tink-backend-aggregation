@@ -14,8 +14,10 @@ import se.tink.libraries.date.DateUtils;
 public class TransactionEntity {
     @JsonProperty("Date")
     private String date;
+
     @JsonProperty("Amount")
     private double amount;
+
     @JsonProperty("Text")
     private String text;
 
@@ -25,11 +27,12 @@ public class TransactionEntity {
             return Optional.empty();
         }
 
-        return Optional.of(Transaction.builder()
-                .setAmount(Amount.inSEK(amount))
-                .setDescription(text)
-                .setDate(getTransactionDate())
-                .build());
+        return Optional.of(
+                Transaction.builder()
+                        .setAmount(Amount.inSEK(amount))
+                        .setDescription(text)
+                        .setDate(getTransactionDate())
+                        .build());
     }
 
     @JsonIgnore

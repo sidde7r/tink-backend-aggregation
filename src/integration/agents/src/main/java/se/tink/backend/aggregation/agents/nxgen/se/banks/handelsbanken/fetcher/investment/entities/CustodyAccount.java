@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc.FundHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
@@ -10,7 +11,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class CustodyAccount extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);
@@ -20,26 +20,31 @@ public class CustodyAccount extends BaseResponse {
     private String custodyAccountNumber;
     private HandelsbankenAmount marketValue;
 
-    public Optional<InvestmentAccount> toInvestmentAccount(HandelsbankenSEApiClient client,
-            Credentials credentials) {
+    public Optional<InvestmentAccount> toInvestmentAccount(
+            HandelsbankenSEApiClient client, Credentials credentials) {
         if (type != null) {
             switch (type.toLowerCase()) {
-            case "fund_summary":
-                return client.fundHoldings(this)
-                        .map(FundHoldingsResponse::getUserFundHoldings)
-                        .map(fundHoldings -> fundHoldings.toAccount(this));
-            case "isk":
-                // Intentional fall through
-            case "normal":
-                return client.custodyAccount(this).map(custodyAccount -> custodyAccount.toInvestmentAccount(client));
-            case "kapital":
-                return client.pensionDetails(this)
-                        .map(pensionDetails -> pensionDetails.toInvestmentAccount(client, this));
-            default:
-                // Intentional fall through
+                case "fund_summary":
+                    return client.fundHoldings(this)
+                            .map(FundHoldingsResponse::getUserFundHoldings)
+                            .map(fundHoldings -> fundHoldings.toAccount(this));
+                case "isk":
+                    // Intentional fall through
+                case "normal":
+                    return client.custodyAccount(this)
+                            .map(custodyAccount -> custodyAccount.toInvestmentAccount(client));
+                case "kapital":
+                    return client.pensionDetails(this)
+                            .map(
+                                    pensionDetails ->
+                                            pensionDetails.toInvestmentAccount(client, this));
+                default:
+                    // Intentional fall through
             }
         }
-        log.info(String.format("Not yet implemented custody account - type: %s, relative links: %s",
+        log.info(
+                String.format(
+                        "Not yet implemented custody account - type: %s, relative links: %s",
                         type, getLinks().keySet()));
         return Optional.empty();
     }
@@ -69,6 +74,8 @@ public class CustodyAccount extends BaseResponse {
     }
 
     public Amount getTinkAmount() {
-        return Optional.ofNullable(marketValue).map(HandelsbankenAmount::asAmount).orElse(Amount.inSEK(0.0));
+        return Optional.ofNullable(marketValue)
+                .map(HandelsbankenAmount::asAmount)
+                .orElse(Amount.inSEK(0.0));
     }
 }

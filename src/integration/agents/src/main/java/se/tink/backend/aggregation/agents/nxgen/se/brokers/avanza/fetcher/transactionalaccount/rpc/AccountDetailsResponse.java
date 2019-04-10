@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
+
 import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
 
 @JsonObject
 public class AccountDetailsResponse {

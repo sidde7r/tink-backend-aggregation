@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class MessageTypeEntity {
     @JsonProperty("Id")
     private int id;
+
     @JsonProperty("Description")
     private String description;
+
     @JsonProperty("Subscribing")
     private boolean subscribing;
 

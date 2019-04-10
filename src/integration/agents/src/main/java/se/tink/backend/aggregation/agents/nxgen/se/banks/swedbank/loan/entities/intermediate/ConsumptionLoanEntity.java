@@ -17,7 +17,8 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
         super(loanOverview);
     }
 
-    protected static ConsumptionLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static ConsumptionLoanEntity create(
+            LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new ConsumptionLoanEntity(loanDetails, loanOverview);
     }
 
@@ -38,9 +39,10 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
     }
 
     private LoanDetails buildLoanDetails(List<String> borrowers) {
-        return LoanDetails.builder(getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN) ?
-                LoanDetails.Type.MEMBERSHIP :
-                LoanDetails.Type.BLANCO)
+        return LoanDetails.builder(
+                        getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN)
+                                ? LoanDetails.Type.MEMBERSHIP
+                                : LoanDetails.Type.BLANCO)
                 .setMonthlyAmortization(getMonthlyAmortization())
                 .setApplicants(borrowers)
                 .setCoApplicant(borrowers.size() > 1)

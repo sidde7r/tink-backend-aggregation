@@ -7,22 +7,23 @@ import java.util.Optional;
 import java.util.function.Function;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.loan.parsers.NumMonthBoundParser;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.InterestDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.InterestDeserializer;
-
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class HandelsbankenSELoan {
 
     private String agreementNumber;
     private String lender;
+
     @JsonDeserialize(using = InterestDeserializer.class)
     private Double interestRateFormatted;
+
     private HandelsbankenAmount currentDebtAmount;
     private List<SELoanSegment> segments;
     private String fixationdateText;
@@ -36,12 +37,13 @@ public class HandelsbankenSELoan {
                 .setName(lender)
                 .addIdentifier(new SwedishIdentifier(agreementNumber))
                 .setInterestRate(interestRateFormatted)
-                .setDetails(LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
-                        .setCoApplicant(multipleApplicantValue())
-                        .setNextDayOfTermsChange(termsOfChangeValue())
-                        .setNumMonthsBound(NumMonthBoundParser.parse(fixationdateText))
-                        .setMonthlyAmortization(monthlyAmortization())
-                        .build())
+                .setDetails(
+                        LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
+                                .setCoApplicant(multipleApplicantValue())
+                                .setNextDayOfTermsChange(termsOfChangeValue())
+                                .setNumMonthsBound(NumMonthBoundParser.parse(fixationdateText))
+                                .setMonthlyAmortization(monthlyAmortization())
+                                .build())
                 .build();
     }
 
@@ -68,11 +70,14 @@ public class HandelsbankenSELoan {
                 .orElse(false);
     }
 
-    private Optional<SELoanProperty> findLoanInformationWith(Function<SELoanSegment, Optional<SELoanProperty>> property) {
+    private Optional<SELoanProperty> findLoanInformationWith(
+            Function<SELoanSegment, Optional<SELoanProperty>> property) {
         if (segments == null) {
             return Optional.empty();
         }
-        return segments.stream().filter(SELoanSegment::loanInformation).findFirst().flatMap(property);
+        return segments.stream()
+                .filter(SELoanSegment::loanInformation)
+                .findFirst()
+                .flatMap(property);
     }
-
 }

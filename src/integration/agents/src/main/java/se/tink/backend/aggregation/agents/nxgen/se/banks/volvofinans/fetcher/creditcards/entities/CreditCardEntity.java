@@ -9,13 +9,17 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class CreditCardEntity {
     @JsonProperty("kontoId")
-    private String accountId;   // used as api endpoint
+    private String accountId; // used as api endpoint
+
     @JsonProperty("kontonummer")
     private String accountNumber;
+
     @JsonProperty("disponibeltBelopp")
     private double availableCredit;
+
     @JsonProperty("saldo")
     private double balance;
+
     @JsonProperty("namn")
     private String name;
 
@@ -39,8 +43,8 @@ public class CreditCardEntity {
     private boolean kanKonverteraTillVisa;
 
     public CreditCardAccount toTinkAccount() {
-        return CreditCardAccount
-                .builder(accountNumber, Amount.inSEK(balance), Amount.inSEK(availableCredit))
+        return CreditCardAccount.builder(
+                        accountNumber, Amount.inSEK(balance), Amount.inSEK(availableCredit))
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)

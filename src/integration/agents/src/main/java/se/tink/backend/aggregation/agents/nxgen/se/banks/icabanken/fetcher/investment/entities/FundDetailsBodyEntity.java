@@ -3,58 +3,81 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inve
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FundDetailsBodyEntity {
 
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Id")
     private String id;
+
     @JsonProperty("Active")
     private boolean active;
+
     @JsonProperty("Buyable")
     private boolean buyable;
+
     @JsonProperty("Currency")
     private CurrencyEntity currency;
+
     @JsonProperty("CountryCodeTwoChars")
     private String countryCodeTwoChars;
+
     @JsonProperty("TradingCode")
     private String tradingCode;
+
     @JsonProperty("NetAssetValue")
     private double netAssetValue;
+
     @JsonProperty("NetAssetValueDate")
     private String netAssetValueDate;
+
     @JsonProperty("HasMorningstarInfo")
     private boolean hasMorningstarInfo;
+
     @JsonProperty("MorningStarLink")
     private String morningStarLink;
+
     @JsonProperty("MorningstarFundPDFLink")
     private String morningstarFundPDFLink;
+
     @JsonProperty("MorningstarFundBrochurePDFLink")
     private String morningstarFundBrochurePDFLink;
+
     @JsonProperty("MorningstarFundGraphLink")
     private String morningstarFundGraphLink;
+
     @JsonProperty("MorningstarFundGraph410X228Link")
     private String morningstarFundGraph410X228Link;
+
     @JsonProperty("ISIN")
     private String iSIN;
+
     @JsonProperty("MorningstarId")
     private String morningstarId;
+
     @JsonProperty("Rating")
     private int rating;
+
     @JsonProperty("Risk")
     private int risk;
+
     @JsonProperty("Fees")
     private FeesEntity fees;
+
     @JsonProperty("Category")
     private String category;
+
     @JsonProperty("Development")
     private DevelopmentEntity development;
+
     @JsonProperty("MinimumBuyAmount")
     private String minimumBuyAmount;
+
     @JsonProperty("SustainabilityRating")
     private int sustainabilityRating;
 
@@ -71,8 +94,8 @@ public class FundDetailsBodyEntity {
         instrument.setType(Instrument.Type.FUND); // Currently only possible to buy funds at ICA
         instrument.setIsin(iSIN);
         instrument.setMarketPlace(tradingCode);
-        instrument.setAverageAcquisitionPrice(holdingEntity.getInvestedAmount()
-                / holdingEntity.getShares());
+        instrument.setAverageAcquisitionPrice(
+                holdingEntity.getInvestedAmount() / holdingEntity.getShares());
         instrument.setCurrency(tradingCode);
         instrument.setMarketValue(holdingEntity.getMarketValue());
         instrument.setName(holdingEntity.getFundName());
@@ -86,8 +109,8 @@ public class FundDetailsBodyEntity {
 
     @JsonIgnore
     private double calcProfit(Instrument instrument) {
-        return instrument.getMarketValue() - (instrument.getAverageAcquisitionPrice()
-                * instrument.getQuantity());
+        return instrument.getMarketValue()
+                - (instrument.getAverageAcquisitionPrice() * instrument.getQuantity());
     }
 
     public String getName() {

@@ -42,24 +42,18 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         final HolderName holder = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
         final List<SessionAccountPair> sessionAccountPairs =
-                authSessionStorage
-                        .keySet()
-                        .stream()
+                authSessionStorage.keySet().stream()
                         .flatMap(getSessionAccountPairs())
                         .collect(Collectors.toList());
 
-        return sessionAccountPairs
-                .stream()
+        return sessionAccountPairs.stream()
                 .flatMap(getInvestmentAccounts(holder, sessionAccountPairs))
                 .collect(Collectors.toList());
     }
 
     private Function<String, Stream<? extends SessionAccountPair>> getSessionAccountPairs() {
         return authSession ->
-                apiClient
-                        .fetchAccounts(authSession)
-                        .getAccounts()
-                        .stream()
+                apiClient.fetchAccounts(authSession).getAccounts().stream()
                         .filter(AccountEntity::isInvestmentAccount)
                         .map(AccountEntity::getAccountId)
                         .map(accountId -> new SessionAccountPair(authSession, accountId));
@@ -68,8 +62,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
     private Function<SessionAccountPair, Stream<? extends InvestmentAccount>> getInvestmentAccounts(
             HolderName holder, List<SessionAccountPair> sessionAccountPairs) {
         return sessionAccount ->
-                sessionAccountPairs
-                        .stream()
+                sessionAccountPairs.stream()
                         .map(aggregatePortfolioIsinPair())
                         .map(aggregateInvestmentAccount(holder, sessionAccount));
     }
@@ -94,9 +87,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
             final IsinMap isinMap = portfolioIsinPair.getIsinMap();
 
             final List<Instrument> instruments =
-                    portfolio
-                            .getInstruments()
-                            .stream()
+                    portfolio.getInstruments().stream()
                             .flatMap(getInstruments(authSession, isinMap))
                             .collect(Collectors.toList());
 
@@ -107,9 +98,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
     private Function<InstrumentEntity, Stream<? extends Instrument>> getInstruments(
             String authSession, IsinMap isinMap) {
         return instrument ->
-                instrument
-                        .getPositions()
-                        .stream()
+                instrument.getPositions().stream()
                         .map(aggregateInstrument(isinMap, apiClient, authSession, instrument));
     }
 

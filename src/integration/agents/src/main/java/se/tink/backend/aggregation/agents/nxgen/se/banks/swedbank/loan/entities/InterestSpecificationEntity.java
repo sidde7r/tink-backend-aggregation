@@ -8,8 +8,10 @@ public class InterestSpecificationEntity {
     private AmountEntity interest;
     private AmountEntity amount;
     private String interestRate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String periodDateFrom;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String periodDateTo;
 

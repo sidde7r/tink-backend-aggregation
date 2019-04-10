@@ -16,10 +16,7 @@ public class SbabLoanFetcher implements AccountFetcher<LoanAccount> {
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return apiClient
-                .listLoans()
-                .getLoans()
-                .stream()
+        return apiClient.listLoans().getLoans().stream()
                 .map(LoanEntity::toTinkLoanAccount)
                 .collect(Collectors.toList());
     }

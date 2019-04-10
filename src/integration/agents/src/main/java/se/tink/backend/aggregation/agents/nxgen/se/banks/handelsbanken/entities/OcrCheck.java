@@ -19,19 +19,18 @@ public class OcrCheck {
 
     public OcrValidationConfiguration getValidationConfiguration() {
         switch (type) {
-        case MESSAGE:
-            return OcrValidationConfiguration.noOcr();
-        case MESSAGE_OR_OCR:
-            return OcrValidationConfiguration.softOcr();
-        case OCR_WITH_CONTROL_DIGIT:
-            return OcrValidationConfiguration.hardOcrVariableLength();
-        case OCR_VARIABLE_LENGTH:
-            return OcrValidationConfiguration.hardOcrVariableLengthWithLengthCheck();
-        case OCR_FIXED_LENGTH:
-            return OcrValidationConfiguration.hardOcrFixedLength(refLength1, refLength2);
-        default:
-            return null;
+            case MESSAGE:
+                return OcrValidationConfiguration.noOcr();
+            case MESSAGE_OR_OCR:
+                return OcrValidationConfiguration.softOcr();
+            case OCR_WITH_CONTROL_DIGIT:
+                return OcrValidationConfiguration.hardOcrVariableLength();
+            case OCR_VARIABLE_LENGTH:
+                return OcrValidationConfiguration.hardOcrVariableLengthWithLengthCheck();
+            case OCR_FIXED_LENGTH:
+                return OcrValidationConfiguration.hardOcrFixedLength(refLength1, refLength2);
+            default:
+                return null;
         }
     }
 }
-

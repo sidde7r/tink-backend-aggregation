@@ -14,13 +14,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-public class IcaBankenTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, Date>, UpcomingTransactionFetcher<TransactionalAccount> {
+public class IcaBankenTransactionalAccountsFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, Date>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenTransactionFetcher icaBankenTransactionFetcher;
 
-    public IcaBankenTransactionalAccountsFetcher(IcaBankenApiClient apiClient){
+    public IcaBankenTransactionalAccountsFetcher(IcaBankenApiClient apiClient) {
         this.apiClient = apiClient;
         this.icaBankenTransactionFetcher = new IcaBankenTransactionFetcher(apiClient);
     }
@@ -39,12 +41,14 @@ public class IcaBankenTransactionalAccountsFetcher implements AccountFetcher<Tra
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(TransactionalAccount account, Date key) {
+    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(
+            TransactionalAccount account, Date key) {
         return icaBankenTransactionFetcher.fetchTransactions(account, key);
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         return icaBankenTransactionFetcher.fetchUpcomingTransactions(account);
     }
 }

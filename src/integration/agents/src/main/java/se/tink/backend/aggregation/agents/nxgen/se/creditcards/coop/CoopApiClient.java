@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.rpc.AuthenticateRequest;
@@ -16,11 +20,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-import javax.ws.rs.core.HttpHeaders;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 public class CoopApiClient {
 
     private final TinkHttpClient client;
@@ -31,35 +30,33 @@ public class CoopApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public AuthenticateResponse authenticate(String username, String password) throws AuthenticationException {
+    public AuthenticateResponse authenticate(String username, String password)
+            throws AuthenticationException {
         AuthenticateRequest authenticateRequest = new AuthenticateRequest(username, password);
 
         try {
 
             return createRequest(CoopConstants.Url.AUTHENTICATE)
                     .post(AuthenticateResponse.class, authenticateRequest);
-        }catch (HttpResponseException e) {
+        } catch (HttpResponseException e) {
 
             int status = e.getResponse().getStatus();
-            if(status == 401) {
+            if (status == 401) {
 
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
             throw e;
         }
-
     }
-
 
     public UserSummaryResponse getUserSummary() {
-        return createRequest(CoopConstants.Url.USER_SUMMARY)
-                .get(UserSummaryResponse.class);
+        return createRequest(CoopConstants.Url.USER_SUMMARY).get(UserSummaryResponse.class);
     }
 
-
     // fetch transactions
-    // this is done in three tries where we fetch 200 first time, 1000 second time and 10000 last time
+    // this is done in three tries where we fetch 200 first time, 1000 second time and 10000 last
+    // time
     // this is because Coop API only returns a number of transactions, there is no offsetting
     // we fetch e few the first time since most accounts are fetched every day
     // We will not fetch more than 10000 transactions
@@ -72,13 +69,14 @@ public class CoopApiClient {
         // offset is already fetched transactions
         int offset = 0;
         if (page > 0) {
-            offset = CoopConstants.Account.TRANSACTION_BATCH_SIZE.get(page-1);
+            offset = CoopConstants.Account.TRANSACTION_BATCH_SIZE.get(page - 1);
         }
 
         int maxNoTransactions = CoopConstants.Account.TRANSACTION_BATCH_SIZE.get(page);
         int fromYear = CoopConstants.Account.YEAR_TO_START_FETCH;
 
-        TransactionsRequest transactionsRequest = TransactionsRequest.create(maxNoTransactions, accountType, fromYear);
+        TransactionsRequest transactionsRequest =
+                TransactionsRequest.create(maxNoTransactions, accountType, fromYear);
 
         return createRequest(CoopConstants.Url.TRANSACTIONS)
                 .post(TransactionsResponse.class, transactionsRequest)
@@ -86,12 +84,11 @@ public class CoopApiClient {
     }
 
     private RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .headers(getHeaders());
+        return client.request(url).headers(getHeaders());
     }
 
     private Map<String, Object> getHeaders() {
-        Map<String, Object> headers= new HashMap<>(CoopConstants.Header.DEFAULT_HEADERS);
+        Map<String, Object> headers = new HashMap<>(CoopConstants.Header.DEFAULT_HEADERS);
 
         String authHeader = getAuthHeader();
         if (!Strings.isNullOrEmpty(authHeader)) {

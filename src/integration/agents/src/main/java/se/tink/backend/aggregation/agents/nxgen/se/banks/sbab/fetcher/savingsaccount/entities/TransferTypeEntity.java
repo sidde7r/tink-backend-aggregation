@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public enum TransferTypeEntity {
-  @JsonProperty("withdrawal")
-  WITHDRAWAL,
-  @JsonProperty("deposit")
-  DEPOSIT,
-  @JsonProperty("interest_rate")
-  INTEREST_RATE,
-  @JsonProperty("other")
-  OTHER,
+    @JsonProperty("withdrawal")
+    WITHDRAWAL,
+    @JsonProperty("deposit")
+    DEPOSIT,
+    @JsonProperty("interest_rate")
+    INTEREST_RATE,
+    @JsonProperty("other")
+    OTHER,
 }

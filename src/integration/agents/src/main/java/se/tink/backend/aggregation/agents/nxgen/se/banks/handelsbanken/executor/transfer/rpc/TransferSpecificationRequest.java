@@ -6,8 +6,8 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class TransferSpecificationRequest {
@@ -17,15 +17,19 @@ public class TransferSpecificationRequest {
     private String annotation;
     private TransferAmount fromAccount;
     private TransferAmount toAccount;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date transferDate;
+
     private String toClearingNo;
 
-    private TransferSpecificationRequest() {
-    }
+    private TransferSpecificationRequest() {}
 
-    public static TransferSpecificationRequest create(Transfer transfer, AmountableSource source,
-            AmountableDestination destination, TransferMessageFormatter.Messages messages) {
+    public static TransferSpecificationRequest create(
+            Transfer transfer,
+            AmountableSource source,
+            AmountableDestination destination,
+            TransferMessageFormatter.Messages messages) {
         TransferSpecificationRequest request = new TransferSpecificationRequest();
         request.transferDate = new Date();
         request.amount = toAmount(transfer);
@@ -47,8 +51,7 @@ public class TransferSpecificationRequest {
         TransferAmount toTransferAmount();
     }
 
-    public interface AmountableSource extends Amountable {
-    }
+    public interface AmountableSource extends Amountable {}
 
     public interface AmountableDestination extends Amountable {
         boolean isKnownDestination();

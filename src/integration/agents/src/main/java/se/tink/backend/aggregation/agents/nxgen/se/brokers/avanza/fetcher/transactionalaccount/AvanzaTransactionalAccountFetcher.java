@@ -41,9 +41,7 @@ public class AvanzaTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
-        return authSessionStorage
-                .keySet()
-                .stream()
+        return authSessionStorage.keySet().stream()
                 .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
     }
@@ -51,10 +49,7 @@ public class AvanzaTransactionalAccountFetcher
     private Function<String, Stream<? extends TransactionalAccount>> getAccounts(
             HolderName holderName) {
         return authSession ->
-                apiClient
-                        .fetchAccounts(authSession)
-                        .getAccounts()
-                        .stream()
+                apiClient.fetchAccounts(authSession).getAccounts().stream()
                         .filter(AccountEntity::isTransactionalAccount)
                         .map(account -> account.toTinkAccount(holderName));
     }
@@ -67,9 +62,7 @@ public class AvanzaTransactionalAccountFetcher
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
         Collection<? extends Transaction> transactions =
-                authSessionStorage
-                        .keySet()
-                        .stream()
+                authSessionStorage.keySet().stream()
                         .map(a -> apiClient.fetchTransactions(accId, fromDateStr, toDateStr, a))
                         .map(TransactionsResponse::getTransactions)
                         .flatMap(Collection::stream)

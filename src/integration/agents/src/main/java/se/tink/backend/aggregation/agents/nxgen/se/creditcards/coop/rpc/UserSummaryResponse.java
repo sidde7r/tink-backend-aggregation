@@ -16,26 +16,37 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class UserSummaryResponse {
     @JsonProperty("Accounts")
     private List<AccountEntity> accounts;
+
     @JsonProperty("ConsumerSocietyMemberships")
     private List<String> consumerSocietyMemberships;
+
     @JsonProperty("Email")
     private String email;
+
     @JsonProperty("FirstName")
     private String firstName;
+
     @JsonProperty("HasFinancialAccount")
     private boolean hasFinancialAccount;
+
     @JsonProperty("HouseholdMembers")
     private List<String> householdMembers;
+
     @JsonProperty("Id360")
     private String id360;
+
     @JsonProperty("IsEcommerceCustomer")
     private boolean isEcommerceCustomer;
+
     @JsonProperty("LastName")
     private String lastName;
+
     @JsonProperty("MedmeraId")
     private int medmeraId;
+
     @JsonProperty("MemberAccountType")
     private int memberAccountType;
+
     @JsonProperty("RefundSummary")
     private RefundSummaryEntity refundSummary;
 

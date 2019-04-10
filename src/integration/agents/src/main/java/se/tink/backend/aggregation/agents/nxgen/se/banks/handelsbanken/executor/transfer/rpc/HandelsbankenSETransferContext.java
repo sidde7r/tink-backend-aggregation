@@ -16,15 +16,18 @@ public class HandelsbankenSETransferContext extends TransferableResponse {
     private HandelsbankenSEAccountContext toAccounts;
 
     public Optional<HandelsbankenSEPaymentAccount> findSourceAccount(Transfer transfer) {
-        return Optional.ofNullable(fromAccounts).flatMap(fromAccounts -> fromAccounts.findSourceAccount(transfer));
+        return Optional.ofNullable(fromAccounts)
+                .flatMap(fromAccounts -> fromAccounts.findSourceAccount(transfer));
     }
 
     public Optional<HandelsbankenSEPaymentAccount> findDestinationAccount(Transfer transfer) {
-        return Optional.ofNullable(toAccounts).flatMap(toAccounts -> toAccounts.findDestinationAccount(transfer));
+        return Optional.ofNullable(toAccounts)
+                .flatMap(toAccounts -> toAccounts.findDestinationAccount(transfer));
     }
 
     public boolean destinationIsOwned(Transfer transfer) {
-        return Optional.ofNullable(toAccounts).map(toAccounts -> toAccounts.destinationIsOwned(transfer))
+        return Optional.ofNullable(toAccounts)
+                .map(toAccounts -> toAccounts.destinationIsOwned(transfer))
                 .orElse(false);
     }
 

@@ -9,12 +9,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.HandelsbankenCreditCardTransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class HandelsbankenSECreditCardTransactionPaginator extends
-        HandelsbankenCreditCardTransactionPaginator<HandelsbankenSEApiClient> {
+public class HandelsbankenSECreditCardTransactionPaginator
+        extends HandelsbankenCreditCardTransactionPaginator<HandelsbankenSEApiClient> {
 
     public HandelsbankenSECreditCardTransactionPaginator(
-            HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         super(client, sessionStorage);
     }
 
@@ -22,7 +21,8 @@ public class HandelsbankenSECreditCardTransactionPaginator extends
     protected List<Transaction> fetchAccountTransactions(
             HandelsbankenAccount handelsbankenAccount) {
 
-        Collection<? extends Transaction> fetched = client.transactions(handelsbankenAccount).getTinkTransactions();
+        Collection<? extends Transaction> fetched =
+                client.transactions(handelsbankenAccount).getTinkTransactions();
 
         return new ArrayList<>(fetched);
     }

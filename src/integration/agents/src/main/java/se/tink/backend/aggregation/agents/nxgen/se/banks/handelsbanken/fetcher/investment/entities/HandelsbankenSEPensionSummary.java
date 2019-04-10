@@ -10,10 +10,12 @@ public class HandelsbankenSEPensionSummary {
     List<HandelsbankenSEProperty> items;
 
     public Optional<Double> toPaymentsMade() {
-        return Optional.ofNullable(items).flatMap(
-                properties -> properties.stream()
-                        .filter(HandelsbankenSEProperty::isPayment)
-                        .findFirst()
-        ).map(HandelsbankenSEProperty::asDouble);
+        return Optional.ofNullable(items)
+                .flatMap(
+                        properties ->
+                                properties.stream()
+                                        .filter(HandelsbankenSEProperty::isPayment)
+                                        .findFirst())
+                .map(HandelsbankenSEProperty::asDouble);
     }
 }

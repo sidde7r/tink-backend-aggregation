@@ -7,20 +7,28 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DevelopmentEntity {
     @JsonProperty("OneDay")
     private double oneDay;
+
     @JsonProperty("OneWeek")
     private double oneWeek;
+
     @JsonProperty("OneMonth")
     private double oneMonth;
+
     @JsonProperty("ThreeMonths")
     private double threeMonths;
+
     @JsonProperty("SixMonths")
     private double sixMonths;
+
     @JsonProperty("ThisYear")
     private double thisYear;
+
     @JsonProperty("OneYear")
     private double oneYear;
+
     @JsonProperty("ThreeYears")
     private double threeYears;
+
     @JsonProperty("FiveYears")
     private double fiveYears;
 

@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountsEntity {
     @JsonProperty("OwnAccounts")
     private List<AccountEntity> ownAccounts;
+
     @JsonProperty("JointAccounts")
     private List<AccountEntity> jointAccounts;
+
     @JsonProperty("MinorsAccounts")
     private List<AccountEntity> minorsAccounts;
 

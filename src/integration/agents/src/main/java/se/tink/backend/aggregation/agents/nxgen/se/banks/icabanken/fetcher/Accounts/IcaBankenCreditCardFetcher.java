@@ -12,8 +12,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class IcaBankenCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, Date> {
+public class IcaBankenCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, Date> {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenTransactionFetcher icaBankenTransactionFetcher;
@@ -36,7 +37,8 @@ public class IcaBankenCreditCardFetcher implements AccountFetcher<CreditCardAcco
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(CreditCardAccount account, Date key) {
+    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(
+            CreditCardAccount account, Date key) {
         return icaBankenTransactionFetcher.fetchTransactions(account, key);
     }
 }

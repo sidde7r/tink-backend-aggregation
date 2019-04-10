@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.cr
 import java.util.ArrayList;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities.CreditCardEntity;
 
-public class CreditCardsResponse extends ArrayList<CreditCardEntity> {
-}
+public class CreditCardsResponse extends ArrayList<CreditCardEntity> {}

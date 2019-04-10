@@ -5,21 +5,23 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 
 public class NumMonthBoundParser {
 
-    private NumMonthBoundParser() {
-    }
+    private NumMonthBoundParser() {}
 
     public static Integer parse(String value) {
         if (HandelsbankenSEConstants.Fetcher.Loans.FLOATING.equalsIgnoreCase(value)) {
             return HandelsbankenSEConstants.Fetcher.Loans.FLOATING_REEVALUATION_PERIOD;
         }
         if (value == null) {
-            throw new IllegalArgumentException(HandelsbankenSEConstants.Fetcher.Loans.LOG_TAG +
-                    " - Cannot parse numbers of months bound from null value.");
+            throw new IllegalArgumentException(
+                    HandelsbankenSEConstants.Fetcher.Loans.LOG_TAG
+                            + " - Cannot parse numbers of months bound from null value.");
         }
         Matcher matcher = HandelsbankenSEConstants.Fetcher.Loans.PERIOD_PATTERN.matcher(value);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException(HandelsbankenSEConstants.Fetcher.Loans.LOG_TAG +
-                    " - Cannot parse numbers of months bound from value: " + value);
+            throw new IllegalArgumentException(
+                    HandelsbankenSEConstants.Fetcher.Loans.LOG_TAG
+                            + " - Cannot parse numbers of months bound from value: "
+                            + value);
         }
         return parse(matcher);
     }

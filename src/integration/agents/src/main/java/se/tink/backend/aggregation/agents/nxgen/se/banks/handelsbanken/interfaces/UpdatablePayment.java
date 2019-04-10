@@ -7,8 +7,12 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public interface UpdatablePayment {
     DetailedPermissions getDetailedPermissions();
+
     boolean isChangeAllowed();
+
     HandelsbankenSEPaymentContext getContext();
+
     URL toPaymentContext();
+
     Optional<URL> toUpdate();
 }

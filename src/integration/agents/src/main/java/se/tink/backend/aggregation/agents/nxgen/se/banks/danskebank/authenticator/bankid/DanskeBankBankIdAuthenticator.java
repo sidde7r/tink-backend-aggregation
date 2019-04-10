@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Objects;
+import java.util.Optional;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -23,13 +25,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.agents.rpc.Credentials;
 
-import java.util.Objects;
-import java.util.Optional;
-
-public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticator implements BankIdAuthenticator<String> {
-    private static final AggregationLogger log = new AggregationLogger(DanskeBankBankIdAuthenticator.class);
+public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticator
+        implements BankIdAuthenticator<String> {
+    private static final AggregationLogger log =
+            new AggregationLogger(DanskeBankBankIdAuthenticator.class);
     private static final ObjectMapper mapper = new ObjectMapper();
     private final DanskeBankSEApiClient apiClient;
     private final String deviceId;
@@ -37,8 +37,10 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
     private String dynamicBankIdJavascript;
     private String finalizePackage;
 
-    public DanskeBankBankIdAuthenticator(DanskeBankSEApiClient apiClient, String deviceId,
-                                         DanskeBankConfiguration configuration) {
+    public DanskeBankBankIdAuthenticator(
+            DanskeBankSEApiClient apiClient,
+            String deviceId,
+            DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
         this.deviceId = deviceId;
         this.configuration = (DanskeBankSEConfiguration) configuration;
@@ -47,36 +49,49 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
     @Override
     public String init(String ssn) throws BankIdException, AuthorizationException {
         // Get the dynamic logon javascript
-        HttpResponse getResponse = apiClient.collectDynamicLogonJavascript(configuration.getSecuritySystem(),
-                configuration.getBrand());
+        HttpResponse getResponse =
+                apiClient.collectDynamicLogonJavascript(
+                        configuration.getSecuritySystem(), configuration.getBrand());
 
         // Add the authorization header from the response
-        apiClient.addPersistentHeader("Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
+        apiClient.addPersistentHeader(
+                "Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));
 
         // Add method to return device information string
-        dynamicBankIdJavascript = DanskeBankConstants.Javascript.getDeviceInfo(deviceId, configuration.getMarketCode(),
-                configuration.getAppName(), configuration.getAppVersion()) + getResponse.getBody(String.class);
+        dynamicBankIdJavascript =
+                DanskeBankConstants.Javascript.getDeviceInfo(
+                                deviceId,
+                                configuration.getMarketCode(),
+                                configuration.getAppName(),
+                                configuration.getAppVersion())
+                        + getResponse.getBody(String.class);
 
         // Execute javascript to get encrypted logon package and finalize package
         WebDriver driver = null;
         try {
             driver = constructWebDriver();
             JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript(DanskeBankJavascriptStringFormatter.createBankIdJavascript(dynamicBankIdJavascript, ssn));
+            js.executeScript(
+                    DanskeBankJavascriptStringFormatter.createBankIdJavascript(
+                            dynamicBankIdJavascript, ssn));
 
             // Get encrypted logon package
-            String logonPackage = driver.findElement(By.tagName("body")).getAttribute("logonPackage");
+            String logonPackage =
+                    driver.findElement(By.tagName("body")).getAttribute("logonPackage");
 
             // Initiate bankid logon
             InitResponse bankIdInitResponse = apiClient.initiateBankIdLogin(logonPackage);
 
-            if (bankIdInitResponse.getStatus() != null && Objects.equals(
-                    DanskeBankSEConfiguration.BankIdStatus.ALREADY_IN_PROGRESS, bankIdInitResponse.getStatus().toLowerCase())) {
+            if (bankIdInitResponse.getStatus() != null
+                    && Objects.equals(
+                            DanskeBankSEConfiguration.BankIdStatus.ALREADY_IN_PROGRESS,
+                            bankIdInitResponse.getStatus().toLowerCase())) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             }
 
             // Set the finalize package which will be used during finalization of the login
-            this.finalizePackage = driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
+            this.finalizePackage =
+                    driver.findElement(By.tagName("body")).getAttribute("finalizePackage");
 
             return bankIdInitResponse.getOrderReference();
         } finally {
@@ -84,26 +99,30 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
                 driver.quit();
             }
         }
-
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(String reference)
+            throws AuthenticationException, AuthorizationException {
         PollResponse pollResponse = apiClient.pollBankId(reference);
 
         if (pollResponse.getStatus() == null) {
-            throw new IllegalStateException("Could not authenticate user - BankId poll returned null status");
+            throw new IllegalStateException(
+                    "Could not authenticate user - BankId poll returned null status");
         }
 
         switch (pollResponse.getStatus().toLowerCase()) {
             case DanskeBankSEConfiguration.BankIdStatus.OK:
                 // Finalize authentication
-                FinalizeAuthenticationResponse finalizeAuthenticationResponse = finalizeAuthentication();
+                FinalizeAuthenticationResponse finalizeAuthenticationResponse =
+                        finalizeAuthentication();
 
-                // TODO: In about three months, check the logging and remove this block after implementation
+                // TODO: In about three months, check the logging and remove this block after
+                // implementation
                 if (finalizeAuthenticationResponse.getSessionStatus() != 200) {
                     try {
-                        log.infoExtraLong(mapper.writeValueAsString(finalizeAuthenticationResponse),
+                        log.infoExtraLong(
+                                mapper.writeValueAsString(finalizeAuthenticationResponse),
                                 DanskeBankConstants.LogTags.AUTHENTICATION_BANKID);
                     } catch (JsonProcessingException e) {
                         throw new IllegalStateException("Could not serialize response", e);
@@ -139,23 +158,21 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
         // Get encrypted finalize package
         return apiClient.finalizeAuthentication(
                 FinalizeAuthenticationRequest.createForBankId(finalizePackage));
-
     }
-
 
     private String createJavascriptString(String ssn) {
         String javascriptString =
-                "var e = %s;\n" +
-                        "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {\\n                  init: (typeof init === 'function' ? init : function () {}),\\n                  initSeBankIdLogon: initSeBankIdLogon,\\n                  pollSeBankId: pollSeBankId,\\n                  cleanup: (typeof cleanup === 'function' ? cleanup : function () {})\\n                 };\")();\n" +
-                        "function getLogonPackage(logonPackage, failMethod) {\n" +
-                        "    document.body.setAttribute(\"logonPackage\", logonPackage);" +
-                        "}\n" +
-                        "function getFinalizePackage(finalizePackage, failMethod) {\n" +
-                        "    document.body.setAttribute(\"finalizePackage\", finalizePackage)" +
-                        "}\n" +
-                        "function failMethod(arg1) {}\n" +
-                        "nt.initSeBankIdLogon(\"%s\", getLogonPackage, failMethod);\n" +
-                        "nt.pollSeBankId(\"OK\", getFinalizePackage, failMethod)";
+                "var e = %s;\n"
+                        + "var nt = new Function(\"eval(\" + JSON.stringify(e) + \"); return {\\n                  init: (typeof init === 'function' ? init : function () {}),\\n                  initSeBankIdLogon: initSeBankIdLogon,\\n                  pollSeBankId: pollSeBankId,\\n                  cleanup: (typeof cleanup === 'function' ? cleanup : function () {})\\n                 };\")();\n"
+                        + "function getLogonPackage(logonPackage, failMethod) {\n"
+                        + "    document.body.setAttribute(\"logonPackage\", logonPackage);"
+                        + "}\n"
+                        + "function getFinalizePackage(finalizePackage, failMethod) {\n"
+                        + "    document.body.setAttribute(\"finalizePackage\", finalizePackage)"
+                        + "}\n"
+                        + "function failMethod(arg1) {}\n"
+                        + "nt.initSeBankIdLogon(\"%s\", getLogonPackage, failMethod);\n"
+                        + "nt.pollSeBankId(\"OK\", getFinalizePackage, failMethod)";
 
         return String.format(javascriptString, dynamicBankIdJavascript, ssn);
     }

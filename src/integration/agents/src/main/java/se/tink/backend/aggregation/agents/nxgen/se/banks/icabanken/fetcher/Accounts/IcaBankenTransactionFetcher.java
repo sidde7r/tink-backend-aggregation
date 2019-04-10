@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 /**
- * This class does the transaction fetching for both transactional accounts and credit card accounts as
- * it is carried out in the same way.
+ * This class does the transaction fetching for both transactional accounts and credit card accounts
+ * as it is carried out in the same way.
  */
 public class IcaBankenTransactionFetcher {
 
@@ -31,7 +31,8 @@ public class IcaBankenTransactionFetcher {
 
     public TransactionKeyPaginatorResponse<Date> fetchTransactions(Account account, Date key) {
 
-        TransactionKeyPaginatorResponseImpl<Date> response = new TransactionKeyPaginatorResponseImpl<>();
+        TransactionKeyPaginatorResponseImpl<Date> response =
+                new TransactionKeyPaginatorResponseImpl<>();
 
         if (key == null) {
             TransactionsBodyEntity transactionsBody = apiClient.fetchTransactions(account);
@@ -54,19 +55,22 @@ public class IcaBankenTransactionFetcher {
     }
 
     private List<Transaction> parseTransactions(TransactionsBodyEntity transactionsBody) {
-        return Optional.ofNullable(transactionsBody.getTransactions()).orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(transactionsBody.getTransactions())
+                .orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
     public Collection<UpcomingTransaction> fetchUpcomingTransactions(TransactionalAccount account) {
-        List<UpcomingTransactionEntity> upcomingTransactions = apiClient.fetchUpcomingTransactions();
+        List<UpcomingTransactionEntity> upcomingTransactions =
+                apiClient.fetchUpcomingTransactions();
 
-        return Optional.ofNullable(upcomingTransactions).orElse(Collections.emptyList())
-                .stream()
-                .filter(upcomingTransactionEntity ->
-                        account.getBankIdentifier().equalsIgnoreCase(upcomingTransactionEntity.getFromAccountId()))
+        return Optional.ofNullable(upcomingTransactions).orElse(Collections.emptyList()).stream()
+                .filter(
+                        upcomingTransactionEntity ->
+                                account.getBankIdentifier()
+                                        .equalsIgnoreCase(
+                                                upcomingTransactionEntity.getFromAccountId()))
                 .map(UpcomingTransactionEntity::toUpcomingTransaction)
                 .collect(Collectors.toList());
     }

@@ -17,6 +17,7 @@ public class PendingTransaction extends BaseResponse {
 
     private HandelsbankenAmount amount;
     private HandelsbankenRecipient recipient;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
 

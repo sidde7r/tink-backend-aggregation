@@ -5,14 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public enum TransferStatusEntity {
-  @JsonProperty("complete")
-  COMPLETE,
-  @JsonProperty("pending")
-  PENDING,
-  @JsonProperty("unknown")
-  UNKNOWN,
-  @JsonProperty("suspended")
-  SUSPENDED,
-  @JsonProperty("expired")
-  EXPIRED,
+    @JsonProperty("complete")
+    COMPLETE,
+    @JsonProperty("pending")
+    PENDING,
+    @JsonProperty("unknown")
+    UNKNOWN,
+    @JsonProperty("suspended")
+    SUSPENDED,
+    @JsonProperty("expired")
+    EXPIRED,
 }
