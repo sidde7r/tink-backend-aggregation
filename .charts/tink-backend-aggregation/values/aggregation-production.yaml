@@ -39,3 +39,5 @@ agents:
   mountSignatureKeyPair: true
 
   icsConfiguration: true
+
+shouldProvisionClients: true

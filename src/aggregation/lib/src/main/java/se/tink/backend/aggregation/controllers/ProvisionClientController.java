@@ -28,7 +28,7 @@ public class ProvisionClientController {
     private ClusterConfigurationsRepository clusterConfigurationsRepository;
     private ClientConfigurationsRepository clientConfigurationsRepository;
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
-    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-staging";
+    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-production";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public ProvisionClientController(
@@ -78,7 +78,6 @@ public class ProvisionClientController {
 
         log.info("--------------------------");
         log.info("Client {} has been added.", clientName);
-        log.info("Api key: {}", clientConfiguration.getApiClientKey());
         log.info("Identifiable as: {}", aggregatorConfiguration.getAggregatorInfo());
         log.info("Please store the encrypted keys on an offline drive.");
     }
