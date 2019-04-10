@@ -86,6 +86,8 @@ public class ICSConstants {
         public static final String INVALID_CONFIGURATION =
             "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MISSING_TOKEN = "Cannot find OAuth token.";
+        public static final String MISSING_STATE = "OAuth state cannot be null or empty.";
     }
 
     public static final class StorageKeys {

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import static com.google.common.base.Predicates.not;
+
 import com.google.common.base.Strings;
 import java.util.Calendar;
 import java.util.Date;
@@ -70,13 +72,12 @@ public class ICSApiClient {
     // AUTH start
 
     public URL getAuthorizeUrl(String state) {
-
         // 1. get token with client_credentials
-        ClientCredentialTokenResponse clientCredentialTokenResponse =
+        final ClientCredentialTokenResponse clientCredentialTokenResponse =
                 getTokenWithClientCredential();
 
         // 2. setup account & get accountRequestId
-        AccountSetupResponse accountSetupResponse =
+        final AccountSetupResponse accountSetupResponse =
                 accountSetup(clientCredentialTokenResponse.toTinkToken());
 
         // Verifying we get all permissions from the user
@@ -85,15 +86,16 @@ public class ICSApiClient {
             throw new IllegalStateException("Did not receive all permissions!");
         }
 
-        this.sessionStorage.put(StorageKeys.STATE, state);
+        sessionStorage.put(StorageKeys.STATE, state);
 
-        return getAuthRequest(Urls.OAUTH_AUTHORIZE)
+        final String url = Urls.AUTH_BASE + Urls.OAUTH_AUTHORIZE;
+        final String accountRequestId = accountSetupResponse.getData().getAccountRequestId();
+
+        return createRequest(url)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
-                .queryParam(
-                        QueryKeys.ACCOUNT_REQUEST_ID,
-                        accountSetupResponse.getData().getAccountRequestId())
+                .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE)
@@ -118,16 +120,9 @@ public class ICSApiClient {
     }
 
     private ClientCredentialTokenResponse getTokenWithClientCredential() {
-        return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_CLIENT_CREDENTIALS)
+        return createTokenRequest(QueryValues.GRANT_TYPE_CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .get(ClientCredentialTokenResponse.class);
-    }
-
-    private RequestBuilder getAuthRequest(String resource) {
-        return client.request(Urls.AUTH_BASE + resource);
     }
 
     private boolean receivedAllReadPermissions(AccountSetupResponse response) {
@@ -183,26 +178,23 @@ public class ICSApiClient {
 
     // API start
     public void setToken(OAuth2Token token) {
-        this.persistentStorage.put(StorageKeys.TOKEN, token);
+        persistentStorage.put(StorageKeys.TOKEN, token);
     }
 
     private OAuth2Token getToken() {
-        return this.persistentStorage
+        return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new NoSuchElementException("Token missing"));
+                .orElseThrow(() -> new NoSuchElementException(ErrorMessages.MISSING_TOKEN));
     }
 
     public OAuth2Token fetchToken(String authCode) {
-        String state = this.sessionStorage.get(StorageKeys.STATE);
+        final String state =
+                sessionStorage
+                        .get(StorageKeys.STATE, String.class)
+                        .filter(not(Strings::isNullOrEmpty))
+                        .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_STATE));
 
-        if (Strings.isNullOrEmpty(state)) {
-            throw new IllegalStateException("state cannot be null or empty!");
-        }
-
-        return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
-                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
+        return createTokenRequest(QueryValues.GRANT_TYPE_AUTH_CODE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.AUTH_CODE, authCode)
                 .queryParam(QueryKeys.STATE, state)
@@ -211,16 +203,23 @@ public class ICSApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_REFRESH_TOKEN)
-                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
+        return createTokenRequest(QueryValues.GRANT_TYPE_REFRESH_TOKEN)
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .get(OAuth2Token.class);
     }
 
     private RequestBuilder createRequest(String url) {
         return client.request(Urls.BASE + url);
+    }
+
+    private RequestBuilder createTokenRequest(String grantType) {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+
+        return createRequest(Urls.OAUTH_TOKEN)
+                .queryParam(QueryKeys.GRANT_TYPE, grantType)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
     }
 
     private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
