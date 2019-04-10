@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 public abstract class SebConstants {
 
+    public static final String INTEGRATION_NAME = "seb";
+
     public static class Urls {
         private static final String BASE_AUTH = "/authentication/v2";
         public static final String OAUTH = BASE_AUTH + "/oauth2/authorize";
@@ -58,11 +60,6 @@ public abstract class SebConstants {
 
     public static class Fetcher {
         public static final int START_PAGE = 1;
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "seb";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class ErrorMessages {
