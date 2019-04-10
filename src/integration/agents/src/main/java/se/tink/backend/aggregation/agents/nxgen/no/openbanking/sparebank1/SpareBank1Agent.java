@@ -30,7 +30,7 @@ public final class SpareBank1Agent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new SpareBank1ApiClient(client, sessionStorage);
+        apiClient = new SpareBank1ApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -56,7 +56,7 @@ public final class SpareBank1Agent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SpareBank1Authenticator(apiClient, sessionStorage, persistentStorage, getClientConfiguration());
+        return new SpareBank1Authenticator(apiClient, persistentStorage, getClientConfiguration());
     }
 
     @Override

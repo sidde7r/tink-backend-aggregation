@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -54,7 +55,7 @@ public final class SpareBank1Constants {
     }
 
     public static class StorageKeys {
-        public static final String TOKEN = "token";
+        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String ACCOUNT_ID = "account_id";
     }
 
@@ -62,5 +63,6 @@ public final class SpareBank1Constants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 }

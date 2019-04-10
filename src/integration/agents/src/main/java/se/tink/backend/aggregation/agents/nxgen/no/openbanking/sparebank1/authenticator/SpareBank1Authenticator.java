@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.SpareBank1ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.SpareBank1Constants;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.SpareBank1Constants.ErrorMessages;
@@ -11,23 +12,23 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.SpareB
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.configuration.SpareBank1Configuration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 // TODO: OAuth flow with authorization code will be implemented for production
-public class SpareBank1Authenticator implements Authenticator {
+public class SpareBank1Authenticator implements OAuth2Authenticator, Authenticator {
+
     private final SpareBank1ApiClient client;
-    private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final SpareBank1Configuration configuration;
 
     public SpareBank1Authenticator(
             SpareBank1ApiClient client,
-            SessionStorage sessionStorage,
             PersistentStorage persistentStorage,
             SpareBank1Configuration configuration) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
     }
@@ -35,6 +36,26 @@ public class SpareBank1Authenticator implements Authenticator {
     public SpareBank1Configuration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        return null;
+    }
+
+    @Override
+    public OAuth2Token exchangeAuthorizationCode(String code) {
+        return null;
+    }
+
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
+        return null;
+    }
+
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
     @Override
@@ -50,6 +71,6 @@ public class SpareBank1Authenticator implements Authenticator {
                         .setClientSecret(clientSecret)
                         .build();
 
-        sessionStorage.put(StorageKeys.OAUTH_TOKEN, client.getToken(form));
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, client.getToken(form));
     }
 }
