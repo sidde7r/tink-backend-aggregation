@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -298,6 +299,67 @@ public class AgentWorkerOperationFactory {
                 createOrderedRefreshableItemsCommands(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
+        return new AgentWorkerOperation(
+                agentWorkerOperationState, metricsName, request, commands, context);
+    }
+
+    public AgentWorkerOperation createOperationAuthenticate(
+            ManualAuthenticateRequest request, ClientInfo clientInfo) {
+
+        log.debug("Creating Authenticate operation chain for credential");
+
+        ControllerWrapper controllerWrapper =
+                controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
+
+        AgentWorkerCommandContext context =
+                new AgentWorkerCommandContext(
+                        request,
+                        metricRegistry,
+                        coordinationClient,
+                        agentsServiceConfiguration,
+                        aggregatorInfoProvider.createAggregatorInfoFor(
+                                clientInfo.getAggregatorId()),
+                        supplementalInformationController,
+                        controllerWrapper,
+                        clientInfo.getClusterId());
+        CryptoWrapper cryptoWrapper =
+                cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
+
+        //Please be aware that the order of adding commands is meaningful
+        List<AgentWorkerCommand> commands = Lists.newArrayList();
+
+        String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
+
+        commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+        commands.add(
+                new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
+        commands.add(new LockAgentWorkerCommand(context));
+        commands.add(
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper));
+
+        commands.add(
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
+                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+        commands.add(
+                new ReportProviderMetricsAgentWorkerCommand(
+                        context, metricsName, reportMetricsAgentWorkerCommandState));
+
+        commands.add(
+                new DecryptCredentialsWorkerCommand(
+                        context,
+                        new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
+        commands.add(
+                new DebugAgentWorkerCommand(
+                        context, debugAgentWorkerCommandState, agentDebugStorageHandler));
+        commands.add(
+                new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
+        commands.add(
+                new LoginAgentWorkerCommand(
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
+
+        log.debug("Created Authenticate operation for credential");
         return new AgentWorkerOperation(
                 agentWorkerOperationState, metricsName, request, commands, context);
     }

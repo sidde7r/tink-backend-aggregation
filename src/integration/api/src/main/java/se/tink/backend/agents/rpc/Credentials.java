@@ -52,6 +52,8 @@ public class Credentials implements Cloneable {
     private CredentialsTypes type;
     private Date updated;
     private String userId;
+    @JsonIgnore
+    private boolean forceManualAuthentication = false;
 
     @JsonIgnore // Shoudn't be used between containers.
     private String sensitivePayloadSerialized;
@@ -239,6 +241,10 @@ public class Credentials implements Cloneable {
         return this.userId;
     }
 
+    public boolean forceManualAuthentication() {
+        return forceManualAuthentication;
+    }
+
     @Deprecated
     public String getUsername() {
         return getField(Field.Key.USERNAME);
@@ -405,6 +411,11 @@ public class Credentials implements Cloneable {
 
     public void setProviderLatency(long providerLatency) {
         this.providerLatency = providerLatency;
+    }
+
+    @JsonIgnore
+    public void setForceManualAuthentication(boolean forceManualAuthentication) {
+        this.forceManualAuthentication = forceManualAuthentication;
     }
 
     @Override

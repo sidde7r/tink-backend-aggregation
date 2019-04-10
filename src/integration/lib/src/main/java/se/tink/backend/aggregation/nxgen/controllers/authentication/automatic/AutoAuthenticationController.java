@@ -45,7 +45,8 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
                                     authenticationRequest.getCredentials().getType())
                             || (request.isUpdate()
                                     && !Objects.equals(
-                                            request.getType(), CredentialsRequestType.TRANSFER)))) {
+                                            request.getType(), CredentialsRequestType.TRANSFER)))
+                    || request.getCredentials().forceManualAuthentication()) {
                 return manualProgressive(authenticationRequest);
             } else {
                 Preconditions.checkState(
@@ -75,7 +76,8 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
                     && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
                             || (request.isUpdate()
                                     && !Objects.equals(
-                                            request.getType(), CredentialsRequestType.TRANSFER)))) {
+                                            request.getType(), CredentialsRequestType.TRANSFER)))
+                    || credentials.forceManualAuthentication()) {
                 manual(credentials);
             } else {
                 Preconditions.checkState(

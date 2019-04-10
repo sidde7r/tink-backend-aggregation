@@ -17,7 +17,12 @@ public class CoreCredentialsMapper {
                             mapper ->
                                     mapper.skip(
                                             se.tink.backend.agents.rpc.Credentials
-                                                    ::setPersistentSession));
+                                                    ::setPersistentSession))
+                    .addMappings(
+                            mapper ->
+                                    mapper.skip(
+                                            se.tink.backend.agents.rpc.Credentials
+                                                    ::setForceManualAuthentication));
 
     /** ModelMapper for converting a Aggregation RPR Credentials object to a core.Credentals */
     @VisibleForTesting
