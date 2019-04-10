@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.configuration.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.IngAccountsFetcher;
@@ -31,30 +30,27 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class IngAgent extends NextGenerationAgent {
 
+    private final String clientName;
     private final IngApiClient apiClient;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient =
-                new IngApiClient(
-                        client, sessionStorage, request.getProvider().getMarket().toLowerCase());
+        final String market = request.getProvider().getMarket().toLowerCase();
+
+        apiClient = new IngApiClient(client, sessionStorage, market);
+        clientName = request.getProvider().getPayload();
     }
+
+    @Override
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final IngConfiguration ingConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                Market.INTEGRATION_NAME, Market.CLIENT_NAME, IngConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+        final IngConfiguration ingConfiguration = getClientConfiguration();
 
         apiClient.setConfiguration(ingConfiguration);
         client.setSslClientCertificate(
@@ -62,8 +58,13 @@ public final class IngAgent extends NextGenerationAgent {
                 ingConfiguration.getClientKeyStorePassword());
     }
 
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    public IngConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        IngConstants.INTEGRATION_NAME, clientName, IngConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
