@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -34,12 +36,10 @@ public class AccountEntity {
     }
 
     private Amount getBalance() {
-        return balances != null && !balances.isEmpty()
-                ? balances.stream()
-                        .filter(BalanceEntity::isAvailable)
-                        .findFirst()
-                        .orElse(balances.get(0))
-                        .getAmount()
-                : BalanceEntity.Default;
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+                .filter(BalanceEntity::isAvailable)
+                .findFirst()
+                .map(BalanceEntity::getAmount)
+                .orElse(BalanceEntity.Default);
     }
 }
