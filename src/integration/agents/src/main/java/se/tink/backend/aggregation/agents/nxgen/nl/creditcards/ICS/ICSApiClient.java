@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
@@ -82,15 +84,15 @@ public class ICSApiClient {
         this.sessionStorage.put(ICSConstants.Storage.STATE, state);
 
         return getAuthRequest(ICSConstants.URL.OAUTH_AUTHORIZE)
-                .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(ICSConstants.Query.SCOPE, ICSConstants.Query.SCOPE_ACCOUNTS)
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
+                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .queryParam(
-                        ICSConstants.Query.ACCOUNT_REQUEST_ID,
+                        QueryKeys.ACCOUNT_REQUEST_ID,
                         accountSetupResponse.getData().getAccountRequestId())
-                .queryParam(ICSConstants.Query.STATE, state)
-                .queryParam(ICSConstants.Query.REDIRECT_URI, redirectUri)
-                .queryParam(ICSConstants.Query.RESPONSE_TYPE, ICSConstants.Query.RESPONSE_TYPE_CODE)
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE)
                 .getUrl();
     }
 
@@ -117,12 +119,12 @@ public class ICSApiClient {
 
     private ClientCredentialTokenResponse getTokenWithClientCredential() {
         return createRequest(ICSConstants.URL.OAUTH_TOKEN)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
+                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
                 .queryParam(
-                        ICSConstants.Query.GRANT_TYPE,
-                        ICSConstants.Query.GRANT_TYPE_CLIENT_CREDENTIALS)
-                .queryParam(ICSConstants.Query.SCOPE, ICSConstants.Query.SCOPE_ACCOUNTS)
+                        QueryKeys.GRANT_TYPE,
+                        QueryValues.GRANT_TYPE_CLIENT_CREDENTIALS)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .get(ClientCredentialTokenResponse.class);
     }
 
@@ -202,12 +204,12 @@ public class ICSApiClient {
         }
 
         return createRequest(ICSConstants.URL.OAUTH_TOKEN)
-                .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
-                .queryParam(ICSConstants.Query.REDIRECT_URI, redirectUri)
-                .queryParam(ICSConstants.Query.AUTH_CODE, authCode)
-                .queryParam(ICSConstants.Query.STATE, state)
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
+                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.AUTH_CODE, authCode)
+                .queryParam(QueryKeys.STATE, state)
                 .get(TokenResponse.class)
                 .toTinkToken();
     }
@@ -215,10 +217,10 @@ public class ICSApiClient {
     public OAuth2Token refreshToken(String refreshToken) {
         return createRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(
-                        ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_REFRESH_TOKEN)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
-                .queryParam(ICSConstants.Query.REFRESH_TOKEN, refreshToken)
+                        QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_REFRESH_TOKEN)
+                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(QueryKeys.CLIENT_SECRET, getConfiguration().getClientSecret())
+                .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .get(OAuth2Token.class);
     }
 
