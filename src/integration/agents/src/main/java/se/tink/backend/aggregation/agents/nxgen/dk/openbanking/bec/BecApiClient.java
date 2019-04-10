@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec;
 
+import java.util.Date;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -10,10 +13,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.List;
 
 public final class BecApiClient {
     private final TinkHttpClient client;
