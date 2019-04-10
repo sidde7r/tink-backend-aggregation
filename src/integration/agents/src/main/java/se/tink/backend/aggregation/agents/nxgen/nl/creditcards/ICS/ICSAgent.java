@@ -72,10 +72,12 @@ public class ICSAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        ICSOAuthAuthenticator authenticator = new ICSOAuthAuthenticator(apiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new ICSOAuthAuthenticator(apiClient, sessionStorage));
+
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,

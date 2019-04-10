@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtil
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -68,27 +67,8 @@ public class ICSApiClient {
         this.configuration = configuration;
     }
 
-    // AUTH start
-
-    public URL getAuthorizeUrl(String state) {
-        // 1. get token with client_credentials
-        final ClientCredentialTokenResponse clientCredentialTokenResponse =
-                getTokenWithClientCredential();
-
-        // 2. setup account & get accountRequestId
-        final AccountSetupResponse accountSetupResponse =
-                accountSetup(clientCredentialTokenResponse.toTinkToken());
-
-        // Verifying we get all permissions from the user
-        // The documentation does not specify what permissions are required for the endpoints
-        if (!receivedAllReadPermissions(accountSetupResponse)) {
-            throw new IllegalStateException("Did not receive all permissions!");
-        }
-
-        sessionStorage.put(StorageKeys.STATE, state);
-
+    public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
         final String url = Urls.AUTH_BASE + Urls.OAUTH_AUTHORIZE;
-        final String accountRequestId = accountSetupResponse.getData().getAccountRequestId();
 
         return createRequest(url)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
@@ -97,8 +77,7 @@ public class ICSApiClient {
                 .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE)
-                .getUrl();
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
     }
 
     public AccountSetupResponse accountSetup(OAuth2Token token) {
@@ -118,13 +97,16 @@ public class ICSApiClient {
                 .post(AccountSetupResponse.class, request);
     }
 
-    private ClientCredentialTokenResponse getTokenWithClientCredential() {
+    public ClientCredentialTokenResponse getTokenWithClientCredential() {
         return createTokenRequest(QueryValues.GRANT_TYPE_CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .get(ClientCredentialTokenResponse.class);
     }
 
-    private boolean receivedAllReadPermissions(AccountSetupResponse response) {
+    // Verifying we get all permissions from the user
+    // The documentation does not specify what permissions are required for the
+    // endpoints
+    public boolean receivedAllReadPermissions(AccountSetupResponse response) {
         return response.getData().getPermissions().equals(Permissions.ALL_READ_PERMISSIONS);
     }
 
