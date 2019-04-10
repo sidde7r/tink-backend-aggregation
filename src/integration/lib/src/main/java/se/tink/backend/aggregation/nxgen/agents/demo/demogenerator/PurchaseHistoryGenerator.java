@@ -87,6 +87,11 @@ public class PurchaseHistoryGenerator {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
+        transactions.addAll(addMontlyRecurringCost(from, to, "Salary", 3500));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Netflix", -9.99));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Spotify", -9.99));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Gym Membership", -45.99));
+
         return PaginatorResponseImpl.create(transactions, false);
     }
 
@@ -114,5 +119,26 @@ public class PurchaseHistoryGenerator {
                         .collect(toList());
 
         return PaginatorResponseImpl.create(transactions, false);
+    }
+
+    private List<Transaction> addMontlyRecurringCost(
+            Date from, Date to, String name, double amount) {
+        String currency = "EUR";
+        int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
+        List<Transaction> transactions =
+                IntStream.range(0, numberOfMonths)
+                        .mapToObj(
+                                i ->
+                                        Transaction.builder()
+                                                .setAmount(new Amount(currency, amount))
+                                                .setPending(false)
+                                                .setDescription(name)
+                                                .setDate(
+                                                        DateUtils.addMonths(
+                                                                DateUtils.getToday(), -i))
+                                                .build())
+                        .collect(toList());
+
+        return transactions;
     }
 }
