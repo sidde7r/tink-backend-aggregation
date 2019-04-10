@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
 
+import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
@@ -12,12 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
 
 @JsonObject
 public class AccountEntity {
