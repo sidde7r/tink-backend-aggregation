@@ -11,16 +11,16 @@ import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
 public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
 
-    private final LaCaixaApiClient bankClient;
+    private final LaCaixaApiClient apiClient;
 
-    public LaCaixaIdentityDataFetcher(LaCaixaApiClient bankClient) {
+    public LaCaixaIdentityDataFetcher(LaCaixaApiClient apiClient) {
 
-        this.bankClient = bankClient;
+        this.apiClient = apiClient;
     }
 
     @Override
     public CustomerInfo fetchCustomerInfo() {
-        UserDataResponse userDataResponse = bankClient.fetchIdentityData();
+        UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
         EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();
 

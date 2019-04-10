@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 
 public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
 
-    private final LaCaixaApiClient bankClient;
+    private final LaCaixaApiClient apiClient;
 
-    public LaCaixaPasswordAuthenticator(LaCaixaApiClient bankClient) {
-        this.bankClient = bankClient;
+    public LaCaixaPasswordAuthenticator(LaCaixaApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
 
         // Requests a session ID from the server in the form of a cookie.
         // Also gets seed for password hashing.
-        SessionResponse sessionResponse = bankClient.initializeSession();
+        SessionResponse sessionResponse = apiClient.initializeSession();
 
 
         // Initialize password hasher with seed from initialization request.
@@ -31,6 +31,6 @@ public class LaCaixaPasswordAuthenticator implements PasswordAuthenticator {
 
 
         // Construct login request from username and hashed password
-        bankClient.login(new LoginRequest(username, otpHelper.createOtp()));
+        apiClient.login(new LoginRequest(username, otpHelper.createOtp()));
     }
 }
