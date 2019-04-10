@@ -35,5 +35,5 @@ public interface SystemUpdater {
 
     void setWaitingOnConnectorTransactions(boolean waitingOnConnectorTransactions);
 
-    Identity sendIdentityToUpdateService(String uniqueId);
+    Identity sendIdentityToIdentityService(String uniqueId);
 }

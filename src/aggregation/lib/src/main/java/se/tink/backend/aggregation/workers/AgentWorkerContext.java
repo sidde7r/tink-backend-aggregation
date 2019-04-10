@@ -588,7 +588,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Identity sendIdentityToUpdateService(String uniqueId) {
+    public Identity sendIdentityToIdentityService(String uniqueId) {
         // TODO: implement sending identity data
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest updateIdentityDataRequest =
                 new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest();

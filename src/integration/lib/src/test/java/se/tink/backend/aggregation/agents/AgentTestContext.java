@@ -315,7 +315,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public Identity sendIdentityToUpdateService(String uniqueId) {
+    public Identity sendIdentityToIdentityService(String uniqueId) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }

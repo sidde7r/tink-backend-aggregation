@@ -150,7 +150,7 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public Identity sendIdentityToUpdateService(String uniqueId) {
+                    public Identity sendIdentityToIdentityService(String uniqueId) {
                         return null;
                     }
 
