@@ -21,6 +21,8 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Identity;
+
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -584,4 +586,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             this.transfers.add(transfer);
         }
     }
+
+    @Override
+    public Identity sendIdentityToUpdateService(String uniqueId) {
+        // TODO: implement sending identity data
+        return null;
+    }
+
 }

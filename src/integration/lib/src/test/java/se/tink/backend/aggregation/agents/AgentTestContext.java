@@ -16,6 +16,11 @@ import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import se.tink.backend.agents.rpc.Identity;
+import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -23,9 +28,6 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -310,6 +312,12 @@ public class AgentTestContext extends AgentContext {
                 }
             }
         }
+    }
+
+    @Override
+    public Identity sendIdentityToUpdateService(String uniqueId) {
+        // TODO: implement sending identity data
+        throw new NotImplementedException("Method not implemented");
     }
 
     @Override

@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -147,6 +148,12 @@ public class FakeIntegrationArgumentsCreator {
                     public Account updateAccount(String uniqueId) {
                         return null;
                     }
+
+                    @Override
+                    public Identity sendIdentityToUpdateService(String uniqueId) {
+                        return null;
+                    }
+
                 };
         return context;
     }
