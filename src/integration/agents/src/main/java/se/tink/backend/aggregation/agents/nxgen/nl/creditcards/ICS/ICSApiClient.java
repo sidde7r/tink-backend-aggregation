@@ -135,13 +135,6 @@ public class ICSApiClient {
                 .get(ClientCredentialTokenResponse.class);
     }
 
-    // Verifying we get all permissions from the user
-    // The documentation does not specify what permissions are required for the
-    // endpoints
-    public boolean receivedAllReadPermissions(AccountSetupResponse response) {
-        return response.getData().getPermissions().equals(Permissions.ALL_READ_PERMISSIONS);
-    }
-
     public OAuth2Token fetchToken(String authCode) {
         final String state =
                 sessionStorage

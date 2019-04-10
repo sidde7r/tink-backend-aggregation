@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.ClientCredentialTokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -25,10 +26,10 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
     @Override
     public URL buildAuthorizeUrl(String state) {
         final String accountRequestId =
-                Optional.ofNullable(client.getTokenWithClientCredential())
+                Optional.ofNullable(client.fetchTokenWithClientCredential())
                         .map(ClientCredentialTokenResponse::toTinkToken)
-                        .map(client::accountSetup)
-                        .filter(client::receivedAllReadPermissions)
+                        .map(client::setupAccount)
+                        .filter(AccountSetupResponse::receivedAllReadPermissions)
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.MISSING_PERMISSIONS))
                         .getData()
