@@ -33,7 +33,7 @@ spec:
             command:
               - "/mnt/scripts/add-secrets.sh"
             image: gcr.io/tink-containers/debian:stretch
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             securityContext:
               readOnlyRootFilesystem: true
             volumeMounts:
@@ -59,7 +59,7 @@ spec:
           containers:
           - name: tink-backend-aggregation-provisioning-cronjob
             image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
-            imagePullPolicy: Never
+            imagePullPolicy: Always
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
