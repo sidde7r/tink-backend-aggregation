@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BbvaConstants {
 
+    public static final String INTEGRATION_NAME = "bbva";
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CHECKING")

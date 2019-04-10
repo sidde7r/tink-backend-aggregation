@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Pagination;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration.BbvaConfiguration;
@@ -32,6 +31,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BbvaAgent extends NextGenerationAgent {
 
+    private final String clientName;
     private final BbvaApiClient apiClient;
 
     public BbvaAgent(
@@ -39,24 +39,22 @@ public final class BbvaAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
 
         apiClient = new BbvaApiClient(client, sessionStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final BbvaConfiguration bbvaConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                Market.INTEGRATION_NAME,
-                                Market.CLIENT_NAME,
-                                BbvaConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
 
-        apiClient.setConfiguration(bbvaConfiguration);
+        apiClient.setConfiguration(getClientConfiguration());
+    }
+
+    private BbvaConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        BbvaConstants.INTEGRATION_NAME, clientName, BbvaConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

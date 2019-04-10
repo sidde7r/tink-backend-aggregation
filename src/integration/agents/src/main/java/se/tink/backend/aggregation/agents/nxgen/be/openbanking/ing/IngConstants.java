@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 public final class IngConstants {
 
+    public static final String INTEGRATION_NAME = "ing";
+
     public static class Urls {
         public static final String ACCOUNTS = "/v2/accounts";
         private static final String BASE_AUTH = "/oauth2";
@@ -73,11 +75,6 @@ public final class IngConstants {
         public static final String SIGNATURE_NAME = "signature=";
         public static final String HTTP_METHOD_POST = "post";
         public static final String HTTP_METHOD_GET = "get";
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "ing";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class BalanceTypes {
