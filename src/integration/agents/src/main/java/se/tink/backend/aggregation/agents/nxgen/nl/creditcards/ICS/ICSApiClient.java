@@ -67,17 +67,49 @@ public class ICSApiClient {
         this.configuration = configuration;
     }
 
+    private RequestBuilder createRequest(String url) {
+        return client.request(Urls.BASE + url);
+    }
+
     public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
         final String url = Urls.AUTH_BASE + Urls.OAUTH_AUTHORIZE;
 
         return createRequest(url)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
-                .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
-                .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
-                .queryParam(QueryKeys.STATE, state)
-                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
-                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
+            .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE_AUTH_CODE)
+            .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
+            .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
+            .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
+            .queryParam(QueryKeys.STATE, state)
+            .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+            .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE_CODE);
+    }
+
+    private RequestBuilder createTokenRequest(String grantType) {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+
+        return createRequest(Urls.OAUTH_TOKEN)
+            .queryParam(QueryKeys.GRANT_TYPE, grantType)
+            .queryParam(QueryKeys.CLIENT_ID, clientId)
+            .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
+    }
+
+    private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+        final String xFinancialID = ICSUtils.getFinancialId();
+        final String xCustomerIPAddress = ICSUtils.getCustomerIpAdress();
+        final String xInteractionId = ICSUtils.getInteractionId();
+
+        return createRequest(url)
+            .addBearerToken(token)
+            .header(HeaderKeys.CLIENT_ID, clientId)
+            .header(HeaderKeys.CLIENT_SECRET, clientSecret)
+            .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
+            .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
+            .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     }
 
     public AccountSetupResponse accountSetup(OAuth2Token token) {
@@ -110,9 +142,6 @@ public class ICSApiClient {
         return response.getData().getPermissions().equals(Permissions.ALL_READ_PERMISSIONS);
     }
 
-    // AUTH end
-
-    // API start
     public void setToken(OAuth2Token token) {
         persistentStorage.put(StorageKeys.TOKEN, token);
     }
@@ -144,41 +173,6 @@ public class ICSApiClient {
                 .get(OAuth2Token.class);
     }
 
-    private RequestBuilder createRequest(String url) {
-        return client.request(Urls.BASE + url);
-    }
-
-    private RequestBuilder createTokenRequest(String grantType) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-
-        return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.GRANT_TYPE, grantType)
-                .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
-    }
-
-    private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
-        final String xFinancialID = ICSUtils.getFinancialId();
-        final String xCustomerIPAddress = ICSUtils.getCustomerIpAdress();
-        final String xInteractionId = ICSUtils.getInteractionId();
-
-        return createRequest(url)
-                .addBearerToken(token)
-                .header(HeaderKeys.CLIENT_ID, clientId)
-                .header(HeaderKeys.CLIENT_SECRET, clientSecret)
-                .header(HeaderKeys.X_FAPI_FINANCIAL_ID, xFinancialID)
-                .header(HeaderKeys.X_FAPI_CUSTOMER_IP_ADDRESS, xCustomerIPAddress)
-                .header(HeaderKeys.X_FAPI_INTERACTION_ID, xInteractionId)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-    }
-
-    // API end
-
-    // AIS
     public CreditAccountsResponse getAllAccounts() {
         return createRequestInSession(Urls.ACCOUNT, getToken()).get(CreditAccountsResponse.class);
     }
