@@ -12,10 +12,11 @@ public class ResursBankAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("se", "se-resursbank-oauth2")
-            .expectLoggedIn(false)
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder("se", "se-resursbank-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

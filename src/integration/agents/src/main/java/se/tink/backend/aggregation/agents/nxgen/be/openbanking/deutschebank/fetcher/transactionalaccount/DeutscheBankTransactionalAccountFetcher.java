@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class DeutscheBankTransactionalAccountFetcher
-    implements AccountFetcher<TransactionalAccount>,
-    TransactionPagePaginator<TransactionalAccount> {
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPagePaginator<TransactionalAccount> {
 
     private final DeutscheBankApiClient apiClient;
 
@@ -19,8 +19,9 @@ public class DeutscheBankTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts()
-            .toTinkAccounts(apiClient.fetchPartners().getNaturalFullName());
+        return apiClient
+                .fetchAccounts()
+                .toTinkAccounts(apiClient.fetchPartners().getNaturalFullName());
     }
 
     @Override

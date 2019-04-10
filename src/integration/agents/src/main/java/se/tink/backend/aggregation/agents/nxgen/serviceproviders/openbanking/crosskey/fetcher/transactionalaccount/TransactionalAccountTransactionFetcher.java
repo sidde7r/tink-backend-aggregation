@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class TransactionalAccountTransactionFetcher implements
-    TransactionDatePaginator<TransactionalAccount> {
+public class TransactionalAccountTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final CrosskeyBaseApiClient apiClient;
 
@@ -16,9 +16,8 @@ public class TransactionalAccountTransactionFetcher implements
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate,
-        Date toDate) {
-
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         return apiClient.fetchTransactionalAccountTransactions(account, fromDate, toDate);
     }
 }

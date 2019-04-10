@@ -7,29 +7,29 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class BookedEntity {
-  private String transactionId;
+    private String transactionId;
 
-  private String valueDate;
+    private String valueDate;
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
-  private Date bookingDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDate;
 
-  private String entryReference;
+    private String entryReference;
 
-  private String descriptiveText;
+    private String descriptiveText;
 
-  private TransactionAmountEntity transactionAmount;
+    private TransactionAmountEntity transactionAmount;
 
-  private String proprietaryBankTransactionCode;
+    private String proprietaryBankTransactionCode;
 
-  private String proprietaryBankTransactionCodeText;
+    private String proprietaryBankTransactionCodeText;
 
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setAmount(transactionAmount.getAmount())
-        .setDate(bookingDate)
-        .setDescription(descriptiveText)
-        .setPending(false)
-        .build();
-  }
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setAmount(transactionAmount.getAmount())
+                .setDate(bookingDate)
+                .setDescription(descriptiveText)
+                .setPending(false)
+                .build();
+    }
 }

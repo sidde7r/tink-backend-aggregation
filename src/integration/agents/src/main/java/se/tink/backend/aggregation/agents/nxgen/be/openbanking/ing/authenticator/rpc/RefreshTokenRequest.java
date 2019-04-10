@@ -13,9 +13,9 @@ public class RefreshTokenRequest {
 
     public String toData() {
         return Form.builder()
-            .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.REFRESH_TOKEN)
-            .put(IngConstants.FormKeys.REFRESH_TOKEN, refreshToken)
-            .build()
-            .serialize();
+                .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.REFRESH_TOKEN)
+                .put(IngConstants.FormKeys.REFRESH_TOKEN, refreshToken)
+                .build()
+                .serialize();
     }
 }

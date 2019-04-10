@@ -6,10 +6,10 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BalanceEntity {
-    @JsonIgnore public static Amount Default = Amount.inSEK(0);
+
+    @JsonIgnore static Amount Default = Amount.inSEK(0);
 
     private BalanceAmountEntity balanceAmount;
-
     private String balanceType;
 
     public String getBalanceType() {

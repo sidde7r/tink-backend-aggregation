@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class RefreshTokenRequest {
 
-    @JsonProperty
-    private String code;
+    @JsonProperty private String code;
+    @JsonProperty private String scope;
 
     @JsonProperty("grant_type")
     private String grantType;
@@ -24,11 +24,14 @@ public class RefreshTokenRequest {
     @JsonProperty("refresh_token")
     private String refreshToken;
 
-    @JsonProperty
-    private String scope;
-
-    private RefreshTokenRequest(String code, String grantType, String redirectUri, String clientId,
-        String clientSecret, String scope, String refreshToken) {
+    private RefreshTokenRequest(
+            String code,
+            String grantType,
+            String redirectUri,
+            String clientId,
+            String clientSecret,
+            String scope,
+            String refreshToken) {
         this.code = code;
         this.grantType = grantType;
         this.redirectUri = redirectUri;
@@ -36,6 +39,10 @@ public class RefreshTokenRequest {
         this.clientSecret = clientSecret;
         this.scope = scope;
         this.refreshToken = refreshToken;
+    }
+
+    public static TokenRequestBuilder builder() {
+        return new TokenRequestBuilder();
     }
 
     public String getCode() {
@@ -62,12 +69,7 @@ public class RefreshTokenRequest {
         return scope;
     }
 
-    public static TokenRequestBuilder builder() {
-        return new TokenRequestBuilder();
-    }
-
     public static class TokenRequestBuilder {
-
         private String code;
         private String grantType;
         private String redirectUri;
@@ -106,14 +108,14 @@ public class RefreshTokenRequest {
             return this;
         }
 
-        public TokenRequestBuilder refreshToken(String refreshToken){
+        public TokenRequestBuilder refreshToken(String refreshToken) {
             this.refreshToken = refreshToken;
             return this;
         }
 
         public RefreshTokenRequest build() {
-            return new RefreshTokenRequest(code, grantType, redirectUri, clientId, clientSecret, scope, refreshToken);
+            return new RefreshTokenRequest(
+                    code, grantType, redirectUri, clientId, clientSecret, scope, refreshToken);
         }
-
     }
 }

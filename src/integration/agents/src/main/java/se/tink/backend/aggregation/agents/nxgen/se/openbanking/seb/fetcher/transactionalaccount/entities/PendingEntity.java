@@ -8,21 +8,21 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class PendingEntity {
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
-  private Date valueDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date valueDate;
 
-  private String creditorName;
+    private String creditorName;
 
-  private TransactionAmountEntity transactionAmount;
+    private TransactionAmountEntity transactionAmount;
 
-  private String pendingType;
+    private String pendingType;
 
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setAmount(transactionAmount.getAmount())
-        .setDate(valueDate)
-        .setDescription(creditorName)
-        .setPending(true)
-        .build();
-  }
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setAmount(transactionAmount.getAmount())
+                .setDate(valueDate)
+                .setDescription(creditorName)
+                .setPending(true)
+                .build();
+    }
 }

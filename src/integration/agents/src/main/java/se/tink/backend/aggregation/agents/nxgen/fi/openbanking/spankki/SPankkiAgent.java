@@ -7,9 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SPankkiAgent extends CrosskeyBaseAgent {
 
-    public SPankkiAgent(CredentialsRequest request,
-        AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public SPankkiAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

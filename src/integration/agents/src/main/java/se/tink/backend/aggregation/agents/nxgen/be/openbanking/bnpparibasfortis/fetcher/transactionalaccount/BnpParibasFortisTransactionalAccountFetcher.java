@@ -19,9 +19,9 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 @JsonObject
-public class BnpParibasFortisTransactionalAccountFetcher implements
-    AccountFetcher<TransactionalAccount>,
-    TransactionKeyPaginator<TransactionalAccount, URL> {
+public class BnpParibasFortisTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final BnpParibasFortisApiClient apiClient;
 
@@ -31,26 +31,22 @@ public class BnpParibasFortisTransactionalAccountFetcher implements
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient
-            .getAccounts()
-            .getAccounts()
-            .stream()
-            .filter(this::isCheckingAccount)
-            .map(account -> account
-                .toTinkModel(apiClient.getBalanceForAccount(account).getBalances()))
-            .collect(Collectors.toList());
+        return apiClient.getAccounts().getAccounts().stream()
+                .filter(this::isCheckingAccount)
+                .map(acc -> acc.toTinkModel(apiClient.getBalanceForAccount(acc).getBalances()))
+                .collect(Collectors.toList());
     }
 
     private boolean isCheckingAccount(Account account) {
         return BnpParibasFortisConstants.ACCOUNT_TYPE_MAPPER
-            .translate(account.getCashAccountType())
-            .map(item -> item == AccountTypes.CHECKING)
-            .orElse(false);
+                .translate(account.getCashAccountType())
+                .map(AccountTypes.CHECKING::equals)
+                .orElse(false);
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account,
-        URL nextUrl) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL nextUrl) {
         try {
             GetTransactionsResponse response = apiClient.getTransactionsForAccount(account);
             response.setAccount(account);

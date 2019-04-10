@@ -12,5 +12,4 @@ public class DebtorAccountEntity {
     private String name;
     private String schemeName;
     private String secondaryIdentification;
-
 }

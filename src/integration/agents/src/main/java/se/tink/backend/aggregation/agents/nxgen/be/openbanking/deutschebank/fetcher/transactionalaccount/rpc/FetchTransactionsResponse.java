@@ -14,20 +14,15 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class FetchTransactionsResponse implements PaginatorResponse {
 
     private int totalItems;
-
     private int limit;
-
     private int offset;
-
     private List<TransactionsEntity> transactions;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions != null
-            ? transactions.stream()
-            .map(TransactionsEntity::toTinkTransaction)
-            .collect(Collectors.toList())
-            : Collections.emptyList();
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                .map(TransactionsEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
