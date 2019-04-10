@@ -28,6 +28,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SebAgent extends NextGenerationAgent {
+
+    private final String clientName;
     private final SebApiClient apiClient;
 
     public SebAgent(
@@ -35,25 +37,22 @@ public final class SebAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
 
         apiClient = new SebApiClient(client, sessionStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final SebConfiguration sebConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                SebConstants.Market.INTEGRATION_NAME,
-                                SebConstants.Market.CLIENT_NAME,
-                                SebConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+        apiClient.setConfiguration(getClientConfiguration());
+    }
 
-        apiClient.setConfiguration(sebConfiguration);
+    private SebConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        SebConstants.INTEGRATION_NAME, clientName, SebConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -61,10 +60,12 @@ public final class SebAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        SebAuthenticator authenticator = new SebAuthenticator(apiClient, sessionStorage);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new SebAuthenticator(apiClient, sessionStorage));
+
         return new AutoAuthenticationController(
                 request,
                 context,
@@ -76,7 +77,7 @@ public final class SebAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        SebTransactionalAccountFetcher accountFetcher =
+        final SebTransactionalAccountFetcher accountFetcher =
                 new SebTransactionalAccountFetcher(apiClient);
 
         return Optional.of(
