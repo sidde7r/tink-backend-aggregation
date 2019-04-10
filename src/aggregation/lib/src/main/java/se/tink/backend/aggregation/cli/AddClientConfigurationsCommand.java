@@ -23,9 +23,8 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
     protected void run(Bootstrap<AggregationServiceConfiguration> bootstrap, Namespace namespace,
             AggregationServiceConfiguration configuration, Injector injector) throws Exception {
 
-        if (!configuration.shouldProvisionClients()) {
-            log.info("Provisioning not enabled for this cluster.");
-            return;
+        if (configuration.getProvisionClientsConfig() == null) {
+            throw new Exception("Provision clients configuration should not be null.");
         }
 
         AggregatorConfigurationsRepository aggregatorConfigurationsRepository = injector
@@ -44,7 +43,7 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
                 cryptoConfigurationsRepository
         );
 
-        provisionClientController.provision();
+        provisionClientController.provision(configuration.getProvisionClientsConfig());
 
     }
 }
