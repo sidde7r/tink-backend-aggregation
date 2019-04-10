@@ -142,16 +142,6 @@ public class ICSApiClient {
         return response.getData().getPermissions().equals(Permissions.ALL_READ_PERMISSIONS);
     }
 
-    public void setToken(OAuth2Token token) {
-        persistentStorage.put(StorageKeys.TOKEN, token);
-    }
-
-    private OAuth2Token getToken() {
-        return persistentStorage
-                .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new NoSuchElementException(ErrorMessages.MISSING_TOKEN));
-    }
-
     public OAuth2Token fetchToken(String authCode) {
         final String state =
                 sessionStorage
@@ -171,6 +161,16 @@ public class ICSApiClient {
         return createTokenRequest(OAuthGrantTypes.REFRESH_TOKEN)
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .get(OAuth2Token.class);
+    }
+
+    public void setToken(OAuth2Token token) {
+        persistentStorage.put(StorageKeys.TOKEN, token);
+    }
+
+    private OAuth2Token getToken() {
+        return persistentStorage
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new NoSuchElementException(ErrorMessages.MISSING_TOKEN));
     }
 
     public CreditAccountsResponse getAllAccounts() {
