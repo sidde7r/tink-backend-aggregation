@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SpareBank1Constants {
 
+    public static final String INTEGRATION_NAME = "sparebank1";
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "USER").build();
 
@@ -31,7 +33,6 @@ public final class SpareBank1Constants {
 
     public static class HeaderKeys {
         public static final String CACHE_CONTROL = "Cache-Control";
-        public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class HeaderValues {
@@ -55,11 +56,11 @@ public final class SpareBank1Constants {
     public static class StorageKeys {
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "account_id";
-        public static final String CLIENT_ID = "client_id";
-        public static final String CLIENT_SECRET = "client_secret";
     }
 
-    public class Market {
-        public static final String INTEGRATION_NAME = "sparebank1";
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }
