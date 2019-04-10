@@ -112,7 +112,7 @@ public class ICSApiClient {
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     }
 
-    public AccountSetupResponse accountSetup(OAuth2Token token) {
+    public AccountSetupResponse setupAccount(OAuth2Token token) {
         Date fromDate = ICSUtils.getFromDate();
         Date toDate = ICSUtils.getToDate();
         Date expirationDate = ICSUtils.getExpirationDate();
@@ -129,7 +129,7 @@ public class ICSApiClient {
                 .post(AccountSetupResponse.class, request);
     }
 
-    public ClientCredentialTokenResponse getTokenWithClientCredential() {
+    public ClientCredentialTokenResponse fetchTokenWithClientCredential() {
         return createTokenRequest(OAuthGrantTypes.CLIENT_CREDENTIALS)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .get(ClientCredentialTokenResponse.class);
