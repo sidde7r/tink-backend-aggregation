@@ -6,7 +6,7 @@ import os
 PROJECTS = {
     'tink-backend-aggregation': {
         'chart': True,
-        'salt': True,
+        'salt': False,
         'branches': {
             'aggregation-production': {'block': True},
             'aggregation-staging': {'block': False},
