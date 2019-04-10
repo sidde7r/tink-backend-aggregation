@@ -35,7 +35,7 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        UserDataResponse userDataResponse = apiClient.fetchHolderName();
+        UserDataResponse userDataResponse = apiClient.fetchIdentityData();
         EngagementResponse engagements = apiClient
                 .fetchEngagements(LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_P);
 

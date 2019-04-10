@@ -19,10 +19,10 @@ public class LaCaixaAccountFetcher implements AccountFetcher<TransactionalAccoun
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
 
-        UserDataResponse userDataResponse = apiClient.fetchHolderName();
+        UserDataResponse userDataResponse = apiClient.fetchIdentityData();
         ListAccountsResponse accountResponse = apiClient.fetchAccountList();
 
-        if(accountResponse == null || !accountResponse.hasAccounts()) {
+        if (accountResponse == null || !accountResponse.hasAccounts()) {
             return Collections.emptyList();
         }
 
