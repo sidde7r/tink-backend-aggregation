@@ -79,11 +79,16 @@ public class ICSConstants {
                         READ_TRANSACTIONS_DEBITS);
     }
 
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+            "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+    }
+
     public static final class Storage {
         public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
-        public static final String ICS_CONFIGURATION = "icsConfiguration";
     }
 
     public static final class Date {

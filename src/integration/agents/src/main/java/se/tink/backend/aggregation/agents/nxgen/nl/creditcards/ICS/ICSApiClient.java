@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -37,6 +39,7 @@ public class ICSApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final String redirectUri;
+    private ICSConfiguration configuration;
 
     public ICSApiClient(
             TinkHttpClient client,
@@ -49,10 +52,13 @@ public class ICSApiClient {
         this.redirectUri = redirectUri;
     }
 
-    private ICSConfiguration getICSConfiguration() {
-        return persistentStorage
-                .get(ICSConstants.Storage.ICS_CONFIGURATION, ICSConfiguration.class)
-                .get();
+    public ICSConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(ICSConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     // AUTH start
@@ -77,7 +83,7 @@ public class ICSApiClient {
 
         return getAuthRequest(ICSConstants.URL.OAUTH_AUTHORIZE)
                 .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getICSConfiguration().getClientId())
+                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(ICSConstants.Query.SCOPE, ICSConstants.Query.SCOPE_ACCOUNTS)
                 .queryParam(
                         ICSConstants.Query.ACCOUNT_REQUEST_ID,
@@ -106,8 +112,8 @@ public class ICSApiClient {
         return getAPIRequest(
                         ICSConstants.URL.ACCOUNT_SETUP,
                         token,
-                        getICSConfiguration().getClientId(),
-                        getICSConfiguration().getClientSecret(),
+                        getConfiguration().getClientId(),
+                        getConfiguration().getClientSecret(),
                         getFinancialId(),
                         getCustomerIpAdress(),
                         getInteractionId())
@@ -118,9 +124,8 @@ public class ICSApiClient {
 
     private ClientCredentialTokenResponse getTokenWithClientCredential() {
         return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getICSConfiguration().getClientId())
-                .queryParam(
-                        ICSConstants.Query.CLIENT_SECRET, getICSConfiguration().getClientSecret())
+                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
                 .queryParam(
                         ICSConstants.Query.GRANT_TYPE,
                         ICSConstants.Query.GRANT_TYPE_CLIENT_CREDENTIALS)
@@ -209,9 +214,8 @@ public class ICSApiClient {
 
         return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getICSConfiguration().getClientId())
-                .queryParam(
-                        ICSConstants.Query.CLIENT_SECRET, getICSConfiguration().getClientSecret())
+                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
                 .queryParam(ICSConstants.Query.REDIRECT_URI, redirectUri)
                 .queryParam(ICSConstants.Query.AUTH_CODE, authCode)
                 .queryParam(ICSConstants.Query.STATE, state)
@@ -223,9 +227,8 @@ public class ICSApiClient {
         return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(
                         ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_REFRESH_TOKEN)
-                .queryParam(ICSConstants.Query.CLIENT_ID, getICSConfiguration().getClientId())
-                .queryParam(
-                        ICSConstants.Query.CLIENT_SECRET, getICSConfiguration().getClientSecret())
+                .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
+                .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
                 .queryParam(ICSConstants.Query.REFRESH_TOKEN, refreshToken)
                 .get(OAuth2Token.class);
     }
@@ -265,8 +268,8 @@ public class ICSApiClient {
         return getAPIRequest(
                         ICSConstants.URL.ACCOUNT,
                         getToken(),
-                        getICSConfiguration().getClientId(),
-                        getICSConfiguration().getClientSecret(),
+                        getConfiguration().getClientId(),
+                        getConfiguration().getClientSecret(),
                         getFinancialId(),
                         getCustomerIpAdress(),
                         getInteractionId())
@@ -277,8 +280,8 @@ public class ICSApiClient {
         return getAPIRequest(
                         String.format(ICSConstants.URL.BALANCES, accountId),
                         getToken(),
-                        getICSConfiguration().getClientId(),
-                        getICSConfiguration().getClientSecret(),
+                        getConfiguration().getClientId(),
+                        getConfiguration().getClientSecret(),
                         getFinancialId(),
                         getCustomerIpAdress(),
                         getInteractionId())
@@ -289,8 +292,8 @@ public class ICSApiClient {
         return getAPIRequest(
                         String.format(ICSConstants.URL.TRANSACTIONS, accountId),
                         getToken(),
-                        getICSConfiguration().getClientId(),
-                        getICSConfiguration().getClientSecret(),
+                        getConfiguration().getClientId(),
+                        getConfiguration().getClientSecret(),
                         getFinancialId(),
                         getCustomerIpAdress(),
                         getInteractionId())
