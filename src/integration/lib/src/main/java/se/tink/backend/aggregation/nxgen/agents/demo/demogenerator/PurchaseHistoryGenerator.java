@@ -37,7 +37,7 @@ public class PurchaseHistoryGenerator {
     private double randomisePurchase(GeneratePurchaseBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * price;
+            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * -price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
