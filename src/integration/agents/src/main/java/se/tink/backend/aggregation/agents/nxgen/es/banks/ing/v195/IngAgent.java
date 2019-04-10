@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
+import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
@@ -32,7 +34,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 import java.util.Optional;
 
-public class IngAgent extends NextGenerationAgent {
+public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
 
     private final IngApiClient ingApiClient;
 
@@ -136,7 +138,8 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CustomerInfoFetcher> constructCustomerInfoFetcher() {
-        return Optional.of(new IngCustomerInfoFetcher(ingApiClient));
+    public FetchCustomerInfoResponse fetchCustomerInfo() {
+        final CustomerInfoFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
+        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
     }
 }

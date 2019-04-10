@@ -74,10 +74,10 @@ public final class RefreshExecutorUtils {
                                     .getAccounts());
                     break;
                 case IDENTITY:
-                    ((RefreshCustomerInfoExecutor) agent)
-                            .fetchCustomerInfo()
-                            .getCustomerInfo()
-                            .ifPresent(context::updateCustomerInfo);
+                    context.updateCustomerInfo(
+                            ((RefreshCustomerInfoExecutor) agent)
+                                    .fetchCustomerInfo()
+                                    .getCustomerInfo());
                     break;
                 case CHECKING_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
