@@ -8,8 +8,9 @@ public class CounterpartyEntity {
 
     @JsonProperty("account_number")
     private String accountNumber;
+
     private String name;
+
     @JsonProperty("sort_code")
     private String sortCode;
-    
 }

@@ -12,5 +12,4 @@ public class AccountsResponse {
     public List<AccountEntity> getAccounts() {
         return accounts;
     }
-
 }

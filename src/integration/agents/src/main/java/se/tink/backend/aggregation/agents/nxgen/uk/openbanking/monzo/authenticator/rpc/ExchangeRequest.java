@@ -9,5 +9,4 @@ public class ExchangeRequest extends AbstractForm {
     public void put(@Nonnull String key, @Nonnull String value) {
         super.put(key, value);
     }
-
 }

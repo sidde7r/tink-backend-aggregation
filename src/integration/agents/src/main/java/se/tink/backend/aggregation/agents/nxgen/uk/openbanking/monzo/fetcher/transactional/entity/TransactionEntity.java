@@ -20,27 +20,40 @@ public class TransactionEntity {
     private Object merchant;
     private String notes;
     private Object metadata;
+
     @JsonProperty("account_balance")
     private int accountBalance;
+
     private Object attachments;
     private String category;
+
     @JsonProperty("is_load")
     private boolean isLoad;
+
     private Instant settled;
+
     @JsonProperty("decline_reason")
     private String declineReason;
+
     @JsonProperty("local_amount")
     private int localAmount;
+
     @JsonProperty("local_currency")
     private String localCurrency;
+
     private String updated;
+
     @JsonProperty("account_id")
     private String accountId;
+
     private CounterpartyEntity counterparty;
     private String scheme;
+
     @JsonProperty("dedupe_id")
     private String dedupeId;
+
     private boolean originator;
+
     @JsonProperty("include_in_spending")
     private boolean includeInSpending;
 

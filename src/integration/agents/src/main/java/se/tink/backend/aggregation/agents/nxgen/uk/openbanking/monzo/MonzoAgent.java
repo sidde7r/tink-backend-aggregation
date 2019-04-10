@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.MonzoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.configuration.MonzoConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.MonzoTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.configuration.MonzoConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -28,66 +29,61 @@ public class MonzoAgent extends NextGenerationAgent {
     private final String clientName;
     private final MonzoApiClient apiClient;
 
-    public MonzoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public MonzoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
         apiClient = new MonzoApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        MonzoConfiguration monzoConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(MonzoConstants.INTEGRATION_NAME, clientName, MonzoConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No Monzo client configured for name: %s",
-                                                        clientName)));
+        apiClient.setConfiguration(getClientConfiguration());
+    }
 
-        persistentStorage.put(MonzoConstants.StorageKey.CLIENT_ID, monzoConfiguration.getClientId());
-        persistentStorage.put(MonzoConstants.StorageKey.CLIENT_SECRET, monzoConfiguration.getClientSecret());
-        persistentStorage.put(MonzoConstants.StorageKey.REDIRECT_URL, monzoConfiguration.getRedirectUrl());
+    public MonzoConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        MonzoConstants.INTEGRATION_NAME, clientName, MonzoConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new MonzoAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()));
 
-        MonzoAuthenticator authenticator = new MonzoAuthenticator(apiClient, persistentStorage);
-
-        OAuth2AuthenticationController controller = new OAuth2AuthenticationController(persistentStorage,
-                supplementalInformationHelper, authenticator);
-
-        ThirdPartyAppAuthenticationController<String> thirdParty = new ThirdPartyAppAuthenticationController<>(
-                controller,
-                supplementalInformationHelper);
-
-        return new AutoAuthenticationController(request, systemUpdater, thirdParty, controller);
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        MonzoTransactionalAccountFetcher fetcher = new MonzoTransactionalAccountFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        final MonzoTransactionalAccountFetcher fetcher =
+                new MonzoTransactionalAccountFetcher(apiClient);
+
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         fetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                fetcher
-                        )
-                )
-        );
+                        new TransactionFetcherController<>(transactionPaginationHelper, fetcher)));
     }
 
     @Override
@@ -111,7 +107,8 @@ public class MonzoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -124,5 +121,4 @@ public class MonzoAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
-
 }

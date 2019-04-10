@@ -12,5 +12,4 @@ public class TransactionsResponse {
     public List<TransactionEntity> getTransactions() {
         return transactions;
     }
-
 }
