@@ -29,7 +29,7 @@ public final class AktiaAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new AktiaApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new AktiaApiClient(client, sessionStorage);
     }
 
     @Override
@@ -44,14 +44,11 @@ public final class AktiaAgent extends NextGenerationAgent {
                                 request.getProvider().getPayload(),
                                 AktiaConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException("Akita configuration missing."));
-
-        persistentStorage.put(
-                AktiaConstants.StorageKeys.CLIENT_ID, akitaConfiguration.getClientId());
-        persistentStorage.put(
-                AktiaConstants.StorageKeys.CLIENT_SECRET, akitaConfiguration.getClientSecret());
-        persistentStorage.put(
-                AktiaConstants.StorageKeys.CONSENT_ID, akitaConfiguration.getConsentId());
+                                () ->
+                                        new IllegalStateException(
+                                                AktiaConstants.ErrorMessages
+                                                        .MISSING_CONFIGURATION));
+        apiClient.setConfiguration(akitaConfiguration);
     }
 
     @Override

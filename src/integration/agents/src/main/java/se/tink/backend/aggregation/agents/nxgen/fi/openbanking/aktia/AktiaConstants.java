@@ -51,6 +51,10 @@ public final class AktiaConstants {
         public static final String X_IBM_CLIENT_SECRET = "x-ibm-client-secret";
     }
 
+    public static class ErrorMessages {
+        public static final String MISSING_CONFIGURATION = "Configuration is missing!";
+    }
+
     public class Market {
         public static final String INTEGRATION_NAME = "aktia";
     }

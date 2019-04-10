@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -11,22 +13,29 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class AktiaApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
+    private AktiaConfiguration configuration;
 
-    public AktiaApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public AktiaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
+    }
+
+    public AktiaConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        AktiaConstants.ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(AktiaConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -38,15 +47,11 @@ public final class AktiaApiClient {
 
     private RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(
-                        AktiaConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(AktiaConstants.StorageKeys.CONSENT_ID))
-                .header(
-                        AktiaConstants.HeaderKeys.X_IBM_CLIENT_ID,
-                        persistentStorage.get(AktiaConstants.StorageKeys.CLIENT_ID))
+                .header(AktiaConstants.HeaderKeys.CONSENT_ID, configuration.getConsentId())
+                .header(AktiaConstants.HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
                 .header(
                         AktiaConstants.HeaderKeys.X_IBM_CLIENT_SECRET,
-                        persistentStorage.get(AktiaConstants.StorageKeys.CLIENT_SECRET));
+                        configuration.getClientSecret());
     }
 
     public List<TransactionalAccount> getAccounts() {
