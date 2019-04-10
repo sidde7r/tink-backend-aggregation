@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -10,11 +14,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 public final class AktiaApiClient {
     private final TinkHttpClient client;
@@ -60,10 +59,8 @@ public final class AktiaApiClient {
     public PaginatorResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return createRequestInSession(
-                        AktiaConstants.Urls.GET_TRANSACTIONS
-                                .parameter(
-                                        AktiaConstants.IdTags.ACCOUNT_ID,
-                                        account.getApiIdentifier()))
+                        AktiaConstants.Urls.GET_TRANSACTIONS.parameter(
+                                AktiaConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier()))
                 .queryParam(
                         AktiaConstants.QueryKeys.DATE_FROM,
                         ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))

@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiClient;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-
-import java.util.Collection;
-import java.util.Date;
 
 public class AktiaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -8,8 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAcco
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-
-import java.util.List;
 
 @JsonObject
 public class AccountEntity {
