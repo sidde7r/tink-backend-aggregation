@@ -4,6 +4,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public abstract class BecConstants {
 
+    public static final String INTEGRATION_NAME = "bec";
+
     public static class Urls {
         public static final String BASE_URL = "https://api.sandbox.openbanking.bec.dk";
 
@@ -37,12 +39,13 @@ public abstract class BecConstants {
         public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "bec";
+    public static class IdTags {
+        public static final String ACCOUNT_ID = "accountId";
     }
 
-    public static class IdTags {
-
-        public static final String ACCOUNT_ID = "accountId";
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }
