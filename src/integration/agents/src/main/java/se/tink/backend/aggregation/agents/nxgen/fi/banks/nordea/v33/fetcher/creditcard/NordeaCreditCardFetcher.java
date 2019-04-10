@@ -10,8 +10,7 @@ public class NordeaCreditCardFetcher implements AccountFetcher<CreditCardAccount
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaCreditCardFetcher(NordeaFIApiClient apiClient,
-            SessionStorage sessionStorage) {
+    public NordeaCreditCardFetcher(NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }

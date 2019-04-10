@@ -7,7 +7,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionDetailsRequest {
     @JsonProperty("Accept")
     private String accept;
+
     private String accountId;
+
     @JsonProperty("Authorization")
     private String authorization;
 

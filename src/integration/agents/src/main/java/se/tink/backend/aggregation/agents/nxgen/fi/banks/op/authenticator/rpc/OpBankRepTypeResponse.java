@@ -7,4 +7,3 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OpBankRepTypeResponse extends OpBankResponseEntity {
     private String representationType;
 }
-

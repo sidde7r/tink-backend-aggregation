@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class OpBankInstrumentsEntity {
@@ -33,7 +33,8 @@ public class OpBankInstrumentsEntity {
         instrument.setCurrency(marketValue.getCurrency());
 
         instrument.setQuantity(holdings.getOwnedPcs());
-        if (OpBankConstants.Fetcher.INSTRUMENT_TYPE_BOND.equalsIgnoreCase(type) && instrument.getQuantity() == 0) {
+        if (OpBankConstants.Fetcher.INSTRUMENT_TYPE_BOND.equalsIgnoreCase(type)
+                && instrument.getQuantity() == 0) {
             instrument.setQuantity(1D);
         }
 
@@ -47,7 +48,8 @@ public class OpBankInstrumentsEntity {
     }
 
     /**
-     * Returns market price if it's present, if not, calculates market price by dividing marketValue by ownedPcs
+     * Returns market price if it's present, if not, calculates market price by dividing marketValue
+     * by ownedPcs
      */
     private Double getInstrumentPrice() {
         OpBankPriceEurEntity marketPrice = holdings.getMarketPrice();

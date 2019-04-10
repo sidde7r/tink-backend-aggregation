@@ -15,7 +15,8 @@ public class AktiaAutoAuthenticator implements AutoAuthenticator {
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate()
+            throws SessionException, BankServiceException, AuthorizationException {
         aktiaAuthenticationFlow.authenticate();
     }
 }

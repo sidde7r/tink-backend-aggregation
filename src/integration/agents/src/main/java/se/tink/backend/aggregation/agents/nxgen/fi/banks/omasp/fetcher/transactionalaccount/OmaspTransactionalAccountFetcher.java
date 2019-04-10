@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.entities.AccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.entities.TransactionsEntity;
@@ -17,17 +19,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
 
-
-public class OmaspTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>, TransactionPagePaginator<TransactionalAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(OmaspTransactionalAccountFetcher.class);
+public class OmaspTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPagePaginator<TransactionalAccount> {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(OmaspTransactionalAccountFetcher.class);
 
     private final OmaspApiClient apiClient;
     private final Credentials credentials;
 
-    private final Map<TransactionalAccount, List<TransactionsEntity>> accountTransactions = new HashMap<>();
+    private final Map<TransactionalAccount, List<TransactionsEntity>> accountTransactions =
+            new HashMap<>();
 
     public OmaspTransactionalAccountFetcher(OmaspApiClient apiClient, Credentials credentials) {
         this.apiClient = apiClient;
@@ -40,14 +43,18 @@ public class OmaspTransactionalAccountFetcher implements AccountFetcher<Transact
         List<AccountsEntity> accounts = this.apiClient.getAccounts();
 
         // Must fetch transaction list for the account in order to get the account type
-        accounts.forEach(account -> {
-            TransactionsResponse transactionsResponse = this.apiClient.getTransactionsFor(account.getId());
+        accounts.forEach(
+                account -> {
+                    TransactionsResponse transactionsResponse =
+                            this.apiClient.getTransactionsFor(account.getId());
 
-            AccountTypes accountType = transactionsResponse.getTinkAccountType(this.credentials);
+                    AccountTypes accountType =
+                            transactionsResponse.getTinkAccountType(this.credentials);
 
-            this.accountTransactions.put(account.toTransactionalAccount(accountType),
-                    transactionsResponse.getTransactions());
-        });
+                    this.accountTransactions.put(
+                            account.toTransactionalAccount(accountType),
+                            transactionsResponse.getTransactions());
+                });
 
         return new ArrayList<>(this.accountTransactions.keySet());
     }
@@ -55,7 +62,8 @@ public class OmaspTransactionalAccountFetcher implements AccountFetcher<Transact
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
-        List<TransactionsEntity> transactionsEntities = this.accountTransactions.getOrDefault(account, null);
+        List<TransactionsEntity> transactionsEntities =
+                this.accountTransactions.getOrDefault(account, null);
         if (transactionsEntities == null) {
             // should not happen
             return PaginatorResponseImpl.createEmpty(false);
@@ -66,10 +74,12 @@ public class OmaspTransactionalAccountFetcher implements AccountFetcher<Transact
         }
 
         TransactionsEntity transactionsEntity = transactionsEntities.get(page);
-        TransactionDetailsResponse transactionDetailsResponse = this.apiClient.getTransactionDetails(
-                account.getBankIdentifier(), transactionsEntity.getId());
+        TransactionDetailsResponse transactionDetailsResponse =
+                this.apiClient.getTransactionDetails(
+                        account.getBankIdentifier(), transactionsEntity.getId());
 
-        return PaginatorResponseImpl.create(Collections.singletonList(transactionDetailsResponse.toTinkTransaction()),
-                page+1 < transactionsEntities.size());
+        return PaginatorResponseImpl.create(
+                Collections.singletonList(transactionDetailsResponse.toTinkTransaction()),
+                page + 1 < transactionsEntities.size());
     }
 }

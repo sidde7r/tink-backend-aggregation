@@ -38,7 +38,8 @@ public class OpBankAccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inEUR(balance))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(), accountNumber, Amount.inEUR(balance))
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
                 .setHolderName(new HolderName(ownerName))
@@ -49,7 +50,8 @@ public class OpBankAccountEntity {
 
     @JsonIgnore
     public AccountTypes getTinkAccountType() {
-        return OpBankConstants.ACCOUNT_TYPE_MAPPER.translate(bankingServiceTypeCode)
+        return OpBankConstants.ACCOUNT_TYPE_MAPPER
+                .translate(bankingServiceTypeCode)
                 .orElse(AccountTypes.OTHER);
     }
 

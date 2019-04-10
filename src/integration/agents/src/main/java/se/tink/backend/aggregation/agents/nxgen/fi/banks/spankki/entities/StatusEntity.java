@@ -18,7 +18,8 @@ public class StatusEntity {
 
     @JsonIgnore
     public boolean isOK() {
-        return SpankkiConstants.ServerResponse.OK == SpankkiConstants.ServerResponse.getMessage(this);
+        return SpankkiConstants.ServerResponse.OK
+                == SpankkiConstants.ServerResponse.getMessage(this);
     }
 
     public Object getErrorTitle() {

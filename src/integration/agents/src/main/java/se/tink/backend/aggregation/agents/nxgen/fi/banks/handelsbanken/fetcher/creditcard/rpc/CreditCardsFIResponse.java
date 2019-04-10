@@ -10,6 +10,7 @@ public class CreditCardsFIResponse extends CreditCardsResponse<HandelsbankenFICr
 
     public List<CreditCardAccount> toTinkAccounts() {
         return cards.stream()
-                .map(HandelsbankenFICreditCard::toTinkAccount).collect(Collectors.toList());
+                .map(HandelsbankenFICreditCard::toTinkAccount)
+                .collect(Collectors.toList());
     }
 }

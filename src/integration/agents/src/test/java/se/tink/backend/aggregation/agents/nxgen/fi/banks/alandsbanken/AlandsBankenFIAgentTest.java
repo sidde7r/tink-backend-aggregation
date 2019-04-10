@@ -15,11 +15,12 @@ public class AlandsBankenFIAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-codecard")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true);
+        builder =
+                new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-codecard")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test

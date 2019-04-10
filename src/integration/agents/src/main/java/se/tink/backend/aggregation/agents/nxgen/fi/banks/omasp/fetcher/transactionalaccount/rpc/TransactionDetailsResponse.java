@@ -23,7 +23,6 @@ public class TransactionDetailsResponse extends OmaspBaseResponse {
     // `referenceNumber` is null - cannot define it!
     private Boolean copyAllowed;
 
-
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(Amount.inEUR(sum.getValue()))

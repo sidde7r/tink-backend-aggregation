@@ -15,8 +15,7 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaLoanFetcher(NordeaFIApiClient apiClient,
-            SessionStorage sessionStorage) {
+    public NordeaLoanFetcher(NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -26,11 +25,12 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
         FetchLoanResponse fetchLoan = apiClient.fetchLoans();
 
         return fetchLoan.stream()
-                .map(loansEntity -> {
-                    FetchLoanDetailsResponse loanDetails = apiClient
-                            .fetchLoanDetails(loansEntity.getLoanId());
-                    return loanDetails.toTinkLoanAccount(loansEntity);
-                })
+                .map(
+                        loansEntity -> {
+                            FetchLoanDetailsResponse loanDetails =
+                                    apiClient.fetchLoanDetails(loansEntity.getLoanId());
+                            return loanDetails.toTinkLoanAccount(loansEntity);
+                        })
                 .collect(Collectors.toList());
     }
 

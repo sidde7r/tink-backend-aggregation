@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class FetchTransactionsResponse implements PaginatorResponse{
+public class FetchTransactionsResponse implements PaginatorResponse {
 
     private List<TransactionEntity> transactions;
 

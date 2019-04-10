@@ -1,14 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.creditcard.entities;
 
-
-
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class CreditCardEntity {
-    
+
     public String amount;
     public String available;
     public String balance;
@@ -86,16 +84,18 @@ public class CreditCardEntity {
         return totalLimit;
     }
 
-    public Amount toTinkAmount(String m){
+    public Amount toTinkAmount(String m) {
         return Amount.inEUR(Double.parseDouble(m));
     }
 
     public CreditCardAccount toTinkAccount() {
-        return CreditCardAccount.builder(this.getCreditAccountNr(), toTinkAmount(this.balance), toTinkAmount(this.totalLimit))
+        return CreditCardAccount.builder(
+                        this.getCreditAccountNr(),
+                        toTinkAmount(this.balance),
+                        toTinkAmount(this.totalLimit))
                 .setAccountNumber(this.creditAccountNr)
                 .setBankIdentifier(this.getCreditAccountNr())
                 .setName(this.creditName)
                 .build();
     }
-
 }

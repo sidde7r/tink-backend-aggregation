@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -48,7 +48,8 @@ public class AccountsEntity {
     private String sortName;
 
     public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(convertAccountType(), accountNumber, new Amount(currency, balance))
+        return TransactionalAccount.builder(
+                        convertAccountType(), accountNumber, new Amount(currency, balance))
                 .setAccountNumber(accountNumber)
                 .setName(accountNickname)
                 .setBankIdentifier(accountId)
@@ -60,8 +61,13 @@ public class AccountsEntity {
 
         if (type == SpankkiConstants.AccountType.UNKOWN) {
             // until we have some more knowledge set everything to checking and log to improve
-            LOGGER.info(String.format("%s - Found unhandled account Nickname [%s], account type [%s], account type name [%s]",
-                    SpankkiConstants.LogTags.LOG_TAG_ACCOUNT_TYPE, accountNickname, accountType, accountTypeName));
+            LOGGER.info(
+                    String.format(
+                            "%s - Found unhandled account Nickname [%s], account type [%s], account type name [%s]",
+                            SpankkiConstants.LogTags.LOG_TAG_ACCOUNT_TYPE,
+                            accountNickname,
+                            accountType,
+                            accountTypeName));
 
             return AccountTypes.CHECKING;
         }

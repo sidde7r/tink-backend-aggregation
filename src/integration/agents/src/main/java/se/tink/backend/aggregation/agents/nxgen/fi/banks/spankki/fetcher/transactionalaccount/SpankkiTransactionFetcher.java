@@ -26,23 +26,28 @@ public class SpankkiTransactionFetcher implements TransactionDatePaginator<Trans
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         List<Transaction> transactions = new ArrayList<>();
 
         if (shouldIncludeReservations(toDate)) {
-            ReservationsResponse reservationsResponse = apiClient.fetchReservations(account.getBankIdentifier());
+            ReservationsResponse reservationsResponse =
+                    apiClient.fetchReservations(account.getBankIdentifier());
             if (reservationsResponse.getReservations() != null) {
-                transactions.addAll(reservationsResponse.getReservations().stream()
-                        .map(ReservationsEntity::toTinkTransaction)
-                        .collect(Collectors.toList()));
+                transactions.addAll(
+                        reservationsResponse.getReservations().stream()
+                                .map(ReservationsEntity::toTinkTransaction)
+                                .collect(Collectors.toList()));
             }
         }
-        GetTransactionsResponse transactionsResponse = apiClient
-                .fetchTransactions(account.getBankIdentifier(), formatDate(fromDate), formatDate(toDate));
+        GetTransactionsResponse transactionsResponse =
+                apiClient.fetchTransactions(
+                        account.getBankIdentifier(), formatDate(fromDate), formatDate(toDate));
         if (transactionsResponse.getTransactions() != null) {
-            transactions.addAll(transactionsResponse.getTransactions().stream()
-                    .map(TransactionsEntity::toTinkTransaction)
-                    .collect(Collectors.toList()));
+            transactions.addAll(
+                    transactionsResponse.getTransactions().stream()
+                            .map(TransactionsEntity::toTinkTransaction)
+                            .collect(Collectors.toList()));
         }
 
         return PaginatorResponseImpl.create(transactions);

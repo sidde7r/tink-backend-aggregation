@@ -13,6 +13,7 @@ public class LoanEntity {
     protected String loanCategory;
     protected String loanNumber;
     protected NextPaymentEntity nextPayment;
+
     @JsonProperty("usePurpose")
     protected String name;
 

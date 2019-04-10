@@ -14,6 +14,7 @@ public class ReservationsRequest extends SpankkiRequest {
         this.reservation = new ReservationEntity().setAccountId(accountId);
         return this;
     }
+
     public ReservationsRequest setReservation(ReservationEntity reservation) {
         this.reservation = reservation;
         return this;

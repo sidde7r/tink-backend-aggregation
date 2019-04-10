@@ -7,22 +7,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoansEntity {
     @JsonProperty("loan_id")
     private String loanId;
+
     @JsonProperty("loan_formatted_id")
     private String loanFormattedId;
+
     @JsonProperty("product_code")
     private String productCode;
-    @JsonProperty
-    private String currency;
-    @JsonProperty
-    private String group;
+
+    @JsonProperty private String currency;
+    @JsonProperty private String group;
+
     @JsonProperty("repayment_status")
     private String repaymentStatus;
-    @JsonProperty
-    private String nickname;
-    @JsonProperty
-    private AmountEntity amount;
-    @JsonProperty
-    private CreditEntity credit;
+
+    @JsonProperty private String nickname;
+    @JsonProperty private AmountEntity amount;
+    @JsonProperty private CreditEntity credit;
 
     public String getLoanId() {
         return loanId;

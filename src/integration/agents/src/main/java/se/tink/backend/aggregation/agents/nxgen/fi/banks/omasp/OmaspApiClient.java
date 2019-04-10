@@ -39,7 +39,8 @@ public class OmaspApiClient {
     }
 
     private RequestBuilder buildRequest(URL url) {
-        return httpClient.request(url)
+        return httpClient
+                .request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
@@ -54,16 +55,16 @@ public class OmaspApiClient {
 
     public LoginResponse login(String username, String password, String deviceId) {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUserId(username)
-                .setPassword(password)
-                .setDeviceId(deviceId);
+        loginRequest.setUserId(username).setPassword(password).setDeviceId(deviceId);
 
         return buildRequest(OmaspConstants.Url.LOGIN).post(LoginResponse.class, loginRequest);
     }
 
-    public RegisterDeviceResponse registerDevice(String codeCardId, String codeCardIndex, String codeCardValue) {
+    public RegisterDeviceResponse registerDevice(
+            String codeCardId, String codeCardIndex, String codeCardValue) {
         RegisterDeviceRequest registerDeviceRequest = new RegisterDeviceRequest();
-        registerDeviceRequest.setCardId(codeCardId)
+        registerDeviceRequest
+                .setCardId(codeCardId)
                 .setSecurityKeyIndex(codeCardIndex)
                 .setSecurityCode(codeCardValue);
 
@@ -72,7 +73,8 @@ public class OmaspApiClient {
     }
 
     public List<AccountsEntity> getAccounts() {
-        AccountsResponse accountsResponse = buildRequest(OmaspConstants.Url.ACCOUNTS).get(AccountsResponse.class);
+        AccountsResponse accountsResponse =
+                buildRequest(OmaspConstants.Url.ACCOUNTS).get(AccountsResponse.class);
         return accountsResponse.getAccounts();
     }
 
@@ -80,27 +82,34 @@ public class OmaspApiClient {
         TransactionsRequest transactionsRequest = new TransactionsRequest();
         transactionsRequest.setAccountId(accountId);
 
-        return buildRequest(OmaspConstants.Url.TRANSACTIONS).post(TransactionsResponse.class,
-                transactionsRequest);
+        return buildRequest(OmaspConstants.Url.TRANSACTIONS)
+                .post(TransactionsResponse.class, transactionsRequest);
     }
 
-    public TransactionDetailsResponse getTransactionDetails(String accountId, String transactionId) {
-        Preconditions.checkState(sessionStorage.containsKey(OmaspConstants.Storage.ACCESS_TOKEN),
+    public TransactionDetailsResponse getTransactionDetails(
+            String accountId, String transactionId) {
+        Preconditions.checkState(
+                sessionStorage.containsKey(OmaspConstants.Storage.ACCESS_TOKEN),
                 "Has no access token");
 
         String accessToken = sessionStorage.get(OmaspConstants.Storage.ACCESS_TOKEN);
 
         TransactionDetailsRequest transactionDetailsRequest = new TransactionDetailsRequest();
-        transactionDetailsRequest.setAccept("application/json")
+        transactionDetailsRequest
+                .setAccept("application/json")
                 .setAccountId(accountId)
                 .setAuthorization(accessToken);
 
-        return buildRequest(OmaspConstants.Url.TRANSACTION_DETAILS.parameter("transactionId", transactionId))
+        return buildRequest(
+                        OmaspConstants.Url.TRANSACTION_DETAILS.parameter(
+                                "transactionId", transactionId))
                 .post(TransactionDetailsResponse.class, transactionDetailsRequest);
     }
 
     public List<CreditCardEntity> getCreditCards() {
-        return buildRequest(OmaspConstants.Url.CREDITCARDS).get(CreditCardsResponse.class).getCards();
+        return buildRequest(OmaspConstants.Url.CREDITCARDS)
+                .get(CreditCardsResponse.class)
+                .getCards();
     }
 
     public CreditCardDetailsResponse getCreditCardDetails(String cardId) {
@@ -114,6 +123,8 @@ public class OmaspApiClient {
 
     public LoanDetailsEntity getLoanDetails(String loanId) {
         LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest(loanId);
-        return buildRequest(OmaspConstants.Url.LOAN_DETAILS).post(LoanDetailsResponse.class, loanDetailsRequest).getLoan();
+        return buildRequest(OmaspConstants.Url.LOAN_DETAILS)
+                .post(LoanDetailsResponse.class, loanDetailsRequest)
+                .getLoan();
     }
 }

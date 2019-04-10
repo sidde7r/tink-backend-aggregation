@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.op_v1.fetcher.rpc;
 
+import static junit.framework.TestCase.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.entity.OpBankAccountEntity;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.entity.OpBankAccountEntity;
 import se.tink.libraries.user.rpc.User;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class OpBankAccountEntityTest {
     private static final String EXPECTED_ACCOUNT_NUMBER = "FI1234567890123456";
@@ -14,7 +14,10 @@ public class OpBankAccountEntityTest {
 
     @Before
     public void setUp() throws Exception {
-        account = new OpBankAccountEntity().setAccountNumber("FI1234567890123456").setBankingServiceTypeCode("710001");
+        account =
+                new OpBankAccountEntity()
+                        .setAccountNumber("FI1234567890123456")
+                        .setBankingServiceTypeCode("710001");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -27,7 +30,9 @@ public class OpBankAccountEntityTest {
     public void getNormalizedBankIdIllegalCharsRemoved() {
         account.setAccountNumber("-FI 12'34 567?890123456_");
 
-        assertEquals(EXPECTED_ACCOUNT_NUMBER, account.toTransactionalAccount().toSystemAccount(new User()).getBankId());
+        assertEquals(
+                EXPECTED_ACCOUNT_NUMBER,
+                account.toTransactionalAccount().toSystemAccount(new User()).getBankId());
     }
 
     @Test

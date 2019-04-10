@@ -40,12 +40,14 @@ public class HandelsbankenFILoan {
 
     @JsonIgnore
     public LoanAccount toLoanAccount() {
-        LoanDetails details = LoanDetails
-                .builder(HandelsbankenFIConstants.LoanType.findLoanType(loanName).getTinkType())
-                .setLoanNumber(loanNumber)
-                .build();
+        LoanDetails details =
+                LoanDetails.builder(
+                                HandelsbankenFIConstants.LoanType.findLoanType(loanName)
+                                        .getTinkType())
+                        .setLoanNumber(loanNumber)
+                        .build();
 
-        if (loanAmount.asDouble() > 0 ) {
+        if (loanAmount.asDouble() > 0) {
             loanAmount.setAmount(-loanAmount.asDouble());
         }
 
@@ -62,5 +64,4 @@ public class HandelsbankenFILoan {
     public String toString() {
         return SerializationUtils.serializeToString(this);
     }
-
 }

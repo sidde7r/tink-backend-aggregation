@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.NordeaFiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
@@ -15,14 +15,16 @@ public class AccountEntity {
 
     @JsonProperty("product_id")
     private String productId;
+
     @JsonProperty("product_sub_category")
     private String productSubCategory;
+
     private String nickname;
+
     @JsonProperty("display_number")
     private String displayNumber;
 
-    @JsonUnwrapped
-    private AmountEntity amount;
+    @JsonUnwrapped private AmountEntity amount;
 
     public TransactionalAccount toTinkAccount() {
 
@@ -32,8 +34,9 @@ public class AccountEntity {
         if (!NordeaFiConstants.ACCOUNT_TYPES.containsKey(productSubCategory))
             log.warn(String.format("Unmapped account type (%s)", productSubCategory));
 
-        return TransactionalAccount
-                .builder(NordeaFiConstants.ACCOUNT_TYPES.getOrDefault(productSubCategory, AccountTypes.OTHER),
+        return TransactionalAccount.builder(
+                        NordeaFiConstants.ACCOUNT_TYPES.getOrDefault(
+                                productSubCategory, AccountTypes.OTHER),
                         iban)
                 .setName(nickname)
                 .setBalance(amount)

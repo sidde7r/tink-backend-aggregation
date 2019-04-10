@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankBondsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankDistributionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankFundsEntity;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEn
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PortfolioDetailsResponse extends OpBankResponseEntity {
@@ -71,6 +71,8 @@ public class PortfolioDetailsResponse extends OpBankResponseEntity {
 
     @JsonIgnore
     public boolean hasInvestmentGroups() {
-        return instrumentGroupStocks != null || instrumentGroupFunds != null || instrumentGroupBonds != null;
+        return instrumentGroupStocks != null
+                || instrumentGroupFunds != null
+                || instrumentGroupBonds != null;
     }
 }

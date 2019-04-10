@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.authenticator;
 
 import java.util.Map;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -30,8 +32,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.validators.CommitProfileResponseValidator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthenticator {
 
@@ -41,7 +41,8 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
     private final HandelsbankenConfiguration configuration;
     private final HandelsbankenAutoAuthenticator autoAuthenticator;
 
-    public HandelsbankenFICardDeviceAuthenticator(HandelsbankenFIApiClient client,
+    public HandelsbankenFICardDeviceAuthenticator(
+            HandelsbankenFIApiClient client,
             HandelsbankenPersistentStorage persistentStorage,
             SupplementalInformationController supplementalInformationController,
             HandelsbankenConfiguration configuration,
@@ -59,47 +60,49 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         LibTFA tfa = new LibTFA();
 
         EntryPointResponse entryPoint = client.fetchEntryPoint();
 
-        InitNewProfileResponse initNewProfile = client.initNewProfile(
-                entryPoint,
-                InitNewProfileRequest.create(configuration, tfa)
-        );
+        InitNewProfileResponse initNewProfile =
+                client.initNewProfile(entryPoint, InitNewProfileRequest.create(configuration, tfa));
 
-        SecurityCardResponse securityCard = client.authenticate(
-                initNewProfile,
-                EncryptedUserCredentialsRequest.create(
+        SecurityCardResponse securityCard =
+                client.authenticate(
                         initNewProfile,
-                        UserCredentialsRequest.create(
-                                credentials.getField(Field.Key.USERNAME),
-                                credentials.getField(HandelsbankenFIConstants.DeviceAuthentication.SIGNUP_PASSWORD)
-                        ),
-                        tfa)
-        );
+                        EncryptedUserCredentialsRequest.create(
+                                initNewProfile,
+                                UserCredentialsRequest.create(
+                                        credentials.getField(Field.Key.USERNAME),
+                                        credentials.getField(
+                                                HandelsbankenFIConstants.DeviceAuthentication
+                                                        .SIGNUP_PASSWORD)),
+                                tfa));
 
         new SecurityCardResponseValidator(securityCard).validate();
 
-        Map<String, String> securityCardCode = supplementalInformationController.askSupplementalInformation(
-                challengeField(securityCard), responseField()
-        );
+        Map<String, String> securityCardCode =
+                supplementalInformationController.askSupplementalInformation(
+                        challengeField(securityCard), responseField());
 
-        VerifySecurityCodeResponse verifySecurityCode = client.verifySecurityCode(
-                securityCard,
-                EncryptedSecurityCodeRequest.create(
-                        SecurityCodeRequest.create(securityCardCode.get(HandelsbankenConstants.DeviceAuthentication.CODE)), tfa)
-        );
+        VerifySecurityCodeResponse verifySecurityCode =
+                client.verifySecurityCode(
+                        securityCard,
+                        EncryptedSecurityCodeRequest.create(
+                                SecurityCodeRequest.create(
+                                        securityCardCode.get(
+                                                HandelsbankenConstants.DeviceAuthentication.CODE)),
+                                tfa));
 
         new VerifySecurityCodeResponseValidator(verifySecurityCode).validate();
 
         CreateProfileResponse createProfile = client.createProfile(verifySecurityCode);
 
-        ActivateProfileResponse activateProfile = client.activateProfile(
-                createProfile,
-                ActivateProfileRequest.create(createProfile, tfa)
-        );
+        ActivateProfileResponse activateProfile =
+                client.activateProfile(
+                        createProfile, ActivateProfileRequest.create(createProfile, tfa));
 
         new ActivateProfileValidator(activateProfile).validate();
 
@@ -110,7 +113,8 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
         persistentStorage.persist(activateProfile);
         persistentStorage.persist(tfa);
 
-        // For handelsbanken FI, the carddeviceAuthenticator only unlock the device, we have to do the auto auth here
+        // For handelsbanken FI, the carddeviceAuthenticator only unlock the device, we have to do
+        // the auto auth here
         autoAuthenticator.autoAuthenticate();
     }
 
@@ -120,9 +124,10 @@ public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthen
         field.setDescription("Challenge code");
         field.setValue(authenticate.getSecurityKeyIndex());
         field.setName("challenge");
-        field.setHelpText(String.format("Find the code in your codesheet (%s) for the indicated key.",
-                authenticate.getSecurityKeyCardId()
-        ));
+        field.setHelpText(
+                String.format(
+                        "Find the code in your codesheet (%s) for the indicated key.",
+                        authenticate.getSecurityKeyCardId()));
         return field;
     }
 

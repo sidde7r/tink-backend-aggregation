@@ -9,8 +9,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class OpBankTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, String> {
+public class OpBankTransactionalAccountsFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final OpBankApiClient apiClient;
 
@@ -27,8 +28,8 @@ public class OpBankTransactionalAccountsFetcher implements AccountFetcher<Transa
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account,
-            String nextKey) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String nextKey) {
         if (nextKey == null) {
             return apiClient.getTransactions(account);
         } else {

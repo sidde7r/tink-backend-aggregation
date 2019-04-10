@@ -3,14 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transact
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonObject
 public class TransactionsResponse extends OmaspBaseResponse {
@@ -56,10 +56,13 @@ public class TransactionsResponse extends OmaspBaseResponse {
 
     @JsonIgnore
     public AccountTypes getTinkAccountType(Credentials credentials) {
-        AccountTypes type = OmaspConstants.ACCOUNT_TYPES.getOrDefault(productName.toLowerCase(), null);
+        AccountTypes type =
+                OmaspConstants.ACCOUNT_TYPES.getOrDefault(productName.toLowerCase(), null);
         if (Objects.isNull(type)) {
-            log.warn(String.format("%s: Unknown account type: %s",
-                    OmaspConstants.LogTags.LOG_TAG_ACCOUNTS, productName));
+            log.warn(
+                    String.format(
+                            "%s: Unknown account type: %s",
+                            OmaspConstants.LogTags.LOG_TAG_ACCOUNTS, productName));
             return AccountTypes.CHECKING;
         }
         return type;

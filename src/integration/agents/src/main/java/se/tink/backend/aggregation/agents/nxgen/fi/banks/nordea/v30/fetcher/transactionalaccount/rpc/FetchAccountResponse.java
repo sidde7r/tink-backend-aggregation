@@ -13,8 +13,6 @@ public class FetchAccountResponse {
 
     public List<TransactionalAccount> toTinkAccounts() {
 
-        return products.stream()
-                .map(AccountEntity::toTinkAccount)
-                .collect(Collectors.toList());
+        return products.stream().map(AccountEntity::toTinkAccount).collect(Collectors.toList());
     }
 }

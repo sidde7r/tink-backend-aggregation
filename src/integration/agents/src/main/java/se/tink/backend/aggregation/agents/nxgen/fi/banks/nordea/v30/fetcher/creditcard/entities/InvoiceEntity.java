@@ -7,14 +7,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InvoiceEntity {
     @JsonProperty("next_sum")
     private double nextSum;
+
     @JsonProperty("next_date")
     private String nextDate;
+
     @JsonProperty("prev_total")
     private double prevTotal;
+
     @JsonProperty("prev_date")
     private String prevDate;
+
     @JsonProperty("due_day_of_month")
     private int dueDayOfMonth;
+
     @JsonProperty("reference_number")
     private String referenceNumber;
 

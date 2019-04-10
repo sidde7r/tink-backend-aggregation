@@ -7,18 +7,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InstrumentEntity {
-    @JsonProperty
-    private String id;
-    @JsonProperty
-    private double price;
-    @JsonProperty
-    private String currency;
+    @JsonProperty private String id;
+    @JsonProperty private double price;
+    @JsonProperty private String currency;
+
     @JsonProperty("instrument_name")
     private String instrumentName;
+
     @JsonProperty("instrument_type")
     private String rawType;
-    @JsonProperty
-    private String isin;
+
+    @JsonProperty private String isin;
 
     public Instrument toTinkInstrument() {
         Instrument instrument = new Instrument();
@@ -29,7 +28,10 @@ public class InstrumentEntity {
         instrument.setCurrency(currency);
         instrument.setName(instrumentName);
         instrument.setPrice(price);
-        instrument.setType(NordeaFIConstants.INSTRUMENT_TYPE_MAP.translate(rawType).orElse(Instrument.Type.OTHER));
+        instrument.setType(
+                NordeaFIConstants.INSTRUMENT_TYPE_MAP
+                        .translate(rawType)
+                        .orElse(Instrument.Type.OTHER));
         instrument.setRawType(rawType);
         // The following fields are set in HoldingEntity since the can't be found here.
         // AvgPurchasePrice
@@ -43,7 +45,7 @@ public class InstrumentEntity {
         return idFormat();
     }
 
-    private String idFormat(){
+    private String idFormat() {
         // id format TRADER-ISIN-MARKET-ZONE
         return id.split("-")[2];
     }

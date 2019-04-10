@@ -8,23 +8,26 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
-public class CreditCardFITransactionsResponse extends CreditCardTransactionsResponse<HandelsbankenFICreditCard> {
+public class CreditCardFITransactionsResponse
+        extends CreditCardTransactionsResponse<HandelsbankenFICreditCard> {
     private List<HandelsbankenFICreditCardTransaction> transactions;
 
     @Override
-    public List<CreditCardTransaction> tinkTransactions(HandelsbankenFICreditCard creditcard,
-            CreditCardAccount account) {
+    public List<CreditCardTransaction> tinkTransactions(
+            HandelsbankenFICreditCard creditcard, CreditCardAccount account) {
         return transactions.stream()
-                .map(handelsbankenFICreditCardTransaction -> handelsbankenFICreditCardTransaction
-                        .toTinkTransaction(account))
+                .map(
+                        handelsbankenFICreditCardTransaction ->
+                                handelsbankenFICreditCardTransaction.toTinkTransaction(account))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<CreditCardTransaction> tinkTransactions(CreditCardAccount account) {
         return transactions.stream()
-                .map(handelsbankenFICreditCardTransaction -> handelsbankenFICreditCardTransaction
-                        .toTinkTransaction(account))
+                .map(
+                        handelsbankenFICreditCardTransaction ->
+                                handelsbankenFICreditCardTransaction.toTinkTransaction(account))
                 .collect(Collectors.toList());
     }
 }

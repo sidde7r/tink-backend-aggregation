@@ -18,9 +18,16 @@ public class FetchTransactionalAccountResponse {
     public List<TransactionalAccount> toTinkAccount() {
 
         return accounts.stream()
-                .filter(entity -> NordeaFIConstants.ACCOUNT_TYPE_MAPPER.translate(entity.getCategory()).equals(
-                        Optional.of(AccountTypes.CHECKING)))
-                .filter(entity -> entity.permissions.isCanPayFromAccount()) //filter ISK accounts marked as "savings"
+                .filter(
+                        entity ->
+                                NordeaFIConstants.ACCOUNT_TYPE_MAPPER
+                                        .translate(entity.getCategory())
+                                        .equals(Optional.of(AccountTypes.CHECKING)))
+                .filter(
+                        entity ->
+                                entity.permissions
+                                        .isCanPayFromAccount()) // filter ISK accounts marked as
+                // "savings"
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }

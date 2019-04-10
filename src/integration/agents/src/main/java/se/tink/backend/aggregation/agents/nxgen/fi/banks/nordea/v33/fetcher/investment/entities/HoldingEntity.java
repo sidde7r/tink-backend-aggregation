@@ -8,16 +8,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class HoldingEntity {
     @JsonProperty("market_value")
     private double marketValue;
+
     @JsonProperty("profit_loss")
     private double profitLoss;
-    @JsonProperty
-    private String id;
-    @JsonProperty
-    private double quantity;
+
+    @JsonProperty private String id;
+    @JsonProperty private double quantity;
+
     @JsonProperty("avg_purchase_price")
     private double avgPurchasePrice;
-    @JsonProperty
-    private InstrumentEntity instrument;
+
+    @JsonProperty private InstrumentEntity instrument;
 
     public Instrument toTinkInstrument() {
         Instrument tinkInstrument = instrument.toTinkInstrument();

@@ -11,6 +11,7 @@ public class HandelsbankenFITransaction extends BaseResponse {
 
     private HandelsbankenAmount amount;
     private String reference;
+
     @JsonFormat(pattern = "dd.MM.yyyy")
     private Date bookingDate;
 

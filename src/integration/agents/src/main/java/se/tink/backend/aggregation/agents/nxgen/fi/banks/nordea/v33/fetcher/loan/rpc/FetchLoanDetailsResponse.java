@@ -13,40 +13,42 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.LoansEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.OwnersEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class FetchLoanDetailsResponse {
     @JsonProperty("loan_id")
     private String loanId;
+
     @JsonProperty("loan_formatted_id")
     private String loanFormattedId;
+
     @JsonProperty("product_code")
     private String productCode;
-    @JsonProperty
-    private String currency;
-    @JsonProperty
-    private String group;
+
+    @JsonProperty private String currency;
+    @JsonProperty private String group;
+
     @JsonProperty("repayment_status")
     private String repaymentStatus;
-    @JsonProperty
-    private String nickname;
+
+    @JsonProperty private String nickname;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("first_draw_down_date")
     private Date firstDrawDownDate;
-    @JsonProperty
-    private InterestEntity interest;
-    @JsonProperty
-    private AmountEntity amount;
-    @JsonProperty
-    private CreditEntity credit;
+
+    @JsonProperty private InterestEntity interest;
+    @JsonProperty private AmountEntity amount;
+    @JsonProperty private CreditEntity credit;
+
     @JsonProperty("following_payment")
     private FollowingPaymentEntity followingPayment;
-    @JsonProperty
-    private List<OwnersEntity> owners;
+
+    @JsonProperty private List<OwnersEntity> owners;
 
     public LoanAccount toTinkLoanAccount(LoansEntity loansEntity) {
 
@@ -94,9 +96,7 @@ public class FetchLoanDetailsResponse {
     }
 
     public List<String> getApplicants() {
-        return owners.stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
+        return owners.stream().map(Object::toString).collect(Collectors.toList());
     }
 
     public Amount getInstalmentValue() {

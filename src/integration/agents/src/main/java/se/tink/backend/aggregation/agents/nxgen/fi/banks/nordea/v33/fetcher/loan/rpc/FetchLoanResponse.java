@@ -8,8 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchLoanResponse {
-    @JsonProperty
-    private List<LoansEntity> loans;
+    @JsonProperty private List<LoansEntity> loans;
 
     public Stream<LoansEntity> stream() {
         return loans.stream();

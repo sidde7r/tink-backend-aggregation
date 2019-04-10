@@ -7,14 +7,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PermissionsEntity {
     @JsonProperty("can_view")
     private boolean canView;
+
     @JsonProperty("can_view_transactions")
     private boolean canViewTransactions;
+
     @JsonProperty("can_pay_from_account")
     private boolean canPayFromAccount;
+
     @JsonProperty("can_transfer_from_account")
     private boolean canTransferFromAccount;
+
     @JsonProperty("can_transfer_to_account")
     private boolean canTransferToAccount;
+
     @JsonProperty("can_pay_pgbg_from_account")
     private boolean canPayPgbgFromAccount;
 

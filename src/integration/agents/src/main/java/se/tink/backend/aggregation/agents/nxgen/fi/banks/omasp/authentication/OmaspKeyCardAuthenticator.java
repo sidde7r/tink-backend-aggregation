@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -19,10 +20,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
-    private static final AggregationLogger LOGGER = new AggregationLogger(OmaspKeyCardAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(OmaspKeyCardAuthenticator.class);
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -30,7 +31,9 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     private SecurityKeyResponseEntity securityKeyEntity;
 
-    public OmaspKeyCardAuthenticator(OmaspApiClient apiClient, PersistentStorage persistentStorage,
+    public OmaspKeyCardAuthenticator(
+            OmaspApiClient apiClient,
+            PersistentStorage persistentStorage,
             Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
@@ -38,18 +41,21 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     }
 
     @Override
-    public KeyCardInitValues init(String username, String password) throws AuthenticationException,
-            AuthorizationException {
+    public KeyCardInitValues init(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         try {
             LoginResponse loginResponse = apiClient.login(username, password);
 
-            Preconditions.checkState(loginResponse.getSecurityKeyRequired(),
+            Preconditions.checkState(
+                    loginResponse.getSecurityKeyRequired(),
                     "Code card authentication not required! (it should be)");
 
-            securityKeyEntity = Preconditions.checkNotNull(loginResponse.getSecurityKey(),
-                    "No code card information in response");
+            securityKeyEntity =
+                    Preconditions.checkNotNull(
+                            loginResponse.getSecurityKey(), "No code card information in response");
 
-            return new KeyCardInitValues(securityKeyEntity.getCardId(), securityKeyEntity.getSecurityKeyIndex());
+            return new KeyCardInitValues(
+                    securityKeyEntity.getCardId(), securityKeyEntity.getSecurityKeyIndex());
         } catch (HttpResponseException e) {
             HttpResponse httpResponse = e.getResponse();
             if (httpResponse.getStatus() != 401 && httpResponse.getStatus() != 403) {
@@ -64,24 +70,27 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
             }
 
             switch (error.toLowerCase()) {
-            case OmaspConstants.Error.AUTHENTICATION_FAILED:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            case OmaspConstants.Error.OTHER_BANK_CUSTOMER:
-                throw LoginError.NOT_CUSTOMER.exception();
-            case OmaspConstants.Error.LOGIN_WARNING:
-                String message = errorResponse.getMessage();
+                case OmaspConstants.Error.AUTHENTICATION_FAILED:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case OmaspConstants.Error.OTHER_BANK_CUSTOMER:
+                    throw LoginError.NOT_CUSTOMER.exception();
+                case OmaspConstants.Error.LOGIN_WARNING:
+                    String message = errorResponse.getMessage();
 
-                if (!isLoginBlocked(message)) {
+                    if (!isLoginBlocked(message)) {
+                        throw e;
+                    }
+
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                            OmaspConstants.UserMessage.LOGIN_BLOCKED.getKey());
+                default:
+                    LOGGER.warn(
+                            String.format(
+                                    "%s: Unknown error code for loginRequest: %s, Message: %s",
+                                    OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
+                                    errorResponse.getError(),
+                                    errorResponse.getMessage()));
                     throw e;
-                }
-
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(OmaspConstants.UserMessage.LOGIN_BLOCKED.getKey());
-            default:
-                LOGGER.warn(String.format("%s: Unknown error code for loginRequest: %s, Message: %s",
-                                OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
-                                errorResponse.getError(),
-                                errorResponse.getMessage()));
-                throw e;
             }
         }
     }
@@ -89,16 +98,19 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
         try {
-            RegisterDeviceResponse registerDeviceResponse = apiClient.registerDevice(
-                    securityKeyEntity.getCardId(),
-                    securityKeyEntity.getSecurityKeyIndex(),
-                    code);
+            RegisterDeviceResponse registerDeviceResponse =
+                    apiClient.registerDevice(
+                            securityKeyEntity.getCardId(),
+                            securityKeyEntity.getSecurityKeyIndex(),
+                            code);
 
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(registerDeviceResponse.getDeviceId()),
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(registerDeviceResponse.getDeviceId()),
                     "Device id is null or empty");
 
-            persistentStorage.put(OmaspConstants.Storage.DEVICE_ID, registerDeviceResponse.getDeviceId());
-        } catch(HttpResponseException e) {
+            persistentStorage.put(
+                    OmaspConstants.Storage.DEVICE_ID, registerDeviceResponse.getDeviceId());
+        } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 403) {
                 throw e;
             }
@@ -111,20 +123,22 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
             }
 
             switch (error.toLowerCase()) {
-            case OmaspConstants.Error.SECURITY_KEY_FAILED:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            default:
-                LOGGER.warn(String.format("%s: Unknown error code for registerDevice: %s, Message: %s",
-                                OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
-                                errorResponse.getError(),
-                                errorResponse.getMessage()));
-                throw e;
+                case OmaspConstants.Error.SECURITY_KEY_FAILED:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                default:
+                    LOGGER.warn(
+                            String.format(
+                                    "%s: Unknown error code for registerDevice: %s, Message: %s",
+                                    OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
+                                    errorResponse.getError(),
+                                    errorResponse.getMessage()));
+                    throw e;
             }
         }
     }
 
     private boolean isLoginBlocked(String message) {
-        return Objects.nonNull(message) &&
-                        message.toLowerCase().contains(OmaspConstants.ErrorMessage.LOGIN_BLOCKED);
+        return Objects.nonNull(message)
+                && message.toLowerCase().contains(OmaspConstants.ErrorMessage.LOGIN_BLOCKED);
     }
 }

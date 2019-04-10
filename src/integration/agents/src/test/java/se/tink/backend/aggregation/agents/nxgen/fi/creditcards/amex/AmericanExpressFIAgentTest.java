@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex;
 
+import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,11 +13,9 @@ import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-
-import java.util.List;
 
 @Ignore
 public class AmericanExpressFIAgentTest extends NextGenerationAgentTest<AmericanExpressFIAgent> {
@@ -55,11 +54,11 @@ public class AmericanExpressFIAgentTest extends NextGenerationAgentTest<American
         credentials.setType(CredentialsTypes.PASSWORD);
         testLogin(credentials);
     }
+
     @Test
-    public void testAgent() throws Exception{
+    public void testAgent() throws Exception {
         credentials.setType(CredentialsTypes.PASSWORD);
         testAgent(this.credentials, true);
-
     }
 
     @Test
@@ -75,8 +74,8 @@ public class AmericanExpressFIAgentTest extends NextGenerationAgentTest<American
 
         this.testContext = new AgentTestContext(credentials);
         this.testContext.setTestContext(true);
-        Agent agent = factory.create(cls, createRefreshInformationRequest(credentials),
-                this.testContext);
+        Agent agent =
+                factory.create(cls, createRefreshInformationRequest(credentials), this.testContext);
 
         agent.login();
 

@@ -19,31 +19,30 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaTransactionFetcher(
-            NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaTransactionFetcher(NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
-                                                int startIndex) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, int numberOfTransactions, int startIndex) {
         return fetchTransactions(account, numberOfTransactions, startIndex, 1);
     }
 
-    private PaginatorResponse fetchTransactions(TransactionalAccount account,
-            int numberOfTransactions,
-            int startIndex,
-            int attempt) {
+    private PaginatorResponse fetchTransactions(
+            TransactionalAccount account, int numberOfTransactions, int startIndex, int attempt) {
         try {
-            return apiClient
-                    .fetchTransactions(startIndex, numberOfTransactions, account.getBankIdentifier());
+            return apiClient.fetchTransactions(
+                    startIndex, numberOfTransactions, account.getBankIdentifier());
         } catch (HttpResponseException hre) {
-            return fetchWithBackoffAndRetry(hre, account, numberOfTransactions, startIndex, attempt);
+            return fetchWithBackoffAndRetry(
+                    hre, account, numberOfTransactions, startIndex, attempt);
         }
     }
 
-    private PaginatorResponse fetchWithBackoffAndRetry(HttpResponseException hre,
+    private PaginatorResponse fetchWithBackoffAndRetry(
+            HttpResponseException hre,
             TransactionalAccount account,
             int numberOfTransactions,
             int startIndex,
@@ -53,14 +52,18 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
                 || hre.getResponse().getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
             if (attempt <= MAX_RETRY_ATTEMPTS) {
                 backoffAWhile();
-                LOG.debug(String.format(
-                        "Retry [%d] fetch transactions account[%s], offset[%d], numTrans[%d] after backoff ",
-                        attempt, account.getAccountNumber(), startIndex, numberOfTransactions
-                ));
+                LOG.debug(
+                        String.format(
+                                "Retry [%d] fetch transactions account[%s], offset[%d], numTrans[%d] after backoff ",
+                                attempt,
+                                account.getAccountNumber(),
+                                startIndex,
+                                numberOfTransactions));
 
                 return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
             }
-            // this is an ugly fix for Nordea FI since they tend to throw INTERNAL SERVER ERROR after 500 tx fetched
+            // this is an ugly fix for Nordea FI since they tend to throw INTERNAL SERVER ERROR
+            // after 500 tx fetched
             if (startIndex > GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS) {
                 return PaginatorResponseImpl.createEmpty(false);
             }

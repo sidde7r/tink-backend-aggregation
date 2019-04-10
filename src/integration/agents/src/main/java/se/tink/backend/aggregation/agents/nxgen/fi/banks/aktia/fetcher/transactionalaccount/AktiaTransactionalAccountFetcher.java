@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount;
 
 import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.entities.AccountSummaryListEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -8,12 +11,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-public class AktiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, String> {
+public class AktiaTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String> {
     private final AktiaApiClient apiClient;
 
     public AktiaTransactionalAccountFetcher(AktiaApiClient apiClient) {
@@ -30,7 +30,8 @@ public class AktiaTransactionalAccountFetcher implements AccountFetcher<Transact
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
         String aktiaAccountId = account.getBankIdentifier();
 
         if (Strings.isNullOrEmpty(key)) {

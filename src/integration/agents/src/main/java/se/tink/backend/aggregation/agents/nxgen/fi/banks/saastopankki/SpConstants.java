@@ -6,6 +6,3 @@ public class SpConstants {
         public static final String BASE = "https://m.saastopankki.fi";
     }
 }
-
-
-

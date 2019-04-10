@@ -9,8 +9,10 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class TransactionsEntity {
     private String transactionId;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date dueDate;
+
     private String bookingDate;
     private double amount;
     private String currency;

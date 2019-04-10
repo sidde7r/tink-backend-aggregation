@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -12,17 +13,19 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(OmaspAutoAuthenticator.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(OmaspAutoAuthenticator.class);
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
 
-    public OmaspAutoAuthenticator(OmaspApiClient apiClient, PersistentStorage persistentStorage,
+    public OmaspAutoAuthenticator(
+            OmaspApiClient apiClient,
+            PersistentStorage persistentStorage,
             Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
@@ -35,7 +38,9 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceId = persistentStorage.get(OmaspConstants.Storage.DEVICE_ID);
 
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(deviceId)) {
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(password)
+                || Strings.isNullOrEmpty(deviceId)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -57,14 +62,16 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
             }
 
             switch (error.toLowerCase()) {
-            case OmaspConstants.Error.AUTHENTICATION_FAILED:
-                throw SessionError.SESSION_EXPIRED.exception();
-            default:
-                LOGGER.warn(String.format("%s: Unknown error code for loginRequest: %s, Message: %s",
-                                OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
-                                omaspErrorResponse.getError(),
-                                omaspErrorResponse.getMessage()));
-                throw e;
+                case OmaspConstants.Error.AUTHENTICATION_FAILED:
+                    throw SessionError.SESSION_EXPIRED.exception();
+                default:
+                    LOGGER.warn(
+                            String.format(
+                                    "%s: Unknown error code for loginRequest: %s, Message: %s",
+                                    OmaspConstants.LogTags.LOG_TAG_AUTHENTICATION,
+                                    omaspErrorResponse.getError(),
+                                    omaspErrorResponse.getMessage()));
+                    throw e;
             }
         }
     }

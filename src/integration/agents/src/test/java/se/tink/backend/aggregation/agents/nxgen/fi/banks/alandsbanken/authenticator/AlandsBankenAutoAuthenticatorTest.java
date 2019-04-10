@@ -1,25 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.authenticator;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenFIConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyPersistentStorage;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithTokenResponse;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.mocks.ResultCaptor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,10 +12,30 @@ import static se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.Ala
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenTestConfig.PASSWORD;
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenTestConfig.USERNAME;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenFIConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithTokenResponse;
+import se.tink.backend.aggregation.mocks.ResultCaptor;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
 public class AlandsBankenAutoAuthenticatorTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    @Rule public ExpectedException exception = ExpectedException.none();
 
     private CrossKeyApiClient client;
     private PersistentStorage persistentStorage;
@@ -70,10 +70,11 @@ public class AlandsBankenAutoAuthenticatorTest {
         assertNotNull(actual);
         assertEquals("OK", actual.getPasswordStatus());
         assertNotEquals(DEVICE_TOKEN, actual.getDeviceToken());
-        assertNotEquals(DEVICE_TOKEN, persistentStorage.get(
-                CrossKeyConstants.Storage.DEVICE_TOKEN));
-        assertEquals(actual.getDeviceToken(), persistentStorage.get(
-                CrossKeyConstants.Storage.DEVICE_TOKEN));
+        assertNotEquals(
+                DEVICE_TOKEN, persistentStorage.get(CrossKeyConstants.Storage.DEVICE_TOKEN));
+        assertEquals(
+                actual.getDeviceToken(),
+                persistentStorage.get(CrossKeyConstants.Storage.DEVICE_TOKEN));
     }
 
     @Test
@@ -147,12 +148,13 @@ public class AlandsBankenAutoAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
-        client = spy(new CrossKeyApiClient(new TinkHttpClient(),
-                new AlandsBankenFIConfiguration()));
+        client =
+                spy(new CrossKeyApiClient(new TinkHttpClient(), new AlandsBankenFIConfiguration()));
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_ID, deviceId);
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_TOKEN, deviceToken);
-        authenticator = new CrossKeyAutoAuthenticator(client, new CrossKeyPersistentStorage(this.persistentStorage),
-                credentials);
+        authenticator =
+                new CrossKeyAutoAuthenticator(
+                        client, new CrossKeyPersistentStorage(this.persistentStorage), credentials);
     }
 
     private void expectIncorrectCredentials() {
@@ -171,5 +173,4 @@ public class AlandsBankenAutoAuthenticatorTest {
         this.exception.expect(expectedException.getClass());
         this.exception.expectMessage(expectedException.getMessage());
     }
-
 }

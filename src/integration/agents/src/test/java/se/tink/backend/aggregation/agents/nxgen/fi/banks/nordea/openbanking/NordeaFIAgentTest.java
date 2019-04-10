@@ -11,9 +11,9 @@ public class NordeaFIAgentTest {
     public void testRefresh() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("fi", "fi-nordea-openbanking")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
-                .expectLoggedIn(false);
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true)
+                        .expectLoggedIn(false);
 
         builder.build().testRefresh();
     }

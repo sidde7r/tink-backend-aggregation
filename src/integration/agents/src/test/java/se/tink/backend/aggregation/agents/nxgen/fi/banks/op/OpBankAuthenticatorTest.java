@@ -1,27 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.AgentTestContext;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticationTokenGenerator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.mocks.ResultCaptor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,10 +15,32 @@ import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestCon
 import static se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig.USERNAME;
 import static se.tink.libraries.strings.StringUtils.hashAsUUID;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentTestContext;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticationTokenGenerator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
+import se.tink.backend.aggregation.mocks.ResultCaptor;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
 public class OpBankAuthenticatorTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+    @Rule public ExpectedException exception = ExpectedException.none();
     private OpAutoAuthenticator opBankAuthenticator;
     private String applicationInstanceId;
     private String username;
@@ -57,20 +57,29 @@ public class OpBankAuthenticatorTest {
     }
 
     @Test
-    public void testAutoLogin(){
+    public void testAutoLogin() {
         Credentials credentials = new Credentials();
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
         AgentTestContext context = new AgentTestContext(credentials);
-        TinkHttpClient tinkHttpClient = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
-                context.getLogOutputStream(), null, null);
-        //tinkHttpClient.setDebugOutput(true);
-        //tinkHttpClient.setProxy("http://127.0.0.1:8888");
+        TinkHttpClient tinkHttpClient =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        context.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        null,
+                        null);
+        // tinkHttpClient.setDebugOutput(true);
+        // tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
-        OpBankPersistentStorage persistentStorage = new OpBankPersistentStorage(null, new PersistentStorage());
-        persistentStorage.put(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
-        OpAutoAuthenticator oaa = new OpAutoAuthenticator(new OpBankApiClient(tinkHttpClient), persistentStorage, credentials);
+        OpBankPersistentStorage persistentStorage =
+                new OpBankPersistentStorage(null, new PersistentStorage());
+        persistentStorage.put(
+                OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
+        OpAutoAuthenticator oaa =
+                new OpAutoAuthenticator(
+                        new OpBankApiClient(tinkHttpClient), persistentStorage, credentials);
         try {
             oaa.autoAuthenticate();
             oaa.authenticate(username, password);
@@ -178,13 +187,18 @@ public class OpBankAuthenticatorTest {
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
         AgentContext context = new AgentTestContext(credentials);
-        SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
-                context, credentials);
+        SupplementalInformationController supplementalInformationController =
+                new SupplementalInformationController(context, credentials);
 
         OpBankApiClient bankClient =
-                spy(new OpBankApiClient(
-                        new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
-                                context.getLogOutputStream(), null, null)));
+                spy(
+                        new OpBankApiClient(
+                                new TinkHttpClient(
+                                        context.getAggregatorInfo(),
+                                        context.getMetricRegistry(),
+                                        context.getLogOutputStream(),
+                                        null,
+                                        null)));
         loginResultCaptor = new ResultCaptor();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())
@@ -192,13 +206,14 @@ public class OpBankAuthenticatorTest {
                 .enableExtendedMobileServices(
                         anyString()); // just to make sure test data is never accidentally messed up
 
-        OpBankPersistentStorage persistentStorage = new OpBankPersistentStorage(credentials, new PersistentStorage());
-        persistentStorage.put(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
-        authenticationChallenger = spy(new OpAuthenticator(bankClient,
-                persistentStorage, credentials));
+        OpBankPersistentStorage persistentStorage =
+                new OpBankPersistentStorage(credentials, new PersistentStorage());
+        persistentStorage.put(
+                OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
+        authenticationChallenger =
+                spy(new OpAuthenticator(bankClient, persistentStorage, credentials));
         opBankAuthenticator =
-                spy(new OpAutoAuthenticator(bankClient, persistentStorage,
-                        credentials));
+                spy(new OpAutoAuthenticator(bankClient, persistentStorage, credentials));
     }
 
     private void authenticate() throws AuthenticationException, AuthorizationException {

@@ -15,15 +15,20 @@ import se.tink.libraries.amount.Amount;
 public class CollateralCreditDetailsResponse extends OpBankResponseEntity {
     @JsonFormat(pattern = "y-M-d")
     private Date firstWithdrawalDate;
+
     private double interestRate;
     private String interestSupportCode;
     private double interestSupportRate;
     private int interestPaymentPeriod;
+
     @JsonFormat(pattern = "y-M-d")
     private Date interestVerificationDate;
+
     private int creditType;
+
     @JsonFormat(pattern = "y-M-d")
     private Date instalmentDueDate;
+
     private double instalmentAmount;
     private String instalmentMethod;
     private int instalmentPeriod;
@@ -47,12 +52,16 @@ public class CollateralCreditDetailsResponse extends OpBankResponseEntity {
                 .setInterestRate(interestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())
                 .setName(creditEntity.getLoanName())
-                .setDetails(LoanDetails.builder(OpBankConstants.LoanType.findLoanType(creditEntity.getUsage()).getTinkType())
-                        .setLoanNumber(creditEntity.getAgreementNumberIban())
-                        .setInitialBalance(Amount.inEUR(creditEntity.getCalculatedWithdrawnAmount()))
-                        .setInitialDate(firstWithdrawalDate)
-                        .build()
-                )
+                .setDetails(
+                        LoanDetails.builder(
+                                        OpBankConstants.LoanType.findLoanType(
+                                                        creditEntity.getUsage())
+                                                .getTinkType())
+                                .setLoanNumber(creditEntity.getAgreementNumberIban())
+                                .setInitialBalance(
+                                        Amount.inEUR(creditEntity.getCalculatedWithdrawnAmount()))
+                                .setInitialDate(firstWithdrawalDate)
+                                .build())
                 .build();
     }
 

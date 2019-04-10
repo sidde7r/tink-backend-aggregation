@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 
 import com.google.common.collect.ImmutableMap;
 import java.time.format.DateTimeFormatter;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -29,26 +29,31 @@ public class OmaspConstants {
         static final URL REGISTER_DEVICE = new URL(BASE + "/auth/devices");
         static final URL ACCOUNTS = new URL(BASE + "/accounts");
         static final URL TRANSACTIONS = new URL(BASE + "/accounts/transactions");
-        static final URL TRANSACTION_DETAILS = new URL(BASE + "/accounts/transactions/{transactionId}");
+        static final URL TRANSACTION_DETAILS =
+                new URL(BASE + "/accounts/transactions/{transactionId}");
         static final URL CREDITCARDS = new URL(BASE + "/cards");
         static final URL CREDITCARD_DETAILS = new URL(BASE + "/cards/{cardId}");
         static final URL LOANS = new URL(BASE + "/loans");
         static final URL LOAN_DETAILS = new URL(BASE + "/loans/details");
     }
 
-    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
-            .put("käyttötili", AccountTypes.CHECKING) // "current account"
-            .put("säästötalletus", AccountTypes.SAVINGS) // "saving deposit"
-            .put("asuntosäästöpalkkiotili", AccountTypes.SAVINGS) // "HOUSING SAVINGS PREMIUM ACCOUNT"
-            .put("yritystili", AccountTypes.CHECKING) // "company account"
-            .build();
+    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
+            ImmutableMap.<String, AccountTypes>builder()
+                    .put("käyttötili", AccountTypes.CHECKING) // "current account"
+                    .put("säästötalletus", AccountTypes.SAVINGS) // "saving deposit"
+                    .put(
+                            "asuntosäästöpalkkiotili",
+                            AccountTypes.SAVINGS) // "HOUSING SAVINGS PREMIUM ACCOUNT"
+                    .put("yritystili", AccountTypes.CHECKING) // "company account"
+                    .build();
 
-    public static final ImmutableMap<String, LoanDetails.Type> LOAN_TYPES = ImmutableMap.<String, LoanDetails.Type>builder()
-            .put("other_loan", LoanDetails.Type.OTHER)
-            .put("student_loan", LoanDetails.Type.STUDENT)
-            .put("restructuring_loan", LoanDetails.Type.OTHER) // "debt settlement loan"
-            .put("home_loan", LoanDetails.Type.MORTGAGE)
-            .build();
+    public static final ImmutableMap<String, LoanDetails.Type> LOAN_TYPES =
+            ImmutableMap.<String, LoanDetails.Type>builder()
+                    .put("other_loan", LoanDetails.Type.OTHER)
+                    .put("student_loan", LoanDetails.Type.STUDENT)
+                    .put("restructuring_loan", LoanDetails.Type.OTHER) // "debt settlement loan"
+                    .put("home_loan", LoanDetails.Type.MORTGAGE)
+                    .build();
 
     public static final class Error {
         public static final String LOGIN_WARNING = "login_warning";
@@ -62,16 +67,19 @@ public class OmaspConstants {
     }
 
     public static final String HMAC_KEY = "d8Ve963x8rVkffpUzdMe9mTxEqTL9SRV";
-    public static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'");
+    public static final DateTimeFormatter TIMESTAMP_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'");
 
     public enum UserMessage implements LocalizableEnum {
-        LOGIN_BLOCKED(new LocalizableKey("Login is blocked. Contact your bank's customer service."));
+        LOGIN_BLOCKED(
+                new LocalizableKey("Login is blocked. Contact your bank's customer service."));
 
         private LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;

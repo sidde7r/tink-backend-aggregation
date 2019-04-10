@@ -18,7 +18,9 @@ public class SpankkiKeyCardAuthenticator implements KeyCardAuthenticator {
     private final SpankkiPersistentStorage persistentStorage;
     private final SpankkiSessionStorage sessionStorage;
 
-    public SpankkiKeyCardAuthenticator(SpankkiApiClient apiClient, SpankkiPersistentStorage persistentStorage,
+    public SpankkiKeyCardAuthenticator(
+            SpankkiApiClient apiClient,
+            SpankkiPersistentStorage persistentStorage,
             SpankkiSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
@@ -26,13 +28,14 @@ public class SpankkiKeyCardAuthenticator implements KeyCardAuthenticator {
     }
 
     @Override
-    public KeyCardInitValues init(String username, String password) throws AuthenticationException,
-        AuthorizationException {
+    public KeyCardInitValues init(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
         SpankkiResponse challengeResponse = this.apiClient.handleSetupChallenge();
         this.sessionStorage.putSessionId(challengeResponse.getSessionId());
 
-        UsernamePasswordLoginResponse loginResponse = this.apiClient.loginUserPassword(username, password);
+        UsernamePasswordLoginResponse loginResponse =
+                this.apiClient.loginUserPassword(username, password);
 
         return new KeyCardInitValues(loginResponse.getLoginStatus().getPinPosition());
     }

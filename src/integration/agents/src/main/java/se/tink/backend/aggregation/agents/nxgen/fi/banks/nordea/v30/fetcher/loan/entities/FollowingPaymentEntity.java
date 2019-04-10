@@ -10,8 +10,10 @@ public class FollowingPaymentEntity {
     private double instalment;
     private double interest;
     private int fees;
+
     @JsonProperty("account_mgmt_fee")
     private int accountMgmtFee;
+
     private int total;
 
     double getInstalmentValue() {

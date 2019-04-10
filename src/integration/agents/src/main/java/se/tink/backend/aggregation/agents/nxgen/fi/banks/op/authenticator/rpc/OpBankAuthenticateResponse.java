@@ -8,18 +8,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OpBankAuthenticateResponse {
     @JsonProperty("etk_klo")
     private String etkKlo;
+
     @JsonProperty("etk_pvm")
     private String etkPvm;
+
     @JsonProperty("avl_jaljella")
     private String cardId;
+
     @JsonProperty("postituskd_avll")
     private String postituskdAvll;
+
     @JsonProperty("pankinLuku")
     private String userKey;
+
     private int httpResponseCode;
     private String errorCode;
 
-    public int getHttpResponseCode(){
+    public int getHttpResponseCode() {
         return this.httpResponseCode;
     }
 

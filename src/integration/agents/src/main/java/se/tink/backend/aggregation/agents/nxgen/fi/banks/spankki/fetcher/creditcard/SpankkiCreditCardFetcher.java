@@ -16,8 +16,10 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class SpankkiCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(SpankkiCreditCardFetcher.class);
+public class SpankkiCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(SpankkiCreditCardFetcher.class);
 
     private final SpankkiApiClient apiClient;
 
@@ -26,24 +28,27 @@ public class SpankkiCreditCardFetcher implements AccountFetcher<CreditCardAccoun
     }
 
     @Override
-    public Collection<CreditCardAccount> fetchAccounts(){
+    public Collection<CreditCardAccount> fetchAccounts() {
 
         try {
             String rawResponse = this.apiClient.fetchCardsOverview();
-            CardsOverviewResponse cardsOverviewResponse = new ObjectMapper().readValue(rawResponse, CardsOverviewResponse.class);
+            CardsOverviewResponse cardsOverviewResponse =
+                    new ObjectMapper().readValue(rawResponse, CardsOverviewResponse.class);
 
-            if (!cardsOverviewResponse.getCredits().isEmpty()){
+            if (!cardsOverviewResponse.getCredits().isEmpty()) {
                 return cardsOverviewResponse.getCredits().stream()
                         .filter(CreditCardEntity::isCredit)
                         .map(CreditCardEntity::toTinkAccount)
                         .collect(Collectors.toList());
             }
 
-            LOGGER.infoExtraLong(this.apiClient.fetchCardsOverview(), SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD);
+            LOGGER.infoExtraLong(
+                    this.apiClient.fetchCardsOverview(),
+                    SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD);
 
         } catch (HttpResponseException e) {
             LOGGER.warnExtraLong(SpankkiConstants.LogTags.LOG_TAG_CREDIT_CARD, e);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
 

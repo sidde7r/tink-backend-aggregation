@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PortfolioEntity {
@@ -54,8 +54,7 @@ public class PortfolioEntity {
                 categories.stream()
                         .map(content -> content.getTinkInstruments(fundIdIsinMapper))
                         .flatMap(Collection::stream)
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()));
 
         return portfolio;
     }

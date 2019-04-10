@@ -7,8 +7,7 @@ public class SecurityCode {
 
     private String code;
 
-    private SecurityCode() {
-    }
+    private SecurityCode() {}
 
     public static SecurityCode create(String code) {
         return new SecurityCode().setCode(code);

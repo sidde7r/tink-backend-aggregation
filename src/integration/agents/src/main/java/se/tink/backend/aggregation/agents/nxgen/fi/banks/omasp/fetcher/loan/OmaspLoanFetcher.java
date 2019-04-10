@@ -26,19 +26,21 @@ public class OmaspLoanFetcher implements AccountFetcher<LoanAccount> {
         List<LoanEntity> loans = apiClient.getLoans();
 
         return loans.stream()
-                .map(loan -> {
-                    LoanDetailsEntity loanDetails = apiClient.getLoanDetails(loan.getId());
-                    if (!loanDetails.isKnownLoanType()) {
-                        logLoanDetails(loanDetails);
-                    }
-                    return loanDetails;
-                })
+                .map(
+                        loan -> {
+                            LoanDetailsEntity loanDetails = apiClient.getLoanDetails(loan.getId());
+                            if (!loanDetails.isKnownLoanType()) {
+                                logLoanDetails(loanDetails);
+                            }
+                            return loanDetails;
+                        })
                 .map(LoanDetailsEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     private void logLoanDetails(LoanDetailsEntity loanDetails) {
-        log.infoExtraLong(SerializationUtils.serializeToString(loanDetails),
+        log.infoExtraLong(
+                SerializationUtils.serializeToString(loanDetails),
                 OmaspConstants.LogTags.LOG_TAG_LOAN_DETAILS);
     }
 }

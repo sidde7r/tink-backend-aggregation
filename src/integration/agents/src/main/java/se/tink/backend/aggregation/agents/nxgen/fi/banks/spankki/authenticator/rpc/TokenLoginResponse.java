@@ -21,7 +21,8 @@ public class TokenLoginResponse extends SpankkiResponse {
 
     @JsonIgnore
     public boolean isMustChangePassword() {
-        return SpankkiConstants.Authentication.PASSWORD_STATUS_CHANGE.equalsIgnoreCase(passwordStatus);
+        return SpankkiConstants.Authentication.PASSWORD_STATUS_CHANGE.equalsIgnoreCase(
+                passwordStatus);
     }
 
     public CustomerEntity getCustomer() {

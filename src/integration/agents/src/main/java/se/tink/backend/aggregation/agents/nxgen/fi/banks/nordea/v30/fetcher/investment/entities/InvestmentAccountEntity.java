@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.NordeaFiConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class InvestmentAccountEntity {
@@ -19,8 +19,7 @@ public class InvestmentAccountEntity {
     @JsonProperty("account_number")
     private String accountNumber;
 
-    @JsonUnwrapped
-    private AmountEntity balance;
+    @JsonUnwrapped private AmountEntity balance;
 
     private String name;
 
@@ -40,7 +39,6 @@ public class InvestmentAccountEntity {
                 .setName(name)
                 .setPortfolios(Collections.singletonList(getTinkPortfolio()))
                 .build();
-
     }
 
     private Portfolio getTinkPortfolio() {
@@ -60,9 +58,7 @@ public class InvestmentAccountEntity {
 
     private List<Instrument> getInstruments() {
 
-        return holdings.stream()
-                .map(HoldingEntity::toTinkInstrument)
-                .collect(Collectors.toList());
+        return holdings.stream().map(HoldingEntity::toTinkInstrument).collect(Collectors.toList());
     }
 
     private String getRawType() {

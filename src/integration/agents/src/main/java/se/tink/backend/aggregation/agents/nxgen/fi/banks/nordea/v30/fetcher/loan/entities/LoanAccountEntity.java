@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -80,13 +80,10 @@ public class LoanAccountEntity {
     }
 
     private List<String> getApplicants() {
-        return owners.stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
+        return owners.stream().map(Object::toString).collect(Collectors.toList());
     }
 
     private Amount toAmount(double value) {
         return new Amount(currency, value);
     }
-
 }

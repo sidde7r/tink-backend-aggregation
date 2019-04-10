@@ -41,7 +41,9 @@ public class SpankkiApiClient {
     private final SpankkiSessionStorage sessionStorage;
     private final SpankkiPersistentStorage persistentStorage;
 
-    public SpankkiApiClient(TinkHttpClient client, SpankkiSessionStorage sessionStorage,
+    public SpankkiApiClient(
+            TinkHttpClient client,
+            SpankkiSessionStorage sessionStorage,
             SpankkiPersistentStorage persistentStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
@@ -52,121 +54,147 @@ public class SpankkiApiClient {
         String randomString = UUID.randomUUID().toString();
         String requestToken = calculateRequestToken(randomString);
 
-        RequestChallengeRequest reqChallengeRequest = new RequestChallengeRequest()
-                .setRequestInfo(randomString);
+        RequestChallengeRequest reqChallengeRequest =
+                new RequestChallengeRequest().setRequestInfo(randomString);
 
         addSessionIdAndRequestToken(reqChallengeRequest, requestToken);
 
         RequestChallengeResponse reqChallengeResponse = requestChallenge(reqChallengeRequest);
 
-        RespondToChallengeRequest resChallengeRequest = new RespondToChallengeRequest()
-                .setAuthenticationId(reqChallengeResponse.getAuthenticationId())
-                .setChallengeResponse(calculateChallengeResponse(reqChallengeResponse.getChallenge()));
+        RespondToChallengeRequest resChallengeRequest =
+                new RespondToChallengeRequest()
+                        .setAuthenticationId(reqChallengeResponse.getAuthenticationId())
+                        .setChallengeResponse(
+                                calculateChallengeResponse(reqChallengeResponse.getChallenge()));
         addSessionIdAndRequestToken(resChallengeRequest, requestToken);
 
         return respondToChallenge(resChallengeRequest);
     }
 
-    public UsernamePasswordLoginResponse loginUserPassword(String username, String password) throws
-            AuthenticationException, AuthorizationException {
-        LoginRequest loginRequest = LoginRequest.createUsernamePasswordLoginRequest(username, password);
-        addSessionIdAndRequestToken(loginRequest, SpankkiConstants.Url.LOGIN_USERNAME_PASSWORD.getRequestToken());
+    public UsernamePasswordLoginResponse loginUserPassword(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        LoginRequest loginRequest =
+                LoginRequest.createUsernamePasswordLoginRequest(username, password);
+        addSessionIdAndRequestToken(
+                loginRequest, SpankkiConstants.Url.LOGIN_USERNAME_PASSWORD.getRequestToken());
 
-        return postLoginRequest(UsernamePasswordLoginResponse.class,
-                SpankkiConstants.Url.LOGIN_USERNAME_PASSWORD.getUrl(), loginRequest);
+        return postLoginRequest(
+                UsernamePasswordLoginResponse.class,
+                SpankkiConstants.Url.LOGIN_USERNAME_PASSWORD.getUrl(),
+                loginRequest);
     }
 
-    public PinLoginResponse loginPin(String code) throws AuthenticationException, AuthorizationException {
+    public PinLoginResponse loginPin(String code)
+            throws AuthenticationException, AuthorizationException {
         LoginRequest loginRequest = LoginRequest.createPinLoginRequest(code);
         addSessionIdAndRequestToken(loginRequest, SpankkiConstants.Url.LOGIN_PIN.getRequestToken());
 
-        return postLoginRequest(PinLoginResponse.class, SpankkiConstants.Url.LOGIN_PIN.getUrl(), loginRequest);
+        return postLoginRequest(
+                PinLoginResponse.class, SpankkiConstants.Url.LOGIN_PIN.getUrl(), loginRequest);
     }
 
     public AddDeviceResponse addDevice() {
         String deviceId = UUID.randomUUID().toString();
 
-        AddDeviceRequest addDeviceRequest = new AddDeviceRequest()
-                .setUserDeviceName(SpankkiConstants.Authentication.USER_DEVICE_NAME)
-                .setHardwareId(deviceId);
-        addSessionIdAndRequestToken(addDeviceRequest, SpankkiConstants.Url.ADD_DEVICE.getRequestToken());
+        AddDeviceRequest addDeviceRequest =
+                new AddDeviceRequest()
+                        .setUserDeviceName(SpankkiConstants.Authentication.USER_DEVICE_NAME)
+                        .setHardwareId(deviceId);
+        addSessionIdAndRequestToken(
+                addDeviceRequest, SpankkiConstants.Url.ADD_DEVICE.getRequestToken());
 
-        return postRequest(AddDeviceResponse.class, SpankkiConstants.Url.ADD_DEVICE.getUrl(), addDeviceRequest);
+        return postRequest(
+                AddDeviceResponse.class,
+                SpankkiConstants.Url.ADD_DEVICE.getUrl(),
+                addDeviceRequest);
     }
 
     public TokenLoginResponse loginWithToken(String password, String deviceId, String deviceToken)
             throws AuthenticationException, AuthorizationException {
-        LoginRequest loginRequest = LoginRequest.createDeviceTokenLoginRequest(password, deviceId, deviceToken);
-        addSessionIdAndRequestToken(loginRequest, SpankkiConstants.Url.LOGIN_DEVICE_TOKEN.getRequestToken());
+        LoginRequest loginRequest =
+                LoginRequest.createDeviceTokenLoginRequest(password, deviceId, deviceToken);
+        addSessionIdAndRequestToken(
+                loginRequest, SpankkiConstants.Url.LOGIN_DEVICE_TOKEN.getRequestToken());
 
-        return postLoginRequest(TokenLoginResponse.class, SpankkiConstants.Url.LOGIN_DEVICE_TOKEN.getUrl(),
+        return postLoginRequest(
+                TokenLoginResponse.class,
+                SpankkiConstants.Url.LOGIN_DEVICE_TOKEN.getUrl(),
                 loginRequest);
     }
 
     public GetAccountsResponse fetchAccounts() {
         SpankkiRequest getAccountsRequest = new SpankkiRequest();
-        addSessionIdRequestTokenAndDeviceId(getAccountsRequest, SpankkiConstants.Url.GET_ACCOUNTS.getRequestToken());
+        addSessionIdRequestTokenAndDeviceId(
+                getAccountsRequest, SpankkiConstants.Url.GET_ACCOUNTS.getRequestToken());
 
-        return postRequest(GetAccountsResponse.class, SpankkiConstants.Url.GET_ACCOUNTS.getUrl(), getAccountsRequest);
+        return postRequest(
+                GetAccountsResponse.class,
+                SpankkiConstants.Url.GET_ACCOUNTS.getUrl(),
+                getAccountsRequest);
     }
 
-    public GetTransactionsResponse fetchTransactions(String bankId, String fromDate, String toDate) {
-        GetTransactionsRequest getTransactionsRequest = new GetTransactionsRequest()
-                .setAccountId(bankId)
-                .setFromDate(fromDate)
-                .setToDate(toDate);
-        addSessionIdRequestTokenAndDeviceId(getTransactionsRequest,
-                SpankkiConstants.Url.GET_TRANSACTIONS.getRequestToken());
+    public GetTransactionsResponse fetchTransactions(
+            String bankId, String fromDate, String toDate) {
+        GetTransactionsRequest getTransactionsRequest =
+                new GetTransactionsRequest()
+                        .setAccountId(bankId)
+                        .setFromDate(fromDate)
+                        .setToDate(toDate);
+        addSessionIdRequestTokenAndDeviceId(
+                getTransactionsRequest, SpankkiConstants.Url.GET_TRANSACTIONS.getRequestToken());
 
-        return postRequest(GetTransactionsResponse.class, SpankkiConstants.Url.GET_TRANSACTIONS.getUrl(),
+        return postRequest(
+                GetTransactionsResponse.class,
+                SpankkiConstants.Url.GET_TRANSACTIONS.getUrl(),
                 getTransactionsRequest);
     }
 
     public ReservationsResponse fetchReservations(String bankId) {
-        ReservationsRequest reservationsRequest = new ReservationsRequest()
-                .setReservationAccountId(bankId);
+        ReservationsRequest reservationsRequest =
+                new ReservationsRequest().setReservationAccountId(bankId);
         addSessionIdAndDeviceId(reservationsRequest);
 
-        return postRequest(ReservationsResponse.class, SpankkiConstants.Url.RESERVATIONS.getUrl(), reservationsRequest);
+        return postRequest(
+                ReservationsResponse.class,
+                SpankkiConstants.Url.RESERVATIONS.getUrl(),
+                reservationsRequest);
     }
 
     public void logout() {
         SpankkiRequest logoutRequest = new SpankkiRequest();
         addSessionIdAndDeviceId(logoutRequest);
 
-        request(SpankkiConstants.Url.LOGOUT.getUrl())
-                .post(logoutRequest);
+        request(SpankkiConstants.Url.LOGOUT.getUrl()).post(logoutRequest);
     }
 
     // logging call
     public String fetchCardsOverview() {
         SpankkiRequest getCardsRequest = new SpankkiRequest();
-        addSessionIdRequestTokenAndDeviceId(getCardsRequest, SpankkiConstants.Url.CARDS_OVERVIEW.getRequestToken());
+        addSessionIdRequestTokenAndDeviceId(
+                getCardsRequest, SpankkiConstants.Url.CARDS_OVERVIEW.getRequestToken());
 
         return request(SpankkiConstants.Url.CARDS_OVERVIEW.getUrl())
                 .post(String.class, getCardsRequest);
     }
 
     public LoanOverviewResponse fetchLoanOverview() {
-        LoanOverviewRequest loanOverviewRequest = new LoanOverviewRequest()
-                .setCustomerId(this.sessionStorage.getCustomerId());
-        addSessionIdRequestTokenAndDeviceId(loanOverviewRequest,
-                SpankkiConstants.Url.LOAN_OVERVIEW.getRequestToken());
+        LoanOverviewRequest loanOverviewRequest =
+                new LoanOverviewRequest().setCustomerId(this.sessionStorage.getCustomerId());
+        addSessionIdRequestTokenAndDeviceId(
+                loanOverviewRequest, SpankkiConstants.Url.LOAN_OVERVIEW.getRequestToken());
 
         return request(SpankkiConstants.Url.LOAN_OVERVIEW.getUrl())
                 .post(LoanOverviewResponse.class, loanOverviewRequest);
     }
 
     public LoanDetailsResponse fetchLoanDetails(String loanId, String loanType) {
-        LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest()
-                .setLoanDetails(
-                        new LoanDetailsIdentity()
-                                .setLoanId(loanId)
-                                .setLoanType(loanType)
-                );
+        LoanDetailsRequest loanDetailsRequest =
+                new LoanDetailsRequest()
+                        .setLoanDetails(
+                                new LoanDetailsIdentity().setLoanId(loanId).setLoanType(loanType));
 
-        addSessionIdRequestTokenAndDeviceId(loanDetailsRequest,
-                SpankkiConstants.Url.LOAN_DETAILS.getRequestToken());
+        addSessionIdRequestTokenAndDeviceId(
+                loanDetailsRequest, SpankkiConstants.Url.LOAN_DETAILS.getRequestToken());
 
         return request(SpankkiConstants.Url.LOAN_DETAILS.getUrl())
                 .post(LoanDetailsResponse.class, loanDetailsRequest);
@@ -200,8 +228,8 @@ public class SpankkiApiClient {
                 .post(SpankkiResponse.class, resChallengeRequest);
     }
 
-    private <T> T postLoginRequest(Class<T> c, URL requestUrl, SpankkiRequest requestData) throws AuthenticationException,
-            AuthorizationException {
+    private <T> T postLoginRequest(Class<T> c, URL requestUrl, SpankkiRequest requestData)
+            throws AuthenticationException, AuthorizationException {
         SpankkiResponse response = (SpankkiResponse) request(requestUrl).post(c, requestData);
 
         SpankkiConstants.ServerResponse.throwIfError(response.getStatus());
@@ -235,21 +263,23 @@ public class SpankkiApiClient {
     }
 
     private String calculateRequestToken(String randomString) {
-        String randomBytesString = randomString + SpankkiConstants.Authentication.REQUEST_TOKEN_RANDOM_STRING;
+        String randomBytesString =
+                randomString + SpankkiConstants.Authentication.REQUEST_TOKEN_RANDOM_STRING;
 
         return EncodingUtils.encodeAsBase64String(Hash.sha256(randomBytesString));
     }
 
     private String calculateChallengeResponse(String challenge) {
-        String randomBytesString = challenge + SpankkiConstants.Authentication.CHALLENGE_RESPONSE_RANDOM_STRING;
+        String randomBytesString =
+                challenge + SpankkiConstants.Authentication.CHALLENGE_RESPONSE_RANDOM_STRING;
 
         return EncodingUtils.encodeAsBase64String(Hash.sha256(randomBytesString));
     }
 
     private RequestBuilder request(URL url) {
-        return this.client.request(url)
+        return this.client
+                .request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-
     }
 }

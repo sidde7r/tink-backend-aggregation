@@ -16,7 +16,9 @@ public class HandelsbankenFIAgentTest {
         new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-codecard")
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PIN)
-                .addCredentialField(HandelsbankenFIConstants.DeviceAuthentication.SIGNUP_PASSWORD, SIGNUP_PASSWORD)
+                .addCredentialField(
+                        HandelsbankenFIConstants.DeviceAuthentication.SIGNUP_PASSWORD,
+                        SIGNUP_PASSWORD)
                 .loadCredentialsBefore(true)
                 .saveCredentialsAfter(true)
                 .build()

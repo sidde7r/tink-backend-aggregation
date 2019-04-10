@@ -14,24 +14,25 @@ public class HandelsbankenFIAccountTransactionPaginator
     private final HandelsbankenFIApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
 
-    public HandelsbankenFIAccountTransactionPaginator(HandelsbankenFIApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+    public HandelsbankenFIAccountTransactionPaginator(
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account,
-            URL key) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL key) {
 
-        return sessionStorage.accountList()
+        return sessionStorage
+                .accountList()
                 .flatMap(accountList -> accountList.find(account))
                 .map(handelsbankenAccount -> getTransactionsFor(handelsbankenAccount, key))
                 .orElse(null);
     }
 
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(HandelsbankenAccount account,
-            URL key) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            HandelsbankenAccount account, URL key) {
 
         if (key != null) {
             return client.transactions(key);

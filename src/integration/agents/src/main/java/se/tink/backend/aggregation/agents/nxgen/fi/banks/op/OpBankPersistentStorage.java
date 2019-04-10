@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class OpBankPersistentStorage {
     private final Credentials credentials;
@@ -17,15 +16,16 @@ public class OpBankPersistentStorage {
         if (persistentStorage.containsKey(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID)) {
             return persistentStorage.get(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID);
         }
-        return se.tink.libraries.strings.StringUtils.hashAsUUID("TINK-" + credentials.getUserId()).toLowerCase();
+        return se.tink.libraries.strings.StringUtils.hashAsUUID("TINK-" + credentials.getUserId())
+                .toLowerCase();
     }
 
     public void put(String key, String value) {
         persistentStorage.put(key, value);
     }
 
-    public boolean containsAppId(){
-        return persistentStorage.containsKey(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID);
+    public boolean containsAppId() {
+        return persistentStorage.containsKey(
+                OpBankConstants.Authentication.APPLICATION_INSTANCE_ID);
     }
-
 }

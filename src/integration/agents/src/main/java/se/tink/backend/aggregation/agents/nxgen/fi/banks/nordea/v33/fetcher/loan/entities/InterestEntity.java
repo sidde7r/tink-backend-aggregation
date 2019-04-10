@@ -5,12 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InterestEntity {
-    @JsonProperty
-    private double rate;
+    @JsonProperty private double rate;
+
     @JsonProperty("reference_rate_type")
     private String referenceRateType;
+
     @JsonProperty("period_start_date")
     private String periodStartDate;
+
     @JsonProperty("base_rate")
     private double baseRate;
 

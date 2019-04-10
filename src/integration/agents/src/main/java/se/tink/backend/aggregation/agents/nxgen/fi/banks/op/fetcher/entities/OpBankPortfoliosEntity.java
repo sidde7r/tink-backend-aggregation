@@ -47,5 +47,4 @@ public class OpBankPortfoliosEntity extends OpBankResponseEntity {
     public int getPortfolioCount() {
         return portfolioCount;
     }
-
 }
