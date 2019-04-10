@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -43,7 +43,7 @@ public class AccountEntity {
                         balanceResponse.getAvailableCredit(accountId))
                 .setName(productEntity.getProductName())
                 .setAccountNumber(creditCardEntity.getCustomerNumber())
-                .putInTemporaryStorage(ICSConstants.Storage.ACCOUNT_ID, accountId)
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
                 .build();
     }
 }

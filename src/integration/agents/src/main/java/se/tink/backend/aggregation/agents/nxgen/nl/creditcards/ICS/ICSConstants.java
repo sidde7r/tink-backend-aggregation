@@ -7,7 +7,7 @@ public class ICSConstants {
 
     public static final String INTEGRATION_NAME = "icsConfiguration";
 
-    public static final class URL {
+    public static final class Urls {
         public static final String AUTH_BASE = "https://auth.vvwpgvhh.icscards.nl";
         public static final String BASE = "https://api.vvwpgvhh.icscards.nl";
         public static final String ACCOUNT_SETUP = "/1/api/open-banking/v1.0/account-requests";
@@ -40,7 +40,7 @@ public class ICSConstants {
         public static final String RESPONSE_TYPE_CODE = "code";
     }
 
-    public static final class Headers {
+    public static final class HeaderKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
 
@@ -88,7 +88,7 @@ public class ICSConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
-    public static final class Storage {
+    public static final class StorageKeys {
         public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
