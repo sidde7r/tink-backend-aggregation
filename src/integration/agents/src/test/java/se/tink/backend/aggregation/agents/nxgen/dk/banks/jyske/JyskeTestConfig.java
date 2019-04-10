@@ -4,12 +4,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class JyskeTestConfig {
 
-    public static final User USER_1 =
-            new User("", "","",
-                    "");
-    public static final User USER_2 =
-            new User("", "", "",
-                    "");
+    public static final User USER_1 = new User("", "", "", "");
+    public static final User USER_2 = new User("", "", "", "");
 
     public static class User {
 

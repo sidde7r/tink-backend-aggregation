@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class NordeaDkConstants {
     public static final String MARKET_CODE = "DK";
@@ -214,7 +214,8 @@ public class NordeaDkConstants {
 
             addAccountType("SE4000", "Spara Kapital", AccountTypes.SAVINGS);
             addAccountType("SE4300", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
-            // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0), guess it might be a
+            // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0),
+            // guess it might be a
             // mistake that SE4309 is actually SE4300.
             addAccountType("SE4309", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
             addAccountType("SE4400", "Skatteutjämningskonto", AccountTypes.SAVINGS);
@@ -281,7 +282,6 @@ public class NordeaDkConstants {
             addAccountType("SE7901", "Belastningsnummer", AccountTypes.SAVINGS);
             addAccountType("SE8001", "Business Gold", AccountTypes.CREDIT_CARD);
             addAccountType("SE8002", "First card", AccountTypes.CREDIT_CARD);
-
 
             addAccountType("SE46100601", "Bonuskonto 2006 utgåva 1", AccountTypes.CHECKING);
             addAccountType("SE46100602", "Bonuskonto 2006 utgåva 2", AccountTypes.CHECKING);
@@ -374,7 +374,11 @@ public class NordeaDkConstants {
             addAccountType("SE00020", "Studentlån", AccountTypes.LOAN, LoanDetails.Type.STUDENT);
             addAccountType("SE00021", "Startlån", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
             addAccountType("SE00022", "Privatlån", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
-            addAccountType("SE00090", "Låna person, utan säkerhet", AccountTypes.LOAN, LoanDetails.Type.BLANCO);
+            addAccountType(
+                    "SE00090",
+                    "Låna person, utan säkerhet",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.BLANCO);
             addAccountType("SE00091", "Låna spar", AccountTypes.LOAN);
             addAccountType("SE00092", "Låna bostad", AccountTypes.LOAN, LoanDetails.Type.MORTGAGE);
             addAccountType("SE00093", "Låna person, med säkerhet", AccountTypes.LOAN);
@@ -403,17 +407,61 @@ public class NordeaDkConstants {
             addAccountType("SE00913", "Kreditgaranti", AccountTypes.LOAN);
             addAccountType("SE00915", "Garanti", AccountTypes.LOAN);
             addAccountType("SE00919", "Garantifondförbindelse", AccountTypes.LOAN);
-            addAccountType("SE10102", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10103", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10104", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10105", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10302", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10304", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10305", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10401", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10402", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10403", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
-            addAccountType("SE10404", "Bil- och Fritidskredit", AccountTypes.LOAN, LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10102",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10103",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10104",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10105",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10302",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10304",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10305",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10401",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10402",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10403",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
+            addAccountType(
+                    "SE10404",
+                    "Bil- och Fritidskredit",
+                    AccountTypes.LOAN,
+                    LoanDetails.Type.VEHICLE);
             addAccountType("SE30101", "Reverslån, Nordea finans", AccountTypes.LOAN);
             addAccountType("SE30103", "Reverslån, Nordea finans", AccountTypes.LOAN);
             addAccountType("SE30104", "Reverslån, Nordea finans", AccountTypes.LOAN);
@@ -492,7 +540,8 @@ public class NordeaDkConstants {
             ACCOUNT_NAMES_BY_CODE.put(code, name);
         }
 
-        private static void addAccountType(String code, String name, AccountTypes type, LoanDetails.Type loanType) {
+        private static void addAccountType(
+                String code, String name, AccountTypes type, LoanDetails.Type loanType) {
             addAccountType(code, name, type);
             LOAN_TYPES_BY_CODE.put(code, loanType);
         }

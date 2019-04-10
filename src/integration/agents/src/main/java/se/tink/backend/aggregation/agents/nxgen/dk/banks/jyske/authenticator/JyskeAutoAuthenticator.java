@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -14,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class JyskeAutoAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
     private final JyskeApiClient apiClient;
@@ -24,7 +24,8 @@ public class JyskeAutoAuthenticator implements PasswordAuthenticator, AutoAuthen
     private final JyskeServiceAuthenticator serviceAuthenticator;
 
     public JyskeAutoAuthenticator(
-            JyskeApiClient client, JyskePersistentStorage persistentStorage,
+            JyskeApiClient client,
+            JyskePersistentStorage persistentStorage,
             Credentials credentials) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
@@ -40,13 +41,15 @@ public class JyskeAutoAuthenticator implements PasswordAuthenticator, AutoAuthen
         }
         try {
             authenticationController.authenticate(credentials);
-        } catch (AuthorizationException | AuthenticationException e) { // AuthorizationException never thrown...
+        } catch (AuthorizationException
+                | AuthenticationException e) { // AuthorizationException never thrown...
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         Token token = Token.generate();
         apiClient.nemIdInit(token);
 

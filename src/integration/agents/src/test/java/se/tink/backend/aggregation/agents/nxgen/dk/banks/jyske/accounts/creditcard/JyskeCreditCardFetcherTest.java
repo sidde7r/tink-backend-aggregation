@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.creditcard;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -9,11 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-
-import java.util.Collection;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class JyskeCreditCardFetcherTest {
 
@@ -26,7 +25,8 @@ public class JyskeCreditCardFetcherTest {
         credentials.setField(Field.Key.USERNAME, user.username);
         credentials.setField(Field.Key.PASSWORD, user.mobilCode);
         JyskeApiClient apiClient = new JyskeApiClient(new TinkHttpClient());
-        new JyskeAutoAuthenticator(apiClient, user.persistentStorage, credentials).autoAuthenticate();
+        new JyskeAutoAuthenticator(apiClient, user.persistentStorage, credentials)
+                .autoAuthenticate();
 
         JyskeCreditCardFetcher creditCardFetcher = new JyskeCreditCardFetcher(apiClient);
 

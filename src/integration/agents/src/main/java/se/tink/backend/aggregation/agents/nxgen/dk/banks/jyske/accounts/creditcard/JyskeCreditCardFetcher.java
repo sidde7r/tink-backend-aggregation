@@ -12,7 +12,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class JyskeCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(JyskeCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(JyskeCreditCardFetcher.class);
 
     private final JyskeApiClient apiClient;
 
@@ -28,17 +29,12 @@ public class JyskeCreditCardFetcher implements AccountFetcher<CreditCardAccount>
                     .filter(JyskeCardsResponse::hasCreditCards)
                     .isPresent()) {
                 LOGGER.infoExtraLong(
-                        "Jyske cards: " + serializedCards,
-                        JyskeConstants.Log.CREDITCARD_LOGGING
-                );
+                        "Jyske cards: " + serializedCards, JyskeConstants.Log.CREDITCARD_LOGGING);
             }
         } catch (Exception e) {
             // Probably means the user hasn't enabled the Jyske Wallet.
             LOGGER.infoExtraLong(
-                    "Jyske cards fetching failed",
-                    JyskeConstants.Log.CREDITCARD_LOGGING,
-                    e
-            );
+                    "Jyske cards fetching failed", JyskeConstants.Log.CREDITCARD_LOGGING, e);
         }
         return Collections.emptyList();
     }

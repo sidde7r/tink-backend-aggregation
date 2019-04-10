@@ -27,15 +27,15 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator {
     private String password;
     private Token token;
 
-    public JyskeKeyCardAuthenticator(JyskeApiClient client, JyskePersistentStorage persistentStorage) {
+    public JyskeKeyCardAuthenticator(
+            JyskeApiClient client, JyskePersistentStorage persistentStorage) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         serviceAuthenticator = new JyskeServiceAuthenticator(apiClient);
     }
 
     @Override
-    public KeyCardInitValues init(String username, String password)
-            throws AuthenticationException {
+    public KeyCardInitValues init(String username, String password) throws AuthenticationException {
 
         this.username = username;
         this.password = password;
@@ -49,12 +49,12 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator {
             encryptionEntity.setPinCode(password);
             NemIdResponse challenge = apiClient.nemIdGetChallenge(encryptionEntity, token);
             this.challengeEntity = new Decryptor(token).read(challenge, NemIdChallengeEntity.class);
-            return new KeyCardInitValues(this.challengeEntity.getKeycardNo(), this.challengeEntity.getKey());
+            return new KeyCardInitValues(
+                    this.challengeEntity.getKeycardNo(), this.challengeEntity.getKey());
         } catch (HttpResponseException e) {
             NemIdErrorEntity.throwError(e);
-            throw e;//will never get here because exception already thrown.
+            throw e; // will never get here because exception already thrown.
         }
-
     }
 
     @Override
@@ -69,7 +69,8 @@ public class JyskeKeyCardAuthenticator implements KeyCardAuthenticator {
 
         NemIdResponse enrollment = apiClient.nemIdEnroll(enrollEntity, this.token);
 
-        NemIdInstallIdEntity installIdEntity = new Decryptor(token).read(enrollment, NemIdInstallIdEntity.class);
+        NemIdInstallIdEntity installIdEntity =
+                new Decryptor(token).read(enrollment, NemIdInstallIdEntity.class);
 
         NemIdLoginEncryptionEntity encryptionEntity = new NemIdLoginEncryptionEntity();
 

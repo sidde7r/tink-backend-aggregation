@@ -17,7 +17,7 @@ public class GetAccountResponse {
 
     public List<AccountBriefEntity> getAccountsBrief() {
         return accounts.stream()
-                       .map(AccountEntity::toAccountBriefEntity)
-                       .collect(Collectors.toList());
+                .map(AccountEntity::toAccountBriefEntity)
+                .collect(Collectors.toList());
     }
 }

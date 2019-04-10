@@ -37,8 +37,9 @@ public class AuthenticatedUserEntity {
     }
 
     /**
-     * Nordea API is a bit weird and send items on different formats depending on the number of items. Multiple
-     * rows means that we will get an List of items and one row will not be typed as an array.
+     * Nordea API is a bit weird and send items on different formats depending on the number of
+     * items. Multiple rows means that we will get an List of items and one row will not be typed as
+     * an array.
      */
     @JsonProperty("agreements")
     public void setAgreements(Object input) {
@@ -49,7 +50,8 @@ public class AuthenticatedUserEntity {
         if (input instanceof Map) {
             agreements = Lists.newArrayList(MAPPER.convertValue(input, AgreementListEntity.class));
         } else {
-            agreements = MAPPER.convertValue(input, new TypeReference<List<AgreementListEntity>>() {});
+            agreements =
+                    MAPPER.convertValue(input, new TypeReference<List<AgreementListEntity>>() {});
         }
     }
 }

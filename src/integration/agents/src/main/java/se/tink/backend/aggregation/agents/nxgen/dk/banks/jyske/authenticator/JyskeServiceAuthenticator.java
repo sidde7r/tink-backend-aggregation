@@ -24,7 +24,8 @@ public class JyskeServiceAuthenticator {
             throw LoginError.ERROR_WITH_MOBILE_OPERATOR.exception();
         }
 
-        NemIdLoginResponse mobilServiceLogin = apiClient.mobilServiceLogin(loginWithInstallId, token);
+        NemIdLoginResponse mobilServiceLogin =
+                apiClient.mobilServiceLogin(loginWithInstallId, token);
         if (!mobilServiceLogin.isOk()) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }

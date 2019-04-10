@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class NemIdGenericRequest {
 
-    private NemIdGenericRequest() {
-    }
+    private NemIdGenericRequest() {}
 
     private String data;
 
@@ -17,5 +16,4 @@ public class NemIdGenericRequest {
         request.data = Encryptable.encrypt(token, encryptable);
         return request;
     }
-
 }

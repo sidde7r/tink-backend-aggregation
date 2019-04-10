@@ -143,5 +143,4 @@ public class TransactionsEntity {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
-
 }

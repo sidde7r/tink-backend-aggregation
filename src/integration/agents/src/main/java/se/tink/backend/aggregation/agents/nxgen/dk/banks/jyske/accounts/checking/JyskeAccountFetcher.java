@@ -24,5 +24,4 @@ public class JyskeAccountFetcher implements AccountFetcher<TransactionalAccount>
                 .map(AccountEntity::toTransactionalAccount)
                 .collect(Collectors.toList());
     }
-
 }

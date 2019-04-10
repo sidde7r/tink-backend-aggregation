@@ -8,25 +8,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class NemidAuthenticateUserEntity {
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String loginType;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String nemIdSessionId;
+
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String nemIdToken;
 
-    public NemidAuthenticateUserEntity setLoginType(
-            String loginType) {
+    public NemidAuthenticateUserEntity setLoginType(String loginType) {
         this.loginType = loginType;
         return this;
     }
 
-    public NemidAuthenticateUserEntity setNemIdSessionId(
-            String nemIdSessionId) {
+    public NemidAuthenticateUserEntity setNemIdSessionId(String nemIdSessionId) {
         this.nemIdSessionId = nemIdSessionId;
         return this;
     }
 
-    public NemidAuthenticateUserEntity setNemIdToken(
-            String nemIdToken) {
+    public NemidAuthenticateUserEntity setNemIdToken(String nemIdToken) {
         this.nemIdToken = nemIdToken;
         return this;
     }

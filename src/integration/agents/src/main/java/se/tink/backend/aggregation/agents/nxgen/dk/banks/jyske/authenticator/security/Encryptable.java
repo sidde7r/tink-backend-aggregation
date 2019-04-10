@@ -10,16 +10,16 @@ public interface Encryptable {
 
     static String encrypt(Token token, Encryptable encryptable) {
         return Optional.ofNullable(SerializationUtils.serializeToString(encryptable))
-                .map(serialized -> new String(
-                                JyskeSecurityHelper.encryptWithAESAndBase64Encode(
-                                        StringEscapeUtils.unescapeJava(
-                                                JyskeConstants.Crypto.AES_PADDING + serialized
-                                        ).getBytes(JyskeConstants.CHARSET),
-                                        token
-                                )
-                        )
-                )
-                .orElseThrow(() -> new IllegalStateException("Invalid encryptable entity json format"));
+                .map(
+                        serialized ->
+                                new String(
+                                        JyskeSecurityHelper.encryptWithAESAndBase64Encode(
+                                                StringEscapeUtils.unescapeJava(
+                                                                JyskeConstants.Crypto.AES_PADDING
+                                                                        + serialized)
+                                                        .getBytes(JyskeConstants.CHARSET),
+                                                token)))
+                .orElseThrow(
+                        () -> new IllegalStateException("Invalid encryptable entity json format"));
     }
-
 }

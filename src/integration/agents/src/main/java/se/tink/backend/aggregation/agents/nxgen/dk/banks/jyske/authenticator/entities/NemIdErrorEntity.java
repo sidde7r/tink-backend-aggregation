@@ -23,13 +23,13 @@ public class NemIdErrorEntity {
     public static void throwError(HttpResponseException e) throws LoginException {
         NemIdErrorEntity error = e.getResponse().getBody(NemIdErrorEntity.class);
         switch (Integer.valueOf(error.getErrorCode())) {
-        case JyskeConstants.ErrorCode.INVALID_CREDENTIAL:
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        default:
-            throw new IllegalStateException(
-                    String.format("ErrorCode: %s, errorMsg: %s.", error.getErrorCode(),
-                            error.getErrorMessage()));
+            case JyskeConstants.ErrorCode.INVALID_CREDENTIAL:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "ErrorCode: %s, errorMsg: %s.",
+                                error.getErrorCode(), error.getErrorMessage()));
         }
-
     }
 }

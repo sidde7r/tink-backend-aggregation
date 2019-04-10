@@ -2,6 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -26,12 +31,6 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 public class NordeaDkParser extends NordeaV20Parser {
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");
 
@@ -43,7 +42,8 @@ public class NordeaDkParser extends NordeaV20Parser {
     }
 
     private Optional<String> getTinkAccountName(ProductEntity pe) {
-        if (Objects.equals(pe.getProductCode(), ProductType.MORTGAGE) && pe.getMtgLoanName() != null) {
+        if (Objects.equals(pe.getProductCode(), ProductType.MORTGAGE)
+                && pe.getMtgLoanName() != null) {
             return Optional.of(pe.getMtgLoanName());
         }
 
@@ -70,42 +70,62 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public LoanAccount parseMortgage(ProductEntity pe, LoanDetailsResponse loanDetailsResponse) {
-        LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
-                new Amount(pe.getCurrency(), pe.getBalance()))
-                .setAccountNumber(pe.getAccountNumber(true))
-                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
-                .setBankIdentifier(pe.getNordeaAccountIdV2());
+        LoanAccount.Builder<?, ?> accountBuilder =
+                LoanAccount.builder(
+                                pe.getAccountNumber(false),
+                                new Amount(pe.getCurrency(), pe.getBalance()))
+                        .setAccountNumber(pe.getAccountNumber(true))
+                        .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
+                        .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         LoanData loanData = loanDetailsResponse.getLoanData();
         if (loanData != null) {
-            accountBuilder.setInterestRate(loanData.getInterest())
-                    .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
-                            .setLoanNumber(loanData.getLocalNumber())
-                            .setNextDayOfTermsChange(loanData.getInterestTermEnds())
-                            .setMonthlyAmortization(new Amount(loanData.getCurrency(),
-                                    loanDetailsResponse.getFollowingPayment().getAmortization()))
-                            .setInitialBalance(new Amount(loanData.getCurrency(), loanData.getGranted()))
-                            .build());
+            accountBuilder
+                    .setInterestRate(loanData.getInterest())
+                    .setDetails(
+                            LoanDetails.builder(
+                                            AccountType.getLoanTypeForCode(
+                                                    pe.getProductTypeExtension()))
+                                    .setLoanNumber(loanData.getLocalNumber())
+                                    .setNextDayOfTermsChange(loanData.getInterestTermEnds())
+                                    .setMonthlyAmortization(
+                                            new Amount(
+                                                    loanData.getCurrency(),
+                                                    loanDetailsResponse
+                                                            .getFollowingPayment()
+                                                            .getAmortization()))
+                                    .setInitialBalance(
+                                            new Amount(
+                                                    loanData.getCurrency(), loanData.getGranted()))
+                                    .build());
         }
 
         return accountBuilder.build();
     }
 
     public LoanAccount parseBlancoLoan(ProductEntity pe) {
-        return LoanAccount.builder(pe.getAccountNumber(false), new Amount(pe.getCurrency(), pe.getBalance()))
+        return LoanAccount.builder(
+                        pe.getAccountNumber(false), new Amount(pe.getCurrency(), pe.getBalance()))
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
-                .setDetails(LoanDetails.builder(AccountType.getLoanTypeForCode(pe.getProductTypeExtension()))
-                        .setLoanNumber(Optional.ofNullable(pe.getLoanId()).orElse(pe.getProductNumber()))
-                        .build())
+                .setDetails(
+                        LoanDetails.builder(
+                                        AccountType.getLoanTypeForCode(
+                                                pe.getProductTypeExtension()))
+                                .setLoanNumber(
+                                        Optional.ofNullable(pe.getLoanId())
+                                                .orElse(pe.getProductNumber()))
+                                .build())
                 .build();
     }
 
     @Override
     public TransactionalAccount parseAccount(ProductEntity pe) {
-        return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
-                new Amount(pe.getCurrency(), pe.getBalance()))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(pe),
+                        pe.getAccountNumber(false),
+                        new Amount(pe.getCurrency(), pe.getBalance()))
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -113,10 +133,12 @@ public class NordeaDkParser extends NordeaV20Parser {
     }
 
     @Override
-    public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardDetailsEntity cardDetails) {
-        return CreditCardAccount.builder(pe.getAccountNumber(false),
-                new Amount(pe.getCurrency(), pe.getBalance()),
-                new Amount(pe.getCurrency(), pe.getFundsAvailable()))
+    public CreditCardAccount parseCreditCardAccount(
+            ProductEntity pe, CardDetailsEntity cardDetails) {
+        return CreditCardAccount.builder(
+                        pe.getAccountNumber(false),
+                        new Amount(pe.getCurrency(), pe.getBalance()),
+                        new Amount(pe.getCurrency(), pe.getFundsAvailable()))
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
@@ -125,8 +147,7 @@ public class NordeaDkParser extends NordeaV20Parser {
 
     @Override
     public InvestmentAccount parseInvestmentAccount(CustodyAccount custodyAccount) {
-        return InvestmentAccount
-                .builder(custodyAccount.getAccountId())
+        return InvestmentAccount.builder(custodyAccount.getAccountId())
                 .setAccountNumber(custodyAccount.getAccountNumber())
                 .setName(custodyAccount.getName())
                 .setCashBalance(Amount.inDKK(0))
@@ -137,7 +158,8 @@ public class NordeaDkParser extends NordeaV20Parser {
     private Portfolio parsePortfolio(CustodyAccount custodyAccount) {
         Portfolio portfolio = new Portfolio();
 
-        portfolio.setType(custodyAccount.getPortfolioType(credentials)); // credentials used for logging
+        portfolio.setType(
+                custodyAccount.getPortfolioType(credentials)); // credentials used for logging
         portfolio.setRawType(custodyAccount.getName());
         portfolio.setTotalProfit(custodyAccount.getProfit());
         portfolio.setTotalValue(custodyAccount.getMarketValue());

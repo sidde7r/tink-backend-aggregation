@@ -33,18 +33,21 @@ public class FetchInvestmentResponse {
             return Stream.empty();
         }
         return this.custodyAccounts.stream()
-                .map(custodyAccount -> InvestmentAccount
-                        .builder(custodyAccount.createUniqueIdentifier())
-                        .setAccountNumber(custodyAccount.createUniqueIdentifier())
-                        .setName(custodyAccount.getName())
-                        .setCashBalance(Amount.inDKK(0))
-                        .setPortfolios(
-                                holdingOption
-                                        .map(holding -> holding.toPortfolio(custodyAccount))
-                                        .map(Collections::singletonList)
-                                        .orElseGet(Collections::emptyList)
-                        )
-                        .build());
+                .map(
+                        custodyAccount ->
+                                InvestmentAccount.builder(custodyAccount.createUniqueIdentifier())
+                                        .setAccountNumber(custodyAccount.createUniqueIdentifier())
+                                        .setName(custodyAccount.getName())
+                                        .setCashBalance(Amount.inDKK(0))
+                                        .setPortfolios(
+                                                holdingOption
+                                                        .map(
+                                                                holding ->
+                                                                        holding.toPortfolio(
+                                                                                custodyAccount))
+                                                        .map(Collections::singletonList)
+                                                        .orElseGet(Collections::emptyList))
+                                        .build());
     }
 
     private Stream<InvestmentAccount> getPoolInvestments() {
