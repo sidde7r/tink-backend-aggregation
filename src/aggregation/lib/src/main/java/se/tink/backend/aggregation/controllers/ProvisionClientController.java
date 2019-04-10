@@ -28,7 +28,9 @@ public class ProvisionClientController {
     private ClusterConfigurationsRepository clusterConfigurationsRepository;
     private ClientConfigurationsRepository clientConfigurationsRepository;
     private CryptoConfigurationsRepository cryptoConfigurationsRepository;
-    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-staging";
+
+    // FIXME: make this configurable from the yaml.
+    private static final String OXFORD_PROD_CLUSTER_NAME = "oxford-production";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 
     public ProvisionClientController(
@@ -78,7 +80,6 @@ public class ProvisionClientController {
 
         log.info("--------------------------");
         log.info("Client {} has been added.", clientName);
-        log.info("Api key: {}", clientConfiguration.getApiClientKey());
         log.info("Identifiable as: {}", aggregatorConfiguration.getAggregatorInfo());
         log.info("Please store the encrypted keys on an offline drive.");
     }
@@ -98,9 +99,8 @@ public class ProvisionClientController {
         return BASE64_ENCODER.encodeToString(bytes);
     }
 
-    public void provision() throws IOException {
-        ProvisionClientsConfig conf  = ProvisionConfigurationParser.parse();
-        conf.getClients().forEach((k,v) -> this.provision(
+    public void provision(ProvisionClientsConfig provisionClientsConfig) {
+        provisionClientsConfig.getClients().forEach((k,v) -> this.provision(
                 k,
                 v.getAggregatorIdentifier()
         ));

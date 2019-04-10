@@ -25,3 +25,7 @@ agents:
   callbackJwtSignatureKeyPairEnabled: false
 
 shouldProvisionClients: true
+
+clients:
+  provision-job-testing:
+    aggregatorIdentifier: "Provision Job Testing"

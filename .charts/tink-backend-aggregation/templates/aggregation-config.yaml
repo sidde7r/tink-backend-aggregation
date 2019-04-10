@@ -73,7 +73,12 @@ data:
       {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
 
     isMultiClientDevelopment: false
-    shouldProvisionClients: {{ default false .Values.shouldProvisionClients }}
+
+    {{- if .Values.clients }}
+    provisionClientsConfig:
+      clients:{{ .Values.clients | toYaml | trimSuffix "\n" | nindent 8 }}
+    {{- end }}
+
 
     {{- if eq "local" .Values.Cluster }}
     developmentMode: true

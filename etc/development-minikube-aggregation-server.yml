@@ -124,3 +124,10 @@ logging:
       logFormat: '%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"} %level [%thread] R:%X{requestId} %logger %message%n%xException'
 
 isMultiClientDevelopment: false
+
+provisionClientsConfig:
+  clients:
+    provision-job-testing:
+      aggregatorIdentifier: "Provision Job Testing"
+    provisioning-job2-testing:
+      aggregatorIdentifier: "Local provisioning"

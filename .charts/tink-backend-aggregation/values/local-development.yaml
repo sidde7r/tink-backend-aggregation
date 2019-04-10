@@ -16,3 +16,9 @@ s3StorageConfiguration:
 agents:
   demoFakeBank:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
+
+
+
+clients:
+  provision-job-testing:
+    aggregatorIdentifier: "Provision Job Testing"
