@@ -3,11 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 import static com.google.common.base.Predicates.not;
 
 import com.google.common.base.Strings;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.utils.ICSUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -103,18 +102,18 @@ public class ICSApiClient {
     }
 
     public AccountSetupResponse accountSetup(OAuth2Token token) {
-        Date fromDate = getFromDate();
-        Date toDate = getToDate();
-        Date expirationDate = getExpirationDate();
+        Date fromDate = ICSUtils.getFromDate();
+        Date toDate = ICSUtils.getToDate();
+        Date expirationDate = ICSUtils.getExpirationDate();
 
         AccountSetupRequest request =
                 new AccountSetupRequest()
                         .setup(Permissions.ALL_READ_PERMISSIONS, fromDate, toDate, expirationDate);
 
-        String lastLoggedTime = getLastLoggedTime(new Date());
+        String lastLoggedTime = ICSUtils.getLastLoggedTime(new Date());
 
         return createRequestInSession(Urls.ACCOUNT_SETUP, token)
-                .header(HeaderKeys.X_JWS_SIGNATURE, getJWSSignature(request))
+                .header(HeaderKeys.X_JWS_SIGNATURE, ICSUtils.getJWSSignature(request))
                 .header(HeaderKeys.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, lastLoggedTime)
                 .post(AccountSetupResponse.class, request);
     }
@@ -127,51 +126,6 @@ public class ICSApiClient {
 
     private boolean receivedAllReadPermissions(AccountSetupResponse response) {
         return response.getData().getPermissions().equals(Permissions.ALL_READ_PERMISSIONS);
-    }
-
-    private String getInteractionId() {
-        return UUID.randomUUID().toString();
-    }
-
-    // Not required to send actual values, sending dummy data
-    private String getFinancialId() {
-        return "e3213dfd-435fgrd5-e7edr4";
-    }
-
-    // Not required to send actual values, sending dummy data
-    private String getCustomerIpAdress() {
-        return "234.213.323.123";
-    }
-
-    // Not required to send actual values, sending dummy data
-    private String getJWSSignature(AccountSetupRequest request) {
-        return "";
-    }
-
-    // Can fetch transactions max 2 years back
-    private Date getFromDate() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.YEAR, -2);
-        return c.getTime();
-    }
-
-    private Date getToDate() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        return c.getTime();
-    }
-
-    // Can be max 90 days in the future
-    private Date getExpirationDate() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, 90);
-        return c.getTime();
-    }
-
-    private String getLastLoggedTime(Date date) {
-        return ICSConstants.Date.LAST_LOGGED_TIME_FORMAT.format(date);
     }
 
     // AUTH end
@@ -225,9 +179,9 @@ public class ICSApiClient {
     private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-        final String xFinancialID = getFinancialId();
-        final String xCustomerIPAddress = getCustomerIpAdress();
-        final String xInteractionId = getInteractionId();
+        final String xFinancialID = ICSUtils.getFinancialId();
+        final String xCustomerIPAddress = ICSUtils.getCustomerIpAdress();
+        final String xInteractionId = ICSUtils.getInteractionId();
 
         return createRequest(url)
                 .addBearerToken(token)
