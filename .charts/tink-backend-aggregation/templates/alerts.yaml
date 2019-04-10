@@ -17,6 +17,7 @@ spec:
     labels:
       severity: urgent
       who: aggregation
+      priority: P2
     annotations:
       description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
         '<{ $labels.at }>'.
@@ -29,6 +30,7 @@ spec:
     labels:
       severity: urgent
       who: aggregation
+      priority: P2
     annotations:
       description: No instances of aggregation service has been running for the past 20 minutes.
       summary: Application Aggregation is not running
@@ -83,6 +85,7 @@ spec:
     labels:
       severity: urgent
       who: aggregation
+      priority: P2
     annotations:
       description: Application Aggregation has been running with reduced availability
         (< 2 instances) for the past 20 minutes.
