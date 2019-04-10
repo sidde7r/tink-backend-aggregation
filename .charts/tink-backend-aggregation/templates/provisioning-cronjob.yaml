@@ -29,7 +29,7 @@ spec:
 
           initContainers:
           # Script to replace placeholder passwords with the real passwords
-          - name: add-secrets-to-config
+          - name: add-secrets-to-config-for-cronjob
             command:
               - "/mnt/scripts/add-secrets.sh"
             image: gcr.io/tink-containers/debian:stretch
