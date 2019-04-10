@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.banks.seb.SEBApiConstants;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -71,9 +72,9 @@ public class InsuranceEntity {
         }
 
         switch (type.toLowerCase()) {
-            case "kapitalförsäkring":
+            case SEBApiConstants.PortfolioType.ENDOWMENT_INSURANCE:
                 return Portfolio.Type.KF;
-            case "tjänstepension":
+            case SEBApiConstants.PortfolioType.OCCUPATIONAL_PENSION:
                 return Portfolio.Type.PENSION;
             default:
                 log.warn(String.format("Unknown insurance type: %s", type));
