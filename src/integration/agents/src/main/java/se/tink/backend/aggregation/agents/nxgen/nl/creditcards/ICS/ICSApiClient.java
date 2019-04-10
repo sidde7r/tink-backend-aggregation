@@ -109,21 +109,14 @@ public class ICSApiClient {
 
         String lastLoggedTime = getLastLoggedTime(new Date());
 
-        return getAPIRequest(
-                        ICSConstants.URL.ACCOUNT_SETUP,
-                        token,
-                        getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
-                        getFinancialId(),
-                        getCustomerIpAdress(),
-                        getInteractionId())
+        return createRequestInSession(ICSConstants.URL.ACCOUNT_SETUP, token)
                 .header(ICSConstants.Headers.X_JWS_SIGNATURE, getJWSSignature(request))
                 .header(ICSConstants.Headers.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, lastLoggedTime)
                 .post(AccountSetupResponse.class, request);
     }
 
     private ClientCredentialTokenResponse getTokenWithClientCredential() {
-        return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
+        return createRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
                 .queryParam(
@@ -133,12 +126,8 @@ public class ICSApiClient {
                 .get(ClientCredentialTokenResponse.class);
     }
 
-    private String getAuthUrl(String resource) {
-        return ICSConstants.URL.AUTH_BASE + resource;
-    }
-
     private RequestBuilder getAuthRequest(String resource) {
-        return client.request(getAuthUrl(resource));
+        return client.request(ICSConstants.URL.AUTH_BASE + resource);
     }
 
     private boolean receivedAllReadPermissions(AccountSetupResponse response) {
@@ -212,7 +201,7 @@ public class ICSApiClient {
             throw new IllegalStateException("state cannot be null or empty!");
         }
 
-        return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
+        return createRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
                 .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(ICSConstants.Query.CLIENT_SECRET, getConfiguration().getClientSecret())
@@ -224,7 +213,7 @@ public class ICSApiClient {
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        return getAPIRequest(ICSConstants.URL.OAUTH_TOKEN)
+        return createRequest(ICSConstants.URL.OAUTH_TOKEN)
                 .queryParam(
                         ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_REFRESH_TOKEN)
                 .queryParam(ICSConstants.Query.CLIENT_ID, getConfiguration().getClientId())
@@ -233,24 +222,18 @@ public class ICSApiClient {
                 .get(OAuth2Token.class);
     }
 
-    private String getApiUrl(String url) {
-        return ICSConstants.URL.BASE + url;
+    private RequestBuilder createRequest(String url) {
+        return client.request(ICSConstants.URL.BASE + url);
     }
 
-    private RequestBuilder getAPIRequest(String url) {
-        return client.request(getApiUrl(url));
-    }
+    private RequestBuilder createRequestInSession(String url, OAuth2Token token) {
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+        final String xFinancialID = getFinancialId();
+        final String xCustomerIPAddress = getCustomerIpAdress();
+        final String xInteractionId = getInteractionId();
 
-    private RequestBuilder getAPIRequest(
-            String url,
-            OAuth2Token token,
-            String clientId,
-            String clientSecret,
-            String xFinancialID,
-            String xCustomerIPAddress,
-            String xInteractionId) {
-
-        return client.request(getApiUrl(url))
+        return createRequest(url)
                 .addBearerToken(token)
                 .header(ICSConstants.Headers.CLIENT_ID, clientId)
                 .header(ICSConstants.Headers.CLIENT_SECRET, clientSecret)
@@ -265,38 +248,19 @@ public class ICSApiClient {
 
     // AIS
     public CreditAccountsResponse getAllAccounts() {
-        return getAPIRequest(
-                        ICSConstants.URL.ACCOUNT,
-                        getToken(),
-                        getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
-                        getFinancialId(),
-                        getCustomerIpAdress(),
-                        getInteractionId())
+        return createRequestInSession(ICSConstants.URL.ACCOUNT, getToken())
                 .get(CreditAccountsResponse.class);
     }
 
     public CreditBalanceResponse getAccountBalance(String accountId) {
-        return getAPIRequest(
-                        String.format(ICSConstants.URL.BALANCES, accountId),
-                        getToken(),
-                        getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
-                        getFinancialId(),
-                        getCustomerIpAdress(),
-                        getInteractionId())
-                .get(CreditBalanceResponse.class);
+        final String url = String.format(ICSConstants.URL.BALANCES, accountId);
+
+        return createRequestInSession(url, getToken()).get(CreditBalanceResponse.class);
     }
 
     public CreditTransactionsResponse getTransactions(String accountId) {
-        return getAPIRequest(
-                        String.format(ICSConstants.URL.TRANSACTIONS, accountId),
-                        getToken(),
-                        getConfiguration().getClientId(),
-                        getConfiguration().getClientSecret(),
-                        getFinancialId(),
-                        getCustomerIpAdress(),
-                        getInteractionId())
-                .get(CreditTransactionsResponse.class);
+        final String url = String.format(ICSConstants.URL.TRANSACTIONS, accountId);
+
+        return createRequestInSession(url, getToken()).get(CreditTransactionsResponse.class);
     }
 }
