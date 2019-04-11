@@ -71,7 +71,7 @@ public final class ValidatorFactory {
                 .rule(
                         "Identity data is provided",
                         aisData -> aisData.getIdentityData() != null,
-                        aisData -> "Agent did not fetch customer info")
+                        aisData -> "Agent did not fetch identity data")
                 .build();
     }
 }
