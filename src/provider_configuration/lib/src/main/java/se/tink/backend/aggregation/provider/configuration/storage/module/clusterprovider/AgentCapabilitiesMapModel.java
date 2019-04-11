@@ -10,6 +10,5 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class AgentCapabilitiesMapModel extends HashMap<String, Set<ProviderConfigurationStorage.Capability>> {
-
-}
+public final class AgentCapabilitiesMapModel
+        extends HashMap<String, Set<ProviderConfigurationStorage.Capability>> {}

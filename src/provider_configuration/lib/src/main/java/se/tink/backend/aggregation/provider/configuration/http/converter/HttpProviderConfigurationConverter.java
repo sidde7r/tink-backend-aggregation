@@ -1,32 +1,30 @@
 package se.tink.backend.aggregation.provider.configuration.http.converter;
 
 import com.google.common.collect.Sets;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
-import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
+import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class HttpProviderConfigurationConverter {
-    private static final Set<ProviderConfigurationCore.Capability> NON_OXFORD_CAPABILITIES = Sets.immutableEnumSet(
-            ProviderConfigurationCore.Capability.MORTGAGE_AGGREGATION, ProviderConfigurationCore.Capability.TRANSFERS);
+    private static final Set<ProviderConfigurationCore.Capability> NON_OXFORD_CAPABILITIES =
+            Sets.immutableEnumSet(
+                    ProviderConfigurationCore.Capability.MORTGAGE_AGGREGATION,
+                    ProviderConfigurationCore.Capability.TRANSFERS);
 
-    private static final Predicate<ProviderConfigurationCore.Capability> NON_OXFORD_CAPABILITIES_FILTER =
-            NON_OXFORD_CAPABILITIES::contains;
+    private static final Predicate<ProviderConfigurationCore.Capability>
+            NON_OXFORD_CAPABILITIES_FILTER = NON_OXFORD_CAPABILITIES::contains;
 
-    public static ProviderConfigurationDTO convert(String clusterId, ProviderConfigurationCore providerConfigurationCore) {
+    public static ProviderConfigurationDTO convert(
+            String clusterId, ProviderConfigurationCore providerConfigurationCore) {
 
         ProviderConfigurationDTO dto = new ProviderConfigurationDTO();
 
-        dto.setAccessType(
-                convertAccessType(providerConfigurationCore.getAccessType())
-        );
-        dto.setCapabilitiesSerialized(
-                handleCapabilities(clusterId, providerConfigurationCore)
-        );
+        dto.setAccessType(convertAccessType(providerConfigurationCore.getAccessType()));
+        dto.setCapabilitiesSerialized(handleCapabilities(clusterId, providerConfigurationCore));
         dto.setClassName(providerConfigurationCore.getClassName());
         dto.setCredentialsType(providerConfigurationCore.getCredentialsType());
         dto.setCurrency(providerConfigurationCore.getCurrency());
@@ -61,28 +59,30 @@ public class HttpProviderConfigurationConverter {
                 .collect(Collectors.toList());
     }
 
-    private static String handleCapabilities(String clusterId, ProviderConfigurationCore providerConfigurationCore) {
-        // TODO: This can be removed when all clusters are running the following version of respective service:
+    private static String handleCapabilities(
+            String clusterId, ProviderConfigurationCore providerConfigurationCore) {
+        // TODO: This can be removed when all clusters are running the following version of
+        // respective service:
         // Aggregation Controller: 201812031439-3488b872
         // Main: 201812030837-6fa50f81
         // System: 201812030837-6fa50f81
         if (!clusterId.contains("oxford")) {
-            Set<ProviderConfigurationCore.Capability> capabilities = providerConfigurationCore.getCapabilities().stream()
-                    .filter(NON_OXFORD_CAPABILITIES_FILTER)
-                    .collect(Collectors.toSet());
+            Set<ProviderConfigurationCore.Capability> capabilities =
+                    providerConfigurationCore.getCapabilities().stream()
+                            .filter(NON_OXFORD_CAPABILITIES_FILTER)
+                            .collect(Collectors.toSet());
             return SerializationUtils.serializeToString(capabilities);
         }
 
         return providerConfigurationCore.getCapabilitiesSerialized();
     }
 
-    private static ProviderConfigurationDTO.AccessType convertAccessType(ProviderConfigurationCore.AccessType accessType) {
+    private static ProviderConfigurationDTO.AccessType convertAccessType(
+            ProviderConfigurationCore.AccessType accessType) {
         if (accessType == null) {
             return null;
         }
 
-        return ProviderConfigurationDTO.AccessType.valueOf(
-                accessType.name()
-        );
+        return ProviderConfigurationDTO.AccessType.valueOf(accessType.name());
     }
 }

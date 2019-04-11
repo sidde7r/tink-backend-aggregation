@@ -8,6 +8,10 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.provider.enums.ProviderStatuses;
@@ -15,20 +19,17 @@ import se.tink.libraries.provider.enums.ProviderTypes;
 import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfigurationStorage {
 
     public enum AccessType {
-        OPEN_BANKING, OTHER
+        OPEN_BANKING,
+        OTHER
     }
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
+
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
@@ -38,12 +39,16 @@ public class ProviderConfigurationStorage {
     private CredentialsTypes credentialsType;
     private String currency;
     private String displayName;
+
     @JsonProperty("fields")
     private String fieldsSerialized;
+
     private String financialInstituteId;
     private String financialInstituteName;
+
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
+
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -61,8 +66,8 @@ public class ProviderConfigurationStorage {
     private String refreshScheduleSerialized;
 
     public ProviderConfigurationStorage() {
-        setFields(Lists.<Field> newArrayList());
-        setSupplementalFields(Lists.<Field> newArrayList());
+        setFields(Lists.<Field>newArrayList());
+        setSupplementalFields(Lists.<Field>newArrayList());
     }
 
     @Override
@@ -98,7 +103,9 @@ public class ProviderConfigurationStorage {
             return Sets.newHashSet();
         }
 
-        return Sets.newConcurrentHashSet(SerializationUtils.deserializeFromString(capabilitiesSerialized, CapabilityList.class));
+        return Sets.newConcurrentHashSet(
+                SerializationUtils.deserializeFromString(
+                        capabilitiesSerialized, CapabilityList.class));
     }
 
     public String getCapabilitiesSerialized() {
@@ -132,7 +139,11 @@ public class ProviderConfigurationStorage {
             return null;
         }
 
-        Field field = fields.stream().filter(f -> Objects.equal(f.getName(), name)).findFirst().orElse(null);
+        Field field =
+                fields.stream()
+                        .filter(f -> Objects.equal(f.getName(), name))
+                        .findFirst()
+                        .orElse(null);
 
         return field;
     }
@@ -158,7 +169,8 @@ public class ProviderConfigurationStorage {
     }
 
     public List<Field> getSupplementalFields() {
-        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
+        return SerializationUtils.deserializeFromString(
+                supplementalFieldsSerialized, FieldsList.class);
     }
 
     public String getGroupDisplayName() {
@@ -218,8 +230,7 @@ public class ProviderConfigurationStorage {
         return transactional;
     }
 
-    public void setAccessType(
-            AccessType accessType) {
+    public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
     }
 
@@ -326,16 +337,18 @@ public class ProviderConfigurationStorage {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(ProviderConfigurationStorage.class).add("name", name).toString();
+        return MoreObjects.toStringHelper(ProviderConfigurationStorage.class)
+                .add("name", name)
+                .toString();
     }
 
     /**
-     * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
-     * main to know if an agent implements an interface e.g. TransferExecutor.
+     * Used on providers to indicate different tasks it can handle in terms of agents, since it's
+     * not possible now in main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,              // backwards compatibility
-        MORTGAGE_AGGREGATION,   // backwards compatibility
+        TRANSFERS, // backwards compatibility
+        MORTGAGE_AGGREGATION, // backwards compatibility
         CHECKING_ACCOUNTS,
         SAVINGS_ACCOUNTS,
         CREDIT_CARDS,
@@ -356,8 +369,7 @@ public class ProviderConfigurationStorage {
         }
 
         return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(refreshScheduleSerialized, ProviderRefreshSchedule.class));
+                SerializationUtils.deserializeFromString(
+                        refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 }
-
-

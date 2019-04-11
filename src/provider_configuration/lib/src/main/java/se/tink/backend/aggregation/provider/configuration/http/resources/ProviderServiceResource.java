@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterInfo;
 import se.tink.backend.aggregation.provider.configuration.controllers.ProviderServiceController;
-import se.tink.backend.aggregation.provider.configuration.api.ProviderService;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.http.converter.HttpProviderConfigurationConverter;
 import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
@@ -35,9 +35,10 @@ public class ProviderServiceResource implements ProviderService {
     }
 
     @Override
-    public ProviderConfigurationDTO getProviderByName(String providerName, ClusterInfo clusterInfo) {
-        Optional<ProviderConfigurationCore> providerConfiguration = providerController.getProviderByName(
-                clusterInfo.getClusterId(), providerName);
+    public ProviderConfigurationDTO getProviderByName(
+            String providerName, ClusterInfo clusterInfo) {
+        Optional<ProviderConfigurationCore> providerConfiguration =
+                providerController.getProviderByName(clusterInfo.getClusterId(), providerName);
 
         if (!providerConfiguration.isPresent()) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);

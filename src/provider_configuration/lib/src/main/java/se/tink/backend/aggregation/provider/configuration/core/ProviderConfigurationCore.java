@@ -6,30 +6,29 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.field.rpc.Field;
-import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
-import se.tink.libraries.provider.enums.ProviderStatuses;
-import se.tink.libraries.provider.enums.ProviderTypes;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
+import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ProviderConfigurationCore {
 
     public enum AccessType {
-        OPEN_BANKING, OTHER
+        OPEN_BANKING,
+        OTHER
     }
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
+
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
-
 
     private AccessType accessType;
     private String capabilitiesSerialized;
@@ -58,7 +57,7 @@ public class ProviderConfigurationCore {
     private String refreshScheduleSerialized;
 
     public ProviderConfigurationCore() {
-        setFields(Lists.<Field> newArrayList());
+        setFields(Lists.<Field>newArrayList());
     }
 
     @Override
@@ -94,7 +93,9 @@ public class ProviderConfigurationCore {
             return Sets.newHashSet();
         }
 
-        return Sets.newConcurrentHashSet(SerializationUtils.deserializeFromString(capabilitiesSerialized, CapabilityList.class));
+        return Sets.newConcurrentHashSet(
+                SerializationUtils.deserializeFromString(
+                        capabilitiesSerialized, CapabilityList.class));
     }
 
     public String getCapabilitiesSerialized() {
@@ -128,7 +129,11 @@ public class ProviderConfigurationCore {
             return null;
         }
 
-        Field field = fields.stream().filter(f -> Objects.equal(f.getName(), name)).findFirst().orElse(null);
+        Field field =
+                fields.stream()
+                        .filter(f -> Objects.equal(f.getName(), name))
+                        .findFirst()
+                        .orElse(null);
 
         return field;
     }
@@ -190,7 +195,8 @@ public class ProviderConfigurationCore {
     }
 
     public List<Field> getSupplementalFields() {
-        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
+        return SerializationUtils.deserializeFromString(
+                supplementalFieldsSerialized, FieldsList.class);
     }
 
     @Override
@@ -214,8 +220,7 @@ public class ProviderConfigurationCore {
         return transactional;
     }
 
-    public void setAccessType(
-            AccessType accessType) {
+    public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
     }
 
@@ -317,16 +322,17 @@ public class ProviderConfigurationCore {
     }
 
     public void setSupplementalFields(List<Field> supplementalFields) {
-        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
+        this.supplementalFieldsSerialized =
+                SerializationUtils.serializeToString(supplementalFields);
     }
 
     /**
-     * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
-     * main to know if an agent implements an interface e.g. TransferExecutor.
+     * Used on providers to indicate different tasks it can handle in terms of agents, since it's
+     * not possible now in main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,              // backwards compatibility
-        MORTGAGE_AGGREGATION,   // backwards compatibility
+        TRANSFERS, // backwards compatibility
+        MORTGAGE_AGGREGATION, // backwards compatibility
         CHECKING_ACCOUNTS,
         SAVINGS_ACCOUNTS,
         CREDIT_CARDS,
@@ -347,6 +353,7 @@ public class ProviderConfigurationCore {
         }
 
         return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(refreshScheduleSerialized, ProviderRefreshSchedule.class));
+                SerializationUtils.deserializeFromString(
+                        refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 }

@@ -12,11 +12,14 @@ import se.tink.backend.aggregation.provider.configuration.config.ProviderService
 public class ProviderConfigurationFactory {
     private static final Logger LOG = LoggerFactory.getLogger(ProviderConfigurationFactory.class);
 
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+    private static final Validator VALIDATOR =
+            Validation.buildDefaultValidatorFactory().getValidator();
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
-    private static final io.dropwizard.configuration.ConfigurationFactory<ProviderServiceConfiguration> CONFIGURATION_FACTORY
-            = new io.dropwizard.configuration.ConfigurationFactory<>(ProviderServiceConfiguration.class, VALIDATOR,
-            MAPPER, "");
+    private static final io.dropwizard.configuration.ConfigurationFactory<
+                    ProviderServiceConfiguration>
+            CONFIGURATION_FACTORY =
+                    new io.dropwizard.configuration.ConfigurationFactory<>(
+                            ProviderServiceConfiguration.class, VALIDATOR, MAPPER, "");
 
     private static ProviderServiceConfiguration configuration;
 
@@ -25,8 +28,10 @@ public class ProviderConfigurationFactory {
             try {
                 configuration = CONFIGURATION_FACTORY.build(new File(configPath));
             } catch (Exception e) {
-                String errorMessage = String
-                        .format("Could not load configuration %s for %s", configPath, e.getMessage());
+                String errorMessage =
+                        String.format(
+                                "Could not load configuration %s for %s",
+                                configPath, e.getMessage());
                 LOG.error(errorMessage);
                 throw new IllegalArgumentException(errorMessage);
             }

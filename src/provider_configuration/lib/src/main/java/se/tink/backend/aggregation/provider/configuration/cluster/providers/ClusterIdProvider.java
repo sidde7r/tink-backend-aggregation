@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.Cl
 
 public class ClusterIdProvider {
 
-    public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment) throws ClusterNotValid {
+    public ClusterInfo getClusterInfo(String clusterName, String clusterEnvironment)
+            throws ClusterNotValid {
         ClusterId clusterId = ClusterId.of(clusterName, clusterEnvironment);
 
         if (!clusterId.isValidId()) {

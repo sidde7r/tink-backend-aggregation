@@ -28,12 +28,17 @@ public class ProviderServiceController {
         return providerConfigurationDAO.findAllByClusterIdAndMarket(clusterId.getId(), market);
     }
 
-    public Optional<ProviderConfigurationCore> getProviderByName(ClusterId clusterId, String providerName) {
+    public Optional<ProviderConfigurationCore> getProviderByName(
+            ClusterId clusterId, String providerName) {
         try {
-            return Optional.of(providerConfigurationDAO.findByClusterIdAndProviderName(clusterId.getId(), providerName));
+            return Optional.of(
+                    providerConfigurationDAO.findByClusterIdAndProviderName(
+                            clusterId.getId(), providerName));
         } catch (NoResultException e) {
-            log.warn("Could not find providerConfiguration for clusterId: {}, providerName: {}",
-                    clusterId.getId(), providerName);
+            log.warn(
+                    "Could not find providerConfiguration for clusterId: {}, providerName: {}",
+                    clusterId.getId(),
+                    providerName);
         }
         return Optional.empty();
     }

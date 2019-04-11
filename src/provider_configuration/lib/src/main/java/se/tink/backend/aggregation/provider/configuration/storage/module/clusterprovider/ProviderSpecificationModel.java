@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
-
 import java.util.List;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -14,6 +13,7 @@ import java.util.List;
 public class ProviderSpecificationModel {
     @JsonProperty("clusterid")
     private String clusterId;
+
     @JsonProperty("provider-configuration")
     private List<ProviderConfigurationStorage> providerSpecificConfiguration;
 
@@ -29,7 +29,8 @@ public class ProviderSpecificationModel {
         this.clusterId = clusterId;
     }
 
-    public void setProviderSpecificConfiguration(List<ProviderConfigurationStorage> providerSpecificConfiguration) {
+    public void setProviderSpecificConfiguration(
+            List<ProviderConfigurationStorage> providerSpecificConfiguration) {
         this.providerSpecificConfiguration = providerSpecificConfiguration;
     }
 }

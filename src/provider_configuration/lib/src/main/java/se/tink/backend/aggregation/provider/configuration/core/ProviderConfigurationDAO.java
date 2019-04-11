@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.provider.configuration.core;
 
-import se.tink.libraries.provider.enums.ProviderStatuses;
-
 import java.util.List;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 public interface ProviderConfigurationDAO {
     List<ProviderConfigurationCore> findAllByClusterId(String id);

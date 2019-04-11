@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.provider.configuration.storage.module.cluste
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
-
 import java.util.List;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)

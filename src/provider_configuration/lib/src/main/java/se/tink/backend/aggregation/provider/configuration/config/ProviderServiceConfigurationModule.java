@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.provider.configuration.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MetricCollector;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 import se.tink.libraries.metrics.PrometheusExportServer;
+import se.tink.libraries.service.version.VersionInformation;
 
 public class ProviderServiceConfigurationModule extends AbstractModule {
     private final ProviderServiceConfiguration configuration;

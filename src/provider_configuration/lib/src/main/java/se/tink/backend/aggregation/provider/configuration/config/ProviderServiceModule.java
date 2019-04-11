@@ -33,7 +33,9 @@ public class ProviderServiceModule extends AbstractModule {
         bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
         bind(ClusterProviderHandler.class).in(Scopes.SINGLETON);
-        bind(ProviderConfigurationDAO.class).to(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
+        bind(ProviderConfigurationDAO.class)
+                .to(ProviderConfigurationProvider.class)
+                .in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
                 .binder(binder())
@@ -42,12 +44,8 @@ public class ProviderServiceModule extends AbstractModule {
                 .addRequestFilters(
                         AccessLoggingFilter.class,
                         RequestTracingFilter.class,
-                        ProviderLoggerRequestFilter.class
-                )
-                .addResponseFilters(
-                        AccessLoggingFilter.class,
-                        RequestTracingFilter.class
-                )
+                        ProviderLoggerRequestFilter.class)
+                .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
                 .addResources(ProviderService.class)
                 .addResources(MonitoringService.class)
                 .addResources(JerseyClusterIdProvider.class)

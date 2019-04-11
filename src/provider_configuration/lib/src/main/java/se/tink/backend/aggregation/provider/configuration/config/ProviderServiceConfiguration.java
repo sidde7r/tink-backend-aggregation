@@ -7,11 +7,9 @@ import se.tink.libraries.repository.config.DatabaseConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderServiceConfiguration extends Configuration {
-    @JsonProperty
-    private DatabaseConfiguration database = new DatabaseConfiguration();
+    @JsonProperty private DatabaseConfiguration database = new DatabaseConfiguration();
 
-    @JsonProperty
-    private PrometheusConfiguration prometheus = new PrometheusConfiguration();
+    @JsonProperty private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
     public DatabaseConfiguration getDatabase() {
         return database;

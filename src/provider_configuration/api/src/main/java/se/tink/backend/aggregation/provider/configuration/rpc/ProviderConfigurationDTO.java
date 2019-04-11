@@ -5,33 +5,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.field.rpc.Field;
-import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
-import se.tink.libraries.provider.enums.ProviderStatuses;
-import se.tink.libraries.provider.enums.ProviderTypes;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
+import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 // FIXME: remove all code that has JSON IGNORE
 public class ProviderConfigurationDTO {
 
     public enum AccessType {
-        OPEN_BANKING, OTHER
+        OPEN_BANKING,
+        OTHER
     }
 
     @SuppressWarnings("serial")
-    private static class CapabilityList extends ArrayList<Capability> {
-    }
+    private static class CapabilityList extends ArrayList<Capability> {}
 
     @SuppressWarnings("serial")
-    private static class FieldsList extends ArrayList<Field> {
-    }
+    private static class FieldsList extends ArrayList<Field> {}
 
     private AccessType accessType;
     private String capabilitiesSerialized;
@@ -40,12 +37,16 @@ public class ProviderConfigurationDTO {
     private String currency;
     private String displayName;
     private String displayDescription;
+
     @JsonProperty("fields")
     private String fieldsSerialized;
+
     private String financialInstituteId;
     private String financialInstituteName;
+
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
+
     private String groupDisplayName;
     private String market;
     private boolean multiFactor;
@@ -72,7 +73,8 @@ public class ProviderConfigurationDTO {
         }
 
         return Sets.newConcurrentHashSet(
-                SerializationUtils.deserializeFromString(capabilitiesSerialized, CapabilityList.class));
+                SerializationUtils.deserializeFromString(
+                        capabilitiesSerialized, CapabilityList.class));
     }
 
     public String getCapabilitiesSerialized() {
@@ -106,7 +108,11 @@ public class ProviderConfigurationDTO {
             return null;
         }
 
-        Field field = fields.stream().filter(f -> Objects.equal(f.getName(), name)).findFirst().orElse(null);
+        Field field =
+                fields.stream()
+                        .filter(f -> Objects.equal(f.getName(), name))
+                        .findFirst()
+                        .orElse(null);
 
         return field;
     }
@@ -164,7 +170,8 @@ public class ProviderConfigurationDTO {
     }
 
     public List<Field> getSupplementalFields() {
-        return SerializationUtils.deserializeFromString(supplementalFieldsSerialized, FieldsList.class);
+        return SerializationUtils.deserializeFromString(
+                supplementalFieldsSerialized, FieldsList.class);
     }
 
     public ProviderTypes getType() {
@@ -183,8 +190,7 @@ public class ProviderConfigurationDTO {
         return transactional;
     }
 
-    public void setAccessType(
-            AccessType accessType) {
+    public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
     }
 
@@ -286,16 +292,17 @@ public class ProviderConfigurationDTO {
     }
 
     public void setSupplementalFields(List<Field> supplementalFields) {
-        this.supplementalFieldsSerialized = SerializationUtils.serializeToString(supplementalFields);
+        this.supplementalFieldsSerialized =
+                SerializationUtils.serializeToString(supplementalFields);
     }
 
     /**
-     * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
-     * main to know if an agent implements an interface e.g. TransferExecutor.
+     * Used on providers to indicate different tasks it can handle in terms of agents, since it's
+     * not possible now in main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,              // backwards compatibility
-        MORTGAGE_AGGREGATION,   // backwards compatibility
+        TRANSFERS, // backwards compatibility
+        MORTGAGE_AGGREGATION, // backwards compatibility
         CHECKING_ACCOUNTS,
         SAVINGS_ACCOUNTS,
         CREDIT_CARDS,
@@ -316,6 +323,7 @@ public class ProviderConfigurationDTO {
         }
 
         return Optional.ofNullable(
-                SerializationUtils.deserializeFromString(refreshScheduleSerialized, ProviderRefreshSchedule.class));
+                SerializationUtils.deserializeFromString(
+                        refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 }
