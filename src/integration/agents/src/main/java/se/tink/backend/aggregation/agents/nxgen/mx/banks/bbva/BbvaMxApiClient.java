@@ -172,7 +172,7 @@ public class BbvaMxApiClient {
     }
 
     // AIS
-    public IdentityDataResponse getCustomerInfo() {
+    public IdentityDataResponse getIdentityData() {
         String authenticationData =
                 String.format(
                         BbvaMxConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
