@@ -240,23 +240,19 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
             }
 
-            if (RefreshableItem.hasAccounts(sortedItems)) {
-            } else {
+            if (!RefreshableItem.hasAccounts(sortedItems)) {
                 Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
             }
 
-            if (RefreshableItem.hasTransactions(sortedItems)) {
-            } else {
+            if (!RefreshableItem.hasTransactions(sortedItems)) {
                 Assert.assertTrue(context.getTransactions().isEmpty());
             }
 
-            if (refreshableItems.contains(RefreshableItem.EINVOICES)) {
-            } else {
+            if (!refreshableItems.contains(RefreshableItem.EINVOICES)) {
                 Assert.assertTrue(context.getTransfers().isEmpty());
             }
 
-            if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-            } else {
+            if (!refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
             }
         }
