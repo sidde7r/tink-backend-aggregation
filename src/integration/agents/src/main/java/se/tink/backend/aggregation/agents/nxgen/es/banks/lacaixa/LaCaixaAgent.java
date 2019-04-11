@@ -116,7 +116,7 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshIdentity
     }
 
     @Override
-    public FetchIdentityDataResponse fetchCustomerInfo() {
+    public FetchIdentityDataResponse fetchIdentityData() {
         final CustomerInfoFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
     }
