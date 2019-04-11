@@ -1,9 +1,9 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [
-    "dk-danskebank-servicecode",
-    "dk-nordea-nemid",
-    "dk-test-password",
-    "dk-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-staging",
+    "providers": [
+        "dk-danskebank-servicecode",
+        "dk-nordea-nemid",
+        "dk-test-password",
+        "dk-test-multi-supplemental"
+    ]
 }

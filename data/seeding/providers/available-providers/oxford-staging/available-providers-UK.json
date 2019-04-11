@@ -1,25 +1,25 @@
 {
-  "clusterid": "oxford-staging",
-  "providers": [
-    "uk-aib-oauth2",
-    "uk-barclays-oauth2",
-    "uk-danskebank-oauth2",
-    "uk-monzo-oauth2",
-    "uk-halifax-oauth2",
-    "uk-hsbc-oauth2",
-    "uk-ulster-oauth2",
-    "uk-natwest-oauth2",
-    "uk-markandspencer-oauth2",
-    "uk-firstdirect-oauth2",
-    "uk-lloyds-oauth2",
-    "uk-rbs-oauth2",
-    "uk-bankofscotland-oauth2",
-    "uk-santander-oauth2",
-    "uk-americanexpress-password",
-    "uk-revolut-password",
-    "uk-n26-password",
-    "uk-starling-oauth2",
-    "uk-test-password",
-    "uk-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-staging",
+    "providers": [
+        "uk-aib-oauth2",
+        "uk-barclays-oauth2",
+        "uk-danskebank-oauth2",
+        "uk-monzo-oauth2",
+        "uk-halifax-oauth2",
+        "uk-hsbc-oauth2",
+        "uk-ulster-oauth2",
+        "uk-natwest-oauth2",
+        "uk-markandspencer-oauth2",
+        "uk-firstdirect-oauth2",
+        "uk-lloyds-oauth2",
+        "uk-rbs-oauth2",
+        "uk-bankofscotland-oauth2",
+        "uk-santander-oauth2",
+        "uk-americanexpress-password",
+        "uk-revolut-password",
+        "uk-n26-password",
+        "uk-starling-oauth2",
+        "uk-test-password",
+        "uk-test-multi-supplemental"
+    ]
 }
