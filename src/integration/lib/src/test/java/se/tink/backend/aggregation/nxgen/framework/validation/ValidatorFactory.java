@@ -70,7 +70,7 @@ public final class ValidatorFactory {
                                         dupeFinder.getAnyDuplicates(aisdata.getTransactions())))
                 .rule(
                         "Customer info is provided",
-                        aisData -> aisData.getCustomerInfo() != null,
+                        aisData -> aisData.getIdentityData() != null,
                         aisData -> "Agent did not fetch customer info")
                 .build();
     }

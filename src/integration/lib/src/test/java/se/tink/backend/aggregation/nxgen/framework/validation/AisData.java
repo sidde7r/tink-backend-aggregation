@@ -28,7 +28,7 @@ public final class AisData {
         return transactions;
     }
 
-    public IdentityData getCustomerInfo() {
+    public IdentityData getIdentityData() {
         return customerInfo;
     }
 
