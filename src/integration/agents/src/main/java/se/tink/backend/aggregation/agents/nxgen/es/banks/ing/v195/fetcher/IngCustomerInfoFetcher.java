@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.IdentityData;
-import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.EsCustomerInfo;
 
 public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
     private IngApiClient ingApiClient;

@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.IdentityData;
-import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.EsCustomerInfo;
 
 public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");

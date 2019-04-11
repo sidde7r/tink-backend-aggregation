@@ -1,7 +1,7 @@
-package se.tink.libraries.customerinfo.countries;
+package se.tink.libraries.identitydata.countries;
 
 import java.util.Map;
-import se.tink.libraries.customerinfo.IdentityData;
+import se.tink.libraries.identitydata.IdentityData;
 
 public class EsCustomerInfo extends IdentityData {
 

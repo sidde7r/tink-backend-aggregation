@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.contexts;
 
 import java.util.Optional;
-import se.tink.libraries.customerinfo.IdentityData;
+import se.tink.libraries.identitydata.IdentityData;
 
 public interface IdentityDataCacher {
 

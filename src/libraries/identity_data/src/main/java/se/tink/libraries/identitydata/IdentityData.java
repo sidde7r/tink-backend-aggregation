@@ -1,4 +1,4 @@
-package se.tink.libraries.customerinfo;
+package se.tink.libraries.identitydata;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;

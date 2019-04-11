@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.customerinfo.IdentityData;
+import se.tink.libraries.identitydata.IdentityData;
 
 public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;
