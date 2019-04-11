@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
-import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
+public class IngAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final IngApiClient ingApiClient;
 
