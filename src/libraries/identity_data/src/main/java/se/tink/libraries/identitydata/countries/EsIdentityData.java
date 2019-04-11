@@ -3,13 +3,13 @@ package se.tink.libraries.identitydata.countries;
 import java.util.Map;
 import se.tink.libraries.identitydata.IdentityData;
 
-public class EsCustomerInfo extends IdentityData {
+public class EsIdentityData extends IdentityData {
 
     private final String nieNumber;
     private final String nifNumber;
     private final String passportNumber;
 
-    private EsCustomerInfo(Builder builder) {
+    private EsIdentityData(Builder builder) {
         super(builder);
         nieNumber = builder.nieNumber;
         nifNumber = builder.nifNumber;
@@ -51,8 +51,8 @@ public class EsCustomerInfo extends IdentityData {
             return this;
         }
 
-        public EsCustomerInfo build() {
-            return new EsCustomerInfo(this);
+        public EsIdentityData build() {
+            return new EsIdentityData(this);
         }
     }
 

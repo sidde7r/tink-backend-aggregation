@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClien
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.identitydata.countries.EsCustomerInfo;
+import se.tink.libraries.identitydata.countries.EsIdentityData;
 
 public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
@@ -22,7 +22,7 @@ public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     public IdentityData fetchCustomerInfo() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
-        EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();
+        EsIdentityData.EsCustomerInfoBuilder builder = EsIdentityData.builder();
 
         String dni = userDataResponse.getDNI();
 

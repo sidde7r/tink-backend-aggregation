@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.identitydata.countries.EsCustomerInfo;
+import se.tink.libraries.identitydata.countries.EsIdentityData;
 
 public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
     private IngApiClient ingApiClient;
@@ -20,7 +20,7 @@ public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
     public IdentityData fetchCustomerInfo() {
         ClientResponse client = ingApiClient.getApiRestClient();
 
-        EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();
+        EsIdentityData.EsCustomerInfoBuilder builder = EsIdentityData.builder();
 
         switch (client.getDocumentType()) {
             case IngConstants.UsernameTypes.NIF:
