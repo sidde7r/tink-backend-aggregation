@@ -66,8 +66,8 @@ public class BbvaMxAuthenticator implements Authenticator {
     }
 
     private void fetchClientInfo() {
-        IdentityDataResponse customerInfo = client.getIdentityData();
-        storage.put(BbvaMxConstants.STORAGE.HOLDERNAME, customerInfo.getCustomerName());
+        IdentityDataResponse identityData = client.getIdentityData();
+        storage.put(BbvaMxConstants.STORAGE.HOLDERNAME, identityData.getCustomerName());
     }
 
     private GrantingTicketResponse handleLogin(String phoneNumber, String password)
