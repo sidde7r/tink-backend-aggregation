@@ -95,8 +95,7 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Rep
 
     @Override
     public Collection<Transaction> getTinkTransactions() {
-        return transactionList
-                .stream()
+        return transactionList.stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

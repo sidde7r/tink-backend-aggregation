@@ -9,24 +9,26 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class BancoPopularTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class BancoPopularTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final BancoPopularApiClient bankClient;
     private final BancoPopularPersistentStorage persistentStorage;
 
-    public BancoPopularTransactionFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistentStorage persistentStorage) {
+    public BancoPopularTransactionFetcher(
+            BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         BancoPopularContract contract = persistentStorage.getLoginContracts().getFirstContract();
 
-        FetchTransactionsRequest fetchTransactionsRequest = FetchTransactionsRequest.build(
-                contract, account, fromDate, toDate);
+        FetchTransactionsRequest fetchTransactionsRequest =
+                FetchTransactionsRequest.build(contract, account, fromDate, toDate);
 
         return bankClient.fetchTransactions(fetchTransactionsRequest);
     }

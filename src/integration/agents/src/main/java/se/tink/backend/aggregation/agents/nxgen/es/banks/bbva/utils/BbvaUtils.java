@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.UTILS_SPLIT_GET_PAGINATION_KEY;
+
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
@@ -11,10 +16,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.UTILS_SPLIT_GET_PAGINATION_KEY;
 
 public class BbvaUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaUtils.class);

@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
-
 import java.math.BigDecimal;
 import java.util.Objects;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AmountEntity {
@@ -29,6 +28,7 @@ public class AmountEntity {
     public void setDecimalsNumber(int decimalsNumber) {
         this.scale = decimalsNumber;
     }
+
     @JsonProperty("decimales")
     public void setDecimals(int decimalsNumber) {
         this.scale = decimalsNumber;
@@ -40,7 +40,8 @@ public class AmountEntity {
     }
 
     public Amount toTinkAmount() {
-        return new Amount(coin.getShortName(), BigDecimal.valueOf(unscaledValue, scale).doubleValue());
+        return new Amount(
+                coin.getShortName(), BigDecimal.valueOf(unscaledValue, scale).doubleValue());
     }
 
     @JsonProperty("numeroDecimalesImporte")

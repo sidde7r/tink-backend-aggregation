@@ -15,9 +15,7 @@ public class IberCajaSessionHandler implements SessionHandler {
     }
 
     @Override
-    public void logout() {
-
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {

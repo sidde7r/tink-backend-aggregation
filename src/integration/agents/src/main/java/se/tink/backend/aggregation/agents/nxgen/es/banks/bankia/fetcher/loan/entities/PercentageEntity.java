@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PercentageEntity {
     @JsonProperty("porcentaje")
     private int percentage;
+
     @JsonProperty("numDecimales")
     private String numDecimals;
+
     @JsonProperty("unidadMedidaPorcentual")
     private String unitMeasurePercentual;
 

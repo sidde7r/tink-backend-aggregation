@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class CardTransactionsResponse {
     @JsonProperty("listaMovimientos")
     private CardTransactionsListEntity transactionsList;
+
     @JsonProperty("totalMovimientosEncontrados")
     private int totalNumberOfTransactions;
 

@@ -11,30 +11,42 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FundDetailsResponse {
     @JsonProperty("titulares")
     private List<String> holders;
+
     @JsonProperty("fondoNombre")
     private String fundName;
+
     @JsonProperty("expediente")
     private String accountId;
+
     @JsonProperty("cuenta")
     private String account;
+
     private String fechaAlta;
     private String entidadGestora;
     private String entidadDeposito;
     private BalanceEntity inversionMinimaSucesiva;
     private String fechaValoracionActualFondo;
+
     @JsonProperty("saldoActual")
     private BalanceEntity currentBalance;
+
     @JsonProperty("participaciones")
     private double quantity;
+
     @JsonProperty("valorParticipacion")
     private BalanceEntity marketPrice;
+
     private double participacionesRetenidas;
+
     @JsonProperty("inversionInicial")
     private BalanceEntity initialInvestment;
+
     @JsonProperty("plusvaliaInicial")
     private BalanceEntity valueChange;
+
     @JsonProperty("porcentajePlusvaliaInicial")
     private double valueChangePercent;
+
     private boolean mostrarEvolucionFondo;
     private String refValEmpresaGestora;
     private String refValCodigoFondo;

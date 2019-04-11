@@ -10,6 +10,7 @@ public class FilterEntity {
 
     @JsonProperty("listaTarjetas")
     private List<String> listCards;
+
     @JsonProperty("listaFraccionables")
     private List<String> fractionalList;
 

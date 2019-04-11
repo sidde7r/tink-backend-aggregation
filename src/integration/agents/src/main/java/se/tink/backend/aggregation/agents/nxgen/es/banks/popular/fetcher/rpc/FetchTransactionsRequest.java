@@ -13,28 +13,42 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class FetchTransactionsRequest {
     @JsonProperty("numIntContrato")
     private String contractNumber;
+
     @JsonProperty("cccBanco")
     private String bank;
+
     @JsonProperty("cccSucursal")
     private String office;
+
     @JsonProperty("cccDigitos")
     private String digits;
+
     @JsonProperty("cccSubcuenta")
     private String subAccount;
+
     @JsonProperty("cccCuenta")
     private String account;
+
     @JsonProperty("cccDigitosCtrol")
     private String checkDigits;
+
     @JsonProperty("fechaDesde")
     private String fetchFrom;
+
     @JsonProperty("fechaHasta")
     private String fetchTo;
+
     @JsonProperty("tipoMovEcrmvto2")
     private String movementType = BancoPopularConstants.Fetcher.MOVEMENT_TYPE;
-    private int concepEcrmvto2 = BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2; // no clue what to translate to
 
-    private FetchTransactionsRequest(BancoPopularContract contract, TransactionalAccount account,
-            Date fromDate, Date toDate) {
+    private int concepEcrmvto2 =
+            BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2; // no clue what to translate to
+
+    private FetchTransactionsRequest(
+            BancoPopularContract contract,
+            TransactionalAccount account,
+            Date fromDate,
+            Date toDate) {
         String accountNumber = extractAccountNumber(account.getAccountNumber());
 
         this.contractNumber = account.getBankIdentifier();
@@ -48,11 +62,13 @@ public class FetchTransactionsRequest {
         this.fetchTo = formatDate(toDate);
         this.movementType = BancoPopularConstants.Fetcher.MOVEMENT_TYPE;
         this.concepEcrmvto2 = BancoPopularConstants.Fetcher.CONCEP_ECRMVTO_2;
-
     }
 
-    public static FetchTransactionsRequest build(BancoPopularContract contract, TransactionalAccount account,
-            Date fromDate, Date toDate) {
+    public static FetchTransactionsRequest build(
+            BancoPopularContract contract,
+            TransactionalAccount account,
+            Date fromDate,
+            Date toDate) {
 
         return new FetchTransactionsRequest(contract, account, fromDate, toDate);
     }
@@ -61,7 +77,8 @@ public class FetchTransactionsRequest {
     private String extractAccountNumber(String accountNumber) {
         String normalizedAccountNumber = accountNumber.replaceAll(" ", "");
         if (normalizedAccountNumber.length() > 12) {
-            normalizedAccountNumber = normalizedAccountNumber.substring(normalizedAccountNumber.length() - 12);
+            normalizedAccountNumber =
+                    normalizedAccountNumber.substring(normalizedAccountNumber.length() - 12);
         }
 
         return normalizedAccountNumber;

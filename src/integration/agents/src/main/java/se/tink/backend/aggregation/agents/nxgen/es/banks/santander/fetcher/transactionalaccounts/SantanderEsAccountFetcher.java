@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -37,9 +37,7 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
         LoginResponse loginResponse =
                 SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
 
-        return loginResponse
-                .getAccountList()
-                .stream()
+        return loginResponse.getAccountList().stream()
                 .filter(AccountEntity::isKnownAccountType)
                 .map(accountEntity -> accountEntity.toTinkAccount(loginResponse))
                 .collect(Collectors.toList());

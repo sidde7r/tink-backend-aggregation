@@ -7,13 +7,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DebtorEntity {
     private String codigoTipoDocumentoIdentificativo;
     private String identificadorDocumentoCliente;
+
     @JsonProperty("nombreRazonSocial")
     private String debtorName;
+
     private String identificadorCliente;
+
     @JsonProperty("codigoTipoIntervencion")
     private String debtorRoleCode;
+
     @JsonProperty("nombreTipoIntervencion")
     private String debtorRoleName;
+
     private int numeroOrdenTipoIntervencion;
     private PercentageEntity porcentajeExtincionFiador;
     private PercentageEntity porcentajeParticipacion;

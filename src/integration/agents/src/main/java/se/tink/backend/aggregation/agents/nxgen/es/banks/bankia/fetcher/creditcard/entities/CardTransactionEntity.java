@@ -11,10 +11,13 @@ public class CardTransactionEntity {
 
     @JsonProperty("importeMovimiento")
     private AmountEntity movementAmount;
+
     @JsonProperty("fechaMovimiento")
     private DateEntity date;
+
     @JsonProperty("lugarMovimiento")
     private String description;
+
     @JsonProperty("descripcionMovimiento")
     private String type;
 

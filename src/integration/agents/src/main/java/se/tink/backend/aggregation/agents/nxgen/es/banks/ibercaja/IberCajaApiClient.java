@@ -31,13 +31,15 @@ public class IberCajaApiClient {
 
     public SessionResponse initializeSession(SessionRequest sessionRequest) throws LoginException {
 
-        String response = createRequest(IberCajaConstants.Urls.INIT_LOGIN)
-                .post(String.class, sessionRequest);
+        String response =
+                createRequest(IberCajaConstants.Urls.INIT_LOGIN).post(String.class, sessionRequest);
 
-        SessionResponse sessionResponse = SerializationUtils.deserializeFromString(response, SessionResponse.class);
+        SessionResponse sessionResponse =
+                SerializationUtils.deserializeFromString(response, SessionResponse.class);
 
         if (sessionResponse.getTicket() == null) {
-            ErrorResponse errorResponse = SerializationUtils.deserializeFromString(response, ErrorResponse.class);
+            ErrorResponse errorResponse =
+                    SerializationUtils.deserializeFromString(response, ErrorResponse.class);
             errorResponse.logError();
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else {
@@ -59,8 +61,8 @@ public class IberCajaApiClient {
                 .get(FetchAccountResponse.class);
     }
 
-    public TransactionalDetailsResponse fetchTransactionDetails(String bankIdentifier, String dateMin,
-            String dateMax) {
+    public TransactionalDetailsResponse fetchTransactionDetails(
+            String bankIdentifier, String dateMin, String dateMax) {
 
         return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_ACCOUNT, bankIdentifier)
@@ -76,9 +78,11 @@ public class IberCajaApiClient {
     }
 
     public String fetchInvestmentTransactionDetails(String bankIdentifier) {
-        return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_INVESTMENT_ACCOUNT_TRANSACTION)
+        return createAuthenticatedRequest(
+                        IberCajaConstants.Urls.FETCH_INVESTMENT_ACCOUNT_TRANSACTION)
                 .queryParam(IberCajaConstants.QueryParams.ACCOUNT, bankIdentifier)
-                .queryParam(IberCajaConstants.QueryParams.REQUEST_IS_SPECIALIIST,
+                .queryParam(
+                        IberCajaConstants.QueryParams.REQUEST_IS_SPECIALIIST,
                         IberCajaConstants.DefaultRequestParams.IS_SPECIALIST)
                 .get(String.class);
     }
@@ -89,8 +93,12 @@ public class IberCajaApiClient {
                 .get(FetchAccountResponse.class);
     }
 
-    public CreditCardResponse fetchCreditCardsTransactionList(String bankIdentifier, String requestOrden,
-            String requestTipo, String dateMin, String dateMax) {
+    public CreditCardResponse fetchCreditCardsTransactionList(
+            String bankIdentifier,
+            String requestOrden,
+            String requestTipo,
+            String dateMin,
+            String dateMax) {
 
         return createAuthenticatedRequest(IberCajaConstants.Urls.FETCH_CREDIT_CARD_ACCOUNT)
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_CARD, bankIdentifier)
@@ -120,16 +128,18 @@ public class IberCajaApiClient {
                 .request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
+                .header(
+                        IberCajaConstants.Headers.PLAYBACK_MODE,
                         IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL);
     }
 
     private RequestBuilder createAuthenticatedRequest(URL url) {
         return createRequest(url)
-                .header(IberCajaConstants.Headers.USER,
+                .header(
+                        IberCajaConstants.Headers.USER,
                         sessionStorage.get(IberCajaConstants.Storage.USERNAME))
-                .header(IberCajaConstants.Headers.TICKET,
+                .header(
+                        IberCajaConstants.Headers.TICKET,
                         sessionStorage.get(IberCajaConstants.Storage.TICKET));
     }
-
 }

@@ -23,4 +23,3 @@ public class ServicingFundsResponse {
         return fundList;
     }
 }
-

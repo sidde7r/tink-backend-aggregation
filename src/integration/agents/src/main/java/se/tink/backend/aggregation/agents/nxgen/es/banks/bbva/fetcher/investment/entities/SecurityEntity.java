@@ -32,8 +32,10 @@ public class SecurityEntity {
     private AmountEntity totalAmount;
     private double availableTitles;
     private AmountEntity availableBalance;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date evaluateDate;
+
     private String evaluateHourTime;
     private TypeEntity evaluateType;
     private String batch;

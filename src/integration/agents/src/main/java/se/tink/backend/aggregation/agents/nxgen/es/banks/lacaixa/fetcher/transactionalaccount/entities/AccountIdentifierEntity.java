@@ -26,12 +26,12 @@ public class AccountIdentifierEntity {
         return accountNumber;
     }
 
-    public Collection<AccountIdentifier> getIdentifiers(){
+    public Collection<AccountIdentifier> getIdentifiers() {
 
         return Arrays.asList(new IbanIdentifier(iban));
     }
 
-    public String getAccountReference(){
+    public String getAccountReference() {
         return accountReference;
     }
 }

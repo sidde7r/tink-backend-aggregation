@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class SabadellTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, Boolean> {
+public class SabadellTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, Boolean> {
     private final SabadellApiClient apiClient;
 
     public SabadellTransactionFetcher(SabadellApiClient apiClient) {
@@ -14,11 +15,12 @@ public class SabadellTransactionFetcher implements TransactionKeyPaginator<Trans
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Boolean> getTransactionsFor(TransactionalAccount account, Boolean key) {
+    public TransactionKeyPaginatorResponse<Boolean> getTransactionsFor(
+            TransactionalAccount account, Boolean key) {
         boolean moreRequest = key != null;
         AccountEntity accountEntity =
                 account.getFromTemporaryStorage(account.getAccountNumber(), AccountEntity.class)
-                .orElseThrow(() -> new IllegalStateException("No account entity provided"));
+                        .orElseThrow(() -> new IllegalStateException("No account entity provided"));
 
         return apiClient.fetchTransactions(accountEntity, moreRequest);
     }

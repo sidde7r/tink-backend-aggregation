@@ -12,8 +12,8 @@ public class BancoPopularContractFetcher {
     protected final BancoPopularApiClient bankClient;
     protected final BancoPopularPersistentStorage persistentStorage;
 
-    public BancoPopularContractFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistentStorage persistentStorage) {
+    public BancoPopularContractFetcher(
+            BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
 
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;

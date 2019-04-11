@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountIdentifierEntity {
     @JsonProperty("pais")
     private String country;
+
     @JsonProperty("digitosDeControl")
     private String controlDigits;
+
     @JsonProperty("identificador")
     private String identifier;
 

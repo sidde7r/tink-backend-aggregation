@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
+import java.util.Base64;
+import java.util.Optional;
+import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
@@ -24,10 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Random;
 
 public final class BankiaAgent extends NextGenerationAgent {
 
@@ -61,8 +60,7 @@ public final class BankiaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -72,7 +70,7 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         BankiaTransactionalAccountFetcher fetcher =
                 new BankiaTransactionalAccountFetcher(apiClient);
         return Optional.of(
@@ -99,15 +97,18 @@ public final class BankiaAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
-        return Optional.of(new InvestmentRefreshController(metricRefreshController,
-                updateController,
-                fetcher));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, fetcher));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController,
-                new BankiaLoanFetcher(apiClient)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BankiaLoanFetcher(apiClient)));
     }
 
     @Override
@@ -117,7 +118,7 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

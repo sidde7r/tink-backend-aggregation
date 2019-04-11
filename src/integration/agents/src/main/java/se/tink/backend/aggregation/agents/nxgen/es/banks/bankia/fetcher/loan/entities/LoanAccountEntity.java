@@ -13,10 +13,13 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 public class LoanAccountEntity {
     @JsonProperty("contrato")
     private ContractEntity contract;
+
     @JsonProperty("saldoInformado")
     private boolean informedBalance;
+
     @JsonProperty("capitalConcedido")
     private AmountEntity grantedAmount;
+
     @JsonProperty("deudaPendiente")
     private AmountEntity pendingDebt;
 
@@ -51,7 +54,8 @@ public class LoanAccountEntity {
                 .setAccountNumber(contractNumber)
                 .setName(loanDetailsResponse.getLoanName())
                 .setBalance(pendingDebt.toTinkAmount().negate())
-                // NB! interest rates are hard to understand in Spain, we have 4 of them in the detailed response
+                // NB! interest rates are hard to understand in Spain, we have 4 of them in the
+                // detailed response
                 .setInterestRate(loanDetailsResponse.getInterestRate())
                 .setHolderName(loanDetailsResponse.getHolderName())
                 .setDetails(details)

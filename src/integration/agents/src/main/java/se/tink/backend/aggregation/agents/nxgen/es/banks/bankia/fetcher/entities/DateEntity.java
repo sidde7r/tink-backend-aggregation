@@ -32,7 +32,8 @@ public class DateEntity {
 
     @JsonIgnore
     public Date toJavaLangDate() {
-        return new Date(getLocalDate().atStartOfDay(BankiaConstants.ZONE_ID).toInstant().toEpochMilli());
+        return new Date(
+                getLocalDate().atStartOfDay(BankiaConstants.ZONE_ID).toInstant().toEpochMilli());
     }
 
     public String getValue() {
@@ -42,5 +43,4 @@ public class DateEntity {
     public void setValue(String value) {
         this.value = value;
     }
-
 }

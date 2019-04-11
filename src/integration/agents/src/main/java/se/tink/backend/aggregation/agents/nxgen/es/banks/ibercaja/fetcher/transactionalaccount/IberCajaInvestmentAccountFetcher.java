@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 
 public class IberCajaInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
-    private static final Logger logger = LoggerFactory.getLogger(IberCajaInvestmentAccountFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(IberCajaInvestmentAccountFetcher.class);
     private final IberCajaApiClient bankClient;
 
     public IberCajaInvestmentAccountFetcher(IberCajaApiClient bankClient) {
@@ -23,7 +24,8 @@ public class IberCajaInvestmentAccountFetcher implements AccountFetcher<Investme
         Collection<InvestmentAccount> investmentAccounts = accounts.getInvestmentAccounts();
 
         for (InvestmentAccount i : investmentAccounts) {
-            String investmentResponse = bankClient.fetchInvestmentTransactionDetails(i.getBankIdentifier());
+            String investmentResponse =
+                    bankClient.fetchInvestmentTransactionDetails(i.getBankIdentifier());
             logger.info(investmentResponse);
         }
 

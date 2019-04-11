@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class CardMovementEntity {
     private String movementNumber;
     private String concept;
+
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
+
     private String hour;
     private String city;
     private boolean canSplit;
@@ -25,7 +27,6 @@ public class CardMovementEntity {
     private String address;
     private boolean isConfirmed;
     private boolean isSplit;
-
 
     public CreditCardTransaction toTinkTransaction(CreditCardAccount creditCardAccount) {
         return CreditCardTransaction.builder()

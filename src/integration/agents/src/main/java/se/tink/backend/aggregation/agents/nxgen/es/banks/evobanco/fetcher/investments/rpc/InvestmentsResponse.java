@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InvestmentsResponse {

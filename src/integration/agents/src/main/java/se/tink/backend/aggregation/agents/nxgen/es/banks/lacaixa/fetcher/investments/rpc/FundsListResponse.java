@@ -18,20 +18,28 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 public class FundsListResponse {
     @JsonProperty("tieneFondos")
     private boolean hasFunds;
+
     @JsonProperty("listaFondos")
     private List<FundsListEntity> fundAccounts;
+
     @JsonProperty("verFondosSaldo")
     private ShowFundsBalanceEntity showFundsBalance;
+
     @JsonProperty("masDatos")
     private boolean moreData;
+
     private boolean timeOut;
+
     @JsonProperty("construyeOtrosBotones")
     private ConstructOtherButtonsEntity constructOtherButtons;
 
     @JsonIgnore
-    public List<InvestmentAccount> getTinkInvestments(LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
+    public List<InvestmentAccount> getTinkInvestments(
+            LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
         return Optional.ofNullable(fundAccounts).orElse(Collections.emptyList()).stream()
-                .map(fundAccount -> fundAccount.toTinkInvestment(apiClient, holderName, engagements))
+                .map(
+                        fundAccount ->
+                                fundAccount.toTinkInvestment(apiClient, holderName, engagements))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

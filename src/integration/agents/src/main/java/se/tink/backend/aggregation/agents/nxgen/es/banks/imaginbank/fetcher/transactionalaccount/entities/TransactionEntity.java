@@ -14,8 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionEntity {
 
-    @JsonUnwrapped
-    private BalanceEntity amount;
+    @JsonUnwrapped private BalanceEntity amount;
 
     @JsonProperty("concepto")
     private String description;
@@ -32,7 +31,8 @@ public class TransactionEntity {
     @JsonIgnore
     private String getTransactionDescription() {
         if (ImaginBankConstants.TransactionDescriptions.TRANSFER.equalsIgnoreCase(description)) {
-            Matcher m = ImaginBankConstants.TransactionDescriptions.CLEAN_TRANSFER_MSG.matcher(sender);
+            Matcher m =
+                    ImaginBankConstants.TransactionDescriptions.CLEAN_TRANSFER_MSG.matcher(sender);
             if (m.matches() && m.groupCount() == 2) {
                 return String.format("%s %s", description, m.group(2));
             } else if (!Strings.isNullOrEmpty(sender)) {
@@ -43,7 +43,7 @@ public class TransactionEntity {
         return description;
     }
 
-    public Transaction toTinkTransaction(){
+    public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(amount)
                 .setDescription(getTransactionDescription())

@@ -10,11 +10,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.Fet
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class BancoPopularAccountFetcher extends BancoPopularContractFetcher implements
-        AccountFetcher<TransactionalAccount> {
+public class BancoPopularAccountFetcher extends BancoPopularContractFetcher
+        implements AccountFetcher<TransactionalAccount> {
 
-    public BancoPopularAccountFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistentStorage persistentStorage) {
+    public BancoPopularAccountFetcher(
+            BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);
     }
 
@@ -28,11 +28,12 @@ public class BancoPopularAccountFetcher extends BancoPopularContractFetcher impl
 
             if (selectCurrentContract(contract)) {
 
-                FetchAccountsRequest fetchAccountsRequest = FetchAccountsRequest.build(
-                        BancoPopularConstants.Fetcher.CHECKING_ACCOUNT_IDENTIFIER);
+                FetchAccountsRequest fetchAccountsRequest =
+                        FetchAccountsRequest.build(
+                                BancoPopularConstants.Fetcher.CHECKING_ACCOUNT_IDENTIFIER);
 
-                allAccounts.addAll(bankClient.fetchAccounts(fetchAccountsRequest)
-                        .getTinkAccounts());
+                allAccounts.addAll(
+                        bankClient.fetchAccounts(fetchAccountsRequest).getTinkAccounts());
             }
         }
 

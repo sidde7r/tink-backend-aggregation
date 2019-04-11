@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionDetailsEntity {
     @JsonProperty("literal")
     private String type;
+
     @JsonProperty("valor")
     private List<String> value;
 

@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.inves
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
 import java.io.IOException;
 
 public class AccountEntitySerializer extends StdSerializer<AccountEntity> {
@@ -37,7 +36,8 @@ public class AccountEntitySerializer extends StdSerializer<AccountEntity> {
         gen.writeStringField(composeKey("numOwners"), String.valueOf(value.getNumOwners()));
         gen.writeStringField(composeKey("isOwner"), String.valueOf(value.isOwner()));
         gen.writeStringField(composeKey("isSBPManaged"), String.valueOf(value.isIberSecurities()));
-        gen.writeStringField(composeKey("isIberSecurities"), String.valueOf(value.isIberSecurities()));
+        gen.writeStringField(
+                composeKey("isIberSecurities"), String.valueOf(value.isIberSecurities()));
         gen.writeStringField(composeKey("joint"), value.getJoint());
         gen.writeStringField(composeKey("mobileWarning"), value.getMobileWarning());
         gen.writeStringField(

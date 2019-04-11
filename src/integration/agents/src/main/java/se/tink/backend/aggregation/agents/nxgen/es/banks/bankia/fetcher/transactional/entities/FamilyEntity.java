@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FamilyEntity {
     @JsonProperty("idFamilia")
     private String idFamily;
+
     @JsonProperty("idSubfamilia")
     private String idSubfamily;
 }

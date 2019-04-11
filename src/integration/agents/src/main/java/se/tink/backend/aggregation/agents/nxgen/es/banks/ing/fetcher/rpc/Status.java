@@ -20,9 +20,7 @@ public final class Status {
         return this.getCode();
     }
 
-    /**
-     * Seems to be a spelling error
-     */
+    /** Seems to be a spelling error */
     public void setCod(String cod) {
         this.setCode(cod);
     }

@@ -58,5 +58,4 @@ public class AmericanExpressESConfiguration implements AmericanExpressConfigurat
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
     }
-
 }

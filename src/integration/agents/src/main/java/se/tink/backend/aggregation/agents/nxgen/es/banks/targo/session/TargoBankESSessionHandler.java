@@ -17,12 +17,14 @@ public class TargoBankESSessionHandler implements SessionHandler {
     private final EuroInformationApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    private TargoBankESSessionHandler(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    private TargoBankESSessionHandler(
+            EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
-    public static TargoBankESSessionHandler create(EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
+    public static TargoBankESSessionHandler create(
+            EuroInformationApiClient apiClient, SessionStorage sessionStorage) {
         return new TargoBankESSessionHandler(apiClient, sessionStorage);
     }
 
@@ -37,7 +39,8 @@ public class TargoBankESSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         AccountSummaryResponse response = apiClient.requestAccounts();
-        Optional.ofNullable(response).filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
+        Optional.ofNullable(response)
+                .filter(o -> EuroInformationUtils.isSuccess(o.getReturnCode()))
                 .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
     }
 }

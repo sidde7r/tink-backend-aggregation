@@ -310,7 +310,10 @@ public final class Product {
         this.associatedAccount = associatedAccount;
     }
 
-    /** Different products supply holder information different ways - list or single attribute. This is an attempt to unify them. */
+    /**
+     * Different products supply holder information different ways - list or single attribute. This
+     * is an attempt to unify them.
+     */
     public Holder getHolder() {
         if (holder != null) {
             return holder;

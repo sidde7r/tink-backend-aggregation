@@ -45,8 +45,9 @@ public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
     }
 
     private LoanDetailsResponse fetchLoanDetails(LoanAccountEntity loanAccountEntity) {
-        LoanDetailsRequest request = new LoanDetailsRequest(loanAccountEntity.getProductCode())
-                .setLoanIdentifier(loanAccountEntity.getLoanIdentifier());
+        LoanDetailsRequest request =
+                new LoanDetailsRequest(loanAccountEntity.getProductCode())
+                        .setLoanIdentifier(loanAccountEntity.getLoanIdentifier());
 
         return apiClient.getLoanDetails(request);
     }

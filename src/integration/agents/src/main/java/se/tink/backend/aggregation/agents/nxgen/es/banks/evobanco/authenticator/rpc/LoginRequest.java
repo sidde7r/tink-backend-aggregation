@@ -9,5 +9,4 @@ public class LoginRequest extends AbstractForm {
         put(EvoBancoConstants.FormKey.USERNAME, username);
         put(EvoBancoConstants.FormKey.PASSWORD, password);
     }
-
 }

@@ -23,6 +23,4 @@ public class LoanMovementEntity {
 
     @JsonProperty("lista")
     private List<LoanOperationEntity> operationList;
-
-
 }

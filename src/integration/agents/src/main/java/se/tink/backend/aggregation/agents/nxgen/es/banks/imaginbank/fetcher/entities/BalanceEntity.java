@@ -7,7 +7,8 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class BalanceEntity extends Amount {
 
-    public BalanceEntity(@JsonProperty("moneda") String currency, @JsonProperty("importe") double value) {
+    public BalanceEntity(
+            @JsonProperty("moneda") String currency, @JsonProperty("importe") double value) {
         super(currency, value);
     }
 }

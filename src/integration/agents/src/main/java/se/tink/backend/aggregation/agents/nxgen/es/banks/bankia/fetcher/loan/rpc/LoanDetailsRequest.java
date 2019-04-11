@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanDetailsRequest {
     @JsonProperty("clavePaginacionEntrada")
     private String continuationKey = "";
+
     @JsonProperty("codigoLineaRiesgo")
     private String code;
+
     @JsonProperty("identificadorExpediente")
     private String loanIdentifier;
 

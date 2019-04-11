@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class SabadellCreditCardTransactionFetcher implements TransactionPagePaginator<CreditCardAccount> {
+public class SabadellCreditCardTransactionFetcher
+        implements TransactionPagePaginator<CreditCardAccount> {
     private final SabadellApiClient apiClient;
 
     public SabadellCreditCardTransactionFetcher(SabadellApiClient apiClient) {
@@ -16,11 +17,12 @@ public class SabadellCreditCardTransactionFetcher implements TransactionPagePagi
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        CreditCardEntity creditCardEntity = account
-                .getFromTemporaryStorage(account.getBankIdentifier(), CreditCardEntity.class)
+        CreditCardEntity creditCardEntity =
+                account.getFromTemporaryStorage(account.getBankIdentifier(), CreditCardEntity.class)
                         .orElseThrow(() -> new IllegalStateException("No account entity provided"));
 
-        return apiClient.fetchCreditCardTransactions(creditCardEntity, getTotalItemsFetched(page), page);
+        return apiClient.fetchCreditCardTransactions(
+                creditCardEntity, getTotalItemsFetched(page), page);
     }
 
     private int getTotalItemsFetched(int page) {

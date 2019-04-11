@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 
+import static io.vavr.Predicates.anyOf;
+import static io.vavr.Predicates.instanceOf;
+
 import java.util.function.Predicate;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import static io.vavr.Predicates.anyOf;
-import static io.vavr.Predicates.instanceOf;
 
 public final class OpenbankPredicates {
     /** Checks if exception has the prerequisites for being an Openbank ErrorResponse */

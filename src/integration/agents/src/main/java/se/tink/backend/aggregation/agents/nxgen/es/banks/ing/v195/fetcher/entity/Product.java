@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public final class Product {
@@ -100,7 +99,6 @@ public final class Product {
     private Double numberOfShares;
     private Double lastNetAssetValue;
     private String lastNetAssetValueDate;
-
 
     public String getProductNumber() {
         return productNumber;
@@ -446,7 +444,8 @@ public final class Product {
         return lastNetAssetValueDate;
     }
 
-    // This unique identifier strategy was used in the old agent, which only implemented transaction accounts.
+    // This unique identifier strategy was used in the old agent, which only implemented transaction
+    // accounts.
     @JsonIgnore
     public String getUniqueIdentifierForTransactionAccount() {
         return iban.replaceAll(" ", "").toLowerCase();
@@ -480,7 +479,8 @@ public final class Product {
 
     @JsonIgnore
     public boolean isActiveTransactionalAccount() {
-        boolean isTransactionalAccount = IngConstants.AccountCategories.TRANSACTION_ACCOUNTS.contains(type);
+        boolean isTransactionalAccount =
+                IngConstants.AccountCategories.TRANSACTION_ACCOUNTS.contains(type);
         boolean isSavingsAccount = IngConstants.AccountCategories.SAVINGS_ACCOUNTS.contains(type);
 
         boolean isOperative = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
 import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
@@ -32,13 +33,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
 
     private final IngApiClient ingApiClient;
 
-    public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
 
         super(request, context, signatureKeyPair);
 
@@ -46,8 +46,7 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -55,19 +54,27 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
 
-        IngTransactionalAccountFetcher accountFetcher = new IngTransactionalAccountFetcher(ingApiClient, sessionStorage);
+        IngTransactionalAccountFetcher accountFetcher =
+                new IngTransactionalAccountFetcher(ingApiClient, sessionStorage);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
-        TransactionMonthPaginationController<TransactionalAccount> paginationController = new TransactionMonthPaginationController<>(
-                transactionFetcher, IngConstants.ZONE_ID);
+        TransactionMonthPaginationController<TransactionalAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID);
 
-        TransactionFetcherController<TransactionalAccount> fetcherController = new TransactionFetcherController<>(
-                transactionPaginationHelper, paginationController);
+        TransactionFetcherController<TransactionalAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
 
-        TransactionalAccountRefreshController refreshController = new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, accountFetcher, fetcherController);
+        TransactionalAccountRefreshController refreshController =
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        fetcherController);
 
         return Optional.of(refreshController);
     }
@@ -78,14 +85,20 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
         IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
-        TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
-                transactionFetcher, IngConstants.ZONE_ID);
+        TransactionMonthPaginationController<CreditCardAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID);
 
-        TransactionFetcherController<CreditCardAccount> fetcherController = new TransactionFetcherController<>(
-                transactionPaginationHelper, paginationController);
+        TransactionFetcherController<CreditCardAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
 
-        CreditCardRefreshController refreshController = new CreditCardRefreshController(
-                metricRefreshController, updateController, accountFetcher, fetcherController);
+        CreditCardRefreshController refreshController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        fetcherController);
 
         return Optional.of(refreshController);
     }
@@ -94,8 +107,9 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
 
-        InvestmentRefreshController refreshController = new InvestmentRefreshController(
-                metricRefreshController, updateController, accountFetcher);
+        InvestmentRefreshController refreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, accountFetcher);
 
         return Optional.of(refreshController);
     }
@@ -105,14 +119,20 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
         IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
-        TransactionMonthPaginationController<LoanAccount> paginationController = new TransactionMonthPaginationController<>(
-                transactionFetcher, IngConstants.ZONE_ID);
+        TransactionMonthPaginationController<LoanAccount> paginationController =
+                new TransactionMonthPaginationController<>(
+                        transactionFetcher, IngConstants.ZONE_ID);
 
-        TransactionFetcherController<LoanAccount> fetcherController = new TransactionFetcherController<>(
-                transactionPaginationHelper, paginationController);
+        TransactionFetcherController<LoanAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
 
-        LoanRefreshController refreshController = new LoanRefreshController(
-                metricRefreshController, updateController, accountFetcher, fetcherController);
+        LoanRefreshController refreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        fetcherController);
 
         return Optional.of(refreshController);
     }
@@ -123,7 +143,8 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

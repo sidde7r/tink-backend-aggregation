@@ -16,9 +16,12 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonObject
 public class TransactionalDetailsResponse implements PaginatorResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(TransactionalDetailsResponse.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(TransactionalDetailsResponse.class);
+
     @JsonProperty("Paginacion")
     private boolean pagination;
+
     @JsonProperty("Movimientos")
     private List<TransactionDetailsEntity> transactions;
 

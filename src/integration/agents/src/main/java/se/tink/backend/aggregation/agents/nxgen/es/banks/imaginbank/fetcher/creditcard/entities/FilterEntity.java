@@ -11,11 +11,13 @@ public class FilterEntity {
 
     @JsonProperty("listaTarjetas")
     private List<String> listCards;
+
     @JsonProperty("listaFraccionables")
     private List<String> fractionalList;
 
     public FilterEntity(String cardId) {
         listCards = Collections.singletonList(cardId);
-        fractionalList = Collections.singletonList(ImaginBankConstants.CreditCard.FRACTIONAL_LIST_FILTER);
+        fractionalList =
+                Collections.singletonList(ImaginBankConstants.CreditCard.FRACTIONAL_LIST_FILTER);
     }
 }

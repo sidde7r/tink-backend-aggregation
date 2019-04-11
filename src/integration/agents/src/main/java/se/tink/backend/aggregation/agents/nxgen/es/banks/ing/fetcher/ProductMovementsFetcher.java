@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngUtils;
@@ -26,13 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 
-abstract class ProductMovementsFetcher<A extends Account, T extends Transaction> implements AccountFetcher<A>,
-        TransactionMonthPaginator<A> {
+abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
+        implements AccountFetcher<A>, TransactionMonthPaginator<A> {
 
-    protected static final AggregationLogger LOGGER = new AggregationLogger(ProductMovementsFetcher.class);
+    protected static final AggregationLogger LOGGER =
+            new AggregationLogger(ProductMovementsFetcher.class);
 
     private final IngApiClient apiClient;
 
@@ -49,14 +50,18 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
             return Collections.emptyList();
         }
 
-        return products.stream().filter(productType()).map(toTinkAccount()).collect(Collectors.toList());
+        return products.stream()
+                .filter(productType())
+                .map(toTinkAccount())
+                .collect(Collectors.toList());
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(A account, Year year, Month month) {
 
-        Product product = account.getFromTemporaryStorage(IngConstants.ORIGINAL_ENTITY, Product.class)
-                .orElseThrow(() -> new IllegalStateException("No product supplied"));
+        Product product =
+                account.getFromTemporaryStorage(IngConstants.ORIGINAL_ENTITY, Product.class)
+                        .orElseThrow(() -> new IllegalStateException("No product supplied"));
 
         List<T> transactions = new ArrayList<>();
 
@@ -70,13 +75,17 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
 
         do {
 
-            movements = apiClient.getApiRestProductsMovements(product.getUuid(), fromDate, toDate, currOffset);
+            movements =
+                    apiClient.getApiRestProductsMovements(
+                            product.getUuid(), fromDate, toDate, currOffset);
 
             if (movements == null) {
                 break;
             }
 
-            movements.getElements().forEach(movement -> transactions.add(toTinkTransaction(account, movement)));
+            movements
+                    .getElements()
+                    .forEach(movement -> transactions.add(toTinkTransaction(account, movement)));
 
             currOffset += movements.getCount();
 
@@ -104,8 +113,8 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
                 .putInTemporaryStorage(IngConstants.ORIGINAL_ENTITY, product);
     }
 
-    protected static void copyCommonAttributes(Account account, Element movement,
-            Transaction.Builder builder) {
+    protected static void copyCommonAttributes(
+            Account account, Element movement, Transaction.Builder builder) {
         builder.setAmount(new Amount(account.getBalance().getCurrency(), movement.getAmount()))
                 .setDate(IngUtils.toJavaLangDate(movement.getEffectiveDate()))
                 .setDescription(movement.getDescription())

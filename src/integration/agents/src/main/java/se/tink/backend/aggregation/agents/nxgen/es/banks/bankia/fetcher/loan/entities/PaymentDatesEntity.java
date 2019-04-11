@@ -8,5 +8,5 @@ public class PaymentDatesEntity {
     private int diaVencimientoCuotas;
     private DateEntity fechaAnteriorVencimiento;
     private DateEntity fechaProximoVencimiento;
-//    private List<CodigoMesAlternoEntity> codigoMesAlterno;  // no values for this yet
+    //    private List<CodigoMesAlternoEntity> codigoMesAlterno;  // no values for this yet
 }

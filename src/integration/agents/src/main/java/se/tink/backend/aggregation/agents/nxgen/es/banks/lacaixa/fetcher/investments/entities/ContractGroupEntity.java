@@ -12,9 +12,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ContractGroupEntity {
     private String literalAgrupacion;
+
     @JsonProperty("codigoAgrupacion")
     private String contractGroupCode;
+
     private boolean agrupacionCerrada;
+
     @JsonProperty("contrato")
     private List<ContractEntity> contracts;
 
@@ -22,9 +25,13 @@ public class ContractGroupEntity {
     public Map<String, String> getProductCodeByContractNumber() {
         Map<String, String> codeByNumber = new HashMap<>();
 
-        Optional.ofNullable(contracts).orElse(Collections.emptyList())
-                .forEach(contract -> codeByNumber.put(contract.getContractNumber(), contract.getProductCode()));
-        
+        Optional.ofNullable(contracts)
+                .orElse(Collections.emptyList())
+                .forEach(
+                        contract ->
+                                codeByNumber.put(
+                                        contract.getContractNumber(), contract.getProductCode()));
+
         return codeByNumber;
     }
 

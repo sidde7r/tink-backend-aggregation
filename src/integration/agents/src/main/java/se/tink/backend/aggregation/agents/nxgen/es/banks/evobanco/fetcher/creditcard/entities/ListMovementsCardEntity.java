@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
 
 @JsonObject
 public class ListMovementsCardEntity {
@@ -123,8 +122,7 @@ public class ListMovementsCardEntity {
 
     public CreditCardTransaction toTinkTransaction() {
         return new CreditCardTransaction.Builder()
-                .setAmount(
-                        Amount.inEUR(AgentParsingUtils.parseAmount(getTransactionAmount())))
+                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(getTransactionAmount())))
                 .setDateTime(getZonedDateTime())
                 .setDescription(getDescription())
                 .build();

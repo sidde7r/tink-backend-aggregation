@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FundDetailsRequest {
     @JsonProperty("refValExpediente")
     private final String fundReference;
+
     @JsonProperty("codigoFondo")
     private final String fundCode;
+
     @JsonProperty("divisa")
     private final String currency;
+
     private final String alias = "";
 
     public FundDetailsRequest(String fundReference, String fundCode, String currency) {

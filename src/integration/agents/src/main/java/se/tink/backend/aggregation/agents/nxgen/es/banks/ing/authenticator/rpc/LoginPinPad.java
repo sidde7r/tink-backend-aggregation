@@ -8,6 +8,7 @@ public final class LoginPinPad {
 
     /** 1-based indices of the digits that should be given */
     private List<Integer> pinPositions;
+
     private List<Integer> pinPadNumbers;
     private String lastConnection;
     private String lastDeviceConnection;

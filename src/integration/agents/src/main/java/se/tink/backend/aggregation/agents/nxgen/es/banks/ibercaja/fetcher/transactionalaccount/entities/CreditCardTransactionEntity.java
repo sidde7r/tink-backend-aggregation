@@ -14,13 +14,16 @@ public class CreditCardTransactionEntity {
     @JsonProperty("FechaOperacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfTransaction;
+
     @JsonProperty("Concepto")
     private String description;
+
     @JsonProperty("Importe")
     private double amount;
 
-    public CreditCardTransaction toTinkTransaction(){
-        return CreditCardTransaction.builder().setAmount(new Amount(IberCajaConstants.currency, amount))
+    public CreditCardTransaction toTinkTransaction() {
+        return CreditCardTransaction.builder()
+                .setAmount(new Amount(IberCajaConstants.currency, amount))
                 .setDate(dateOfTransaction)
                 .setDescription(description)
                 .build();

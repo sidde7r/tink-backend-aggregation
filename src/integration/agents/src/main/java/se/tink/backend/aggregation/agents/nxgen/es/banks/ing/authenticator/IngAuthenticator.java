@@ -40,12 +40,11 @@ public class IngAuthenticator implements Authenticator {
     /**
      * Validates username type and returns the corresponding document type number.
      *
-     * NIF rule: 8 digits followed by 1 letter, DDDDDDDDL
-     * NIE rule: 1 letter followed by 7 digits followed by 1 letter, LDDDDDDDL
-     * PASSPORT rule: 2 letters followed by 6 digits, LLDDDDDD
+     * <p>NIF rule: 8 digits followed by 1 letter, DDDDDDDDL NIE rule: 1 letter followed by 7 digits
+     * followed by 1 letter, LDDDDDDDL PASSPORT rule: 2 letters followed by 6 digits, LLDDDDDD
      *
-     * These are the only possible formats that I've found that the ING accept on the frontend side. Anything I try
-     * outside these formats result in "incorrect format" error.
+     * <p>These are the only possible formats that I've found that the ING accept on the frontend
+     * side. Anything I try outside these formats result in "incorrect format" error.
      */
     public static int getUsernameType(String username) throws LoginException {
 
@@ -66,13 +65,16 @@ public class IngAuthenticator implements Authenticator {
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
 
         String username = credentials.getField(Field.Key.USERNAME);
         String dateOfBirth = credentials.getField(IngConstants.DATE_OF_BIRTH);
         String pin = credentials.getField(Field.Key.PASSWORD);
 
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(dateOfBirth) || Strings.isNullOrEmpty(pin)) {
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(dateOfBirth)
+                || Strings.isNullOrEmpty(pin)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
@@ -114,10 +116,11 @@ public class IngAuthenticator implements Authenticator {
         List<Integer> pinPadNumbers = pinPad.getPinPadNumbers();
 
         // List of indices pointing to where on the pin pad the digits are
-        List<Integer> identifiedPositions = positionsOfDigitsToIdentify.stream()
-                .map(endIndex -> Integer.valueOf(pin.substring(endIndex - 1, endIndex)))
-                .map(pinPadNumbers::indexOf)
-                .collect(Collectors.toList());
+        List<Integer> identifiedPositions =
+                positionsOfDigitsToIdentify.stream()
+                        .map(endIndex -> Integer.valueOf(pin.substring(endIndex - 1, endIndex)))
+                        .map(pinPadNumbers::indexOf)
+                        .collect(Collectors.toList());
 
         return new LoginPinPositions(identifiedPositions);
     }

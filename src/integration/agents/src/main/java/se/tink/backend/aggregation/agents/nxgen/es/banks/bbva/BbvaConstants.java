@@ -65,7 +65,8 @@ public final class BbvaConstants {
         public static final LogTag LOAN_REVOLVING_CREDIT =
                 LogTag.from("bbva_loan_revolving_credit");
         public static final LogTag LOAN_WORKING_CAPITAL = LogTag.from("bbva_loan_working_capital");
-        public static final LogTag UTILS_SPLIT_GET_PAGINATION_KEY = LogTag.from("bbva_utils_split_get_pagination_key");
+        public static final LogTag UTILS_SPLIT_GET_PAGINATION_KEY =
+                LogTag.from("bbva_utils_split_get_pagination_key");
     }
 
     public static final class Url {
@@ -92,7 +93,9 @@ public final class BbvaConstants {
 
     public enum Headers implements HeaderEnum {
         CONSUMER_ID("ConsumerID", "00000013"),
-        BBVA_USER_AGENT("BBVA-User-Agent", "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
+        BBVA_USER_AGENT(
+                "BBVA-User-Agent",
+                "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
         ORIGIN("Origin", "https://movil.bbva.es"),
         REFERER("Referer", "https://movil.bbva.es/versions/woody/6.14.5/index.html");
 

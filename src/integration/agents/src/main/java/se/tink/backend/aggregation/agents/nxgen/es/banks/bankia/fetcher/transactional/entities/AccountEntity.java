@@ -2,21 +2,24 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transac
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 @JsonObject
 public class AccountEntity {
     @JsonProperty("contrato")
     private ContractEntity contract;
+
     @JsonProperty("saldoInformado")
     private boolean informedBalance;
+
     @JsonProperty("saldoReal")
     private AmountEntity realBalance;
+
     @JsonProperty("saldoDisponible")
     private AmountEntity availableBalance;
 
@@ -25,18 +28,21 @@ public class AccountEntity {
     }
 
     public boolean isAccountTypeTransactional() {
-        Optional<AccountTypes> accountType = BankiaConstants.AccountType.translateType(getBankiaAccountType());
+        Optional<AccountTypes> accountType =
+                BankiaConstants.AccountType.translateType(getBankiaAccountType());
         return accountType.map(TransactionalAccount.ALLOWED_ACCOUNT_TYPES::contains).orElse(false);
     }
 
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType = BankiaConstants.AccountType.translateType(getBankiaAccountType());
+        Optional<AccountTypes> accountType =
+                BankiaConstants.AccountType.translateType(getBankiaAccountType());
         return accountType.orElse(AccountTypes.OTHER);
     }
 
     private String getAccountName(String iban) {
         // The bank app shows the account name as: "[ALIAS] *[LAST_FOUR_DIGITS_OF_IBAN]"
-        return String.format("%s *%s", contract.getAlias(), iban.substring(iban.length() - 4, iban.length()));
+        return String.format(
+                "%s *%s", contract.getAlias(), iban.substring(iban.length() - 4, iban.length()));
     }
 
     public TransactionalAccount toTinkAccount() {

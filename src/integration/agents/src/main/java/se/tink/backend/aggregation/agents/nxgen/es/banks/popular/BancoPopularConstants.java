@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class BancoPopularConstants {
 
@@ -25,14 +25,15 @@ public class BancoPopularConstants {
     }
 
     public static class Urls {
-        private static final String BASE ="https://bm.bancopopular.es/ACBL/";
+        private static final String BASE = "https://bm.bancopopular.es/ACBL/";
 
         public static final URL LOGIN_URL = new URL(BASE + ApiService.LOGIN_PATH);
         public static final URL KEEP_ALIVE_URL = new URL(BASE + ApiService.KEEP_ALIVE_PATH);
 
         public static final URL SET_CONTRACT_URL = new URL(BASE + ApiService.SET_CONTRACT_PATH);
         public static final URL FETCH_ACCOUNTS_URL = new URL(BASE + ApiService.ACCOUNTS_PATH);
-        public static final URL FETCH_TRANSACTIONS_URL = new URL(BASE + ApiService.TRANSACTIONS_PATH);
+        public static final URL FETCH_TRANSACTIONS_URL =
+                new URL(BASE + ApiService.TRANSACTIONS_PATH);
     }
 
     public static class Fetcher {
@@ -41,11 +42,11 @@ public class BancoPopularConstants {
         public static final String MOVEMENT_TYPE = "T";
         public static final int CONCEP_ECRMVTO_2 = 98;
 
-        public static final String CHECKING_ACCOUNT_IDENTIFIER = "A32";  // account
-        public static final String CREDIT_CARD_ACCOUNT_IDENTIFIER = "A45";  // credit card account
-        public static final String FUND_ACCOUNT_IDENTIFIER = "J01";  // funds
-        public static final String LOAN_ACCOUNT_IDENTIFIER = "K11";   // loan
-        public static final String INSURANCE_ACCOUNT_IDENTIFIER = "F99";   // securities (stocks?)
+        public static final String CHECKING_ACCOUNT_IDENTIFIER = "A32"; // account
+        public static final String CREDIT_CARD_ACCOUNT_IDENTIFIER = "A45"; // credit card account
+        public static final String FUND_ACCOUNT_IDENTIFIER = "J01"; // funds
+        public static final String LOAN_ACCOUNT_IDENTIFIER = "K11"; // loan
+        public static final String INSURANCE_ACCOUNT_IDENTIFIER = "F99"; // securities (stocks?)
 
         // BTAT query constants
         public static final String LEVEL = "002";
@@ -70,13 +71,12 @@ public class BancoPopularConstants {
         public static final String AMOUNT_SIGN_INDICATOR_2 = "-";
 
         public static final String MERCHANT_NAME = "merchantName";
-        public static final String MERCHANT_NAME_REGEX = String.format(
-                ".*, en (?<%s>.+)$", MERCHANT_NAME);
+        public static final String MERCHANT_NAME_REGEX =
+                String.format(".*, en (?<%s>.+)$", MERCHANT_NAME);
 
         public static final LogTag INVESTMENT_LOGGING =
                 LogTag.from("#investment-logging-popular-es");
-        public static final LogTag LOAN_LOGGING =
-                LogTag.from("#loan-logging-popular-es");
+        public static final LogTag LOAN_LOGGING = LogTag.from("#loan-logging-popular-es");
     }
 
     public static class Authentication {
@@ -98,32 +98,30 @@ public class BancoPopularConstants {
     }
 
     public static final class Tags {
-        public static final LogTag UNKNOWN_PRODUCT_CODE = LogTag.from("es_popular_unknown_product_code");
+        public static final LogTag UNKNOWN_PRODUCT_CODE =
+                LogTag.from("es_popular_unknown_product_code");
     }
 
     public static class ProductCode {
 
-        /**
-         * CUENTA CORRIENTE
-         */
+        /** CUENTA CORRIENTE */
         private static final int CHECKING_ACCOUNT = 100;
-        /**
-         * CUENTA DE AHORRO
-         */
+        /** CUENTA DE AHORRO */
         private static final int SAVINGS_ACCOUNT = 110;
 
         public static Optional<AccountTypes> translate(int productCode) {
             switch (productCode) {
-            case CHECKING_ACCOUNT:
-                return Optional.of(AccountTypes.CHECKING);
-            case SAVINGS_ACCOUNT:
-                return Optional.of(AccountTypes.SAVINGS);
-            default:
-                LOGGER.info("{} Unknown product code: {}", BancoPopularConstants.Tags.UNKNOWN_PRODUCT_CODE,
-                        productCode);
-                return Optional.empty();
+                case CHECKING_ACCOUNT:
+                    return Optional.of(AccountTypes.CHECKING);
+                case SAVINGS_ACCOUNT:
+                    return Optional.of(AccountTypes.SAVINGS);
+                default:
+                    LOGGER.info(
+                            "{} Unknown product code: {}",
+                            BancoPopularConstants.Tags.UNKNOWN_PRODUCT_CODE,
+                            productCode);
+                    return Optional.empty();
             }
         }
     }
-
 }

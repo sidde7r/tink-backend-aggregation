@@ -15,7 +15,8 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class ImaginBankCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(ImaginBankCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(ImaginBankCreditCardFetcher.class);
 
     private final ImaginBankApiClient apiClient;
 
@@ -33,15 +34,16 @@ public class ImaginBankCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        // Pagination state is maintained on the server. We should only indicate if this is new/first request or not.
+        // Pagination state is maintained on the server. We should only indicate if this is
+        // new/first request or not.
         // The response contains a boolean that indicates if there is more data to fetch or not.
         LocalDate fromDate = ImaginBankConstants.CreditCard.START_DATE;
         LocalDate toDate = LocalDate.now();
 
         try {
-            CardTransactionsResponse cardTransactionsResponse = apiClient
-                    .fetchCardTransactions(account.getApiIdentifier(), fromDate,
-                            toDate, page > 0);
+            CardTransactionsResponse cardTransactionsResponse =
+                    apiClient.fetchCardTransactions(
+                            account.getApiIdentifier(), fromDate, toDate, page > 0);
 
             return cardTransactionsResponse.toPaginatorResponse();
         } catch (Exception e) {

@@ -16,18 +16,26 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PositionValuesResponse {
     @JsonProperty("idExpediente")
     private String id;
+
     private String alias;
+
     @JsonProperty("valoracionExpedientes")
     private BalanceEntity currentValue;
+
     @JsonProperty("plusvaliaExpedientes")
     private BalanceEntity valueChange;
+
     private boolean mostrarPlusvaliaRentabilidad;
+
     @JsonProperty("numeroExpediente28")
     private String accountNumber;
+
     @JsonProperty("listaExpedientes")
     private List<PortfolioEntity> portfolioList;
+
     @JsonProperty("listaBloques")
     private List<PortfolioContentEntity> portfolioContents;
+
     private String descripcionTiempoExcedido;
     private boolean tiempoExcedido;
 

@@ -12,6 +12,7 @@ public class TransactionEntity {
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
+
     private String concept;
     private AmountEntity amount;
     private boolean canSplit;

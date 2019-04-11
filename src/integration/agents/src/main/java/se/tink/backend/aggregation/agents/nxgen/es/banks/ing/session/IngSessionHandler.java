@@ -23,7 +23,8 @@ public class IngSessionHandler implements SessionHandler {
     public void logout() {
         // This is what the app calls when the user actively logs out
         apiClient.getApiRestCommunicationLogoutAllSessions();
-        // This, I believe, is called to make sure there are no sessions remaining (before creating a new one)
+        // This, I believe, is called to make sure there are no sessions remaining (before creating
+        // a new one)
         apiClient.deleteApiRestSession();
     }
 

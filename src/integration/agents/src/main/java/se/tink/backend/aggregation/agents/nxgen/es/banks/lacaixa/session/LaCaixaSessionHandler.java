@@ -20,7 +20,7 @@ public class LaCaixaSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if(!apiClient.isAlive()){
+        if (!apiClient.isAlive()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

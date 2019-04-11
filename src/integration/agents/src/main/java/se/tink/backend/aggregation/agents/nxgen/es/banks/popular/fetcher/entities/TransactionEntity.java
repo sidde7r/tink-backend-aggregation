@@ -20,40 +20,57 @@ public class TransactionEntity {
 
     @JsonProperty("numSecuenMov")
     private int sequenceNumber;
+
     @JsonProperty("fecmvtoEcrmvto2211")
     private Date transactionDate;
+
     @JsonProperty("conceptoMov")
     private String description;
+
     @JsonProperty("tipoMov")
     private String type;
+
     @JsonDouble
     @JsonProperty("importeMov")
     private double amount;
+
     @JsonProperty("signoImporteMov")
     private String amountSign;
+
     @JsonProperty("fecvalorEcrmvto221")
     private Date valueDate;
+
     @JsonProperty("codMoneda")
     private String currencyCode;
+
     @JsonDouble
     @JsonProperty("importeCV")
     private double amountCv;
+
     @JsonProperty("codMonedaCV")
     private String currencyCodeCv;
+
     @JsonProperty("indicador")
     private int indicator;
+
     @JsonProperty("saldoCont")
     private int accountBalance;
+
     @JsonProperty("signoCont")
     private String accountSign;
+
     private String indE;
     private int refE;
+
     @JsonProperty("indDuplicado")
     private String indDuplicate;
+
     @JsonProperty("codServicio")
     private int serviceCode;
+
     @JsonProperty("contIdentOperServicio")
     private String accountIdentiferOperationService;
+
     @JsonProperty("indicaRss")
     private String rssIndicator;
 
@@ -65,9 +82,7 @@ public class TransactionEntity {
                 .build();
     }
 
-    /**
-     * Sign is set in separate field, use this when converting to Tink amount
-     */
+    /** Sign is set in separate field, use this when converting to Tink amount */
     @JsonIgnore
     private double convertToAmount(double amount, String amountSign) {
         if (BancoPopularConstants.Fetcher.AMOUNT_SIGN_INDICATOR_1.equalsIgnoreCase(amountSign)

@@ -42,8 +42,7 @@ public class EeIConsultationMovementsPostponedViewEntity {
             return this;
         }
 
-        public EeIConsultationMovementsPostponedViewEntity.Builder withAgreement(
-                String agreement) {
+        public EeIConsultationMovementsPostponedViewEntity.Builder withAgreement(String agreement) {
             this.agreement = agreement;
             return this;
         }

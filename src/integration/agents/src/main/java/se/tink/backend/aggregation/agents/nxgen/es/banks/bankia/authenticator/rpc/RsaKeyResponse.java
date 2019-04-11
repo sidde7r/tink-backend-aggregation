@@ -7,14 +7,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RsaKeyResponse {
     @JsonProperty("j_gid_response_rsa")
     private String rsaPublicKey;
+
     @JsonProperty("j_gid_response_url")
     private String responseUrl;
+
     @JsonProperty("j_gid_response_domain")
     private String responseDomain;
+
     @JsonProperty("j_gid_response_lt")
     private String responseLt;
+
     @JsonProperty("version-gid-client")
     private String versionGidClient;
+
     @JsonProperty("j_gid_response_original_request")
     private String responseOriginalRequest;
 

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -8,7 +10,6 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularTestBase;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import static org.junit.Assert.assertNotNull;
 
 public class BancoPopularTransactionFetcherTest extends BancoPopularTestBase {
 
@@ -26,14 +27,15 @@ public class BancoPopularTransactionFetcherTest extends BancoPopularTestBase {
     public void getTransactionsFor() throws Exception {
         authenticate();
         Collection<TransactionalAccount> accounts = accountFetcher.fetchAccounts();
-        Calendar c =Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         Date toDate = c.getTime();
         c.add(Calendar.YEAR, -365);
         Date fromDate = c.getTime();
         for (TransactionalAccount account : accounts) {
-            Collection<? extends Transaction> transactions = transactionFetcher
-                    .getTransactionsFor(account, fromDate, toDate)
-                    .getTinkTransactions();
+            Collection<? extends Transaction> transactions =
+                    transactionFetcher
+                            .getTransactionsFor(account, fromDate, toDate)
+                            .getTinkTransactions();
             assertNotNull(transactions);
             System.out.println("From date " + fromDate);
             System.out.println("To date " + toDate);
@@ -43,5 +45,4 @@ public class BancoPopularTransactionFetcherTest extends BancoPopularTestBase {
             }
         }
     }
-
 }

@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 public class AmericanExpressESAgentTest {
 
     private AgentIntegrationTest.Builder builder() {
-        return new AgentIntegrationTest.Builder(AmericanExpressESConstants.MARKET,
-                AmericanExpressESConstants.PROVIDER_NAME)
+        return new AgentIntegrationTest.Builder(
+                        AmericanExpressESConstants.MARKET, AmericanExpressESConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, "")
                 .addCredentialField(Field.Key.PASSWORD, "")
                 .loadCredentialsBefore(false)
@@ -21,5 +21,4 @@ public class AmericanExpressESAgentTest {
     public void testRefresh() throws Exception {
         builder().build().testRefresh();
     }
-
 }

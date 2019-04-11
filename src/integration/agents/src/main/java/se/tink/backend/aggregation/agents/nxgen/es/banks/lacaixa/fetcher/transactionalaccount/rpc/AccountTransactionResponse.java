@@ -20,15 +20,19 @@ public class AccountTransactionResponse implements PaginatorResponse {
     private List<TransactionEntity> transactions;
     private boolean moreDataAvaliable;
 
-    // Using this setter to avoid creating several layers of wrapper entities because of JSON tree structure
+    // Using this setter to avoid creating several layers of wrapper entities because of JSON tree
+    // structure
     @JsonProperty("listaMovimientos")
-    private void unpackNested(JsonNode m) throws IOException{
+    private void unpackNested(JsonNode m) throws IOException {
 
         m = m.get("listaMovimientos"); // Skip one duplicate level of the JSON tree
 
         moreDataAvaliable = m.get("masDatos").asBoolean();
-        transactions = new ObjectMapper().readValue(m.get("movimiento").traverse(),
-                new TypeReference <List<TransactionEntity>>(){});
+        transactions =
+                new ObjectMapper()
+                        .readValue(
+                                m.get("movimiento").traverse(),
+                                new TypeReference<List<TransactionEntity>>() {});
     }
 
     public List<TransactionEntity> getTransactions() {

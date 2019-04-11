@@ -11,11 +11,13 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
-public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger log = new AggregationLogger(BancoPopularInvestmentFetcher.class);
+public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher
+        implements AccountFetcher<InvestmentAccount> {
+    private static final AggregationLogger log =
+            new AggregationLogger(BancoPopularInvestmentFetcher.class);
 
-    public BancoPopularInvestmentFetcher(BancoPopularApiClient bankClient,
-            BancoPopularPersistentStorage persistentStorage) {
+    public BancoPopularInvestmentFetcher(
+            BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
         super(bankClient, persistentStorage);
     }
 
@@ -33,7 +35,8 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
             }
 
         } catch (Exception e) {
-            log.infoExtraLong("Could not fetch investment accounts " + e.toString(),
+            log.infoExtraLong(
+                    "Could not fetch investment accounts " + e.toString(),
                     BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
         }
 
@@ -41,34 +44,42 @@ public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher i
     }
 
     private void fetchFundAccounts() {
-        FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
-                BancoPopularConstants.Fetcher.FUND_ACCOUNT_IDENTIFIER);
+        FetchAccountsRequest fetchInvestmentAccountsRequest =
+                FetchAccountsRequest.build(BancoPopularConstants.Fetcher.FUND_ACCOUNT_IDENTIFIER);
 
-        String fetchInvestmentAccountsResponse = bankClient.fetchFundAccounts(fetchInvestmentAccountsRequest);
+        String fetchInvestmentAccountsResponse =
+                bankClient.fetchFundAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
         if (fetchInvestmentAccountsResponse.contains("\"faultIndicator\":true")) {
             log.debug("Unable to fetch fund accounts " + fetchInvestmentAccountsResponse);
         } else {
-            log.infoExtraLong(fetchInvestmentAccountsResponse, BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
+            log.infoExtraLong(
+                    fetchInvestmentAccountsResponse,
+                    BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
         }
     }
 
     private void fetchSecuritiesAccounts() {
-        FetchAccountsRequest fetchInvestmentAccountsRequest = FetchAccountsRequest.build(
-                BancoPopularConstants.Fetcher.INSURANCE_ACCOUNT_IDENTIFIER);
+        FetchAccountsRequest fetchInvestmentAccountsRequest =
+                FetchAccountsRequest.build(
+                        BancoPopularConstants.Fetcher.INSURANCE_ACCOUNT_IDENTIFIER);
 
-        String fetchInvestmentAccountsResponse = bankClient.fetchSecuritiesAccounts(fetchInvestmentAccountsRequest);
+        String fetchInvestmentAccountsResponse =
+                bankClient.fetchSecuritiesAccounts(fetchInvestmentAccountsRequest);
         // this is just to avoid unnecessary logging when no data is present
         if (fetchInvestmentAccountsResponse.contains("\"faultIndicator\":true")) {
             log.debug("Unable to fetch securities accounts " + fetchInvestmentAccountsResponse);
         } else {
-            log.infoExtraLong(fetchInvestmentAccountsResponse, BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
+            log.infoExtraLong(
+                    fetchInvestmentAccountsResponse,
+                    BancoPopularConstants.Fetcher.INVESTMENT_LOGGING);
         }
     }
 
     private void fetchCreditAccounts() {
-        FetchAccountsRequest request =  FetchAccountsRequest.build(
-                BancoPopularConstants.Fetcher.CREDIT_CARD_ACCOUNT_IDENTIFIER);
+        FetchAccountsRequest request =
+                FetchAccountsRequest.build(
+                        BancoPopularConstants.Fetcher.CREDIT_CARD_ACCOUNT_IDENTIFIER);
 
         String response = bankClient.fetchCreditAccounts(request);
         // this is just to avoid unnecessary logging when no data is present

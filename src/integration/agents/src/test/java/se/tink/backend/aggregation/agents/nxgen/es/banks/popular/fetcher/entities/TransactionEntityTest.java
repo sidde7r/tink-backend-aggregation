@@ -25,7 +25,6 @@ public class TransactionEntityTest {
         Transaction t1 = createTransactionEntityWithDescription(descriptionString1);
 
         Assert.assertEquals(descriptionString1, t1.getDescription());
-
     }
 
     private Transaction createTransactionEntityWithDescription(String description) {

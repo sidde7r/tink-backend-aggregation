@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanInstallmentsEntity {
     @JsonProperty("importeCuotaActual")
     private AmountEntity currentAmortizationAmount;
+
     private QuantityEntity plazoPendienteUltimaFacturacion;
     private int numeroCuotasPrestamo;
+
     @JsonProperty("importeProximaCuota")
     private AmountEntity nextAmortizationAmount;
 

@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AnswerEntityTransactionsResponse {

@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
+import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
+import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity.LOGGER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
@@ -13,11 +17,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.Optional;
-
-import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity.LOGGER;
 
 @JsonObject
 public class AgreementsListEntity {

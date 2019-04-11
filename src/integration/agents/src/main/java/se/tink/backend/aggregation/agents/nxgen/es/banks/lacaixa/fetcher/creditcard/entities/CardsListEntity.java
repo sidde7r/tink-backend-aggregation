@@ -9,6 +9,7 @@ public class CardsListEntity {
 
     @JsonProperty("tarjetaGenerica")
     private List<GenericCardEntity> cards;
+
     @JsonProperty("masDatos")
     private boolean moreData;
 
@@ -19,5 +20,4 @@ public class CardsListEntity {
     boolean canFetchMore() {
         return moreData;
     }
-
 }

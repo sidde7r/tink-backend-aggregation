@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
@@ -10,9 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
@@ -40,9 +39,11 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
             throw new IllegalStateException("Unrecognised loan product type");
         }
 
-        // T.A.E stands for a Spanish term "La Tasa Anual Equivalente". Mortgages do not have this value set but other
+        // T.A.E stands for a Spanish term "La Tasa Anual Equivalente". Mortgages do not have this
+        // value set but other
         // types of loans do.
-        // Mortgages have the interest rate in a field called "nominalType". We use this if it is available, and if not
+        // Mortgages have the interest rate in a field called "nominalType". We use this if it is
+        // available, and if not
         // we use the TAE rate
         Double interestRate = product.getNominalType();
         if (interestRate == null) {
@@ -63,10 +64,17 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
     private static LoanDetails mapLoanDetailsForMortgage(Product product) {
         return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                .setAmortized(new Amount(product.getCurrency(), product.getInitialAmount() - product.getPendingAmount()))
+                .setAmortized(
+                        new Amount(
+                                product.getCurrency(),
+                                product.getInitialAmount() - product.getPendingAmount()))
                 .setInitialBalance(new Amount(product.getCurrency(), product.getInitialAmount()))
-                .setMonthlyAmortization(new Amount(product.getCurrency(), product.getNextPaymentAmount()))
-                .setApplicants(product.getHolders().stream().map(Holder::getAnyName).collect(Collectors.toList()))
+                .setMonthlyAmortization(
+                        new Amount(product.getCurrency(), product.getNextPaymentAmount()))
+                .setApplicants(
+                        product.getHolders().stream()
+                                .map(Holder::getAnyName)
+                                .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
                 .setInitialDate(IngUtils.toJavaLangDate(product.getSignClientDate()))
                 .setNextDayOfTermsChange(IngUtils.toJavaLangDate(product.getNextRevisionDate()))
@@ -78,8 +86,12 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
         return LoanDetails.builder(LoanDetails.Type.OTHER)
                 .setAmortized(new Amount(product.getCurrency(), product.getPaidAmount()))
                 .setInitialBalance(new Amount(product.getCurrency(), product.getInitialAmount()))
-                .setMonthlyAmortization(new Amount(product.getCurrency(), product.getNextPayOffAmount()))
-                .setApplicants(product.getHolders().stream().map(Holder::getAnyName).collect(Collectors.toList()))
+                .setMonthlyAmortization(
+                        new Amount(product.getCurrency(), product.getNextPayOffAmount()))
+                .setApplicants(
+                        product.getHolders().stream()
+                                .map(Holder::getAnyName)
+                                .collect(Collectors.toList()))
                 .setCoApplicant(product.getHolders().size() > 1)
                 .setInitialDate(IngUtils.toJavaLangDate(product.getInitDate()))
                 .setLoanNumber(product.getProductNumber())

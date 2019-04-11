@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class IberCajaTransactionalFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class IberCajaTransactionalFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final IberCajaApiClient bankClient;
 
@@ -23,7 +24,8 @@ public class IberCajaTransactionalFetcher implements TransactionDatePaginator<Tr
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
 
         return bankClient.fetchTransactionDetails(
                 account.getBankIdentifier(), format(fromDate), format(toDate));

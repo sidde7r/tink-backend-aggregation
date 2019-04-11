@@ -29,7 +29,8 @@ public class FetchTransactionsResponse extends BancoPopularResponse implements P
     @Override
     public Optional<Boolean> canFetchMore() {
         // Possible fields for deciding if we can fetch more doesn't actually indicate this.
-        // hasMore is always "N" and nextPage is always an empty string. Leaving it up to the paginator to
+        // hasMore is always "N" and nextPage is always an empty string. Leaving it up to the
+        // paginator to
         // stop fetching once we've gotten two empty pages in a row.
         return Optional.empty();
     }

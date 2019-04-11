@@ -9,5 +9,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InstallmentsEntity {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date installmentDate;
+
     private AmountEntity installmentAmount;
 }

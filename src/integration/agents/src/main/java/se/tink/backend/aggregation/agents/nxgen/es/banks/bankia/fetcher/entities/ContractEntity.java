@@ -8,46 +8,67 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ContractEntity {
     @JsonProperty("codigoProductoUrsus")
     private String productCode;
+
     @JsonProperty("codigoProductoPersonalizado")
     private String customizedProductCode;
+
     @JsonProperty("identificadorContratoProducto")
     private String identifierProductContract;
+
     @JsonProperty("identificadorContratoProductoInterno")
     private String identifierProductContractInternal;
+
     @JsonProperty("entidadDelProducto")
     private String productEntity;
+
     private String alias;
+
     @JsonProperty("nivelOperatividad")
     private String operabilityLevel;
+
     @JsonProperty("tipoRelacionContratoUsuario")
     private String typeContractUserAgreement;
+
     @JsonProperty("orden")
     private int order;
+
     @JsonProperty("familia")
     private FamilyEntity family;
+
     private boolean idVista1;
     private boolean idVista2;
     private boolean idVista3;
     private boolean idVista4;
+
     @JsonProperty("indicadorProductoNuevo")
     private boolean productNewIndicator;
+
     @JsonProperty("numeroFirmasProducto")
     private int numberOfFirmsProduct;
+
     @JsonProperty("indicadorTitularResidenteEnEspana")
     private boolean indicatorResidentHolderInSpain;
+
     @JsonProperty("identificadorTipoNaturaleza")
     private String typeNatureIdentifier;
+
     @JsonProperty("oficinaContrato")
     private String contractOffice;
+
     @JsonProperty("decimalesParticipacionesFondo")
     private int decimalsHoldingsFund;
+
     private String isin;
+
     @JsonProperty("tipoTarjeta")
     private String cardType;
+
     @JsonProperty("tarjetaConChip")
     private boolean cardWithChip;
+
     @JsonProperty("tarjetaEsMulti")
     private boolean esMultiCard;
+
     @JsonProperty("urlPlasticoTarjeta")
     private String plasticUrlCard;
 

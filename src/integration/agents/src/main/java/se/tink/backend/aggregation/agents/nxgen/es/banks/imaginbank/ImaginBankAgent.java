@@ -34,42 +34,52 @@ public class ImaginBankAgent extends NextGenerationAgent {
     private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage imaginBankSessionStorage;
 
-    public ImaginBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public ImaginBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new ImaginBankApiClient(client);
         imaginBankSessionStorage = new ImaginBankSessionStorage(sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new ImaginBankPasswordAuthenticator(apiClient, imaginBankSessionStorage)
-        );
+                new ImaginBankPasswordAuthenticator(apiClient, imaginBankSessionStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        ImaginBankAccountFetcher accountFetcher = new ImaginBankAccountFetcher(apiClient, imaginBankSessionStorage);
-        ImaginBankTransactionFetcher transactionFetcher = new ImaginBankTransactionFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        ImaginBankAccountFetcher accountFetcher =
+                new ImaginBankAccountFetcher(apiClient, imaginBankSessionStorage);
+        ImaginBankTransactionFetcher transactionFetcher =
+                new ImaginBankTransactionFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(transactionFetcher, 0))));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(transactionFetcher, 0))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         ImaginBankCreditCardFetcher creditCardFetcher = new ImaginBankCreditCardFetcher(apiClient);
 
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, new TransactionFetcherController<>(this.transactionPaginationHelper,
-                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
     }
 
     @Override
@@ -88,7 +98,8 @@ public class ImaginBankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

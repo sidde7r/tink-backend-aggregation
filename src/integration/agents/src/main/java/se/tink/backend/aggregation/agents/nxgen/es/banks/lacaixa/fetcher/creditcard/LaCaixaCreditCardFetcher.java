@@ -31,15 +31,20 @@ public class LaCaixaCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        // Pagination state is maintained on the server. We should only indicate if this is new/first request or not.
+        // Pagination state is maintained on the server. We should only indicate if this is
+        // new/first request or not.
         // The response contains a boolean that indicates if there is more data to fetch or not.
 
-        // if there are no transactions we sometimes get an error respomnse instead of empty, we return empty
+        // if there are no transactions we sometimes get an error respomnse instead of empty, we
+        // return empty
         try {
             return apiClient.fetchCardTransactions(account.getBankIdentifier(), page == 0);
         } catch (HttpResponseException hre) {
             if (noTransactions(hre.getResponse())) {
-                LOG.info(String.format("Failed to fetch transaction for credit card %s", account.getAccountNumber()));
+                LOG.info(
+                        String.format(
+                                "Failed to fetch transaction for credit card %s",
+                                account.getAccountNumber()));
                 return PaginatorResponseImpl.createEmpty(false);
             }
 

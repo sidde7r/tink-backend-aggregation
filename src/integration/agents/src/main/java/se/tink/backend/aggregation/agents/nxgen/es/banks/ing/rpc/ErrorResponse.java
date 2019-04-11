@@ -12,13 +12,13 @@ public class ErrorResponse {
     private List<MessageEntity> message;
 
     public boolean hasError() {
-        return Objects.nonNull(message) && message.stream()
-                .anyMatch(m -> !Strings.isNullOrEmpty(m.getErrorCode()));
+        return Objects.nonNull(message)
+                && message.stream().anyMatch(m -> !Strings.isNullOrEmpty(m.getErrorCode()));
     }
 
     public boolean hasErrorCode(String errorCode) {
-        return Objects.nonNull(message) && message.stream()
-                .anyMatch(m -> errorCode.equalsIgnoreCase(m.getErrorCode()));
+        return Objects.nonNull(message)
+                && message.stream().anyMatch(m -> errorCode.equalsIgnoreCase(m.getErrorCode()));
     }
 
     public Optional<String> getErrorSummary() {
@@ -28,8 +28,11 @@ public class ErrorResponse {
 
         return Optional.of(
                 message.stream()
-                        .map(m -> String.format("%s:%s:%s", m.getField(), m.getErrorCode(), m.getMessage()))
-                        .collect(Collectors.joining(","))
-        );
+                        .map(
+                                m ->
+                                        String.format(
+                                                "%s:%s:%s",
+                                                m.getField(), m.getErrorCode(), m.getMessage()))
+                        .collect(Collectors.joining(",")));
     }
 }

@@ -13,27 +13,34 @@ public class TransactionFilterEntity {
     @JsonProperty("filtro_fecha_inicio")
     @JsonRawValue
     private String filterStartDate;
+
     @JsonProperty("filtro_importe_minimo")
     private String filtroImporteMinimo = "";
+
     @JsonProperty("filtro_estado")
     private String filtroEstado = "";
+
     @JsonProperty("filtro_categoria")
     private String filtroCategoria = "";
+
     @JsonProperty("filtro_etiqueta")
     private String filtroEtiqueta = "";
+
     @JsonProperty("filtro_importe_maximo")
     private String filtroImporteMaximo = "";
+
     @JsonProperty("filtro_comercio")
     private String filtroComercio = "";
+
     @JsonProperty("filtro_tarjetas")
     private String filterCards;
+
     @JsonProperty("filtro_fecha_fin")
     @JsonRawValue
     private String filterEndDate;
 
-    public static final TransactionFilterEntity createTransactionFilter(String filterCards,
-            LocalDate startDate,
-            LocalDate endDate) {
+    public static final TransactionFilterEntity createTransactionFilter(
+            String filterCards, LocalDate startDate, LocalDate endDate) {
         TransactionFilterEntity filter = new TransactionFilterEntity();
         filter.filterCards = filterCards;
         filter.filterStartDate = startDate.format(JAVA_LOCAL_DATE_IMAGINBANK_FORMATTER);

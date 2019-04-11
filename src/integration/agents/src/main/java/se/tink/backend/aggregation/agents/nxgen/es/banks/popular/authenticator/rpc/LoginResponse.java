@@ -8,32 +8,46 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoginResponse {
     private List<BancoPopularLoginContract> loginContractOut;
+
     @JsonProperty("numIntPersona")
     private String personNumber;
+
     @JsonProperty("nombre")
     private String firstName;
+
     @JsonProperty("tratamiento")
     private int treatment;
+
     private String digDocum;
+
     @JsonProperty("datosBasicos")
     private String basicData;
+
     @JsonProperty("sitFirma")
     private int sitCompany;
+
     @JsonProperty("rentasAltas")
     private String highRents;
+
     @JsonProperty("inHayMas")
     private String inHasMore;
+
     @JsonProperty("codConducta")
     private String codeConduct;
+
     private String otpTelef;
     private String dsExc;
     private String dsOtp;
     private String glContprov;
+
     @JsonProperty("delegado")
     private String delegate;
+
     private String sitBenFre;
+
     @JsonProperty("tipoFirma")
     private String signatureType;
+
     private int nDiasMigrs;
     private int tPerfilclie;
 

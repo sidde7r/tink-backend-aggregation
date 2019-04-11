@@ -14,8 +14,7 @@ public class TransactionDetailsResponse {
 
     public Optional<String> getDetailedDescription(String key) {
 
-        return Optional.ofNullable(additionalInfo).orElseGet(Collections::emptyList)
-                .stream()
+        return Optional.ofNullable(additionalInfo).orElseGet(Collections::emptyList).stream()
                 .filter(details -> key.equalsIgnoreCase(details.getType()))
                 .map(TransactionDetailsEntity::getValue)
                 .flatMap(List::stream)

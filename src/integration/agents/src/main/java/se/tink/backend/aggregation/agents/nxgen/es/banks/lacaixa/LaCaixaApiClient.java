@@ -23,10 +23,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investm
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanListResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -46,15 +46,14 @@ public class LaCaixaApiClient {
 
     public SessionResponse initializeSession() {
 
-        SessionRequest request = new SessionRequest(
-                LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
-                LaCaixaConstants.DefaultRequestParams.ORIGIN,
-                LaCaixaConstants.DefaultRequestParams.CHANNEL,
-                LaCaixaConstants.DefaultRequestParams.INSTALLATION_ID
-        );
+        SessionRequest request =
+                new SessionRequest(
+                        LaCaixaConstants.DefaultRequestParams.LANGUAGE_EN,
+                        LaCaixaConstants.DefaultRequestParams.ORIGIN,
+                        LaCaixaConstants.DefaultRequestParams.CHANNEL,
+                        LaCaixaConstants.DefaultRequestParams.INSTALLATION_ID);
 
-        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN)
-                .post(SessionResponse.class, request);
+        return createRequest(LaCaixaConstants.Urls.INIT_LOGIN).post(SessionResponse.class, request);
     }
 
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
@@ -76,8 +75,7 @@ public class LaCaixaApiClient {
     }
 
     public void logout() {
-        createRequest(LaCaixaConstants.Urls.LOGOUT)
-                .post();
+        createRequest(LaCaixaConstants.Urls.LOGOUT).post();
     }
 
     public ListAccountsResponse fetchAccountList() {
@@ -100,14 +98,15 @@ public class LaCaixaApiClient {
                         UserData.FIRST_SUR_NAME,
                         UserData.SECOND_SUR_NAME);
 
-        UserDataResponse userDataResponse = createRequest(Urls.FETCH_USER_DATA)
-                .post(UserDataResponse.class, request);
+        UserDataResponse userDataResponse =
+                createRequest(Urls.FETCH_USER_DATA).post(UserDataResponse.class, request);
 
         userDataCache = userDataResponse;
         return userDataResponse;
     }
 
-    public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin) {
+    public AccountTransactionResponse fetchNextAccountTransactions(
+            String accountReference, boolean fromBegin) {
 
         return createRequest(LaCaixaConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
@@ -117,10 +116,10 @@ public class LaCaixaApiClient {
 
     public EngagementResponse fetchEngagements(String globalPositionType) {
         return createRequest(LaCaixaConstants.Urls.FETCH_ENGAGEMENTS)
-                .queryParam(LaCaixaConstants.QueryParams.ZERO_BALANCE_CONTRACTS,
+                .queryParam(
+                        LaCaixaConstants.QueryParams.ZERO_BALANCE_CONTRACTS,
                         LaCaixaConstants.DefaultRequestParams.ZERO_BALANCE_CONTRACTS)
-                .queryParam(LaCaixaConstants.QueryParams.GLOBAL_POSITION_TYPE,
-                        globalPositionType)
+                .queryParam(LaCaixaConstants.QueryParams.GLOBAL_POSITION_TYPE, globalPositionType)
                 .get(EngagementResponse.class);
     }
 
@@ -130,7 +129,8 @@ public class LaCaixaApiClient {
                 .post(FundsListResponse.class, request);
     }
 
-    public FundDetailsResponse fetchFundDetails(String fundReference, String fundCode, String currency) {
+    public FundDetailsResponse fetchFundDetails(
+            String fundReference, String fundCode, String currency) {
         FundDetailsRequest request = new FundDetailsRequest(fundReference, fundCode, currency);
         return createRequest(LaCaixaConstants.Urls.FETCH_FUND_DETAILS)
                 .post(FundDetailsResponse.class, request);
@@ -157,7 +157,9 @@ public class LaCaixaApiClient {
 
     public GenericCardsResponse fetchCards() {
         return createRequest(LaCaixaConstants.Urls.FETCH_CARDS)
-                .body(new GenericCardsRequest(true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS))
+                .body(
+                        new GenericCardsRequest(
+                                true, LaCaixaConstants.DefaultRequestParams.NUM_CARDS))
                 .post(GenericCardsResponse.class);
     }
 
@@ -173,6 +175,7 @@ public class LaCaixaApiClient {
                 .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
                 .get(LoanListResponse.class);
     }
+
     public LoanDetailsResponse fetchLoanDetails(String loanId) {
         LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest(loanId);
 
@@ -195,8 +198,7 @@ public class LaCaixaApiClient {
 
     private RequestBuilder createRequest(URL url) {
 
-        return client
-                .request(url)
+        return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

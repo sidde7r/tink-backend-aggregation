@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
@@ -13,11 +17,6 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-import javax.ws.rs.core.MediaType;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
 public class IngApiClient {
 
     private final TinkHttpClient client;
@@ -28,10 +27,12 @@ public class IngApiClient {
         this.client = client;
     }
 
-    public CreateSessionResponse postLoginRestSession(String username, int usernameType, String dob) {
+    public CreateSessionResponse postLoginRestSession(
+            String username, int usernameType, String dob) {
 
         LocalDate birthday = LocalDate.parse(dob, IngUtils.BIRTHDAY_INPUT);
-        CreateSessionRequest request = CreateSessionRequest.create(username, usernameType, birthday);
+        CreateSessionRequest request =
+                CreateSessionRequest.create(username, usernameType, birthday);
 
         return client.request(IngConstants.Url.LOGIN_REST_SESSION)
                 .type(MediaType.APPLICATION_JSON)
@@ -46,16 +47,16 @@ public class IngApiClient {
                 .put(PutRestSessionResponse.class, PutSessionRequest.create(pinPositions));
     }
 
-
     public boolean postLoginAuthResponse(String ticket) {
 
         client.request(IngConstants.Url.LOGIN_AUTH_RESPONSE)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(Form.builder()
-                        .put(IngConstants.Form.TICKET, ticket)
-                        .put(IngConstants.Form.DEVICE, IngConstants.Default.MOBILE_PHONE)
-                        .build().serialize()
-                );
+                .post(
+                        Form.builder()
+                                .put(IngConstants.Form.TICKET, ticket)
+                                .put(IngConstants.Form.DEVICE, IngConstants.Default.MOBILE_PHONE)
+                                .build()
+                                .serialize());
 
         return true;
     }
@@ -70,10 +71,11 @@ public class IngApiClient {
     // Product list
     public ProductsResponse getApiRestProducts() {
         if (cachedProductsResponse == null) {
-            Product[] products = client.request(IngConstants.Url.API_REST_PRODUCTS)
-                    .type(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .get(Product[].class);
+            Product[] products =
+                    client.request(IngConstants.Url.API_REST_PRODUCTS)
+                            .type(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .get(Product[].class);
 
             List<Product> productList = Arrays.asList(products);
 
@@ -86,25 +88,27 @@ public class IngApiClient {
     }
 
     // "Movements" (Transactions)
-    public MovementsResponse getApiRestProductMovements(String productUuid,
-                                                        LocalDate fromDate,
-                                                        LocalDate toDate,
-                                                        int offset) {
+    public MovementsResponse getApiRestProductMovements(
+            String productUuid, LocalDate fromDate, LocalDate toDate, int offset) {
 
-        URL movementsUrl = new URL(IngConstants.Url.API_REST_PRODUCTS_MOVEMENTS)
-                .parameter("product", productUuid);
+        URL movementsUrl =
+                new URL(IngConstants.Url.API_REST_PRODUCTS_MOVEMENTS)
+                        .parameter("product", productUuid);
 
         return client.request(movementsUrl)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam(IngConstants.Query.FROM_DATE, IngUtils.DATE_FORMATTER.format(fromDate))
                 .queryParam(IngConstants.Query.TO_DATE, IngUtils.DATE_FORMATTER.format(toDate))
-                .queryParam(IngConstants.Query.LIMIT, Integer.toString(IngConstants.FetchControl.PAGE_SIZE))
+                .queryParam(
+                        IngConstants.Query.LIMIT,
+                        Integer.toString(IngConstants.FetchControl.PAGE_SIZE))
                 .queryParam(IngConstants.Query.OFFSET, Integer.toString(offset))
                 .get(MovementsResponse.class);
     }
 
-    // This request is performed by the mobile app prior to the delete session request. It's unclear whether this
+    // This request is performed by the mobile app prior to the delete session request. It's unclear
+    // whether this
     // actually serves any purpose.
     public CommunicationsResponse getApiRestCommunicationLogoutRequest() {
         return client.request(IngConstants.Url.API_REST_COMMUNICATION)

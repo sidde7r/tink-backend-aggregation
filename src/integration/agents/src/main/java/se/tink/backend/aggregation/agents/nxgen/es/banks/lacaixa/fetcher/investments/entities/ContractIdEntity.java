@@ -6,8 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ContractIdEntity {
     private String area;
+
     @JsonProperty("numeroContrato")
     private String contractNumber;
+
     private String empresa;
     private String oficina;
     private String longitudModalidad;

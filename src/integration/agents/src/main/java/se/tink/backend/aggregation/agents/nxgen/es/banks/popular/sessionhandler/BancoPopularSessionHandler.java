@@ -14,6 +14,7 @@ public class BancoPopularSessionHandler implements SessionHandler {
 
         this.bankClient = bankClient;
     }
+
     @Override
     public void logout() {
         // no such method in the api

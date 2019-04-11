@@ -30,22 +30,32 @@ public class InitiateSessionRequestEntity {
 
     @JsonIgnore
     public static InitiateSessionRequestEntity build(String username, String password) {
-        InitiateSessionRequestEntity initiateSessionRequestEntity = new InitiateSessionRequestEntity();
+        InitiateSessionRequestEntity initiateSessionRequestEntity =
+                new InitiateSessionRequestEntity();
 
-        initiateSessionRequestEntity.deviceInfo = SabadellConstants.InitiateSessionRequest.DEVICE_INFO;
-        initiateSessionRequestEntity.lastRequestDate = SabadellConstants.InitiateSessionRequest.LAST_REQUEST_DATE;
+        initiateSessionRequestEntity.deviceInfo =
+                SabadellConstants.InitiateSessionRequest.DEVICE_INFO;
+        initiateSessionRequestEntity.lastRequestDate =
+                SabadellConstants.InitiateSessionRequest.LAST_REQUEST_DATE;
         initiateSessionRequestEntity.brand = SabadellConstants.InitiateSessionRequest.BRAND;
-        initiateSessionRequestEntity.geolocationData = SabadellConstants.InitiateSessionRequest.GEO_LOCATION_DATA;
-        initiateSessionRequestEntity.newDevice = SabadellConstants.InitiateSessionRequest.NEW_DEVICE;
-        initiateSessionRequestEntity.requestId = SabadellConstants.InitiateSessionRequest.REQUEST_ID;
+        initiateSessionRequestEntity.geolocationData =
+                SabadellConstants.InitiateSessionRequest.GEO_LOCATION_DATA;
+        initiateSessionRequestEntity.newDevice =
+                SabadellConstants.InitiateSessionRequest.NEW_DEVICE;
+        initiateSessionRequestEntity.requestId =
+                SabadellConstants.InitiateSessionRequest.REQUEST_ID;
         initiateSessionRequestEntity.userName = username;
-        initiateSessionRequestEntity.loginType = SabadellConstants.InitiateSessionRequest.LOGIN_TYPE;
-        initiateSessionRequestEntity.compilationType = SabadellConstants.InitiateSessionRequest.COMPILATION_TYPE;
+        initiateSessionRequestEntity.loginType =
+                SabadellConstants.InitiateSessionRequest.LOGIN_TYPE;
+        initiateSessionRequestEntity.compilationType =
+                SabadellConstants.InitiateSessionRequest.COMPILATION_TYPE;
         initiateSessionRequestEntity.password = password;
         initiateSessionRequestEntity.contract = SabadellConstants.InitiateSessionRequest.CONTRACT;
         initiateSessionRequestEntity.parametersBS = getParametersBS(username, password);
-        initiateSessionRequestEntity.devicePrint = SabadellConstants.InitiateSessionRequest.DEVICE_PRINT;
-        initiateSessionRequestEntity.lastKnownBrand = SabadellConstants.InitiateSessionRequest.LAST_KNOWN_BRAND;
+        initiateSessionRequestEntity.devicePrint =
+                SabadellConstants.InitiateSessionRequest.DEVICE_PRINT;
+        initiateSessionRequestEntity.lastKnownBrand =
+                SabadellConstants.InitiateSessionRequest.LAST_KNOWN_BRAND;
         initiateSessionRequestEntity.csid = UUID.randomUUID().toString();
         initiateSessionRequestEntity.trusteer = SabadellConstants.InitiateSessionRequest.TRUSTEER;
 
@@ -54,17 +64,21 @@ public class InitiateSessionRequestEntity {
 
     @JsonIgnore
     private static List<ParametersBSEntity> getParametersBS(String username, String password) {
-        ParametersBSEntity usernameParam = new ParametersBSEntity()
-                .setKey(SabadellConstants.InitiateSessionRequest.USERNAME_BS_KEY)
-                .setValue(StringEscapeUtils.escapeJson(
-                        SabadellCryptoUtils.getEncryptedParamAsB64String(username))
-                );
+        ParametersBSEntity usernameParam =
+                new ParametersBSEntity()
+                        .setKey(SabadellConstants.InitiateSessionRequest.USERNAME_BS_KEY)
+                        .setValue(
+                                StringEscapeUtils.escapeJson(
+                                        SabadellCryptoUtils.getEncryptedParamAsB64String(
+                                                username)));
 
-        ParametersBSEntity passwordParam = new ParametersBSEntity()
-                .setKey(SabadellConstants.InitiateSessionRequest.PASSWORD_BS_KEY)
-                .setValue(StringEscapeUtils.escapeJson(
-                        SabadellCryptoUtils.getEncryptedParamAsB64String(password))
-                );
+        ParametersBSEntity passwordParam =
+                new ParametersBSEntity()
+                        .setKey(SabadellConstants.InitiateSessionRequest.PASSWORD_BS_KEY)
+                        .setValue(
+                                StringEscapeUtils.escapeJson(
+                                        SabadellCryptoUtils.getEncryptedParamAsB64String(
+                                                password)));
 
         return Arrays.asList(usernameParam, passwordParam);
     }
@@ -161,8 +175,7 @@ public class InitiateSessionRequestEntity {
         return parametersBS;
     }
 
-    public InitiateSessionRequestEntity setParametersBS(
-            List<ParametersBSEntity> parametersBS) {
+    public InitiateSessionRequestEntity setParametersBS(List<ParametersBSEntity> parametersBS) {
         this.parametersBS = parametersBS;
         return this;
     }

@@ -97,5 +97,4 @@ public class LoanDetailsResponse {
     public String getNextPeaymentAmount() {
         return nextPeaymentAmount;
     }
-
 }

@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardTransactionEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -58,9 +58,7 @@ public class CreditCardTransactionsResponse {
 
     @JsonIgnore
     public Collection<CreditCardTransaction> getTinkTransactions() {
-        return Optional.ofNullable(transactionList)
-                .orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(transactionList).orElse(Collections.emptyList()).stream()
                 .map(CreditCardTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

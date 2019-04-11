@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils;
 
-import io.vavr.control.Option;
-import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+
+import io.vavr.control.Option;
+import org.junit.Test;
 
 public class BbvaUtilsTest {
 

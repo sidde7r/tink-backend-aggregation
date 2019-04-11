@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CardTransactionsRequest {
     @JsonProperty("identificadorTarjeta")
     private String cardNumberUnmasked;
+
     @JsonProperty("criteriosBusquedaMovimientosTarjeta")
     private SearchCriteriaEntity searchCriteria;
 
@@ -24,4 +25,3 @@ public class CardTransactionsRequest {
         return new CardTransactionsRequest(cardNumberUnmasked, limit);
     }
 }
-

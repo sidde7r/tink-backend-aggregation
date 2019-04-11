@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionDescriptionEntity {
     @JsonProperty("identificadorConcepto")
     private String identifierConcept;
+
     @JsonProperty("descripcionConcepto")
     private String descriptionConcept;
 

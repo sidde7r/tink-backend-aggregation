@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class CreditCardEntityTest {
 

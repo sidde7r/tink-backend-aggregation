@@ -8,7 +8,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountsWrapperEntity {
     @JsonProperty("masOperaciones")
     private int moreOperations;
+
     private int noccursdatostab;
+
     @JsonProperty("customRr001014")
     private List<AccountEntity> accountList;
 

@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class ImaginBankTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
+public class ImaginBankTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount> {
 
     private final ImaginBankApiClient bankClient;
 
@@ -18,10 +19,12 @@ public class ImaginBankTransactionFetcher implements TransactionPagePaginator<Tr
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
-        String accountReference = account.getFromTemporaryStorage(ImaginBankConstants.TemporaryStorage.ACCOUNT_REFERENCE);
+        String accountReference =
+                account.getFromTemporaryStorage(
+                        ImaginBankConstants.TemporaryStorage.ACCOUNT_REFERENCE);
 
         AccountTransactionResponse response =
-                bankClient.fetchNextAccountTransactions(accountReference,page == 0);
+                bankClient.fetchNextAccountTransactions(accountReference, page == 0);
 
         return response;
     }

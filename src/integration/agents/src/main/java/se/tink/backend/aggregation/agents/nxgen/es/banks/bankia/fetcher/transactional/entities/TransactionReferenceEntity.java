@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionReferenceEntity {
     @JsonProperty("codigoCampo")
     private String fieldCode;
+
     @JsonProperty("codigoPlantilla")
     private String templateCode;
+
     @JsonProperty("descripcion")
     private String description;
+
     @JsonProperty("nombreCorto")
     private String shortName;
+
     @JsonProperty("longitudPlantilla")
     private String templateLength;
 }

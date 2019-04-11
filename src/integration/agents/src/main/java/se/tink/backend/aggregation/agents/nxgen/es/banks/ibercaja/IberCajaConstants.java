@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class IberCajaConstants {
 
@@ -27,17 +27,21 @@ public class IberCajaConstants {
         public static final URL INIT_LOGIN = new URL(BASE + ApiService.LOGIN_INIT_PATH);
         public static final URL LOGIN = new URL(BASE + ApiService.LOGIN);
         public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
-        public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
-        public static final URL FETCH_CREDIT_CARD_ACCOUNT = new URL(BASE + ApiService.CREDIT_CARD_ACCOUNT_PATH);
-        public static final URL FETCH_INVESTMENT_ACCOUNT_TRANSACTION = new URL(
-                BASE + ApiService.INVESTMENT_ACCOUNT_PATH);
-        public static final URL KEEP_ALIVE = new URL(KEEPALIVE + ApiService.CHECK_SAVINGS_ACCOUNT_PATH);
+        public static final URL FETCH_ACCOUNT_TRANSACTION =
+                new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
+        public static final URL FETCH_CREDIT_CARD_ACCOUNT =
+                new URL(BASE + ApiService.CREDIT_CARD_ACCOUNT_PATH);
+        public static final URL FETCH_INVESTMENT_ACCOUNT_TRANSACTION =
+                new URL(BASE + ApiService.INVESTMENT_ACCOUNT_PATH);
+        public static final URL KEEP_ALIVE =
+                new URL(KEEPALIVE + ApiService.CHECK_SAVINGS_ACCOUNT_PATH);
     }
 
     public static class DefaultRequestParams {
 
         public static final boolean CARD = false;
-        public static final String LAST_ACCESS = "2018-10-25T00:00:00+02:00";    // Maybe can be anything?
+        public static final String LAST_ACCESS =
+                "2018-10-25T00:00:00+02:00"; // Maybe can be anything?
         public static final String REQUEST_ORDER = "1";
         public static final String REQUEST_TYPE = "2";
         public static final String PLAYBACK_MODE_REAL = "Real";
@@ -74,14 +78,16 @@ public class IberCajaConstants {
         public static final String USERNAME = "USER";
     }
 
-    public static AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, 0)
-            .put(AccountTypes.CREDIT_CARD, 1)
-            .put(AccountTypes.INVESTMENT, 6)
-            .build();
+    public static AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, 0)
+                    .put(AccountTypes.CREDIT_CARD, 1)
+                    .put(AccountTypes.INVESTMENT, 6)
+                    .build();
 
-    public static AccountTypeMapper CARD_TYPE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CREDIT_CARD, 2)
-            .ignoreKeys(1)  //1 is debit card
-            .build();
+    public static AccountTypeMapper CARD_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CREDIT_CARD, 2)
+                    .ignoreKeys(1) // 1 is debit card
+                    .build();
 }

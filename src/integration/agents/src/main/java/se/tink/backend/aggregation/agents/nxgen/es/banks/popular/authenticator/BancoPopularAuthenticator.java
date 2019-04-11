@@ -17,13 +17,15 @@ public class BancoPopularAuthenticator implements PasswordAuthenticator {
     private final BancoPopularApiClient bankClient;
     private final BancoPopularPersistentStorage persistentStorage;
 
-    public BancoPopularAuthenticator(BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
+    public BancoPopularAuthenticator(
+            BancoPopularApiClient bankClient, BancoPopularPersistentStorage persistentStorage) {
         this.bankClient = bankClient;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         LoginRequest loginRequest = LoginRequest.build(username, password);
 
         LoginResponse response = bankClient.login(loginRequest);
@@ -33,9 +35,9 @@ public class BancoPopularAuthenticator implements PasswordAuthenticator {
 
         for (BancoPopularLoginContract loginContract : loginContracts) {
             contracts.addLoginContract(BancoPopularContract.build(loginContract));
-       }
+        }
 
-       // store for subsequent calls
-       persistentStorage.setContracts(contracts);
+        // store for subsequent calls
+        persistentStorage.setContracts(contracts);
     }
 }

@@ -22,5 +22,4 @@ public class PutRestSessionResponse {
     public String getRememberMeToken() {
         return rememberMeToken;
     }
-
 }

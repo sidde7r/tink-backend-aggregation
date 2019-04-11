@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.BancoPopularAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class BancoPopularTestBase {
 
@@ -18,7 +18,6 @@ public class BancoPopularTestBase {
     protected String user = BancoPopularTestConfig.USERNAME;
     protected String password = BancoPopularTestConfig.PASSWORD;
 
-
     protected void authenticate() throws Exception {
         authenticator.authenticate(user, password);
     }
@@ -26,8 +25,13 @@ public class BancoPopularTestBase {
     protected void setup() {
         credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
-                context.getLogOutputStream(), null, null);
+        TinkHttpClient client =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        context.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        null,
+                        null);
         client.setDebugOutput(true);
 
         persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());

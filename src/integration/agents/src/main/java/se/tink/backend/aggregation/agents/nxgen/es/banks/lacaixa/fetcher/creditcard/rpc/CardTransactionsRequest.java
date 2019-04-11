@@ -9,12 +9,14 @@ public class CardTransactionsRequest {
 
     @JsonProperty("filtroLista")
     private FilterEntity filter;
+
     private String numItemsPag = "100";
+
     @JsonProperty("inicio")
     private boolean start;
 
     public CardTransactionsRequest(String cardId, boolean start) {
         filter = new FilterEntity(cardId);
-        this.start =  start;
+        this.start = start;
     }
 }

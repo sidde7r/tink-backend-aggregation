@@ -8,5 +8,4 @@ public class LastMovementDataEntity {
     private String lastMov;
     private String impLastMov;
     private String monedaLastMov;
-
 }

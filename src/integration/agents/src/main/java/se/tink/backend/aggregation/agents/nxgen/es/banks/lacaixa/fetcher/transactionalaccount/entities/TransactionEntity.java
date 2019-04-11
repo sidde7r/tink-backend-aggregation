@@ -13,8 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionEntity {
 
-    @JsonUnwrapped
-    private BalanceEntity amount;
+    @JsonUnwrapped private BalanceEntity amount;
 
     // These are used to get transaction details. I'm not sure how to translate them.
     private String indComunicados;
@@ -27,7 +26,7 @@ public class TransactionEntity {
     private LocalDate date;
 
     @JsonProperty("fechaValor")
-    private void setDate(Map<String, String> node){
+    private void setDate(Map<String, String> node) {
 
         String dateString = node.get("valor");
         String dateFormat = node.get("formato");
@@ -55,7 +54,7 @@ public class TransactionEntity {
         return refValConsultaCom;
     }
 
-    public Transaction toTinkTransaction(){
+    public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(amount)
                 .setDescription(description)

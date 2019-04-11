@@ -12,9 +12,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class EngagementResponse {
     private String prodSaldoCeroCaixaBank;
     private boolean hayAplicativoCerrado;
+
     @JsonProperty("listaContratosAhorroInversionCaixaBank")
     private SavingsInvestmentContractEntity savingsInvestmentContract;
-    //private FinancingEntity listaContratosFinanciacionCaixaBank;
+    // private FinancingEntity listaContratosFinanciacionCaixaBank;
 
     @JsonIgnore
     public Map<String, String> getProductCodeByContractNumber() {

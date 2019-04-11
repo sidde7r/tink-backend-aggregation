@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
@@ -13,10 +16,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Uniq
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 

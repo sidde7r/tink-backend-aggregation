@@ -8,14 +8,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ContractEntity {
     @JsonProperty("expediente")
     private ContractIdEntity contractId;
+
     private String codigoContrato;
     private String descripcionContrato;
+
     @JsonProperty("contratoLOFormateado")
     private String contractNumberFormatted;
+
     @JsonProperty("codigoProducto")
     private String productCode;
+
     @JsonProperty("aliasContrato")
     private String contractAlias;
+
     private String codigoDivisa;
     private String literalDivisa;
     private String importeEuros;
