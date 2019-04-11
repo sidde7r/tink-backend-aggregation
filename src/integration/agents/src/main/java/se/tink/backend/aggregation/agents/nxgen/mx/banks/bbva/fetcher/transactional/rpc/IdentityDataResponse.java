@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CustomerInfoResponse {
+public class IdentityDataResponse {
     private List<CustomerDataItemEntity> data;
 
     public String getCustomerName() {

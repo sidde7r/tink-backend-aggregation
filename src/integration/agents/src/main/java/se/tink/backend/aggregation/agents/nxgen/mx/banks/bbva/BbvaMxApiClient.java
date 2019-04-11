@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.rpc
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.rpc.CreditTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -172,7 +172,7 @@ public class BbvaMxApiClient {
     }
 
     // AIS
-    public CustomerInfoResponse getCustomerInfo() {
+    public IdentityDataResponse getCustomerInfo() {
         String authenticationData =
                 String.format(
                         BbvaMxConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
@@ -186,7 +186,7 @@ public class BbvaMxApiClient {
                         .get(HttpResponse.class);
         String tsec = response.getHeaders().getFirst(BbvaMxConstants.HEADERS.TSEC);
         this.storage.put(BbvaMxConstants.STORAGE.TSEC, tsec);
-        return response.getBody(CustomerInfoResponse.class);
+        return response.getBody(IdentityDataResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {

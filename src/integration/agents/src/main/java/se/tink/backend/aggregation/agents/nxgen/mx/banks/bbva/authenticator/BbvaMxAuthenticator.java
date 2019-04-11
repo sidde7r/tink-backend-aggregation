@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.TokenAuthCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionResponse;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -66,7 +66,7 @@ public class BbvaMxAuthenticator implements Authenticator {
     }
 
     private void fetchClientInfo() {
-        CustomerInfoResponse customerInfo = client.getCustomerInfo();
+        IdentityDataResponse customerInfo = client.getCustomerInfo();
         storage.put(BbvaMxConstants.STORAGE.HOLDERNAME, customerInfo.getCustomerName());
     }
 
