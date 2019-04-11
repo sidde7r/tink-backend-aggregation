@@ -9,7 +9,10 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class RefreshExecutorUtils {
+public final class RefreshExecutorUtils {
+    private RefreshExecutorUtils() {
+        throw new AssertionError();
+    }
 
     private static final Map<RefreshableItem, Class> REFRESHABLEITEM_EXECUTOR_MAP =
             ImmutableMap.<RefreshableItem, Class>builder()
@@ -29,6 +32,7 @@ public class RefreshExecutorUtils {
                     .put(
                             RefreshableItem.CREDITCARD_TRANSACTIONS,
                             RefreshCreditCardAccountsExecutor.class)
+                    .put(RefreshableItem.IDENTITY, RefreshCustomerInfoExecutor.class)
                     .put(RefreshableItem.LOAN_ACCOUNTS, RefreshLoanAccountsExecutor.class)
                     .put(RefreshableItem.LOAN_TRANSACTIONS, RefreshLoanAccountsExecutor.class)
                     .put(
@@ -39,7 +43,7 @@ public class RefreshExecutorUtils {
                             RefreshInvestmentAccountsExecutor.class)
                     .build();
 
-    public static Class getRefreshExecutor(RefreshableItem item) {
+    private static Class getRefreshExecutor(RefreshableItem item) {
         return REFRESHABLEITEM_EXECUTOR_MAP.get(item);
     }
 
