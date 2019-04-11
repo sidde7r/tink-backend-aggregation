@@ -14,7 +14,7 @@ public final class AisData {
     public AisData(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
-            IdentityData identityData) {
+            final IdentityData identityData) {
         this.accounts = accounts;
         this.transactions = transactions;
         this.identityData = identityData;
