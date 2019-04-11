@@ -59,7 +59,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     private final Map<String, List<TransferDestinationPattern>>
             transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
-    private IdentityData customerInfo = null;
+    private IdentityData identityData = null;
 
     private final User user;
     private final Credentials credential;
@@ -309,12 +309,12 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
 
     @Override
     public void updateCustomerInfo(IdentityData customerInfo) {
-        this.customerInfo = customerInfo;
+        this.identityData = customerInfo;
     }
 
     @Override
     public Optional<IdentityData> getCustomerInfo() {
-        return Optional.ofNullable(customerInfo);
+        return Optional.ofNullable(identityData);
     }
 
     @Override
@@ -365,7 +365,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                 accountsByBankId.values(),
                 transactionsByAccountBankId.values().stream()
                         .collect(ArrayList::new, List::addAll, List::addAll),
-                customerInfo);
+            identityData);
     }
 
     private void printLoanDetails(List<Loan> loans) {
@@ -589,9 +589,9 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     public void printCustomerInfo() {
-        if (customerInfo != null) {
+        if (identityData != null) {
             List<Map<String, String>> table =
-                    customerInfo.toMap().entrySet().stream()
+                    identityData.toMap().entrySet().stream()
                             .map(
                                     entry -> {
                                         Map<String, String> row = new LinkedHashMap<>();
