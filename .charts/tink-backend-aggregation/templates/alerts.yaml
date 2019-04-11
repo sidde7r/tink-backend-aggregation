@@ -23,30 +23,6 @@ spec:
         '<{ $labels.at }>'.
       summary: Too many errors logged by <{ $labels.job }>
 
-### No running services ###
-  - alert: NoAggregationServiceRunning
-    expr: sum(up{job="tink-aggregation"}) == 0
-    for: 20m
-    labels:
-      severity: urgent
-      who: aggregation
-      priority: P2
-    annotations:
-      description: No instances of aggregation service has been running for the past 20 minutes.
-      summary: Application Aggregation is not running
-
-### Heap dump ###
-  - alert: UnhandledAggregationHeapDumpAwaiting
-    expr: tink_heap_dumps{app="tink-aggregation"} > 0
-    for: 1m
-    labels:
-      severity: ping
-      who: '#aggregation-oncall'
-    annotations:
-      description: Aggregation JVM process ran out of memory and dumped its heap
-        to disk. Please download heap (and remove the dump) to see what went wrong.
-      summary: Aggregation JVM process ran out of memory
-
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
     expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
@@ -77,18 +53,5 @@ spec:
       who: '#aggregation-oncall'
     annotations:
       description: No messages has been consumed from the Automatic Refresh Queue for the past 15 minutes.
-
-  - alert: LowRedundancyOfAggregationTinkService
-    expr: |
-      sum(up{job="tink-aggregation"}) BY (job) < 2
-    for: 20m
-    labels:
-      severity: urgent
-      who: aggregation
-      priority: P2
-    annotations:
-      description: Application Aggregation has been running with reduced availability
-        (< 2 instances) for the past 20 minutes.
-      summary: Application Aggregation is running with reduced availability
   {{- end }}
 {{ end }}
