@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.DEVICE_ID;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.ING_ID;
@@ -16,6 +10,13 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SESSION_KEY_AUTH_IN_HEX;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SESSION_KEY_IN_HEX;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Storage.SYSTEM_PIN;
+
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class IngTestConfig {
     private static final String USERNAME = "";

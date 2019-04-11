@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants.Storage.DEVICE_TOKEN;
+
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class TestConfig {
 

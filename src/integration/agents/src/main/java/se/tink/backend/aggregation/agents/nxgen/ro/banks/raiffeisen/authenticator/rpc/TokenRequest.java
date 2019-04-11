@@ -5,12 +5,16 @@ import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.authenticato
 public class TokenRequest {
     private TokenEntity tokenEntity;
 
-    public TokenRequest(String grantType, String clientId, String clientSecret, String code, String redirectUri) {
+    public TokenRequest(
+            String grantType,
+            String clientId,
+            String clientSecret,
+            String code,
+            String redirectUri) {
         this.tokenEntity = new TokenEntity(grantType, clientId, clientSecret, code, redirectUri);
     }
 
     public String toData() {
         return tokenEntity.toForm();
     }
-
 }

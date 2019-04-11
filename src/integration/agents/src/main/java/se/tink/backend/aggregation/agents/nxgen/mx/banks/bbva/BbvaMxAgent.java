@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-
 public class BbvaMxAgent extends NextGenerationAgent {
 
     private final BbvaMxApiClient bbvaApiClient;

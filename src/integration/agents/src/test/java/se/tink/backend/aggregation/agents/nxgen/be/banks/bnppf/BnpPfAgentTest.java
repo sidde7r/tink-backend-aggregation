@@ -12,13 +12,12 @@ public class BnpPfAgentTest {
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-bnppf-jwt")
-            .addCredentialField(Field.Key.ACCESS_TOKEN, ACCESS_TOKEN)
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+                    .addCredentialField(Field.Key.ACCESS_TOKEN, ACCESS_TOKEN)
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
 }

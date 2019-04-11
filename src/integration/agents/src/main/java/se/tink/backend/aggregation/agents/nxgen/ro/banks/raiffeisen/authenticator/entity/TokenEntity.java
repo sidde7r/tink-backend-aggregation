@@ -10,7 +10,12 @@ public class TokenEntity {
     private String code;
     private String redirectUri;
 
-    public TokenEntity(String grantType, String clientId, String clientSecret, String code, String redirectUri) {
+    public TokenEntity(
+            String grantType,
+            String clientId,
+            String clientSecret,
+            String code,
+            String redirectUri) {
         this.grantType = grantType;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -25,6 +30,7 @@ public class TokenEntity {
                 .put(RaiffeisenConstants.FORM.CLIENT_SECRET, clientSecret)
                 .put(RaiffeisenConstants.FORM.CODE, code)
                 .put(RaiffeisenConstants.FORM.REDIRECT_URI, redirectUri)
-                .build().serialize();
+                .build()
+                .serialize();
     }
 }

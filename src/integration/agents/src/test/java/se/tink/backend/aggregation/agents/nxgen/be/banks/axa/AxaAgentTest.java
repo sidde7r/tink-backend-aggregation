@@ -53,6 +53,7 @@ public class AxaAgentTest {
     public void testLoginAndRefreshWithFrenchLocale() throws Exception {
         testBuilder.setUserLocale("fr_BE").build().testRefresh();
     }
+
     @Test
     public void testLoginAndRefreshWithEnglishLocale() throws Exception {
         testBuilder.setUserLocale("en_GB").build().testRefresh();

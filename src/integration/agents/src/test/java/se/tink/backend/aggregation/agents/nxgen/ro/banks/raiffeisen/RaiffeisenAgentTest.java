@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-
 public class RaiffeisenAgentTest {
 
     @Test
@@ -14,6 +13,5 @@ public class RaiffeisenAgentTest {
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
-
     }
 }

@@ -5,10 +5,11 @@ import java.util.regex.Pattern;
 
 public class RaiffeisenConstants {
 
-    //TODO: Move to development.yaml
+    // TODO: Move to development.yaml
     // These are only for sandbox!
     public static final String CLIENT_ID_VALUE = "52c20546-32c0-42b1-afa2-18770029ec80";
-    public static final String CLIENT_SECRET_VALUE = "P5cM0oP1sM5iV8uP3fF6dV3bU8uI0fD5kG2dO1sB1eF2pJ4pS4";
+    public static final String CLIENT_SECRET_VALUE =
+            "P5cM0oP1sM5iV8uP3fF6dV3bU8uI0fD5kG2dO1sB1eF2pJ4pS4";
 
     // Redirect values:
     // for prod "https://api.tink.se/api/v1/credentials/third-party/callback";
@@ -16,7 +17,8 @@ public class RaiffeisenConstants {
     // for staging: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
 
     public static final class URL {
-        public static final String BASE_AUTH = "https://api-test.raiffeisen.ro/psd2-sandbox-oauth2-api";
+        public static final String BASE_AUTH =
+                "https://api-test.raiffeisen.ro/psd2-sandbox-oauth2-api";
         public static final String BASE_API = "https://api-test.raiffeisen.ro/";
         public static final String OAUTH = "/oauth2/authorize";
         public static final String TOKEN = "/oauth2/token";
@@ -79,7 +81,7 @@ public class RaiffeisenConstants {
 
     public static final class REGEX {
         public static final Pattern PAGE = Pattern.compile("page=(.*)");
-        public static final Pattern PATTERN_STRUCTURED_INFO = Pattern.compile(".*\\\"MerchantName\\\" ?: ?\\\"(.*)\\\".*");
+        public static final Pattern PATTERN_STRUCTURED_INFO =
+                Pattern.compile(".*\\\"MerchantName\\\" ?: ?\\\"(.*)\\\".*");
     }
-
 }

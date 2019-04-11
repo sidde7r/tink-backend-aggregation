@@ -12,8 +12,7 @@ public class DetailEntity {
     private List<IndicatorsItemEntity> indicators;
 
     public Amount getCheckingBalance() {
-        return specificAmounts
-                .stream()
+        return specificAmounts.stream()
                 .filter(x -> x.getId().equalsIgnoreCase(BbvaMxConstants.VALUES.CURRENT_BALANCE))
                 .map(x -> x.getAmounts().get(0).getAmount())
                 .findFirst()

@@ -12,8 +12,7 @@ public class LoanDataEntity {
     private List<ContractsItem> contracts;
 
     public Collection<LoanAccount> getLoanAccounts() {
-        return contracts
-                .stream()
+        return contracts.stream()
                 .map(x -> x.toLoanAccount())
                 .filter(Optional::isPresent)
                 .map(Optional::get)

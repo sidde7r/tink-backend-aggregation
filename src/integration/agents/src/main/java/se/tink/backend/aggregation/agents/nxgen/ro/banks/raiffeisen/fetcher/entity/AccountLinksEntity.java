@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountLinksEntity {
     @JsonProperty("balances")
     private String balanceUrl;
+
     @JsonProperty("transactions")
     private String transactionUrl;
 

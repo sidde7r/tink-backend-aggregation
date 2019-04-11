@@ -15,6 +15,5 @@ public class ICSAgentTest {
                 .expectLoggedIn(false)
                 .build()
                 .testRefresh();
-
     }
 }
