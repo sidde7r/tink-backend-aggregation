@@ -8,10 +8,15 @@ import io.grpc.Server;
 import io.grpc.ServerInterceptor;
 import io.grpc.ServerInterceptors;
 import io.grpc.netty.NettyServerBuilder;
+import java.io.*;
+import java.net.SocketAddress;
+import java.security.PrivateKey;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
@@ -23,12 +28,6 @@ import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 
-import java.io.*;
-import java.net.SocketAddress;
-import java.security.PrivateKey;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 public class GrpcServer {
     private Server server;
     private NettyServerBuilder serverBuilder;
@@ -39,18 +38,16 @@ public class GrpcServer {
             @Named("grpcServices") Set<BindableService> services,
             @Named("grpcInterceptors") Set<ServerInterceptor> interceptors,
             @Named("grpcSocket") SocketAddress listenAddress) {
-        serverBuilder = NettyServerBuilder
-                .forAddress(listenAddress);
+        serverBuilder = NettyServerBuilder.forAddress(listenAddress);
 
         serverBuilder.executor(createExecutor());
-        services.stream().map(s -> ServerInterceptors.intercept(s, Lists.newArrayList(interceptors)))
+        services.stream()
+                .map(s -> ServerInterceptors.intercept(s, Lists.newArrayList(interceptors)))
                 .forEach(serverBuilder::addService);
     }
 
     public void useTransportSecurity(File certChain, File privateKey) throws IOException {
-        serverBuilder.useTransportSecurity(
-                new FileInputStream(certChain),
-                ensurePkcs8(privateKey));
+        serverBuilder.useTransportSecurity(new FileInputStream(certChain), ensurePkcs8(privateKey));
     }
 
     /**
@@ -69,28 +66,29 @@ public class GrpcServer {
         if (privateKeyObject.getType().endsWith("RSA PRIVATE KEY")) {
             // PKCS#1 key
             RSAPrivateKey rsa = RSAPrivateKey.getInstance(privateKeyObject.getContent());
-            privateKeyParameter = new RSAPrivateCrtKeyParameters(
-                    rsa.getModulus(),
-                    rsa.getPublicExponent(),
-                    rsa.getPrivateExponent(),
-                    rsa.getPrime1(),
-                    rsa.getPrime2(),
-                    rsa.getExponent1(),
-                    rsa.getExponent2(),
-                    rsa.getCoefficient()
-            );
+            privateKeyParameter =
+                    new RSAPrivateCrtKeyParameters(
+                            rsa.getModulus(),
+                            rsa.getPublicExponent(),
+                            rsa.getPrivateExponent(),
+                            rsa.getPrime1(),
+                            rsa.getPrime2(),
+                            rsa.getExponent1(),
+                            rsa.getExponent2(),
+                            rsa.getCoefficient());
         } else if (privateKeyObject.getType().endsWith("PRIVATE KEY")) {
             // PKCS#8 key
-            privateKeyParameter = (RSAPrivateCrtKeyParameters) PrivateKeyFactory.createKey(
-                    privateKeyObject.getContent()
-            );
+            privateKeyParameter =
+                    (RSAPrivateCrtKeyParameters)
+                            PrivateKeyFactory.createKey(privateKeyObject.getContent());
         } else {
             throw new RuntimeException("Unsupported key type: " + privateKeyObject.getType());
         }
 
-        PrivateKey privateKey = new JcaPEMKeyConverter().getPrivateKey(
-                PrivateKeyInfoFactory.createPrivateKeyInfo(privateKeyParameter)
-        );
+        PrivateKey privateKey =
+                new JcaPEMKeyConverter()
+                        .getPrivateKey(
+                                PrivateKeyInfoFactory.createPrivateKeyInfo(privateKeyParameter));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -108,16 +106,18 @@ public class GrpcServer {
     }
 
     public void stop(final CountDownLatch shutdownLatch, int duration, TimeUnit unit) {
-        Runnable shutdownThread = () -> {
-            try {
-                this.server.shutdown();
-                this.server.awaitTermination(duration, unit);
-            } catch (InterruptedException e) {
-                logger.warn("gRPC server was not able to terminate within timeout and was not shutdown gracefully");
-            } finally {
-                shutdownLatch.countDown();
-            }
-        };
+        Runnable shutdownThread =
+                () -> {
+                    try {
+                        this.server.shutdown();
+                        this.server.awaitTermination(duration, unit);
+                    } catch (InterruptedException e) {
+                        logger.warn(
+                                "gRPC server was not able to terminate within timeout and was not shutdown gracefully");
+                    } finally {
+                        shutdownLatch.countDown();
+                    }
+                };
 
         shutdownThread.run();
     }
