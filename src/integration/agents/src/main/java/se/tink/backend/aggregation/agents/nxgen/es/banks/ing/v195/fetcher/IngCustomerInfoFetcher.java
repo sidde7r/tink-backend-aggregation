@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.CustomerInfoFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
-public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
+public class IngCustomerInfoFetcher implements IdentityDataFetcher {
     private IngApiClient ingApiClient;
 
     public IngCustomerInfoFetcher(IngApiClient ingApiClient) {

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.CustomerInfoFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -160,7 +160,7 @@ public class IngAgent extends NextGenerationAgent implements RefreshIdentityData
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final CustomerInfoFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
+        final IdentityDataFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
         return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
     }
 }

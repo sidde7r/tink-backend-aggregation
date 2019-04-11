@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.CustomerInfoFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -117,7 +117,7 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshIdentity
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final CustomerInfoFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
+        final IdentityDataFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
         return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
     }
 }
