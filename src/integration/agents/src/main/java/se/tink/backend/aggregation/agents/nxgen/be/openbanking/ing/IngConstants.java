@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 public final class IngConstants {
+  
+    public static final String INTEGRATION_NAME = "ing";
 
     private IngConstants() {
         throw new AssertionError();
@@ -79,14 +81,15 @@ public final class IngConstants {
         public static final String HTTP_METHOD_GET = "get";
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "ing";
-        public static final String CLIENT_NAME = "tink";
-    }
-
     public static class BalanceTypes {
         public static final String EXPECTED = "expected";
         public static final String INTERIM_BOOKED = "interimBooked";
         public static final String CLOSING_BOOKED = "closingBooked";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }

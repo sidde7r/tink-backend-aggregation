@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 public abstract class CrosskeyBaseConstants {
 
+    public static final String INTEGRATION_NAME = "crosskey";
+
     public static class Urls {
         public static final String TOKEN = "/oidc/v1.0/token";
         public static final String OAUTH = "/oidc/auth";
@@ -17,19 +19,8 @@ public abstract class CrosskeyBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_AUTH_URL = "BASE_AUTH_URL";
-        public static final String BASE_API_URL = "BASE_API_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String TOKEN = "TOKEN";
-        public static final String KEY_STORE_PATH = "KEY_STORE_PATH";
-        public static final String KEY_STORE_PWD = "KEY_STORE_PWD";
-        public static final String KEY_PATH = "KEY_PATH";
-        public static final String CERTIFICATE_PATH = "CERTIFICATE_PATH";
-        public static final String OPENBANKING_INTENT_ID = "OPENBANKING_INTENT_ID";
         public static final String CONSENT = "CONSENT";
-        public static final String X_FAPI_FINANCIAL_ID = "X_FAPI_FINANCIAL_ID";
     }
 
     public static class QueryKeys {
@@ -63,16 +54,15 @@ public abstract class CrosskeyBaseConstants {
 
     public static class HeaderKeys {
         public static final String X_API_KEY = "X-API-Key";
-        public static final String AUTHORIZATION = "Authorization";
         public static final String X_FAPI_FINANCIAL_ID = "x-fapi-financial-id";
     }
 
-    public static class Exceptions {
-        public static final String MISSING_CONFIGURATION_LOG = " {} - Missing configuration: {}";
-        public static final String MISSING_CONFIGURATION = "Configuration missing.";
-        public static final String INVALID_CONFIGURATION = "Configuration is invalid.";
-        public static final String MISSING_TOKEN = "Cannot find token!";
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_BALANCE = "No balance found";
+        public static final String MISSING_TOKEN = "Cannot find token!";
         public static final String MISSING_CONSENT = "Consent has to be acquired first";
     }
 

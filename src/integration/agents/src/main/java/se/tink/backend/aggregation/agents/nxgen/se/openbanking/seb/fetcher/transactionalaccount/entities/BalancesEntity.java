@@ -7,21 +7,21 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BalancesEntity {
-  @JsonIgnore public static Amount Default = Amount.inSEK(0);
+    @JsonIgnore public static Amount Default = Amount.inSEK(0);
 
-  private String balanceType;
+    private String balanceType;
 
-  private String creditLimitIncluded;
+    private String creditLimitIncluded;
 
-  private BalanceAmountEntity balanceAmount;
+    private BalanceAmountEntity balanceAmount;
 
-  public boolean isAvailableBalance() {
-    return balanceType.equalsIgnoreCase(SebConstants.Accounts.AVAILABLE_BALANCE);
-  }
+    public boolean isAvailableBalance() {
+        return balanceType.equalsIgnoreCase(SebConstants.Accounts.AVAILABLE_BALANCE);
+    }
 
-  public Amount toAmount() {
-    return balanceAmount != null
-        ? new Amount(balanceAmount.getCurrency(), balanceAmount.getAmount())
-        : BalancesEntity.Default;
-  }
+    public Amount toAmount() {
+        return balanceAmount != null
+                ? new Amount(balanceAmount.getCurrency(), balanceAmount.getAmount())
+                : BalancesEntity.Default;
+    }
 }

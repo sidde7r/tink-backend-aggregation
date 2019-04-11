@@ -8,20 +8,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class SEBSessionHandler implements SessionHandler {
+public final class SebSessionHandler implements SessionHandler {
+
     private final SebApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public SEBSessionHandler(SebApiClient apiClient, SessionStorage sessionStorage) {
+    public SebSessionHandler(SebApiClient apiClient, SessionStorage sessionStorage) {
 
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void logout() {
-
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {

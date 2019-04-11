@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 public abstract class SebConstants {
 
+    public static final String INTEGRATION_NAME = "seb";
+
     public static class Urls {
         private static final String BASE_AUTH = "/authentication/v2";
-        private static final String BASE_AIS = "/ais/v3";
-
         public static final String OAUTH = BASE_AUTH + "/oauth2/authorize";
         public static final String TOKEN = BASE_AUTH + "/oauth2/token";
+        private static final String BASE_AIS = "/ais/v3";
         public static final String ACCOUNTS = BASE_AIS + "/accounts";
         public static final String TRANSACTIONS = BASE_AIS + "/accounts/{accountId}/transactions";
     }
@@ -61,8 +62,9 @@ public abstract class SebConstants {
         public static final int START_PAGE = 1;
     }
 
-    public static class Market {
-        public static final String INTEGRATION_NAME = "seb";
-        public static final String CLIENT_NAME = "tink";
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }

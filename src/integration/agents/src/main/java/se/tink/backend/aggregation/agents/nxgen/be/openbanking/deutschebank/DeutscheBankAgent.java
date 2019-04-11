@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
@@ -29,36 +30,30 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class DeutscheBankAgent extends NextGenerationAgent {
 
+    private final String clientName;
     private final DeutscheBankApiClient apiClient;
 
     public DeutscheBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new DeutscheBankApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new DeutscheBankApiClient(client, sessionStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final DeutscheBankConfiguration deutscheBankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                DeutscheBankConstants.Market.INTEGRATION_NAME,
-                                DeutscheBankConstants.Market.CLIENT_NAME,
-                                DeutscheBankConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "DeutscheBank configuration missing."));
+        apiClient.setConfiguration(getClientConfiguration());
+    }
 
-        persistentStorage.put(StorageKeys.BASE_URL, deutscheBankConfiguration.getBaseUrl());
-        persistentStorage.put(StorageKeys.CLIENT_ID, deutscheBankConfiguration.getClientId());
-        persistentStorage.put(
-                StorageKeys.CLIENT_SECRET, deutscheBankConfiguration.getClientSecret());
-        persistentStorage.put(StorageKeys.REDIRECT_URI, deutscheBankConfiguration.getRedirectUri());
+    private DeutscheBankConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        Market.INTEGRATION_NAME, clientName, DeutscheBankConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -66,10 +61,11 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final DeutscheBankAuthenticator authenticator = new DeutscheBankAuthenticator(apiClient);
         final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new DeutscheBankAuthenticator(apiClient));
         return new AutoAuthenticationController(
                 request,
                 context,

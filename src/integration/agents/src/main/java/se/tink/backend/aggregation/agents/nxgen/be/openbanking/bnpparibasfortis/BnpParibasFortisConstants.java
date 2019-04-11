@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BnpParibasFortisConstants {
 
+    public static final String INTEGRATION_NAME = "bnpparibasfortis";
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CACC")
@@ -19,14 +21,7 @@ public abstract class BnpParibasFortisConstants {
     }
 
     public static class StorageKeys {
-        public static final String AUTH_BASE_URL = "AUTH_BASE_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String ORGANIZATION_ID = "ORGANIZATION_ID";
-        public static final String OPENBANK_STET_VERSION = "OPENBANK_STET_VERSION";
         public static final String OAUTH_TOKEN = "OAUTH_TOKEN";
-        public static final String API_BASE_URL = "API_BASE_URL";
         public static final String ACCOUNT_LINKS = "ACCOUNT_LINKS";
     }
 
@@ -41,11 +36,6 @@ public abstract class BnpParibasFortisConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "aisp";
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "bnpparibasfortis";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public static class HeaderKeys {
@@ -67,5 +57,11 @@ public abstract class BnpParibasFortisConstants {
 
     public static class Transactions {
         public static final String PENDING_STATUS = "PDNG";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 }
