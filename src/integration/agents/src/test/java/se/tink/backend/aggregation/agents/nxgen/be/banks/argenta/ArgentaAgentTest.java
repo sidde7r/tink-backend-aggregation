@@ -16,7 +16,8 @@ public class ArgentaAgentTest {
                     .saveCredentialsAfter(true);
 
     // You will need card/ Argenta digipass and the service for supplementary information
-    // Argenta allows a maximum of 10 devices, please remove not used devices by web interface after testing
+    // Argenta allows a maximum of 10 devices, please remove not used devices by web interface after
+    // testing
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();

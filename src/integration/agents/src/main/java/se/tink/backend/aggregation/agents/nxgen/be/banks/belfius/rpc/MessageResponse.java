@@ -36,9 +36,8 @@ public class MessageResponse extends ResponseEntity {
                 response.filter(MessageResponse.class).findFirst().orElse(null);
         if (erroResponse != null) {
             if (erroResponse.isWrongCredentialsMessage() // Handled in LoginResponse::validate
-                    || erroResponse
-                            .isMobileBankingDisabled()) { // Handled in
-                                                          // PrepareLoginResponse::validate
+                    || erroResponse.isMobileBankingDisabled()) { // Handled in
+                // PrepareLoginResponse::validate
                 return;
             }
             throw new IllegalStateException(erroResponse.getMessageDetail());

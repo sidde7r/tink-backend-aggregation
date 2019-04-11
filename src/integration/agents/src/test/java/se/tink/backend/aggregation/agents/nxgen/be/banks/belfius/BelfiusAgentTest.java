@@ -19,7 +19,7 @@ public class BelfiusAgentTest {
 
     @Before
     public void before() {
-       helper.before();
+        helper.before();
     }
 
     @AfterClass
@@ -29,9 +29,8 @@ public class BelfiusAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-       buildWithCredentials().testRefresh();
+        buildWithCredentials().testRefresh();
     }
-
 
     private AgentIntegrationTest buildWithCredentials() {
         return builder.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))

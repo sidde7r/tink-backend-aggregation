@@ -5,23 +5,26 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FortisTestData {
 
-    static final String BULK_ERROR_MESSAGE = "{\n" +
-            "    \"value\": null,\n" +
-            "    \"businessMessageBulk\": {\n" +
-            "        \"messages\": [{\n" +
-            "            \"ind\": \"E\",\n" +
-            "            \"code\": \"PEW0026\",\n" +
-            "            \"text\": \"\"\n" +
-            "        }],\n" +
-            "        \"pewCode\": \"PEW0501\",\n" +
-            "        \"globalIndicator\": \"E\",\n" +
-            "        \"text\": \"\"\n" +
-            "    }\n" +
-            "}";
+    static final String BULK_ERROR_MESSAGE =
+            "{\n"
+                    + "    \"value\": null,\n"
+                    + "    \"businessMessageBulk\": {\n"
+                    + "        \"messages\": [{\n"
+                    + "            \"ind\": \"E\",\n"
+                    + "            \"code\": \"PEW0026\",\n"
+                    + "            \"text\": \"\"\n"
+                    + "        }],\n"
+                    + "        \"pewCode\": \"PEW0501\",\n"
+                    + "        \"globalIndicator\": \"E\",\n"
+                    + "        \"text\": \"\"\n"
+                    + "    }\n"
+                    + "}";
 
-    static final String TRANSACTIONS_EMPTY_RESPONSE = "{\"value\":{\"numberPending\":0,\"completeListFlag\":true,\"movements\":[]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
+    static final String TRANSACTIONS_EMPTY_RESPONSE =
+            "{\"value\":{\"numberPending\":0,\"completeListFlag\":true,\"movements\":[]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
 
-    static final TransactionsResponse TRANSACTIONS_RESPONSE = SerializationUtils.deserializeFromString(
+    static final TransactionsResponse TRANSACTIONS_RESPONSE =
+            SerializationUtils.deserializeFromString(
                     "{\n"
                             + "\t\"value\": {\n"
                             + "\t\t\"numberPending\": 0,\n"
@@ -217,7 +220,9 @@ public class FortisTestData {
                             + "}",
                     TransactionsResponse.class);
 
-    static final String UPCOMING_TRANSACTIONS = "{\"value\":{\"numberUpcoming\":1,\"completeListFlag\":true,\"transfer\":[{\"transferId\":\"172875266\",\"transferType\":\"Standing Order\",\"beneficiary\":{\"name\":\"Firstname Lastname\",\"accountNumber\":\"BEXXXXXXXXXX\"},\"amount\":{\"amount\":\"50,00\",\"currency\":\"EUR\"},\"period\":\"LATER\",\"executionDate\":\"20190101\",\"originatingAccount\":\"BEYYYYYYYYYYY\",\"communication\":{\"type\":\"FREE_TEXT\",\"message\":\"KeyPlan\"},\"transferLastUpdate\":null,\"amountType\":\"F\"}]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
+    static final String UPCOMING_TRANSACTIONS =
+            "{\"value\":{\"numberUpcoming\":1,\"completeListFlag\":true,\"transfer\":[{\"transferId\":\"172875266\",\"transferType\":\"Standing Order\",\"beneficiary\":{\"name\":\"Firstname Lastname\",\"accountNumber\":\"BEXXXXXXXXXX\"},\"amount\":{\"amount\":\"50,00\",\"currency\":\"EUR\"},\"period\":\"LATER\",\"executionDate\":\"20190101\",\"originatingAccount\":\"BEYYYYYYYYYYY\",\"communication\":{\"type\":\"FREE_TEXT\",\"message\":\"KeyPlan\"},\"transferLastUpdate\":null,\"amountType\":\"F\"}]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
 
-    static final String UPCOMING_TRANSACTIONS_EMPTY = "{\"value\":{\"numberUpcoming\":0,\"completeListFlag\":false,\"transfer\":[]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
+    static final String UPCOMING_TRANSACTIONS_EMPTY =
+            "{\"value\":{\"numberUpcoming\":0,\"completeListFlag\":false,\"transfer\":[]},\"businessMessageBulk\":{\"messages\":[],\"pewCode\":null,\"globalIndicator\":null,\"text\":null}}";
 }

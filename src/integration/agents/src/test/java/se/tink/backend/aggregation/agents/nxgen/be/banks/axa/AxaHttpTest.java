@@ -1,6 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
+import javax.net.ssl.SSLContext;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
@@ -11,20 +24,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.http.URL;
-
-import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public class AxaHttpTest {
     @Rule

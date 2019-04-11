@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.Payment;
 
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -8,22 +13,18 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
+import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusTransferExecutorTest extends BelfiusTest {
 
@@ -31,14 +32,15 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         return argThat(StringUtils::isNoneBlank);
     }
 
-    protected final SupplementalInformationController supplementalInformationController = mock(SupplementalInformationController
-            .class);
+    protected final SupplementalInformationController supplementalInformationController =
+            mock(SupplementalInformationController.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // TODO Move this out to test helper.
     private ProviderConfig readProvidersConfiguration(String market) {
-        String providersFilePath = "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
+        String providersFilePath =
+                "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
         File providersFile = new File(providersFilePath);
         try {
             return mapper.readValue(providersFile, ProviderConfig.class);
@@ -75,15 +77,16 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
 
-        BelfiusTransferExecutor bte = new BelfiusTransferExecutor(
-                apiClient,
-                sessionStorage,
-                new Catalog(new Locale("fr", "BE")),
-                new SupplementalInformationHelper(provider,supplementalInformationController));
+        BelfiusTransferExecutor bte =
+                new BelfiusTransferExecutor(
+                        apiClient,
+                        sessionStorage,
+                        new Catalog(new Locale("fr", "BE")),
+                        new SupplementalInformationHelper(
+                                provider, supplementalInformationController));
 
         bte.executeTransfer(t);
-        verify(this.apiClient, times(1))
-                .login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
+        verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
     }
 
     @Test
@@ -109,15 +112,16 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
-        BelfiusTransferExecutor bte = new BelfiusTransferExecutor(
-                apiClient,
-                sessionStorage,
-                new Catalog(new Locale("fr", "BE")),
-                new SupplementalInformationHelper(provider,supplementalInformationController));
+        BelfiusTransferExecutor bte =
+                new BelfiusTransferExecutor(
+                        apiClient,
+                        sessionStorage,
+                        new Catalog(new Locale("fr", "BE")),
+                        new SupplementalInformationHelper(
+                                provider, supplementalInformationController));
 
         bte.executeTransfer(t);
-        verify(this.apiClient, times(1))
-                .login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
+        verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
     }
 
     @Test
@@ -143,14 +147,15 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
-        BelfiusTransferExecutor bte = new BelfiusTransferExecutor(
-                apiClient,
-                sessionStorage,
-                new Catalog(new Locale("fr", "BE")),
-                new SupplementalInformationHelper(provider,supplementalInformationController));
+        BelfiusTransferExecutor bte =
+                new BelfiusTransferExecutor(
+                        apiClient,
+                        sessionStorage,
+                        new Catalog(new Locale("fr", "BE")),
+                        new SupplementalInformationHelper(
+                                provider, supplementalInformationController));
 
         bte.executeTransfer(t);
-        verify(this.apiClient, times(1))
-                .login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
+        verify(this.apiClient, times(1)).login(anyNoneBlank(), anyNoneBlank(), anyNoneBlank());
     }
 }

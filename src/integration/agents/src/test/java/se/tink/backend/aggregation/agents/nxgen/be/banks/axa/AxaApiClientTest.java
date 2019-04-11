@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.RegisterUserResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-
-import java.util.UUID;
 
 public class AxaApiClientTest {
 
