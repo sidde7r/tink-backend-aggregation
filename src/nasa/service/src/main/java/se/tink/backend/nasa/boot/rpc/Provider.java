@@ -11,8 +11,8 @@ public class Provider {
     private String displayName;
     private String fields;
     private String market;
-    //providerStatuses
-    //type
+    // providerStatuses
+    // type
 
     public Provider() {}
 

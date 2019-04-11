@@ -1,5 +1,7 @@
 package se.tink.backend.nasa.boot;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -14,8 +16,6 @@ import se.tink.backend.nasa.boot.rpc.RefreshInformationRequest;
 import se.tink.backend.nasa.boot.rpc.RefreshableItem;
 import se.tink.backend.nasa.boot.rpc.User;
 import se.tink.backend.nasa.boot.rpc.UserProfile;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AggregationClientTest {
 

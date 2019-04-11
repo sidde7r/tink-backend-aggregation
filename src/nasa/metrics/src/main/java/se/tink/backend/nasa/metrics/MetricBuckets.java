@@ -10,17 +10,17 @@ import java.util.concurrent.atomic.LongAdder;
 
 /**
  * A fixed-bucket histogram used for metrics.
- * <p>
- * Optimized for many writes a few reads.
- * <p>
- * Calls must be thread-safe.
+ *
+ * <p>Optimized for many writes a few reads.
+ *
+ * <p>Calls must be thread-safe.
  */
 public class MetricBuckets {
     // Borrowed from Prometheus' golang client w/ +0 to catch metrics that need heavy tuning.
-    public static final ImmutableList<Double> STANDARD_BUCKETS = ImmutableList.of(0., .005, .01, .025, .05, .1, .25,
-            .5, 1., 2.5, 5., 10.);
-    public static final List<? extends Number> PERCENTAGE_BUCKETS = ImmutableList
-            .of(0, 1, 2, 5, 10, 20, 30, 70, 80, 90, 95, 98, 99, 100);
+    public static final ImmutableList<Double> STANDARD_BUCKETS =
+            ImmutableList.of(0., .005, .01, .025, .05, .1, .25, .5, 1., 2.5, 5., 10.);
+    public static final List<? extends Number> PERCENTAGE_BUCKETS =
+            ImmutableList.of(0, 1, 2, 5, 10, 20, 30, 70, 80, 90, 95, 98, 99, 100);
 
     private final ImmutableSortedMap<Double, LongAdder> buckets;
 
@@ -46,7 +46,8 @@ public class MetricBuckets {
 
         long counter = 0;
         // Must reverse the map since `headMap` is non-inclusive, while `tailMap` is.
-        for (Map.Entry<Double, LongAdder> bucket : buckets.descendingMap().tailMap(limit).entrySet()) {
+        for (Map.Entry<Double, LongAdder> bucket :
+                buckets.descendingMap().tailMap(limit).entrySet()) {
             counter += bucket.getValue().sum();
         }
 

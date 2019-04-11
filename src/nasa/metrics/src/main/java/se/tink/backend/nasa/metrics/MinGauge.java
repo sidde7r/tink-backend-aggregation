@@ -7,12 +7,14 @@ public class MinGauge implements Metric {
 
     @Override
     public void register(MetricCollector exporter, MetricId id) {
-        exporter.register(id, new Gauge() {
-            @Override
-            public double getValue() {
-                return minValue.get().doubleValue();
-            }
-        });
+        exporter.register(
+                id,
+                new Gauge() {
+                    @Override
+                    public double getValue() {
+                        return minValue.get().doubleValue();
+                    }
+                });
     }
 
     public void update(Number value) {

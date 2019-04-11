@@ -43,9 +43,10 @@ public class NasaRequestHandler implements NasaApi {
         credentials.setUsername("user");
         credentials.setPassword("password");
 
-        RefreshInformationRequest refreshInformationRequest =  new RefreshInformationRequest(
-                user, provider, credentials, true);
-        refreshInformationRequest.setItemsToRefresh(ImmutableSet.of(RefreshableItem.CHECKING_ACCOUNTS));
+        RefreshInformationRequest refreshInformationRequest =
+                new RefreshInformationRequest(user, provider, credentials, true);
+        refreshInformationRequest.setItemsToRefresh(
+                ImmutableSet.of(RefreshableItem.CHECKING_ACCOUNTS));
 
         return AggregationClient.refreshInformation(API_CLIENT_KEY, refreshInformationRequest);
     }

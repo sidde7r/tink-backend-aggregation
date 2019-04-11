@@ -5,14 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Immutable (and thread-safe) metric id.
- */
+/** Immutable (and thread-safe) metric id. */
 public class MetricId {
 
-    /**
-     * Immutable (and thread-safe) metric labels.
-     */
+    /** Immutable (and thread-safe) metric labels. */
     public static class MetricLabels {
         private final ImmutableMap<String, String> values;
 
@@ -29,12 +25,16 @@ public class MetricId {
         }
 
         public MetricId.MetricLabels add(String key, String label) {
-            return new MetricLabels(ImmutableMap.<String, String>builder().putAll(values).put(key, label).build());
+            return new MetricLabels(
+                    ImmutableMap.<String, String>builder().putAll(values).put(key, label).build());
         }
 
         public MetricId.MetricLabels addAll(MetricLabels moreLabels) {
             return new MetricLabels(
-                    ImmutableMap.<String, String>builder().putAll(values).putAll(moreLabels.values).build());
+                    ImmutableMap.<String, String>builder()
+                            .putAll(values)
+                            .putAll(moreLabels.values)
+                            .build());
         }
 
         private ImmutableMap<String, String> getValues() {
