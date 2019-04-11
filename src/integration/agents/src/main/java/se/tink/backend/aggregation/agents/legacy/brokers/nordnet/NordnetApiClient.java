@@ -141,7 +141,7 @@ public class NordnetApiClient {
                 redirectLocation, "Expected redirect to /mux/login/startSE.html");
 
         // This request will set NOW, LOL and TUX-COOKIE
-        createClientRequest(redirectLocation.toASCIIString()).get(ClientResponse.class);
+        createClientRequest(BASE_URL + redirectLocation.toASCIIString()).get(ClientResponse.class);
     }
 
     private void initLoginSession() {
