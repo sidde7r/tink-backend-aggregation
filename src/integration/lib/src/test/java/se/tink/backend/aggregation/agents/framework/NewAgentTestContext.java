@@ -196,10 +196,6 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
         }
     }
 
-    public void processAccounts() {
-        // noop
-    }
-
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountsByBankId.put(account.getBankId(), account);
@@ -349,14 +345,6 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
 
     @Override
     public void updateDocument(DocumentContainer contianer) {
-        // noop
-    }
-
-    public void processEinvoices() {
-        // noop
-    }
-
-    public void processTransferDestinationPatterns() {
         // noop
     }
 
