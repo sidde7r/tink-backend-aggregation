@@ -40,7 +40,7 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -59,7 +59,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     private final Map<String, List<TransferDestinationPattern>>
             transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
-    private CustomerInfo customerInfo = null;
+    private IdentityData customerInfo = null;
 
     private final User user;
     private final Credentials credential;
@@ -308,12 +308,12 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public void updateCustomerInfo(CustomerInfo customerInfo) {
+    public void updateCustomerInfo(IdentityData customerInfo) {
         this.customerInfo = customerInfo;
     }
 
     @Override
-    public Optional<CustomerInfo> getCustomerInfo() {
+    public Optional<IdentityData> getCustomerInfo() {
         return Optional.ofNullable(customerInfo);
     }
 

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents;
 
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 
 public final class FetchCustomerInfoResponse {
-    private final CustomerInfo customerInfo;
+    private final IdentityData customerInfo;
 
-    public FetchCustomerInfoResponse(final CustomerInfo customerInfo) {
+    public FetchCustomerInfoResponse(final IdentityData customerInfo) {
         this.customerInfo = customerInfo;
     }
 
-    public CustomerInfo getCustomerInfo() {
+    public IdentityData getCustomerInfo() {
         return customerInfo;
     }
 }

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo;
 
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 
 public interface CustomerInfoFetcher {
 
-    CustomerInfo fetchCustomerInfo();
+    IdentityData fetchCustomerInfo();
 }

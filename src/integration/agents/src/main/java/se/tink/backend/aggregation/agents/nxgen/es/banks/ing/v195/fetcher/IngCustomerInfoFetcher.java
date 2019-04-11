@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
 
 public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
@@ -17,7 +17,7 @@ public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
     }
 
     @Override
-    public CustomerInfo fetchCustomerInfo() {
+    public IdentityData fetchCustomerInfo() {
         ClientResponse client = ingApiClient.getApiRestClient();
 
         EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();

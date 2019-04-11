@@ -1,9 +1,9 @@
 package se.tink.libraries.customerinfo.countries;
 
 import java.util.Map;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 
-public class EsCustomerInfo extends CustomerInfo {
+public class EsCustomerInfo extends IdentityData {
 
     private final String nieNumber;
     private final String nifNumber;
@@ -20,7 +20,7 @@ public class EsCustomerInfo extends CustomerInfo {
         return new Builder();
     }
 
-    public interface EsCustomerInfoBuilder extends CustomerInfo.InitialBuilderStep {
+    public interface EsCustomerInfoBuilder extends IdentityData.InitialBuilderStep {
         EsCustomerInfoBuilder setNieNumber(String val);
 
         EsCustomerInfoBuilder setNifNumber(String val);
@@ -28,7 +28,7 @@ public class EsCustomerInfo extends CustomerInfo {
         EsCustomerInfoBuilder setPassportNumber(String val);
     }
 
-    public static final class Builder extends CustomerInfo.Builder
+    public static final class Builder extends IdentityData.Builder
             implements EsCustomerInfoBuilder {
         private String nieNumber;
         private String nifNumber;

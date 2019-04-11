@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
 
 public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
@@ -19,7 +19,7 @@ public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     }
 
     @Override
-    public CustomerInfo fetchCustomerInfo() {
+    public IdentityData fetchCustomerInfo() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
         EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();

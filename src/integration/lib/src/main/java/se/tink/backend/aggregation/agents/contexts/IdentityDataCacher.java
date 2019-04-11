@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.contexts;
 
 import java.util.Optional;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.customerinfo.IdentityData;
 
 public interface IdentityDataCacher {
 
@@ -11,11 +11,11 @@ public interface IdentityDataCacher {
      *
      * @param customerInfo Customer identity data
      */
-    void updateCustomerInfo(CustomerInfo customerInfo);
+    void updateCustomerInfo(IdentityData customerInfo);
 
     /**
      * @return The customer identity data previously stored using {@code
      *     IdentityDataCacher::updateCustomerInfo}, or Optional.empty() if none exists
      */
-    Optional<CustomerInfo> getCustomerInfo();
+    Optional<IdentityData> getCustomerInfo();
 }
