@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents;
 import se.tink.libraries.identitydata.IdentityData;
 
 public final class FetchIdentityDataResponse {
-    private final IdentityData customerInfo;
+    private final IdentityData identityData;
 
     public FetchIdentityDataResponse(final IdentityData customerInfo) {
-        this.customerInfo = customerInfo;
+        this.identityData = customerInfo;
     }
 
     public IdentityData getIdentityData() {
-        return customerInfo;
+        return identityData;
     }
 }
