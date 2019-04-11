@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetch
 import static se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -46,12 +49,12 @@ public class AccountEntity {
     }
 
     private Amount getAvailableBalance() {
-        return balances != null && !balances.isEmpty()
-                ? balances.stream()
-                        .filter(BalanceEntity::isAvailableBalance)
-                        .findFirst()
-                        .orElse(balances.get(0))
-                        .toAmount()
-                : BalanceEntity.Default;
+        return Optional.ofNullable(balances)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .filter(BalanceEntity::isAvailableBalance)
+                .findFirst()
+                .map(BalanceEntity::toAmount)
+                .orElse(BalanceEntity.Default);
     }
 }
