@@ -59,7 +59,7 @@ public class BbvaMxConstants {
 
         private static final String FETCH =
                 "/SRVS_A02/contracts/v0/financial-overview?contracts.productType=%s";
-        public static final String CUSTOMER_INFO =
+        public static final String CUSTOMER_IDENTITY_DATA =
                 "/SRVS_A02/customers/v1/customers?expand=avatars";
         public static final String ACCOUNTS = String.format(FETCH, "ACCOUNTS,DEPOSITS");
         public static final String LOANS = String.format(FETCH, "LOANS");
