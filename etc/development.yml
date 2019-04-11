@@ -146,117 +146,109 @@ agentsServiceConfiguration:
         signingKey: "signingKeyInBase64"
     ukOpenBankingJson: |
       {"rootCAData":"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","rootCAPassword":"tinktink","softwareStatements":{"tink":{"softwareStatementAssertion":{"assertion":"","softwareId":"","redirectUri":"https://127.0.0.1:7357/api/v1/thirdparty/callback"},"signingKey":{"keyId":"","key":"","password":""},"transportKey":{"keyId":"","key":"","password":""},"providerConfigurations":{"modelo":{"organizationId":"0015800001041RHAAY","apiBaseURL":"https://modelobank2018.o3bank.co.uk:4501/open-banking/v2.0","wellKnownURL":"https://modelobankauth2018.o3bank.co.uk:4101/.well-known/openid-configuration","clientInfo":{"clientId":"","clientSecret":"","clientIdIssuedAt":0,"clientSecretExpiresAt":0}}}}}}
-  creditsafe:
-    username: TINKTESTIN
-    password: cU7356rwx
-  excludedDebugClusters:
-    excludedClusters:
-      - local-development
-  aggregationWorker:
-    collectorSubscriptionKey: ASK_JOHANNES
-  ukOpenBankingJson: ""
-  nordea:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-  bec:
-  sparebank1:
-    tink:
-  ing:
-    tink:
-      baseUrl: "https://api.sandbox.ing.com"
-      clientId: "5ca1ab1e-c0ca-c01a-cafe-154deadbea75"
-      clientSigningKeyPath: "data/test/cryptography/ing/signing.key"
-      clientSigningCertificatePath: "data/test/cryptography/ing/signing.cer"
-      clientKeyStorePath: "data/test/cryptography/ing/client.p12"
-      clientKeyStorePassword: "123456"
-      redirectUrl: "xxx"
-  deutschebank:
-    tink:
-      baseUrl: "https://simulator-api.db.com"
-      clientId: "54f9cba4-702f-41cb-a5c1-6831f3041c1a"
-      clientSecret: "YOaWhiZjwwMSg2-x-I5Xyd_dxcSp7-UuRhVSYra1tlhqixfdti1s1wvv5ODk4AjfHWTA4Ks2LWJb8XULzpNmzA"
-      redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-  seb:
-    tink:
-      baseUrl: "https://sandbox.sebgroup.com"
-      clientId: "7a140014-c446-44e9-986d-7af449c3e0b1"
-      clientSecret: "oL6bI4pF6yW8yE4mY1hE0hC4wT1qB1pO1vK6xU6pF2tE3kB7tE"
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-  lansforsakringar:
-    tink:
-  rabobank:
-    tink:
-      clientId: "dummyClientId"
-      clientSecret: "dummySecret"
-      redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-      clientSSLP12: "dummyP12"
-      clientSSLKeyPassword: "dummyPassword"
-  bnpparibasfortis:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-      authBaseUrl: "https://sandbox.auth.bnpparibasfortis.com"
-      apiBaseUrl: "https://sandbox.api.bnpparibasfortis.com"
-      organisationId: ""
-      openbankStetVersion: "1.4.0.47.develop"
-  spankki:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-      baseAuthUrl: "https://s-pankki-sandbox.crosskey.io"
-      baseAPIUrl: "https://s-pankki-api-sandbox.crosskey.io"
-      clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-      clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-      clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-      clientKeyStorePassword: "123456"
-      xFapiFinancialId: "s-pankki"
-  resursbank:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-      baseAuthUrl: "https://resursbank-sandbox.crosskey.io"
-      baseAPIUrl: "https://resursbank-api-sandbox.crosskey.io"
-      clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-      clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-      clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-      clientKeyStorePassword: "123456"
-      xFapiFinancialId: "resursbank"
-  alandsbank-se:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-      baseAuthUrl: "https://alandsbanken-se-sandbox.crosskey.io"
-      baseAPIUrl: "https://alandsbanken-se-api-sandbox.crosskey.io"
-      clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-      clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-      clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-      clientKeyStorePassword: "123456"
-      xFapiFinancialId: "alandsbanken-se"
-  alandsbank-fi:
-    tink:
-      clientId: ""
-      clientSecret: ""
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-      baseAuthUrl: "https://alandsbanken-fi-sandbox.crosskey.io"
-      baseAPIUrl: "https://alandsbanken-fi-api-sandbox.crosskey.io"
-      clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
-      clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
-      clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
-      clientKeyStorePassword: "123456"
-      xFapiFinancialId: "alandsbanken-fi"
-  bbva:
-    tink:
-      baseAuthUrl: "https://connect.bbva.com"
-      baseApiUrl: "https://apis.bbva.com"
-      clientId: "app.bbva.bbvatestapp"
-      clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
-      redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    creditsafe:
+      username: TINKTESTIN
+      password: cU7356rwx
+    excludedDebugClusters:
+      excludedClusters:
+        - local-development
+    aggregationWorker:
+      collectorSubscriptionKey: ASK_JOHANNES
+    nordea:
+      tink:
+        clientId: "8c7518e5-701f-4be5-b580-724e3084f257"
+        clientSecret: "oT0vF1xF5wP0eE3mU1jA3iR7pH4oI7xJ7kW1eX4gV1yR7iL0cI"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    bec:
+    sparebank1:
+      tink:
+    ing:
+      tink:
+        baseUrl: "https://api.sandbox.ing.com"
+        clientId: "5ca1ab1e-c0ca-c01a-cafe-154deadbea75"
+        clientSigningKeyPath: "data/test/cryptography/ing/signing.key"
+        clientSigningCertificatePath: "data/test/cryptography/ing/signing.cer"
+        clientKeyStorePath: "data/test/cryptography/ing/client.p12"
+        clientKeyStorePassword: "123456"
+        redirectUrl: "xxx"
+    deutschebank:
+      tink:
+        baseUrl: "https://simulator-api.db.com"
+        clientId: "54f9cba4-702f-41cb-a5c1-6831f3041c1a"
+        clientSecret: "YOaWhiZjwwMSg2-x-I5Xyd_dxcSp7-UuRhVSYra1tlhqixfdti1s1wvv5ODk4AjfHWTA4Ks2LWJb8XULzpNmzA"
+        redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    seb:
+      tink:
+        baseUrl: "https://sandbox.sebgroup.com"
+        clientId: "7a140014-c446-44e9-986d-7af449c3e0b1"
+        clientSecret: "oL6bI4pF6yW8yE4mY1hE0hC4wT1qB1pO1vK6xU6pF2tE3kB7tE"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    lansforsakringar:
+      tink:
+    bnpparibasfortis:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        authBaseUrl: "https://sandbox.auth.bnpparibasfortis.com"
+        apiBaseUrl: "https://sandbox.api.bnpparibasfortis.com"
+        organisationId: ""
+        openbankStetVersion: "1.4.0.47.develop"
+    spankki:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        baseAuthUrl: "https://s-pankki-sandbox.crosskey.io"
+        baseAPIUrl: "https://s-pankki-api-sandbox.crosskey.io"
+        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
+        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
+        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
+        clientKeyStorePassword: "123456"
+        xFapiFinancialId: "s-pankki"
+    resursbank:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        baseAuthUrl: "https://resursbank-sandbox.crosskey.io"
+        baseAPIUrl: "https://resursbank-api-sandbox.crosskey.io"
+        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
+        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
+        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
+        clientKeyStorePassword: "123456"
+        xFapiFinancialId: "resursbank"
+    alandsbank-se:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        baseAuthUrl: "https://alandsbanken-se-sandbox.crosskey.io"
+        baseAPIUrl: "https://alandsbanken-se-api-sandbox.crosskey.io"
+        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
+        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
+        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
+        clientKeyStorePassword: "123456"
+        xFapiFinancialId: "alandsbanken-se"
+    alandsbank-fi:
+      tink:
+        clientId: ""
+        clientSecret: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        baseAuthUrl: "https://alandsbanken-fi-sandbox.crosskey.io"
+        baseAPIUrl: "https://alandsbanken-fi-api-sandbox.crosskey.io"
+        clientSigningKeyPath: "data/test/cryptography/crosskey/signing.key"
+        clientSigningCertificatePath: "data/test/cryptography/crosskey/signing.cer"
+        clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
+        clientKeyStorePassword: "123456"
+        xFapiFinancialId: "alandsbanken-fi"
+    bbva:
+      tink:
+        baseAuthUrl: "https://connect.bbva.com"
+        baseApiUrl: "https://apis.bbva.com"
+        clientId: "app.bbva.bbvatestapp"
+        clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
   signatureKeyPair:
     privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
     publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
