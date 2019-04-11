@@ -225,13 +225,6 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         if (agent instanceof DeprecatedRefreshExecutor) {
             log.warn("DeprecatedRefreshExecutor");
             ((DeprecatedRefreshExecutor) agent).refresh();
-
-            // process everything
-            context.processAccounts();
-            context.processTransactions();
-            context.processEinvoices();
-            context.processTransferDestinationPatterns();
-
         } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
@@ -248,25 +241,21 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             if (RefreshableItem.hasAccounts(sortedItems)) {
-                context.processAccounts();
             } else {
                 Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
             }
 
             if (RefreshableItem.hasTransactions(sortedItems)) {
-                context.processTransactions();
             } else {
                 Assert.assertTrue(context.getTransactions().isEmpty());
             }
 
             if (refreshableItems.contains(RefreshableItem.EINVOICES)) {
-                context.processEinvoices();
             } else {
                 Assert.assertTrue(context.getTransfers().isEmpty());
             }
 
             if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-                context.processTransferDestinationPatterns();
             } else {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
             }
