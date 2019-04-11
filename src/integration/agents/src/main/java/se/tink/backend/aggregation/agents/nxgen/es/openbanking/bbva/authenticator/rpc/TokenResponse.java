@@ -7,24 +7,30 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 @JsonObject
 public class TokenResponse {
 
-  @JsonProperty("access_token")
-  private String accessToken;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-  @JsonProperty("expires_in")
-  private String expiresIn;
+    @JsonProperty("expires_in")
+    private String expiresIn;
 
-  @JsonProperty("refresh_token")
-  private String refreshToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
-  @JsonProperty("refresh_expires_in")
-  private String refreshExpiresIn;
+    @JsonProperty("refresh_expires_in")
+    private String refreshExpiresIn;
 
-  @JsonProperty("token_type")
-  private String tokenType;
+    @JsonProperty("token_type")
+    private String tokenType;
 
-  private String scope;
+    private String scope;
 
-  public OAuth2Token toTinkToken() {
-    return OAuth2Token.create("bearer", accessToken, refreshToken, Long.parseLong(expiresIn), Long.parseLong(refreshExpiresIn)); //ToDo - Allow different token types for OAuth2 token
-  }
+    public OAuth2Token toTinkToken() {
+        return OAuth2Token.create(
+                "bearer",
+                accessToken,
+                refreshToken,
+                Long.parseLong(expiresIn),
+                Long.parseLong(
+                        refreshExpiresIn)); // ToDo - Allow different token types for OAuth2 token
+    }
 }

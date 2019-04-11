@@ -15,8 +15,8 @@ public class CreditCardTransactionFetcher implements TransactionDatePaginator<Cr
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate,
-        Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
 
         return apiClient.fetchCreditCardTransactions(account, fromDate, toDate);
     }

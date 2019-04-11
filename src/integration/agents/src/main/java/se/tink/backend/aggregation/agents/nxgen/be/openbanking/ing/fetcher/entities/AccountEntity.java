@@ -15,6 +15,7 @@ public class AccountEntity {
     private String iban;
     private String name;
     private String currency;
+
     @JsonProperty("_links")
     private LinksEntity links;
 

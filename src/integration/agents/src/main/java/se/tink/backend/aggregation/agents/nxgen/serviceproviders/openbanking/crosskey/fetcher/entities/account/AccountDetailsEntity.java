@@ -26,7 +26,7 @@ public class AccountDetailsEntity {
         return schemeName;
     }
 
-    public boolean isIBAN(){
+    public boolean isIBAN() {
         return StringUtils.containsIgnoreCase(schemeName, "iban");
     }
 }

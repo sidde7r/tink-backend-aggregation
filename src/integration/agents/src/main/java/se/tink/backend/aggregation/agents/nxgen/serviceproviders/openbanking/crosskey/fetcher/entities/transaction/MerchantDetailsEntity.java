@@ -10,5 +10,4 @@ public class MerchantDetailsEntity {
 
     private String merchantCategoryCode;
     private String merchantName;
-
 }

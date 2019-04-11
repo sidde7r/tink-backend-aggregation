@@ -1,188 +1,181 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis;
 
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration.BnpParibasFortisConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Account;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Links;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance.GetBalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class BnpParibasFortisApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
+    private BnpParibasFortisConfiguration configuration;
 
-    public BnpParibasFortisApiClient(TinkHttpClient client, SessionStorage sessionStorage,
-        PersistentStorage persistentStorage) {
+    public BnpParibasFortisApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    public BnpParibasFortisConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(BnpParibasFortisConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    private RequestBuilder createRequest(String url) {
         return client.request(url)
-            .accept(MediaType.APPLICATION_JSON)
-            .type(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createAuthenticatedRequest(String url) {
+        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
+        final String organizationId = getConfiguration().getOrganisationId();
+
+        return createRequest(url)
+                .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.OPENBANK_STET_VERSION, openbankStetVersion)
+                .header(HeaderKeys.ORGANIZATION_ID, organizationId)
+                .header(HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.SIGNATURE, UUID.randomUUID().toString())
+                .accept(HeaderKeys.APPLICATION_HAL_JSON);
     }
 
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
-            .get(BnpParibasFortisConstants.StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
-            .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
-    }
-
-    private RequestBuilder createAuthenticatedRequest(URL url) {
-        return createRequest(url)
-            .addBearerToken(getTokenFromSession())
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.OPENBANK_STET_VERSION,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.OPENBANK_STET_VERSION)
-            )
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.ORGANIZATION_ID,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.ORGANIZATION_ID)
-            )
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.REQUEST_ID,
-                UUID.randomUUID().toString()
-            )
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.SIGNATURE,
-                UUID.randomUUID().toString()
-            )
-            .accept(BnpParibasFortisConstants.HeaderKeys.APPLICATION_HAL_JSON);
+                .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
     public URL getAuthorizeUrl(String state) {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.AUTH_BASE_URL);
-        String oauthUrl = baseUrl + BnpParibasFortisConstants.Urls.OAUTH;
+        final String clientId = getConfiguration().getClientId();
 
-        return createRequest(new URL(oauthUrl))
-            .queryParam(
-                BnpParibasFortisConstants.QueryKeys.RESPONSE_TYPE,
-                BnpParibasFortisConstants.QueryValues.RESPONSE_TYPE)
-            .queryParam(
-                BnpParibasFortisConstants.QueryKeys.CLIENT_ID,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.CLIENT_ID))
-            .queryParam(
-                BnpParibasFortisConstants.QueryKeys.REDIRECT_URI,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.REDIRECT_URI))
-            .queryParam(
-                BnpParibasFortisConstants.QueryKeys.SCOPE,
-                BnpParibasFortisConstants.QueryValues.SCOPE)
-            .queryParam(
-                BnpParibasFortisConstants.QueryKeys.STATE,
-                state)
-            .getUrl();
+        final String redirectUri = getConfiguration().getRedirectUri();
+        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String oauthUrl = authBaseUrl + Urls.OAUTH;
+
+        return createRequest(oauthUrl)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.STATE, state)
+                .getUrl();
     }
 
     public OAuth2Token getToken(String code) {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.AUTH_BASE_URL);
-        String tokenUrl = baseUrl + BnpParibasFortisConstants.Urls.TOKEN;
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
+        final String organizationId = getConfiguration().getOrganisationId();
 
-        TokenResponse response = createRequest(new URL(tokenUrl))
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.ORGANIZATION_ID,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.ORGANIZATION_ID))
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.OPENBANK_STET_VERSION,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.OPENBANK_STET_VERSION))
-            .body(TokenRequest
-                    .builder()
-                    .clientId(persistentStorage.get(BnpParibasFortisConstants.StorageKeys.CLIENT_ID))
-                    .clientSecret(
-                        persistentStorage.get(BnpParibasFortisConstants.StorageKeys.CLIENT_SECRET))
-                    .code(code)
-                    .grantType(BnpParibasFortisConstants.FormValues.GRANT_TYPE)
-                    .redirectUri(
-                        persistentStorage.get(BnpParibasFortisConstants.StorageKeys.REDIRECT_URI))
-                    .scope(BnpParibasFortisConstants.FormValues.SCOPE)
-                    .build(),
-                MediaType.APPLICATION_JSON
-            )
-            .accept(MediaType.APPLICATION_JSON)
-            .post(TokenResponse.class);
+        final String redirectUri = getConfiguration().getRedirectUri();
+        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String tokenUrl = authBaseUrl + Urls.TOKEN;
+
+        final TokenResponse response =
+                createRequest(tokenUrl)
+                        .header(HeaderKeys.ORGANIZATION_ID, organizationId)
+                        .header(HeaderKeys.OPENBANK_STET_VERSION, openbankStetVersion)
+                        .body(
+                                TokenRequest.builder()
+                                        .clientId(clientId)
+                                        .clientSecret(clientSecret)
+                                        .code(code)
+                                        .grantType(FormValues.GRANT_TYPE)
+                                        .redirectUri(redirectUri)
+                                        .scope(FormValues.SCOPE)
+                                        .build(),
+                                MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .post(TokenResponse.class);
 
         return OAuth2Token.create(
-            response.getTokenType(),
-            response.getToken(),
-            response.getRefresh(),
-            response.getExpiresIn()
-        );
+                response.getTokenType(),
+                response.getToken(),
+                response.getRefresh(),
+                response.getExpiresIn());
     }
 
     public OAuth2Token refreshToken(String refreshToken) {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.AUTH_BASE_URL);
-        String tokenUrl = baseUrl + BnpParibasFortisConstants.Urls.TOKEN;
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
+        final String openbankStetVersion = getConfiguration().getOpenbankStetVersion();
+        final String organizationId = getConfiguration().getOrganisationId();
 
-        TokenResponse response = createRequest(new URL(tokenUrl))
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.ORGANIZATION_ID,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.ORGANIZATION_ID))
-            .header(
-                BnpParibasFortisConstants.HeaderKeys.OPENBANK_STET_VERSION,
-                persistentStorage.get(BnpParibasFortisConstants.StorageKeys.OPENBANK_STET_VERSION))
-            .body(RefreshTokenRequest
-                    .builder()
-                    .clientId(persistentStorage.get(BnpParibasFortisConstants.StorageKeys.CLIENT_ID))
-                    .clientSecret(
-                        persistentStorage.get(BnpParibasFortisConstants.StorageKeys.CLIENT_SECRET))
-                    .refreshToken(refreshToken)
-                    .grantType(BnpParibasFortisConstants.FormValues.GRANT_TYPE)
-                    .redirectUri(
-                        persistentStorage.get(BnpParibasFortisConstants.StorageKeys.REDIRECT_URI))
-                    .scope(BnpParibasFortisConstants.FormValues.SCOPE)
-                    .build(),
-                MediaType.APPLICATION_JSON
-            )
-            .accept(MediaType.APPLICATION_JSON)
-            .post(TokenResponse.class);
+        final String redirectUri = getConfiguration().getRedirectUri();
+        final String authBaseUrl = getConfiguration().getAuthBaseUrl();
+        final String tokenUrl = authBaseUrl + Urls.TOKEN;
+
+        final TokenResponse response =
+                createRequest(tokenUrl)
+                        .header(HeaderKeys.ORGANIZATION_ID, organizationId)
+                        .header(HeaderKeys.OPENBANK_STET_VERSION, openbankStetVersion)
+                        .body(
+                                RefreshTokenRequest.builder()
+                                        .clientId(clientId)
+                                        .clientSecret(clientSecret)
+                                        .refreshToken(refreshToken)
+                                        .grantType(FormValues.GRANT_TYPE)
+                                        .redirectUri(redirectUri)
+                                        .scope(FormValues.SCOPE)
+                                        .build(),
+                                MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .post(TokenResponse.class);
 
         return OAuth2Token.create(
-            response.getTokenType(),
-            response.getToken(),
-            response.getRefresh(),
-            response.getExpiresIn()
-        );
+                response.getTokenType(),
+                response.getToken(),
+                response.getRefresh(),
+                response.getExpiresIn());
     }
 
     public GetAccountsResponse getAccounts() {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.API_BASE_URL);
-        String accountsUrl = baseUrl + BnpParibasFortisConstants.Urls.ACCOUNTS;
+        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String accountsUrl = baseUrl + Urls.ACCOUNTS;
 
-        return createAuthenticatedRequest(new URL(accountsUrl))
-            .get(GetAccountsResponse.class);
+        return createAuthenticatedRequest(accountsUrl).get(GetAccountsResponse.class);
     }
 
     public GetBalancesResponse getBalanceForAccount(Account account) {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.API_BASE_URL);
-        String balancesUrl = baseUrl + account.getLinks().getBalances().getHref();
+        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String balancesUrl = baseUrl + account.getLinks().getBalances().getHref();
 
-        return createAuthenticatedRequest(new URL(balancesUrl))
-            .get(GetBalancesResponse.class);
+        return createAuthenticatedRequest(balancesUrl).get(GetBalancesResponse.class);
     }
 
     public GetTransactionsResponse getTransactionsForAccount(TransactionalAccount account) {
-        String baseUrl = persistentStorage.get(BnpParibasFortisConstants.StorageKeys.API_BASE_URL);
-        String transactionsUrl = account
-            .getFromTemporaryStorage(BnpParibasFortisConstants.StorageKeys.ACCOUNT_LINKS,
-                Links.class)
-            .map(links -> baseUrl + links.getTransactions().getHref())
-            .orElseThrow(IllegalStateException::new);
+        final String baseUrl = getConfiguration().getApiBaseUrl();
+        final String transactionsUrl =
+                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_LINKS, Links.class)
+                        .map(links -> baseUrl + links.getTransactions().getHref())
+                        .orElseThrow(IllegalStateException::new);
 
-        return createAuthenticatedRequest(new URL(transactionsUrl))
-            .get(GetTransactionsResponse.class);
+        return createAuthenticatedRequest(transactionsUrl).get(GetTransactionsResponse.class);
     }
 }

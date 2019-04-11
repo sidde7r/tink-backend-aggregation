@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -19,17 +18,19 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class FetchTransactionsResponse implements PaginatorResponse {
 
     private TransactionsEntity transactions;
+
     @JsonProperty("_links")
     private LinkEntity links;
-    @JsonIgnore
-    private Function<String, FetchTransactionsResponse> fetchNextConsumer;
+
+    @JsonIgnore private Function<String, FetchTransactionsResponse> fetchNextConsumer;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions != null ? Stream.concat(transactions.toTinkTransactions(),
-            hasNextLink() ? fetchNext() : Stream.empty())
-            .collect(Collectors.toList())
-            : Collections.emptyList();
+        return Optional.ofNullable(transactions)
+                .map(TransactionsEntity::toTinkTransactions)
+                .map(ts -> Stream.concat(ts, hasNextLink() ? fetchNext() : Stream.empty()))
+                .orElse(Stream.empty())
+                .collect(Collectors.toList());
     }
 
     @Override

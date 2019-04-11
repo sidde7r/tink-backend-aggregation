@@ -50,8 +50,9 @@ public final class IngUtils {
 
     public static String generateSignature(String input, String signingKeyPath, String algorithm) {
         return Base64.getEncoder()
-            .encodeToString(
-                RSA.signSha256(readSigningKey(signingKeyPath, algorithm), input.getBytes()));
+                .encodeToString(
+                        RSA.signSha256(
+                                readSigningKey(signingKeyPath, algorithm), input.getBytes()));
     }
 
     public static byte[] readFile(String path) {
@@ -65,9 +66,9 @@ public final class IngUtils {
     private static PrivateKey readSigningKey(String path, String algorithm) {
         try {
             return KeyFactory.getInstance(algorithm)
-                .generatePrivate(
-                    new PKCS8EncodedKeySpec(
-                        Base64.getDecoder().decode(new String(readFile(path)))));
+                    .generatePrivate(
+                            new PKCS8EncodedKeySpec(
+                                    Base64.getDecoder().decode(new String(readFile(path)))));
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }

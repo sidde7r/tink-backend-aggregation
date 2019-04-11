@@ -28,9 +28,8 @@ public class IngAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken)
-        throws BankServiceException {
-        OAuth2Token token = this.client.refreshToken(refreshToken);
+    public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+        final OAuth2Token token = this.client.refreshToken(refreshToken);
         client.setTokenToSession(token);
         return token;
     }

@@ -12,10 +12,11 @@ public class SPankkiAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("fi", "fi-spankki-oauth2")
-            .expectLoggedIn(false)
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder("fi", "fi-spankki-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

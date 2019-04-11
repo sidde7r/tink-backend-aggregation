@@ -37,7 +37,7 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class HeaderValues {
-        //TODO: We need to support these PSU headers in production.
+        // TODO: We need to support these PSU headers in production.
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
     }
@@ -50,6 +50,12 @@ public abstract class LansforsakringarConstants {
 
     public static class FormValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
     public class Market {

@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class OwnerNameEntity {
-  private String name;
+    private String name;
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 }
