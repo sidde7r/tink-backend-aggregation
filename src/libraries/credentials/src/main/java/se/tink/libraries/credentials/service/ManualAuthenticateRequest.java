@@ -6,14 +6,17 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.user.rpc.User;
 
 public class ManualAuthenticateRequest extends CredentialsRequest {
-    @JsonProperty
-    private boolean manual;
+    @JsonProperty private boolean manual;
 
-    public ManualAuthenticateRequest() {
+    public ManualAuthenticateRequest() {}
 
-    }
-
-    public ManualAuthenticateRequest(User user, Provider provider, Credentials credentials, boolean manual, boolean create, boolean update) {
+    public ManualAuthenticateRequest(
+            User user,
+            Provider provider,
+            Credentials credentials,
+            boolean manual,
+            boolean create,
+            boolean update) {
         super(user, provider, credentials);
 
         this.manual = manual;
@@ -23,7 +26,8 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
         this.getCredentials().setForceManualAuthentication(true);
     }
 
-    public ManualAuthenticateRequest(User user, Provider provider, Credentials credentials, boolean manual) {
+    public ManualAuthenticateRequest(
+            User user, Provider provider, Credentials credentials, boolean manual) {
         this(user, provider, credentials, manual, false, false);
     }
 
