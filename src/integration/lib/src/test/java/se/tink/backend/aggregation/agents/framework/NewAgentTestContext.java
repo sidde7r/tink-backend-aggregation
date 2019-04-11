@@ -588,7 +588,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
         CliPrintUtils.printTable(0, "transfers", table);
     }
 
-    public void printCustomerInfo() {
+    public void printIdentityData() {
         if (identityData != null) {
             List<Map<String, String>> table =
                     identityData.toMap().entrySet().stream()
@@ -614,7 +614,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                     System.out.println("");
                 });
 
-        printCustomerInfo();
+        printIdentityData();
         printTransfers();
     }
 
