@@ -49,7 +49,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 
-public class NewAgentTestContext extends AgentContext implements IdentityDataCacher {
+public final class NewAgentTestContext extends AgentContext implements IdentityDataCacher {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
