@@ -17,24 +17,31 @@ public class CryptoConfigurationDao {
 
     @Inject
     CryptoConfigurationDao(CryptoConfigurationsRepository cryptoConfigurationsRepository) {
-        List<CryptoConfiguration> allCryptoConfigurations = cryptoConfigurationsRepository.findAll();
+        List<CryptoConfiguration> allCryptoConfigurations =
+                cryptoConfigurationsRepository.findAll();
 
         if (Objects.isNull(allCryptoConfigurations) || allCryptoConfigurations.isEmpty()) {
             throw new IllegalStateException();
         }
 
-        this.cryptoConfigurationsByClientName = allCryptoConfigurations.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                configuration -> configuration.getCryptoConfigurationId().getClientName()));
+        this.cryptoConfigurationsByClientName =
+                allCryptoConfigurations.stream()
+                        .collect(
+                                Collectors.groupingBy(
+                                        configuration ->
+                                                configuration
+                                                        .getCryptoConfigurationId()
+                                                        .getClientName()));
     }
 
     public CryptoWrapper getCryptoWrapperOfClientName(String clientName) {
-        List<CryptoConfiguration> cryptoConfigurations = cryptoConfigurationsByClientName.getOrDefault(
-                clientName, Collections.emptyList());
+        List<CryptoConfiguration> cryptoConfigurations =
+                cryptoConfigurationsByClientName.getOrDefault(clientName, Collections.emptyList());
 
-        Preconditions.checkArgument(!cryptoConfigurations.isEmpty(),
-                "Could not find cryptoConfigurations for clientName %s.", clientName);
+        Preconditions.checkArgument(
+                !cryptoConfigurations.isEmpty(),
+                "Could not find cryptoConfigurations for clientName %s.",
+                clientName);
         return CryptoWrapper.of(ImmutableList.copyOf(cryptoConfigurations));
     }
 }

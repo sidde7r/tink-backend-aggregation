@@ -1,54 +1,111 @@
 package se.tink.backend.aggregation.workers.concurrency;
 
-import com.google.common.collect.ImmutableList;
-import java.util.concurrent.TimeUnit;
-import org.junit.Test;
-import se.tink.libraries.concurrency.FakeTicker;
-import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
-import se.tink.libraries.metrics.MetricRegistry;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.google.common.collect.ImmutableList;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
+import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
+import se.tink.libraries.concurrency.FakeTicker;
+import se.tink.libraries.metrics.MetricRegistry;
+
 public class CircuitBreakerStatisticsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveTimeLimitValidation() {
-        new CircuitBreakerStatistics(0, TimeUnit.HOURS, singletonList(1), 0.5, 1, 1, new MetricRegistry(),
-                "providerName", "className", "market");
+        new CircuitBreakerStatistics(
+                0,
+                TimeUnit.HOURS,
+                singletonList(1),
+                0.5,
+                1,
+                1,
+                new MetricRegistry(),
+                "providerName",
+                "className",
+                "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNoneEmptyListOfMultiplicationFactorsValidation() {
-        new CircuitBreakerStatistics(1, TimeUnit.HOURS, emptyList(), 0.5, 1, 1, new MetricRegistry(),
-                "providerName", "className","market");
+        new CircuitBreakerStatistics(
+                1,
+                TimeUnit.HOURS,
+                emptyList(),
+                0.5,
+                1,
+                1,
+                new MetricRegistry(),
+                "providerName",
+                "className",
+                "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveErrorRatioThresholdValidation() {
-        new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.0, 1, 1, new MetricRegistry(),
-                "providerName", "className", "market");
+        new CircuitBreakerStatistics(
+                1,
+                TimeUnit.HOURS,
+                singletonList(1),
+                0.0,
+                1,
+                1,
+                new MetricRegistry(),
+                "providerName",
+                "className",
+                "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveCircuitBreakerThresholdValidation() {
-        new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.5, 0, 1, new MetricRegistry(),
-                "providerName", "className", "market");
+        new CircuitBreakerStatistics(
+                1,
+                TimeUnit.HOURS,
+                singletonList(1),
+                0.5,
+                0,
+                1,
+                new MetricRegistry(),
+                "providerName",
+                "className",
+                "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveCircuitBreakBreakerThresholdValidation() {
-        new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.5, 1, 0, new MetricRegistry(),
-                "providerName", "className", "market");
+        new CircuitBreakerStatistics(
+                1,
+                TimeUnit.HOURS,
+                singletonList(1),
+                0.5,
+                1,
+                0,
+                new MetricRegistry(),
+                "providerName",
+                "className",
+                "market");
     }
 
     @Test
     public void testNotCircuitBrokenAndMultiplicationFactorOfOneAfterInstantiation() {
         final FakeTicker ticker = new FakeTicker();
-        CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", "market", ticker);
+        CircuitBreakerStatistics statistics =
+                new CircuitBreakerStatistics(
+                        1,
+                        TimeUnit.SECONDS,
+                        ImmutableList.of(1, 2),
+                        0.5,
+                        2,
+                        5,
+                        new MetricRegistry(),
+                        "providerName",
+                        "className",
+                        "market",
+                        ticker);
 
         assertFalse(statistics.getStatus().isCircuitBroken());
         assertEquals(statistics.getStatus().getRateLimitMultiplicationFactor(), 1);
@@ -57,10 +114,21 @@ public class CircuitBreakerStatisticsTest {
     @Test
     public void testBasicFunctionalityWithLevelingAndResetting() {
         final FakeTicker ticker = new FakeTicker();
-        final CircuitBreakerConfiguration circuitBreakerConfiguration = new CircuitBreakerConfiguration();
-        CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-               circuitBreakerConfiguration.getRateLimitMultiplicationFactors(), 0.5, 2, 5, new MetricRegistry(),
-                "providerName", "className", "market", ticker);
+        final CircuitBreakerConfiguration circuitBreakerConfiguration =
+                new CircuitBreakerConfiguration();
+        CircuitBreakerStatistics statistics =
+                new CircuitBreakerStatistics(
+                        1,
+                        TimeUnit.SECONDS,
+                        circuitBreakerConfiguration.getRateLimitMultiplicationFactors(),
+                        0.5,
+                        2,
+                        5,
+                        new MetricRegistry(),
+                        "providerName",
+                        "className",
+                        "market",
+                        ticker);
 
         statistics.registerError();
         statistics.registerError();
@@ -140,10 +208,21 @@ public class CircuitBreakerStatisticsTest {
     @Test
     public void testBasicFunctionalityWithLevelingAndEscapeOfCircuitBreak() {
         final FakeTicker ticker = new FakeTicker();
-        final CircuitBreakerConfiguration circuitBreakerConfiguration = new CircuitBreakerConfiguration();
-        CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-                circuitBreakerConfiguration.getRateLimitMultiplicationFactors(), 0.5, 2, 5, new MetricRegistry(),
-                "providerName", "className", "market", ticker);
+        final CircuitBreakerConfiguration circuitBreakerConfiguration =
+                new CircuitBreakerConfiguration();
+        CircuitBreakerStatistics statistics =
+                new CircuitBreakerStatistics(
+                        1,
+                        TimeUnit.SECONDS,
+                        circuitBreakerConfiguration.getRateLimitMultiplicationFactors(),
+                        0.5,
+                        2,
+                        5,
+                        new MetricRegistry(),
+                        "providerName",
+                        "className",
+                        "market",
+                        ticker);
 
         statistics.registerError();
         statistics.registerError();
@@ -220,8 +299,19 @@ public class CircuitBreakerStatisticsTest {
     @Test
     public void testNoSubsequentIfNoInput() {
         final FakeTicker ticker = new FakeTicker();
-        CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", "market", ticker);
+        CircuitBreakerStatistics statistics =
+                new CircuitBreakerStatistics(
+                        1,
+                        TimeUnit.SECONDS,
+                        ImmutableList.of(1, 2),
+                        0.5,
+                        2,
+                        5,
+                        new MetricRegistry(),
+                        "providerName",
+                        "className",
+                        "market",
+                        ticker);
 
         statistics.registerError();
 
@@ -233,5 +323,4 @@ public class CircuitBreakerStatisticsTest {
 
         assertEquals(statistics.getStatus().getConsecutiveOperationsCounter(), 1);
     }
-
 }

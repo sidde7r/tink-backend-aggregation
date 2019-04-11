@@ -8,7 +8,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 public class ConfigurationUtils {
-    public static <T> T getConfiguration(String fileName, Class<T> cls) throws FileNotFoundException {
+    public static <T> T getConfiguration(String fileName, Class<T> cls)
+            throws FileNotFoundException {
         FileInputStream configFileStream = new FileInputStream(new File(fileName));
 
         Representer representer = new Representer();
@@ -19,4 +20,3 @@ public class ConfigurationUtils {
         return cls.cast(yaml.load(configFileStream));
     }
 }
-

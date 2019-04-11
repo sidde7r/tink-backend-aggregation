@@ -3,22 +3,17 @@ package se.tink.backend.aggregation.configuration.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class S3StorageConfiguration {
-    @JsonProperty
-    private boolean enabled = false;
+    @JsonProperty private boolean enabled = false;
 
-    @JsonProperty
-    private String url;
+    @JsonProperty private String url;
 
-    @JsonProperty
-    private String region;
+    @JsonProperty private String region;
 
-    @JsonProperty
-    private String agentDebugBucketName;
+    @JsonProperty private String agentDebugBucketName;
 
-    public S3StorageConfiguration() {
-    }
+    public S3StorageConfiguration() {}
 
     public String getUrl() {
         return url;
@@ -44,11 +39,11 @@ public class S3StorageConfiguration {
         this.enabled = enabled;
     }
 
-    public String getAgentDebugBucketName(){
+    public String getAgentDebugBucketName() {
         return agentDebugBucketName;
     }
 
-    public void setAgentDebugBucketName(String agentDebugBucketName){
+    public void setAgentDebugBucketName(String agentDebugBucketName) {
         this.agentDebugBucketName = agentDebugBucketName;
     }
 }

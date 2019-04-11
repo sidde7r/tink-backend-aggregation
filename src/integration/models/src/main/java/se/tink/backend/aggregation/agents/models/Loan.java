@@ -9,7 +9,13 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class Loan implements Comparable<Loan>, Serializable {
     public enum Type {
-        MORTGAGE, BLANCO, MEMBERSHIP, VEHICLE, LAND, STUDENT, OTHER
+        MORTGAGE,
+        BLANCO,
+        MEMBERSHIP,
+        VEHICLE,
+        LAND,
+        STUDENT,
+        OTHER
     }
 
     private UUID accountId;
@@ -133,31 +139,41 @@ public class Loan implements Comparable<Loan>, Serializable {
         }
         if (type != null) {
             switch (type) {
-            case "MORTGAGE":
-                Preconditions.checkArgument(isInMortgageRateInterval(interest),
-                        String.format("[credentialsId:%s accountId:%s] Interest rate not in mortgage interval.",
-                                credentialsId, accountId));
-                break;
-            case "BLANCO":
-                Preconditions.checkArgument(isInBlancoLoanRateInterval(interest),
-                        String.format("[credentialsId:%s accountId:%s] Interest rate not in blanco rate interval.",
-                                credentialsId, accountId));
-                break;
-            case "VEHICLE":
-                Preconditions.checkArgument(isInVehicleLoanRateInterval(interest),
-                        String.format("[credentialsId:%s accountId:%s] Interest rate not in vehicle rate interval.",
-                                credentialsId, accountId));
-                break;
-            case "STUDENT":
-                Preconditions.checkArgument(isInStudentLoanRateInterval(interest),
-                        String.format("[credentialsId:%s accountId:%s] Interest rate not in student rate interval.",
-                                credentialsId, accountId));
-                break;
-            default:
-                // No matter what all our rates should be in the unit interval.
-                Preconditions.checkArgument(isInRateInterval(interest, 1.0),
-                        String.format("[credentialsId:%s accountId:%s] Interest rate not in rate interval.",
-                                credentialsId, accountId));
+                case "MORTGAGE":
+                    Preconditions.checkArgument(
+                            isInMortgageRateInterval(interest),
+                            String.format(
+                                    "[credentialsId:%s accountId:%s] Interest rate not in mortgage interval.",
+                                    credentialsId, accountId));
+                    break;
+                case "BLANCO":
+                    Preconditions.checkArgument(
+                            isInBlancoLoanRateInterval(interest),
+                            String.format(
+                                    "[credentialsId:%s accountId:%s] Interest rate not in blanco rate interval.",
+                                    credentialsId, accountId));
+                    break;
+                case "VEHICLE":
+                    Preconditions.checkArgument(
+                            isInVehicleLoanRateInterval(interest),
+                            String.format(
+                                    "[credentialsId:%s accountId:%s] Interest rate not in vehicle rate interval.",
+                                    credentialsId, accountId));
+                    break;
+                case "STUDENT":
+                    Preconditions.checkArgument(
+                            isInStudentLoanRateInterval(interest),
+                            String.format(
+                                    "[credentialsId:%s accountId:%s] Interest rate not in student rate interval.",
+                                    credentialsId, accountId));
+                    break;
+                default:
+                    // No matter what all our rates should be in the unit interval.
+                    Preconditions.checkArgument(
+                            isInRateInterval(interest, 1.0),
+                            String.format(
+                                    "[credentialsId:%s accountId:%s] Interest rate not in rate interval.",
+                                    credentialsId, accountId));
             }
         }
 
@@ -286,32 +302,38 @@ public class Loan implements Comparable<Loan>, Serializable {
     }
 
     private boolean isInMortgageRateInterval(Double interest) {
-        // The maxRate value 0.1 is chosen as a threshold to verify that the rate is indeed a mortgage rate.
-        // We've chosen a threshold that is as small as possible but considerably larger than the likely values.
+        // The maxRate value 0.1 is chosen as a threshold to verify that the rate is indeed a
+        // mortgage rate.
+        // We've chosen a threshold that is as small as possible but considerably larger than the
+        // likely values.
         return isInRateInterval(interest, 0.1);
     }
 
     private boolean isInBlancoLoanRateInterval(Double interest) {
-        // The maxRate value 0.35 is chosen as a threshold to verify that the rate is indeed a blanco loan rate.
-        // We've chosen a threshold that is as small as possible but considerably larger than the likely values.
+        // The maxRate value 0.35 is chosen as a threshold to verify that the rate is indeed a
+        // blanco loan rate.
+        // We've chosen a threshold that is as small as possible but considerably larger than the
+        // likely values.
         return isInRateInterval(interest, 0.35);
     }
 
     private boolean isInVehicleLoanRateInterval(Double interest) {
-        // The maxRate value 0.3 is chosen as a threshold to verify that the rate is indeed a vehicle loan rate.
-        // We've chosen a threshold that is as small as possible but considerably larger than the likely values.
+        // The maxRate value 0.3 is chosen as a threshold to verify that the rate is indeed a
+        // vehicle loan rate.
+        // We've chosen a threshold that is as small as possible but considerably larger than the
+        // likely values.
         return isInRateInterval(interest, 0.3);
     }
 
     private boolean isInStudentLoanRateInterval(Double interest) {
-        // The maxRate value 0.3 is chosen as a threshold to verify that the rate is indeed a student loan rate.
-        // We've chosen a threshold that is as small as possible but considerably larger than the likely values.
+        // The maxRate value 0.3 is chosen as a threshold to verify that the rate is indeed a
+        // student loan rate.
+        // We've chosen a threshold that is as small as possible but considerably larger than the
+        // likely values.
         return isInRateInterval(interest, 0.1);
     }
 
     public void setType(String type) {
         this.type = type;
     }
-
 }
-

@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.creditcards.sebkort;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.CardGroupEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.ContractEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.InvoiceBillingUnitEntity;
@@ -14,10 +18,7 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.InvoiceDetai
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.SummaryTransactionsEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class SEBKortParserTest {
 
@@ -31,7 +32,8 @@ public class SEBKortParserTest {
 
     @Test
     public void testDeduplicatesTransactions() throws ParseException {
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCardGroupForAccount("345678******3456");
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCardGroupForAccount("345678******3456");
         List<TransactionEntity> transactions = getTransactionsForFirstAccount(invoiceDetails);
 
         TransactionEntity transaction;
@@ -45,7 +47,8 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("345678******3456");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("345678******3456");
         assertNotNull(accountTransactions);
         assertEquals(1, accountTransactions.size());
     }
@@ -65,7 +68,8 @@ public class SEBKortParserTest {
         parser.parseInvoiceDetails(emptyInvoiceDetails);
 
         // Add a "normal" transaction
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
         List<TransactionEntity> transactions = getTransactionsForFirstAccount(invoiceDetails);
         transaction = buildTransaction();
         transaction.setOriginalAmountDate("07-20");
@@ -74,16 +78,19 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("123456******1234");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("123456******1234");
         assertNotNull(accountTransactions);
         assertEquals(2, accountTransactions.size());
     }
 
     @Test
-    public void testPendingAccountLessTransactionsArePutIntoAnAccountOnlyOnce() throws ParseException {
+    public void testPendingAccountLessTransactionsArePutIntoAnAccountOnlyOnce()
+            throws ParseException {
         TransactionEntity transaction;
 
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
 
         // Add a normal transaction
         List<TransactionEntity> transactions = getTransactionsForFirstAccount(invoiceDetails);
@@ -98,7 +105,8 @@ public class SEBKortParserTest {
 
         InvoiceDetailsEntity pendingInvoiceDetails = buildInvoiceDetails();
 
-        List<TransactionEntity> summaryTransactions = getPendingSummaryTransactions(pendingInvoiceDetails);
+        List<TransactionEntity> summaryTransactions =
+                getPendingSummaryTransactions(pendingInvoiceDetails);
         transaction = buildTransaction();
         transaction.setDescription("BETALT BG DATUM 130830");
         summaryTransactions.add(transaction);
@@ -106,7 +114,8 @@ public class SEBKortParserTest {
         parser.parsePendingInvoiceDetails(contractEntity, pendingInvoiceDetails);
         parser.parsePendingInvoiceDetails(contractEntity, pendingInvoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("123456******1234");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("123456******1234");
         assertNotNull(accountTransactions);
         assertEquals(2, accountTransactions.size());
     }
@@ -114,7 +123,8 @@ public class SEBKortParserTest {
     @Test
     public void testHandlesTransactionsWithoutIds() throws ParseException {
         TransactionEntity transaction;
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCardGroupForAccount("123456******1234");
 
         List<TransactionEntity> transactions = getTransactionsForFirstAccount(invoiceDetails);
         transaction = buildTransaction();
@@ -129,12 +139,14 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("123456******1234");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("123456******1234");
         assertNotNull(accountTransactions);
         assertEquals(2, accountTransactions.size());
     }
 
-    private List<TransactionEntity> getPendingSummaryTransactions(InvoiceDetailsEntity invoiceDetails) {
+    private List<TransactionEntity> getPendingSummaryTransactions(
+            InvoiceDetailsEntity invoiceDetails) {
         if (invoiceDetails.getTransactionGroups() == null) {
             List<TransactionGroupEntity> transactionGroups = Lists.newArrayList();
             invoiceDetails.setTransactionGroups(transactionGroups);
@@ -147,15 +159,18 @@ public class SEBKortParserTest {
     }
 
     @Test
-    public void testAccountLessTransactionsThatAreJustSummariesAreDiscarded() throws ParseException {
+    public void testAccountLessTransactionsThatAreJustSummariesAreDiscarded()
+            throws ParseException {
         TransactionEntity transaction;
 
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCardGroupForAccount("234567******2345");
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCardGroupForAccount("234567******2345");
 
         List<TransactionEntity> summaryTransactions = getSummaryTransactions(invoiceDetails);
 
         transaction = buildTransaction();
-        transaction.setDescription("Saldo fr√•n f√∂reg√•ende m√•nad"); // It really looks like this in the API
+        transaction.setDescription(
+                "Saldo fr√•n f√∂reg√•ende m√•nad"); // It really looks like this in the API
         summaryTransactions.add(transaction);
 
         transaction = buildTransaction();
@@ -164,7 +179,8 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("234567******2345");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("234567******2345");
         assertNotNull(accountTransactions);
         assertEquals(0, accountTransactions.size());
     }
@@ -258,8 +274,10 @@ public class SEBKortParserTest {
 
     @Test
     public void testCobrandCardTransactionsAreParsed() throws ParseException {
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCobrandCardGroupForAccount("345678******3456");
-        List<TransactionEntity> transactions = getTransactionsForFirstCobrandAccount(invoiceDetails);
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCobrandCardGroupForAccount("345678******3456");
+        List<TransactionEntity> transactions =
+                getTransactionsForFirstCobrandAccount(invoiceDetails);
 
         TransactionEntity transaction;
         transaction = buildTransaction();
@@ -267,15 +285,18 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("345678******3456");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("345678******3456");
         assertNotNull(accountTransactions);
         assertEquals(1, accountTransactions.size());
     }
 
     @Test
     public void testTransactionsFromCobrand() throws ParseException {
-        InvoiceDetailsEntity invoiceDetails = buildInvoiceDetailsWithOneCobrandCardGroupForAccount("345678******3456");
-        List<TransactionEntity> transactions = getTransactionsForFirstCobrandAccount(invoiceDetails);
+        InvoiceDetailsEntity invoiceDetails =
+                buildInvoiceDetailsWithOneCobrandCardGroupForAccount("345678******3456");
+        List<TransactionEntity> transactions =
+                getTransactionsForFirstCobrandAccount(invoiceDetails);
 
         TransactionEntity transaction;
         transaction = buildTransaction();
@@ -283,7 +304,8 @@ public class SEBKortParserTest {
 
         parser.parseInvoiceDetails(invoiceDetails);
 
-        List<Transaction> accountTransactions = parser.getTransactionsByAccountNumber().get("345678******3456");
+        List<Transaction> accountTransactions =
+                parser.getTransactionsByAccountNumber().get("345678******3456");
         assertNotNull(accountTransactions);
         assertEquals(1, accountTransactions.size());
     }
@@ -354,22 +376,36 @@ public class SEBKortParserTest {
         return invoiceDetails.getSummaryTransactions().getTransactions();
     }
 
-    protected List<TransactionEntity> getTransactionsForFirstCobrandAccount(InvoiceDetailsEntity invoiceDetails) {
-        return invoiceDetails.getCobrandCardGroups().get(0).getTransactionGroups().get(0).getTransactions();
+    protected List<TransactionEntity> getTransactionsForFirstCobrandAccount(
+            InvoiceDetailsEntity invoiceDetails) {
+        return invoiceDetails
+                .getCobrandCardGroups()
+                .get(0)
+                .getTransactionGroups()
+                .get(0)
+                .getTransactions();
     }
 
-    protected List<TransactionEntity> getTransactionsForFirstAccount(InvoiceDetailsEntity invoiceDetails) {
-        return invoiceDetails.getCardGroups().get(0).getTransactionGroups().get(0).getTransactions();
+    protected List<TransactionEntity> getTransactionsForFirstAccount(
+            InvoiceDetailsEntity invoiceDetails) {
+        return invoiceDetails
+                .getCardGroups()
+                .get(0)
+                .getTransactionGroups()
+                .get(0)
+                .getTransactions();
     }
 
-    protected InvoiceDetailsEntity buildInvoiceDetailsWithOneCobrandCardGroupForAccount(String accountNumber) {
+    protected InvoiceDetailsEntity buildInvoiceDetailsWithOneCobrandCardGroupForAccount(
+            String accountNumber) {
         InvoiceDetailsEntity invoiceDetails = buildInvoiceDetails();
         CardGroupEntity cardGroup = buildCardGroupForAccount(accountNumber);
         invoiceDetails.getCobrandCardGroups().add(cardGroup);
         return invoiceDetails;
     }
 
-    protected InvoiceDetailsEntity buildInvoiceDetailsWithOneCardGroupForAccount(String accountNumber) {
+    protected InvoiceDetailsEntity buildInvoiceDetailsWithOneCardGroupForAccount(
+            String accountNumber) {
         InvoiceDetailsEntity invoiceDetails = buildInvoiceDetails();
         CardGroupEntity cardGroup = buildCardGroupForAccount(accountNumber);
         invoiceDetails.getCardGroups().add(cardGroup);
@@ -390,7 +426,8 @@ public class SEBKortParserTest {
         return invoiceDetails;
     }
 
-    protected InvoiceDetailsEntity buildInvoiceDetailsWithArrangementNumber(String arrangementNumber) {
+    protected InvoiceDetailsEntity buildInvoiceDetailsWithArrangementNumber(
+            String arrangementNumber) {
         InvoiceDetailsEntity invoiceDetails = new InvoiceDetailsEntity();
         SummaryTransactionsEntity summaryTransactions = new SummaryTransactionsEntity();
         invoiceDetails.setSummaryTransactions(summaryTransactions);
@@ -415,14 +452,15 @@ public class SEBKortParserTest {
         return cardGroup;
     }
 
-    protected void addCobrandCardGroupForAccount(InvoiceDetailsEntity invoiceDetails, String accountNumber,
-            double balance) {
+    protected void addCobrandCardGroupForAccount(
+            InvoiceDetailsEntity invoiceDetails, String accountNumber, double balance) {
         CardGroupEntity cobrandCardGroup = buildCardGroupForAccount(accountNumber);
         cobrandCardGroup.setTotalNumber(balance);
         invoiceDetails.getCardGroups().add(cobrandCardGroup);
     }
 
-    protected void addCardGroupForAccount(InvoiceDetailsEntity invoiceDetails, String accountNumber, double balance) {
+    protected void addCardGroupForAccount(
+            InvoiceDetailsEntity invoiceDetails, String accountNumber, double balance) {
         CardGroupEntity cardGroup = buildCardGroupForAccount(accountNumber);
         cardGroup.setTotalNumber(balance);
         invoiceDetails.getCardGroups().add(cardGroup);

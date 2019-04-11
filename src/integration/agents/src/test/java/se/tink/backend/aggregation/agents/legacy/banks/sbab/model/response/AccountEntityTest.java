@@ -41,7 +41,8 @@ public class AccountEntityTest {
     }
 
     @Test
-    public void entityWithNewLineInAccountNumber_AndNoName_ConvertsToTinkAccountWithoutNewLineInName() {
+    public void
+            entityWithNewLineInAccountNumber_AndNoName_ConvertsToTinkAccountWithoutNewLineInName() {
         AccountEntity accountEntity = new AccountEntity();
         accountEntity.setBalance("10 000,00 kr");
         accountEntity.setAccountNumber("\n0123456789");

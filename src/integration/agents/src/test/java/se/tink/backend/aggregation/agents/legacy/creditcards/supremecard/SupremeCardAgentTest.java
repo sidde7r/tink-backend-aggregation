@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.creditcards.supremecard;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.libraries.social.security.TestSSN;
 
 public class SupremeCardAgentTest extends AbstractAgentTest<SupremeCardAgent> {

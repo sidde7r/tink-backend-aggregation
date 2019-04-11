@@ -17,14 +17,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-
 public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
 
     private DemoBankIdAuthenticator authenticator;
 
-    public FailingBankIdDemoAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public FailingBankIdDemoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new DemoBankIdAuthenticator(credentials, false);
     }
@@ -136,11 +134,13 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
 
             @Override
             public double getBalance() {
-                return  26245.33;
+                return 26245.33;
             }
 
             @Override
-            public AccountIdentifier getIdentifier() { return null; }
+            public AccountIdentifier getIdentifier() {
+                return null;
+            }
         };
     }
 

@@ -5,14 +5,16 @@ import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LockAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger log = new AggregationLogger(LockAgentWorkerCommand.class);
-    private static final String LOCK_FORMAT = "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, credentialsId)
+    private static final AggregationLogger log =
+            new AggregationLogger(LockAgentWorkerCommand.class);
+    private static final String LOCK_FORMAT =
+            "/locks/aggregation/LockAgentWorkerCommand/%s/%s"; // % (userId, credentialsId)
 
     private InterProcessLock lock;
     private AgentWorkerCommandContext context;
@@ -26,17 +28,22 @@ public class LockAgentWorkerCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         CredentialsRequest request = context.getRequest();
 
-        lock = new InterProcessSemaphoreMutex(
-                context.getCoordinationClient(),
-                String.format(LOCK_FORMAT, request.getUser().getId(), request.getCredentials().getId())
-        );
+        lock =
+                new InterProcessSemaphoreMutex(
+                        context.getCoordinationClient(),
+                        String.format(
+                                LOCK_FORMAT,
+                                request.getUser().getId(),
+                                request.getCredentials().getId()));
 
         String providerName = request.getProvider().getName();
 
         if (!Strings.isNullOrEmpty(providerName) && providerName.startsWith("uk-")) {
-            // Super UK specific fix to handle two requests coming in at the same time. We don't want the
+            // Super UK specific fix to handle two requests coming in at the same time. We don't
+            // want the
             // second request to execute as it works with stale data and will put the credential
-            // in AUTHENTICATION_ERROR. This should be removed once we have a robust solution in place.
+            // in AUTHENTICATION_ERROR. This should be removed once we have a robust solution in
+            // place.
             hasAcquiredLock = lock.acquire(35, TimeUnit.SECONDS);
         } else {
             hasAcquiredLock = lock.acquire(4, TimeUnit.MINUTES);

@@ -10,9 +10,7 @@ public class AgentInfo {
     }
 
     public static AgentInfo of(String className, String state) {
-        return new AgentInfo(
-                className,
-                AgentState.of(state));
+        return new AgentInfo(className, AgentState.of(state));
     }
 
     public String getAgentClassName() {

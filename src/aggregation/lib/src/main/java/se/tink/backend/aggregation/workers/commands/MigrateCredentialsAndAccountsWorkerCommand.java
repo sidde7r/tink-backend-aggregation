@@ -16,24 +16,34 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     private final CredentialsRequest request;
     protected ImmutableMap<String, AgentVersionMigration> migrations =
             new ImmutableMap.Builder<String, AgentVersionMigration>()
-                // Add your migrations here
-                .put("handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber())
+                    // Add your migrations here
+                    .put("handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber())
 
-                // SEB Kort migrations
-                .put("chevroletmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("choicemastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("djurgardskortetmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("eurocard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("finnairmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("jetmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("nknyckelnmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("opelmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("saabmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("saseurobonusmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("sebwalletmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .put("statoilmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
-                .build();
+                    // SEB Kort migrations
+                    .put(
+                            "chevroletmastercard-bankid",
+                            new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("choicemastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put(
+                            "djurgardskortetmastercard-bankid",
+                            new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("eurocard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("finnairmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("jetmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put(
+                            "nknyckelnmastercard-bankid",
+                            new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("opelmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("saabmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put(
+                            "saseurobonusmastercard-bankid",
+                            new SebKortSanitizeUniqueIdentifierMgration())
+                    .put(
+                            "sebwalletmastercard-bankid",
+                            new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("statoilmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
             CredentialsRequest request, ControllerWrapper controllerWrapper) {
@@ -57,9 +67,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
 
-        migrations
-                .entrySet()
-                .stream()
+        migrations.entrySet().stream()
                 .filter(e -> e.getKey().equals(request.getProvider().getName()))
                 .map(e -> e.getValue())
                 .filter(m -> m.shouldChangeRequest(request))

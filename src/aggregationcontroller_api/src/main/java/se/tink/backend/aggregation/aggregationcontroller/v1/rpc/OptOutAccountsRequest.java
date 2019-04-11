@@ -7,11 +7,10 @@ public class OptOutAccountsRequest {
     private String credentialsId;
     private String userId;
 
-    private OptOutAccountsRequest() {
+    private OptOutAccountsRequest() {}
 
-    }
-
-    public static OptOutAccountsRequest of(String userId, String credentialsId, List<String> optedOutAccounts) {
+    public static OptOutAccountsRequest of(
+            String userId, String credentialsId, List<String> optedOutAccounts) {
         OptOutAccountsRequest optOutAccountsRequest = new OptOutAccountsRequest();
         optOutAccountsRequest.setUserId(userId);
         optOutAccountsRequest.setCredentialsId(credentialsId);

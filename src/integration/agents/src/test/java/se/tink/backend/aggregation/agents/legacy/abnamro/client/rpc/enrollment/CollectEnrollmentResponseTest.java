@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class CollectEnrollmentResponseTest {
     @Test

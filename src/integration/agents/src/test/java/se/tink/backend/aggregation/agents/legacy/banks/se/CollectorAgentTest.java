@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.banks.se;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.banks.se.collector.CollectorAgent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.backend.aggregation.agents.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.banks.se.collector.CollectorAgent;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.social.security.TestSSN;
 
 public class CollectorAgentTest extends AbstractAgentTest<CollectorAgent> {
     private Credentials credentials = new Credentials();
@@ -30,6 +30,7 @@ public class CollectorAgentTest extends AbstractAgentTest<CollectorAgent> {
         c.setType(CredentialsTypes.MOBILE_BANKID);
         return c;
     }
+
     @Before
     public void setup() {
         credentials = credentials(SSN);
@@ -44,5 +45,4 @@ public class CollectorAgentTest extends AbstractAgentTest<CollectorAgent> {
     public void testPersistentLogin() throws Exception {
         testAgentPersistentLoggedIn(credentials);
     }
-
 }

@@ -1,20 +1,20 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.date.DateUtils;
 
 public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
@@ -31,12 +31,11 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     @Test
     public void testRefresh() throws Exception {
         new AgentIntegrationTest.Builder("se", "sbab-bankid")
-                .addCredentialField(Field.Key.USERNAME,"ssn")
+                .addCredentialField(Field.Key.USERNAME, "ssn")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .build()
                 .testRefresh();
-
     }
 
     @Test
@@ -122,7 +121,8 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     /**
      * Prior to running the below test one must make sure that the recipient is not saved at SBAB.
-     * Note: the new recipient is not saved at SBAB when doing a transfer to a new recipient through Tink.
+     * Note: the new recipient is not saved at SBAB when doing a transfer to a new recipient through
+     * Tink.
      */
     @Test
     public void testTransferExternalNewRecipient() throws Exception {
@@ -232,5 +232,4 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
         testTransferException(credentials, transfer);
     }
-
 }

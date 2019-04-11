@@ -16,18 +16,20 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCredi
 import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.libraries.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.http.utils.HttpResponseHelper;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class CreditSafeServiceResource implements CreditSafeService {
 
-    private static final ImmutableList<String> VALID_CLUSTERS = ImmutableList.of(
-            "oxford-production", "oxford-staging", "local-development");
+    private static final ImmutableList<String> VALID_CLUSTERS =
+            ImmutableList.of("oxford-production", "oxford-staging", "local-development");
     private ConsumerMonitoringWrapper consumerMonitoringWrapper;
 
     @Inject
     CreditSafeServiceResource(AgentsServiceConfiguration configuration) {
-        this(configuration.getCreditSafe().getUsername(), configuration.getCreditSafe().getPassword(),
+        this(
+                configuration.getCreditSafe().getUsername(),
+                configuration.getCreditSafe().getPassword(),
                 configuration.getCreditSafe().isLogConsumerMonitoringTraffic());
     }
 
@@ -36,10 +38,12 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
+    public void removeConsumerMonitoring(
+            RemoveMonitoredConsumerCreditSafeRequest request,
             @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
-        SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
+        SocialSecurityNumber.Sweden socialSecurityNumber =
+                new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
@@ -48,10 +52,11 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo) {
+    public Response addConsumerMonitoring(
+            AddMonitoredConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
-        SocialSecurityNumber.Sweden socialSecurityNumber = new SocialSecurityNumber.Sweden(request.getPnr());
+        SocialSecurityNumber.Sweden socialSecurityNumber =
+                new SocialSecurityNumber.Sweden(request.getPnr());
         if (!socialSecurityNumber.isValid()) {
             HttpResponseHelper.error(Status.BAD_REQUEST);
         }
@@ -67,15 +72,15 @@ public class CreditSafeServiceResource implements CreditSafeService {
     }
 
     @Override
-    public PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo) {
+    public PageableConsumerCreditSafeResponse listChangedConsumers(
+            ChangedConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
         return consumerMonitoringWrapper.listChangedConsumers(request);
     }
 
     @Override
-    public PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo) {
+    public PageableConsumerCreditSafeResponse listMonitoredConsumers(
+            PageableConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo) {
         validateCluster(clientInfo);
         return consumerMonitoringWrapper.listMonitoredConsumers(request);
     }

@@ -41,14 +41,14 @@ public class SBABTransferUtilsTest {
         transfer.setAmount(new Amount(null, 100.567));
         Assert.assertEquals("100,57", SBABTransferUtils.formatAmount(transfer));
     }
-    
+
     @Test
     public void amountBetweenZeroAndOne_LeadingZero() {
         Transfer transfer = new Transfer();
         transfer.setAmount(new Amount(null, 0.12));
         Assert.assertEquals("0,12", SBABTransferUtils.formatAmount(transfer));
     }
-    
+
     @Test
     public void amountBelowZero_LeadingMinus() {
         Transfer transfer = new Transfer();

@@ -4,26 +4,30 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
+import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 
 public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
-    private static final Logger log = LoggerFactory.getLogger(UpdateCredentialsStatusAgentWorkerCommand.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(UpdateCredentialsStatusAgentWorkerCommand.class);
     private final ControllerWrapper controllerWrapper;
     private final Credentials credentials;
     private final Provider provider;
     private final AgentWorkerCommandContext context;
     private final Predicate<AgentWorkerCommandContext> setStatusUpdatedPredicate;
 
-    public UpdateCredentialsStatusAgentWorkerCommand(ControllerWrapper controllerWrapper,
-            Credentials credentials, Provider provider, AgentWorkerCommandContext context,
+    public UpdateCredentialsStatusAgentWorkerCommand(
+            ControllerWrapper controllerWrapper,
+            Credentials credentials,
+            Provider provider,
+            AgentWorkerCommandContext context,
             Predicate<AgentWorkerCommandContext> setStatusUpdatedPredicate) {
         this.controllerWrapper = controllerWrapper;
         this.credentials = credentials;
@@ -50,11 +54,15 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         }
 
         if (CredentialsStatus.FAILED_OPERATION_STATUSES.contains(credentials.getStatus())) {
-            log.info("Credentials status does not warrant status update - Status: {}", credentials.getStatus());
+            log.info(
+                    "Credentials status does not warrant status update - Status: {}",
+                    credentials.getStatus());
             return;
         }
 
-        log.info("Updating credentials status to UPDATED - Current status: {}", credentials.getStatus());
+        log.info(
+                "Updating credentials status to UPDATED - Current status: {}",
+                credentials.getStatus());
         updateStatus(CredentialsStatus.UPDATED);
     }
 
@@ -64,7 +72,8 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         Credentials credentialsCopy = credentials.clone();
         credentialsCopy.clearSensitiveInformation(provider);
 
-        UpdateCredentialsStatusRequest updateCredentialsStatusRequest = new UpdateCredentialsStatusRequest();
+        UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
+                new UpdateCredentialsStatusRequest();
         updateCredentialsStatusRequest.setCredentials(
                 CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy));
 

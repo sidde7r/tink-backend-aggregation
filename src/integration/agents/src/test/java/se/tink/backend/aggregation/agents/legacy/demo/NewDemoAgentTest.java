@@ -18,14 +18,16 @@ public class NewDemoAgentTest {
 
     @Test
     public void testDemoSupplementalInfo() throws Exception {
-        builder().addCredentialField(Field.Key.USERNAME, DemoCredentials.USER8.getUsername())
+        builder()
+                .addCredentialField(Field.Key.USERNAME, DemoCredentials.USER8.getUsername())
                 .build()
                 .testRefresh();
     }
 
     @Test
     public void testDemoSwe() throws Exception {
-        builder().addCredentialField(Field.Key.USERNAME, DemoCredentials.USER4.getUsername())
+        builder()
+                .addCredentialField(Field.Key.USERNAME, DemoCredentials.USER4.getUsername())
                 .build()
                 .testRefresh();
     }

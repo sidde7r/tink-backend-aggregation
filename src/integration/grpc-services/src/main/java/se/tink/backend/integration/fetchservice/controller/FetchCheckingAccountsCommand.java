@@ -9,8 +9,10 @@ public class FetchCheckingAccountsCommand {
     private Credentials credentials;
     private AggregatorInfo aggregatorInfo;
 
-    FetchCheckingAccountsCommand(String operationId,
-            AgentInfo agentInfo, Credentials credentials,
+    FetchCheckingAccountsCommand(
+            String operationId,
+            AgentInfo agentInfo,
+            Credentials credentials,
             AggregatorInfo aggregatorInfo) {
         this.operationId = operationId;
         this.agentInfo = agentInfo;
@@ -18,8 +20,10 @@ public class FetchCheckingAccountsCommand {
         this.aggregatorInfo = aggregatorInfo;
     }
 
-    public static FetchCheckingAccountsCommand of(String operationId,
-            AgentInfo agentInfo, Credentials credentials,
+    public static FetchCheckingAccountsCommand of(
+            String operationId,
+            AgentInfo agentInfo,
+            Credentials credentials,
             AggregatorInfo aggregatorInfo) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(operationId));
         Preconditions.checkNotNull(agentInfo);
@@ -28,11 +32,7 @@ public class FetchCheckingAccountsCommand {
 
         // FIXME: add more elaborate checks per command
         return new FetchCheckingAccountsCommand(
-                operationId,
-                agentInfo,
-                credentials,
-                aggregatorInfo
-        );
+                operationId, agentInfo, credentials, aggregatorInfo);
     }
 
     public String getOperationId() {

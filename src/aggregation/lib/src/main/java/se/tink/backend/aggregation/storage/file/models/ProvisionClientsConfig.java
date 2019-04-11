@@ -10,5 +10,4 @@ public class ProvisionClientsConfig {
     public void setClients(Clients clients) {
         this.clients = clients;
     }
-
 }

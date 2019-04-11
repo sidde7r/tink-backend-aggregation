@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
-import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 
 public class BeneficiaryEntityTest {
@@ -23,7 +23,8 @@ public class BeneficiaryEntityTest {
         assertThat(identifier.is(AccountIdentifier.Type.SE)).isTrue();
 
         SwedishIdentifier swedishIdentifier = identifier.to(SwedishIdentifier.class);
-        assertThat(swedishIdentifier).isEqualTo(AccountIdentifier.create(AccountIdentifier.Type.SE, "33008607015537"));
+        assertThat(swedishIdentifier)
+                .isEqualTo(AccountIdentifier.create(AccountIdentifier.Type.SE, "33008607015537"));
     }
 
     @Test
@@ -35,7 +36,8 @@ public class BeneficiaryEntityTest {
 
         AccountIdentifier identifier = beneficiaryEntity.generalGetAccountIdentifier();
 
-        AccountIdentifier expected = AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.NORDEA_EP);
+        AccountIdentifier expected =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.NORDEA_EP);
         assertThat(identifier).isEqualTo(expected);
     }
 
@@ -48,7 +50,8 @@ public class BeneficiaryEntityTest {
 
         AccountIdentifier identifier = beneficiaryEntity.generalGetAccountIdentifier();
 
-        AccountIdentifier expected = AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.HANDELSBANKEN_FH);
+        AccountIdentifier expected =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.HANDELSBANKEN_FH);
         assertThat(identifier).isEqualTo(expected);
     }
 
@@ -64,7 +67,9 @@ public class BeneficiaryEntityTest {
 
         SwedishIdentifier swedishIdentifier = identifier.to(SwedishIdentifier.class);
 
-        SwedishIdentifier expected = AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.DANSKEBANK_FH).to(SwedishIdentifier.class);
+        SwedishIdentifier expected =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, TestAccount.DANSKEBANK_FH)
+                        .to(SwedishIdentifier.class);
         assertThat(swedishIdentifier).isEqualTo(expected);
     }
 
@@ -174,7 +179,8 @@ public class BeneficiaryEntityTest {
         AccountIdentifier identifier = beneficiaryEntity.generalGetAccountIdentifier();
 
         assertThat(identifier.is(AccountIdentifier.Type.SE_BG)).isTrue();
-        assertThat(identifier.getIdentifier(new DisplayAccountIdentifierFormatter())).isEqualTo("120-2407");
+        assertThat(identifier.getIdentifier(new DisplayAccountIdentifierFormatter()))
+                .isEqualTo("120-2407");
     }
 
     @Test
@@ -188,7 +194,8 @@ public class BeneficiaryEntityTest {
         AccountIdentifier identifier = beneficiaryEntity.generalGetAccountIdentifier();
 
         assertThat(identifier.is(AccountIdentifier.Type.SE_PG)).isTrue();
-        assertThat(identifier.getIdentifier(new DisplayAccountIdentifierFormatter())).isEqualTo("820703-7");
+        assertThat(identifier.getIdentifier(new DisplayAccountIdentifierFormatter()))
+                .isEqualTo("820703-7");
     }
 
     @Test

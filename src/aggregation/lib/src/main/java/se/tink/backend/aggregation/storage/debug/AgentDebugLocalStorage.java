@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.storage.debug;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import com.google.common.io.Files;
-import com.google.common.base.Charsets;
 
-public class AgentDebugLocalStorage implements AgentDebugStorageHandler{
+public class AgentDebugLocalStorage implements AgentDebugStorageHandler {
 
     @Override
     public String store(String content, File file) throws IOException {

@@ -1,17 +1,19 @@
 package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetRateRequestTest {
     @Test
     public void uriFromMandatoryParameters() {
-        ApiRequest ratesRequest = GetRateRequest.builder()
-                .withLoanAmount(1000000.00)
-                .withAge(24)
-                .withPropertyType(PropertyType.VILLA)
-                .build();
+        ApiRequest ratesRequest =
+                GetRateRequest.builder()
+                        .withLoanAmount(1000000.00)
+                        .withAge(24)
+                        .withPropertyType(PropertyType.VILLA)
+                        .build();
 
         String queryString = ratesRequest.getUriPath();
         assertThat(queryString)
@@ -41,14 +43,15 @@ public class GetRateRequestTest {
 
     @Test
     public void uriFromOptionalParameters() {
-        ApiRequest ratesRequest = GetRateRequest.builder()
-                .withLoanAmount(1000000.00)
-                .withAge(24)
-                .withPropertyType(PropertyType.VILLA)
-                .withOptionalMarketValue(123.00)
-                .withOptionalMunicipality("SVEDALA")
-                .withOptionalNewPlacementVolume(1234.00)
-                .build();
+        ApiRequest ratesRequest =
+                GetRateRequest.builder()
+                        .withLoanAmount(1000000.00)
+                        .withAge(24)
+                        .withPropertyType(PropertyType.VILLA)
+                        .withOptionalMarketValue(123.00)
+                        .withOptionalMunicipality("SVEDALA")
+                        .withOptionalNewPlacementVolume(1234.00)
+                        .build();
 
         String queryString = ratesRequest.getUriPath();
         assertThat(queryString)
@@ -64,7 +67,7 @@ public class GetRateRequestTest {
     @Test(expected = IllegalArgumentException.class)
     public void uriWithoutMandatoryParameter_Throws() {
         GetRateRequest.builder()
-                //.withLoanAmount(1000000.00)
+                // .withLoanAmount(1000000.00)
                 .withAge(24)
                 .withPropertyType(PropertyType.VILLA)
                 .build();
@@ -72,16 +75,15 @@ public class GetRateRequestTest {
 
     @Test
     public void uriIsEncoded() {
-        ApiRequest ratesRequest = GetRateRequest.builder()
-                .withLoanAmount(1000000.00)
-                .withAge(24)
-                .withPropertyType(PropertyType.VILLA)
-                .withOptionalMunicipality("Götte borg")
-                .build();
+        ApiRequest ratesRequest =
+                GetRateRequest.builder()
+                        .withLoanAmount(1000000.00)
+                        .withAge(24)
+                        .withPropertyType(PropertyType.VILLA)
+                        .withOptionalMunicipality("Götte borg")
+                        .build();
 
         String queryString = ratesRequest.getUriPath();
-        assertThat(queryString)
-                .startsWith("/rates?")
-                .contains("municipality=G%C3%B6tte+borg");
+        assertThat(queryString).startsWith("/rates?").contains("municipality=G%C3%B6tte+borg");
     }
 }

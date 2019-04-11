@@ -6,5 +6,6 @@ import spark.Response;
 
 public interface NasaApi {
     String ping(Request request, Response response);
+
     HttpResponse initiate(Request request, Response response) throws Exception;
 }

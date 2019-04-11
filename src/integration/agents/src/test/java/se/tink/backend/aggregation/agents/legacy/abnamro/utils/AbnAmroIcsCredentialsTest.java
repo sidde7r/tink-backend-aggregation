@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.abnamro.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.Sets;
 import org.junit.Test;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbnAmroIcsCredentialsTest {
 
@@ -13,7 +14,8 @@ public class AbnAmroIcsCredentialsTest {
 
         credentials.addContractNumbers(Sets.newHashSet(1L, 2L));
 
-        assertThat(AbnAmroIcsCredentials.isAbnAmroIcsCredentials(credentials.getCredentials())).isTrue();
+        assertThat(AbnAmroIcsCredentials.isAbnAmroIcsCredentials(credentials.getCredentials()))
+                .isTrue();
         assertThat(credentials.getBcNumber()).isEqualTo("1234");
         assertThat(credentials.getContractNumbers()).contains(1L, 2L);
         assertThat(credentials.hasContracts()).isTrue();
@@ -33,9 +35,7 @@ public class AbnAmroIcsCredentialsTest {
         assertThat(credentials.getCredentials().getStatus()).isEqualTo(CredentialsStatus.DISABLED);
     }
 
-    /**
-     * Test to add contract numbers to verify that they are persisted correctly
-     */
+    /** Test to add contract numbers to verify that they are persisted correctly */
     @Test
     public void testAddContractNumber() throws Exception {
         AbnAmroIcsCredentials credentials = AbnAmroIcsCredentials.create("userid", "1234");

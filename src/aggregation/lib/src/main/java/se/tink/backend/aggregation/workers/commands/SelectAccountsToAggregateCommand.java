@@ -1,34 +1,35 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.WhitelistRequest;
-import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
-import se.tink.libraries.enums.TinkFeature;
-
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
+import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.WhitelistRequest;
+import se.tink.backend.aggregation.workers.AgentWorkerCommand;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.enums.TinkFeature;
 
 public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
-    private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private final SetAccountsToAggregateContext context;
     private final CredentialsRequest refreshInformationRequest;
 
-    public SelectAccountsToAggregateCommand(SetAccountsToAggregateContext context, CredentialsRequest request) {
+    public SelectAccountsToAggregateCommand(
+            SetAccountsToAggregateContext context, CredentialsRequest request) {
         this.context = context;
         this.refreshInformationRequest = request;
     }
 
-    // select from all accounts that is under this credential and store in `accountsToAggregate` list in
+    // select from all accounts that is under this credential and store in `accountsToAggregate`
+    // list in
     // AgentWorkerCommandContext:
     //      if it is regular refresh (refresh all but excluded account:
     //          we store all besides the excluded accounts
@@ -40,10 +41,16 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     public AgentWorkerCommandResult execute() throws Exception {
         List<Account> allAccounts = context.getCachedAccounts();
         List<String> uniqueIdOfUserSelectedAccounts = context.getUniqueIdOfUserSelectedAccounts();
-        List<Account> accountsFromRequest = refreshInformationRequest.getAccounts() == null? Lists.newArrayList(): refreshInformationRequest.getAccounts();
+        List<Account> accountsFromRequest =
+                refreshInformationRequest.getAccounts() == null
+                        ? Lists.newArrayList()
+                        : refreshInformationRequest.getAccounts();
 
         // handle black list removal
-        List<Account> allExceptForBlacklisted = allAccounts.stream().filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x)).collect(Collectors.toList());
+        List<Account> allExceptForBlacklisted =
+                allAccounts.stream()
+                        .filter(x -> !shouldNotAggregateDataForAccount(accountsFromRequest, x))
+                        .collect(Collectors.toList());
         if (!(refreshInformationRequest instanceof WhitelistRequest)) {
             context.setAccountsToAggregate(allExceptForBlacklisted);
             return AgentWorkerCommandResult.CONTINUE;
@@ -59,9 +66,8 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
         }
 
         // handle whitelist-only inclusion
-        List<String> accountIdsFromRequest = accountsFromRequest.stream()
-                .map(Account::getBankId)
-                .collect(Collectors.toList());
+        List<String> accountIdsFromRequest =
+                accountsFromRequest.stream().map(Account::getBankId).collect(Collectors.toList());
         context.setAccountsToAggregate(
                 allExceptForBlacklisted.stream()
                         .filter(a -> accountIdsFromRequest.contains(a.getBankId()))
@@ -70,17 +76,20 @@ public class SelectAccountsToAggregateCommand extends AgentWorkerCommand {
     }
 
     @Override
-    public void postProcess() throws Exception {
+    public void postProcess() throws Exception {}
 
+    private boolean shouldNotAggregateDataForAccount(
+            List<Account> accountsFromRequest, Account account) {
+        Optional<Account> existingAccount =
+                accountsFromRequest.stream()
+                        .filter(a -> Objects.equals(a.getBankId(), account.getBankId()))
+                        .findFirst();
+
+        return existingAccount.isPresent()
+                && existingAccount
+                        .get()
+                        .getAccountExclusion()
+                        .excludedFeatures
+                        .contains(TinkFeature.AGGREGATION);
     }
-
-    private boolean shouldNotAggregateDataForAccount(List<Account> accountsFromRequest, Account account) {
-        Optional<Account> existingAccount = accountsFromRequest.stream()
-                .filter(a -> Objects.equals(a.getBankId(), account.getBankId()))
-                .findFirst();
-
-        return existingAccount.isPresent() &&
-                existingAccount.get().getAccountExclusion().excludedFeatures.contains(TinkFeature.AGGREGATION);
-    }
-
 }

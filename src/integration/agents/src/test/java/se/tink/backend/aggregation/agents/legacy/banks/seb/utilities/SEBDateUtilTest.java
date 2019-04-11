@@ -9,7 +9,8 @@ import org.junit.Test;
 
 public class SEBDateUtilTest {
 
-    // "Till andra svenska banker är pengarna tillgängliga för mottagaren samma dag om du skickar uppdraget senast
+    // "Till andra svenska banker är pengarna tillgängliga för mottagaren samma dag om du skickar
+    // uppdraget senast
     // 13.35." // SEB's Web Internet Bank
     private static final int MIDDAY_HOUR = 13;
     private static final int MIDDAY_MINUTE = 25;
@@ -19,12 +20,8 @@ public class SEBDateUtilTest {
         Calendar cal = Calendar.getInstance();
         cal.set(2014, Calendar.APRIL, 3, 0, 0, 0);
 
-        for (int hour : new int[] {
-                10, 15
-        }) {
-            for (int dayOfWeek : new int[] {
-                    0, 1, 2, 3, 4, 5, 6
-            }) {
+        for (int hour : new int[] {10, 15}) {
+            for (int dayOfWeek : new int[] {0, 1, 2, 3, 4, 5, 6}) {
                 cal.set(Calendar.HOUR_OF_DAY, hour);
                 cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
 
@@ -39,13 +36,17 @@ public class SEBDateUtilTest {
     }
 
     private void assertTimeOfDayIsBeforeMidday(Calendar calendar) {
-        Assert.assertTrue(calendar.get(Calendar.HOUR_OF_DAY) < MIDDAY_HOUR
-                || (calendar.get(Calendar.HOUR_OF_DAY) == MIDDAY_HOUR && calendar.get(Calendar.MINUTE) < MIDDAY_MINUTE));
+        Assert.assertTrue(
+                calendar.get(Calendar.HOUR_OF_DAY) < MIDDAY_HOUR
+                        || (calendar.get(Calendar.HOUR_OF_DAY) == MIDDAY_HOUR
+                                && calendar.get(Calendar.MINUTE) < MIDDAY_MINUTE));
     }
 
     private void assertTimeOfDayIsAfterMidday(Calendar calendar) {
-        Assert.assertTrue(calendar.get(Calendar.HOUR_OF_DAY) > MIDDAY_HOUR
-                || (calendar.get(Calendar.HOUR_OF_DAY) == MIDDAY_HOUR && calendar.get(Calendar.MINUTE) > MIDDAY_MINUTE));
+        Assert.assertTrue(
+                calendar.get(Calendar.HOUR_OF_DAY) > MIDDAY_HOUR
+                        || (calendar.get(Calendar.HOUR_OF_DAY) == MIDDAY_HOUR
+                                && calendar.get(Calendar.MINUTE) > MIDDAY_MINUTE));
     }
 
     @Test

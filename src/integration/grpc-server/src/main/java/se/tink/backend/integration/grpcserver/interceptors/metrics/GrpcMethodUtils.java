@@ -38,7 +38,8 @@ public class GrpcMethodUtils {
                 getMethodHandler(serverCallHandler)
                         .map(methodHandler -> getField(methodHandler, "serviceImpl").orElse(null));
         if (!classValue.isPresent()) {
-            logger.warn("Implemented class was not found for call " + getFullMethodName(serverCall));
+            logger.warn(
+                    "Implemented class was not found for call " + getFullMethodName(serverCall));
         }
         return classValue;
     }

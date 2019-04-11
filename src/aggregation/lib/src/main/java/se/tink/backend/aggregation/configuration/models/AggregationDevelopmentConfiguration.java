@@ -11,13 +11,21 @@ public class AggregationDevelopmentConfiguration {
     private AggregatorConfiguration aggregatorConfiguration;
     private CryptoConfiguration cryptoConfiguration;
 
-    public ClusterConfiguration getClusterConfiguration() { return clusterConfiguration; }
+    public ClusterConfiguration getClusterConfiguration() {
+        return clusterConfiguration;
+    }
 
-    public ClientConfiguration getClientConfiguration() { return clientConfiguration; }
+    public ClientConfiguration getClientConfiguration() {
+        return clientConfiguration;
+    }
 
-    public AggregatorConfiguration getAggregatorConfiguration() { return aggregatorConfiguration; }
+    public AggregatorConfiguration getAggregatorConfiguration() {
+        return aggregatorConfiguration;
+    }
 
-    public CryptoConfiguration getCryptoConfiguration() { return cryptoConfiguration; }
+    public CryptoConfiguration getCryptoConfiguration() {
+        return cryptoConfiguration;
+    }
 
     public boolean isValid() {
         if (this.clusterConfiguration == null) {
@@ -28,16 +36,14 @@ public class AggregationDevelopmentConfiguration {
             return false;
         }
 
-
         if (this.cryptoConfiguration == null) {
             return false;
         }
 
-
         if (this.aggregatorConfiguration == null) {
             return false;
         }
-        
+
         return true;
     }
 }

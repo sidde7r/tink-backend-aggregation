@@ -5,14 +5,20 @@ import java.util.List;
 public class Portfolio {
 
     public enum Type {
-        ISK, KF, DEPOT, PENSION, OTHER
+        ISK,
+        KF,
+        DEPOT,
+        PENSION,
+        OTHER
     }
 
-    // For an account with one portfolio this can be the account nr. For accounts with multiple portfolios this can be
+    // For an account with one portfolio this can be the account nr. For accounts with multiple
+    // portfolios this can be
     // the account nr combined with some static name/type/id only applicable to this portfolio.
     private String uniqueIdentifier;
 
-    // The total profit of the entire portfolio, both historical (real) profit and current (potential) profit.
+    // The total profit of the entire portfolio, both historical (real) profit and current
+    // (potential) profit.
     private Double totalProfit;
     // The funds, on this portfolio, available for purchase instruments.
     private Double cashValue;

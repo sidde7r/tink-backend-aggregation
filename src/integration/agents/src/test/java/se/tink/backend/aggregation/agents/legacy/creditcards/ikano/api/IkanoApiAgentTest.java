@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -9,9 +13,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Ignore
 public class IkanoApiAgentTest {

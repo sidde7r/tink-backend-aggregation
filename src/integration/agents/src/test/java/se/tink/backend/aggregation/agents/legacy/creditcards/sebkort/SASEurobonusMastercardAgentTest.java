@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.creditcards.sebkort;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.social.security.TestSSN;
 
 public class SASEurobonusMastercardAgentTest extends AbstractAgentTest<SEBKortAgent> {

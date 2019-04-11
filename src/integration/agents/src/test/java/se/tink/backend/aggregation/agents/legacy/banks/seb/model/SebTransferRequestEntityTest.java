@@ -1,21 +1,20 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
-import org.junit.Assert;
-import org.junit.Test;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.transfer.rpc.Transfer;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.Assert;
+import org.junit.Test;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.rpc.Transfer;
+
 public class SebTransferRequestEntityTest {
-    /**
-     * Verifies that we matches the signed transfer response with a transfer request
-     */
+    /** Verifies that we matches the signed transfer response with a transfer request */
     @Test
     public void verifyMatchingTransfer() throws TransferMessageException {
 
@@ -27,8 +26,9 @@ public class SebTransferRequestEntityTest {
         transfer.setSourceMessage("hubba");
 
         TransferMessageFormatter mockedTransferMessageFormatter = mockTransferMessageFormatter();
-        SebTransferRequestEntity transferRequest = SebBankTransferRequestEntity.createExternalBankTransfer(transfer, "12345",
-                mockedTransferMessageFormatter);
+        SebTransferRequestEntity transferRequest =
+                SebBankTransferRequestEntity.createExternalBankTransfer(
+                        transfer, "12345", mockedTransferMessageFormatter);
 
         BankTransferListEntity bankTransfer = new BankTransferListEntity();
         bankTransfer.SourceAccountNumber = "56241111111";
@@ -37,13 +37,15 @@ public class SebTransferRequestEntityTest {
         Assert.assertTrue(transferRequest.matches(bankTransfer));
     }
 
-    private TransferMessageFormatter mockTransferMessageFormatter() throws TransferMessageException {
-        TransferMessageFormatter.Messages messages = new TransferMessageFormatter.Messages(
-                "some formatted source message",
-                "some formatted dest message");
+    private TransferMessageFormatter mockTransferMessageFormatter()
+            throws TransferMessageException {
+        TransferMessageFormatter.Messages messages =
+                new TransferMessageFormatter.Messages(
+                        "some formatted source message", "some formatted dest message");
 
         TransferMessageFormatter mock = mock(TransferMessageFormatter.class);
-        when(mock.getDestinationMessage(any(Transfer.class), anyBoolean())).thenReturn(messages.getDestinationMessage());
+        when(mock.getDestinationMessage(any(Transfer.class), anyBoolean()))
+                .thenReturn(messages.getDestinationMessage());
         when(mock.getSourceMessage(any(Transfer.class))).thenReturn(messages.getSourceMessage());
         when(mock.getMessages(any(Transfer.class), anyBoolean())).thenReturn(messages);
 

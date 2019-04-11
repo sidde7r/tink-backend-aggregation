@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.cluster.identification;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
 import javax.ws.rs.WebApplicationException;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClusterIdTest {
     private static final String NAME = "clusterName";
@@ -12,9 +13,7 @@ public class ClusterIdTest {
     @Test(expected = WebApplicationException.class)
     public void whenEmptyClusterId_throwWebApplicationException() {
         ClusterId empty = ClusterId.createEmpty();
-        Optional.of(empty)
-                .filter(ClusterId::isValidId)
-                .orElseThrow(WebApplicationException::new);
+        Optional.of(empty).filter(ClusterId::isValidId).orElseThrow(WebApplicationException::new);
     }
 
     @Test(expected = WebApplicationException.class)
@@ -50,10 +49,12 @@ public class ClusterIdTest {
     @Test
     public void whenValidClusterId_assertThatIdEqualsExpectedId() {
         ClusterId validClusterId = ClusterId.of(NAME, ENVIRONMENT);
-        ClusterId clusterId = Optional.of(validClusterId)
-                .filter(ClusterId::isValidId)
-                .orElseThrow(WebApplicationException::new);
+        ClusterId clusterId =
+                Optional.of(validClusterId)
+                        .filter(ClusterId::isValidId)
+                        .orElseThrow(WebApplicationException::new);
 
-        assertThat(clusterId.getId()).isEqualToIgnoringCase(String.format("%s-%s", NAME, ENVIRONMENT));
+        assertThat(clusterId.getId())
+                .isEqualToIgnoringCase(String.format("%s-%s", NAME, ENVIRONMENT));
     }
 }

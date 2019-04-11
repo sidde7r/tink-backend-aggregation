@@ -5,5 +5,4 @@ import com.google.common.util.concurrent.RateLimiter;
 public interface ProviderRateLimiterFactory {
 
     RateLimiter buildFor(String providerClassName);
-
 }

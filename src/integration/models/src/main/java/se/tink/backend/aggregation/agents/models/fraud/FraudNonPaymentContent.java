@@ -10,38 +10,50 @@ public class FraudNonPaymentContent extends FraudDetailsContent {
     private double amount;
     private String type;
     private Date date;
-    
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public double getAmount() {
         return amount;
     }
+
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public Date getDate() {
         return date;
     }
+
     public void setDate(Date date) {
         this.date = date;
     }
 
     @Override
     public String generateContentId() {
-        return String
-                .valueOf(Objects.hash(itemType(), name, amount, type, Optional.ofNullable(date).orElse(new Date(0))));
+        return String.valueOf(
+                Objects.hash(
+                        itemType(),
+                        name,
+                        amount,
+                        type,
+                        Optional.ofNullable(date).orElse(new Date(0))));
     }
-    
+
     @Override
     public FraudTypes itemType() {
         return FraudTypes.CREDIT;

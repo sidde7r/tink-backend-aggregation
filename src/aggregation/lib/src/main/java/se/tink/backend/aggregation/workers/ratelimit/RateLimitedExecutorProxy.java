@@ -31,7 +31,8 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
         }
     }
 
-    // Needs to be public to introspect <code>rateLimittedQueue</code> items from outside of this class.
+    // Needs to be public to introspect <code>rateLimittedQueue</code> items from outside of this
+    // class.
     public class RateLimitedRunnable implements Runnable {
 
         private final Runnable actualRunnable;
@@ -52,16 +53,19 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
     private final Supplier<RateLimiter> rateLimiter;
     private final BlockingQueue<Runnable> rateLimittedQueue;
 
-    public RateLimitedExecutorProxy(Supplier<RateLimiter> rateLimiter,
+    public RateLimitedExecutorProxy(
+            Supplier<RateLimiter> rateLimiter,
             ListenableThreadPoolExecutor<Runnable> delegate,
-            ThreadFactory threadFactory, MetricRegistry metricRegistry,
+            ThreadFactory threadFactory,
+            MetricRegistry metricRegistry,
             MetricId.MetricLabels metricLabels,
             int maxQueueableItems) {
         this.delegate = Preconditions.checkNotNull(delegate);
         this.rateLimiter = Preconditions.checkNotNull(rateLimiter);
         this.rateLimittedQueue = new LinkedBlockingQueue<>(maxQueueableItems);
-        this.rateLimitedExecutorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, rateLimittedQueue,
-                threadFactory);
+        this.rateLimitedExecutorService =
+                new ThreadPoolExecutor(
+                        1, 1, 0L, TimeUnit.MILLISECONDS, rateLimittedQueue, threadFactory);
         this.metricRegistry = metricRegistry;
         this.metricLabels = metricLabels;
     }
@@ -73,11 +77,15 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
 
     @Override
     public void execute(Runnable command) {
-        // Important we call #execute here. #submit method will wrap the Runnable in a FutureRunnable, which isn't
+        // Important we call #execute here. #submit method will wrap the Runnable in a
+        // FutureRunnable, which isn't
         // comparable. Comparability is required for the PriorityBlockingQueue to properly function.
-        InstrumentedRunnable instrumentedRunnable = new InstrumentedRunnable(metricRegistry, "rate-limitter",
-                metricLabels,
-                new RateLimitedRunnable(Preconditions.checkNotNull(command)));
+        InstrumentedRunnable instrumentedRunnable =
+                new InstrumentedRunnable(
+                        metricRegistry,
+                        "rate-limitter",
+                        metricLabels,
+                        new RateLimitedRunnable(Preconditions.checkNotNull(command)));
         rateLimitedExecutorService.execute(instrumentedRunnable);
         instrumentedRunnable.submitted();
     }
@@ -96,20 +104,15 @@ public class RateLimitedExecutorProxy extends AbstractExecutorService {
         return rateLimitedExecutorService.isTerminated();
     }
 
-    /**
-     * Note that the delegate executor service is _not_ shutdown.
-     */
+    /** Note that the delegate executor service is _not_ shutdown. */
     @Override
     public void shutdown() {
         rateLimitedExecutorService.shutdown();
     }
 
-    /**
-     * Note that the delegate executor service is _not_ shutdown.
-     */
+    /** Note that the delegate executor service is _not_ shutdown. */
     @Override
     public List<Runnable> shutdownNow() {
         return rateLimitedExecutorService.shutdownNow();
     }
-
 }

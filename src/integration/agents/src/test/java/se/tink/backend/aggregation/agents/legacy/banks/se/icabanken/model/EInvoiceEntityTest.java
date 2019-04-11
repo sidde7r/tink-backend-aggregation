@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
+import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
@@ -9,8 +10,6 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.util.Date;
 
 public class EInvoiceEntityTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";
@@ -26,7 +25,8 @@ public class EInvoiceEntityTest {
         EInvoiceEntity eInvoice = createEInvoiceEntity("PaymentBg", accountNumber);
         Transfer transfer = eInvoice.toTinkTransfer(catalog);
 
-        Assert.assertEquals(transfer.getDestination(),
+        Assert.assertEquals(
+                transfer.getDestination(),
                 AccountIdentifier.create(AccountIdentifier.Type.SE_BG, accountNumber));
         Assert.assertEquals(transfer.getAmount(), Amount.inSEK(AMOUNT));
         Assert.assertEquals(transfer.getType(), TransferType.EINVOICE);
@@ -79,7 +79,8 @@ public class EInvoiceEntityTest {
 
         // When
         String serialized = SerializationUtils.serializeToString(entity);
-        EInvoiceEntity deserialized = SerializationUtils.deserializeFromString(serialized, EInvoiceEntity.class);
+        EInvoiceEntity deserialized =
+                SerializationUtils.deserializeFromString(serialized, EInvoiceEntity.class);
 
         // Then
         Assert.assertNotNull("Could not deserialize EInvoiceEntity.", deserialized);

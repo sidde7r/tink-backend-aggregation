@@ -6,23 +6,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Map;
-import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
+import se.tink.libraries.user.rpc.User;
 
 /**
- * Immutable credentials object that's supposed to be used only as hack when needing a credentials instance, but
- * we want to ensure we don't use it for supplemental information etc.
+ * Immutable credentials object that's supposed to be used only as hack when needing a credentials
+ * instance, but we want to ensure we don't use it for supplemental information etc.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FakedCredentials extends Credentials {
 
     /**
-     * These are the only properties usable on a FakedCredentials. If more are needed, put them here. Though we should
-     * not use this credential to save stuff on since it's not supposed to be persisted.
+     * These are the only properties usable on a FakedCredentials. If more are needed, put them
+     * here. Though we should not use this credential to save stuff on since it's not supposed to be
+     * persisted.
      */
     @JsonCreator
     public FakedCredentials(
@@ -34,10 +35,15 @@ public class FakedCredentials extends Credentials {
     }
 
     public FakedCredentials(User user, Provider provider) {
-        applySuperValues(user.getId(), user.getUsername(), provider.getName(), provider.getCredentialsType());
+        applySuperValues(
+                user.getId(),
+                user.getUsername(),
+                provider.getName(),
+                provider.getCredentialsType());
     }
 
-    private void applySuperValues(String userId, String userName, String providerName, CredentialsTypes type) {
+    private void applySuperValues(
+            String userId, String userName, String providerName, CredentialsTypes type) {
         // Fake values that hopefully doesn't blow NPE's later on
         this.setType(type);
         super.setId(null);
@@ -54,7 +60,8 @@ public class FakedCredentials extends Credentials {
     }
 
     /**
-     * Original Credentials generates id if missing. This Credential has no id, so should not generate.
+     * Original Credentials generates id if missing. This Credential has no id, so should not
+     * generate.
      */
     @Override
     @JsonIgnore

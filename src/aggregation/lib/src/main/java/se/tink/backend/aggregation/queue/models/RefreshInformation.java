@@ -17,8 +17,7 @@ public class RefreshInformation {
     private String environment;
     private Map<String, String> context;
 
-    public RefreshInformation() {
-    }
+    public RefreshInformation() {}
 
     public RefreshInformation(RefreshInformationRequest request, ClientInfo clientInfo) {
         this.request = request;
@@ -77,11 +76,11 @@ public class RefreshInformation {
         this.clusterId = clusterId;
     }
 
-    public void setMDCContext(Map<String, String> context){
+    public void setMDCContext(Map<String, String> context) {
         this.context = context;
     }
 
-    public Map<String, String> getMDCContext(){
+    public Map<String, String> getMDCContext() {
         return context;
     }
 }

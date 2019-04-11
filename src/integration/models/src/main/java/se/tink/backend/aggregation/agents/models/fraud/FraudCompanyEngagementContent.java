@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.models.fraud;
 
+import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import com.google.common.collect.Lists;
 
 public class FraudCompanyEngagementContent extends FraudDetailsContent {
 
@@ -60,8 +59,9 @@ public class FraudCompanyEngagementContent extends FraudDetailsContent {
         if (roles == null) {
             return "null";
         }
-        
-        return String.valueOf(Objects.hash(itemType(), name, number, getRolesSortedLowercase(), outDate));
+
+        return String.valueOf(
+                Objects.hash(itemType(), name, number, getRolesSortedLowercase(), outDate));
     }
 
     private List<String> getRolesSortedLowercase() {
@@ -70,9 +70,9 @@ public class FraudCompanyEngagementContent extends FraudDetailsContent {
         for (String role : roles) {
             rolesSorted.add(role.toLowerCase());
         }
-        
+
         Collections.sort(rolesSorted);
-        
+
         return rolesSorted;
     }
 

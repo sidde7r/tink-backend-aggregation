@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.seb;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import static org.assertj.core.api.Assertions.assertThat;
+import se.tink.libraries.account.identifiers.TestAccount;
 
 public class SebAccountIdentifierFormatterTest {
 
@@ -13,23 +14,25 @@ public class SebAccountIdentifierFormatterTest {
 
     @Test
     public void testNordeaFormatting() {
-        Assert.assertEquals("8401141935",
-                new SwedishIdentifier("33008401141935").getIdentifier(formatter));
+        Assert.assertEquals(
+                "8401141935", new SwedishIdentifier("33008401141935").getIdentifier(formatter));
     }
 
     @Test
     public void testSavingsbankFormatting() {
-        Assert.assertEquals("842280031270465",
-                new SwedishIdentifier("8422831270465").getIdentifier(formatter));
+        Assert.assertEquals(
+                "842280031270465", new SwedishIdentifier("8422831270465").getIdentifier(formatter));
     }
 
     @Test
     public void parseNordeaSSNAccount() {
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseSwedishIdentifier("8401141935", "NB");
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseSwedishIdentifier("8401141935", "NB");
 
         assertThat(parsedIdentifier.isPresent()).isTrue();
-        assertThat(parsedIdentifier.get()).isEqualTo(new SwedishIdentifier(TestAccount.NORDEASSN_EP));
+        assertThat(parsedIdentifier.get())
+                .isEqualTo(new SwedishIdentifier(TestAccount.NORDEASSN_EP));
     }
 
     @Test
@@ -37,7 +40,8 @@ public class SebAccountIdentifierFormatterTest {
         String accountNumber = TestAccount.NORDEA_EP;
 
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseSwedishIdentifier(accountNumber, "NB");
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseSwedishIdentifier(accountNumber, "NB");
 
         assertThat(parsedIdentifier.isPresent()).isTrue();
         assertThat(parsedIdentifier.get()).isEqualTo(new SwedishIdentifier(accountNumber));
@@ -48,7 +52,8 @@ public class SebAccountIdentifierFormatterTest {
         String accountNumber = TestAccount.SKANDIABANKEN_FH;
 
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseSwedishIdentifier(accountNumber, "NB");
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseSwedishIdentifier(accountNumber, "NB");
 
         assertThat(parsedIdentifier.isPresent()).isFalse();
     }
@@ -58,7 +63,8 @@ public class SebAccountIdentifierFormatterTest {
         String accountNumber = TestAccount.DANSKEBANK_FH;
 
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseSwedishIdentifier(accountNumber, null);
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseSwedishIdentifier(accountNumber, null);
 
         assertThat(parsedIdentifier.isPresent()).isTrue();
         assertThat(parsedIdentifier.get()).isEqualTo(new SwedishIdentifier(accountNumber));
@@ -69,7 +75,8 @@ public class SebAccountIdentifierFormatterTest {
         String accountNumber = TestAccount.SEB_DL;
 
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseInternalIdentifier(accountNumber);
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseInternalIdentifier(accountNumber);
 
         assertThat(parsedIdentifier.isPresent()).isTrue();
         assertThat(parsedIdentifier.get()).isEqualTo(new SwedishIdentifier(accountNumber));
@@ -80,7 +87,8 @@ public class SebAccountIdentifierFormatterTest {
         String accountNumber = TestAccount.SKANDIABANKEN_FH;
 
         SebAccountIdentifierFormatter formatter = new SebAccountIdentifierFormatter();
-        Optional<SwedishIdentifier> parsedIdentifier = formatter.parseInternalIdentifier(accountNumber);
+        Optional<SwedishIdentifier> parsedIdentifier =
+                formatter.parseInternalIdentifier(accountNumber);
 
         assertThat(parsedIdentifier.isPresent()).isFalse();
     }

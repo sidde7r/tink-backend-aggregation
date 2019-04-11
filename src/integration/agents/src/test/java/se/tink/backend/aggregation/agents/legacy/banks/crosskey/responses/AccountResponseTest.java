@@ -1,29 +1,30 @@
 package se.tink.backend.aggregation.agents.banks.crosskey.responses;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import java.io.IOException;
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.banks.crosskey.PaginationTypes;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.util.List;
+import org.junit.Test;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.crosskey.PaginationTypes;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
+
 public class AccountResponseTest {
-    private static final String ACCOUNT_RESPONSE_JSON = "{\"accountNumber\":\"SE123456\",\"accountId\":\"abc123\",\"accountNickname\":\"2311 10 101 10\",\"currency\":\"SEK\",\"availableAmount\":-2000000.00,\"balance\":-2000000.00,\"creditLimit\":null,\"interestRate\":1.6500,\"trueInterestRate\":null,\"interestMargin\":0,\"capitalization\":\"\",\"minInterestRate\":0,\"maxInterestRate\":0,\"referenceInterestName\":\"\",\"referenceInterestValue\":0,\"interestLadder\":[],\"accountType\":\"506\",\"accountTypeName\":\"LÅN FAST RÄNTA - BULLET\",\"accountGroup\":\"loan\",\"accountSubGroup\":null,\"bban\":\"23111010110\",\"bbanFormatted\":\"2311 10 101 10\",\"bic\":\"AABASESS\",\"payableAccount\":false,\"transferable\":false,\"defaultAccount\":false,\"showAccount\":true,\"reservations\":false,\"reservationAmount\":0,\"accountOwnerName\":\"FIRST LAST\",\"accountCoOwnerName\":\"PARTNER PERHAPS\",\"moreOwnersThanTwo\":false,\"dueDate\":null,\"grossInterestAmount\":null,\"netInterestAmount\":null,\"interestTaxAmount\":null,\"receiverAccount\":null,\"owner\":true,\"softLocked\":false,\"pledged\":false,\"allowedAsDefaultAccount\":true,\"usageType\":null,\"usageText\":null}";
+    private static final String ACCOUNT_RESPONSE_JSON =
+            "{\"accountNumber\":\"SE123456\",\"accountId\":\"abc123\",\"accountNickname\":\"2311 10 101 10\",\"currency\":\"SEK\",\"availableAmount\":-2000000.00,\"balance\":-2000000.00,\"creditLimit\":null,\"interestRate\":1.6500,\"trueInterestRate\":null,\"interestMargin\":0,\"capitalization\":\"\",\"minInterestRate\":0,\"maxInterestRate\":0,\"referenceInterestName\":\"\",\"referenceInterestValue\":0,\"interestLadder\":[],\"accountType\":\"506\",\"accountTypeName\":\"LÅN FAST RÄNTA - BULLET\",\"accountGroup\":\"loan\",\"accountSubGroup\":null,\"bban\":\"23111010110\",\"bbanFormatted\":\"2311 10 101 10\",\"bic\":\"AABASESS\",\"payableAccount\":false,\"transferable\":false,\"defaultAccount\":false,\"showAccount\":true,\"reservations\":false,\"reservationAmount\":0,\"accountOwnerName\":\"FIRST LAST\",\"accountCoOwnerName\":\"PARTNER PERHAPS\",\"moreOwnersThanTwo\":false,\"dueDate\":null,\"grossInterestAmount\":null,\"netInterestAmount\":null,\"interestTaxAmount\":null,\"receiverAccount\":null,\"owner\":true,\"softLocked\":false,\"pledged\":false,\"allowedAsDefaultAccount\":true,\"usageType\":null,\"usageText\":null}";
 
     @Test
     public void verifyToStringOutput_containsNonSensitiveInfoOnly() throws IOException {
-        AccountResponse accountResponse = new ObjectMapper().readValue(ACCOUNT_RESPONSE_JSON, AccountResponse.class);
+        AccountResponse accountResponse =
+                new ObjectMapper().readValue(ACCOUNT_RESPONSE_JSON, AccountResponse.class);
         String toStringValue = accountResponse.toString();
 
         assertThat(toStringValue)
@@ -31,8 +32,10 @@ public class AccountResponseTest {
                 .doesNotContain("abc123")
                 .doesNotContain("2311 10 101 10")
                 .doesNotContain("23111010110")
-                .doesNotContain("FIRST").doesNotContain("LAST")
-                .doesNotContain("PARTNER").doesNotContain("PERHAPS")
+                .doesNotContain("FIRST")
+                .doesNotContain("LAST")
+                .doesNotContain("PARTNER")
+                .doesNotContain("PERHAPS")
                 .doesNotContain("-2000000.00")
                 .contains("=SEK")
                 .contains("=1.65")
@@ -116,8 +119,10 @@ public class AccountResponseTest {
     }
 
     public void createStaticReturnValuesFor(CrossKeyConfig config) {
-        when(config.getAccountType(any(String.class), any(String.class))).thenReturn(AccountTypes.CHECKING);
-        when(config.getIdentifiers(any(String.class), any(String.class), any(String.class))).thenReturn(createIdentifiers());
+        when(config.getAccountType(any(String.class), any(String.class)))
+                .thenReturn(AccountTypes.CHECKING);
+        when(config.getIdentifiers(any(String.class), any(String.class), any(String.class)))
+                .thenReturn(createIdentifiers());
         when(config.getPaginationType()).thenReturn(PaginationTypes.DATE);
     }
 }

@@ -9,15 +9,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.enums.AccountExclusion;
-import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.account.identifiers.GiroIdentifier;
-import se.tink.libraries.serialization.TypeReferences;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
-
 import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
@@ -27,9 +18,18 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountExclusion;
+import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.GiroIdentifier;
+import se.tink.libraries.serialization.TypeReferences;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
+@JsonAutoDetect(
+        fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Account implements Cloneable {
@@ -85,7 +85,8 @@ public class Account implements Cloneable {
     }
 
     /**
-     * @return Unique identifier on the client side, not to be confused with nxgen Account.getBankIdentifier
+     * @return Unique identifier on the client side, not to be confused with nxgen
+     *     Account.getBankIdentifier
      */
     public String getBankId() {
         return this.bankId;
@@ -107,8 +108,10 @@ public class Account implements Cloneable {
         return name;
     }
 
-    // Forces serialization to use this getter in order to ensure account name fallback similar to that
-    // existing in nxgen account builders. This solves issues in legacy agents where name is not set.
+    // Forces serialization to use this getter in order to ensure account name fallback similar to
+    // that
+    // existing in nxgen account builders. This solves issues in legacy agents where name is not
+    // set.
     @JsonProperty("name")
     public String getNameWithFallback() {
         return this.name != null ? this.name : getAccountNumber();
@@ -239,7 +242,7 @@ public class Account implements Cloneable {
     }
 
     public void setFlags(Collection<AccountFlag> flags) {
-        for (AccountFlag flag: flags) {
+        for (AccountFlag flag : flags) {
             this.putFlag(flag);
         }
     }
@@ -247,7 +250,10 @@ public class Account implements Cloneable {
     public void putFlag(AccountFlag flag) {
         Set<String> flags = Sets.newHashSet();
         if (this.flags != null) {
-            flags = Sets.newHashSet(SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS));
+            flags =
+                    Sets.newHashSet(
+                            SerializationUtils.deserializeFromString(
+                                    this.flags, TypeReferences.LIST_OF_STRINGS));
         }
 
         flags.add(flag.name());
@@ -256,10 +262,12 @@ public class Account implements Cloneable {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this.getClass()).add("id", getId()).add("credentialsid", getCredentialsId())
-                .add("userid", getUserId()).toString();
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("id", getId())
+                .add("credentialsid", getCredentialsId())
+                .add("userid", getUserId())
+                .toString();
     }
-
 
     public List<AccountIdentifier> getIdentifiers() {
         return deserializeIdentifiers();
@@ -278,19 +286,19 @@ public class Account implements Cloneable {
     @JsonIgnore
     public AccountIdentifier getPreferredIdentifier(Type destinationIdentifierType) {
         switch (destinationIdentifierType) {
-        case SE:
-        case SE_PG:
-        case SE_BG:
-        case SE_SHB_INTERNAL:
-        case TINK:
-            return getIdentifier(Type.SE);
-        case FI:
-        case IBAN:
-            return getIdentifier(Type.IBAN);
-        case BE:
-            return getIdentifier(Type.BE);
-        case SEPA_EUR:
-            return getIdentifier(Type.SEPA_EUR);
+            case SE:
+            case SE_PG:
+            case SE_BG:
+            case SE_SHB_INTERNAL:
+            case TINK:
+                return getIdentifier(Type.SE);
+            case FI:
+            case IBAN:
+                return getIdentifier(Type.IBAN);
+            case BE:
+                return getIdentifier(Type.BE);
+            case SEPA_EUR:
+                return getIdentifier(Type.SEPA_EUR);
         }
         return null;
     }
@@ -302,8 +310,10 @@ public class Account implements Cloneable {
 
         Set<String> ids = Sets.newHashSet();
         if (this.identifiers != null) {
-            ids = Sets
-                    .newHashSet(SerializationUtils.deserializeFromString(this.identifiers, TypeReferences.LIST_OF_STRINGS));
+            ids =
+                    Sets.newHashSet(
+                            SerializationUtils.deserializeFromString(
+                                    this.identifiers, TypeReferences.LIST_OF_STRINGS));
         }
         ids.add(identifier.toUriAsString());
 
@@ -317,15 +327,19 @@ public class Account implements Cloneable {
         }
         List<AccountIdentifier> identifiers = deserializeIdentifiers();
 
-        Optional<AccountIdentifier> identifier = identifiers.stream()
-                .filter(identifier1 -> identifier1.getType() == type).findFirst();
+        Optional<AccountIdentifier> identifier =
+                identifiers.stream()
+                        .filter(identifier1 -> identifier1.getType() == type)
+                        .findFirst();
 
         // If we couldn't find a matching Identifier, try find a PG/BG with a predefined OCR
-        return identifier.orElseGet(() -> identifiers.stream().filter(FIND_GIRO_WITH_OCR).findFirst().orElse(null));
+        return identifier.orElseGet(
+                () -> identifiers.stream().filter(FIND_GIRO_WITH_OCR).findFirst().orElse(null));
     }
 
     @JsonIgnore
-    public <T extends AccountIdentifier> T getIdentifier(AccountIdentifier.Type type, Class<T> cls) {
+    public <T extends AccountIdentifier> T getIdentifier(
+            AccountIdentifier.Type type, Class<T> cls) {
         AccountIdentifier identifier = getIdentifier(type);
         if (identifier == null) {
             return null;
@@ -337,7 +351,9 @@ public class Account implements Cloneable {
         List<AccountIdentifier> accountIdentifiers = Lists.newArrayList();
 
         if (this.identifiers != null) {
-            List<String> ids = SerializationUtils.deserializeFromString(this.identifiers, TypeReferences.LIST_OF_STRINGS);
+            List<String> ids =
+                    SerializationUtils.deserializeFromString(
+                            this.identifiers, TypeReferences.LIST_OF_STRINGS);
             for (String id : ids) {
                 accountIdentifiers.add(AccountIdentifier.create(URI.create(id)));
             }
@@ -367,8 +383,10 @@ public class Account implements Cloneable {
         List<AccountFlag> accountFlags = Lists.newArrayList();
 
         if (this.flags != null) {
-            List<String> flags = SerializationUtils.deserializeFromString(this.flags, TypeReferences.LIST_OF_STRINGS);
-            for(String flag : flags) {
+            List<String> flags =
+                    SerializationUtils.deserializeFromString(
+                            this.flags, TypeReferences.LIST_OF_STRINGS);
+            for (String flag : flags) {
                 accountFlags.add(AccountFlag.valueOf(flag));
             }
         }
@@ -384,8 +402,8 @@ public class Account implements Cloneable {
     }
 
     /**
-     * Means that exclusion of the account is controlled by user and shouldn't
-     * be changed automatically.
+     * Means that exclusion of the account is controlled by user and shouldn't be changed
+     * automatically.
      *
      * @return true if account exclusion is user controlled
      */
@@ -437,25 +455,25 @@ public class Account implements Cloneable {
             return Maps.newHashMap();
         } else {
             // Will return null if it wasn't possible to convert the payload to a map
-            return SerializationUtils.deserializeFromString(this.payload, TypeReferences.MAP_OF_STRING_STRING);
+            return SerializationUtils.deserializeFromString(
+                    this.payload, TypeReferences.MAP_OF_STRING_STRING);
         }
     }
 
-    private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR = accountIdentifier -> {
-        if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
-            Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
-            return ocr.isPresent();
-        }
+    private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR =
+            accountIdentifier -> {
+                if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
+                    Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
+                    return ocr.isPresent();
+                }
 
-        return false;
-    };
+                return false;
+            };
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
         return Objects.equals(bankId, account.bankId);
     }

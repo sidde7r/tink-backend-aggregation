@@ -10,8 +10,10 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 public class SEBLoanTest {
-    private static final String LOAN_RESPONSE_ITEM = "{\"ROW_ID\":1,\"KONTRAKTNR\":\"1337\",\"KTOSLAG_TXT\":\"BOLÅN - BOTTENLÅN MED BUNDEN RÄNTA\",\"SKULD\":47000.00,\"RTE_SATS\":1.760,\"NASTA_FFDAT\":\"2016-09-28\",\"BELOPP\":1069.00,\"LANTAGARE1\":\"NAMN NAMNSSON\",\"LANTAGARE2\":\"\",\"FLER_LANTAGARE_FL\":\"N\",\"RTE_FF_DATUM\":\"2019-04-28\",\"INBETSATT\":\"DEBITERAS  KONTO 31337\",\"OBJBETD1\":\"Örebro\",\"OBJBETD2\":\"Ålsjön\",\"OBJBETD3\":\"3\",\"OBJBETD4\":\"\",\"AMORTERING\":1000.00,\"RANTA\":69.00,\"DRJBEL\":0.00,\"OVRAVGBEL\":0.00,\"KUNDNR_LOP_NR\":\"001\",\"LANTAGARE_FL\":\"1\",\"DATSLUTBET\":\"2019-04-28\",\"DATRTEJUST\":\"\",\"AVISERING_FL\":\"J\",\"FORFALL_KOD\":\"01\",\"AVI_TXT\":\"VARJE MÅNAD\"}";
-    private static final String LOAN_RESPONSE_ITEM_WITH_EPMTY_AND_NULLS = "{\"ROW_ID\":1,\"KONTRAKTNR\":null,\"KTOSLAG_TXT\":null,\"SKULD\":0.00,\"RTE_SATS\":0.00,\"NASTA_FFDAT\":null,\"BELOPP\":0.00,\"LANTAGARE1\":null,\"LANTAGARE2\":null,\"FLER_LANTAGARE_FL\":null,\"RTE_FF_DATUM\":null,\"INBETSATT\":null,\"OBJBETD1\":null,\"OBJBETD2\":null,\"OBJBETD3\":null,\"OBJBETD4\":null,\"AMORTERING\":0.00,\"RANTA\":0.00,\"DRJBEL\":0.00,\"OVRAVGBEL\":0.00,\"KUNDNR_LOP_NR\":null,\"LANTAGARE_FL\":null,\"DATSLUTBET\":null,\"DATRTEJUST\":null,\"AVISERING_FL\":null,\"FORFALL_KOD\":null,\"AVI_TXT\":null}";
+    private static final String LOAN_RESPONSE_ITEM =
+            "{\"ROW_ID\":1,\"KONTRAKTNR\":\"1337\",\"KTOSLAG_TXT\":\"BOLÅN - BOTTENLÅN MED BUNDEN RÄNTA\",\"SKULD\":47000.00,\"RTE_SATS\":1.760,\"NASTA_FFDAT\":\"2016-09-28\",\"BELOPP\":1069.00,\"LANTAGARE1\":\"NAMN NAMNSSON\",\"LANTAGARE2\":\"\",\"FLER_LANTAGARE_FL\":\"N\",\"RTE_FF_DATUM\":\"2019-04-28\",\"INBETSATT\":\"DEBITERAS  KONTO 31337\",\"OBJBETD1\":\"Örebro\",\"OBJBETD2\":\"Ålsjön\",\"OBJBETD3\":\"3\",\"OBJBETD4\":\"\",\"AMORTERING\":1000.00,\"RANTA\":69.00,\"DRJBEL\":0.00,\"OVRAVGBEL\":0.00,\"KUNDNR_LOP_NR\":\"001\",\"LANTAGARE_FL\":\"1\",\"DATSLUTBET\":\"2019-04-28\",\"DATRTEJUST\":\"\",\"AVISERING_FL\":\"J\",\"FORFALL_KOD\":\"01\",\"AVI_TXT\":\"VARJE MÅNAD\"}";
+    private static final String LOAN_RESPONSE_ITEM_WITH_EPMTY_AND_NULLS =
+            "{\"ROW_ID\":1,\"KONTRAKTNR\":null,\"KTOSLAG_TXT\":null,\"SKULD\":0.00,\"RTE_SATS\":0.00,\"NASTA_FFDAT\":null,\"BELOPP\":0.00,\"LANTAGARE1\":null,\"LANTAGARE2\":null,\"FLER_LANTAGARE_FL\":null,\"RTE_FF_DATUM\":null,\"INBETSATT\":null,\"OBJBETD1\":null,\"OBJBETD2\":null,\"OBJBETD3\":null,\"OBJBETD4\":null,\"AMORTERING\":0.00,\"RANTA\":0.00,\"DRJBEL\":0.00,\"OVRAVGBEL\":0.00,\"KUNDNR_LOP_NR\":null,\"LANTAGARE_FL\":null,\"DATSLUTBET\":null,\"DATRTEJUST\":null,\"AVISERING_FL\":null,\"FORFALL_KOD\":null,\"AVI_TXT\":null}";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
@@ -44,7 +46,8 @@ public class SEBLoanTest {
 
     @Test
     public void testWithNulls() throws IOException, ParseException {
-        PCBW2581 details = MAPPER.readValue(LOAN_RESPONSE_ITEM_WITH_EPMTY_AND_NULLS, PCBW2581.class);
+        PCBW2581 details =
+                MAPPER.readValue(LOAN_RESPONSE_ITEM_WITH_EPMTY_AND_NULLS, PCBW2581.class);
 
         details.toLoan();
         details.toAccount();

@@ -16,7 +16,8 @@ public class UpdateDocumentResponse {
         return response;
     }
 
-    public static UpdateDocumentResponse createSuccessful(String documentIdentifier, UUID token, String fullUrl) {
+    public static UpdateDocumentResponse createSuccessful(
+            String documentIdentifier, UUID token, String fullUrl) {
 
         UpdateDocumentResponse response = new UpdateDocumentResponse();
         response.successfullyStored = true;

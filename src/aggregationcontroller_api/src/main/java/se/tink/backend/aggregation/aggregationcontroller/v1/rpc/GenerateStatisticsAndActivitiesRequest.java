@@ -13,6 +13,7 @@ public class GenerateStatisticsAndActivitiesRequest {
 
     private String userId;
     private StatisticGenerationMode statisticGenerationMode = StatisticGenerationMode.REWRITE;
+
     public String getCredentialsId() {
         return credentialsId;
     }

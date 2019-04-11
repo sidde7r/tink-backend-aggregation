@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements;
 
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
-import se.tink.backend.agents.rpc.Account;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
 
 public class CardEntityTest {
     private static final String AVAILABLE_CREDIT = "3500";
@@ -24,6 +24,7 @@ public class CardEntityTest {
         assertThat(account.getBankId()).isEqualTo(AGREEMENT_NUMBER);
         assertThat(account.getName()).isEqualTo(CARD_NAME);
         assertThat(account.getBalance()).isEqualTo(-1500);
-        assertThat(account.getAvailableCredit()).isEqualTo(IkanoParser.stringToDouble(AVAILABLE_CREDIT));
+        assertThat(account.getAvailableCredit())
+                .isEqualTo(IkanoParser.stringToDouble(AVAILABLE_CREDIT));
     }
 }

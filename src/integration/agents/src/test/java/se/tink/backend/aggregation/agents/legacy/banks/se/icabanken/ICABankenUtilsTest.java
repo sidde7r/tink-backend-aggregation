@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ICABankenUtilsTest {
 
@@ -32,10 +32,7 @@ public class ICABankenUtilsTest {
 
     @Test
     public void findOrCreateDueDate_shouldNeverBeNull() {
-        Transfer transfer = TransferMock
-                .bankTransfer()
-                .withDueDate(null)
-                .build();
+        Transfer transfer = TransferMock.bankTransfer().withDueDate(null).build();
 
         String dueDate = ICABankenUtils.findOrCreateDueDateFor(transfer);
         assertThat(dueDate).isNotNull().isNotEmpty();

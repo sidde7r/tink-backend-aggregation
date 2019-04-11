@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.abnamro.utils.paymentproviders;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class AdyenTest {
 
@@ -33,7 +34,9 @@ public class AdyenTest {
         assertThat(adyen.getDescription("Spotify 12 345 453 45 345")).isEqualTo("Spotify");
 
         // Matched descriptions (start with digits and description in the end)
-        assertThat(adyen.getDescription("1114511873114104 1100043266 00111 8HappySocks")).isEqualTo("HappySocks");
-        assertThat(adyen.getDescription("1114511873114104 Some characters 00111 8HappySocks")).isEqualTo("HappySocks");
+        assertThat(adyen.getDescription("1114511873114104 1100043266 00111 8HappySocks"))
+                .isEqualTo("HappySocks");
+        assertThat(adyen.getDescription("1114511873114104 Some characters 00111 8HappySocks"))
+                .isEqualTo("HappySocks");
     }
 }

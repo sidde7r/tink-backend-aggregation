@@ -55,7 +55,6 @@ public class HostConfiguration {
         return BASE64_DECODER.decode(base64encodedclientcert);
     }
 
-
     public static HostConfiguration createForTesting(String clusterId) {
         HostConfiguration hostConfiguration = new HostConfiguration();
 

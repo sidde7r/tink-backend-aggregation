@@ -1,8 +1,7 @@
 package se.tink.backend.system.rpc;
 
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 
 public class UpdateFraudDetailsRequest {
     private List<FraudDetailsContent> detailsContents;

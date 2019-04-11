@@ -49,21 +49,22 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
 
-
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
     protected CredentialsRequest request;
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
-    protected Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount = Maps.newHashMap();
+    protected Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
+            Maps.newHashMap();
     protected List<Transfer> transfers = Lists.newArrayList();
     protected List<AgentEventListener> eventListeners = Lists.newArrayList();
     private SupplementalInformationController supplementalInformationController;
-    //Cached accounts have not been sent to system side yet.
+    // Cached accounts have not been sent to system side yet.
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
-    //Updated accounts have been sent to System side and has been updated with their stored Tink Id
+    // Updated accounts have been sent to System side and has been updated with their stored Tink Id
     protected Map<String, Account> updatedAccountsByTinkId;
     private Set<String> updatedAccountUniqueIds;
-    // a collection of account to keep a record of what accounts we should aggregate data after opt-in flow,
+    // a collection of account to keep a record of what accounts we should aggregate data after
+    // opt-in flow,
     // selecting white listed accounts and eliminating blacklisted accounts
     protected List<Account> accountsToAggregate;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
@@ -72,10 +73,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
-    public AgentWorkerContext(CredentialsRequest request, MetricRegistry metricRegistry,
-                              CuratorFramework coordinationClient, AggregatorInfo aggregatorInfo,
-                              SupplementalInformationController supplementalInformationController,
-                              ControllerWrapper controllerWrapper, String clusterId) {
+    public AgentWorkerContext(
+            CredentialsRequest request,
+            MetricRegistry metricRegistry,
+            CuratorFramework coordinationClient,
+            AggregatorInfo aggregatorInfo,
+            SupplementalInformationController supplementalInformationController,
+            ControllerWrapper controllerWrapper,
+            String clusterId) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
@@ -98,9 +103,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.supplementalInformationController = supplementalInformationController;
         this.controllerWrapper = controllerWrapper;
-
     }
-
 
     @Override
     public void clear() {
@@ -120,14 +123,16 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         List<Transaction> transactions = Lists.newArrayList();
 
         for (String bankId : transactionsByAccountBankId.keySet()) {
-            Optional<Account> account = getUpdatedAccounts().stream()
-                    .filter(a -> Objects.equals(a.getBankId(), bankId))
-                    .findFirst();
+            Optional<Account> account =
+                    getUpdatedAccounts().stream()
+                            .filter(a -> Objects.equals(a.getBankId(), bankId))
+                            .findFirst();
 
             if (!account.isPresent()) {
                 if (!isWhitelistRefresh) {
-                    log.error("Account not found in updated Accounts list. "
-                            + "This should not happen and might mean that Agent is not updating all Accounts separately.");
+                    log.error(
+                            "Account not found in updated Accounts list. "
+                                    + "This should not happen and might mean that Agent is not updating all Accounts separately.");
                 }
 
                 continue;
@@ -148,7 +153,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 transaction.setUserId(request.getCredentials().getUserId());
 
                 if (!Strings.isNullOrEmpty(transaction.getDescription())) {
-                    transaction.setDescription(transaction.getDescription().replace("<", "").replace(">", ""));
+                    transaction.setDescription(
+                            transaction.getDescription().replace("<", "").replace(">", ""));
                 }
 
                 if (transaction.getType() == null) {
@@ -160,15 +166,21 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            log.warn(String.format("Status does not warrant transaction processing: %s", credentials.getStatus()));
+            log.warn(
+                    String.format(
+                            "Status does not warrant transaction processing: %s",
+                            credentials.getStatus()));
             return;
         }
 
         // If fraud credentials, update the statistics and activities.
 
         if (credentials.getType() == CredentialsTypes.FRAUD) {
-            se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest generateStatisticsReq =
-                    new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest();
+            se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                            .GenerateStatisticsAndActivitiesRequest
+                    generateStatisticsReq =
+                            new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                    .GenerateStatisticsAndActivitiesRequest();
             generateStatisticsReq.setUserId(request.getUser().getId());
             generateStatisticsReq.setCredentialsId(request.getCredentials().getId());
             generateStatisticsReq.setUserTriggered(request.isCreate());
@@ -185,8 +197,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         // Send the request to process the transactions that we've collected in this batch.
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest updateTransactionsRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest
+                updateTransactionsRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateTransactionsRequest();
         updateTransactionsRequest.setTransactions(transactions);
         updateTransactionsRequest.setUser(credentials.getUserId());
         updateTransactionsRequest.setCredentials(credentials.getId());
@@ -205,19 +219,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
-        DistributedBarrier lock = new DistributedBarrier(coordinationClient,
-                BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, key));
+    public Optional<String> waitForSupplementalInformation(
+            String key, long waitFor, TimeUnit unit) {
+        DistributedBarrier lock =
+                new DistributedBarrier(
+                        coordinationClient,
+                        BarrierName.build(BarrierName.Prefix.SUPPLEMENTAL_INFORMATION, key));
         try {
             // Reset barrier.
             lock.removeBarrier();
             lock.setBarrier();
 
             if (lock.waitOnBarrier(waitFor, unit)) {
-                String supplementalInformation = supplementalInformationController.getSupplementalInformation(key);
+                String supplementalInformation =
+                        supplementalInformationController.getSupplementalInformation(key);
 
                 if (Objects.equals(supplementalInformation, "null")) {
-                    log.info("Supplemental information request was cancelled by client (returned null)");
+                    log.info(
+                            "Supplemental information request was cancelled by client (returned null)");
                     return Optional.empty();
                 }
 
@@ -244,8 +263,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         if (wait) {
             updateCredentialsExcludingSensitiveInformation(credentials, true);
 
-            Optional<String> supplementalInformation = waitForSupplementalInformation(credentials.getId(), 2,
-                    TimeUnit.MINUTES);
+            Optional<String> supplementalInformation =
+                    waitForSupplementalInformation(credentials.getId(), 2, TimeUnit.MINUTES);
 
             return supplementalInformation.orElse(null);
         } else {
@@ -266,7 +285,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     private boolean shouldAggregateDataForAccount(Account account) {
-        return accountsToAggregate.stream().map(Account::getBankId).collect(Collectors.toList())
+        return accountsToAggregate.stream()
+                .map(Account::getBankId)
+                .collect(Collectors.toList())
                 .contains(account.getBankId());
     }
 
@@ -279,15 +300,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         AccountFeatures accountFeaturesToCache = accountFeatures;
 
         if (allAvailableAccountsByUniqueId.containsKey(account.getBankId())) {
-            // FIXME This whole if-case is a result of having Agents calling cacheAccounts multiple times. Sometimes
+            // FIXME This whole if-case is a result of having Agents calling cacheAccounts multiple
+            // times. Sometimes
             // FIXME with accountFeatures and sometimes without.
-            Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(account.getBankId());
+            Pair<Account, AccountFeatures> pair =
+                    allAvailableAccountsByUniqueId.get(account.getBankId());
             if (accountFeatures.isEmpty() && !pair.second.isEmpty()) {
                 accountFeaturesToCache = pair.second;
             }
         }
 
-        allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeaturesToCache));
+        allAvailableAccountsByUniqueId.put(
+                account.getBankId(), new Pair<>(account, accountFeaturesToCache));
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
@@ -317,8 +341,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             account.setCurrencyCode(request.getProvider().getCurrency());
         }
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest updateAccountRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest
+                updateAccountRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateAccountRequest();
 
         updateAccountRequest.setUser(request.getCredentials().getUserId());
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
@@ -330,8 +356,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
-            log.error("Account update request failed, response: " +
-                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            log.error(
+                    "Account update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
             throw e;
         }
 
@@ -357,8 +386,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest updateAccountRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest
+                updateAccountRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateAccountRequest();
 
         updateAccountRequest.setUser(request.getCredentials().getUserId());
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
@@ -370,8 +401,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
-            log.error("Account update request failed, response: " +
-                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            log.error(
+                    "Account update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
             throw e;
         }
 
@@ -381,7 +415,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doStatusUpdate) {
+    public void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doStatusUpdate) {
         // Execute any event-listeners.
 
         for (AgentEventListener eventListener : eventListeners) {
@@ -394,11 +429,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         Credentials credentialsCopy = credentials.clone();
         credentialsCopy.clearSensitiveInformation(request.getProvider());
 
-        se.tink.libraries.credentials.rpc.Credentials coreCredentials = CoreCredentialsMapper
-                .fromAggregationCredentials(credentialsCopy);
+        se.tink.libraries.credentials.rpc.Credentials coreCredentials =
+                CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy);
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest
+                updateCredentialsStatusRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateCredentialsStatusRequest();
         updateCredentialsStatusRequest.setCredentials(coreCredentials);
         updateCredentialsStatusRequest.setUserId(credentials.getUserId());
         updateCredentialsStatusRequest.setUpdateContextTimestamp(doStatusUpdate);
@@ -422,7 +459,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void updateStatus(final CredentialsStatus status, final String statusPayload,
+    public void updateStatus(
+            final CredentialsStatus status,
+            final String statusPayload,
             final boolean statusFromProvider) {
         Credentials credentials = request.getCredentials();
         credentials.setStatus(status);
@@ -444,10 +483,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             return;
         }
 
-        String payload = catalog.getString("Error from")
-                + " "
-                + request.getProvider().getDisplayName()
-                + ": \"" + statusPayload + "\"";
+        String payload =
+                catalog.getString("Error from")
+                        + " "
+                        + request.getProvider().getDisplayName()
+                        + ": \""
+                        + statusPayload
+                        + "\"";
 
         credentials.setStatusPayload(payload);
 
@@ -466,8 +508,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
-        Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
-        // This crashes if agent is implemented incorrectly. You have to cache Account before you cache Transactions
+        Preconditions.checkNotNull(
+                accountUniqueId); // Necessary until we make @Nonnull throw the exception
+        // This crashes if agent is implemented incorrectly. You have to cache Account before you
+        // cache Transactions
         Preconditions.checkArgument(allAvailableAccountsByUniqueId.containsKey(accountUniqueId));
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
@@ -478,9 +522,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccount.containsKey(account)) {
-                transferDestinationPatternsByAccount.get(account).addAll(transferDestinationPatterns.get(account));
+                transferDestinationPatternsByAccount
+                        .get(account)
+                        .addAll(transferDestinationPatterns.get(account));
             } else {
-                transferDestinationPatternsByAccount.put(account, transferDestinationPatterns.get(account));
+                transferDestinationPatternsByAccount.put(
+                        account, transferDestinationPatterns.get(account));
             }
         }
     }
@@ -495,12 +542,10 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void start() throws Exception {
-    }
+    public void start() throws Exception {}
 
     @Override
-    public void stop() throws Exception {
-    }
+    public void stop() throws Exception {}
 
     @Override
     public List<Account> getUpdatedAccounts() {
@@ -519,13 +564,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
             AccountIdentifier destination = transfer.getDestination();
             if (destination == null) {
-                log.warn(String.format("Ignoring transfer because it has missing destination: %s", transfer));
+                log.warn(
+                        String.format(
+                                "Ignoring transfer because it has missing destination: %s",
+                                transfer));
                 continue;
             }
 
             if (!destination.isValid()) {
-                log.warn(String.format("Ignoring non-valid transfer with identifier '%s'. Transfer: %s",
-                        destination.getIdentifier(), transfer));
+                log.warn(
+                        String.format(
+                                "Ignoring non-valid transfer with identifier '%s'. Transfer: %s",
+                                destination.getIdentifier(), transfer));
                 continue;
             }
 

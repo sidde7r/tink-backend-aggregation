@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.workers.concurrency;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Ticker;
-import com.google.inject.Inject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,7 +18,8 @@ public class CircuitBreakerStatistics {
     private AtomicInteger consecutiveOperationsCounter = new AtomicInteger();
     private AtomicBoolean circuitBroken = new AtomicBoolean();
 
-    private static final MetricId CIRCUIT_BROKEN_PROVIDERS = MetricId.newId("circuit_broken_providers");
+    private static final MetricId CIRCUIT_BROKEN_PROVIDERS =
+            MetricId.newId("circuit_broken_providers");
 
     private final long minNanosForReset;
     private final Ticker ticker;
@@ -29,16 +29,43 @@ public class CircuitBreakerStatistics {
     private final int breakCircuitBreakerThreshold;
     private final List<Integer> rateLimitMultiplicationFactors;
 
-    public CircuitBreakerStatistics(int timeLimit, TimeUnit timeLimitUnit, List<Integer> rateLimitMultiplicationFactors,
-            double errorRatioThreshold, int circuitBreakerThreshold, int breakCircuitBreakerThreshold,
-            MetricRegistry metricRegistry, String providerName, String className, String market) {
-        this(timeLimit, timeLimitUnit, rateLimitMultiplicationFactors, errorRatioThreshold, circuitBreakerThreshold,
-                breakCircuitBreakerThreshold, metricRegistry, providerName, className, market, Ticker.systemTicker());
+    public CircuitBreakerStatistics(
+            int timeLimit,
+            TimeUnit timeLimitUnit,
+            List<Integer> rateLimitMultiplicationFactors,
+            double errorRatioThreshold,
+            int circuitBreakerThreshold,
+            int breakCircuitBreakerThreshold,
+            MetricRegistry metricRegistry,
+            String providerName,
+            String className,
+            String market) {
+        this(
+                timeLimit,
+                timeLimitUnit,
+                rateLimitMultiplicationFactors,
+                errorRatioThreshold,
+                circuitBreakerThreshold,
+                breakCircuitBreakerThreshold,
+                metricRegistry,
+                providerName,
+                className,
+                market,
+                Ticker.systemTicker());
     }
 
-    CircuitBreakerStatistics(int timeLimit, TimeUnit timeLimitUnit, List<Integer> rateLimitMultiplicationFactors,
-            double errorRatioThreshold, int circuitBreakerThreshold, int breakCircuitBreakerThreshold,
-            MetricRegistry metricRegistry, String providerName, String className, String market, Ticker ticker) {
+    CircuitBreakerStatistics(
+            int timeLimit,
+            TimeUnit timeLimitUnit,
+            List<Integer> rateLimitMultiplicationFactors,
+            double errorRatioThreshold,
+            int circuitBreakerThreshold,
+            int breakCircuitBreakerThreshold,
+            MetricRegistry metricRegistry,
+            String providerName,
+            String className,
+            String market,
+            Ticker ticker) {
         Preconditions.checkArgument(timeLimit > 0);
         Preconditions.checkArgument(rateLimitMultiplicationFactors.size() > 0);
         Preconditions.checkArgument(errorRatioThreshold > 0);
@@ -55,10 +82,12 @@ public class CircuitBreakerStatistics {
         this.circuitBreakerThreshold = circuitBreakerThreshold;
         this.breakCircuitBreakerThreshold = breakCircuitBreakerThreshold;
 
-        this.circuitBrokenGauge = metricRegistry.lastUpdateGauge(CIRCUIT_BROKEN_PROVIDERS
-                .label("provider", providerName)
-                .label("className", className)
-                .label("market", market));
+        this.circuitBrokenGauge =
+                metricRegistry.lastUpdateGauge(
+                        CIRCUIT_BROKEN_PROVIDERS
+                                .label("provider", providerName)
+                                .label("className", className)
+                                .label("market", market));
     }
 
     private boolean needToReset() {
@@ -82,7 +111,7 @@ public class CircuitBreakerStatistics {
 
         lastTick = ticker.read();
     }
-    
+
     private void updateCircuitBreakerStatus() {
         countConsecutiveOperations();
         toggleCircuitBreaker();
@@ -112,7 +141,8 @@ public class CircuitBreakerStatistics {
         if (!circuitBroken.get() && consecutiveOperationsCounter.get() >= circuitBreakerThreshold) {
             consecutiveOperationsCounter.set(0);
             circuitBroken.set(true);
-        } else if (circuitBroken.get() && consecutiveOperationsCounter.get() >= breakCircuitBreakerThreshold) {
+        } else if (circuitBroken.get()
+                && consecutiveOperationsCounter.get() >= breakCircuitBreakerThreshold) {
             consecutiveOperationsCounter.set(0);
             circuitBroken.set(false);
         }
@@ -154,9 +184,11 @@ public class CircuitBreakerStatistics {
         CircuitBreakerStatus status = new CircuitBreakerStatus();
         status.circuitBroken = circuitBroken.get();
         status.consecutiveOperationsCounter = consecutiveOperationsCounter.get();
-        // To assure that we don't go out of list range use modulus list size when getting from the list
-        status.rateLimitMultiplicationFactor = rateLimitMultiplicationFactors.get(
-                consecutiveOperationsCounter.get() % rateLimitMultiplicationFactors.size());
+        // To assure that we don't go out of list range use modulus list size when getting from the
+        // list
+        status.rateLimitMultiplicationFactor =
+                rateLimitMultiplicationFactors.get(
+                        consecutiveOperationsCounter.get() % rateLimitMultiplicationFactors.size());
         return status;
     }
 }

@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.storage.database.repositories.ClientConfigura
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 
-public class AddClientConfigurationsCommand extends AggregationServiceContextCommand<AggregationServiceConfiguration> {
+public class AddClientConfigurationsCommand
+        extends AggregationServiceContextCommand<AggregationServiceConfiguration> {
     private static final Logger log = LoggerFactory.getLogger(AddClientConfigurationsCommand.class);
 
     public AddClientConfigurationsCommand() {
@@ -20,30 +21,33 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
     }
 
     @Override
-    protected void run(Bootstrap<AggregationServiceConfiguration> bootstrap, Namespace namespace,
-            AggregationServiceConfiguration configuration, Injector injector) throws Exception {
+    protected void run(
+            Bootstrap<AggregationServiceConfiguration> bootstrap,
+            Namespace namespace,
+            AggregationServiceConfiguration configuration,
+            Injector injector)
+            throws Exception {
 
         if (configuration.getProvisionClientsConfig() == null) {
             throw new Exception("Provision clients configuration should not be null.");
         }
 
-        AggregatorConfigurationsRepository aggregatorConfigurationsRepository = injector
-                .getInstance(AggregatorConfigurationsRepository.class);
-        ClusterConfigurationsRepository clusterConfigurationsRepository = injector
-                .getInstance(ClusterConfigurationsRepository.class);
-        ClientConfigurationsRepository clientConfigurationsRepository = injector
-                .getInstance(ClientConfigurationsRepository.class);
-        CryptoConfigurationsRepository cryptoConfigurationsRepository = injector
-                .getInstance(CryptoConfigurationsRepository.class);
+        AggregatorConfigurationsRepository aggregatorConfigurationsRepository =
+                injector.getInstance(AggregatorConfigurationsRepository.class);
+        ClusterConfigurationsRepository clusterConfigurationsRepository =
+                injector.getInstance(ClusterConfigurationsRepository.class);
+        ClientConfigurationsRepository clientConfigurationsRepository =
+                injector.getInstance(ClientConfigurationsRepository.class);
+        CryptoConfigurationsRepository cryptoConfigurationsRepository =
+                injector.getInstance(CryptoConfigurationsRepository.class);
 
-        ProvisionClientController provisionClientController = new ProvisionClientController(
-                aggregatorConfigurationsRepository,
-                clusterConfigurationsRepository,
-                clientConfigurationsRepository,
-                cryptoConfigurationsRepository
-        );
+        ProvisionClientController provisionClientController =
+                new ProvisionClientController(
+                        aggregatorConfigurationsRepository,
+                        clusterConfigurationsRepository,
+                        clientConfigurationsRepository,
+                        cryptoConfigurationsRepository);
 
         provisionClientController.provision(configuration.getProvisionClientsConfig());
-
     }
 }

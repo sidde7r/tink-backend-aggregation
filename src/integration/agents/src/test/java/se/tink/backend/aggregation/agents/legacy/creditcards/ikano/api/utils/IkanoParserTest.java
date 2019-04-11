@@ -11,8 +11,7 @@ import se.tink.libraries.social.security.time.SwedishTimeRule;
 public class IkanoParserTest {
     private static final String DATE = "2016-03-17";
 
-    @Rule
-    public SwedishTimeRule timeRule = new SwedishTimeRule();
+    @Rule public SwedishTimeRule timeRule = new SwedishTimeRule();
 
     @Test
     public void stringToDoubleTest() {

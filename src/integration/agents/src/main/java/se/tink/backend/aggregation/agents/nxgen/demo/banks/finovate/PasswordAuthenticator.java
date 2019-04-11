@@ -16,23 +16,22 @@ This is a temporary solution and should be deleted as soon as the demo is done
  */
 public class PasswordAuthenticator implements MultiFactorAuthenticator {
 
-    private static final Map<String, String> TEST_CREDENTIALS = ImmutableMap.of(
-            "tink", "tink-1234",
-            "tink2", "tink-2345",
-            "tink3", "tink-3456"
-    );
+    private static final Map<String, String> TEST_CREDENTIALS =
+            ImmutableMap.of(
+                    "tink", "tink-1234",
+                    "tink2", "tink-2345",
+                    "tink3", "tink-3456");
 
-    public PasswordAuthenticator() {
-    }
+    public PasswordAuthenticator() {}
 
     @Override
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
     }
 
-
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
 
@@ -40,7 +39,8 @@ public class PasswordAuthenticator implements MultiFactorAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        if (!(TEST_CREDENTIALS.containsKey(username) && TEST_CREDENTIALS.get(username).equals(password))) {
+        if (!(TEST_CREDENTIALS.containsKey(username)
+                && TEST_CREDENTIALS.get(username).equals(password))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }

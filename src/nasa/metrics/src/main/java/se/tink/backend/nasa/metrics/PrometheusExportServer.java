@@ -16,8 +16,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.LoggerFactory;
 
 public class PrometheusExportServer {
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(
-            PrometheusExportServer.class);
+    private static final org.slf4j.Logger log =
+            LoggerFactory.getLogger(PrometheusExportServer.class);
     private final Server server;
     private final CollectorRegistry registry = new CollectorRegistry(true);
     private final MetricCollector collector;
@@ -28,7 +28,8 @@ public class PrometheusExportServer {
         this.server = new Server(config.getPort());
     }
 
-    public static void start(PrometheusConfiguration config, MetricCollector collector) throws Exception {
+    public static void start(PrometheusConfiguration config, MetricCollector collector)
+            throws Exception {
         PrometheusExportServer server = new PrometheusExportServer(config, collector);
         server.start();
     }
@@ -48,8 +49,8 @@ public class PrometheusExportServer {
     }
 
     /**
-     * Stop the HTTP server to free up the consumed port
-     * This enables the services run multiple times without restarting the JVM
+     * Stop the HTTP server to free up the consumed port This enables the services run multiple
+     * times without restarting the JVM
      */
     @PreDestroy
     public void stop() throws Exception {

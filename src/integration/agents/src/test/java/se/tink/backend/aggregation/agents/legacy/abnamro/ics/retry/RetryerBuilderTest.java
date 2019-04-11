@@ -17,14 +17,14 @@ public class RetryerBuilderTest {
 
     @Test
     public void testNullResult() throws ExecutionException, RetryException {
-        Retryer<String> retryer = RetryerBuilder
-                .<String>newBuilder(log, "testing retry")
-                .withStopStrategy(StopStrategies.stopAfterDelay(10, TimeUnit.SECONDS))
-                .withWaitStrategy(WaitStrategies.fibonacciWait())
-                .retryIfException().build();
-        
+        Retryer<String> retryer =
+                RetryerBuilder.<String>newBuilder(log, "testing retry")
+                        .withStopStrategy(StopStrategies.stopAfterDelay(10, TimeUnit.SECONDS))
+                        .withWaitStrategy(WaitStrategies.fibonacciWait())
+                        .retryIfException()
+                        .build();
+
         String result = retryer.call(() -> null);
         Assert.assertNull(result);
     }
-
 }

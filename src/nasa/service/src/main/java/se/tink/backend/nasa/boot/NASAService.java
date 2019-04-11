@@ -23,15 +23,15 @@ class NASAService {
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            logger.error("Unexpected argument count. Expected exactly one arguments. " +
-                    "The first argument should be the path to the configuration file.");
+            logger.error(
+                    "Unexpected argument count. Expected exactly one arguments. "
+                            + "The first argument should be the path to the configuration file.");
         }
 
         try {
             new NASAService(
                     ConfigurationUtils.getConfiguration(args[0], Configuration.class),
-                    new SensitiveConfiguration()
-            );
+                    new SensitiveConfiguration());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e);
@@ -39,37 +39,48 @@ class NASAService {
         }
     }
 
-
     private final CountDownLatch keepRunningLatch;
     private SimpleHTTPServer httpServer;
     private Injector injector;
     private NasaRequestHandler nasaRequestHandler;
 
-    NASAService(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws Exception {
-        injector = Guice.createInjector(ImmutableList.of(new NASAServiceModule(config, sensitiveConfiguration)));
+    NASAService(Configuration config, SensitiveConfiguration sensitiveConfiguration)
+            throws Exception {
+        injector =
+                Guice.createInjector(
+                        ImmutableList.of(new NASAServiceModule(config, sensitiveConfiguration)));
         logger.debug("Starting Integration Service");
         logger.debug("Built with Java " + System.getProperty("java.version"));
 
         keepRunningLatch = new CountDownLatch(1);
         start(config, sensitiveConfiguration);
         Runtime.getRuntime().addShutdownHook(new Thread(keepRunningLatch::countDown));
-        keepRunningLatch.await();  //released from above thread on sigterm
+        keepRunningLatch.await(); // released from above thread on sigterm
         logger.info("Received signal to stop. Initiating shutdown");
         stop();
     }
 
-    private void start(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws Exception {
+    private void start(Configuration config, SensitiveConfiguration sensitiveConfiguration)
+            throws Exception {
         logger.info("Starting Servers");
 
         nasaRequestHandler = NasaRequestHandler.CreateNasaRequestHandler();
 
         // Start HTTP health check service
         httpServer = new SimpleHTTPServer(8080);
-        httpServer.addContext("/alive", new HealthCheckHandler(() -> {})); // just an connection alive check ("ping")
-        httpServer.addContext("/healthy", new HealthCheckHandler(
-                ()-> {/* check DB */ logger.debug("Database is Healthy!"); },
-                ()-> {/* check something else */}
-        ));
+        httpServer.addContext(
+                "/alive",
+                new HealthCheckHandler(() -> {})); // just an connection alive check ("ping")
+        httpServer.addContext(
+                "/healthy",
+                new HealthCheckHandler(
+                        () -> {
+                            /* check DB */
+                            logger.debug("Database is Healthy!");
+                        },
+                        () -> {
+                            /* check something else */
+                        }));
         httpServer.start();
 
         // Start the Prometheus Exporter Server
@@ -89,7 +100,8 @@ class NASAService {
         Spark.before(SparkFilters.ACCESS_LOGGING);
 
         Spark.get("/ping", (request, response) -> nasaRequestHandler.ping(request, response));
-        Spark.get("/initiate", (request, response) -> nasaRequestHandler.initiate(request, response));
+        Spark.get(
+                "/initiate", (request, response) -> nasaRequestHandler.initiate(request, response));
 
         // Log the path and the body of requests to the Aggregation Controller API
         Spark.before("/aggregation/controller/v1/system/*", SparkFilters.REQUEST_LOGGING);
@@ -105,7 +117,8 @@ class NASAService {
 
         Stopwatch sw = Stopwatch.createStarted();
 
-        final CountDownLatch shutdownLatch = new CountDownLatch(3); // same numbers as components to close
+        final CountDownLatch shutdownLatch =
+                new CountDownLatch(3); // same numbers as components to close
 
         // Stop the Prometheus Exporter Server
         injector.getInstance(PrometheusExportServer.class).stop();
@@ -122,18 +135,20 @@ class NASAService {
     }
 
     private static class SparkFilters {
-        static Filter ACCESS_LOGGING = (request, response) ->
-                logger.info("Request info: {} {} {} {}",
-                        request.ip(),
-                        request.userAgent(),
-                        request.requestMethod(),
-                        request.url());
+        static Filter ACCESS_LOGGING =
+                (request, response) ->
+                        logger.info(
+                                "Request info: {} {} {} {}",
+                                request.ip(),
+                                request.userAgent(),
+                                request.requestMethod(),
+                                request.url());
 
-
-        static Filter REQUEST_LOGGING = (request, response) ->
-                logger.info("Request to path: {} - body: {}",
-                    request.pathInfo(),
-                    request.body());
+        static Filter REQUEST_LOGGING =
+                (request, response) ->
+                        logger.info(
+                                "Request to path: {} - body: {}",
+                                request.pathInfo(),
+                                request.body());
     }
 }
-

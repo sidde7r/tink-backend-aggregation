@@ -10,11 +10,11 @@ public class FraudIncomeContent extends FraudDetailsContent {
     private double incomeByCapital;
     private String taxYear;
     private Date registered;
-    
+
     public double getFinalTax() {
         return finalTax;
     }
-    
+
     public void setFinalTax(double finalTax) {
         this.finalTax = finalTax;
     }
@@ -46,11 +46,11 @@ public class FraudIncomeContent extends FraudDetailsContent {
     public Date getRegistered() {
         return registered;
     }
-    
+
     public void setRegistered(Date registered) {
         this.registered = registered;
     }
-    
+
     @Override
     public FraudTypes itemType() {
         return FraudTypes.INQUIRY;
@@ -68,5 +68,4 @@ public class FraudIncomeContent extends FraudDetailsContent {
     public void setTaxYear(String taxYear) {
         this.taxYear = taxYear;
     }
-
 }

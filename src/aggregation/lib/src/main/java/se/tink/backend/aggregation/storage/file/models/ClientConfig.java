@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.storage.file.models;
 
-
 public class ClientConfig {
     private String aggregatorIdentifier;
 

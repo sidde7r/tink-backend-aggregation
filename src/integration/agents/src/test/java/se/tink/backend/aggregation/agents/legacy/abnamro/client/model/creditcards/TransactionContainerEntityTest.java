@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.abnamro.client.model.creditcards;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.client.model.AmountEntity;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionContainerEntityTest {
 

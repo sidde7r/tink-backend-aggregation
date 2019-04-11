@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.abnamro.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
 import org.junit.Test;
 import se.tink.libraries.user.rpc.User;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbnAmroLegacyUserUtilsTest {
 

@@ -18,13 +18,12 @@ public class FetchController {
     }
 
     public FetchAccountsResponse execute(FetchCheckingAccountsCommand command) throws Exception {
-        RefreshCheckingAccountsExecutor agent = (RefreshCheckingAccountsExecutor) agentFactory.createForIntegration(
-                command.getAgentInfo().getAgentClassName(),
-                FakeIntegrationArgumentsCreator.getCredReq(),
-                FakeIntegrationArgumentsCreator.getAgentContext(metricRegistry)
-        );
+        RefreshCheckingAccountsExecutor agent =
+                (RefreshCheckingAccountsExecutor)
+                        agentFactory.createForIntegration(
+                                command.getAgentInfo().getAgentClassName(),
+                                FakeIntegrationArgumentsCreator.getCredReq(),
+                                FakeIntegrationArgumentsCreator.getAgentContext(metricRegistry));
         return agent.fetchCheckingAccounts();
     }
-
 }
-

@@ -14,7 +14,10 @@ public class MetricAction {
 
     private Timer.Context timer;
 
-    MetricAction(AgentWorkerCommandMetricState state, MetricCacheLoader metricCacheLoader, Credentials credentials,
+    MetricAction(
+            AgentWorkerCommandMetricState state,
+            MetricCacheLoader metricCacheLoader,
+            Credentials credentials,
             MetricId metricPath) {
         Preconditions.checkArgument(state != null, "No MetricState provided");
         Preconditions.checkArgument(metricCacheLoader != null, "No MetricLoader provided");
@@ -26,27 +29,24 @@ public class MetricAction {
     }
 
     public void start() {
-        Preconditions.checkState(timer == null,
-                "MetricAction already in progress");
+        Preconditions.checkState(timer == null, "MetricAction already in progress");
 
         timer = metricCacheLoader.startTimer(metricPath.suffix("duration"));
         state.add(this);
     }
 
     public void start(List<? extends Number> metricBuckets) {
-        Preconditions.checkState(timer == null,
-                "MetricAction already in progress");
+        Preconditions.checkState(timer == null, "MetricAction already in progress");
 
         timer = metricCacheLoader.startTimer(metricPath.suffix("duration"), metricBuckets);
         state.add(this);
     }
 
-    /** Stop action timer and ask AgentWorkerCommandMetricState
-     * to remove itself from ongoing actions
+    /**
+     * Stop action timer and ask AgentWorkerCommandMetricState to remove itself from ongoing actions
      */
     public void stop() {
-        Preconditions.checkState(timer != null,
-                "No active timer to stop");
+        Preconditions.checkState(timer != null, "No active timer to stop");
 
         timer.stop();
         state.remove(this);
@@ -69,12 +69,14 @@ public class MetricAction {
     }
 
     private void mark(Outcome outcome) {
-        metricCacheLoader.mark(
-                metricPath.label("outcome", outcome.getMetricName()));
+        metricCacheLoader.mark(metricPath.label("outcome", outcome.getMetricName()));
     }
 
     private enum Outcome {
-        COMPLETED, FAILED, CANCELLED, UNAVAILABLE;
+        COMPLETED,
+        FAILED,
+        CANCELLED,
+        UNAVAILABLE;
 
         private String getMetricName() {
             return name().toLowerCase();

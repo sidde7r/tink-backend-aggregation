@@ -1,20 +1,21 @@
 package se.tink.backend.aggregation.workers.metrics;
 
-import org.junit.Before;
-import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.agents.rpc.ProviderTypes;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
-import se.tink.backend.aggregation.workers.commands.MetricsCommand;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.Timer;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.agents.rpc.ProviderTypes;
+import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
+import se.tink.backend.aggregation.workers.commands.MetricsCommand;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.Timer;
 
 public class AgentWorkerCommandMetricStateTest {
     private AgentWorkerCommandMetricState metrics;
@@ -116,12 +117,12 @@ public class AgentWorkerCommandMetricStateTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void ensureExceptionIsThrown_whenTryingToAddAction_alreadyPresentInListOfOngoingActions() {
+    public void
+            ensureExceptionIsThrown_whenTryingToAddAction_alreadyPresentInListOfOngoingActions() {
         MetricAction action = mock(MetricAction.class);
         metrics.add(action);
         metrics.add(action);
     }
-
 
     @Test
     public void ensureActionsDoesNotNeedToBeClosed_ifActionTimerIsNotStarted() {

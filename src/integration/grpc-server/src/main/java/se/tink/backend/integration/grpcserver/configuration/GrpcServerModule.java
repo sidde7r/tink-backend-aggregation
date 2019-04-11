@@ -13,8 +13,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
 import se.tink.backend.integration.fetchservice.FetchService;
-import se.tink.backend.integration.gprcserver.interceptors.AccessLogInterceptor;
 import se.tink.backend.integration.gprcserver.GrpcServer;
+import se.tink.backend.integration.gprcserver.interceptors.AccessLogInterceptor;
 import se.tink.backend.integration.gprcserver.interceptors.MonitoringInterceptor;
 import se.tink.backend.integration.pingservice.PingService;
 
@@ -33,10 +33,8 @@ public class GrpcServerModule extends AbstractModule {
     }
 
     private void bindServices(Binder binder) {
-        List<Class<? extends BindableService>> services = Lists.newArrayList(
-                PingService.class,
-                FetchService.class
-        );
+        List<Class<? extends BindableService>> services =
+                Lists.newArrayList(PingService.class, FetchService.class);
 
         bindSet(binder, "grpcServices", BindableService.class, services);
     }
@@ -57,9 +55,10 @@ public class GrpcServerModule extends AbstractModule {
         bindSet(binder, "grpcInterceptors", ServerInterceptor.class, interceptors.reverse());
     }
 
-    private static <T> void bindSet(Binder binder, String bindingName, Class<T> type,
-            List<Class<? extends T>> classes) {
-        Multibinder<T> resourceMultibinder = Multibinder.newSetBinder(binder, type, Names.named(bindingName));
+    private static <T> void bindSet(
+            Binder binder, String bindingName, Class<T> type, List<Class<? extends T>> classes) {
+        Multibinder<T> resourceMultibinder =
+                Multibinder.newSetBinder(binder, type, Names.named(bindingName));
         classes.forEach(c -> resourceMultibinder.addBinding().to(c).in(Scopes.SINGLETON));
     }
 }

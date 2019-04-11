@@ -7,8 +7,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AddClientConfigurationsCommand;
 import se.tink.backend.aggregation.configuration.ConfigurationValidator;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
+import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
@@ -24,21 +24,30 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
     public void initialize(Bootstrap<AggregationServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
         bootstrap.addCommand(new AddClientConfigurationsCommand());
-
     }
 
     @Override
-    public void run(AggregationServiceConfiguration aggregationServiceConfiguration, Environment environment) throws Exception {
+    public void run(
+            AggregationServiceConfiguration aggregationServiceConfiguration,
+            Environment environment)
+            throws Exception {
         // Add a dummy health check to avoid an annoying warning on startup.
-        environment.healthChecks().register("cache", new HealthCheck() {
-            @Override
-            protected Result check() throws Exception {
-                return Result.healthy();
-            }
-        });
+        environment
+                .healthChecks()
+                .register(
+                        "cache",
+                        new HealthCheck() {
+                            @Override
+                            protected Result check() throws Exception {
+                                return Result.healthy();
+                            }
+                        });
 
-        Injector injector = DropwizardLifecycleInjectorFactory.build(
-                environment.lifecycle(), AggregationModuleFactory.build(aggregationServiceConfiguration, environment));
+        Injector injector =
+                DropwizardLifecycleInjectorFactory.build(
+                        environment.lifecycle(),
+                        AggregationModuleFactory.build(
+                                aggregationServiceConfiguration, environment));
 
         // Validate the configurations on start up
         injector.getInstance(ConfigurationValidator.class);

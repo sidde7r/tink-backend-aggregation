@@ -35,16 +35,15 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     private static String username;
     private static String provider;
 
-    public PasswordDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public PasswordDemoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.username = request.getCredentials().getField("username");
         this.provider = request.getProvider().getName();
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -52,8 +51,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                 request,
                 systemUpdater,
                 new PasswordAuthenticator(),
-                new PasswordAutoAuthenticator()
-        );
+                new PasswordAutoAuthenticator());
     }
 
     @Override
@@ -107,8 +105,9 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        if(request.getProvider().getName().equals("at-test-erste-bank")) {
-            return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(this.username, this.provider);
+        if (request.getProvider().getName().equals("at-test-erste-bank")) {
+            return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(
+                    this.username, this.provider);
         }
 
         return null;
@@ -171,24 +170,32 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
         if (request.getProvider().getName().equals("at-test-erste-bank")) {
-            return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
+            return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                    this.username, this.provider);
         }
 
         return null;
     }
 
-    //Override to new transaction fetcher
+    // Override to new transaction fetcher
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        NextGenerationDemoTransactionFetcher transactionFetcher = new NextGenerationDemoTransactionFetcher(
-                request.getAccounts(),
-                currency,
-                catalog,
-                getTransactionalAccountAccounts(),
-                getDemoSavingsAccounts());
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        NextGenerationDemoTransactionFetcher transactionFetcher =
+                new NextGenerationDemoTransactionFetcher(
+                        request.getAccounts(),
+                        currency,
+                        catalog,
+                        getTransactionalAccountAccounts(),
+                        getDemoSavingsAccounts());
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        transactionFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper, transactionFetcher)));
     }
 
     @Override

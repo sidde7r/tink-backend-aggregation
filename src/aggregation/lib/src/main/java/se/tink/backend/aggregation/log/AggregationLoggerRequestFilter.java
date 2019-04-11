@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.log;
 
+import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_ENVIRONMENT_HEADER;
+import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_NAME_HEADER;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
@@ -9,17 +12,16 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.user.rpc.User;
-import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_ENVIRONMENT_HEADER;
-import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_NAME_HEADER;
 
 public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(AggregationLoggerRequestFilter.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(AggregationLoggerRequestFilter.class);
     // Changes to these keys MUST be mirrored in:
     // - tink-backend/etc/development-aggregation-server.yml
     // - tink-infrastructure/states/tink/aggregation/aggregation-server.yml
@@ -33,8 +35,7 @@ public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static class CredentialsRequestImpl extends CredentialsRequest {
-        public CredentialsRequestImpl() {
-        }
+        public CredentialsRequestImpl() {}
 
         public CredentialsRequestImpl(User user, Provider provider, Credentials credentials) {
             super(user, provider, credentials);
@@ -78,7 +79,8 @@ public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
             request.setEntityInputStream(new ByteArrayInputStream(body));
 
             // Try to parse it as a plain CredentialsRequest (impl above)
-            CredentialsRequestImpl credentialsRequest = OBJECT_MAPPER.readValue(body, CredentialsRequestImpl.class);
+            CredentialsRequestImpl credentialsRequest =
+                    OBJECT_MAPPER.readValue(body, CredentialsRequestImpl.class);
             Credentials credentials = credentialsRequest.getCredentials();
             User user = credentialsRequest.getUser();
             Provider provider = credentialsRequest.getProvider();

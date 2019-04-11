@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -32,16 +37,12 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.Timer.Context;
 import se.tink.libraries.user.rpc.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
-    private static final AggregationLogger log = new AggregationLogger(LoginAgentWorkerCommand.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(LoginAgentWorkerCommand.class);
 
-    private static final String LOCK_FORMAT_BANKID_REFRESH = "/locks/aggregation/%s/bankid"; // % (userId)
+    private static final String LOCK_FORMAT_BANKID_REFRESH =
+            "/locks/aggregation/%s/bankid"; // % (userId)
     private boolean weHavePreviouslyLoggedInSuccessfully = false;
 
     private static class MetricName {
@@ -66,7 +67,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private InterProcessSemaphoreMutex lock;
 
-    public LoginAgentWorkerCommand(AgentWorkerCommandContext context, LoginAgentWorkerCommandState state,
+    public LoginAgentWorkerCommand(
+            AgentWorkerCommandContext context,
+            LoginAgentWorkerCommandState state,
             AgentWorkerCommandMetricState metrics) {
         final CredentialsRequest request = context.getRequest();
         this.context = context;
@@ -75,7 +78,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.metrics = metrics.init(this);
         this.credentials = request.getCredentials();
         this.user = request.getUser();
-        this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
+        this.supplementalInformationController =
+                new SupplementalInformationController(context, request.getCredentials());
     }
 
     @Override
@@ -93,8 +97,11 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             if (context.getRequest().getType() == CredentialsRequestType.TRANSFER
                     && credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR) {
 
-                statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, context.getCatalog().getString(
-                        "Invalid credentials status. Update the credentials before retrying the operation."));
+                statusUpdater.updateStatus(
+                        CredentialsStatus.AUTHENTICATION_ERROR,
+                        context.getCatalog()
+                                .getString(
+                                        "Invalid credentials status. Update the credentials before retrying the operation."));
                 result = AgentWorkerCommandResult.ABORT;
 
             } else if (isLoggedIn()) {
@@ -117,8 +124,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private MetricId.MetricLabels metricForAction(String action) {
-        return new MetricId.MetricLabels()
-                .add("action", action);
+        return new MetricId.MetricLabels().add("action", action);
     }
 
     private boolean isLoggedIn() throws Exception {
@@ -127,7 +133,9 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         }
 
         MetricAction action = metrics.buildAction(metricForAction(MetricName.IS_LOGGED_IN));
-        ArrayList<Context> loadPersistentSessionTimerContexts = state.getTimerContexts(state.LOAD_PERSISTENT_SESSION_TIMER_NAME, credentials.getType());
+        ArrayList<Context> loadPersistentSessionTimerContexts =
+                state.getTimerContexts(
+                        state.LOAD_PERSISTENT_SESSION_TIMER_NAME, credentials.getType());
 
         PersistentLogin persistentAgent = (PersistentLogin) agent;
 
@@ -157,12 +165,15 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private boolean acquireLock() throws Exception {
         if (Objects.equals(credentials.getType(), CredentialsTypes.MOBILE_BANKID)) {
-            ArrayList<Context> lockTimerContext = state.getTimerContexts(state.LOCK_TIMER_NAME, credentials.getType());
+            ArrayList<Context> lockTimerContext =
+                    state.getTimerContexts(state.LOCK_TIMER_NAME, credentials.getType());
             MetricAction action = metrics.buildAction(metricForAction(MetricName.ACQUIRE_LOCK));
 
             try {
-                lock = new InterProcessSemaphoreMutex(context.getCoordinationClient(), String.format(
-                        LOCK_FORMAT_BANKID_REFRESH, user.getId()));
+                lock =
+                        new InterProcessSemaphoreMutex(
+                                context.getCoordinationClient(),
+                                String.format(LOCK_FORMAT_BANKID_REFRESH, user.getId()));
 
                 if (!lock.acquire(2, TimeUnit.MINUTES)) {
                     statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
@@ -173,7 +184,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 }
 
                 action.completed();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 action.failed();
                 throw e;
             } finally {
@@ -184,7 +195,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
-    private void progressiveLogin() throws Exception{
+    private void progressiveLogin() throws Exception {
         AuthenticationResponse response =
                 ((ProgressiveAuthAgent) agent)
                         .login(
@@ -201,23 +212,23 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                     ((ProgressiveAuthAgent) agent)
                             .login(
                                     new AuthenticationRequest(
-                                            response.getStep(),
-                                            new ArrayList<>(map.values())));
+                                            response.getStep(), new ArrayList<>(map.values())));
         }
     }
 
     private AgentWorkerCommandResult login() throws Exception {
-        ArrayList<Context> loginTimerContext = state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
+        ArrayList<Context> loginTimerContext =
+                state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
 
         try {
-            // TODO auth: temporarily use the annotation to filter agents that are migrated to use new Auth flow
+            // TODO auth: temporarily use the annotation to filter agents that are migrated to use
+            // new Auth flow
             if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
                 progressiveLogin();
                 action.completed();
                 return AgentWorkerCommandResult.CONTINUE;
-            }
-            else if (agent.login()) {
+            } else if (agent.login()) {
                 action.completed();
                 return AgentWorkerCommandResult.CONTINUE;
             } else {
@@ -226,17 +237,22 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 action.failed();
                 return AgentWorkerCommandResult.ABORT;
             }
-        } catch(BankIdException e) {
+        } catch (BankIdException e) {
             // The way frontend works now the message will not be displayed to the user.
-            statusUpdater.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+            statusUpdater.updateStatus(
+                    CredentialsStatus.UNCHANGED,
+                    context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
             return AgentWorkerCommandResult.ABORT;
-        } catch(BankServiceException e) {
-            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, context.getCatalog().getString(e.getUserMessage()));
+        } catch (BankServiceException e) {
+            statusUpdater.updateStatus(
+                    CredentialsStatus.TEMPORARY_ERROR,
+                    context.getCatalog().getString(e.getUserMessage()));
             action.unavailable();
             return AgentWorkerCommandResult.ABORT;
         } catch (AuthenticationException | AuthorizationException e) {
-            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR,
+            statusUpdater.updateStatus(
+                    CredentialsStatus.AUTHENTICATION_ERROR,
                     context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
             return AgentWorkerCommandResult.ABORT;
@@ -257,7 +273,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
     private void releaseLock() throws Exception {
         if (lock != null && lock.isAcquiredInThisProcess()) {
-            ArrayList<Context> releaseLockTimer = state.getTimerContexts(state.RELEASE_LOCK_TIMER_NAME, credentials.getType());
+            ArrayList<Context> releaseLockTimer =
+                    state.getTimerContexts(state.RELEASE_LOCK_TIMER_NAME, credentials.getType());
             MetricAction action = metrics.buildAction(metricForAction(MetricName.RELEASE_LOCK));
 
             try {
@@ -284,7 +301,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
 
         try {
             if (agent instanceof PersistentLogin) {
-                // If the agent support persistent sessions, save the session data and do not log out.
+                // If the agent support persistent sessions, save the session data and do not log
+                // out.
                 // Only persist for flagged users.
                 persistLoginSession((PersistentLogin) agent);
             } else {
@@ -298,20 +316,22 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     }
 
     private void persistLoginSession(PersistentLogin agent) throws Exception {
-        MetricAction action = metrics.buildAction(metricForAction(MetricName.PERSIST_LOGIN_SESSION));
+        MetricAction action =
+                metrics.buildAction(metricForAction(MetricName.PERSIST_LOGIN_SESSION));
 
         try {
             agent.persistLoginSession();
 
             action.completed();
-        } catch(Exception e) {
+        } catch (Exception e) {
             action.failed();
             throw e;
         }
     }
 
     private void logout() throws Exception {
-        ArrayList<Context> logoutTimerContext = state.getTimerContexts(state.LOGOOUT_TIMER_NAME, credentials.getType());
+        ArrayList<Context> logoutTimerContext =
+                state.getTimerContexts(state.LOGOOUT_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGOUT));
 
         try {

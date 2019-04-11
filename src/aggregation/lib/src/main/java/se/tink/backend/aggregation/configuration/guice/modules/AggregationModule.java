@@ -41,11 +41,13 @@ public class AggregationModule extends AbstractModule {
         bind(AggregationControllerAggregationClient.class).in(Scopes.SINGLETON);
         bind(AgentWorker.class).in(Scopes.SINGLETON);
 
-        if (Objects.nonNull(configuration.getS3StorageConfiguration()) &&
-                configuration.getS3StorageConfiguration().isEnabled()) {
+        if (Objects.nonNull(configuration.getS3StorageConfiguration())
+                && configuration.getS3StorageConfiguration().isEnabled()) {
             bind(AgentDebugStorageHandler.class).to(AgentDebugS3Storage.class).in(Scopes.SINGLETON);
         } else {
-            bind(AgentDebugStorageHandler.class).to(AgentDebugLocalStorage.class).in(Scopes.SINGLETON);
+            bind(AgentDebugStorageHandler.class)
+                    .to(AgentDebugLocalStorage.class)
+                    .in(Scopes.SINGLETON);
         }
 
         bind(CryptoConfigurationDao.class).in(Scopes.SINGLETON);
@@ -61,17 +63,17 @@ public class AggregationModule extends AbstractModule {
                 .binder(binder())
                 .jersey(jersey)
                 .addFilterFactories(ResourceTimerFilterFactory.class)
-                .addRequestFilters(AccessLoggingFilter.class, AggregationLoggerRequestFilter.class,
+                .addRequestFilters(
+                        AccessLoggingFilter.class,
+                        AggregationLoggerRequestFilter.class,
                         RequestTracingFilter.class)
                 .addResponseFilters(AccessLoggingFilter.class, RequestTracingFilter.class)
-                //This is not a resource, but a provider
+                // This is not a resource, but a provider
                 .addResources(
                         AggregationService.class,
                         CreditSafeService.class,
                         MonitoringService.class,
-                        JerseyClientProvider.class
-                )
+                        JerseyClientProvider.class)
                 .bind();
-
     }
 }

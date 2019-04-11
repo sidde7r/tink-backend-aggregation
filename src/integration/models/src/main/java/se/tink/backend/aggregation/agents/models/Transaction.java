@@ -34,8 +34,7 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
     private double originalAmount;
     private Map<TransactionPayloadTypes, String> payload;
 
-    @JsonIgnore
-    private String payloadSerialized;
+    @JsonIgnore private String payloadSerialized;
 
     private boolean pending;
     private long timestamp;

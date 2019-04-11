@@ -40,8 +40,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
 
     @Override
     public boolean shouldMigrateData(CredentialsRequest request) {
-        return !request.getAccounts()
-                .stream()
+        return !request.getAccounts().stream()
                 .filter(checkIfAccountIsProperTypeToBeMigrated)
                 .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
                 // Filter out dupicated acounts
@@ -61,8 +60,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
 
     @Override
     public void migrateData(CredentialsRequest request) {
-        request.getAccounts()
-                .stream()
+        request.getAccounts().stream()
                 .filter(checkIfAccountIsProperTypeToBeMigrated)
                 .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
                 .filter(a -> CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())

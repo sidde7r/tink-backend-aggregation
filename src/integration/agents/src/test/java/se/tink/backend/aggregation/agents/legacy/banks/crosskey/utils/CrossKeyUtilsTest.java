@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.crosskey.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CrossKeyUtilsTest {
     @Test(expected = IllegalArgumentException.class)
@@ -15,21 +16,23 @@ public class CrossKeyUtilsTest {
 
     @Test
     public void getDateRangeOfSingleTransactionList() {
-        Range<DateTime> dateRange = CrossKeyUtils.getDateRange(Lists.newArrayList(
-                createTransaction(2017, 2, 25)));
+        Range<DateTime> dateRange =
+                CrossKeyUtils.getDateRange(Lists.newArrayList(createTransaction(2017, 2, 25)));
 
         assertThat(dateRange.lowerEndpoint())
                 .isEqualTo(dateRange.upperEndpoint())
-                .isEqualTo(createDate(2017,2, 25));
+                .isEqualTo(createDate(2017, 2, 25));
     }
 
     @Test
     public void getDateRangeOfMultiTransactionListWihtoutOrder() {
-        Range<DateTime> dateRange = CrossKeyUtils.getDateRange(Lists.newArrayList(
-                createTransaction(2017, 2, 25),
-                createTransaction(2017, 3, 10),
-                createTransaction(2015, 4, 30), // <-- Min
-                createTransaction(2018, 2, 12))); // <-- Max
+        Range<DateTime> dateRange =
+                CrossKeyUtils.getDateRange(
+                        Lists.newArrayList(
+                                createTransaction(2017, 2, 25),
+                                createTransaction(2017, 3, 10),
+                                createTransaction(2015, 4, 30), // <-- Min
+                                createTransaction(2018, 2, 12))); // <-- Max
 
         assertThat(dateRange.lowerEndpoint()).isEqualTo(createDate(2015, 4, 30));
         assertThat(dateRange.upperEndpoint()).isEqualTo(createDate(2018, 2, 12));

@@ -21,24 +21,22 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 /**
- * This Credentials has been copied from {@link se.tink.libraries.credentials.rpc.Credentials} in an effort to remove :aggregation-apis
- * dependency on :main-api
- * <p>
- * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been
- * reworked. This is because users of the Aggregation API currently expects to get the same data back as it sends away
- * in the "enrichment" process.
+ * This Credentials has been copied from {@link se.tink.libraries.credentials.rpc.Credentials} in an
+ * effort to remove :aggregation-apis dependency on :main-api
+ *
+ * <p>Some of the objects here are not used by Aggregation at all, but are still needed until the
+ * Aggregation API has been reworked. This is because users of the Aggregation API currently expects
+ * to get the same data back as it sends away in the "enrichment" process.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Credentials implements Cloneable {
-    private static class FieldsMap extends HashMap<String, String> {
-    }
+    private static class FieldsMap extends HashMap<String, String> {}
 
     private Date debugUntil;
     private long providerLatency;
 
-    @JsonIgnore
-    private String fieldsSerialized;
+    @JsonIgnore private String fieldsSerialized;
 
     private String id;
     private Date nextUpdate;
@@ -52,8 +50,7 @@ public class Credentials implements Cloneable {
     private CredentialsTypes type;
     private Date updated;
     private String userId;
-    @JsonIgnore
-    private boolean forceManualAuthentication = false;
+    @JsonIgnore private boolean forceManualAuthentication = false;
 
     @JsonIgnore // Shoudn't be used between containers.
     private String sensitivePayloadSerialized;
@@ -69,7 +66,8 @@ public class Credentials implements Cloneable {
 
     public void addSerializedFields(String maskedFields) {
         Map<String, String> fields = getFields();
-        Map<String, String> newFields = SerializationUtils.deserializeFromString(maskedFields, FieldsMap.class);
+        Map<String, String> newFields =
+                SerializationUtils.deserializeFromString(maskedFields, FieldsMap.class);
         fields.putAll(newFields);
         setFields(fields);
     }
@@ -128,7 +126,7 @@ public class Credentials implements Cloneable {
         generateIdIfMissing();
         return this.id;
     }
-    
+
     public Date getNextUpdate() {
         return nextUpdate;
     }
@@ -167,9 +165,10 @@ public class Credentials implements Cloneable {
             return Maps.newHashMap();
         }
 
-        Map<String, String> sensitivePayload = SerializationUtils.deserializeFromString(getSensitivePayloadSerialized(),
-                new TypeReference<HashMap<String, String>>() {
-                });
+        Map<String, String> sensitivePayload =
+                SerializationUtils.deserializeFromString(
+                        getSensitivePayloadSerialized(),
+                        new TypeReference<HashMap<String, String>>() {});
 
         // `sensitivePayload` is `null` if we're unable to deserialize the payload
         if (sensitivePayload == null) {
@@ -270,8 +269,11 @@ public class Credentials implements Cloneable {
         List<Field> providerFields = provider.getFields();
 
         for (final Entry<String, String> fieldEntry : credentialsFields) {
-            Field field = providerFields.stream().filter(f -> Objects.equal(fieldEntry.getKey(), f.getName()))
-                    .findFirst().orElse(null);
+            Field field =
+                    providerFields.stream()
+                            .filter(f -> Objects.equal(fieldEntry.getKey(), f.getName()))
+                            .findFirst()
+                            .orElse(null);
 
             if (field != null && sensitive == (field.isSensitive() | field.isMasked())) {
                 // Fields exists and has same config of sensitive as asked for
@@ -426,15 +428,14 @@ public class Credentials implements Cloneable {
                 .toString();
     }
 
-    /**
-     * Check if this credential is a demo credential
-     */
+    /** Check if this credential is a demo credential */
     @JsonIgnore
     public boolean isDemoCredentials() {
         for (DemoCredentials demoCredentials : DemoCredentials.values()) {
             final String demoUsername = demoCredentials.getUsername();
             if (fieldsSerialized.contains(demoUsername)) {
-                setUsername(demoUsername); // If demo-username is found on another field than username
+                setUsername(
+                        demoUsername); // If demo-username is found on another field than username
                 return true;
             }
         }
@@ -445,7 +446,8 @@ public class Credentials implements Cloneable {
     @JsonIgnore
     public <T> T getPersistentSession(Class<T> returnType) {
         Optional<String> payload = getSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
-        return payload.map(p -> SerializationUtils.deserializeFromString(p, returnType)).orElse(null);
+        return payload.map(p -> SerializationUtils.deserializeFromString(p, returnType))
+                .orElse(null);
     }
 
     @JsonIgnore
@@ -454,7 +456,9 @@ public class Credentials implements Cloneable {
             removePersistentSession();
         }
 
-        setSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME, SerializationUtils.serializeToString(object));
+        setSensitivePayload(
+                Field.Key.PERSISTENT_LOGIN_SESSION_NAME,
+                SerializationUtils.serializeToString(object));
     }
 
     public void removePersistentSession() {

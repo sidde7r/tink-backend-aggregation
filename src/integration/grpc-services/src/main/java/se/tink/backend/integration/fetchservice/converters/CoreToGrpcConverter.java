@@ -12,21 +12,26 @@ public class CoreToGrpcConverter {
 
         CheckingAccountsResponse.Builder builder = CheckingAccountsResponse.newBuilder();
 
-        fetchAccountResponse.getAccounts().forEach(
-                coreAccount -> {
-                    builder.addAccounts(IntegrationAccount
-                            .newBuilder()
-                            .setName(coreAccount.getName())
-                            .setAccountNumber(coreAccount.getAccountNumber())
-                            .setBalance(Amount.getDefaultInstance())
-                            .setAvailableCredit(Amount.getDefaultInstance())
-                            .setUniqueIdentifier(coreAccount.getBankId()) // CHECK: is this the unique idenfier
-                            .setHolderName(HolderName.getDefaultInstance())
-                            .setAgentAccountState(AgentAccountState.getDefaultInstance())
-                            .setAccountIdentifiers(coreAccount.getIdentifiersSerialized())
-                            .build());
-                }
-        );
+        fetchAccountResponse
+                .getAccounts()
+                .forEach(
+                        coreAccount -> {
+                            builder.addAccounts(
+                                    IntegrationAccount.newBuilder()
+                                            .setName(coreAccount.getName())
+                                            .setAccountNumber(coreAccount.getAccountNumber())
+                                            .setBalance(Amount.getDefaultInstance())
+                                            .setAvailableCredit(Amount.getDefaultInstance())
+                                            .setUniqueIdentifier(
+                                                    coreAccount.getBankId()) // CHECK: is this the
+                                            // unique idenfier
+                                            .setHolderName(HolderName.getDefaultInstance())
+                                            .setAgentAccountState(
+                                                    AgentAccountState.getDefaultInstance())
+                                            .setAccountIdentifiers(
+                                                    coreAccount.getIdentifiersSerialized())
+                                            .build());
+                        });
 
         return builder.build();
     }

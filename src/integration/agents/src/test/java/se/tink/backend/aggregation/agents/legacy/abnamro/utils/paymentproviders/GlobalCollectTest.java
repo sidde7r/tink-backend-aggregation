@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.abnamro.utils.paymentproviders;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class GlobalCollectTest {
 
@@ -25,10 +26,14 @@ public class GlobalCollectTest {
         assertThat(globalCollect.getDescription("123 123 345")).isNull();
 
         // Matched descriptions numbers and description in the end
-        assertThat(globalCollect.getDescription("111112945111 1110001159792111 1211121212122 Steampowered"))
+        assertThat(
+                        globalCollect.getDescription(
+                                "111112945111 1110001159792111 1211121212122 Steampowered"))
                 .isEqualTo("Steampowered");
 
-        assertThat(globalCollect.getDescription("0020001149855175 0020001149855175 CY-451237296 CFD-trading-platform"))
+        assertThat(
+                        globalCollect.getDescription(
+                                "0020001149855175 0020001149855175 CY-451237296 CFD-trading-platform"))
                 .isEqualTo("CFD-trading-platform");
 
         assertThat(globalCollect.getDescription("267645167669 0020001133185803 FastSpring"))
@@ -42,7 +47,9 @@ public class GlobalCollectTest {
         assertThat(globalCollect.getDescription("267646117819 0000001151570155 KLM*Ref AA44AA KLM"))
                 .isEqualTo("KLM");
 
-        assertThat(globalCollect.getDescription("267645167669 0020001133185803 KLM*Ref 77GVXW KLM Flight"))
+        assertThat(
+                        globalCollect.getDescription(
+                                "267645167669 0020001133185803 KLM*Ref 77GVXW KLM Flight"))
                 .isEqualTo("KLM Flight");
     }
 }

@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
-import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -62,8 +61,9 @@ public class JerseyClientProvider extends AbstractHttpContextInjectable<ClientIn
     }
 
     private ClientInfo getClientInfoUsingApiKey(String apiKey) {
-        try{
-            ClientConfiguration clientConfig = clientConfigurationProvider.getClientConfiguration(apiKey);
+        try {
+            ClientConfiguration clientConfig =
+                    clientConfigurationProvider.getClientConfiguration(apiKey);
             return convertFromClientConfiguration(clientConfig);
         } catch (ClientNotValid e) {
             logger.error("Api key {} is not valid. no entry found in database.", apiKey);

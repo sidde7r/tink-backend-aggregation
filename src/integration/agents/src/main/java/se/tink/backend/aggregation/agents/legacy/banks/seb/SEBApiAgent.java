@@ -485,8 +485,7 @@ public class SEBApiAgent extends AbstractAgent
         try {
             RequestWrappingEntity requestWrappingEntity = new RequestWrappingEntity();
             requestWrappingEntity.setServiceInput(
-                    Collections.singletonList(
-                            new ServiceInput("DETAIL_URL", detailUrl)));
+                    Collections.singletonList(new ServiceInput("DETAIL_URL", detailUrl)));
 
             InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
             investmentDataRequest.setRequest(requestWrappingEntity);

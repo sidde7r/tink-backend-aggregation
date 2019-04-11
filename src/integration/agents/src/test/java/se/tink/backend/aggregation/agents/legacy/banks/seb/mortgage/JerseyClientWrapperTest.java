@@ -1,16 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.seb.mortgage;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.api.client.Client;
-import java.util.Map;
-import org.assertj.core.util.Strings;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
@@ -22,9 +11,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.client.Client;
+import java.util.Map;
+import org.assertj.core.util.Strings;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+
 public class JerseyClientWrapperTest {
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    public WireMockRule wireMockRule =
+            new WireMockRule(WireMockConfiguration.options().dynamicPort());
 
     private int mockServerPort;
 
@@ -37,7 +39,8 @@ public class JerseyClientWrapperTest {
     public void addFilter() {
         ClientFilterFactory filterFactoryMock = mock(ClientFilterFactory.class);
         Client mockClient = mock(Client.class);
-        JerseyClientWrapper jerseyClientWrapper = new JerseyClientWrapper(mockClient, mock(ApiConfiguration.class));
+        JerseyClientWrapper jerseyClientWrapper =
+                new JerseyClientWrapper(mockClient, mock(ApiConfiguration.class));
 
         jerseyClientWrapper.attachHttpFilters(filterFactoryMock);
 
@@ -47,16 +50,16 @@ public class JerseyClientWrapperTest {
     @Test
     public void postIncludesBodyAndUrl() {
         // Hook the wiremock server to URI and match the headers + content
-        stubFor(post(urlEqualTo("/test"))
-                .withHeader("Content-Type", matching("application/json; charset=utf-8"))
-                .withHeader("Accept", matching("application/json"))
-                .withRequestBody(matching("\\{\\\"input\\\":\\\"value\\\"\\}"))
-                .willReturn(aResponse()
-                        .withBody("...response...")));
+        stubFor(
+                post(urlEqualTo("/test"))
+                        .withHeader("Content-Type", matching("application/json; charset=utf-8"))
+                        .withHeader("Accept", matching("application/json"))
+                        .withRequestBody(matching("\\{\\\"input\\\":\\\"value\\\"\\}"))
+                        .willReturn(aResponse().withBody("...response...")));
 
         // Setup
-        JerseyClientWrapper jerseyClientWrapper = new JerseyClientWrapper(new ClientStub(),
-                new ConfigurationStub(mockServerPort));
+        JerseyClientWrapper jerseyClientWrapper =
+                new JerseyClientWrapper(new ClientStub(), new ConfigurationStub(mockServerPort));
 
         // Post the stuff, which should generated simulated response from wiremock
         String response = jerseyClientWrapper.post(new RequestStub(), String.class);
@@ -67,15 +70,15 @@ public class JerseyClientWrapperTest {
     @Test
     public void getExcludesBodyButResolvesUrl() {
         // Hook the wiremock server to URI and match the headers + content
-        stubFor(get(urlEqualTo("/test"))
-                .withHeader("Accept", matching("application/json"))
-                .withRequestBody(matching("^$")) // Empty body
-                .willReturn(aResponse()
-                        .withBody("...response...")));
+        stubFor(
+                get(urlEqualTo("/test"))
+                        .withHeader("Accept", matching("application/json"))
+                        .withRequestBody(matching("^$")) // Empty body
+                        .willReturn(aResponse().withBody("...response...")));
 
         // Setup
-        JerseyClientWrapper jerseyClientWrapper = new JerseyClientWrapper(new ClientStub(),
-                new ConfigurationStub(mockServerPort));
+        JerseyClientWrapper jerseyClientWrapper =
+                new JerseyClientWrapper(new ClientStub(), new ConfigurationStub(mockServerPort));
 
         // Post the stuff, which should generated simulated response from wiremock
         String response = jerseyClientWrapper.get(new RequestStub(), String.class);
@@ -86,16 +89,18 @@ public class JerseyClientWrapperTest {
     @Test
     public void addsHeadersToRequests() {
         // Hook the wiremock server to URI and match the headers + content
-        stubFor(get(urlEqualTo("/test"))
-                .withHeader("Accept", matching("application/json"))
-                .withHeader("Custom-Header", matching("my-custom"))
-                .withRequestBody(matching("^$")) // Empty body
-                .willReturn(aResponse()
-                        .withBody("...response...")));
+        stubFor(
+                get(urlEqualTo("/test"))
+                        .withHeader("Accept", matching("application/json"))
+                        .withHeader("Custom-Header", matching("my-custom"))
+                        .withRequestBody(matching("^$")) // Empty body
+                        .willReturn(aResponse().withBody("...response...")));
 
         // Setup
-        JerseyClientWrapper jerseyClientWrapper = new JerseyClientWrapper(
-                new ClientStub(), new ConfigurationStub("Custom-Header", "my-custom", mockServerPort));
+        JerseyClientWrapper jerseyClientWrapper =
+                new JerseyClientWrapper(
+                        new ClientStub(),
+                        new ConfigurationStub("Custom-Header", "my-custom", mockServerPort));
 
         // Post the stuff, which should generated simulated response from wiremock
         String response = jerseyClientWrapper.get(new RequestStub(), String.class);
@@ -104,8 +109,7 @@ public class JerseyClientWrapperTest {
         assertThat(response).isEqualTo("...response...");
     }
 
-    private static class ClientStub extends Client {
-    }
+    private static class ClientStub extends Client {}
 
     private static class ConfigurationStub implements ApiConfiguration {
         private final String customHeaderKey;
@@ -151,5 +155,4 @@ public class JerseyClientWrapperTest {
             return "/test";
         }
     }
-
 }

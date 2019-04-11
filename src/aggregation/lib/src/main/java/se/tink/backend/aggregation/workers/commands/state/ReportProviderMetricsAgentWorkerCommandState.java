@@ -23,14 +23,17 @@ public class ReportProviderMetricsAgentWorkerCommandState {
         CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
 
         executionsMeters = cacheBuilder.build(new MeterCacheLoader(metricRegistry, "executions"));
-        temporaryErrorMeters = cacheBuilder.build(new MeterCacheLoader(metricRegistry, "temporary_errors"));
-        authenticationErrorMeters = cacheBuilder
-                .build(new MeterCacheLoader(metricRegistry, "authentication_errors"));
+        temporaryErrorMeters =
+                cacheBuilder.build(new MeterCacheLoader(metricRegistry, "temporary_errors"));
+        authenticationErrorMeters =
+                cacheBuilder.build(new MeterCacheLoader(metricRegistry, "authentication_errors"));
 
         queuedTimers = cacheBuilder.build(new TimerCacheLoader(metricRegistry, "queue_duration"));
-        executionsTimers = cacheBuilder.build(new TimerCacheLoader(metricRegistry, "executions_duration"));
-        globalExecutionsTimers = cacheBuilder
-                .build(new TimerCacheLoader(metricRegistry, "executions_global_duration"));
+        executionsTimers =
+                cacheBuilder.build(new TimerCacheLoader(metricRegistry, "executions_duration"));
+        globalExecutionsTimers =
+                cacheBuilder.build(
+                        new TimerCacheLoader(metricRegistry, "executions_global_duration"));
     }
 
     public LoadingCache<MetricId.MetricLabels, Counter> getAuthenticationErrorMeters() {

@@ -37,12 +37,12 @@ public class RateLimitedExecutorProxyTest {
         public String toString() {
             return MoreObjects.toStringHelper(this).add("identifier", identifier).toString();
         }
-
     }
 
-    private static class FakeRateLimiter extends Ticker implements RateLimitedExecutorProxy.RateLimiter {
+    private static class FakeRateLimiter extends Ticker
+            implements RateLimitedExecutorProxy.RateLimiter {
 
-        private final static long DURATION_SINCE_LAST_ACQUIRE = TimeUnit.MILLISECONDS.toSeconds(50);
+        private static final long DURATION_SINCE_LAST_ACQUIRE = TimeUnit.MILLISECONDS.toSeconds(50);
         private final long minimumNanosPerAcquire;
 
         private Long lastAquire = null;
@@ -51,8 +51,9 @@ public class RateLimitedExecutorProxyTest {
         /**
          * Constructor.
          *
-         * @param now                    the start time
-         * @param minimumNanosPerAcquire the rate per second of aquire. Using long to make arithmetics without rounding errors.
+         * @param now the start time
+         * @param minimumNanosPerAcquire the rate per second of aquire. Using long to make
+         *     arithmetics without rounding errors.
          */
         public FakeRateLimiter(long now, long minimumNanosPerAcquire) {
             this.fakeNow = now;
@@ -72,30 +73,37 @@ public class RateLimitedExecutorProxyTest {
         public long read() {
             return fakeNow;
         }
-
     }
 
     /**
-     * Making sure 1) execution order is correctly understood and 2) that ClassCastExceptions are not thrown.
+     * Making sure 1) execution order is correctly understood and 2) that ClassCastExceptions are
+     * not thrown.
      *
      * @throws InterruptedException should never be thrown.
      */
     @Test
     public void testBasicRateLimiting() throws InterruptedException {
 
-        ListenableThreadPoolExecutor<Runnable> delegateExecutor = ListenableThreadPoolExecutor.builder(
-                Queues.newLinkedBlockingQueue(),
-                new TypedThreadPoolBuilder(1, new ThreadFactoryBuilder().build()))
-                .build();
+        ListenableThreadPoolExecutor<Runnable> delegateExecutor =
+                ListenableThreadPoolExecutor.builder(
+                                Queues.newLinkedBlockingQueue(),
+                                new TypedThreadPoolBuilder(1, new ThreadFactoryBuilder().build()))
+                        .build();
 
         int RATE_PER_SECOND = 1;
-        FakeRateLimiter fakeRateLimiter = new FakeRateLimiter(System.nanoTime(), TimeUnit.SECONDS.toNanos(1));
+        FakeRateLimiter fakeRateLimiter =
+                new FakeRateLimiter(System.nanoTime(), TimeUnit.SECONDS.toNanos(1));
 
-        RateLimitedExecutorProxy executor = new RateLimitedExecutorProxy(
-                Suppliers.<RateLimiter>ofInstance(fakeRateLimiter),
-                delegateExecutor,
-                new ThreadFactoryBuilder().setNameFormat(
-                        "test-rate-limit-proxy-%d").build(), dummyMetricRegistry, NO_METRIC_LABELS, MAX_QUEUED_UP);
+        RateLimitedExecutorProxy executor =
+                new RateLimitedExecutorProxy(
+                        Suppliers.<RateLimiter>ofInstance(fakeRateLimiter),
+                        delegateExecutor,
+                        new ThreadFactoryBuilder()
+                                .setNameFormat("test-rate-limit-proxy-%d")
+                                .build(),
+                        dummyMetricRegistry,
+                        NO_METRIC_LABELS,
+                        MAX_QUEUED_UP);
 
         Stopwatch timer = Stopwatch.createStarted(fakeRateLimiter);
 
@@ -114,8 +122,8 @@ public class RateLimitedExecutorProxyTest {
 
         // The first RateLimitter#acquire call is always free.
         final int RUNNABLES_THAT_WILL_WAIT_FOR_RATE_LIMITER = ITEMS_SUBMITTED - 1;
-        final int TOTAL_LATENCY_RATE_LIMITTER_WILL_INCUR_MS = RUNNABLES_THAT_WILL_WAIT_FOR_RATE_LIMITER * 1000
-                / RATE_PER_SECOND;
+        final int TOTAL_LATENCY_RATE_LIMITTER_WILL_INCUR_MS =
+                RUNNABLES_THAT_WILL_WAIT_FOR_RATE_LIMITER * 1000 / RATE_PER_SECOND;
 
         Assert.assertEquals(elapsed, TOTAL_LATENCY_RATE_LIMITTER_WILL_INCUR_MS);
     }

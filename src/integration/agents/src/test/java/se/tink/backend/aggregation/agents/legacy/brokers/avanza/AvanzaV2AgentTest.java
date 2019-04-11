@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.brokers.avanza;
 
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.libraries.social.security.TestSSN;
 
 public class AvanzaV2AgentTest extends AbstractAgentTest<AvanzaV2Agent> {

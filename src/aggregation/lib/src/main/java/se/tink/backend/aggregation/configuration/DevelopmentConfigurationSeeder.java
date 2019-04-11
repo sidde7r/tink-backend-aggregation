@@ -14,7 +14,8 @@ public class DevelopmentConfigurationSeeder {
     private final AggregationDevelopmentConfiguration developmentConfiguration;
 
     @Inject
-    DevelopmentConfigurationSeeder(CryptoConfigurationsRepository cryptoConfigurationsRepository,
+    DevelopmentConfigurationSeeder(
+            CryptoConfigurationsRepository cryptoConfigurationsRepository,
             AggregationDevelopmentConfiguration developmentConfiguration) {
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
         this.developmentConfiguration = developmentConfiguration;
@@ -24,13 +25,15 @@ public class DevelopmentConfigurationSeeder {
     private void seedCryptoConfiguration() {
         CryptoConfiguration cryptoConfiguration = developmentConfiguration.getCryptoConfiguration();
 
-        // TODO maybe we should add isValid methods in the new methods to check if data is in valid format
+        // TODO maybe we should add isValid methods in the new methods to check if data is in valid
+        // format
         if (Objects.isNull(cryptoConfiguration)) {
             return;
         }
 
-        CryptoConfiguration cryptoConfigurationInStorage = cryptoConfigurationsRepository.findOne(
-                cryptoConfiguration.getCryptoConfigurationId());
+        CryptoConfiguration cryptoConfigurationInStorage =
+                cryptoConfigurationsRepository.findOne(
+                        cryptoConfiguration.getCryptoConfigurationId());
 
         if (!Objects.isNull(cryptoConfigurationInStorage)) {
             return;

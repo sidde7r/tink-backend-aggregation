@@ -11,11 +11,11 @@ import org.hibernate.annotations.Type;
 public class CryptoConfiguration {
     private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
-    @EmbeddedId
-    private CryptoConfigurationId cryptoConfigurationId;
+    @EmbeddedId private CryptoConfigurationId cryptoConfigurationId;
+
     @Type(type = "text")
     private String base64encodedkey;
-    
+
     public int getKeyId() {
         return cryptoConfigurationId.getKeyId();
     }
@@ -28,8 +28,7 @@ public class CryptoConfiguration {
         return cryptoConfigurationId;
     }
 
-    public void setCryptoConfigurationId(
-            CryptoConfigurationId cryptoConfigurationId) {
+    public void setCryptoConfigurationId(CryptoConfigurationId cryptoConfigurationId) {
         this.cryptoConfigurationId = cryptoConfigurationId;
     }
 
@@ -44,5 +43,4 @@ public class CryptoConfiguration {
     public byte[] getDecodedKey() {
         return BASE64_DECODER.decode(base64encodedkey);
     }
-
 }

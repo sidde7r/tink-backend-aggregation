@@ -9,12 +9,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DemoFakeBankAccountsResponse {
-    @JsonProperty
-    private String status;
-    @JsonProperty
-    private String message;
-    @JsonProperty
-    private List<FakeAccount> accounts;
+    @JsonProperty private String status;
+    @JsonProperty private String message;
+    @JsonProperty private List<FakeAccount> accounts;
 
     public DemoFakeBankAccountsResponse() {}
 

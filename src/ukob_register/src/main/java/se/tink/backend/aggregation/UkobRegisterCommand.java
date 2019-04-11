@@ -15,8 +15,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UkobRegisterCommand {
 
-    private final static String OUTFILE_NAME = "registration_response_%d";
-    private final static String DEFAULT_SS = "tink";
+    private static final String OUTFILE_NAME = "registration_response_%d";
+    private static final String DEFAULT_SS = "tink";
 
     public static void main(String args[]) throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -26,18 +26,25 @@ public class UkobRegisterCommand {
             return;
         }
 
-        final UkOpenBankingConfiguration config = SerializationUtils
-                .deserializeFromString(readCredentialFile(args[0]), UkOpenBankingConfiguration.class);
+        final UkOpenBankingConfiguration config =
+                SerializationUtils.deserializeFromString(
+                        readCredentialFile(args[0]), UkOpenBankingConfiguration.class);
         config.validate();
         final String wellKnown = args[1];
 
         final String ssName = args.length == 3 ? args[2] : DEFAULT_SS;
-        final SoftwareStatement softwareStatement = config.getSoftwareStatement(ssName)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("Software Statement \"%s\" was not found in config.", ssName)));
+        final SoftwareStatement softwareStatement =
+                config.getSoftwareStatement(ssName)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalArgumentException(
+                                                String.format(
+                                                        "Software Statement \"%s\" was not found in config.",
+                                                        ssName)));
 
         TinkHttpClient httpClient = createHttpClient(config, softwareStatement);
-        String res = OpenIdApiClient.registerClient(softwareStatement, new URL(wellKnown), httpClient);
+        String res =
+                OpenIdApiClient.registerClient(softwareStatement, new URL(wellKnown), httpClient);
 
         System.out.println("\n### RESPONSE ###\n\n" + res + "\n\n################\n");
         String outFile = saveResponse(res);
@@ -61,14 +68,15 @@ public class UkobRegisterCommand {
     }
 
     private static void printUsageInstructions() {
-        System.out.println("usage: bazel run :ukob-register [config] [well-known] [ss (optional)]\n");
+        System.out.println(
+                "usage: bazel run :ukob-register [config] [well-known] [ss (optional)]\n");
         System.out.println("config      - Path to UkOpenBankingConfiguration in json format.");
         System.out.println("well-known  - URL to banks well-known configuration.");
         System.out.println("ss          - Name of software statement. Default = tink.\n");
     }
 
-    private static TinkHttpClient createHttpClient(UkOpenBankingConfiguration config,
-            SoftwareStatement softwareStatement) {
+    private static TinkHttpClient createHttpClient(
+            UkOpenBankingConfiguration config, SoftwareStatement softwareStatement) {
 
         TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
@@ -88,7 +96,9 @@ public class UkobRegisterCommand {
         if (!folder.exists()) {
             if (!folder.mkdir()) {
                 throw new RuntimeException(
-                        String.format("No output folder %s exists and none could be created.", folder.getPath()));
+                        String.format(
+                                "No output folder %s exists and none could be created.",
+                                folder.getPath()));
             }
         }
 
@@ -103,7 +113,8 @@ public class UkobRegisterCommand {
 
         if (!file.createNewFile()) {
             throw new RuntimeException(
-                    String.format("No output file %s exists and none could be created.", file.getPath()));
+                    String.format(
+                            "No output file %s exists and none could be created.", file.getPath()));
         }
 
         PrintWriter out = new PrintWriter(file);

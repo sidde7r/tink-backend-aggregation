@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.danskebank;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
-import java.security.Security;
+import java.util.Date;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,14 +25,9 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-import java.util.Date;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
     private List<String> featureFlags;
-    private final static String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
+    private static final String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
 
     @Override
     protected List<String> constructFeatureFlags() {
@@ -72,9 +70,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         fetchEInvoices(TestSSN.FH);
     }
 
-    /**
-     * Requires unsigned incoming eInvoices at Danske
-     */
+    /** Requires unsigned incoming eInvoices at Danske */
     @Test
     public void testSignEInvoice() throws Exception {
         this.featureFlags = ImmutableList.of(FeatureFlags.TRANSFERS);
@@ -85,14 +81,17 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         // Update with minimal change
         Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
-        Date originalDateMinus1Day = DateUtils.getCurrentOrPreviousBusinessDay(new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
+        Date originalDateMinus1Day =
+                DateUtils.getCurrentOrPreviousBusinessDay(
+                        new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
 
-        Transfer transferToSign = TransferMock.eInvoice()
-                .createUpdateTransferFromOriginal(originalTransfer)
-                .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                .withAmount(originalAmountPlus1SEK)
-                .withDueDate(originalDateMinus1Day)
-                .build();
+        Transfer transferToSign =
+                TransferMock.eInvoice()
+                        .createUpdateTransferFromOriginal(originalTransfer)
+                        .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                        .withAmount(originalAmountPlus1SEK)
+                        .withDueDate(originalDateMinus1Day)
+                        .build();
 
         testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
@@ -151,13 +150,16 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
     @Test
     public void testTransferBankId() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(
+                        TestAccount.DANSKEBANK_FH, TestAccount.DANSKEBANK_ANOTHER_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdHandelsbanken() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.HANDELSBANKEN_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.HANDELSBANKEN_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -169,43 +171,50 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
     @Test
     public void testTransferExternalBankIdSwedbank() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SWEDBANK_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SWEDBANK_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdSavingsbank() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SAVINGSBANK_AL);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SAVINGSBANK_AL);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdIcaBanken() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.ICABANKEN_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.ICABANKEN_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdNordea() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.NORDEA_EP);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.NORDEA_EP);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdNordeaSSN() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.NORDEASSN_EP);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.NORDEASSN_EP);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdLansforsakringar() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.LANSFORSAKRINGAR_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.LANSFORSAKRINGAR_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
     @Test
     public void testTransferExternalBankIdSkandiabanken() throws Exception {
-        Transfer transfer = create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SKANDIABANKEN_FH);
+        Transfer transfer =
+                create1SEKTestTransfer(TestAccount.DANSKEBANK_FH, TestAccount.SKANDIABANKEN_FH);
         testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transfer);
     }
 
@@ -216,44 +225,52 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             try {
                 testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);

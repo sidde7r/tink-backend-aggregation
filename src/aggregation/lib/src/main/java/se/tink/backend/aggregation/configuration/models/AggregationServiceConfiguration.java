@@ -5,43 +5,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
-import se.tink.libraries.repository.config.DatabaseConfiguration;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.libraries.repository.config.DatabaseConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AggregationServiceConfiguration extends Configuration {
     @JsonProperty
-    private AgentsServiceConfiguration agentsServiceConfiguration = new AgentsServiceConfiguration();
+    private AgentsServiceConfiguration agentsServiceConfiguration =
+            new AgentsServiceConfiguration();
 
-    @JsonProperty
-    private CacheConfiguration cache = new CacheConfiguration();
+    @JsonProperty private CacheConfiguration cache = new CacheConfiguration();
 
-    @JsonProperty
-    private CoordinationConfiguration coordination = new CoordinationConfiguration();
+    @JsonProperty private CoordinationConfiguration coordination = new CoordinationConfiguration();
 
-    @JsonProperty
-    private DatabaseConfiguration database = new DatabaseConfiguration();
+    @JsonProperty private DatabaseConfiguration database = new DatabaseConfiguration();
 
-    @JsonProperty
-    private boolean developmentMode = false;
+    @JsonProperty private boolean developmentMode = false;
 
-    @JsonProperty
-    private PrometheusConfiguration prometheus = new PrometheusConfiguration();
+    @JsonProperty private PrometheusConfiguration prometheus = new PrometheusConfiguration();
 
-    @JsonProperty
-    private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
+    @JsonProperty private SqsQueueConfiguration sqsQueueConfiguration = new SqsQueueConfiguration();
 
     @JsonProperty
     private S3StorageConfiguration s3StorageConfiguration = new S3StorageConfiguration();
 
     @JsonProperty
-    private AggregationDevelopmentConfiguration developmentConfiguration = new AggregationDevelopmentConfiguration();
+    private AggregationDevelopmentConfiguration developmentConfiguration =
+            new AggregationDevelopmentConfiguration();
 
-    @JsonProperty
-    private boolean isMultiClientDevelopment = false;
+    @JsonProperty private boolean isMultiClientDevelopment = false;
 
-    @JsonProperty
-    private ProvisionClientsConfig provisionClientsConfig;
+    @JsonProperty private ProvisionClientsConfig provisionClientsConfig;
 
     public AgentsServiceConfiguration getAgentsServiceConfiguration() {
         return agentsServiceConfiguration;

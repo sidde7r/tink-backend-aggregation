@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.libraries.social.security.time.SwedishTimeRule;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetRateResponseTest {
-    @Rule
-    public SwedishTimeRule timeRule = new SwedishTimeRule();
+    @Rule public SwedishTimeRule timeRule = new SwedishTimeRule();
 
     @Test
     public void deserialize() throws IOException {

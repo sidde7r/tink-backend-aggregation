@@ -36,9 +36,7 @@ public enum FetchProductInformationParameterKey {
         throw new IllegalArgumentException(String.format("No key found: %s", key));
     }
 
-    /**
-     * Need to override the toString() for Jackson to get the key in maps from custom getter
-     */
+    /** Need to override the toString() for Jackson to get the key in maps from custom getter */
     @JsonValue
     @Override
     public String toString() {

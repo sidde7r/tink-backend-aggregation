@@ -14,7 +14,7 @@ public class DemoFakeBankSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        //TODO: Logout
+        // TODO: Logout
     }
 
     @Override

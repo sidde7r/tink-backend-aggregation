@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -21,8 +19,10 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.exception.EmptyDebugLogException;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
