@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.configuration.RaiffeisenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.RaiffeiesenTransactionFetcher;
@@ -45,7 +46,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent {
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                RaiffeisenConstants.Market.INTEGRATION_NAME,
+                                Market.INTEGRATION_NAME,
                                 request.getProvider().getPayload(),
                                 RaiffeisenConfiguration.class)
                         .orElseThrow(

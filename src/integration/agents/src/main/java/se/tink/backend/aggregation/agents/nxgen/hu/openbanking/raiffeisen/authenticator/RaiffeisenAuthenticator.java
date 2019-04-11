@@ -5,7 +5,9 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenApiClient;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.Market;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.entities.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.entities.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.rpc.GetConsentRequest;
@@ -35,8 +37,7 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
         List<AccountInfoEntity> accountInfoEntityList =
                 Collections.singletonList(
                         new AccountInfoEntity(
-                                apiClient.getConfiguration().getIban(),
-                                RaiffeisenConstants.Market.CURRENCY));
+                                apiClient.getConfiguration().getIban(), Market.CURRENCY));
 
         GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
@@ -44,14 +45,13 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
                                 accountInfoEntityList,
                                 accountInfoEntityList,
                                 accountInfoEntityList),
-                        RaiffeisenConstants.FormValues.TRUE,
-                        RaiffeisenConstants.FormValues.VALID_UNTIL,
-                        RaiffeisenConstants.FormValues.FREQUENCY_PER_DAY,
-                        RaiffeisenConstants.FormValues.FALSE);
+                        FormValues.TRUE,
+                        FormValues.VALID_UNTIL,
+                        FormValues.FREQUENCY_PER_DAY,
+                        FormValues.FALSE);
 
         GetConsentResponse getConsentResponse = apiClient.getConsent(getConsentRequest);
-        sessionStorage.put(
-                RaiffeisenConstants.StorageKeys.CONSENT_ID, getConsentResponse.getConsentId());
+        sessionStorage.put(StorageKeys.CONSENT_ID, getConsentResponse.getConsentId());
         return apiClient.getUrl(state, getConsentResponse);
     }
 
@@ -62,7 +62,7 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
                         .setClientId(apiClient.getConfiguration().getClientId())
                         .setClientSecret(apiClient.getConfiguration().getClientSecret())
                         .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
-                        .setGrantType(RaiffeisenConstants.FormValues.AUTHORIZATION_CODE)
+                        .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setCode(code)
                         .build();
 
@@ -77,7 +77,7 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
                 RefreshTokenForm.builder()
                         .setClientId(apiClient.getConfiguration().getClientId())
                         .setClientSecret(apiClient.getConfiguration().getClientSecret())
-                        .setGrantType(RaiffeisenConstants.FormValues.REFRESH_TOKEN)
+                        .setGrantType(FormValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
                         .build();
 
@@ -86,6 +86,6 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(RaiffeisenConstants.StorageKeys.TOKEN, accessToken);
+        sessionStorage.put(StorageKeys.TOKEN, accessToken);
     }
 }

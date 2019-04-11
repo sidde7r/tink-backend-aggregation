@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.fetcher.transactionalaccount.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.BalanceTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -13,7 +13,7 @@ public class BalanceEntity {
     private String referenceDate;
 
     public boolean isAvailableBalance() {
-        return balanceType.equalsIgnoreCase(RaiffeisenConstants.BalanceTypes.INTERIM_BOOKED);
+        return balanceType.equalsIgnoreCase(BalanceTypes.INTERIM_BOOKED);
     }
 
     public Amount toAmount() {

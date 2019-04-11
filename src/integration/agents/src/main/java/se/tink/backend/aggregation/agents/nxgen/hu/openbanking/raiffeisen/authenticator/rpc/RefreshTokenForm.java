@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class RefreshTokenForm extends AbstractForm {
     private RefreshTokenForm(
             String grantType, String clientId, String clientSecret, String refreshToken) {
-        put(RaiffeisenConstants.FormKeys.GRANT_TYPE, grantType);
-        put(RaiffeisenConstants.FormKeys.CLIENT_ID, clientId);
-        put(RaiffeisenConstants.FormKeys.CLIENT_SECRET, clientSecret);
-        put(RaiffeisenConstants.FormKeys.REFRESH_TOKEN, refreshToken);
+        put(FormKeys.GRANT_TYPE, grantType);
+        put(FormKeys.CLIENT_ID, clientId);
+        put(FormKeys.CLIENT_SECRET, clientSecret);
+        put(FormKeys.REFRESH_TOKEN, refreshToken);
     }
 
     public static Builder builder() {
