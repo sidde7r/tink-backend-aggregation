@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.abnamro.client.rpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ErrorEntity;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class SubscriptionResponseTest {
 

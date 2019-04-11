@@ -10,13 +10,15 @@ public class OriginatorTest {
     @Test
     public void testValidBankGiroAccountNumber() {
         Originator o = createOriginator("687-5496", "TINK AB", null);
-        Assert.assertEquals(AccountIdentifier.Type.SE_BG, o.generalGetAccountIdentifier().getType());
+        Assert.assertEquals(
+                AccountIdentifier.Type.SE_BG, o.generalGetAccountIdentifier().getType());
     }
 
     @Test
     public void testValidPostGiroAccountNumber() {
         Originator o = createOriginator("687549-6", "TINK AB", null);
-        Assert.assertEquals(AccountIdentifier.Type.SE_PG, o.generalGetAccountIdentifier().getType());
+        Assert.assertEquals(
+                AccountIdentifier.Type.SE_PG, o.generalGetAccountIdentifier().getType());
     }
 
     @Test

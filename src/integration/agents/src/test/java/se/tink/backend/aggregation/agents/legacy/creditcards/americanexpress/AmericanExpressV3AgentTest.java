@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.creditcards.americanexpress;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -8,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
@@ -16,24 +23,20 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.America
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.LoginRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TimelineRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
-import se.tink.libraries.user.rpc.User;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import se.tink.libraries.user.rpc.User;
 
 public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpressV3Agent> {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ThreadSafeDateFormat LOCAL_TIME_FORMAT = new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss");
-    private static final String BASE_URL = "https://global.americanexpress.com/myca/intl/moblclient/emea/svc";
+    private static final ThreadSafeDateFormat LOCAL_TIME_FORMAT =
+            new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss");
+    private static final String BASE_URL =
+            "https://global.americanexpress.com/myca/intl/moblclient/emea/svc";
 
     private AgentTestContext context;
     private Client client;
@@ -54,13 +57,17 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
     @Test
     public void testSEUser1() throws Exception {
         provider.setMarket("SE");
-        testAgent(CommonAmericanExpress.USER1.getUsername(), CommonAmericanExpress.USER1.getPassword());
+        testAgent(
+                CommonAmericanExpress.USER1.getUsername(),
+                CommonAmericanExpress.USER1.getPassword());
     }
 
     @Test
     public void testSEUser2() throws Exception {
         provider.setMarket("SE");
-        testAgent(CommonAmericanExpress.USER2.getUsername(), CommonAmericanExpress.USER2.getPassword());
+        testAgent(
+                CommonAmericanExpress.USER2.getUsername(),
+                CommonAmericanExpress.USER2.getPassword());
     }
 
     @Test
@@ -70,7 +77,8 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         agent.login();
         agent.refresh();
 
-        Map<String, List<Transaction>> transactionsByAccountBankId = context.getTransactionsByAccountBankId();
+        Map<String, List<Transaction>> transactionsByAccountBankId =
+                context.getTransactionsByAccountBankId();
 
         int count = 0;
 
@@ -93,10 +101,11 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         mockTransactionsRequest(1, 1);
 
         context = new AgentTestContext(credentials);
-        CredentialsRequest request = new RefreshInformationRequest(CoreUserMapper.toAggregationUser(user), provider,
-                credentials,
-                true);
-        AmericanExpressV3ApiClient apiClient = new AmericanExpressV3ApiClient(client, "SE", "Tink", credentials);
+        CredentialsRequest request =
+                new RefreshInformationRequest(
+                        CoreUserMapper.toAggregationUser(user), provider, credentials, true);
+        AmericanExpressV3ApiClient apiClient =
+                new AmericanExpressV3ApiClient(client, "SE", "Tink", credentials);
 
         return new AmericanExpressV3Agent(request, context, new SignatureKeyPair(), apiClient);
     }
@@ -139,21 +148,25 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
     private void mockLoginRequest() {
         WebResource.Builder builder = mockResource("/v1/loginSummary.do");
 
-        when(builder.post(eq(String.class), any(LoginRequest.class))).thenReturn(mockLoginResponse());
+        when(builder.post(eq(String.class), any(LoginRequest.class)))
+                .thenReturn(mockLoginResponse());
     }
 
     private void mockTransactionsRequest(int sortedIndex, int billingIndex) {
         TransactionsRequest transactionsRequest = new TransactionsRequest();
-        transactionsRequest.setBillingIndexList(Collections.singletonList(Integer.toString(billingIndex)));
+        transactionsRequest.setBillingIndexList(
+                Collections.singletonList(Integer.toString(billingIndex)));
         transactionsRequest.setSortedIndex(sortedIndex);
 
         WebResource.Builder builder = mockResource("/v1/transaction.do");
         when(builder.post(eq(String.class), any(TransactionsRequest.class)))
-                .thenAnswer(invocationOnMock -> {
-                    TransactionsRequest request = invocationOnMock.getArgument(1);
-                    return mockTransactionsResponse(request.getSortedIndex(),
-                            Integer.valueOf(request.getBillingIndexList().get(0)));
-                });
+                .thenAnswer(
+                        invocationOnMock -> {
+                            TransactionsRequest request = invocationOnMock.getArgument(1);
+                            return mockTransactionsResponse(
+                                    request.getSortedIndex(),
+                                    Integer.valueOf(request.getBillingIndexList().get(0)));
+                        });
     }
 
     private void mockTimelineRequest(int sortedIndex) {
@@ -168,10 +181,11 @@ public class AmericanExpressV3AgentTest extends AbstractAgentTest<AmericanExpres
         timelineRequest.setPendingChargeEnabled(true);
 
         when(builder.post(eq(String.class), any(TimelineRequest.class)))
-                .thenAnswer(invocationOnMock -> {
-                    TimelineRequest request = invocationOnMock.getArgument(1);
-                    return mockTimelineResponse(request.getSortedIndex());
-                });
+                .thenAnswer(
+                        invocationOnMock -> {
+                            TimelineRequest request = invocationOnMock.getArgument(1);
+                            return mockTimelineResponse(request.getSortedIndex());
+                        });
     }
 
     private WebResource.Builder mockResource(String url) {

@@ -8,26 +8,25 @@ import org.assertj.core.api.Assertions;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.banks.icabanken.ICABankenAccountNumberUtils;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.ICABankenAgent;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.PersistentSession;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionResponseBody;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.transfer.mocks.TransferMock;
-import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.libraries.social.security.TestSSN;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
     private ImmutableList<String> featureFlags = ImmutableList.of();
@@ -96,9 +95,9 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         testTransferError(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
     }
 
-    /** NOTICE!
-     *  Payments must provide an OCR number as Reference
-     *  Reference type "Message" is not implemented yet
+    /**
+     * NOTICE! Payments must provide an OCR number as Reference Reference type "Message" is not
+     * implemented yet
      *
      * @throws Exception
      */
@@ -178,7 +177,9 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         Assert.assertTrue(ICABankenAccountNumberUtils.isOldFormat("   9271-682 017 1   "));
         Assert.assertFalse(ICABankenAccountNumberUtils.isNewFormat("   92716824002   "));
 
-        Assert.assertEquals("9271-682 400 2", ICABankenAccountNumberUtils.fromNewFormatToOldFormat("92716824002"));
+        Assert.assertEquals(
+                "9271-682 400 2",
+                ICABankenAccountNumberUtils.fromNewFormatToOldFormat("92716824002"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -239,12 +240,13 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         Transfer originalTransfer = transfers.get(0);
 
-        Transfer transferToSign = TransferMock.eInvoice()
-                .createUpdateTransferFromOriginal(originalTransfer)
-                .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                .withAmount(originalTransfer.getAmount())
-                .withDueDate(originalTransfer.getDueDate())
-                .build();
+        Transfer transferToSign =
+                TransferMock.eInvoice()
+                        .createUpdateTransferFromOriginal(originalTransfer)
+                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                        .withAmount(originalTransfer.getAmount())
+                        .withDueDate(originalTransfer.getDueDate())
+                        .build();
 
         testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
@@ -260,12 +262,13 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         // Update with minimal change
         Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
 
-        Transfer transferToSign = TransferMock.eInvoice()
-                .createUpdateTransferFromOriginal(originalTransfer)
-                .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                .withAmount(originalAmountPlus1SEK)
-                .withDueDate(originalTransfer.getDueDate())
-                .build();
+        Transfer transferToSign =
+                TransferMock.eInvoice()
+                        .createUpdateTransferFromOriginal(originalTransfer)
+                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                        .withAmount(originalAmountPlus1SEK)
+                        .withDueDate(originalTransfer.getDueDate())
+                        .build();
 
         testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
@@ -279,15 +282,17 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         Transfer originalTransfer = transfers.get(0);
 
         // Update with minimal change
-        Date originalDateMinus1Day = DateUtils.getCurrentOrPreviousBusinessDay(new DateTime(originalTransfer
-                .getDueDate()).minusDays(1).toDate());
+        Date originalDateMinus1Day =
+                DateUtils.getCurrentOrPreviousBusinessDay(
+                        new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
 
-        Transfer transferToSign = TransferMock.eInvoice()
-                .createUpdateTransferFromOriginal(originalTransfer)
-                .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                .withAmount(originalTransfer.getAmount())
-                .withDueDate(originalTransfer.getDueDate())
-                .build();
+        Transfer transferToSign =
+                TransferMock.eInvoice()
+                        .createUpdateTransferFromOriginal(originalTransfer)
+                        .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                        .withAmount(originalTransfer.getAmount())
+                        .withDueDate(originalTransfer.getDueDate())
+                        .build();
 
         testUpdateTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, transferToSign);
     }
@@ -299,44 +304,52 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                    .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                            .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                    .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                            .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             try {
                 testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
@@ -344,6 +357,5 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
                 throw assertionError.getCause();
             }
         }
-
     }
 }

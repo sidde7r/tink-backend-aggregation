@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro.converters;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -9,7 +11,6 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.abnamro.client.model.AmountEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.PfmContractEntity;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountConverterTest {
 
@@ -82,5 +83,4 @@ public class AccountConverterTest {
 
         return entity;
     }
-
 }

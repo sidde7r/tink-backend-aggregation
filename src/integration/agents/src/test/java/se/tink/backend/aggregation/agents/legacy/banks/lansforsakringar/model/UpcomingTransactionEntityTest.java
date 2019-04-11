@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class UpcomingTransactionEntityTest {
     private static final String ACCOUNT_NUMBER_1 = "01234";

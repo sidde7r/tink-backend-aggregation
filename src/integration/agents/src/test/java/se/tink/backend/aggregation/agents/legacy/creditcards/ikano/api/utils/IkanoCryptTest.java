@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.utils;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.security.NoSuchAlgorithmException;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
-
-import java.security.NoSuchAlgorithmException;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IkanoCryptTest {
 

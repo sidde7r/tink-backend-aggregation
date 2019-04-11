@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.abnamro.utils.paymentproviders;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class ClickAndBuyTest {
 
@@ -27,7 +28,8 @@ public class ClickAndBuyTest {
 
         // Matched descriptions ClickandBuy and then name of merchant
         assertThat(clickAndBuy.getDescription("ClickandBuy - Tinder")).isEqualTo("Tinder");
-        assertThat(clickAndBuy.getDescription("ClickandBuy - Tinder Premium")).isEqualTo("Tinder Premium");
+        assertThat(clickAndBuy.getDescription("ClickandBuy - Tinder Premium"))
+                .isEqualTo("Tinder Premium");
         assertThat(clickAndBuy.getDescription("ClickandBuy - Go-Daddy")).isEqualTo("Go-Daddy");
     }
 }

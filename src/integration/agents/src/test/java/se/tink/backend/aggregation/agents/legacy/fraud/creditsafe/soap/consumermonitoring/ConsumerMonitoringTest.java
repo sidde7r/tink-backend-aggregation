@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.consumermonitoring;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
@@ -16,10 +21,6 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCredi
 import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.libraries.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 

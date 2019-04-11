@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.abnamro.ics.retry;
 
+import static org.junit.Assert.fail;
+
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
-import static org.junit.Assert.fail;
 
 public class RetryHelper {
 

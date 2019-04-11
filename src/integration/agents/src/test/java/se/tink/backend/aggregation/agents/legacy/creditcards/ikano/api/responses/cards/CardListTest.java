@@ -16,7 +16,8 @@ public class CardListTest {
     }
 
     @Test(expected = LoginException.class)
-    public void ensureExceptionIsThrown_whenNoCardsMatchesTheSelectedCardType() throws LoginException {
+    public void ensureExceptionIsThrown_whenNoCardsMatchesTheSelectedCardType()
+            throws LoginException {
         CardList cardList = new CardList();
         List<Card> cards = Lists.newArrayList();
 

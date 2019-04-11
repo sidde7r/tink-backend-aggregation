@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.nordea;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -12,9 +16,6 @@ import se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments.Paymen
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments.TransferRequest;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments.TransferResponse;
 import se.tink.libraries.account.AccountIdentifier;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(Enclosed.class)
 public class NordeaTransferUtilsTest {
@@ -27,8 +28,9 @@ public class NordeaTransferUtilsTest {
 
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isTrue();
         }
@@ -39,10 +41,12 @@ public class NordeaTransferUtilsTest {
             TransferResponse paymentResponse = stubPaymentResponseDefault();
             PaymentEntity paymentEntity = stubPaymentEntityDefault();
 
-            ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity, paymentEntity);
+            ImmutableList<PaymentEntity> paymentEntities =
+                    ImmutableList.of(paymentEntity, paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -54,10 +58,12 @@ public class NordeaTransferUtilsTest {
             PaymentEntity paymentEntity = stubPaymentEntityDefault();
             PaymentEntity differentPaymentEntity = stubPaymentEntityThatDiffersCompletely();
 
-            ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity, differentPaymentEntity);
+            ImmutableList<PaymentEntity> paymentEntities =
+                    ImmutableList.of(paymentEntity, differentPaymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isTrue();
 
@@ -76,8 +82,9 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setAmount("1.03");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -92,8 +99,9 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setCurrency("OTHER CURRENCY");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -108,8 +116,9 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setPaymentSubType("OTHER SUBTYPE");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -124,8 +133,9 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setToAccountId("OTHER TO");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -140,15 +150,16 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setPaymentDate("2016-03-10T12:00:01.023+01:00");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
 
         /**
-         * Reason it works like this is since Nordea has different payment dates in MS when POST a new payment
-         * and when GET list of payments that are unsigned
+         * Reason it works like this is since Nordea has different payment dates in MS when POST a
+         * new payment and when GET list of payments that are unsigned
          */
         @Test
         public void presentIfDateDiffersLessThanOneSecond() throws IOException {
@@ -160,16 +171,17 @@ public class NordeaTransferUtilsTest {
             paymentEntity.setPaymentDate("2016-03-10T12:00:00.112+01:00");
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, null);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, null);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isTrue();
         }
 
         /**
-         * Nordea does not return same account identifier for BeneficiaryEntity as for PaymentEntity, so we need
-         * to fallback on our Transfer.getDestination() identifier to e.g. pad the recipient account number with 0's
-         * for Handelsbanken
+         * Nordea does not return same account identifier for BeneficiaryEntity as for
+         * PaymentEntity, so we need to fallback on our Transfer.getDestination() identifier to e.g.
+         * pad the recipient account number with 0's for Handelsbanken
          */
         @Test
         public void presentIfFormattedAccountIdentifierMatches() throws IOException {
@@ -179,19 +191,19 @@ public class NordeaTransferUtilsTest {
 
             paymentRequest.getCreatePaymentIn().setToAccountId("6769392752158");
             paymentEntity.setToAccountId("67690392752158");
-            AccountIdentifier accountIdentifier = AccountIdentifier.create(AccountIdentifier.Type.SE, "6769392752158");
+            AccountIdentifier accountIdentifier =
+                    AccountIdentifier.create(AccountIdentifier.Type.SE, "6769392752158");
 
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, accountIdentifier);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, accountIdentifier);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isTrue();
         }
 
-        /**
-         * Oposite of above to check that we don't accept any formatted identifier
-         */
+        /** Oposite of above to check that we don't accept any formatted identifier */
         @Test
         public void absentIfFormattedAccountIdentifierDiffers() throws IOException {
             TransferRequest paymentRequest = stubPaymentRequestDefault();
@@ -200,12 +212,14 @@ public class NordeaTransferUtilsTest {
 
             paymentRequest.getCreatePaymentIn().setToAccountId("6769392752158");
             paymentEntity.setToAccountId("67690392752158");
-            AccountIdentifier accountIdentifier = AccountIdentifier.create(AccountIdentifier.Type.SE, "676900392752158");
+            AccountIdentifier accountIdentifier =
+                    AccountIdentifier.create(AccountIdentifier.Type.SE, "676900392752158");
 
             ImmutableList<PaymentEntity> paymentEntities = ImmutableList.of(paymentEntity);
 
-            Optional<PaymentEntity> singleMatchingPaymentEntity = NordeaTransferUtils
-                    .getSingleMatchingPaymentEntity(paymentEntities, paymentRequest, paymentResponse, accountIdentifier);
+            Optional<PaymentEntity> singleMatchingPaymentEntity =
+                    NordeaTransferUtils.getSingleMatchingPaymentEntity(
+                            paymentEntities, paymentRequest, paymentResponse, accountIdentifier);
 
             assertThat(singleMatchingPaymentEntity.isPresent()).isFalse();
         }
@@ -213,16 +227,11 @@ public class NordeaTransferUtilsTest {
 
     private static TransferRequest stubPaymentRequestDefault() throws IOException {
         return stubPaymentRequest(
-                "11.22",
-                "BENEFICIARY_NAME",
-                "CURRENCY",
-                "PAYMENT_SUBTYPE",
-                "TO_ACCOUNT_ID");
+                "11.22", "BENEFICIARY_NAME", "CURRENCY", "PAYMENT_SUBTYPE", "TO_ACCOUNT_ID");
     }
 
     private static TransferResponse stubPaymentResponseDefault() {
-        return stubPaymentResponse(
-                "2016-03-10T12:00:00.023+01:00");
+        return stubPaymentResponse("2016-03-10T12:00:00.023+01:00");
     }
 
     private static PaymentEntity stubPaymentEntityDefault() {
@@ -245,8 +254,12 @@ public class NordeaTransferUtilsTest {
                 "TO_ACCOUNT_ID2");
     }
 
-    private static TransferRequest stubPaymentRequest(String amount, String beneficiaryName, String currency,
-            String paymentSubType, String toAccountId) {
+    private static TransferRequest stubPaymentRequest(
+            String amount,
+            String beneficiaryName,
+            String currency,
+            String paymentSubType,
+            String toAccountId) {
         TransferRequest stub = mock(TransferRequest.class);
 
         CreatePaymentIn createPaymentIn = new CreatePaymentIn();
@@ -256,8 +269,7 @@ public class NordeaTransferUtilsTest {
         createPaymentIn.setPaymentSubType(paymentSubType);
         createPaymentIn.setToAccountId(toAccountId);
 
-        when(stub.getCreatePaymentIn())
-                .thenReturn(createPaymentIn);
+        when(stub.getCreatePaymentIn()).thenReturn(createPaymentIn);
 
         return stub;
     }
@@ -273,8 +285,13 @@ public class NordeaTransferUtilsTest {
         return stub;
     }
 
-    private static PaymentEntity stubPaymentEntity(String amount, String beneficiaryName, String currency,
-            String paymentDate, String paymentSubtype, String toAccountId) {
+    private static PaymentEntity stubPaymentEntity(
+            String amount,
+            String beneficiaryName,
+            String currency,
+            String paymentDate,
+            String paymentSubtype,
+            String toAccountId) {
         PaymentEntity stub = new PaymentEntity();
 
         stub.setAmount(amount);

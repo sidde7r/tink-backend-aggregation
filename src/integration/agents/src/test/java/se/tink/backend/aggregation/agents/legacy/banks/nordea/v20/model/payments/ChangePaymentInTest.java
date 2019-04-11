@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import java.io.IOException;
@@ -7,33 +11,39 @@ import java.text.ParseException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ChangePaymentInTest {
-    private static final String GET_PAYMENT_DETAILS_OUT = "{\"paymentId\":{\"$\":\"asdfasdfasdfasdf\"},\"paymentSubType\":{\"$\":\"eInvoice\"},\"paymentSubTypeExtension\":{\"$\":\"BGType\"},\"fromAccountId\":{\"$\":\"NDEASESSXXX-SE1-SEK-8607015537\"},\"toAccountId\":{},\"amount\":{\"$\":123.45},\"currency\":{\"$\":\"SEK\"},\"dueDate\":{\"$\":\"2016-04-30T12:00:00.454+02:00\"},\"dueDateType\":{},\"paymentDate\":{\"$\":\"2016-04-30T12:00:00.454+02:00\"},\"beneficiaryName\":{\"$\":\"messagemessage\"},\"beneficiaryNickName\":{},\"reference\":{},\"messageRow\":{\"$\":\"1212121212\"},\"storePayment\":{},\"receiptCode\":{},\"recurringFrequency\":{\"$\":\"Once\"},\"recurringNumberOfPayments\":{\"$\":0},\"statusCode\":{\"$\":\"Unconfirmed\"},\"timeStamp\":{},\"personalNote\":{},\"recurringContinuously\":{\"$\":false},\"category\":{},\"allowedToModify\":{\"$\":\"Yes\"},\"isAllowedToDelete\":{\"$\":true},\"isAllowedToCopy\":{\"$\":false},\"isAllowedToModifyFromAccountId\":{\"$\":true},\"isAllowedToModifyAmount\":{\"$\":true},\"isAllowedToModifyDueDate\":{\"$\":true},\"isAllowedToModifyStorePayment\":{\"$\":true},\"isAllowedToModifyPaymentSubTypeExtension\":{\"$\":false},\"isAllowedToModifyToAccount\":{\"$\":false},\"isAllowedToModifyMessage\":{\"$\":false},\"isAllowedToModifyRecurringfrequency\":{\"$\":false},\"isAllowedToModifyRecurringnumberOfPayments\":{\"$\":false},\"isAllowedToModifyRecurringContinuously\":{\"$\":false},\"isAllowedToModifyBeneficiaryName\":{\"$\":false},\"isAllowedToModifyBeneficiaryNickName\":{\"$\":false},\"statusExtensionCode\":{},\"beneficiaryBankId\":{},\"toAccountNumber\":{\"$\":\"12345678\"},\"eInvoiceToken\":{\"$\":\"sometoken\"}}";
+    private static final String GET_PAYMENT_DETAILS_OUT =
+            "{\"paymentId\":{\"$\":\"asdfasdfasdfasdf\"},\"paymentSubType\":{\"$\":\"eInvoice\"},\"paymentSubTypeExtension\":{\"$\":\"BGType\"},\"fromAccountId\":{\"$\":\"NDEASESSXXX-SE1-SEK-8607015537\"},\"toAccountId\":{},\"amount\":{\"$\":123.45},\"currency\":{\"$\":\"SEK\"},\"dueDate\":{\"$\":\"2016-04-30T12:00:00.454+02:00\"},\"dueDateType\":{},\"paymentDate\":{\"$\":\"2016-04-30T12:00:00.454+02:00\"},\"beneficiaryName\":{\"$\":\"messagemessage\"},\"beneficiaryNickName\":{},\"reference\":{},\"messageRow\":{\"$\":\"1212121212\"},\"storePayment\":{},\"receiptCode\":{},\"recurringFrequency\":{\"$\":\"Once\"},\"recurringNumberOfPayments\":{\"$\":0},\"statusCode\":{\"$\":\"Unconfirmed\"},\"timeStamp\":{},\"personalNote\":{},\"recurringContinuously\":{\"$\":false},\"category\":{},\"allowedToModify\":{\"$\":\"Yes\"},\"isAllowedToDelete\":{\"$\":true},\"isAllowedToCopy\":{\"$\":false},\"isAllowedToModifyFromAccountId\":{\"$\":true},\"isAllowedToModifyAmount\":{\"$\":true},\"isAllowedToModifyDueDate\":{\"$\":true},\"isAllowedToModifyStorePayment\":{\"$\":true},\"isAllowedToModifyPaymentSubTypeExtension\":{\"$\":false},\"isAllowedToModifyToAccount\":{\"$\":false},\"isAllowedToModifyMessage\":{\"$\":false},\"isAllowedToModifyRecurringfrequency\":{\"$\":false},\"isAllowedToModifyRecurringnumberOfPayments\":{\"$\":false},\"isAllowedToModifyRecurringContinuously\":{\"$\":false},\"isAllowedToModifyBeneficiaryName\":{\"$\":false},\"isAllowedToModifyBeneficiaryNickName\":{\"$\":false},\"statusExtensionCode\":{},\"beneficiaryBankId\":{},\"toAccountNumber\":{\"$\":\"12345678\"},\"eInvoiceToken\":{\"$\":\"sometoken\"}}";
 
     @Test
     public void copyFromPaymentDetails() throws IOException, ParseException {
-        // This actually tests also deserialization of PaymentDetailsResponseOut, but was convenient just to get some test fast of this copy method
+        // This actually tests also deserialization of PaymentDetailsResponseOut, but was convenient
+        // just to get some test fast of this copy method
         ObjectMapper objectMapper = new ObjectMapper();
-        PaymentDetailsResponseOut paymentDetails = objectMapper
-                .readValue(GET_PAYMENT_DETAILS_OUT, PaymentDetailsResponseOut.class);
+        PaymentDetailsResponseOut paymentDetails =
+                objectMapper.readValue(GET_PAYMENT_DETAILS_OUT, PaymentDetailsResponseOut.class);
 
-        ChangePaymentRequest changePaymentRequest = ChangePaymentRequest.copyFromPaymentDetails(mockFromAccounts(), paymentDetails);
+        ChangePaymentRequest changePaymentRequest =
+                ChangePaymentRequest.copyFromPaymentDetails(mockFromAccounts(), paymentDetails);
 
         // Test just a few values for now to check that we wire values
         assertThat(changePaymentRequest.getChangePaymentIn()).isNotNull();
-        assertThat(changePaymentRequest.getChangePaymentIn().getAmount()).isEqualTo(paymentDetails.getAmount());
-        assertThat(changePaymentRequest.getChangePaymentIn().getPaymentSubType()).isEqualTo(Payment.SubType.NORMAL);
-        assertThat(changePaymentRequest.getChangePaymentIn().getFromAccountId()).isEqualTo("abc123-abc123");
+        assertThat(changePaymentRequest.getChangePaymentIn().getAmount())
+                .isEqualTo(paymentDetails.getAmount());
+        assertThat(changePaymentRequest.getChangePaymentIn().getPaymentSubType())
+                .isEqualTo(Payment.SubType.NORMAL);
+        assertThat(changePaymentRequest.getChangePaymentIn().getFromAccountId())
+                .isEqualTo("abc123-abc123");
         assertThat(changePaymentRequest.getChangePaymentIn().getDueDate())
-                .isBetween(ThreadSafeDateFormat.FORMATTER_SECONDS.parse("2016-04-30 00:00:00"), ThreadSafeDateFormat.FORMATTER_SECONDS.parse("2016-04-30 23:59:59"));
+                .isBetween(
+                        ThreadSafeDateFormat.FORMATTER_SECONDS.parse("2016-04-30 00:00:00"),
+                        ThreadSafeDateFormat.FORMATTER_SECONDS.parse("2016-04-30 23:59:59"));
     }
 
     @Test
-    public void serializingDoesNotThrowAndContainsSomeExpectedValue() throws IOException, ParseException {
+    public void serializingDoesNotThrowAndContainsSomeExpectedValue()
+            throws IOException, ParseException {
         ChangePaymentIn changePaymentIn = new ChangePaymentIn();
         changePaymentIn.setAddBeneficiary(false);
         changePaymentIn.setAmount(123.45);

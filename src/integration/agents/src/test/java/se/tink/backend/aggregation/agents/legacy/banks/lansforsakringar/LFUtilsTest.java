@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +11,6 @@ import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.Recipient
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.model.UpcomingTransactionEntity;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class LFUtilsTest {
     @Test
@@ -49,8 +50,8 @@ public class LFUtilsTest {
     }
 
     private SwedishIdentifier createIdentifier(String clearingAndAccountNumber) {
-        AccountIdentifier accountIdentifier = AccountIdentifier.create(AccountIdentifier.Type.SE,
-                clearingAndAccountNumber);
+        AccountIdentifier accountIdentifier =
+                AccountIdentifier.create(AccountIdentifier.Type.SE, clearingAndAccountNumber);
 
         assertThat(accountIdentifier).isNotNull();
 
@@ -80,7 +81,8 @@ public class LFUtilsTest {
     }
 
     @Test
-    public void ensurePaymentRequest_withSpecifiedPaymentDate_matchesPaymentEntity_withSamePaymentDate() {
+    public void
+            ensurePaymentRequest_withSpecifiedPaymentDate_matchesPaymentEntity_withSamePaymentDate() {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setToBgPg("4177404-3");
         paymentRequest.setAmount(1030.0);
@@ -102,7 +104,8 @@ public class LFUtilsTest {
     }
 
     @Test
-    public void ensurePaymentRequest_withSpecifiedPaymentDate_doesNotMatchPaymentEntity_withDifferentPaymentDate() {
+    public void
+            ensurePaymentRequest_withSpecifiedPaymentDate_doesNotMatchPaymentEntity_withDifferentPaymentDate() {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setToBgPg("4177404-3");
         paymentRequest.setAmount(1030.0);
@@ -146,7 +149,8 @@ public class LFUtilsTest {
     }
 
     @Test
-    public void ensurePaymentRequest_withZeroAsPaymentDate_matchesUpcomingTransactionEntityWithDifferentDate() {
+    public void
+            ensurePaymentRequest_withZeroAsPaymentDate_matchesUpcomingTransactionEntityWithDifferentDate() {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setToBgPg("4177404-3");
         paymentRequest.setAmount(1030.0);
@@ -167,7 +171,8 @@ public class LFUtilsTest {
     }
 
     @Test
-    public void ensurePaymentRequest_withSpecifiedPaymentDate_matchesUpcomingTransactionEntity_withSamePaymentDate() {
+    public void
+            ensurePaymentRequest_withSpecifiedPaymentDate_matchesUpcomingTransactionEntity_withSamePaymentDate() {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setToBgPg("4177404-3");
         paymentRequest.setAmount(1030.0);
@@ -188,7 +193,8 @@ public class LFUtilsTest {
     }
 
     @Test
-    public void ensurePaymentRequest_withSpecifiedPaymentDate_doesNotMatchUpcomingTransactionEntity_withDifferentPaymentDate() {
+    public void
+            ensurePaymentRequest_withSpecifiedPaymentDate_doesNotMatchUpcomingTransactionEntity_withDifferentPaymentDate() {
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setToBgPg("4177404-3");
         paymentRequest.setAmount(1030.0);

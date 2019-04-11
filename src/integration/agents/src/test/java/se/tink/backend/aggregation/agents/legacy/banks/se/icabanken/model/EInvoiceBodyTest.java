@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Strings;
+import java.util.List;
 import org.junit.Test;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class EInvoiceBodyTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";

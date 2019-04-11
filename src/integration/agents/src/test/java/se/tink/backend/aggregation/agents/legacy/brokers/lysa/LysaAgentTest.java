@@ -8,10 +8,8 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 
-
 @Ignore
-public class LysaAgentTest
-{
+public class LysaAgentTest {
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("se", "lysa")
                     .loadCredentialsBefore(false)

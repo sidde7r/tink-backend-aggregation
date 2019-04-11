@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.abnamro.utils.paymentproviders;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class PaydotnlTest {
 
@@ -25,7 +26,8 @@ public class PaydotnlTest {
         assertThat(paydotnl.getDescription("123 123 345")).isNull();
 
         // Matched descriptions
-        assertThat(paydotnl.getDescription("11036511Xa7269b 1120001155071201 116 MamaLoes")).isEqualTo("MamaLoes");
+        assertThat(paydotnl.getDescription("11036511Xa7269b 1120001155071201 116 MamaLoes"))
+                .isEqualTo("MamaLoes");
         assertThat(paydotnl.getDescription("0020001147360989 1453049081-185529-010 securesafepay"))
                 .isEqualTo("securesafepay");
     }

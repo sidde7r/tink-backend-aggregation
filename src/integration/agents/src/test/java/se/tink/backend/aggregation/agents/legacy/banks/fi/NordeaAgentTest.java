@@ -2,18 +2,18 @@ package se.tink.backend.aggregation.agents.banks.fi;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgent;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaAgentTest extends AbstractAgentTest<NordeaAgent> {
     public NordeaAgentTest() {
@@ -55,20 +55,52 @@ public class NordeaAgentTest extends AbstractAgentTest<NordeaAgent> {
 
     @Test
     public void testBeneficiaryLookup() {
-        Assert.assertEquals("FSPA", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.SAVINGSBANK_AL)));
-        Assert.assertEquals("DDB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.DANSKEBANK_FH)));
-        Assert.assertEquals("SEB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.SEB_DL)));
-        Assert.assertEquals("SHB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.HANDELSBANKEN_FH)));
-        Assert.assertEquals("ICA", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.ICABANKEN_FH)));
-        Assert.assertEquals("LFB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH)));
-        Assert.assertEquals("NB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.NORDEA_EP)));
-        Assert.assertEquals("NB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.NORDEASSN_EP)));
-        Assert.assertEquals("SKB", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.SKANDIABANKEN_FH)));
-        Assert.assertEquals("FSPA", NordeaAgentUtils.lookupBeneficiaryBankId(new SwedishIdentifier(TestAccount.SWEDBANK_FH)));
+        Assert.assertEquals(
+                "FSPA",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.SAVINGSBANK_AL)));
+        Assert.assertEquals(
+                "DDB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.DANSKEBANK_FH)));
+        Assert.assertEquals(
+                "SEB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.SEB_DL)));
+        Assert.assertEquals(
+                "SHB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.HANDELSBANKEN_FH)));
+        Assert.assertEquals(
+                "ICA",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.ICABANKEN_FH)));
+        Assert.assertEquals(
+                "LFB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.LANSFORSAKRINGAR_FH)));
+        Assert.assertEquals(
+                "NB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.NORDEA_EP)));
+        Assert.assertEquals(
+                "NB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.NORDEASSN_EP)));
+        Assert.assertEquals(
+                "SKB",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.SKANDIABANKEN_FH)));
+        Assert.assertEquals(
+                "FSPA",
+                NordeaAgentUtils.lookupBeneficiaryBankId(
+                        new SwedishIdentifier(TestAccount.SWEDBANK_FH)));
     }
 
-    @Test(expected=ClassCastException.class)
+    @Test(expected = ClassCastException.class)
     public void testFailingBeneficiaryLookup() {
-        Assert.assertEquals("FSPA", NordeaAgentUtils.lookupBeneficiaryBankId(new IbanIdentifier("bic", "ibanNumber")));
+        Assert.assertEquals(
+                "FSPA",
+                NordeaAgentUtils.lookupBeneficiaryBankId(new IbanIdentifier("bic", "ibanNumber")));
     }
 }

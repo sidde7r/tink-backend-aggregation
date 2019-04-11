@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class UpcomingTransactionEntityTest {
 
@@ -222,5 +223,4 @@ public class UpcomingTransactionEntityTest {
 
         assertEquals(t.getHash(), upcomingTransaction1.getHash(false));
     }
-
 }

@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
-
-import static org.junit.Assert.*;
 
 public class CardTest {
     @Test

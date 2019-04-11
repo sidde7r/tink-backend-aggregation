@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.seb.mortgage.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetLoanStatusResponseTest {
     @Test
@@ -11,10 +12,12 @@ public class GetLoanStatusResponseTest {
         String serialized = "{\"status\":\"1\",\"description\":\"SOMEDESC\"}";
 
         ObjectMapper objectMapper = new ObjectMapper();
-        GetLoanStatusResponse getLoanStatusResponse = objectMapper.readValue(serialized, GetLoanStatusResponse.class);
+        GetLoanStatusResponse getLoanStatusResponse =
+                objectMapper.readValue(serialized, GetLoanStatusResponse.class);
 
         assertThat(getLoanStatusResponse.getDescription()).isEqualTo("SOMEDESC");
-        assertThat(getLoanStatusResponse.getStatus()).isEqualTo(MortgageStatus.SEB_WILL_CONTACT_CUSTOMER);
+        assertThat(getLoanStatusResponse.getStatus())
+                .isEqualTo(MortgageStatus.SEB_WILL_CONTACT_CUSTOMER);
     }
 
     @Test

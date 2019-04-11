@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.abnamro.ics.mappers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.client.model.AmountEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.TransactionEntity;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionMapperTest {
     @Test

@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.api.client.util.Preconditions;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CustodyAccountTest {
 
@@ -33,5 +34,4 @@ public class CustodyAccountTest {
         account.setAccountId(accountId);
         return account;
     }
-
 }

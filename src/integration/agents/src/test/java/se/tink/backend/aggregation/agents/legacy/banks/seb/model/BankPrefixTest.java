@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
 
 public class BankPrefixTest {
 
@@ -97,7 +97,8 @@ public class BankPrefixTest {
         Assert.assertEquals("DB", getBankPrefixFrom("24123456789"));
 
         // DB4993("DB4993", "DB", "^(4993|336[3-7])\\d{6}$"),
-        // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug and will fix
+        // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug and
+        // will fix
         // accordingly.
         Assert.assertEquals("DB", getBankPrefixFrom("4993214387"));
         for (int i = 3; i < 8; i++) {
@@ -107,11 +108,13 @@ public class BankPrefixTest {
         }
 
         // DB6044("DB6044", "DB", "^6044993\\d{6}$|^604336[3-7]\\d{6}$"),
-        // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug and will fix
+        // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug and
+        // will fix
         // accordingly.
         Assert.assertEquals("DB", getBankPrefixFrom("6044993123456"));
         for (int i = 3; i < 8; i++) {
-            // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug and will fix
+            // Officially maps to Nordea, not Danske Bank. SEB have acknowledged that this is a bug
+            // and will fix
             // accordingly.
             Assert.assertEquals("DB", getBankPrefixFrom(String.format("604336%d123456", i)));
         }
@@ -143,7 +146,8 @@ public class BankPrefixTest {
         // FOREX9400("FOREX9400", "FOREX", "^(94[0-4][0-9])\\d{7}$"),
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 10; j++) {
-                Assert.assertEquals("FOREX", getBankPrefixFrom(String.format("94%d%d1234567", i, j)));
+                Assert.assertEquals(
+                        "FOREX", getBankPrefixFrom(String.format("94%d%d1234567", i, j)));
             }
         }
     }
@@ -419,5 +423,4 @@ public class BankPrefixTest {
         // Using a fallback to be able to get nice assertion output.
         return BankPrefix.fromAccountIdentifier(identifier);
     }
-
 }

@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.banks;
 
 import com.google.common.collect.Maps;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,9 +13,6 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
@@ -24,10 +24,6 @@ import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 public class LansforsakringarAgentTest extends AbstractAgentTest<LansforsakringarAgent> {
     public LansforsakringarAgentTest() {
@@ -43,8 +39,10 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         Credentials credentials = new Credentials();
         credentials.setUsername(TestSSN.FH);
         credentials.setPassword(null);
-        credentials.setId("199052357a2a40fda818e456916edf7a"); // Some tink uuid to make parsing work
-        credentials.setUserId("589d23f3d8d842c38a1edff7f5a1ba1d"); // Some tink uuid to make parsing work
+        credentials.setId(
+                "199052357a2a40fda818e456916edf7a"); // Some tink uuid to make parsing work
+        credentials.setUserId(
+                "589d23f3d8d842c38a1edff7f5a1ba1d"); // Some tink uuid to make parsing work
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
         return credentials;
     }
@@ -58,8 +56,10 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
     public void testKeepAlive() throws Exception {
         Credentials credentials = getUser1BankIdCredentials();
         AgentTestContext testContext = new AgentTestContext(credentials);
-        LansforsakringarAgent agent = (LansforsakringarAgent) factory
-                .create(cls, createRefreshInformationRequest(credentials), testContext);
+        LansforsakringarAgent agent =
+                (LansforsakringarAgent)
+                        factory.create(
+                                cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
         List<Account> accounts = agent.fetchCheckingAccounts().getAccounts();
         agent.fetchSavingsAccounts();
@@ -203,44 +203,52 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
-                    .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
+                            .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .withAmountInSEK(1.0)
-                    .withNoMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .withAmountInSEK(1.0)
+                            .withNoMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
-                    .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
+                            .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
         }
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferMock.bankTransfer()
-                    .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
-                    .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
-                    .withAmountInSEK(1.0)
-                    .withTooLongMessage().build();
+            Transfer t =
+                    TransferMock.bankTransfer()
+                            .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
+                            .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
+                            .withAmountInSEK(1.0)
+                            .withTooLongMessage()
+                            .build();
 
             try {
                 testTransfer(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, t);
@@ -256,7 +264,9 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         result.put("OCCUPATION", "Anställd");
         result.put("SALARY", 20000);
-        result.put("PURPOSE_OPENING_ACCOUNT", "Ekonomisk trygghet och sparande (ha en buffert om något händer)");
+        result.put(
+                "PURPOSE_OPENING_ACCOUNT",
+                "Ekonomisk trygghet och sparande (ha en buffert om något händer)");
         result.put("MONEY_SOURCE", "Lön/pension/bidrag/");
         result.put("OTHER_MONEY_SOURCE_DESCRIPTION", null);
         result.put("YEARLY_DEPOSIT", "Upp till 100.000 kronor");

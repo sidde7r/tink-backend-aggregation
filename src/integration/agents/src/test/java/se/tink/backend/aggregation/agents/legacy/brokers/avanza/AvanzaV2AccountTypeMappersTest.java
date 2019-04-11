@@ -12,8 +12,7 @@ public final class AvanzaV2AccountTypeMappersTest {
 
         // No warning -- uses exact mapper
         Assert.assertEquals(
-                Optional.of(AccountTypes.INVESTMENT),
-                mappers.inferAccountType("AktieFondkonto"));
+                Optional.of(AccountTypes.INVESTMENT), mappers.inferAccountType("AktieFondkonto"));
         Assert.assertEquals(
                 Optional.of(AccountTypes.INVESTMENT),
                 mappers.inferAccountType("Investeringssparkonto"));
@@ -21,14 +20,11 @@ public final class AvanzaV2AccountTypeMappersTest {
                 Optional.of(AccountTypes.INVESTMENT),
                 mappers.inferAccountType("Kapitalforsakring"));
         Assert.assertEquals(
-                Optional.of(AccountTypes.SAVINGS),
-                mappers.inferAccountType("Sparkonto"));
+                Optional.of(AccountTypes.SAVINGS), mappers.inferAccountType("Sparkonto"));
         Assert.assertEquals(
-                Optional.of(AccountTypes.SAVINGS),
-                mappers.inferAccountType("SparkontoPlus"));
+                Optional.of(AccountTypes.SAVINGS), mappers.inferAccountType("SparkontoPlus"));
         Assert.assertEquals(
-                Optional.of(AccountTypes.PENSION),
-                mappers.inferAccountType("Tjanstepension"));
+                Optional.of(AccountTypes.PENSION), mappers.inferAccountType("Tjanstepension"));
     }
 
     @Test

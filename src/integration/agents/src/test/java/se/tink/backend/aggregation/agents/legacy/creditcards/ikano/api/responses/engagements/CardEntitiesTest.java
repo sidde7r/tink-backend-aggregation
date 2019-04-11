@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements;
 
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
-
-import java.util.List;
 
 public class CardEntitiesTest {
 
@@ -30,6 +29,7 @@ public class CardEntitiesTest {
         CardEntities response = new CardEntities();
         response.keepSelectedCardTypes(CardType.PREEM);
     }
+
     @Test(expected = IkanoApiAgent.CardNotFoundException.class)
     public void throwsIfSelectedCardTypeDoesNotExist() throws IkanoApiAgent.CardNotFoundException {
         List<CardEntity> cards = createCards();

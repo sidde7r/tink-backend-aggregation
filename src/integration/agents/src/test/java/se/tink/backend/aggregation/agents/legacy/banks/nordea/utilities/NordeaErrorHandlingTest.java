@@ -15,8 +15,9 @@ public class NordeaErrorHandlingTest {
         String onTheWire = "{\"errorCode\":{\"$\":\"MBS0528\"}}";
 
         BankingServiceResponse response = new BankingServiceResponse();
-        response.setErrorMessage((Map<String, Object>) SerializationUtils
-                .deserializeFromString(onTheWire, Object.class));
+        response.setErrorMessage(
+                (Map<String, Object>)
+                        SerializationUtils.deserializeFromString(onTheWire, Object.class));
 
         Assert.assertTrue(response.getErrorCode().isPresent());
         Assert.assertEquals("MBS0528", response.getErrorCode().get());
@@ -27,8 +28,9 @@ public class NordeaErrorHandlingTest {
         String onTheWire = "{\"errorCode\":{}}";
 
         BankingServiceResponse response = new BankingServiceResponse();
-        response.setErrorMessage((Map<String, Object>) SerializationUtils
-                .deserializeFromString(onTheWire, Object.class));
+        response.setErrorMessage(
+                (Map<String, Object>)
+                        SerializationUtils.deserializeFromString(onTheWire, Object.class));
 
         Assert.assertFalse(response.getErrorCode().isPresent());
     }
@@ -38,26 +40,26 @@ public class NordeaErrorHandlingTest {
         String onTheWire = "{}";
 
         BankingServiceResponse response = new BankingServiceResponse();
-        response.setErrorMessage((Map<String, Object>) SerializationUtils
-                .deserializeFromString(onTheWire, Object.class));
+        response.setErrorMessage(
+                (Map<String, Object>)
+                        SerializationUtils.deserializeFromString(onTheWire, Object.class));
 
         Assert.assertFalse(response.getErrorCode().isPresent());
     }
 
-    /**
-     * There could be a error with INFO level, let's not call this an error.
-     */
+    /** There could be a error with INFO level, let's not call this an error. */
     @Test
     public void testNoError2() {
-        String onTheWire = "{\"createPaymentOut\":{\"paymentSubType\":{\"$\":\"Normal\"},\"paymentSubTypeExtension\":"
-                + "{\"$\":\"BGType\"},\"dueDateType\":{},\"paymentDate\":{\"$\":\"2016-03-21T12:00:00.220+01:00\"},"
-                + "\"statusCode\":{\"$\":\"Unconfirmed\"},\"paymentToken\":{},\"warningText\":{},"
-                + "\"advancedSigningRequested\":{\"$\":false},\"challenge\":{},\"encryptedPaymentData\":{},"
-                + "\"error\":{\"errorId\":{\"$\":\"MBS0511\"},\"errorLevel\":{\"$\":\"INFO\"}}}}";
+        String onTheWire =
+                "{\"createPaymentOut\":{\"paymentSubType\":{\"$\":\"Normal\"},\"paymentSubTypeExtension\":"
+                        + "{\"$\":\"BGType\"},\"dueDateType\":{},\"paymentDate\":{\"$\":\"2016-03-21T12:00:00.220+01:00\"},"
+                        + "\"statusCode\":{\"$\":\"Unconfirmed\"},\"paymentToken\":{},\"warningText\":{},"
+                        + "\"advancedSigningRequested\":{\"$\":false},\"challenge\":{},\"encryptedPaymentData\":{},"
+                        + "\"error\":{\"errorId\":{\"$\":\"MBS0511\"},\"errorLevel\":{\"$\":\"INFO\"}}}}";
 
-        TransferResponse response = SerializationUtils.deserializeFromString(onTheWire, TransferResponse.class);
+        TransferResponse response =
+                SerializationUtils.deserializeFromString(onTheWire, TransferResponse.class);
 
         Assert.assertFalse(response.getError().isPresent());
     }
-
 }

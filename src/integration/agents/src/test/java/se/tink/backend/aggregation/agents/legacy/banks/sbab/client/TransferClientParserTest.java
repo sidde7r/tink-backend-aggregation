@@ -18,7 +18,8 @@ public class TransferClientParserTest {
         String fileName = "data/agents/sbab/test/transfers/upcoming-transfers-table.html";
         String htmlResponse = Files.toString(new File(fileName), Charsets.UTF_8);
         Element element = Jsoup.parse(htmlResponse).select("table.kommandeoversikt").first();
-        List<TransferEntity> transferToAcceptEntities = TransferClientParser.parseUpcomingTransfers(element);
+        List<TransferEntity> transferToAcceptEntities =
+                TransferClientParser.parseUpcomingTransfers(element);
 
         Assert.assertEquals(transferToAcceptEntities.get(0).getSourceMessage(), "TEST1a");
         Assert.assertEquals(transferToAcceptEntities.get(0).getDestinationMessage(), "TEST1b");
@@ -30,7 +31,4 @@ public class TransferClientParserTest {
         Assert.assertEquals(transferToAcceptEntities.get(1).getDate(), "2017-03-31");
         Assert.assertEquals(transferToAcceptEntities.get(1).getNegativeAmount(), -2d, 0);
     }
-
-
-
 }

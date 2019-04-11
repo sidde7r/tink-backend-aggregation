@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.seb.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ServiceInputTest {
     @Test
