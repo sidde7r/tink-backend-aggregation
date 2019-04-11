@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cre
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
@@ -49,6 +48,6 @@ public class CreditBalanceResponse {
                 .orElse(Stream.empty())
                 .filter(balanceEntity -> balanceEntity.getAccountId().equalsIgnoreCase(accountId))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException(ErrorMessages.MISSING_BALANCE));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));
     }
 }

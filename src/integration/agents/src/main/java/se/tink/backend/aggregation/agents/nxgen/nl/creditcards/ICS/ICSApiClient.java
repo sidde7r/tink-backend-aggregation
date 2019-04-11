@@ -4,7 +4,6 @@ import static com.google.common.base.Predicates.not;
 
 import com.google.common.base.Strings;
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
@@ -163,7 +162,7 @@ public class ICSApiClient {
     private OAuth2Token getToken() {
         return persistentStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new NoSuchElementException(ErrorMessages.MISSING_TOKEN));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     public CreditAccountsResponse getAllAccounts() {
