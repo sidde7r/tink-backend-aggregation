@@ -1,12 +1,12 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "br-americanexpress",
-    "br-banco-do-brasil",
-    "br-bradesco",
-    "br-citibank",
-    "br-itau-unibanco",
-    "br-nubank",
-    "br-santander"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "br-americanexpress",
+        "br-banco-do-brasil",
+        "br-bradesco",
+        "br-citibank",
+        "br-itau-unibanco",
+        "br-nubank",
+        "br-santander"
+    ]
 }

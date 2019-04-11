@@ -1,10 +1,10 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "it-cartasi",
-    "it-demo",
-    "it-ing-direct",
-    "it-posteitaliane",
-    "it-unicredit"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "it-cartasi",
+        "it-demo",
+        "it-ing-direct",
+        "it-posteitaliane",
+        "it-unicredit"
+    ]
 }

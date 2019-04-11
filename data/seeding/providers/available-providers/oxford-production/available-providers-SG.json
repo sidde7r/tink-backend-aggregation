@@ -1,10 +1,10 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "sg-americanexpress",
-    "sg-dbs",
-    "sg-maybank",
-    "sg-ocbc",
-    "sg-sc-breeze"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "sg-americanexpress",
+        "sg-dbs",
+        "sg-maybank",
+        "sg-ocbc",
+        "sg-sc-breeze"
+    ]
 }

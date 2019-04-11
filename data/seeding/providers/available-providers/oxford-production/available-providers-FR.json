@@ -1,11 +1,11 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "fr-cic",
-    "fr-credit-mutuel",
-    "fr-credit-mutuel-bretagne",
-    "fr-credit-mutuel-sud-ouest",
-    "fr-test-password",
-    "fr-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "fr-cic",
+        "fr-credit-mutuel",
+        "fr-credit-mutuel-bretagne",
+        "fr-credit-mutuel-sud-ouest",
+        "fr-test-password",
+        "fr-test-multi-supplemental"
+    ]
 }

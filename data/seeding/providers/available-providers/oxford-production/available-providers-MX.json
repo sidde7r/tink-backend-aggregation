@@ -1,6 +1,6 @@
 {
-  "clusterid": "oxford-production",
-  "providers": [
-    "mx-bbva-password"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "mx-bbva-password"
+    ]
 }

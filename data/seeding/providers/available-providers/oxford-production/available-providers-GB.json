@@ -1,10 +1,10 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "gb-americanexpress",
-    "gb-citibank",
-    "gb-danskebank",
-    "gb-test-password",
-    "gb-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "gb-americanexpress",
+        "gb-citibank",
+        "gb-danskebank",
+        "gb-test-password",
+        "gb-test-multi-supplemental"
+    ]
 }
