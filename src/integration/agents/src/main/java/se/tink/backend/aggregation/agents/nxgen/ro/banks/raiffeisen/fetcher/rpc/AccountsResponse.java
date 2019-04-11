@@ -12,7 +12,8 @@ public class AccountsResponse {
     private List<AccountEntity> accounts;
 
     public Collection<TransactionalAccount> toTransactionalAccounts() {
-        return accounts.stream().map(AccountEntity::toTransactionalAccount)
+        return accounts.stream()
+                .map(AccountEntity::toTransactionalAccount)
                 .collect(Collectors.toList());
     }
 }

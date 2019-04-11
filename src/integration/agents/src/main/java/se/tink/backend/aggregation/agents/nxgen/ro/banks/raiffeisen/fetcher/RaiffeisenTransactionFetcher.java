@@ -15,7 +15,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<TransactionalAccount> {
+public class RaiffeisenTransactionFetcher
+        implements TransactionMonthPaginator<TransactionalAccount> {
 
     private final RaiffeisenApiClient client;
 
@@ -24,11 +25,12 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Year year, Month month) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Year year, Month month) {
         LocalDate fromDate = LocalDate.of(year.getValue(), month, 1);
         LocalDate toDate = fromDate.with(TemporalAdjusters.lastDayOfMonth());
 
-        if(toDate.isAfter(LocalDate.now())){
+        if (toDate.isAfter(LocalDate.now())) {
             toDate = LocalDate.now();
         }
 
@@ -36,14 +38,25 @@ public class RaiffeisenTransactionFetcher implements TransactionMonthPaginator<T
         Collection<Transaction> transactions = new ArrayList<>();
 
         try {
-            TransactionsResponse response = client.fetchTransctions(account.getFromTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID), fromDate , toDate, page);
+            TransactionsResponse response =
+                    client.fetchTransctions(
+                            account.getFromTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID),
+                            fromDate,
+                            toDate,
+                            page);
             transactions.addAll(response.getTinkTransactions());
 
             page++;
             int totalPages = response.getTotalPages();
 
-            while(page < totalPages) {
-                response = client.fetchTransctions(account.getFromTemporaryStorage(RaiffeisenConstants.STORAGE.ACCOUNT_ID), fromDate , toDate, page);
+            while (page < totalPages) {
+                response =
+                        client.fetchTransctions(
+                                account.getFromTemporaryStorage(
+                                        RaiffeisenConstants.STORAGE.ACCOUNT_ID),
+                                fromDate,
+                                toDate,
+                                page);
                 transactions.addAll(response.getTinkTransactions());
                 page++;
                 totalPages = response.getTotalPages();

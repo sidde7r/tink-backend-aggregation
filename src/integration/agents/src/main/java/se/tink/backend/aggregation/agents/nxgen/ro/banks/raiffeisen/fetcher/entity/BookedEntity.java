@@ -96,19 +96,19 @@ public class BookedEntity {
 
     private boolean isNegative() {
 
-        if (!Strings.isNullOrEmpty(debtorName) || (
-                debtorAccount != null &&
-                        (!Strings.isNullOrEmpty(debtorAccount.getAccountNumber()) ||
-                        !Strings.isNullOrEmpty(debtorAccount.getIban()))))
-        {
+        if (!Strings.isNullOrEmpty(debtorName)
+                || (debtorAccount != null
+                        && (!Strings.isNullOrEmpty(debtorAccount.getAccountNumber())
+                                || !Strings.isNullOrEmpty(debtorAccount.getIban())))) {
             return false;
         }
 
-            return true;
+        return true;
     }
 
     private Amount toTinkAmount() {
-        return new Amount(transactionAmount.getCurrency(), transactionAmount.getAmount(isNegative()));
+        return new Amount(
+                transactionAmount.getCurrency(), transactionAmount.getAmount(isNegative()));
     }
 
     private Date toTinkDate() {
@@ -127,33 +127,29 @@ public class BookedEntity {
     private String getDescription() {
 
         /**
-         * Prio:
-         * 1. We have creditorName and unstructured message
-         * 1.5. We have creditorName
-         * 2. We have debtorName and unstructured message
-         * 2.5. We have debtorName
-         * 3. We have merchant name though structure info
-         * 4. We have unstructured info
-         * 5. We have something else in structured info
-         * 6. We have nothing => "Missing Description"
+         * Prio: 1. We have creditorName and unstructured message 1.5. We have creditorName 2. We
+         * have debtorName and unstructured message 2.5. We have debtorName 3. We have merchant name
+         * though structure info 4. We have unstructured info 5. We have something else in
+         * structured info 6. We have nothing => "Missing Description"
          */
-
         if (!Strings.isNullOrEmpty(creditorName)) {
             if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-                return creditorName +": "+remittanceInformationUnstructured;
+                return creditorName + ": " + remittanceInformationUnstructured;
             }
             return creditorName;
         }
 
         if (!Strings.isNullOrEmpty(debtorName)) {
             if (!Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
-                return debtorName +": "+remittanceInformationUnstructured;
+                return debtorName + ": " + remittanceInformationUnstructured;
             }
             return debtorName;
         }
 
         if (!Strings.isNullOrEmpty(remittanceInformationStructured)) {
-            Matcher matcher = RaiffeisenConstants.REGEX.PATTERN_STRUCTURED_INFO.matcher(remittanceInformationStructured);
+            Matcher matcher =
+                    RaiffeisenConstants.REGEX.PATTERN_STRUCTURED_INFO.matcher(
+                            remittanceInformationStructured);
             if (matcher.matches()) {
                 return matcher.group(1);
             }

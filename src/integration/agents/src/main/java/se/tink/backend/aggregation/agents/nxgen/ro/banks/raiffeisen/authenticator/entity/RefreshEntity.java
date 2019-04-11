@@ -10,13 +10,13 @@ public class RefreshEntity {
     private String clientSecret;
     private String redirectUrl;
 
-    public RefreshEntity(String refreshToken, String clientId, String clientSecret, String redirectUrl) {
+    public RefreshEntity(
+            String refreshToken, String clientId, String clientSecret, String redirectUrl) {
         this.refreshToken = refreshToken;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUrl = redirectUrl;
     }
-
 
     public String toForm() {
         return Form.builder()
@@ -25,7 +25,7 @@ public class RefreshEntity {
                 .put(RaiffeisenConstants.FORM.CLIENT_ID, clientId)
                 .put(RaiffeisenConstants.FORM.CLIENT_SECRET, clientSecret)
                 .put(RaiffeisenConstants.FORM.REDIRECT_URI, redirectUrl)
-                .build().serialize();
+                .build()
+                .serialize();
     }
-
 }
