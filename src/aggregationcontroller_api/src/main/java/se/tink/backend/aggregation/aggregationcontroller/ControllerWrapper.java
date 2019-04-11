@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.common.base.Preconditions;
 import javax.ws.rs.core.Response;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -15,16 +17,15 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class ControllerWrapper {
     private final AggregationControllerAggregationClient client;
     private final HostConfiguration configuration;
 
-    private ControllerWrapper(AggregationControllerAggregationClient client, HostConfiguration configuration) {
+    private ControllerWrapper(
+            AggregationControllerAggregationClient client, HostConfiguration configuration) {
         this.client = client;
         this.configuration = configuration;
     }
@@ -33,14 +34,16 @@ public class ControllerWrapper {
         return this.configuration;
     }
 
-    public static ControllerWrapper of(AggregationControllerAggregationClient client, HostConfiguration configuration) {
+    public static ControllerWrapper of(
+            AggregationControllerAggregationClient client, HostConfiguration configuration) {
         Preconditions.checkNotNull(client, "The aggregation client cannot be null.");
         Preconditions.checkNotNull(configuration, "The host configuration cannot be null");
         // TODO: add more host configuration validation.
         return new ControllerWrapper(client, configuration);
     }
 
-    public Response generateStatisticsAndActivityAsynchronously(GenerateStatisticsAndActivitiesRequest request) {
+    public Response generateStatisticsAndActivityAsynchronously(
+            GenerateStatisticsAndActivitiesRequest request) {
         return client.generateStatisticsAndActivityAsynchronously(configuration, request);
     }
 
@@ -52,7 +55,8 @@ public class ControllerWrapper {
         return client.ping(configuration);
     }
 
-    public SupplementalInformationResponse getSupplementalInformation(SupplementalInformationRequest request) {
+    public SupplementalInformationResponse getSupplementalInformation(
+            SupplementalInformationRequest request) {
         return client.getSupplementalInformation(configuration, request);
     }
 

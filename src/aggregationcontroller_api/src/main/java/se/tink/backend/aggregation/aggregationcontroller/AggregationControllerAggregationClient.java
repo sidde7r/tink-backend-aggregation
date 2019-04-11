@@ -34,15 +34,19 @@ public class AggregationControllerAggregationClient {
     private static final String EMPTY_PASSWORD = "";
 
     @Inject
-    public AggregationControllerAggregationClient() {
-    }
+    public AggregationControllerAggregationClient() {}
 
-    private <T> T buildInterClusterServiceFromInterface(HostConfiguration hostConfiguration, Class<T> serviceInterface) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(hostConfiguration.getHost()),
+    private <T> T buildInterClusterServiceFromInterface(
+            HostConfiguration hostConfiguration, Class<T> serviceInterface) {
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(hostConfiguration.getHost()),
                 "Aggregation controller host was not set.");
 
-        Client client = JerseyUtils.getClusterClient(hostConfiguration.getClientCert(), EMPTY_PASSWORD,
-                hostConfiguration.isDisablerequestcompression());
+        Client client =
+                JerseyUtils.getClusterClient(
+                        hostConfiguration.getClientCert(),
+                        EMPTY_PASSWORD,
+                        hostConfiguration.isDisablerequestcompression());
         JerseyUtils.registerAPIAccessToken(client, hostConfiguration.getApiToken());
 
         return WebResourceFactory.newResource(
@@ -61,17 +65,20 @@ public class AggregationControllerAggregationClient {
         return buildInterClusterServiceFromInterface(hostConfiguration, UpdateService.class);
     }
 
-    private AggregationControllerService getAggregationControllerService(HostConfiguration hostConfiguration) {
-        return buildInterClusterServiceFromInterface(hostConfiguration, AggregationControllerService.class);
+    private AggregationControllerService getAggregationControllerService(
+            HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(
+                hostConfiguration, AggregationControllerService.class);
     }
 
-    public Response generateStatisticsAndActivityAsynchronously(HostConfiguration hostConfiguration,
-            GenerateStatisticsAndActivitiesRequest request) {
-        return getProcessService(hostConfiguration).generateStatisticsAndActivityAsynchronously(request);
+    public Response generateStatisticsAndActivityAsynchronously(
+            HostConfiguration hostConfiguration, GenerateStatisticsAndActivitiesRequest request) {
+        return getProcessService(hostConfiguration)
+                .generateStatisticsAndActivityAsynchronously(request);
     }
 
-    public Response updateTransactionsAsynchronously(HostConfiguration hostConfiguration,
-            UpdateTransactionsRequest request) {
+    public Response updateTransactionsAsynchronously(
+            HostConfiguration hostConfiguration, UpdateTransactionsRequest request) {
         return getProcessService(hostConfiguration).updateTransactionsAsynchronously(request);
     }
 
@@ -79,58 +86,68 @@ public class AggregationControllerAggregationClient {
         return getUpdateService(hostConfiguration).ping();
     }
 
-    public SupplementalInformationResponse getSupplementalInformation(HostConfiguration hostConfiguration,
-            SupplementalInformationRequest request) {
+    public SupplementalInformationResponse getSupplementalInformation(
+            HostConfiguration hostConfiguration, SupplementalInformationRequest request) {
         return getUpdateService(hostConfiguration).getSupplementalInformation(request);
     }
 
-    public Account updateAccount(HostConfiguration hostConfiguration, UpdateAccountRequest request) {
+    public Account updateAccount(
+            HostConfiguration hostConfiguration, UpdateAccountRequest request) {
         return getUpdateService(hostConfiguration).updateAccount(request);
     }
 
-    public Account updateAccountMetaData(HostConfiguration hostConfiguration, String accountId, String newBankId) {
+    public Account updateAccountMetaData(
+            HostConfiguration hostConfiguration, String accountId, String newBankId) {
         return getUpdateService(hostConfiguration).updateAccountsBankId(accountId, newBankId);
     }
 
-    public Response updateTransferDestinationPatterns(HostConfiguration hostConfiguration,
-            UpdateTransferDestinationPatternsRequest request) {
+    public Response updateTransferDestinationPatterns(
+            HostConfiguration hostConfiguration, UpdateTransferDestinationPatternsRequest request) {
         return getUpdateService(hostConfiguration).updateTransferDestinationPatterns(request);
     }
 
-    public Response processAccounts(HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
+    public Response processAccounts(
+            HostConfiguration hostConfiguration, ProcessAccountsRequest request) {
         return getUpdateService(hostConfiguration).processAccounts(request);
     }
 
-    public Response optOutAccounts(HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
+    public Response optOutAccounts(
+            HostConfiguration hostConfiguration, OptOutAccountsRequest request) {
         return getUpdateService(hostConfiguration).optOutAccounts(request);
     }
 
-    public Response updateCredentials(HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
+    public Response updateCredentials(
+            HostConfiguration hostConfiguration, UpdateCredentialsStatusRequest request) {
         return getUpdateService(hostConfiguration).updateCredentials(request);
     }
 
-    public Response updateSignableOperation(HostConfiguration hostConfiguration, SignableOperation signableOperation) {
+    public Response updateSignableOperation(
+            HostConfiguration hostConfiguration, SignableOperation signableOperation) {
         return getUpdateService(hostConfiguration).updateSignableOperation(signableOperation);
     }
 
-    public Response processEinvoices(HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
+    public Response processEinvoices(
+            HostConfiguration hostConfiguration, UpdateTransfersRequest request) {
         return getUpdateService(hostConfiguration).processEinvoices(request);
     }
 
-    public UpdateDocumentResponse updateDocument(HostConfiguration hostConfiguration, UpdateDocumentRequest request) {
+    public UpdateDocumentResponse updateDocument(
+            HostConfiguration hostConfiguration, UpdateDocumentRequest request) {
         return getUpdateService(hostConfiguration).updateDocument(request);
     }
 
-    public Response updateFraudDetails(HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
+    public Response updateFraudDetails(
+            HostConfiguration hostConfiguration, UpdateFraudDetailsRequest request) {
         return getUpdateService(hostConfiguration).updateFraudDetails(request);
     }
 
-    public Response updateCredentialSensitive(HostConfiguration hostConfiguration, Credentials credentials,
-            String sensitiveData) {
-        UpdateCredentialsSensitiveRequest request = new UpdateCredentialsSensitiveRequest()
-                .setUserId(credentials.getUserId())
-                .setCredentialsId(credentials.getId())
-                .setSensitiveData(sensitiveData);
+    public Response updateCredentialSensitive(
+            HostConfiguration hostConfiguration, Credentials credentials, String sensitiveData) {
+        UpdateCredentialsSensitiveRequest request =
+                new UpdateCredentialsSensitiveRequest()
+                        .setUserId(credentials.getUserId())
+                        .setCredentialsId(credentials.getId())
+                        .setSensitiveData(sensitiveData);
 
         return getCredentialsService(hostConfiguration).updateSensitive(request);
     }
