@@ -9,7 +9,7 @@ import se.tink.libraries.identitydata.IdentityData;
 public final class AisData {
     private final Collection<Account> accounts;
     private final Collection<Transaction> transactions;
-    private final IdentityData customerInfo;
+    private final IdentityData identityData;
 
     public AisData(
             final Collection<Account> accounts,
@@ -17,7 +17,7 @@ public final class AisData {
             IdentityData customerInfo) {
         this.accounts = accounts;
         this.transactions = transactions;
-        this.customerInfo = customerInfo;
+        this.identityData = customerInfo;
     }
 
     public Collection<Account> getAccounts() {
@@ -29,11 +29,11 @@ public final class AisData {
     }
 
     public IdentityData getIdentityData() {
-        return customerInfo;
+        return identityData;
     }
 
     @Override
     public String toString() {
-        return String.format("AisData(%s, %s, %s)", accounts, transactions, customerInfo);
+        return String.format("AisData(%s, %s, %s)", accounts, transactions, identityData);
     }
 }
