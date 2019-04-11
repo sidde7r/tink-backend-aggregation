@@ -8,26 +8,26 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Lists;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Provider implements Cloneable {
     @SuppressWarnings("serial")
-    private static class FieldsList extends ArrayList<Field> {
-    }
+    private static class FieldsList extends ArrayList<Field> {}
 
-    // Where in the aggregation structure the agent is placed - Format: banks.se.alandsbanken.AlandsBankenAgent
+    // Where in the aggregation structure the agent is placed - Format:
+    // banks.se.alandsbanken.AlandsBankenAgent
     private String className;
     private CredentialsTypes credentialsType;
     // What currency this provider is using for accounts and transactions. I.e. SEK, EUR.
     private String currency;
     // Name displayed in the app. I.e. Swedbank.
     private String displayName;
+
     @JsonProperty("fields")
     // See Field object (Aggregation).
     private String fieldsSerialized;
@@ -36,7 +36,8 @@ public class Provider implements Cloneable {
     private String market;
     private String name;
     // Used if we need anything special for this provider.
-    // Like the service provider SDC where there is a four character number that gives part of the host URL.
+    // Like the service provider SDC where there is a four character number that gives part of the
+    // host URL.
     private String payload;
     private ProviderStatuses status;
     private ProviderTypes type;

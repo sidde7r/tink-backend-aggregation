@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import java.util.List;
 
 /**
- * Class for feature flags. Reason why enum is not used is because the flexibility to add feature flags in DB directly
- * without having to add code.
+ * Class for feature flags. Reason why enum is not used is because the flexibility to add feature
+ * flags in DB directly without having to add code.
  */
 public class FeatureFlags {
 
@@ -26,7 +26,8 @@ public class FeatureFlags {
     public static final String TINK_TEST_ACCOUNT = "TINK_TEST_ACCOUNT";
     public static final String TEST_FRAUD_REMINDERS_ON = "TEST_FRAUD_REMINDERS_ON";
     public static final String ABN_AMRO_PILOT_CUSTOMER = "ABN_AMRO_PILOT_CUSTOMER";
-    public static final String ABN_AMRO_DETAILED_PUSH_NOTIFICATIONS = "ABN_AMRO_DETAILED_PUSH_NOTIFICATIONS";
+    public static final String ABN_AMRO_DETAILED_PUSH_NOTIFICATIONS =
+            "ABN_AMRO_DETAILED_PUSH_NOTIFICATIONS";
     public static final String ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT = "ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT";
     public static final String TRANSFERS = "TRANSFERS";
     public static final String ANONYMOUS = "ANONYMOUS";
@@ -52,14 +53,17 @@ public class FeatureFlags {
     public static final String ALANDSBANKEN_SE_V4 = "ALANDSBANKEN_SE_V4";
     public static final String PRODUCTS_OPT_OUT = "PRODUCTS_OPT_OUT";
 
-    //Flags for testing Actionable Insights
+    // Flags for testing Actionable Insights
     public static final String TEST_ACTIONABLE_INSIGHTS = "TEST_ACTIONABLE_INSIGHTS";
 
     // Dynamic flag if the residence tab should be shown in the apps
     public static final String RESIDENCE_TAB = "RESIDENCE_TAB";
-    // This flag enables Multi Currency phase 1 for a user. This means that this user will recieve accounts and
-    // transactions in multiple currencies, but statistics calculations will not be done for foreign currencies.
-    // The currency is currently stored in a rather hackish way, this is why we don't want to enable it
+    // This flag enables Multi Currency phase 1 for a user. This means that this user will recieve
+    // accounts and
+    // transactions in multiple currencies, but statistics calculations will not be done for foreign
+    // currencies.
+    // The currency is currently stored in a rather hackish way, this is why we don't want to enable
+    // it
     // across the board. // jelgh 2018-11-15
     public static final String MULTI_CURRENCY_PHASE_1 = "MULTI_CURRENCY_PHASE_1";
 
@@ -67,23 +71,29 @@ public class FeatureFlags {
     public static final String ABN_AMRO_ICS_DUPLICATE_FIX = "ABN_AMRO_ICS_DUPLICATE_FIX";
 
     /**
-     * A feature groups hold information what flags are included
-     * and what client version are required.
+     * A feature groups hold information what flags are included and what client version are
+     * required.
      */
     public enum FeatureFlagGroup {
-
         FRAUD_ONLY_FEATURE(ImmutableSet.of(TEST_FRAUD_ONLY), "2.0.0", "1.9.3"),
         FRAUD_FEATURE(ImmutableSet.of(TEST_FRAUD_ANDROID, FRAUD_PROTECTION)),
         TRACKING_DISABLED(ImmutableSet.of(TINK_TEST_ACCOUNT, NO_TINK_USER)),
         FRAUD_OFF_LOCATION(ImmutableSet.of(TINK_EMPLOYEE, ANDROID_BETA)),
         FRAUD_FEATURE_V2(ImmutableSet.of(FRAUD_PROTECTION), "2.0.1", "2.0.3"),
         TRANSFERS_FEATURE(ImmutableSet.of(TRANSFERS, TINK_EMPLOYEE, IOS_BETA, ANDROID_BETA)),
-        APPLICATIONS_FEATURE(ImmutableSet.of(TINK_EMPLOYEE, APPLICATIONS, IOS_BETA), "2.5.5",
+        APPLICATIONS_FEATURE(
+                ImmutableSet.of(TINK_EMPLOYEE, APPLICATIONS, IOS_BETA),
+                "2.5.5",
                 "999.9.9"), // Disabled for Android.
-        RESIDENCE_VALUATION_FEATURE(ImmutableSet.of(TINK_EMPLOYEE, IOS_BETA, RESIDENCE_VALUATION), "2.5.14",
+        RESIDENCE_VALUATION_FEATURE(
+                ImmutableSet.of(TINK_EMPLOYEE, IOS_BETA, RESIDENCE_VALUATION),
+                "2.5.14",
                 "999.9.9"), // Disabled for Android.
-        SPLIT_TRANSACTIONS_FEATURE(ImmutableSet.of(SPLIT_TRANSACTIONS), "999.9.9",
-                "999.9.9"), // TODO: Set the client versions to align with their compatibility with split transactions.
+        SPLIT_TRANSACTIONS_FEATURE(
+                ImmutableSet.of(SPLIT_TRANSACTIONS),
+                "999.9.9",
+                "999.9.9"), // TODO: Set the client versions to align with their compatibility with
+        // split transactions.
         MULTI_CURRENCY_FOR_POCS(ImmutableSet.of(TINK_EMPLOYEE, MULTI_CURRENCY_PHASE_1));
 
         private ImmutableSet<String> flags;
@@ -94,7 +104,8 @@ public class FeatureFlags {
             this.flags = flags;
         }
 
-        FeatureFlagGroup(ImmutableSet<String> flags, String minIosVersion, String minAndroidVersion) {
+        FeatureFlagGroup(
+                ImmutableSet<String> flags, String minIosVersion, String minAndroidVersion) {
             this.flags = flags;
             this.minIosVersion = minIosVersion;
             this.minAndroidVersion = minAndroidVersion;

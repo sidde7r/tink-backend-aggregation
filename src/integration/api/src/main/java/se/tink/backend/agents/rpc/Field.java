@@ -5,27 +5,33 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
 import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Field {
     private String description; // This will be the headline in the view in the app
     private String helpText; // Text displayed just under the input field
-    private String hint; // Gray text in the input view giving hint of the format of the input (YYYYMMDDNNNN for Swedish SSN)
+    private String hint; // Gray text in the input view giving hint of the format of the input
+    // (YYYYMMDDNNNN for Swedish SSN)
     private boolean immutable; // True if the value is immutable
-    private boolean masked; // If this is true the input will be masked, like ***** (Should be true for passwords)
+    private boolean
+            masked; // If this is true the input will be masked, like ***** (Should be true for
+    // passwords)
     private Integer maxLength; // The maximum length of the input
     private Integer minLength; // The minimum length of the input
     private String name; // The key that will be used to retrieve the input
     private boolean numeric; // True if the input is of numeric type
     private boolean optional; // True if this is an optional input
-    private String pattern; // This is a regex pattern of the input ((19|20)[0-9]{10} for Swedish SSN)
-    private String patternError; // If the input doesn't match the pattern this is the error message displayed
+    private String
+            pattern; // This is a regex pattern of the input ((19|20)[0-9]{10} for Swedish SSN)
+    private String patternError; // If the input doesn't match the pattern this is the error message
+    // displayed
     private String value; // The value of the input
-    private boolean sensitive; // If the field is sensitive. A sensitive field will be stored in the encrypted credential.
+    private boolean sensitive; // If the field is sensitive. A sensitive field will be stored in the
+    // encrypted credential.
     private boolean checkbox; // if the field should be a boolean value displayed as a checkbox
-    private String additionalInfo; // This can be used to send additional information, possibly as a serialized JSON.
+    private String additionalInfo; // This can be used to send additional information, possibly as a
+    // serialized JSON.
 
     public String getDescription() {
         return description;
@@ -96,7 +102,7 @@ public class Field {
     }
 
     public void setImmutable(boolean immutable) {
-        this.immutable = immutable; 
+        this.immutable = immutable;
     }
 
     public void setMasked(boolean masked) {
@@ -282,8 +288,8 @@ public class Field {
     }
 
     /**
-     * Keys for fields that are used in many providers, so that we don't need to do static string coding in all
-     * implementations.
+     * Keys for fields that are used in many providers, so that we don't need to do static string
+     * coding in all implementations.
      */
     public enum Key {
         HTTP_CLIENT("http-client"),
@@ -331,6 +337,7 @@ public class Field {
 
     /**
      * Validate the value of a field
+     *
      * @param field
      * @return true if valid (false otherwise)
      */
@@ -341,6 +348,7 @@ public class Field {
 
     /**
      * Validate the value of a field
+     *
      * @param field
      * @param value
      * @return true if valid (false otherwise)
@@ -356,7 +364,9 @@ public class Field {
             return false;
         }
 
-        if (field.getMaxLength() != null && field.getMaxLength() > 0 && field.getMaxLength() < value.length()) {
+        if (field.getMaxLength() != null
+                && field.getMaxLength() > 0
+                && field.getMaxLength() < value.length()) {
             return false;
         }
 

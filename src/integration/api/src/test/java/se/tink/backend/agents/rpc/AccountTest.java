@@ -14,7 +14,8 @@ public class AccountTest {
         account.setName(null);
 
         String serializedAccount = SerializationUtils.serializeToString(account);
-        Account deserializedAccount = SerializationUtils.deserializeFromString(serializedAccount, Account.class);
+        Account deserializedAccount =
+                SerializationUtils.deserializeFromString(serializedAccount, Account.class);
 
         Assert.assertEquals(account.getAccountNumber(), deserializedAccount.getName());
     }
@@ -27,7 +28,8 @@ public class AccountTest {
         account.setName("AccountName");
 
         String serializedAccount = SerializationUtils.serializeToString(account);
-        Account deserializedAccount = SerializationUtils.deserializeFromString(serializedAccount, Account.class);
+        Account deserializedAccount =
+                SerializationUtils.deserializeFromString(serializedAccount, Account.class);
 
         Assert.assertEquals("AccountName", deserializedAccount.getName());
     }
