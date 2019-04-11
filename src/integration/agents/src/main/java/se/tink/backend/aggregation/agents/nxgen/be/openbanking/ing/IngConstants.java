@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 public final class IngConstants {
-  
+
     public static final String INTEGRATION_NAME = "ing";
 
     private IngConstants() {
