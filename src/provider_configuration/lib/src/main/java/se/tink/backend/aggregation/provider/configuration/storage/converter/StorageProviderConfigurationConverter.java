@@ -1,24 +1,24 @@
 package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
-import se.tink.libraries.provider.enums.ProviderStatuses;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 public class StorageProviderConfigurationConverter {
 
     public static List<ProviderConfigurationCore> convert(
             Collection<ProviderConfigurationStorage> providerConfigurationStorage,
             Map<String, ProviderStatuses> providerStatusesMap) {
-        return providerConfigurationStorage
-                .stream()
-                .map(p -> StorageProviderConfigurationConverter
-                        .convert(p, getProviderStatusIfExists(providerStatusesMap, p)))
+        return providerConfigurationStorage.stream()
+                .map(
+                        p ->
+                                StorageProviderConfigurationConverter.convert(
+                                        p, getProviderStatusIfExists(providerStatusesMap, p)))
                 .collect(Collectors.toList());
     }
 
@@ -29,14 +29,12 @@ public class StorageProviderConfigurationConverter {
     }
 
     public static ProviderConfigurationCore convert(
-            ProviderConfigurationStorage providerConfigurationStorage, Optional<ProviderStatuses> providerStatus) {
+            ProviderConfigurationStorage providerConfigurationStorage,
+            Optional<ProviderStatuses> providerStatus) {
 
-        ProviderConfigurationCore core =
-                new ProviderConfigurationCore();
+        ProviderConfigurationCore core = new ProviderConfigurationCore();
 
-        core.setAccessType(
-                convertAccessType(providerConfigurationStorage.getAccessType())
-        );
+        core.setAccessType(convertAccessType(providerConfigurationStorage.getAccessType()));
         core.setCapabilitiesSerialized(providerConfigurationStorage.getCapabilitiesSerialized());
         core.setClassName(providerConfigurationStorage.getClassName());
         core.setCredentialsType(providerConfigurationStorage.getCredentialsType());
@@ -65,21 +63,19 @@ public class StorageProviderConfigurationConverter {
         } else {
             core.setStatus(providerConfigurationStorage.getStatus());
         }
-        providerConfigurationStorage.getRefreshSchedule().ifPresent(
-                prs -> core.setRefreshSchedule(prs)
-        );
+        providerConfigurationStorage
+                .getRefreshSchedule()
+                .ifPresent(prs -> core.setRefreshSchedule(prs));
 
         return core;
-
     }
 
-    private static ProviderConfigurationCore.AccessType convertAccessType(ProviderConfigurationStorage.AccessType accessType) {
+    private static ProviderConfigurationCore.AccessType convertAccessType(
+            ProviderConfigurationStorage.AccessType accessType) {
         if (accessType == null) {
             return null;
         }
 
-        return ProviderConfigurationCore.AccessType.valueOf(
-                accessType.name()
-        );
+        return ProviderConfigurationCore.AccessType.valueOf(accessType.name());
     }
 }

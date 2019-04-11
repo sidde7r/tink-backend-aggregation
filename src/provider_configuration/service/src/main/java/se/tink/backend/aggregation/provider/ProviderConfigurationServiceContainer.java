@@ -14,13 +14,14 @@ import se.tink.backend.aggregation.provider.configuration.config.ProviderService
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
 
-public class ProviderConfigurationServiceContainer extends Application<ProviderServiceConfiguration> {
+public class ProviderConfigurationServiceContainer
+        extends Application<ProviderServiceConfiguration> {
 
-    private static final ImmutableList<Command> COMMANDS = ImmutableList.of(
-            new DebugProviderCommand(),
-            new ProviderStatusCommand(),
-            new GenerateProviderOnClusterFilesCommand()
-    );
+    private static final ImmutableList<Command> COMMANDS =
+            ImmutableList.of(
+                    new DebugProviderCommand(),
+                    new ProviderStatusCommand(),
+                    new GenerateProviderOnClusterFilesCommand());
 
     public static void main(String[] args) throws Exception {
         new ProviderConfigurationServiceContainer().run(args);
@@ -42,12 +43,16 @@ public class ProviderConfigurationServiceContainer extends Application<ProviderS
             throws Exception {
 
         // Add a dummy health check to avoid an annoying warning on startup.
-        environment.healthChecks().register("cache", new HealthCheck() {
-            @Override
-            protected Result check() throws Exception {
-                return Result.healthy();
-            }
-        });
+        environment
+                .healthChecks()
+                .register(
+                        "cache",
+                        new HealthCheck() {
+                            @Override
+                            protected Result check() throws Exception {
+                                return Result.healthy();
+                            }
+                        });
 
         DropwizardLifecycleInjectorFactory.build(
                 environment.lifecycle(),

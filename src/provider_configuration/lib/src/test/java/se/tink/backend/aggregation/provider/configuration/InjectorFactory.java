@@ -25,10 +25,12 @@ public class InjectorFactory {
     }
 
     private static Iterable<Module> build(ProviderServiceConfiguration configuration) {
-        return ImmutableList.<Module>builder().add(
-                new ProviderServiceConfigurationModule(configuration),
-                new TestServiceModule(),
-                new ProviderFileModule(),
-                new TestRepositoryModule()).build();
+        return ImmutableList.<Module>builder()
+                .add(
+                        new ProviderServiceConfigurationModule(configuration),
+                        new TestServiceModule(),
+                        new ProviderFileModule(),
+                        new TestRepositoryModule())
+                .build();
     }
 }

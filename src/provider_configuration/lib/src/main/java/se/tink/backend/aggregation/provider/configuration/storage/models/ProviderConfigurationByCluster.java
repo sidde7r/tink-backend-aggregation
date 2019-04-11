@@ -30,13 +30,19 @@ public class ProviderConfigurationByCluster {
             Map<String, ProviderConfigurationStorage> allProviderConfiguration,
             Map<String, Set<ProviderConfigurationStorage.Capability>> capabilitiesByAgentClass) {
 
-        this.providerConfigurations = selectProviderConfigurations(clusterId, enabledProviders,
-                providerConfigurationOverrides, allProviderConfiguration, capabilitiesByAgentClass);
+        this.providerConfigurations =
+                selectProviderConfigurations(
+                        clusterId,
+                        enabledProviders,
+                        providerConfigurationOverrides,
+                        allProviderConfiguration,
+                        capabilitiesByAgentClass);
         this.clusterId = clusterId;
         this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
     }
 
-    private static Map<String, ProviderConfigurationStorage> selectProviderConfigurations(String clusterId,
+    private static Map<String, ProviderConfigurationStorage> selectProviderConfigurations(
+            String clusterId,
             Set<String> enabledProviders,
             Map<String, ProviderConfigurationStorage> providerConfigurationOverrides,
             Map<String, ProviderConfigurationStorage> allProviderConfiguration,
@@ -45,12 +51,17 @@ public class ProviderConfigurationByCluster {
         Map<String, ProviderConfigurationStorage> providerConfigurations = Maps.newHashMap();
         enabledProviders.forEach(
                 providerName -> {
-                    ProviderConfigurationStorage providerConfigurationStorage = getProviderConfiguration(
-                            providerName, providerConfigurationOverrides, allProviderConfiguration);
+                    ProviderConfigurationStorage providerConfigurationStorage =
+                            getProviderConfiguration(
+                                    providerName,
+                                    providerConfigurationOverrides,
+                                    allProviderConfiguration);
 
                     if (providerConfigurationStorage == null) {
-                        logger.error("Could not find configuration for enabled provider {} and cluster {}",
-                                providerName, clusterId);
+                        logger.error(
+                                "Could not find configuration for enabled provider {} and cluster {}",
+                                providerName,
+                                clusterId);
                         return;
                     }
 
@@ -61,13 +72,13 @@ public class ProviderConfigurationByCluster {
                                     Collections.emptySet()));
 
                     providerConfigurations.put(providerName, providerConfigurationStorage);
-                }
-        );
+                });
 
         return providerConfigurations;
     }
 
-    private static ProviderConfigurationStorage getProviderConfiguration(String providerName,
+    private static ProviderConfigurationStorage getProviderConfiguration(
+            String providerName,
             Map<String, ProviderConfigurationStorage> providerConfigurationOverrides,
             Map<String, ProviderConfigurationStorage> allProviderConfiguration) {
 
@@ -78,7 +89,8 @@ public class ProviderConfigurationByCluster {
         return allProviderConfiguration.get(providerName);
     }
 
-    private static Set<String> getEnabledMarkets(Collection<ProviderConfigurationStorage> providerConfigurationStorages) {
+    private static Set<String> getEnabledMarkets(
+            Collection<ProviderConfigurationStorage> providerConfigurationStorages) {
         return providerConfigurationStorages.stream()
                 .map(ProviderConfigurationStorage::getMarket)
                 .collect(Collectors.toSet());

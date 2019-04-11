@@ -21,7 +21,8 @@ public class ProviderLoggerRequestFilter implements ContainerRequestFilter {
             clusterId = ClusterId.createEmpty();
         } else {
             String clusterName = request.getHeaderValue(ClusterId.CLUSTER_NAME_HEADER);
-            String clusterEnvironment = request.getHeaderValue(ClusterId.CLUSTER_ENVIRONMENT_HEADER);
+            String clusterEnvironment =
+                    request.getHeaderValue(ClusterId.CLUSTER_ENVIRONMENT_HEADER);
             clusterId = ClusterId.of(clusterName, clusterEnvironment);
         }
 

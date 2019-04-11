@@ -24,7 +24,9 @@ public class TestServiceModule extends AbstractModule {
         bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
         bind(ClusterIdProvider.class).in(Scopes.SINGLETON);
         bind(ProviderServiceController.class).in(Scopes.SINGLETON);
-        bind(ProviderConfigurationDAO.class).to(ProviderConfigurationProvider.class).in(Scopes.SINGLETON);
+        bind(ProviderConfigurationDAO.class)
+                .to(ProviderConfigurationProvider.class)
+                .in(Scopes.SINGLETON);
 
         bind(MetricCollector.class).in(Scopes.SINGLETON);
         bind(MetricRegistry.class).in(Scopes.SINGLETON);
