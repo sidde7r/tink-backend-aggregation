@@ -9,5 +9,4 @@ public class TeamOwnershipTest {
     public void testAllApiEndpointsHasATeamAssigned() {
         new ApiTeamOwnershipChecker("se.tink.backend.aggregation").check();
     }
-
 }

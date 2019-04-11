@@ -13,8 +13,6 @@ import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -22,6 +20,8 @@ import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
@@ -35,7 +35,8 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials createCredentials(CreateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+    Credentials createCredentials(
+            CreateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @GET
     @Path("ping")
@@ -49,28 +50,34 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void configureWhitelistInformation(ConfigureWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void configureWhitelistInformation(
+            ConfigureWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 
     @POST
     @Path("refresh/whitelist")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshWhitelistInformation(RefreshWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void refreshWhitelistInformation(
+            RefreshWhitelistInformationRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 
     @POST
     @Path("refresh")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void refreshInformation(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void refreshInformation(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 
     @POST
     @Path("authenticate")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void authenticate(ManualAuthenticateRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void authenticate(ManualAuthenticateRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 
     @POST
     @Path("transfer")
@@ -84,7 +91,9 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void whitelistedTransfer(WhitelistedTransferRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void whitelistedTransfer(
+            WhitelistedTransferRequest request, @ClientContext ClientInfo clientInfo)
+            throws Exception;
 
     @POST
     @Path("keepalive")
@@ -98,7 +107,8 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Credentials updateCredentials(UpdateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+    Credentials updateCredentials(
+            UpdateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("rateLimits/auto")
@@ -119,5 +129,6 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+    Response reEncryptCredentials(
+            ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 }

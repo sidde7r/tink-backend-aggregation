@@ -8,10 +8,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import se.tink.libraries.api.annotations.Team;
-import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.libraries.api.annotations.Team;
+import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.libraries.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
 import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
@@ -26,14 +26,14 @@ public interface CreditSafeService {
     @DELETE
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
-    void removeConsumerMonitoring(RemoveMonitoredConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo);
+    void removeConsumerMonitoring(
+            RemoveMonitoredConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("consumermonitoring")
     @TeamOwnership(Team.INTEGRATION)
-    Response addConsumerMonitoring(AddMonitoredConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo);
+    Response addConsumerMonitoring(
+            AddMonitoredConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo);
 
     @GET
     @Path("consumermonitoring/portfolios")
@@ -43,12 +43,12 @@ public interface CreditSafeService {
     @POST
     @Path("consumermonitoring/all")
     @TeamOwnership(Team.INTEGRATION)
-    PageableConsumerCreditSafeResponse listMonitoredConsumers(PageableConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo);
+    PageableConsumerCreditSafeResponse listMonitoredConsumers(
+            PageableConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo);
 
     @POST
     @Path("consumermonitoring/changed")
     @TeamOwnership(Team.INTEGRATION)
-    PageableConsumerCreditSafeResponse listChangedConsumers(ChangedConsumerCreditSafeRequest request,
-            @ClientContext ClientInfo clientInfo);
+    PageableConsumerCreditSafeResponse listChangedConsumers(
+            ChangedConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo);
 }

@@ -43,11 +43,9 @@ public enum ProcessableItem {
     }
 
     // Explicit order of processable items
-    private static final Ordering<ProcessableItem> PROCESSABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
-            ACCOUNTS,
-            EINVOICES,
-            TRANSFER_DESTINATIONS,
-            TRANSACTIONS));
+    private static final Ordering<ProcessableItem> PROCESSABLE_ITEM_ORDERING =
+            Ordering.explicit(
+                    ImmutableList.of(ACCOUNTS, EINVOICES, TRANSFER_DESTINATIONS, TRANSACTIONS));
 
     public static List<ProcessableItem> sort(Set<ProcessableItem> items) {
         return PROCESSABLE_ITEM_ORDERING.sortedCopy(items);

@@ -8,7 +8,8 @@ public class AggregationSpringContext {
     private final AnnotationConfigApplicationContext centralizedContext;
 
     @Inject
-    public AggregationSpringContext(@Centralized AnnotationConfigApplicationContext centralizedContext)  {
+    public AggregationSpringContext(
+            @Centralized AnnotationConfigApplicationContext centralizedContext) {
         this.centralizedContext = centralizedContext;
     }
 

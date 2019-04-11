@@ -8,8 +8,8 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(name = "aggregator_configurations")
 public class AggregatorConfiguration {
-    @Id
-    private String aggregatorId;
+    @Id private String aggregatorId;
+
     @Type(type = "text")
     private String aggregatorInfo;
 

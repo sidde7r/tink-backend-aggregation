@@ -8,7 +8,8 @@ import se.tink.libraries.discovery.CoordinationModule;
 
 public class AggregationModuleFactory {
 
-    public static ImmutableList<Module> build(AggregationServiceConfiguration configuration, Environment environment) {
+    public static ImmutableList<Module> build(
+            AggregationServiceConfiguration configuration, Environment environment) {
         if (configuration.isDevelopmentMode()) {
             return buildForDevelopment(configuration, environment).build();
         }
@@ -16,27 +17,31 @@ public class AggregationModuleFactory {
         return buildForProduction(configuration, environment).build();
     }
 
-    private static ImmutableList.Builder<Module> baseBuilder(AggregationServiceConfiguration configuration,
-                                                             Environment environment) {
+    private static ImmutableList.Builder<Module> baseBuilder(
+            AggregationServiceConfiguration configuration, Environment environment) {
         return new ImmutableList.Builder<Module>()
                 .add(new AggregationCommonModule())
                 .add(new CoordinationModule())
                 .add(new AgentWorkerCommandModule())
                 .add(new AggregationConfigurationModule(configuration))
                 .add(new AggregationModule(configuration, environment.jersey()))
-                .add(new QueueModule(configuration.getSqsQueueConfiguration(), environment.lifecycle()));
+                .add(
+                        new QueueModule(
+                                configuration.getSqsQueueConfiguration(), environment.lifecycle()));
     }
 
-    private static ImmutableList.Builder<Module> buildForDevelopment(AggregationServiceConfiguration configuration,
-            Environment environment) {
-        return baseBuilder(configuration, environment).add(
-                new AggregationDevelopmentRepositoryModule(configuration.getDatabase(),
-                        configuration.getDevelopmentConfiguration()));
+    private static ImmutableList.Builder<Module> buildForDevelopment(
+            AggregationServiceConfiguration configuration, Environment environment) {
+        return baseBuilder(configuration, environment)
+                .add(
+                        new AggregationDevelopmentRepositoryModule(
+                                configuration.getDatabase(),
+                                configuration.getDevelopmentConfiguration()));
     }
 
-    private static ImmutableList.Builder<Module> buildForProduction(AggregationServiceConfiguration configuration,
-            Environment environment) {
-        return baseBuilder(configuration, environment).add(
-                new AggregationRepositoryModule(configuration.getDatabase()));
+    private static ImmutableList.Builder<Module> buildForProduction(
+            AggregationServiceConfiguration configuration, Environment environment) {
+        return baseBuilder(configuration, environment)
+                .add(new AggregationRepositoryModule(configuration.getDatabase()));
     }
 }

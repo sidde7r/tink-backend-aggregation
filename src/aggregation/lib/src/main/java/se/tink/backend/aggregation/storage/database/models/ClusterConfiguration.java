@@ -1,23 +1,25 @@
 package se.tink.backend.aggregation.storage.database.models;
 
+import java.util.Base64;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
-import java.util.Base64;
-
 @Entity
 @Table(name = "cluster_configurations")
 public class ClusterConfiguration {
-    @Id
-    private String clusterId;
+    @Id private String clusterId;
+
     @Type(type = "text")
     private String host;
+
     @Type(type = "text")
     private String apiToken;
+
     @Type(type = "text")
     private String base64encodedclientcert;
+
     @Type(type = "boolean")
     private boolean disablerequestcompression;
 

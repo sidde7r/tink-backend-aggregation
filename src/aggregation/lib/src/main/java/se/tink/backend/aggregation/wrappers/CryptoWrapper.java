@@ -29,8 +29,9 @@ public class CryptoWrapper {
                 .map(CryptoConfiguration::getDecodedKey)
                 .findAny()
                 .orElseThrow(
-                        () -> new IllegalArgumentException(
-                                String.format("Could not find key with id: %s", keyId)));
+                        () ->
+                                new IllegalArgumentException(
+                                        String.format("Could not find key with id: %s", keyId)));
     }
 
     public Optional<String> getClientName() {

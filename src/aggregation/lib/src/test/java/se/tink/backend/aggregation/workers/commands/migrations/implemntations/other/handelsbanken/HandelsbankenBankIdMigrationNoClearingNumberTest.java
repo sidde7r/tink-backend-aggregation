@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken;
 
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -12,12 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
@@ -86,6 +87,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
         provider.setClassName(OLD_HANDELSBANKEN_AGENT);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
+
     @Test
     public void shouldMigrateData_yes() {
         this.request.getAccounts().add(this.oldFormat);

@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentCo
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
-import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
+import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class AggregationConfigurationModule extends AbstractModule {
 
@@ -22,29 +22,39 @@ public class AggregationConfigurationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(S3StorageConfiguration.class).toProvider(Providers.of(configuration.getS3StorageConfiguration()));
+        bind(S3StorageConfiguration.class)
+                .toProvider(Providers.of(configuration.getS3StorageConfiguration()));
 
-        bindConstant().annotatedWith(Names.named("developmentMode")).to(configuration.isDevelopmentMode());
-        bindConstant().annotatedWith(Names.named("productionMode")).to(!configuration.isDevelopmentMode());
-        bindConstant().annotatedWith(Names.named("queueAvailable"))
+        bindConstant()
+                .annotatedWith(Names.named("developmentMode"))
+                .to(configuration.isDevelopmentMode());
+        bindConstant()
+                .annotatedWith(Names.named("productionMode"))
+                .to(!configuration.isDevelopmentMode());
+        bindConstant()
+                .annotatedWith(Names.named("queueAvailable"))
                 .to(configuration.getSqsQueueConfiguration().isEnabled());
-        bindConstant().annotatedWith(Names.named("isMultiClientDevelopment"))
+        bindConstant()
+                .annotatedWith(Names.named("isMultiClientDevelopment"))
                 .to(configuration.isMultiClientDevelopment());
 
-        bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
-        bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
+        bind(CacheConfiguration.class)
+                .toProvider(Providers.of(configuration.getCacheConfiguration()));
+        bind(SqsQueueConfiguration.class)
+                .toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(AggregationServiceConfiguration.class).toInstance(configuration);
-        bind(AgentsServiceConfiguration.class).toInstance(configuration.getAgentsServiceConfiguration());
+        bind(AgentsServiceConfiguration.class)
+                .toInstance(configuration.getAgentsServiceConfiguration());
 
-        if (configuration.isDevelopmentMode() &&
-                configuration.getDevelopmentConfiguration().isValid()) {
-            bind(AggregationDevelopmentConfiguration.class).toProvider(
-                    Providers.of(configuration.getDevelopmentConfiguration()));
+        if (configuration.isDevelopmentMode()
+                && configuration.getDevelopmentConfiguration().isValid()) {
+            bind(AggregationDevelopmentConfiguration.class)
+                    .toProvider(Providers.of(configuration.getDevelopmentConfiguration()));
         }
 
         // Tink public library configurations
-        bind(CoordinationConfiguration.class).toProvider(Providers.of(configuration.getCoordination()));
+        bind(CoordinationConfiguration.class)
+                .toProvider(Providers.of(configuration.getCoordination()));
         bind(PrometheusConfiguration.class).toInstance(configuration.getPrometheus());
     }
-
 }

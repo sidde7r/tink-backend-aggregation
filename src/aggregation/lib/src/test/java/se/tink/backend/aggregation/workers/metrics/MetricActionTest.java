@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.workers.metrics;
 
-import org.junit.Before;
-import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.Timer;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.Timer;
 
 public class MetricActionTest {
     private static final MetricId ACTION_NAME = MetricId.newId("test_action");
@@ -92,7 +93,6 @@ public class MetricActionTest {
     }
 
     private MetricId markerName(String name) {
-        return ACTION_NAME
-                .label("outcome", name);
+        return ACTION_NAME.label("outcome", name);
     }
 }

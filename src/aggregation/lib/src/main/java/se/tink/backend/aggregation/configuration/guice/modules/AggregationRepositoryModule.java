@@ -6,7 +6,6 @@ import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -33,10 +32,10 @@ public class AggregationRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clusterConfigurations")
-    public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
-        );
+    public Map<String, ClusterConfiguration> provideClusterConfigurations(
+            ClusterConfigurationsRepository repository) {
+        return repository.findAll().stream()
+                .collect(Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity()));
     }
 
     @Provides
@@ -44,26 +43,29 @@ public class AggregationRepositoryModule extends RepositoryModule {
     @Named("aggregatorConfiguration")
     public Map<String, AggregatorConfiguration> providerAggregatorConfiguration(
             AggregatorConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
-        );
+        return repository.findAll().stream()
+                .collect(
+                        Collectors.toMap(
+                                AggregatorConfiguration::getAggregatorId, Function.identity()));
     }
 
     @Provides
     @Singleton
     @Named("clientConfigurationByClientKey")
-    public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
-        );
+    public Map<String, ClientConfiguration> providerClientConfiguration(
+            ClientConfigurationsRepository repository) {
+        return repository.findAll().stream()
+                .collect(
+                        Collectors.toMap(
+                                ClientConfiguration::getApiClientKey, Function.identity()));
     }
 
     @Provides
     @Singleton
     @Named("clientConfigurationByName")
-    public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
-        );
+    public Map<String, ClientConfiguration> providerClientConfigurationByName(
+            ClientConfigurationsRepository repository) {
+        return repository.findAll().stream()
+                .collect(Collectors.toMap(ClientConfiguration::getClientName, Function.identity()));
     }
 }

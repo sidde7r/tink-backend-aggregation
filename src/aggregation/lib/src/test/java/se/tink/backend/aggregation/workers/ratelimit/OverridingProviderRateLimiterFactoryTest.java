@@ -25,8 +25,10 @@ public class OverridingProviderRateLimiterFactoryTest {
 
     @Before
     public void setUp() {
-        factory = new OverridingProviderRateLimiterFactory(ImmutableMap.of(OVERRIDE_PROVIDER,
-                0.1), new DefaultProviderRateLimiterFactory(0.5));
+        factory =
+                new OverridingProviderRateLimiterFactory(
+                        ImmutableMap.of(OVERRIDE_PROVIDER, 0.1),
+                        new DefaultProviderRateLimiterFactory(0.5));
     }
 
     @Test
@@ -38,5 +40,4 @@ public class OverridingProviderRateLimiterFactoryTest {
     public void testFallback() {
         Assert.assertEquals(FALLBACK_RATE, factory.buildFor(FALLBACK_PROVIDER).getRate(), 0.00001);
     }
-
 }

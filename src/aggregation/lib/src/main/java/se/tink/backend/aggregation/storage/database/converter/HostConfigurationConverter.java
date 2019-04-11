@@ -9,8 +9,10 @@ public class HostConfigurationConverter {
         hostConfiguration.setClusterId(clusterConfiguration.getClusterId());
         hostConfiguration.setHost(clusterConfiguration.getHost());
         hostConfiguration.setApiToken(clusterConfiguration.getApiToken());
-        hostConfiguration.setBase64encodedclientcert(clusterConfiguration.getBase64encodedclientcert());
-        hostConfiguration.setDisablerequestcompression(clusterConfiguration.isDisablerequestcompression());
+        hostConfiguration.setBase64encodedclientcert(
+                clusterConfiguration.getBase64encodedclientcert());
+        hostConfiguration.setDisablerequestcompression(
+                clusterConfiguration.isDisablerequestcompression());
         return hostConfiguration;
     }
 }

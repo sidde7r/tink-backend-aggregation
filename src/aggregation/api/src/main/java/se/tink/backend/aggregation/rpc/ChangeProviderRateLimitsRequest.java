@@ -22,5 +22,4 @@ public class ChangeProviderRateLimitsRequest {
     public void setRatePerSecondByClassname(Map<String, Double> ratePerSecondByClassname) {
         this.ratePerSecondByClassname = ratePerSecondByClassname;
     }
-
 }

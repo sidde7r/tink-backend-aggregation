@@ -17,8 +17,6 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -31,6 +29,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWra
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
@@ -41,8 +41,7 @@ import se.tink.libraries.queue.QueueProducer;
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
     private final QueueProducer producer;
-    @Context
-    private HttpServletRequest httpRequest;
+    @Context private HttpServletRequest httpRequest;
 
     private AgentWorker agentWorker;
     private AgentWorkerOperationFactory agentWorkerCommandFactory;
@@ -64,11 +63,10 @@ public class AggregationServiceResource implements AggregationService {
         this.applicationDrainMode = applicationDrainMode;
     }
 
-
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
-        AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
-                .createOperationCreateCredentials(request, clientInfo);
+        AgentWorkerOperation createCredentialsOperation =
+                agentWorkerCommandFactory.createOperationCreateCredentials(request, clientInfo);
 
         createCredentialsOperation.run();
 
@@ -78,7 +76,7 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public String ping(){
+    public String ping() {
         if (applicationDrainMode.isEnabled()) {
             HttpResponseHelper.error(Response.Status.SERVICE_UNAVAILABLE);
         }
@@ -87,8 +85,9 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void configureWhitelistInformation(final ConfigureWhitelistInformationRequest request,
-            ClientInfo clientInfo) throws Exception {
+    public void configureWhitelistInformation(
+            final ConfigureWhitelistInformationRequest request, ClientInfo clientInfo)
+            throws Exception {
         Set<RefreshableItem> itemsToRefresh = request.getItemsToRefresh();
 
         // If the caller don't set any refreshable items, we won't do a refresh
@@ -101,11 +100,13 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
     }
 
     @Override
-    public void refreshWhitelistInformation(final RefreshWhitelistInformationRequest request, ClientInfo clientInfo)
+    public void refreshWhitelistInformation(
+            final RefreshWhitelistInformationRequest request, ClientInfo clientInfo)
             throws Exception {
         // If the caller don't set any accounts to refresh, we won't do a refresh.
         if (Objects.isNull(request.getAccounts()) || request.getAccounts().isEmpty()) {
@@ -124,46 +125,58 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
     }
 
     @Override
-    public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo) throws Exception {
+    public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo)
+            throws Exception {
         if (request.isManual()) {
-            agentWorker.execute(agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
             if (producer.isAvailable()) {
                 producer.send(new RefreshInformation(request, clientInfo));
             } else {
-                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clientInfo));
+                agentWorker.executeAutomaticRefresh(
+                        AgentWorkerRefreshOperationCreatorWrapper.of(
+                                agentWorkerCommandFactory, request, clientInfo));
             }
         }
     }
 
     @Override
-    public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
+    public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo)
+            throws Exception {
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
     }
 
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }
 
     @Override
-    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(request, clientInfo));
+    public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo)
+            throws Exception {
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(
+                        request, clientInfo));
     }
 
     @Override
     public void keepAlive(KeepAliveRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createOperationKeepAlive(request, clientInfo));
+        agentWorker.execute(
+                agentWorkerCommandFactory.createOperationKeepAlive(request, clientInfo));
     }
 
     @Override
     public Credentials updateCredentials(UpdateCredentialsRequest request, ClientInfo clientInfo) {
-        AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createOperationUpdate(request, clientInfo);
+        AgentWorkerOperation updateCredentialsOperation =
+                agentWorkerCommandFactory.createOperationUpdate(request, clientInfo);
 
         updateCredentialsOperation.run();
 
@@ -174,28 +187,31 @@ public class AggregationServiceResource implements AggregationService {
 
     private static ProviderRateLimiterFactory constructProviderRateLimiterFactoryFromRequest(
             ChangeProviderRateLimitsRequest request) {
-        return new OverridingProviderRateLimiterFactory(request.getRatePerSecondByClassname(),
+        return new OverridingProviderRateLimiterFactory(
+                request.getRatePerSecondByClassname(),
                 new DefaultProviderRateLimiterFactory(request.getDefaultRate()));
     }
 
     @Override
     public void updateRateLimits(ChangeProviderRateLimitsRequest request) {
-        agentWorker.getRateLimitedExecutorService().setRateLimiterFactory(
-                constructProviderRateLimiterFactoryFromRequest(request));
+        agentWorker
+                .getRateLimitedExecutorService()
+                .setRateLimiterFactory(constructProviderRateLimiterFactoryFromRequest(request));
     }
 
     @Override
     public void setSupplementalInformation(SupplementInformationRequest request) {
-        supplementalInformationController.setSupplementalInformation(request.getCredentialsId(),
-                request.getSupplementalInformation());
+        supplementalInformationController.setSupplementalInformation(
+                request.getCredentialsId(), request.getSupplementalInformation());
     }
 
     @Override
-    public Response reEncryptCredentials(ReEncryptCredentialsRequest reencryptCredentialsRequest,
-            ClientInfo clientInfo) {
+    public Response reEncryptCredentials(
+            ReEncryptCredentialsRequest reencryptCredentialsRequest, ClientInfo clientInfo) {
         try {
-            agentWorker.execute(agentWorkerCommandFactory
-                    .createOperationReEncryptCredentials(reencryptCredentialsRequest, clientInfo));
+            agentWorker.execute(
+                    agentWorkerCommandFactory.createOperationReEncryptCredentials(
+                            reencryptCredentialsRequest, clientInfo));
         } catch (Exception e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }

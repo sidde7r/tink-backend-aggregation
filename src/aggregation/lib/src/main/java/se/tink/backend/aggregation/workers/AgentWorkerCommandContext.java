@@ -13,30 +13,31 @@ import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.metrics.utils.MetricsUtils;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.utils.MetricsUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
-public class AgentWorkerCommandContext extends AgentWorkerContext implements SetAccountsToAggregateContext {
+public class AgentWorkerCommandContext extends AgentWorkerContext
+        implements SetAccountsToAggregateContext {
     private static final Logger log = LoggerFactory.getLogger(AgentWorkerCommandContext.class);
     protected CuratorFramework coordinationClient;
     private static final String EMPTY_CLASS_NAME = "";
@@ -48,53 +49,68 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     protected final Counter zeroAccountsFoundDuringRefreshTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
 
-    protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES = new HashSet<>(Arrays.asList(
-            AccountTypes.CHECKING,
-            AccountTypes.SAVINGS,
-            AccountTypes.CREDIT_CARD,
-            AccountTypes.LOAN,
-            AccountTypes.INVESTMENT));
+    protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES =
+            new HashSet<>(
+                    Arrays.asList(
+                            AccountTypes.CHECKING,
+                            AccountTypes.SAVINGS,
+                            AccountTypes.CREDIT_CARD,
+                            AccountTypes.LOAN,
+                            AccountTypes.INVESTMENT));
 
     protected long timeLeavingQueue;
     protected long timePutOnQueue;
     protected AgentsServiceConfiguration agentsServiceConfiguration;
     protected List<String> uniqueIdOfUserSelectedAccounts;
 
-
-    public AgentWorkerCommandContext(CredentialsRequest request,
-                                     MetricRegistry metricRegistry,
-                                     CuratorFramework coordinationClient,
-                                     AgentsServiceConfiguration agentsServiceConfiguration,
-                                     AggregatorInfo aggregatorInfo,
-                                     SupplementalInformationController supplementalInformationController,
-                                     ControllerWrapper controllerWrapper,
-                                     String clusterId) {
-        super(request, metricRegistry, coordinationClient, aggregatorInfo, supplementalInformationController,
-                controllerWrapper, clusterId);
+    public AgentWorkerCommandContext(
+            CredentialsRequest request,
+            MetricRegistry metricRegistry,
+            CuratorFramework coordinationClient,
+            AgentsServiceConfiguration agentsServiceConfiguration,
+            AggregatorInfo aggregatorInfo,
+            SupplementalInformationController supplementalInformationController,
+            ControllerWrapper controllerWrapper,
+            String clusterId) {
+        super(
+                request,
+                metricRegistry,
+                coordinationClient,
+                aggregatorInfo,
+                supplementalInformationController,
+                controllerWrapper,
+                clusterId);
         this.coordinationClient = coordinationClient;
         this.timePutOnQueue = System.currentTimeMillis();
         this.uniqueIdOfUserSelectedAccounts = Lists.newArrayList();
 
         Provider provider = request.getProvider();
 
-        defaultMetricLabels = new MetricId.MetricLabels()
-                .addAll(createClusterMetricsLabels(controllerWrapper.getHostConfiguration().getClusterId()))
-                .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
-                .add("market", provider.getMarket())
-                .add("agent", Optional.ofNullable(provider.getClassName()).orElse(EMPTY_CLASS_NAME))
-                .add("request_type", request.getType().name());
+        defaultMetricLabels =
+                new MetricId.MetricLabels()
+                        .addAll(
+                                createClusterMetricsLabels(
+                                        controllerWrapper.getHostConfiguration().getClusterId()))
+                        .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
+                        .add("market", provider.getMarket())
+                        .add(
+                                "agent",
+                                Optional.ofNullable(provider.getClassName())
+                                        .orElse(EMPTY_CLASS_NAME))
+                        .add("request_type", request.getType().name());
 
-        refreshTotal = metricRegistry.meter(
-                MetricId.newId("accounts_refresh")
-                        .label(defaultMetricLabels));
+        refreshTotal =
+                metricRegistry.meter(MetricId.newId("accounts_refresh").label(defaultMetricLabels));
 
-        inconsistencyBetweelAccountsTotal = metricRegistry.meter(
-                MetricId.newId("inconsistency_between_accounts")
-                        .label(defaultMetricLabels));
+        inconsistencyBetweelAccountsTotal =
+                metricRegistry.meter(
+                        MetricId.newId("inconsistency_between_accounts")
+                                .label(defaultMetricLabels));
 
-        zeroAccountsFoundDuringRefreshTotal = metricRegistry.meter(
-                MetricId.newId("zero_accounts_found_during_refresh")
-                        .label(defaultMetricLabels));
+        zeroAccountsFoundDuringRefreshTotal =
+                metricRegistry.meter(
+                        MetricId.newId("zero_accounts_found_during_refresh")
+                                .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
     }
@@ -104,7 +120,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         List<String> splitClusterId = Splitter.on("-").splitToList(clusterId);
 
         if (splitClusterId.size() != 2) {
-            // The clusterId should be of the format <cluster name>-<environment>, i.e. oxford-staging
+            // The clusterId should be of the format <cluster name>-<environment>, i.e.
+            // oxford-staging
             log.warn("SplitClusterId did not have size of exactly 2. ClusterId: {}", clusterId);
             return MetricId.MetricLabels.createEmpty();
         }
@@ -118,28 +135,36 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         Credentials credentials = request.getCredentials();
 
         if (credentials.getStatus() != CredentialsStatus.UPDATING) {
-            log.warn(String.format("Status does not warrant account processing: %s", credentials.getStatus()));
+            log.warn(
+                    String.format(
+                            "Status does not warrant account processing: %s",
+                            credentials.getStatus()));
             return;
         }
 
         // Metrics
         refreshTotal.inc();
-        TARGET_ACCOUNT_TYPES.forEach(accountType -> {
-            if (allAvailableAccountsByUniqueId.values().stream()
-                    .noneMatch(pair -> pair.first.getType() == accountType)) {
-                getMetricRegistry().meter(
-                        MetricId.newId("no_accounts_fetched")
-                                .label(defaultMetricLabels)
-                                .label("type", accountType.toString())
-                ).inc();
-            }
-        });
+        TARGET_ACCOUNT_TYPES.forEach(
+                accountType -> {
+                    if (allAvailableAccountsByUniqueId.values().stream()
+                            .noneMatch(pair -> pair.first.getType() == accountType)) {
+                        getMetricRegistry()
+                                .meter(
+                                        MetricId.newId("no_accounts_fetched")
+                                                .label(defaultMetricLabels)
+                                                .label("type", accountType.toString()))
+                                .inc();
+                    }
+                });
 
-        // Requires Accounts in list to have been "updated" towards System's UpdateService to get their real stored id
+        // Requires Accounts in list to have been "updated" towards System's UpdateService to get
+        // their real stored id
         List<String> accountIds = Lists.newArrayList(updatedAccountsByTinkId.keySet());
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest processAccountsRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsRequest
+                processAccountsRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .ProcessAccountsRequest();
         processAccountsRequest.setAccountIds(accountIds);
         processAccountsRequest.setCredentialsId(credentials.getId());
         processAccountsRequest.setUserId(request.getUser().getId());
@@ -163,7 +188,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         return timePutOnQueue;
     }
 
-
     public void addEventListener(AgentEventListener eventListener) {
         eventListeners.add(eventListener);
     }
@@ -175,7 +199,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     public boolean isSystemProcessingTransactions() {
         return isSystemProcessingTransactions;
     }
-
 
     public void sendAllCachedAccountsToUpdateService() {
 
@@ -192,31 +215,34 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
             // If it's not a refresh it shouldn't get here, but good to return anyway
             return;
         }
-        
+
         List<Account> accountsBeforeRefresh = request.getAccounts();
-        List<Account> accountsFoundByAgent = allAvailableAccountsByUniqueId
-                .values()
-                .stream()
-                .map(p -> p.first)
-                .collect(Collectors.toList());
+        List<Account> accountsFoundByAgent =
+                allAvailableAccountsByUniqueId.values().stream()
+                        .map(p -> p.first)
+                        .collect(Collectors.toList());
 
         // If it was 0 before and 0 found something might be wrong (maybe not though)
-        // If it's 0 accounts before, it means that we are **probably** trying to refresh this credentials for the first time (but not 100% of the time).
+        // If it's 0 accounts before, it means that we are **probably** trying to refresh this
+        // credentials for the first time (but not 100% of the time).
         if (accountsBeforeRefresh.size() == 0 && accountsFoundByAgent.size() == 0) {
             zeroAccountsFoundDuringRefreshTotal.inc();
             return;
         }
 
-        // If the number of accounts sent to system are different than the accounts that we received in the request,
+        // If the number of accounts sent to system are different than the accounts that we received
+        // in the request,
         //      that might mean that the user has a new account in the credentials. (not a problem)
         //      that an account on the credentials closed. (not a problem)
-        // But it's  not something that we expect happening on multiple users at the same time. (problem)
+        // But it's  not something that we expect happening on multiple users at the same time.
+        // (problem)
         if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
             inconsistencyBetweelAccountsTotal.inc();
             return;
         }
 
-        // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH, COMPLETE_MISMATCH, increment accordingly
+        // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH,
+        // COMPLETE_MISMATCH, increment accordingly
     }
 
     public Agent getAgent() {
@@ -238,7 +264,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
     @Override
     public List<Account> getCachedAccounts() {
-        return allAvailableAccountsByUniqueId.values().stream().map(p -> p.first).collect(Collectors.toList());
+        return allAvailableAccountsByUniqueId.values().stream()
+                .map(p -> p.first)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -262,19 +290,21 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         return agentsServiceConfiguration;
     }
 
-
     public void updateSignableOperation(SignableOperation signableOperation) {
         controllerWrapper.updateSignableOperation(signableOperation);
     }
 
-    public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status) {
+    public void updateSignableOperationStatus(
+            SignableOperation signableOperation, SignableOperationStatuses status) {
         signableOperation.setStatus(status);
         signableOperation.setStatusMessage(null);
 
         updateSignableOperation(signableOperation);
     }
 
-    public void updateSignableOperationStatus(SignableOperation signableOperation, SignableOperationStatuses status,
+    public void updateSignableOperationStatus(
+            SignableOperation signableOperation,
+            SignableOperationStatuses status,
             String statusMessage) {
         signableOperation.setStatus(status);
         signableOperation.setStatusMessage(statusMessage);
@@ -283,8 +313,11 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     }
 
     public void processTransferDestinationPatterns() {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest request =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                        .UpdateTransferDestinationPatternsRequest
+                request =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateTransferDestinationPatternsRequest();
 
         request.setDestinationsBySouce(destinationBySource(transferDestinationPatternsByAccount));
         request.setUserId(this.request.getUser().getId());
@@ -294,23 +327,31 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         }
     }
 
-    private Map<se.tink.libraries.account.rpc.Account, List<TransferDestinationPattern>> destinationBySource(
-            Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount) {
+    private Map<se.tink.libraries.account.rpc.Account, List<TransferDestinationPattern>>
+            destinationBySource(
+                    Map<Account, List<TransferDestinationPattern>>
+                            transferDestinationPatternsByAccount) {
         return transferDestinationPatternsByAccount.entrySet().stream()
-                .map(e -> new AbstractMap.SimpleEntry<>(CoreAccountMapper.fromAggregation(e.getKey()), e.getValue()))
-                .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+                .map(
+                        e ->
+                                new AbstractMap.SimpleEntry<>(
+                                        CoreAccountMapper.fromAggregation(e.getKey()),
+                                        e.getValue()))
+                .collect(
+                        Collectors.toMap(
+                                AbstractMap.SimpleEntry::getKey,
+                                AbstractMap.SimpleEntry::getValue));
     }
 
-
     public void processEinvoices() {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest updateTransfersRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest();
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest
+                updateTransfersRequest =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc
+                                .UpdateTransfersRequest();
         updateTransfersRequest.setUserId(request.getUser().getId());
         updateTransfersRequest.setCredentialsId(request.getCredentials().getId());
         updateTransfersRequest.setTransfers(transfers);
 
         controllerWrapper.processEinvoices(updateTransfersRequest);
     }
-
-
 }

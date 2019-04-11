@@ -7,8 +7,8 @@ import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
+import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
@@ -22,8 +22,9 @@ import se.tink.libraries.repository.guice.configuration.RepositoryModule;
 public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     private AggregationDevelopmentConfiguration developmentConfiguration;
 
-    AggregationDevelopmentRepositoryModule(DatabaseConfiguration databaseConfiguration,
-                                           AggregationDevelopmentConfiguration developmentConfiguration) {
+    AggregationDevelopmentRepositoryModule(
+            DatabaseConfiguration databaseConfiguration,
+            AggregationDevelopmentConfiguration developmentConfiguration) {
         super(databaseConfiguration);
         this.developmentConfiguration = developmentConfiguration;
     }
@@ -45,16 +46,20 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clusterConfigurations")
-    public Map<String, ClusterConfiguration> provideClusterConfigurations(ClusterConfigurationsRepository repository) {
-        Map<String, ClusterConfiguration> clusterConfigurations =  repository.findAll().stream().collect(
-                Collectors.toMap(ClusterConfiguration::getClusterId, Function.identity())
-        );
+    public Map<String, ClusterConfiguration> provideClusterConfigurations(
+            ClusterConfigurationsRepository repository) {
+        Map<String, ClusterConfiguration> clusterConfigurations =
+                repository.findAll().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ClusterConfiguration::getClusterId, Function.identity()));
 
         if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
             return clusterConfigurations;
         }
 
-        ClusterConfiguration clusterConfiguration = developmentConfiguration.getClusterConfiguration();
+        ClusterConfiguration clusterConfiguration =
+                developmentConfiguration.getClusterConfiguration();
         clusterConfigurations.put(clusterConfiguration.getClusterId(), clusterConfiguration);
 
         return clusterConfigurations;
@@ -63,19 +68,24 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("aggregatorConfiguration")
-    // TODO change this later to get from service yml instead of database 
+    // TODO change this later to get from service yml instead of database
     public Map<String, AggregatorConfiguration> providerAggregatorConfiguration(
             AggregatorConfigurationsRepository repository) {
-        Map<String, AggregatorConfiguration> aggregatorConfigurations = repository.findAll().stream().collect(
-                Collectors.toMap(AggregatorConfiguration::getAggregatorId, Function.identity())
-        );
+        Map<String, AggregatorConfiguration> aggregatorConfigurations =
+                repository.findAll().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        AggregatorConfiguration::getAggregatorId,
+                                        Function.identity()));
 
         if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
             return aggregatorConfigurations;
         }
 
-        AggregatorConfiguration aggregatorConfiguration = developmentConfiguration.getAggregatorConfiguration();
-        aggregatorConfigurations.put(aggregatorConfiguration.getAggregatorId(), aggregatorConfiguration);
+        AggregatorConfiguration aggregatorConfiguration =
+                developmentConfiguration.getAggregatorConfiguration();
+        aggregatorConfigurations.put(
+                aggregatorConfiguration.getAggregatorId(), aggregatorConfiguration);
 
         return aggregatorConfigurations;
     }
@@ -84,10 +94,13 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Singleton
     @Named("clientConfigurationByClientKey")
     // TODO change this later for local development getting from service yml
-    public Map<String, ClientConfiguration> providerClientConfiguration(ClientConfigurationsRepository repository) {
-        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
-                Collectors.toMap(ClientConfiguration::getApiClientKey, Function.identity())
-        );
+    public Map<String, ClientConfiguration> providerClientConfiguration(
+            ClientConfigurationsRepository repository) {
+        Map<String, ClientConfiguration> clientConfigurations =
+                repository.findAll().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ClientConfiguration::getApiClientKey, Function.identity()));
 
         if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
             return clientConfigurations;
@@ -102,10 +115,13 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
     @Provides
     @Singleton
     @Named("clientConfigurationByName")
-    public Map<String, ClientConfiguration> providerClientConfigurationByName(ClientConfigurationsRepository repository) {
-        Map<String, ClientConfiguration> clientConfigurations = repository.findAll().stream().collect(
-                Collectors.toMap(ClientConfiguration::getClientName, Function.identity())
-        );
+    public Map<String, ClientConfiguration> providerClientConfigurationByName(
+            ClientConfigurationsRepository repository) {
+        Map<String, ClientConfiguration> clientConfigurations =
+                repository.findAll().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ClientConfiguration::getClientName, Function.identity()));
 
         if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
             return clientConfigurations;

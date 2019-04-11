@@ -6,8 +6,7 @@ import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EncryptedCredentialsV1 extends EncryptedCredentials {
-    @JsonIgnore
-    public static final int VERSION = 1;
+    @JsonIgnore public static final int VERSION = 1;
 
     private AesEncryptedData fields;
     private AesEncryptedData payload;

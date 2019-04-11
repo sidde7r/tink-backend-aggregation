@@ -17,12 +17,12 @@ public class DefaultProviderRateLimiterFactoryTest {
 
         long start = System.currentTimeMillis();
         int i = 0;
-        while(i < 10) {
+        while (i < 10) {
             rateLimiter.acquire();
             i++;
         }
-        long duration = System.currentTimeMillis()-start;
-        System.out.println("Took "+duration+"ms");
+        long duration = System.currentTimeMillis() - start;
+        System.out.println("Took " + duration + "ms");
 
         // should be around 90ms
     }
@@ -40,5 +40,4 @@ public class DefaultProviderRateLimiterFactoryTest {
         DefaultProviderRateLimiterFactory factory = new DefaultProviderRateLimiterFactory(0.2);
         Assert.assertEquals(testRate, factory.buildFor(null).getRate(), 0.00001);
     }
-
 }

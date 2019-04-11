@@ -10,7 +10,7 @@ public class CachingProviderRateLimiterFactory implements ProviderRateLimiterFac
 
     private final ConcurrentMap<String, RateLimiter> cache = Maps.newConcurrentMap();
     private final ProviderRateLimiterFactory delegate;
-    
+
     public CachingProviderRateLimiterFactory(ProviderRateLimiterFactory delegate) {
         this.delegate = delegate;
     }
@@ -33,5 +33,4 @@ public class CachingProviderRateLimiterFactory implements ProviderRateLimiterFac
         // Deliberately not printing the cache content here.
         return MoreObjects.toStringHelper(this).add("delegate", delegate).toString();
     }
-
 }

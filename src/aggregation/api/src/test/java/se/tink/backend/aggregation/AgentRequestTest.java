@@ -16,9 +16,12 @@ public class AgentRequestTest {
         credentials.setFieldsSerialized("{}");
         credentials.setProviderName("jens-test-provider");
 
-        CredentialsRequest request = new RefreshInformationRequest(new User(), new Provider(), credentials, false);
-        
-        Assert.assertTrue(request.constructLockPath("SALT").matches("/locks/refreshCredentials/credentials/[0-9a-f]{10}/[0-9a-f]{10}"));
+        CredentialsRequest request =
+                new RefreshInformationRequest(new User(), new Provider(), credentials, false);
+
+        Assert.assertTrue(
+                request.constructLockPath("SALT")
+                        .matches(
+                                "/locks/refreshCredentials/credentials/[0-9a-f]{10}/[0-9a-f]{10}"));
     }
-    
 }

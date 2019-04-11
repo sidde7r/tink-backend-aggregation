@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFactory {
 
-    private static final AggregationLogger log = new AggregationLogger(LoggingProviderRateLimiterFactory.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(LoggingProviderRateLimiterFactory.class);
     private ProviderRateLimiterFactory delegate;
 
     public LoggingProviderRateLimiterFactory(ProviderRateLimiterFactory delegate) {
@@ -17,9 +18,11 @@ public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFac
     public RateLimiter buildFor(String providerClassName) {
         RateLimiter rateLimiter = delegate.buildFor(providerClassName);
 
-        log.info(String.format("Creating RateLimiter for %s, with rate: %s per second",
-                providerClassName == null ? "null" : providerClassName,
-                rateLimiter.getRate()));
+        log.info(
+                String.format(
+                        "Creating RateLimiter for %s, with rate: %s per second",
+                        providerClassName == null ? "null" : providerClassName,
+                        rateLimiter.getRate()));
 
         return rateLimiter;
     }
@@ -28,5 +31,4 @@ public class LoggingProviderRateLimiterFactory implements ProviderRateLimiterFac
     public String toString() {
         return MoreObjects.toStringHelper(this).add("delegate", delegate).toString();
     }
-
 }

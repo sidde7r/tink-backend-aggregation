@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.wrappers;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Base64;
 import java.util.Objects;
@@ -8,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfigurationId;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CryptoWrapperTest {
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
@@ -39,7 +40,8 @@ public class CryptoWrapperTest {
 
     @Test
     public void ensureIsPresent_whenListNotEmpty() {
-        Optional<CryptoConfiguration> latestCryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
+        Optional<CryptoConfiguration> latestCryptoConfiguration =
+                cryptoWrapper.getLatestCryptoConfiguration();
 
         assertThat(latestCryptoConfiguration.isPresent()).isTrue();
     }
@@ -48,7 +50,8 @@ public class CryptoWrapperTest {
     public void ensureNotPresent_whenListEmpty() {
         CryptoWrapper cryptoWrapper = createCryptoWrapper(0);
 
-        Optional<CryptoConfiguration> latestCryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
+        Optional<CryptoConfiguration> latestCryptoConfiguration =
+                cryptoWrapper.getLatestCryptoConfiguration();
 
         assertThat(latestCryptoConfiguration.isPresent()).isFalse();
     }
@@ -60,7 +63,8 @@ public class CryptoWrapperTest {
 
     @Test
     public void ensureWhenRandomIntBetweenOneAndTen_cryptoKeyByKeyIdIsPresent() {
-        byte[] cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
+        byte[] cryptoKeyByKeyId =
+                cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
 
         assertThat(Objects.nonNull(cryptoKeyByKeyId)).isTrue();
     }
@@ -74,19 +78,22 @@ public class CryptoWrapperTest {
 
     @Test
     public void ensureLatestCryptoConfigurationKeyId_equalToNumberOfDefaultCryptoConfigurations() {
-        Optional<CryptoConfiguration> cryptoConfiguration = cryptoWrapper.getLatestCryptoConfiguration();
+        Optional<CryptoConfiguration> cryptoConfiguration =
+                cryptoWrapper.getLatestCryptoConfiguration();
 
-        // Since there is a test that tests that there actually is a latest crypto configuration there is no
+        // Since there is a test that tests that there actually is a latest crypto configuration
+        // there is no
         // need for if-statements before doing get on the cryptoConfiguration.
         assertThat(cryptoConfiguration.get().getKeyId()).isEqualTo(DEFAULT_CRYPTO_CONFIGURATIONS);
     }
 
     @Test
     public void ensureGetCryptoKeyByKeyId_returnsCorrectCryptoKeyByKeyId() {
-        byte[] cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
+        byte[] cryptoKeyByKeyId =
+                cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
 
-        assertThat(new String(cryptoKeyByKeyId)).isEqualTo(
-                String.format(KEY_STRING_FORMAT, NUMBER_BETWEEN_ZERO_AND_DEFAULT));
+        assertThat(new String(cryptoKeyByKeyId))
+                .isEqualTo(String.format(KEY_STRING_FORMAT, NUMBER_BETWEEN_ZERO_AND_DEFAULT));
     }
 
     private CryptoWrapper createCryptoWrapper(int totalItems) {
@@ -97,13 +104,16 @@ public class CryptoWrapperTest {
         ImmutableList.Builder<CryptoConfiguration> listBuilder = ImmutableList.builder();
 
         for (int item = 1; item <= totalItems; item++) {
-            listBuilder.add(createCryptoConfiguration(CLIENT_NAME, item, String.format(KEY_STRING_FORMAT, item)));
+            listBuilder.add(
+                    createCryptoConfiguration(
+                            CLIENT_NAME, item, String.format(KEY_STRING_FORMAT, item)));
         }
 
         return listBuilder.build();
     }
 
-    private CryptoConfiguration createCryptoConfiguration(String clientName, int keyId, String key) {
+    private CryptoConfiguration createCryptoConfiguration(
+            String clientName, int keyId, String key) {
         CryptoConfiguration cryptoConfiguration = new CryptoConfiguration();
 
         CryptoConfigurationId cryptoConfigurationId = new CryptoConfigurationId();

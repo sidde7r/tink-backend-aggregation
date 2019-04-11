@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.controllers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Objects;
@@ -18,7 +17,6 @@ import se.tink.backend.aggregation.storage.database.repositories.AggregatorConfi
 import se.tink.backend.aggregation.storage.database.repositories.ClientConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.aggregation.storage.file.ProvisionConfigurationParser;
 import se.tink.backend.aggregation.storage.file.models.ProvisionClientsConfig;
 
 public class ProvisionClientController {
@@ -47,20 +45,28 @@ public class ProvisionClientController {
     private void provision(String clientName, String aggregatorIdentifier) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(clientName), "Client cannot be null.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(OXFORD_PROD_CLUSTER_NAME), "Cluster name cannot be null.");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorIdentifier),
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(OXFORD_PROD_CLUSTER_NAME), "Cluster name cannot be null.");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(aggregatorIdentifier),
                 "Aggregator Id or identifier value should not be null.");
 
-        ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(OXFORD_PROD_CLUSTER_NAME);
-        Preconditions.checkNotNull(clusterConfiguration, "Cluster configuration could not be found.");
+        ClusterConfiguration clusterConfiguration =
+                clusterConfigurationsRepository.findOne(OXFORD_PROD_CLUSTER_NAME);
+        Preconditions.checkNotNull(
+                clusterConfiguration, "Cluster configuration could not be found.");
 
-        ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
+        ClientConfiguration existingClientConfiguration =
+                clientConfigurationsRepository.findOne(clientName);
         if (!Objects.isNull(existingClientConfiguration)) {
-            log.info("Another entry for {} was found in the database.", existingClientConfiguration.getClientName());
+            log.info(
+                    "Another entry for {} was found in the database.",
+                    existingClientConfiguration.getClientName());
             return;
         }
 
-        AggregatorConfiguration aggregatorConfiguration = createAggregatorIdentifier(aggregatorIdentifier);
+        AggregatorConfiguration aggregatorConfiguration =
+                createAggregatorIdentifier(aggregatorIdentifier);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.setApiClientKey(UUID.randomUUID().toString());
@@ -84,8 +90,7 @@ public class ProvisionClientController {
         log.info("Please store the encrypted keys on an offline drive.");
     }
 
-    private AggregatorConfiguration createAggregatorIdentifier(
-            String aggregatorIdentifier) {
+    private AggregatorConfiguration createAggregatorIdentifier(String aggregatorIdentifier) {
         AggregatorConfiguration aggregatorConfiguration = new AggregatorConfiguration();
         aggregatorConfiguration.setAggregatorId(UUID.randomUUID().toString());
         aggregatorConfiguration.setAggregatorInfo(aggregatorIdentifier);
@@ -100,9 +105,8 @@ public class ProvisionClientController {
     }
 
     public void provision(ProvisionClientsConfig provisionClientsConfig) {
-        provisionClientsConfig.getClients().forEach((k,v) -> this.provision(
-                k,
-                v.getAggregatorIdentifier()
-        ));
+        provisionClientsConfig
+                .getClients()
+                .forEach((k, v) -> this.provision(k, v.getAggregatorIdentifier()));
     }
 }

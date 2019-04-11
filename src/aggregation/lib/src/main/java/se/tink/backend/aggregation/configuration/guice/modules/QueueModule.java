@@ -22,7 +22,8 @@ public class QueueModule extends AbstractModule {
     private SqsQueueConfiguration sqsQueueConfiguration;
     private LifecycleEnvironment lifecycle;
 
-    public QueueModule(SqsQueueConfiguration sqsQueueConfiguration, LifecycleEnvironment lifecycle) {
+    public QueueModule(
+            SqsQueueConfiguration sqsQueueConfiguration, LifecycleEnvironment lifecycle) {
         this.sqsQueueConfiguration = sqsQueueConfiguration;
         this.lifecycle = lifecycle;
     }
@@ -30,7 +31,9 @@ public class QueueModule extends AbstractModule {
     @Override
     protected void configure() {
         if (sqsQueueConfiguration.isEnabled()) {
-            bind(QueueMessageAction.class).to(AutomaticRefreshQueueHandler.class).in(Scopes.SINGLETON);
+            bind(QueueMessageAction.class)
+                    .to(AutomaticRefreshQueueHandler.class)
+                    .in(Scopes.SINGLETON);
             bind(QueueProducer.class).to(SqsProducer.class).in(Scopes.SINGLETON);
             bind(SqsQueue.class).in(Scopes.SINGLETON);
             bind(EncodingHandler.class).to(AutomaticRefreshQueueEncoder.class).in(Scopes.SINGLETON);
@@ -42,8 +45,8 @@ public class QueueModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public QueueConsumer manageQueueThread(SqsQueue sqsQueue,
-            QueueMessageAction queueMessageAction) {
+    public QueueConsumer manageQueueThread(
+            SqsQueue sqsQueue, QueueMessageAction queueMessageAction) {
 
         SqsConsumer sqsConsumer = new SqsConsumer(sqsQueue, queueMessageAction);
         if (sqsQueue.isAvailable()) {

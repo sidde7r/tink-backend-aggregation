@@ -11,6 +11,7 @@ public class CryptoConfigurationId implements Serializable {
     @NotNull
     @Column(name = "clientname")
     private String clientName;
+
     @NotNull
     @Column(name = "keyid")
     private int keyId;

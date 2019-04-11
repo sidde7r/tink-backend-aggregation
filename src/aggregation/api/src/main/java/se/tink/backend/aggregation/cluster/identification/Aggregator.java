@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.cluster.identification;
 public class Aggregator {
 
     private String aggregatorIdentifier;
-    public final static String DEFAULT = "Tink";
+    public static final String DEFAULT = "Tink";
 
-    private Aggregator(String aggregatorIdentifier){
+    private Aggregator(String aggregatorIdentifier) {
         this.aggregatorIdentifier = aggregatorIdentifier;
     }
 
@@ -13,7 +13,7 @@ public class Aggregator {
         return new Aggregator(DEFAULT);
     }
 
-    public String getAggregatorIdentifier(){
+    public String getAggregatorIdentifier() {
         return this.aggregatorIdentifier;
     }
 

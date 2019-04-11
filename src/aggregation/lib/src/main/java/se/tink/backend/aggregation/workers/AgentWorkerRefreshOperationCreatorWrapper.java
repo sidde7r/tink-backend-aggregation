@@ -10,7 +10,10 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
     private RefreshInformationRequest request;
     private ClientInfo clientInfo;
 
-    AgentWorkerRefreshOperationCreatorWrapper(AgentWorkerOperationFactory agentWorkerCommandFactory, RefreshInformationRequest request, ClientInfo clientInfo) {
+    AgentWorkerRefreshOperationCreatorWrapper(
+            AgentWorkerOperationFactory agentWorkerCommandFactory,
+            RefreshInformationRequest request,
+            ClientInfo clientInfo) {
         this.agentWorkerCommandFactory = agentWorkerCommandFactory;
         this.request = request;
         this.clientInfo = clientInfo;
@@ -18,8 +21,8 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
 
     @Override
     public void run() {
-        AgentWorkerOperation agentWorkerOperation = agentWorkerCommandFactory
-                .createOperationRefresh(request, clientInfo);
+        AgentWorkerOperation agentWorkerOperation =
+                agentWorkerCommandFactory.createOperationRefresh(request, clientInfo);
         agentWorkerOperation.run();
     }
 
@@ -39,9 +42,11 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
         return clientInfo;
     }
 
-    public static AgentWorkerRefreshOperationCreatorWrapper of(AgentWorkerOperationFactory agentWorkerOperationFactory,
+    public static AgentWorkerRefreshOperationCreatorWrapper of(
+            AgentWorkerOperationFactory agentWorkerOperationFactory,
             RefreshInformationRequest refreshInformationRequest,
             ClientInfo clientInfo) {
-        return new AgentWorkerRefreshOperationCreatorWrapper(agentWorkerOperationFactory, refreshInformationRequest, clientInfo);
+        return new AgentWorkerRefreshOperationCreatorWrapper(
+                agentWorkerOperationFactory, refreshInformationRequest, clientInfo);
     }
 }

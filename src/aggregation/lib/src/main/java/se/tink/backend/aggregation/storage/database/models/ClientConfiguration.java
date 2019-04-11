@@ -8,12 +8,14 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(name = "client_configurations")
 public class ClientConfiguration {
-    @Id
-    private String clientName;
+    @Id private String clientName;
+
     @Type(type = "text")
     private String apiClientKey;
+
     @Type(type = "text")
     private String clusterId;
+
     @Type(type = "text")
     private String aggregatorId;
 

@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.workers.commands;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
-    private static final AggregationLogger log = new AggregationLogger(KeepAliveAgentWorkerCommand.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(KeepAliveAgentWorkerCommand.class);
     private AgentWorkerCommandContext context;
 
     public KeepAliveAgentWorkerCommand(AgentWorkerCommandContext context) {
@@ -42,7 +43,10 @@ public class KeepAliveAgentWorkerCommand extends AgentWorkerCommand {
 
             return AgentWorkerCommandResult.CONTINUE;
         } else {
-            log.info(String.format("Agent %s does not implement PersistentLogin", agent.getAgentClass().getName()));
+            log.info(
+                    String.format(
+                            "Agent %s does not implement PersistentLogin",
+                            agent.getAgentClass().getName()));
 
             return AgentWorkerCommandResult.ABORT;
         }

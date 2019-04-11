@@ -9,8 +9,8 @@ public abstract class AgentWorkerCommand {
      * Called for every command in a command chain. The chain of method invocations is broken unless
      * AgentWorkerCommandResult.CONTINUE
      *
-     * @return whether an {@link AgentWorkerOperation} should continue running the other command's execute methods or
-     * not.
+     * @return whether an {@link AgentWorkerOperation} should continue running the other command's
+     *     execute methods or not.
      * @throws Exception on error
      */
     public abstract AgentWorkerCommandResult execute() throws Exception;

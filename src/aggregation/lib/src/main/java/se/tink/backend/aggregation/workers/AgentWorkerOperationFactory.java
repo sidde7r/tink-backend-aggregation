@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.curator.framework.CuratorFramework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentClassFactory;
@@ -20,15 +21,9 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
-import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.storage.database.providers.AggregatorInfoProvider;
@@ -44,6 +39,7 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
@@ -66,6 +62,10 @@ import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 import se.tink.libraries.cache.CacheClient;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {
@@ -208,7 +208,9 @@ public class AgentWorkerOperationFactory {
         }
 
         for (RefreshableItem item : nonAccountItems) {
-            commands.add(new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
+            commands.add(
+                    new RefreshItemAgentWorkerCommand(
+                            context, item, createCommandMetricState(request)));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -253,7 +255,7 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        //Please be aware that the order of adding commands is meaningful
+        // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
@@ -266,20 +268,29 @@ public class AgentWorkerOperationFactory {
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper));
 
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
-        // transactions aren't processed in system. The transaction processing in system will set the status
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
+        // connector and if
+        // transactions aren't processed in system. The transaction processing in system will set
+        // the status
         // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
-                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c ->
+                                !c.isWaitingOnConnectorTransactions()
+                                        && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
         commands.add(
-                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
-                ProcessableItem.fromRefreshableItems(
-                        RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
+                new SendDataForProcessingAgentWorkerCommand(
+                        context,
+                        createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -296,7 +307,8 @@ public class AgentWorkerOperationFactory {
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createOrderedRefreshableItemsCommands(request, context, request.getItemsToRefresh()));
+                createOrderedRefreshableItemsCommands(
+                        request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -325,7 +337,7 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        //Please be aware that the order of adding commands is meaningful
+        // Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "authenticate-manual" : "authenticate-auto");
@@ -340,8 +352,13 @@ public class AgentWorkerOperationFactory {
 
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
-                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c ->
+                                !c.isWaitingOnConnectorTransactions()
+                                        && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
@@ -453,7 +470,9 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
-                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                new SendDataForProcessingAgentWorkerCommand(
+                        context,
+                        createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(
                                         RefreshableItem.REFRESHABLE_ITEMS_ALL))),
@@ -463,7 +482,8 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
-                new TransferAgentWorkerCommand(context, request, createCommandMetricState(request)));
+                new TransferAgentWorkerCommand(
+                        context, request, createCommandMetricState(request)));
     }
 
     public AgentWorkerOperation createOperationCreateCredentials(
@@ -622,7 +642,8 @@ public class AgentWorkerOperationFactory {
         for (RefreshableItem item : items) {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(
-                        new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
+                        new RefreshItemAgentWorkerCommand(
+                                context, item, createCommandMetricState(request)));
             }
         }
 
@@ -674,19 +695,29 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper));
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
-        // transactions aren't processed in system. The transaction processing in system will set the status
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
+        // connector and if
+        // transactions aren't processed in system. The transaction processing in system will set
+        // the status
         // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
-                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c ->
+                                !c.isWaitingOnConnectorTransactions()
+                                        && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
-        commands.add(new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
-                ProcessableItem.fromRefreshableItems(
-                        RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
+        commands.add(
+                new SendDataForProcessingAgentWorkerCommand(
+                        context,
+                        createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new DebugAgentWorkerCommand(
@@ -748,7 +779,9 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationMetricName, reportMetricsAgentWorkerCommandState));
         commands.add(
-                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                new SendDataForProcessingAgentWorkerCommand(
+                        context,
+                        createCommandMetricState(request),
                         ProcessableItem.fromRefreshableItems(
                                 RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(

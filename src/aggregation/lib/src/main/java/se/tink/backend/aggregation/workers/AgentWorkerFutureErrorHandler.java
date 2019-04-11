@@ -5,11 +5,10 @@ import java.util.concurrent.CancellationException;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
-/**
- * Thread-safe.
- */
+/** Thread-safe. */
 public class AgentWorkerFutureErrorHandler implements FutureCallback<Object> {
-    private static final AggregationLogger LOG = new AggregationLogger(AgentWorkerFutureErrorHandler.class);
+    private static final AggregationLogger LOG =
+            new AggregationLogger(AgentWorkerFutureErrorHandler.class);
 
     @Override
     public void onSuccess(@Nullable Object t) {
@@ -20,7 +19,8 @@ public class AgentWorkerFutureErrorHandler implements FutureCallback<Object> {
     public void onFailure(Throwable throwable) {
         if (throwable instanceof CancellationException) {
             // Ignore.
-            // A CancellationException is thrown whenever the FIFO queue (in AgentWorkerContext) of size 1 cancels the
+            // A CancellationException is thrown whenever the FIFO queue (in AgentWorkerContext) of
+            // size 1 cancels the
             // item in the queue to make space for a new one.
             return;
         }

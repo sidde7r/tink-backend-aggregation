@@ -25,12 +25,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     private static final String METRIC_NAME = "agent_refresh";
     private static final String METRIC_ACTION = "refresh";
 
-
     private final AgentWorkerCommandContext context;
     private final RefreshableItem item;
     private final AgentWorkerCommandMetricState metrics;
 
-    public RefreshItemAgentWorkerCommand(AgentWorkerCommandContext context, RefreshableItem item,
+    public RefreshItemAgentWorkerCommand(
+            AgentWorkerCommandContext context,
+            RefreshableItem item,
             AgentWorkerCommandMetricState metrics) {
         this.context = context;
         this.item = item;
@@ -50,11 +51,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
     public AgentWorkerCommandResult execute() throws Exception {
         metrics.start(AgentWorkerOperationMetricType.EXECUTE_COMMAND);
         try {
-            MetricAction action = metrics.buildAction(
-                    new MetricId.MetricLabels()
-                            .add("action", METRIC_ACTION)
-                            .add("item", item.name())
-            );
+            MetricAction action =
+                    metrics.buildAction(
+                            new MetricId.MetricLabels()
+                                    .add("action", METRIC_ACTION)
+                                    .add("item", item.name()));
             try {
                 log.info("Refreshing item: {}", item.name());
 
@@ -65,11 +66,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
                 action.completed();
-            } catch(BankServiceException e) {
-                    // The way frontend works now the message will not be displayed to the user.
-                    context.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
-                    action.unavailable();
-                    return AgentWorkerCommandResult.ABORT;
+            } catch (BankServiceException e) {
+                // The way frontend works now the message will not be displayed to the user.
+                context.updateStatus(
+                        CredentialsStatus.UNCHANGED,
+                        context.getCatalog().getString(e.getUserMessage()));
+                action.unavailable();
+                return AgentWorkerCommandResult.ABORT;
             } catch (Exception e) {
                 action.failed();
                 log.warn("Couldn't refresh RefreshableItem({})", item);
@@ -90,10 +93,11 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
 
     @Override
     public List<MetricId.MetricLabels> getCommandTimerName(AgentWorkerOperationMetricType type) {
-        MetricId.MetricLabels typeName = new MetricId.MetricLabels()
-                .add("class", RefreshItemAgentWorkerCommand.class.getSimpleName())
-                .add("item", RefreshMetricNameFactory.createCleanName(item))
-                .add("command", type.getMetricName());
+        MetricId.MetricLabels typeName =
+                new MetricId.MetricLabels()
+                        .add("class", RefreshItemAgentWorkerCommand.class.getSimpleName())
+                        .add("item", RefreshMetricNameFactory.createCleanName(item))
+                        .add("command", type.getMetricName());
 
         return Lists.newArrayList(typeName);
     }

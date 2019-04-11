@@ -2,13 +2,12 @@ package se.tink.backend.aggregation.storage.database.providers;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.cluster.exceptions.ClientNotValid;
 import se.tink.backend.aggregation.cluster.exceptions.ClusterNotValid;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
-
-import java.util.Map;
 
 public class ClientConfigurationProvider {
 
@@ -20,8 +19,10 @@ public class ClientConfigurationProvider {
 
     @Inject
     ClientConfigurationProvider(
-            @Named("clientConfigurationByClientKey") Map<String, ClientConfiguration> clientConfigurationsByClientKey,
-            @Named("clientConfigurationByName") Map<String, ClientConfiguration> clientConfigurationsByName) {
+            @Named("clientConfigurationByClientKey")
+                    Map<String, ClientConfiguration> clientConfigurationsByClientKey,
+            @Named("clientConfigurationByName")
+                    Map<String, ClientConfiguration> clientConfigurationsByName) {
         this.clientConfigurationsByClientKey = clientConfigurationsByClientKey;
         this.clientConfigurationsByName = clientConfigurationsByName;
     }
@@ -43,7 +44,8 @@ public class ClientConfigurationProvider {
         return clientConfigurationsByClientKey.get(apiKey);
     }
 
-    public ClientConfiguration getClientConfiguration(String name, String environment) throws ClusterNotValid {
+    public ClientConfiguration getClientConfiguration(String name, String environment)
+            throws ClusterNotValid {
 
         String clusterId = String.format("%s-%s", name, environment);
 

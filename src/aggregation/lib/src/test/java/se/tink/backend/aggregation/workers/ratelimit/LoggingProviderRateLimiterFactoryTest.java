@@ -15,8 +15,9 @@ public class LoggingProviderRateLimiterFactoryTest {
 
         ProviderRateLimiterFactory mockedDelegate = Mockito.mock(ProviderRateLimiterFactory.class);
         Mockito.when(mockedDelegate.buildFor(TEST_PROVIDER)).thenReturn(RateLimiter.create(0.8));
-        
-        LoggingProviderRateLimiterFactory factory = new LoggingProviderRateLimiterFactory(mockedDelegate);
+
+        LoggingProviderRateLimiterFactory factory =
+                new LoggingProviderRateLimiterFactory(mockedDelegate);
 
         // When
 
@@ -26,5 +27,4 @@ public class LoggingProviderRateLimiterFactoryTest {
 
         Mockito.verify(mockedDelegate).buildFor(TEST_PROVIDER);
     }
-
 }

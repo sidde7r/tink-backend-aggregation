@@ -13,11 +13,11 @@ public class OverridingProviderRateLimiterFactory implements ProviderRateLimiter
 
     /**
      * @param rateByClassname a map from provider classname to permits per second.
-     * @param fallback        the fallback providers rate limiter factory if no matches were found in the
-     *                        rateByClassname.
+     * @param fallback the fallback providers rate limiter factory if no matches were found in the
+     *     rateByClassname.
      */
-    public OverridingProviderRateLimiterFactory(Map<String, Double> rateByClassname,
-            ProviderRateLimiterFactory fallback) {
+    public OverridingProviderRateLimiterFactory(
+            Map<String, Double> rateByClassname, ProviderRateLimiterFactory fallback) {
         this.rateByClassname = ImmutableMap.copyOf(Preconditions.checkNotNull(rateByClassname));
         this.fallback = Preconditions.checkNotNull(fallback);
     }
@@ -31,13 +31,13 @@ public class OverridingProviderRateLimiterFactory implements ProviderRateLimiter
         }
 
         return fallback.buildFor(providerClassName);
-
     }
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("rateByClassname", rateByClassname).add("fallback", fallback)
+        return MoreObjects.toStringHelper(this)
+                .add("rateByClassname", rateByClassname)
+                .add("fallback", fallback)
                 .toString();
     }
-
 }

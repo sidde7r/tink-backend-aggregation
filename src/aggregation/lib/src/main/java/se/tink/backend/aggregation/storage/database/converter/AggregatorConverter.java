@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.storage.database.models.AggregatorConfigurati
 public class AggregatorConverter {
 
     public static AggregatorInfo convert(AggregatorConfiguration aggregatorConfiguration) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(aggregatorConfiguration.getAggregatorInfo()),
-                "Could not find aggregator identifier value for aggregator id %s.", aggregatorConfiguration.getAggregatorId());
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(aggregatorConfiguration.getAggregatorInfo()),
+                "Could not find aggregator identifier value for aggregator id %s.",
+                aggregatorConfiguration.getAggregatorId());
         AggregatorInfo aggregatorInfo = new AggregatorInfo();
 
         aggregatorInfo.setAggregatorIdentifier(aggregatorConfiguration.getAggregatorInfo());

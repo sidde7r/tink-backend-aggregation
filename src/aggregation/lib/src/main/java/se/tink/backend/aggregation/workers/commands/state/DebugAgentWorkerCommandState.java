@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.workers.commands.state;
 
+import java.io.File;
 import java.util.Objects;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-
-import java.io.File;
 import se.tink.backend.aggregation.configuration.AggregationWorkerConfiguration;
 
 public class DebugAgentWorkerCommandState {
@@ -60,8 +59,10 @@ public class DebugAgentWorkerCommandState {
                 log.info("Log directory was created: " + this.debugDirectory.getAbsolutePath());
             }
         } catch (Exception e) {
-            throw new RuntimeException("Could not make sure log directory was created: "
-                    + this.debugDirectory.getAbsolutePath(), e);
+            throw new RuntimeException(
+                    "Could not make sure log directory was created: "
+                            + this.debugDirectory.getAbsolutePath(),
+                    e);
         }
 
         return this.debugDirectory;
