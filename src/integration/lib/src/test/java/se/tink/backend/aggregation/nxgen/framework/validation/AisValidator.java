@@ -51,8 +51,8 @@ public final class AisValidator {
     public void validate(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
-            final IdentityData customerInfo) {
-        validate(new AisData(accounts, transactions, customerInfo));
+            final IdentityData identityData) {
+        validate(new AisData(accounts, transactions, identityData));
     }
 
     public void validate(final AisData aisData) {
