@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
+import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
@@ -28,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class LaCaixaAgent extends NextGenerationAgent {
+public class LaCaixaAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
 
     private final LaCaixaApiClient apiClient;
 
@@ -106,7 +108,8 @@ public class LaCaixaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<CustomerInfoFetcher> constructCustomerInfoFetcher() {
-        return Optional.of(new LaCaixaIdentityDataFetcher(apiClient));
+    public FetchCustomerInfoResponse fetchCustomerInfo() {
+        final CustomerInfoFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
+        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
     }
 }
