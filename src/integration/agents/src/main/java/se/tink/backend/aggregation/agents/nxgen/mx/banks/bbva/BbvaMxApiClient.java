@@ -178,7 +178,9 @@ public class BbvaMxApiClient {
                         BbvaMxConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
                         storage.get(BbvaMxConstants.STORAGE.DEVICE_IDENTIFIER));
         HttpResponse response =
-                getGlomoRequest(BbvaMxConstants.URLS.CUSTOMER_IDENTITY_DATA, MediaType.APPLICATION_JSON)
+                getGlomoRequest(
+                                BbvaMxConstants.URLS.CUSTOMER_IDENTITY_DATA,
+                                MediaType.APPLICATION_JSON)
                         .header(
                                 BbvaMxConstants.HEADERS.AUTHENTICATION_TYPE,
                                 BbvaMxConstants.HEADERS.AUTHENTICATION_TYPE_VALUE)
