@@ -11,7 +11,7 @@ public final class AisData {
     private final Collection<Transaction> transactions;
     private final IdentityData identityData;
 
-    public AisData(
+    AisData(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
             final IdentityData identityData) {
