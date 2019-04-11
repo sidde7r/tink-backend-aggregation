@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import java.text.SimpleDateFormat;
 
 public class ICSConstants {
+
     public static final String INTEGRATION_NAME = "icsConfiguration";
 
-    public static final class URL {
+    public static final class Urls {
         public static final String AUTH_BASE = "https://auth.vvwpgvhh.icscards.nl";
         public static final String BASE = "https://api.vvwpgvhh.icscards.nl";
         public static final String ACCOUNT_SETUP = "/1/api/open-banking/v1.0/account-requests";
@@ -18,7 +20,7 @@ public class ICSConstants {
         public static final String OAUTH_TOKEN = "/openbanking-oauth-tokenv1/token";
     }
 
-    public static final class Query {
+    public static final class QueryKeys {
         public static final String ACCOUNT_REQUEST_ID = "AccountRequestId";
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
@@ -29,15 +31,23 @@ public class ICSConstants {
         public static final String RESPONSE_TYPE = "response_type";
         public static final String AUTH_CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
+    }
 
+    public static final class QueryValues {
         public static final String SCOPE_ACCOUNTS = "accounts";
-        public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
-        public static final String GRANT_TYPE_AUTH_CODE = "authorization_code";
-        public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
         public static final String RESPONSE_TYPE_CODE = "code";
     }
 
-    public static final class Headers {
+    public enum OAuthGrantTypes {
+        @JsonProperty("client_credentials")
+        CLIENT_CREDENTIALS,
+        @JsonProperty("authorization_code")
+        AUTHORIZATION_CODE,
+        @JsonProperty("refresh_token")
+        REFRESH_TOKEN,
+    }
+
+    public static final class HeaderKeys {
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
 
@@ -79,11 +89,20 @@ public class ICSConstants {
                         READ_TRANSACTIONS_DEBITS);
     }
 
-    public static final class Storage {
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIGURATION =
+                "Invalid Configuration: %s cannot be empty or null";
+        public static final String MISSING_BALANCE = "No balance available";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MISSING_TOKEN = "Cannot find OAuth token.";
+        public static final String MISSING_STATE = "OAuth state cannot be null or empty.";
+        public static final String MISSING_PERMISSIONS = "Did not receive all permissions";
+    }
+
+    public static final class StorageKeys {
         public static final String STATE = "state";
         public static final String TOKEN = "token";
         public static final String ACCOUNT_ID = "accountId";
-        public static final String ICS_CONFIGURATION = "icsConfiguration";
     }
 
     public static final class Date {

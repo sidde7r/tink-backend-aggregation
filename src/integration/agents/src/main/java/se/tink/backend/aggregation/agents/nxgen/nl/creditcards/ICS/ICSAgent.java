@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
@@ -29,7 +30,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ICSAgent extends NextGenerationAgent {
 
-    private final ICSApiClient icsApiClient;
+    private final ICSApiClient apiClient;
     private final String clientName;
     private final String redirectUri;
 
@@ -38,7 +39,7 @@ public class ICSAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
-        icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
+        apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
     }
 
     @Override
@@ -50,17 +51,7 @@ public class ICSAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        ICSConfiguration icsConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No ICS client configured for name: %s",
-                                                        clientName)));
+        final ICSConfiguration icsConfiguration = getClientConfiguration();
 
         client.setSslClientCertificate(
                 EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");
@@ -68,15 +59,25 @@ public class ICSAgent extends NextGenerationAgent {
                 EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
                 icsConfiguration.getRootCAPassword());
 
-        persistentStorage.put(ICSConstants.Storage.ICS_CONFIGURATION, icsConfiguration);
+        apiClient.setConfiguration(icsConfiguration);
+    }
+
+    public ICSConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        ICSOAuthAuthenticator authenticator = new ICSOAuthAuthenticator(icsApiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new ICSOAuthAuthenticator(apiClient, sessionStorage));
+
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
@@ -97,11 +98,11 @@ public class ICSAgent extends NextGenerationAgent {
                 new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
-                        new ICSAccountFetcher(icsApiClient),
+                        new ICSAccountFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
-                                        new ICSCreditCardFetcher(icsApiClient), 0),
+                                        new ICSCreditCardFetcher(apiClient), 0),
                                 null)));
     }
 

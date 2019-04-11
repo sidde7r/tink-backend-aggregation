@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.BalanceDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.entities.LinksEntity;
@@ -19,29 +23,31 @@ public class CreditBalanceResponse {
     @JsonProperty("Meta")
     private MetaEntity meta;
 
-    public Amount getBalance(String accountId) { // TODO: verify if there can be more than 1
-        BalanceEntity balance =
-                data.getBalance().stream()
-                        .filter(
-                                balanceEntity ->
-                                        balanceEntity.getAccountId().equalsIgnoreCase(accountId))
-                        .findFirst()
-                        .get();
+    // TODO: verify if there can be more than 1 accountId
+
+    public Amount toTinkBalanceAmount(String accountId) {
+        final BalanceEntity balance = getBalance(accountId);
+
         return new Amount(
                 balance.getBalanceEntity().getCurrency(),
                 Double.parseDouble(balance.getBalanceEntity().getAmount()));
     }
 
-    public Amount getAvailableCredit(String accountId) { // TODO: verify if there can be more than 1
-        BalanceEntity balance =
-                data.getBalance().stream()
-                        .filter(
-                                balanceEntity ->
-                                        balanceEntity.getAccountId().equalsIgnoreCase(accountId))
-                        .findFirst()
-                        .get();
+    public Amount toTinkAvailableCreditAmount(String accountId) {
+        final BalanceEntity balance = getBalance(accountId);
+
         return new Amount(
                 balance.getBalanceEntity().getCurrency(),
                 Double.parseDouble(balance.getBalanceEntity().getAvailableLimit()));
+    }
+
+    public BalanceEntity getBalance(String accountId) {
+        return Optional.ofNullable(data)
+                .map(BalanceDataEntity::getBalance)
+                .map(Collection::stream)
+                .orElse(Stream.empty())
+                .filter(balanceEntity -> balanceEntity.getAccountId().equalsIgnoreCase(accountId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));
     }
 }
