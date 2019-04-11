@@ -55,11 +55,13 @@ public class RabobankAgent extends NextGenerationAgent {
     }
 
     public RabobankConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        // TODO: Remove once https://tinkab.atlassian.net/browse/MIYAG-350 is resolved
+        return new RabobankConfiguration();
+        //return configuration
+        //        .getIntegrations()
+        //        .getClientConfiguration(
+        //                RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
+        //        .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
