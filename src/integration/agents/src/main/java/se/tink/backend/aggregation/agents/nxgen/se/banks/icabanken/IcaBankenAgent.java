@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import java.util.Optional;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IcaBankenAgent extends NextGenerationAgent {
@@ -38,11 +38,13 @@ public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
 
-    public IcaBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IcaBankenAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
         this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
-        this.apiClient = new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
+        this.apiClient =
+                new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
     }
 
     @Override
@@ -52,79 +54,77 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(supplementalRequester,
-                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage, icaBankenPersistentStorage));
+        return new BankIdAuthenticationController<>(
+                supplementalRequester,
+                new IcaBankenBankIdAuthenticator(
+                        apiClient, icaBankenSessionStorage, icaBankenPersistentStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         IcaBankenTransactionalAccountsFetcher transactionalAccountFetcher =
                 new IcaBankenTransactionalAccountsFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(
+        return Optional.of(
+                new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         transactionalAccountFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(transactionalAccountFetcher),
-                                transactionalAccountFetcher)
-                )
-        );
+                                new TransactionKeyPaginationController<>(
+                                        transactionalAccountFetcher),
+                                transactionalAccountFetcher)));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         IcaBankenCreditCardFetcher creditCardFetcher = new IcaBankenCreditCardFetcher(apiClient);
 
-        return Optional.of(new CreditCardRefreshController(
+        return Optional.of(
+                new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
                         creditCardFetcher,
-                        new TransactionFetcherController<>(transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(creditCardFetcher))
-                )
-        );
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(creditCardFetcher))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(
+        return Optional.of(
+                new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenInvestmentFetcher(apiClient)
-                )
-        );
+                        new IcaBankenInvestmentFetcher(apiClient)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
 
-        return Optional.of(new LoanRefreshController(
+        return Optional.of(
+                new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new IcaBankenLoanFetcher(apiClient)
-                )
-        );
+                        new IcaBankenLoanFetcher(apiClient)));
     }
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
         IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
 
-        return Optional.of(new EInvoiceRefreshController(
-                        metricRefreshController,
-                        eInvoiceFetcher)
-        );
+        return Optional.of(new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher));
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.of(new TransferDestinationRefreshController(
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
+        return Optional.of(
+                new TransferDestinationRefreshController(
                         metricRefreshController,
-                        new IcaBankenTransferDestinationFetcher(apiClient)
-                )
-        );
+                        new IcaBankenTransferDestinationFetcher(apiClient)));
     }
 
     @Override
@@ -134,16 +134,15 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        IcaBankenExecutorHelper executorHelper = new IcaBankenExecutorHelper(apiClient, context, catalog,
-                supplementalInformationHelper);
+        IcaBankenExecutorHelper executorHelper =
+                new IcaBankenExecutorHelper(
+                        apiClient, context, catalog, supplementalInformationHelper);
 
         return Optional.of(
                 new TransferController(
                         new IcaBankenPaymentExecutor(apiClient, executorHelper),
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
                         new IcaBankenEInvoiceExecutor(apiClient, executorHelper, catalog),
-                        null
-                )
-        );
+                        null));
     }
 }

@@ -19,8 +19,6 @@ public class PendingEInvoicesResponse extends BaseResponse {
     }
 
     public List<Transfer> toTinkTransfers() {
-        return getEinvoiceStream()
-                .map(EInvoice::toTinkTransfer)
-                .collect(Collectors.toList());
+        return getEinvoiceStream().map(EInvoice::toTinkTransfer).collect(Collectors.toList());
     }
 }

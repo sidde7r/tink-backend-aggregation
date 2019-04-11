@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class CreditCardsSEResponse extends CreditCardsResponse<HandelsbankenSECreditCard> {
-//    private List<HandelsbankenSECreditCard> cards;
+    //    private List<HandelsbankenSECreditCard> cards;
 
     public List<CreditCardAccount> toTinkAccounts(HandelsbankenSEApiClient client) {
         return cards.stream()

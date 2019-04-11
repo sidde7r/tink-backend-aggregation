@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class KdkEntity {
     @JsonProperty("MustUpdate")
     private boolean mustUpdate;
+
     @JsonProperty("PostponesLeft")
     private int postponesLeft;
 

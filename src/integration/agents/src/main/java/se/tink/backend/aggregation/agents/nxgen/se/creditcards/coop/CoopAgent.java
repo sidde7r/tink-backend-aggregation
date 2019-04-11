@@ -26,59 +26,52 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class CoopAgent extends NextGenerationAgent {
     private final CoopApiClient apiClient;
 
-    public CoopAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CoopAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new CoopApiClient(client, sessionStorage);
         sessionStorage.put(CoopConstants.Storage.CREDENTIALS_ID, credentials.getId());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new CoopPasswordAuthenticator(apiClient, sessionStorage, credentials)
-        );
+                new CoopPasswordAuthenticator(apiClient, sessionStorage, credentials));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        CoopTransactionalAccountFetcher accountFetcher = new CoopTransactionalAccountFetcher(apiClient, sessionStorage);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        CoopTransactionalAccountFetcher accountFetcher =
+                new CoopTransactionalAccountFetcher(apiClient, sessionStorage);
 
-        TransactionalAccountRefreshController accountRefreshController = new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                accountFetcher,
-                                0
-                        )
-                )
-        );
+        TransactionalAccountRefreshController accountRefreshController =
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(accountFetcher, 0)));
         return Optional.of(accountRefreshController);
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        CoopCreditCardFetcher creditCardFetcher = new CoopCreditCardFetcher(apiClient, sessionStorage);
+        CoopCreditCardFetcher creditCardFetcher =
+                new CoopCreditCardFetcher(apiClient, sessionStorage);
 
-        CreditCardRefreshController creditCardRefreshController = new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
-                                creditCardFetcher,
-                                0
-                        )
-                )
-        );
+        CreditCardRefreshController creditCardRefreshController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(creditCardFetcher, 0)));
         return Optional.of(creditCardRefreshController);
     }
 
@@ -98,7 +91,8 @@ public class CoopAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

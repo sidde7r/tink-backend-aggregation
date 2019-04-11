@@ -102,11 +102,12 @@ public class AccountEntity {
 
     public SavingsAccount toTinkAccount() {
         return SavingsAccount.builder()
-            .setUniqueIdentifier(accountNumber.toLowerCase())
+                .setUniqueIdentifier(accountNumber.toLowerCase())
                 .setAccountNumber(accountNumber)
                 .setBalance(Amount.inSEK(balance))
                 .setAlias(getAccountName())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, accountNumber))
+                .addAccountIdentifier(
+                        AccountIdentifier.create(AccountIdentifier.Type.SE, accountNumber))
                 .build();
     }
 }

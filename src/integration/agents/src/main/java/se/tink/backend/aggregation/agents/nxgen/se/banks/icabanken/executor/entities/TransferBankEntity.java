@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransferBankEntity {
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("TransferBankId")
     private String transferBankId;
 

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InterestsEntity {
     @JsonProperty("Accrued")
     private double accrued;
+
     @JsonProperty("Interest")
     private double interest;
 

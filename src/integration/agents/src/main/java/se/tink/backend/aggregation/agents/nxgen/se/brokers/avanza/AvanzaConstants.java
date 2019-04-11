@@ -100,9 +100,11 @@ public class AvanzaConstants {
         private static final String INVESTMENT_PORTFOLIO_POSITIONS =
                 ACCOUNT + "/{accountId}/positions?autoPortfolio=1&sort=name";
         private static final String TRANSACTIONS = ACCOUNT + "/transactions";
-        private static final String TRANSACTIONS_LIST = TRANSACTIONS + "/{accountId}?from={fromDate}&to={toDate}";
+        private static final String TRANSACTIONS_LIST =
+                TRANSACTIONS + "/{accountId}?from={fromDate}&to={toDate}";
         private static final String INVESTMENT_TRANSACTIONS_LIST =
-                TRANSACTIONS + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
+                TRANSACTIONS
+                        + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
 
         public static String LOGOUT(String authSession) {
             return new UriTemplate(LOGOUT).createURI(authSession);
@@ -140,8 +142,10 @@ public class AvanzaConstants {
             return new UriTemplate(TRANSACTIONS_LIST).createURI(accountId, fromDate, toDate);
         }
 
-        public static String INVESTMENT_TRANSACTIONS_LIST(String accountId, String fromDate, String toDate) {
-            return new UriTemplate(INVESTMENT_TRANSACTIONS_LIST).createURI(accountId, fromDate, toDate);
+        public static String INVESTMENT_TRANSACTIONS_LIST(
+                String accountId, String fromDate, String toDate) {
+            return new UriTemplate(INVESTMENT_TRANSACTIONS_LIST)
+                    .createURI(accountId, fromDate, toDate);
         }
     }
 

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AcceptEInvoiceTransferRequest {
     @JsonProperty("DebitAccountId")
     private String debitAccountId;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 

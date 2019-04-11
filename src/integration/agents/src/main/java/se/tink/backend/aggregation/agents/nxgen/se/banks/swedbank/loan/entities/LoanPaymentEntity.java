@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanPaymentEntity {
     private String description;
     private List<DescriptiveAmountEntity> amounts;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDay;
+
     private String totalAmount;
 
     public String getDescription() {

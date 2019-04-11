@@ -31,8 +31,7 @@ public class HandelsbankenSEUpcomingTransactionFetcher
     private Map<String, List<Amount>> todaysTransactionAmountsByAccount = new HashMap<>();
 
     public HandelsbankenSEUpcomingTransactionFetcher(
-            HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
@@ -41,19 +40,26 @@ public class HandelsbankenSEUpcomingTransactionFetcher
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
 
-        return sessionStorage.applicationEntryPoint().map(applicationEntryPoint ->
-                {
-                    PendingTransactionsResponse pendingTransactions = client
-                            .pendingTransactions(applicationEntryPoint);
+        return sessionStorage
+                .applicationEntryPoint()
+                .map(
+                        applicationEntryPoint -> {
+                            PendingTransactionsResponse pendingTransactions =
+                                    client.pendingTransactions(applicationEntryPoint);
 
-                    return pendingTransactions.getPendingTransactionStream(account)
-                            .filter(pendingTransaction ->
-                                    filterUpcomingPresentAsTransaction(account, pendingTransaction))
-                            .map(transaction -> transaction
-                                    .toTinkTransaction(getTransferDetails(transaction)))
-                            .collect(Collectors.toList());
-                }
-        ).orElse(Collections.emptyList());
+                            return pendingTransactions
+                                    .getPendingTransactionStream(account)
+                                    .filter(
+                                            pendingTransaction ->
+                                                    filterUpcomingPresentAsTransaction(
+                                                            account, pendingTransaction))
+                                    .map(
+                                            transaction ->
+                                                    transaction.toTinkTransaction(
+                                                            getTransferDetails(transaction)))
+                                    .collect(Collectors.toList());
+                        })
+                .orElse(Collections.emptyList());
     }
 
     private Transfer getTransferDetails(PendingTransaction transaction) {
@@ -74,8 +80,8 @@ public class HandelsbankenSEUpcomingTransactionFetcher
      * positives, but that is accepted as it is only for a short period. After that the problem
      * will resolve itself.
      */
-    private boolean filterUpcomingPresentAsTransaction(TransactionalAccount account,
-            PendingTransaction upcomingTransaction) {
+    private boolean filterUpcomingPresentAsTransaction(
+            TransactionalAccount account, PendingTransaction upcomingTransaction) {
 
         List<Amount> todaysAmounts = fetchTodaysTransactionAmounts(account);
         return todaysAmounts.stream()
@@ -88,12 +94,13 @@ public class HandelsbankenSEUpcomingTransactionFetcher
             return todaysTransactionAmountsByAccount.get(account.getAccountNumber());
         }
 
-        List<Amount> amounts = findAccount(account)
-                .map(client::transactions)
-                .map(TransactionsSEResponse::getTodaysTransactions)
-                .orElse(Stream.empty())
-                .map(HandelsbankenSETransaction::positiveAmount)
-                .collect(Collectors.toList());
+        List<Amount> amounts =
+                findAccount(account)
+                        .map(client::transactions)
+                        .map(TransactionsSEResponse::getTodaysTransactions)
+                        .orElse(Stream.empty())
+                        .map(HandelsbankenSETransaction::positiveAmount)
+                        .collect(Collectors.toList());
 
         todaysTransactionAmountsByAccount.put(account.getAccountNumber(), amounts);
 
@@ -101,7 +108,6 @@ public class HandelsbankenSEUpcomingTransactionFetcher
     }
 
     private Optional<? extends HandelsbankenAccount> findAccount(TransactionalAccount account) {
-        return sessionStorage.accountList()
-                .flatMap(accountList -> accountList.find(account));
+        return sessionStorage.accountList().flatMap(accountList -> accountList.find(account));
     }
 }

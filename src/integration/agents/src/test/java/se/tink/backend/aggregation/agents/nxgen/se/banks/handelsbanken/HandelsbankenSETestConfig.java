@@ -14,8 +14,7 @@ public class HandelsbankenSETestConfig {
     public static final PersistentStorage PERSISTENT_STORAGE = new PersistentStorage();
 
     static {
-        PERSISTENT_STORAGE.put(HandelsbankenConstants.Storage.PRIVATE_KEY,
-                "");
+        PERSISTENT_STORAGE.put(HandelsbankenConstants.Storage.PRIVATE_KEY, "");
         PERSISTENT_STORAGE.put(HandelsbankenConstants.Storage.PROFILE_ID, "");
         PERSISTENT_STORAGE.put(HandelsbankenConstants.Storage.DEVICE_SECURITY_CONTEXT_ID, "");
     }

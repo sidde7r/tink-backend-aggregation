@@ -42,8 +42,8 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String holderName;
     private boolean isCard;
 
-    public Optional<TransactionalAccount> toTransactionalAccount(HandelsbankenApiClient client,
-            TransactionsSEResponse transactionsResponse) {
+    public Optional<TransactionalAccount> toTransactionalAccount(
+            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
         if (isCreditCard()) {
             return Optional.empty();
         }
@@ -53,17 +53,19 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         final String accountNumber = getAccountNumber(transactionsResponse);
         AccountTypes accountType = getAccountType(client, transactionsResponse);
 
-        return Optional.of(TransactionalAccount.builder(accountType, number, findBalanceAmount().asAmount())
-                .setHolderName(new HolderName(holderName))
-                .setBankIdentifier(number)
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .addIdentifier(new SwedishIdentifier(accountNumber))
-                .addIdentifier(new SwedishSHBInternalIdentifier(number))
-                .build());
+        return Optional.of(
+                TransactionalAccount.builder(accountType, number, findBalanceAmount().asAmount())
+                        .setHolderName(new HolderName(holderName))
+                        .setBankIdentifier(number)
+                        .setAccountNumber(accountNumber)
+                        .setName(name)
+                        .addIdentifier(new SwedishIdentifier(accountNumber))
+                        .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                        .build());
     }
 
-    public Optional<CreditCardAccount> toCreditCardAccount(TransactionsSEResponse transactionsResponse) {
+    public Optional<CreditCardAccount> toCreditCardAccount(
+            TransactionsSEResponse transactionsResponse) {
         if (!isCreditCard()) {
             return Optional.empty();
         }
@@ -74,26 +76,32 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         CardInvoiceInfo cardInvoiceInfo = transactionsResponse.getCardInvoiceInfo();
 
-        return Optional.of(CreditCardAccount.builder(number)
-                .setAvailableCredit(cardInvoiceInfo.getCredit().asAmount())
-                .setHolderName(new HolderName(holderName))
-                .setBalance(new Amount(balance.getCurrency(), calculateBalance(transactionsResponse)))
-                .setBankIdentifier(number)
-                .setAccountNumber(accountNumber)
-                .setName(name)
-                .addIdentifier(new SwedishIdentifier(accountNumber))
-                .addIdentifier(new SwedishSHBInternalIdentifier(number))
-                .build());
+        return Optional.of(
+                CreditCardAccount.builder(number)
+                        .setAvailableCredit(cardInvoiceInfo.getCredit().asAmount())
+                        .setHolderName(new HolderName(holderName))
+                        .setBalance(
+                                new Amount(
+                                        balance.getCurrency(),
+                                        calculateBalance(transactionsResponse)))
+                        .setBankIdentifier(number)
+                        .setAccountNumber(accountNumber)
+                        .setName(name)
+                        .addIdentifier(new SwedishIdentifier(accountNumber))
+                        .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                        .build());
     }
 
     private String getAccountNumber(TransactionsSEResponse transactionsResponse) {
-        // Clearing number is not set in the account listing, only in the account we receive when we fetch
+        // Clearing number is not set in the account listing, only in the account we receive when we
+        // fetch
         // transactions.
         HandelsbankenSEAccount transactionsAccount = transactionsResponse.getAccount();
         return transactionsAccount.getClearingNumber() + "-" + numberFormatted;
     }
 
-    private AccountTypes getAccountType(HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
+    private AccountTypes getAccountType(
+            HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
         String accountTypeName = "";
         AccountInfoResponse accountInfo = null;
 
@@ -102,8 +110,12 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
             if (accountInfoURL.isPresent()) {
                 accountInfo = client.accountInfo(accountInfoURL.get());
 
-                accountTypeName = accountInfo.getValuesByLabel()
-                        .getOrDefault(HandelsbankenSEConstants.Fetcher.ACCOUNT_TYPE_NAME_LABEL, name);
+                accountTypeName =
+                        accountInfo
+                                .getValuesByLabel()
+                                .getOrDefault(
+                                        HandelsbankenSEConstants.Fetcher.ACCOUNT_TYPE_NAME_LABEL,
+                                        name);
             }
         } catch (Exception e) {
             LOG.info("Unable to fetch account info " + e.getMessage());
@@ -115,32 +127,36 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                         .orElse(AccountTypes.OTHER);
         // log unknown account types
         if (accountType == AccountTypes.OTHER && accountInfo != null) {
-            LOG.info(String.format("%s %s",
-                    HandelsbankenSEConstants.Fetcher.Accounts.UNKNOWN_ACCOUNT_TYPE,
-                    SerializationUtils.serializeToString(accountInfo)));
+            LOG.info(
+                    String.format(
+                            "%s %s",
+                            HandelsbankenSEConstants.Fetcher.Accounts.UNKNOWN_ACCOUNT_TYPE,
+                            SerializationUtils.serializeToString(accountInfo)));
         }
 
         if (accountType == AccountTypes.OTHER) {
-            accountType = HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
-                    .translate(Strings.nullToEmpty(name).toLowerCase())
-                    .orElse(AccountTypes.OTHER);
-
+            accountType =
+                    HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
+                            .translate(Strings.nullToEmpty(name).toLowerCase())
+                            .orElse(AccountTypes.OTHER);
         }
 
         return accountType;
     }
 
     /**
-     * 1. Some account have credit some does not. If there is credit,
-     * subtract that from amountAvailable (disponibeltbelopp).
-     * 2. If no credit but an available amount, use that.
-     * 3. Default to balance which always exists.
+     * 1. Some account have credit some does not. If there is credit, subtract that from
+     * amountAvailable (disponibeltbelopp). 2. If no credit but an available amount, use that. 3.
+     * Default to balance which always exists.
      */
     private double calculateBalance(TransactionsSEResponse transactionsResponse) {
         CardInvoiceInfo cardInvoiceInfo = transactionsResponse.getCardInvoiceInfo();
 
-        if (cardInvoiceInfo != null && cardInvoiceInfo.getCredit() != null && this.amountAvailable != null) {
-            return this.amountAvailable.getAmount() - cardInvoiceInfo.getCredit().getAmountFormatted();
+        if (cardInvoiceInfo != null
+                && cardInvoiceInfo.getCredit() != null
+                && this.amountAvailable != null) {
+            return this.amountAvailable.getAmount()
+                    - cardInvoiceInfo.getCredit().getAmountFormatted();
         } else if (this.amountAvailable != null) {
             return this.amountAvailable.getAmount();
         }

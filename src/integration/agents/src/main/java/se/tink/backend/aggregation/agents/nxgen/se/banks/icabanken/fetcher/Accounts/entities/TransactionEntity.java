@@ -13,30 +13,39 @@ import se.tink.libraries.amount.Amount;
 public class TransactionEntity {
     @JsonProperty("Key")
     private String key;
+
     @JsonProperty("MemoText")
     private String memoText;
+
     @JsonProperty("PostedDate")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date postedDate;
+
     @JsonProperty("PostedDateTime")
     private String postedDateTime;
+
     @JsonProperty("MerchantType")
     private String merchantType;
+
     @JsonDouble
     @JsonProperty("Amount")
     private double amount;
+
     @JsonDouble
     @JsonProperty("AccountBalance")
     private double accountBalance;
+
     @JsonProperty("Type")
     private String type;
+
     @JsonProperty("HasDetails")
     private boolean hasDetails;
+
     @JsonProperty("Details")
     private DetailsEntity details;
 
     @JsonIgnore
-    public Transaction toTinkTransaction(){
+    public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(Amount.inSEK(amount))
                 .setDate(postedDate)

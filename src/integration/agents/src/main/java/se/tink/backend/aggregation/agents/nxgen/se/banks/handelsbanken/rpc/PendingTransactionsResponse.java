@@ -12,8 +12,7 @@ public class PendingTransactionsResponse extends BaseResponse {
     private List<TransactionGroup> transactionGroups;
 
     public Stream<PendingTransaction> getPendingTransactionStream() {
-        return transactionGroups.stream()
-                .flatMap(TransactionGroup::getPendingTransactionStream);
+        return transactionGroups.stream().flatMap(TransactionGroup::getPendingTransactionStream);
     }
 
     public Stream<PendingTransaction> getPendingTransactionStream(Account account) {

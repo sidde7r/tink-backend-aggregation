@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum IcaSourceType {
-
-    PAYMENT("PaymentFrom"), TRANSFER("TransferFrom");
+    PAYMENT("PaymentFrom"),
+    TRANSFER("TransferFrom");
 
     private List<String> sourceType;
 

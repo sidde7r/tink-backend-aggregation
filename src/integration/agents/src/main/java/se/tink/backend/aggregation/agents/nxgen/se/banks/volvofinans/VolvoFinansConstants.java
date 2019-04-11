@@ -6,18 +6,20 @@ public class VolvoFinansConstants {
 
     public static final class Urls {
         public static final String ENTRY_POINT = "https://api.volvofinans.se";
-        public static final URL LOGIN_BANKID_INIT = new URL(ENTRY_POINT + "/v1/identifiering/bankid");
-        public static final URL LOGIN_BANKID_POLL = new URL(ENTRY_POINT + "/v1/identifiering/{identificationId}");
+        public static final URL LOGIN_BANKID_INIT =
+                new URL(ENTRY_POINT + "/v1/identifiering/bankid");
+        public static final URL LOGIN_BANKID_POLL =
+                new URL(ENTRY_POINT + "/v1/identifiering/{identificationId}");
         public static final URL LOGOUT = new URL(ENTRY_POINT + "/v1/identifiering");
         public static final URL CUSTOMER = new URL(ENTRY_POINT + "/v1/kund");
 
         public static final URL CREDIT_CARD_ACCOUNTS = new URL(ENTRY_POINT + "/v2/kortkonton");
         public static final URL SAVINGS_ACCOUNTS = new URL(ENTRY_POINT + "/v1/sparkonton");
 
-        public static final URL CREDIT_CARD_ACCOUNTS_TRANSACTIONS = new URL(ENTRY_POINT
-                + "/v1/kortkonton/{accountId}/transaktioner");
-        public static final URL SAVINGS_ACCOUNTS_TRANSACTIONS = new URL(ENTRY_POINT
-                + "/v1/sparkonton/{accountId}/transaktioner");
+        public static final URL CREDIT_CARD_ACCOUNTS_TRANSACTIONS =
+                new URL(ENTRY_POINT + "/v1/kortkonton/{accountId}/transaktioner");
+        public static final URL SAVINGS_ACCOUNTS_TRANSACTIONS =
+                new URL(ENTRY_POINT + "/v1/sparkonton/{accountId}/transaktioner");
     }
 
     public static final class UrlParameters {
@@ -72,4 +74,3 @@ public class VolvoFinansConstants {
         public static final String ALREADY_IN_PROGRESS = "already in progress";
     }
 }
-

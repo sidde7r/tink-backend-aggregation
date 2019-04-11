@@ -12,8 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BankIdResponse extends BaseResponse<BankIdBodyEntity> {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(BankIdResponse.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(BankIdResponse.class);
 
     public BankIdStatus getBankIdStatus() {
         String status = Preconditions.checkNotNull(getBody().getStatus(), "BankID status was null");

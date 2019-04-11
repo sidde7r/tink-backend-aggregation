@@ -14,22 +14,22 @@ public class HandelsbankenSEAccountTransactionPaginator
     private final HandelsbankenSessionStorage sessionStorage;
 
     public HandelsbankenSEAccountTransactionPaginator(
-            HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account,
-            int numberOfTransactions, int startIndex) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, int numberOfTransactions, int startIndex) {
 
         // SHB sends all transaction in one request, do not try to fetch another batch
         if (startIndex > 0) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
-        return sessionStorage.accountList()
+        return sessionStorage
+                .accountList()
                 .flatMap(accountList -> accountList.find(account))
                 .map(client::transactions)
                 .orElse(null);

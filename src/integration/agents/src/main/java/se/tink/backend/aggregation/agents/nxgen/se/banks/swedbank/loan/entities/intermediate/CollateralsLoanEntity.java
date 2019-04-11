@@ -22,7 +22,8 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
         super(loanDetails, loanOverview);
     }
 
-    protected static CollateralsLoanEntity create(LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
+    protected static CollateralsLoanEntity create(
+            LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
         return new CollateralsLoanEntity(loanDetails, loanOverview);
     }
 
@@ -53,9 +54,9 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
                 .build();
     }
 
-
     protected int getNumMonthsBound() {
-        return loanDetails.map(LoanDetailsAccountEntity::getFixedInterestPeriod)
+        return loanDetails
+                .map(LoanDetailsAccountEntity::getFixedInterestPeriod)
                 .map(SwedbankSeSerializationUtils::parseNumMonthsBound)
                 .orElse(0);
     }
@@ -65,8 +66,9 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
     }
 
     private String getSecurity() {
-        return loanDetails.map(LoanDetailsAccountEntity::getCollaterals).orElseGet(Collections::emptyList)
-                .stream().map(CollateralsEntity::getDescription)
+        return loanDetails.map(LoanDetailsAccountEntity::getCollaterals)
+                .orElseGet(Collections::emptyList).stream()
+                .map(CollateralsEntity::getDescription)
                 .collect(Collectors.joining(","));
     }
 }

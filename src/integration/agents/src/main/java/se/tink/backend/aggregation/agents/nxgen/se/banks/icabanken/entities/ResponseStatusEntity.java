@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ResponseStatusEntity {
     @JsonProperty("Code")
     private int code;
+
     @JsonProperty("ServerMessage")
     private String serverMessage;
+
     @JsonProperty("ClientMessage")
     private String clientMessage;
 
@@ -28,25 +30,33 @@ public class ResponseStatusEntity {
 
     @JsonIgnore
     public boolean isNotACustomer() {
-        return serverMessage != null &&
-                serverMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.NOT_A_CUSTOMER);
+        return serverMessage != null
+                && serverMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.BankIdStatus.NOT_A_CUSTOMER);
     }
 
     @JsonIgnore
     public boolean isInterrupted() {
-        return serverMessage != null &&
-                serverMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.INTERRUPTED);
+        return serverMessage != null
+                && serverMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.BankIdStatus.INTERRUPTED);
     }
 
     @JsonIgnore
     public boolean isNotVerified() {
-        return clientMessage != null &&
-                clientMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.NOT_VERIFIED);
+        return clientMessage != null
+                && clientMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.BankIdStatus.NOT_VERIFIED);
     }
 
     @JsonIgnore
     public boolean isSomethingWentWrong() {
-        return clientMessage != null &&
-                clientMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.SOMETHING_WENT_WRONG);
+        return clientMessage != null
+                && clientMessage
+                        .toLowerCase()
+                        .contains(IcaBankenConstants.BankIdStatus.SOMETHING_WENT_WRONG);
     }
 }

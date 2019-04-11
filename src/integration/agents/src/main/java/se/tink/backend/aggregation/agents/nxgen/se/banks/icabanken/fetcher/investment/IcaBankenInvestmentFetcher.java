@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.DepotEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.entities.FundDetailsBodyEntity;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inves
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final IcaBankenApiClient apiClient;
@@ -58,8 +58,10 @@ public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAcco
     private List<Instrument> getInstruments(List<FundHoldingsEntity> holdings) {
         List<Instrument> instruments = new ArrayList<>();
 
-        holdings.forEach(holdingEntity -> {
-                    FundDetailsBodyEntity fundDetails = apiClient.getFundDetails(holdingEntity.getFundId());
+        holdings.forEach(
+                holdingEntity -> {
+                    FundDetailsBodyEntity fundDetails =
+                            apiClient.getFundDetails(holdingEntity.getFundId());
                     fundDetails.toInstrument(holdingEntity).ifPresent(instruments::add);
                 });
 

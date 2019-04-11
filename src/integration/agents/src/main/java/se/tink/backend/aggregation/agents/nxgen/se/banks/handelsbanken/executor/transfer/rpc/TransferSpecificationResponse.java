@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 
-public class TransferSpecificationResponse extends BaseResponse implements ExecutorExceptionResolver.Messageable {
+public class TransferSpecificationResponse extends BaseResponse
+        implements ExecutorExceptionResolver.Messageable {
 
     private String status;
     private HandelsbankenSEPaymentAccount fromAccount;
@@ -20,7 +21,8 @@ public class TransferSpecificationResponse extends BaseResponse implements Execu
     }
 
     public Signable toSignable(ExecutorExceptionResolver exceptionResolver) {
-        return () -> searchLink(HandelsbankenConstants.URLS.Links.SIGNATURE)
+        return () ->
+                searchLink(HandelsbankenConstants.URLS.Links.SIGNATURE)
                         .orElseThrow(() -> exceptionResolver.asException(this));
     }
 

@@ -7,16 +7,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerEntity {
     @JsonProperty("DataWarehouseCustomerId")
     private String dataWarehouseCustomerId;
+
     @JsonProperty("ABCustomerId")
     private String aBCustomerId;
+
     @JsonProperty("UserInstallationId")
     private String userInstallationId;
+
     @JsonProperty("IsAbove16")
     private boolean isAbove16;
+
     @JsonProperty("IsAbove18")
     private boolean isAbove18;
+
     @JsonProperty("IsStudent")
     private boolean isStudent;
+
     @JsonProperty("Kdk")
     private KdkEntity kdk;
 

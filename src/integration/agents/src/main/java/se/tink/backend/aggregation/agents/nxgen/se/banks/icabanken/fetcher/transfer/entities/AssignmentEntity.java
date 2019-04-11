@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AssignmentEntity {
     @JsonProperty("Amount")
     private Double amount;
+
     @JsonProperty("RegistrationId")
     private String registrationId;
+
     @JsonProperty("IsRejected")
     private boolean rejected;
 

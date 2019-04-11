@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseRespo
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PaymentNameResponse extends BaseResponse<PaymentNameBodyEntity> {
-}
+public class PaymentNameResponse extends BaseResponse<PaymentNameBodyEntity> {}

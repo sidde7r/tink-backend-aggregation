@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PermissionsEntity {
     @JsonProperty("View")
     private String view;
+
     @JsonProperty("Update")
     private String update;
+
     @JsonProperty("Create")
     private String create;
+
     @JsonProperty("Delete")
     private String delete;
 

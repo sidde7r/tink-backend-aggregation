@@ -41,7 +41,8 @@ public class IcaBankenLoanParsingHelper {
     }
 
     public Date getNextDayOfTermsChange() {
-        String nextDayOfTermsChange = loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.NEXT_DAY_OF_TERMS_CHANGE);
+        String nextDayOfTermsChange =
+                loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.NEXT_DAY_OF_TERMS_CHANGE);
 
         if (Strings.isNullOrEmpty(nextDayOfTermsChange)) {
             return null;
@@ -85,7 +86,7 @@ public class IcaBankenLoanParsingHelper {
             return null;
         }
 
-       return Amount.inSEK(initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
+        return Amount.inSEK(initialDebt - AgentParsingUtils.parseAmountTrimCurrency(presentDebt));
     }
 
     private Double getInitialDebt() {
@@ -129,8 +130,8 @@ public class IcaBankenLoanParsingHelper {
     public boolean hasCoApplicant() {
         String applicants = getApplicants();
 
-        return !Strings.isNullOrEmpty(applicants) &&
-                applicants.contains(IcaBankenConstants.IdTags.SWEDISH_AND_SEPARATOR);
+        return !Strings.isNullOrEmpty(applicants)
+                && applicants.contains(IcaBankenConstants.IdTags.SWEDISH_AND_SEPARATOR);
     }
 
     public String getSecurity() {
@@ -138,15 +139,19 @@ public class IcaBankenLoanParsingHelper {
     }
 
     public Integer getNumMonthsBound() {
-        String periodDescription = loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.MONTH_BOUND);
+        String periodDescription =
+                loanDetailsMap.get(IcaBankenConstants.LoanDetailsKeys.MONTH_BOUND);
 
         if (!Strings.isNullOrEmpty(periodDescription)) {
             String cleanPeriodDescription = periodDescription.replace("-", " ");
 
-            Iterable<String> timeDescription = IcaBankenFormatUtils.WHITESPACE_SPLITTER.split(cleanPeriodDescription);
+            Iterable<String> timeDescription =
+                    IcaBankenFormatUtils.WHITESPACE_SPLITTER.split(cleanPeriodDescription);
             if (Iterables.size(timeDescription) == 3) {
                 return AgentParsingUtils.parseNumMonthsBound(
-                        Iterables.get(timeDescription, 1) + " " + Iterables.get(timeDescription, 2));
+                        Iterables.get(timeDescription, 1)
+                                + " "
+                                + Iterables.get(timeDescription, 2));
             }
         }
         return null;

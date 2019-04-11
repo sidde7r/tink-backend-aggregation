@@ -21,6 +21,7 @@ public class AvanzaAgentTest {
                         .saveCredentialsAfter(false)
                         .doLogout(true);
     }
+
     @Test
     public void testRefresh() throws Exception {
         builder.build().testRefresh();

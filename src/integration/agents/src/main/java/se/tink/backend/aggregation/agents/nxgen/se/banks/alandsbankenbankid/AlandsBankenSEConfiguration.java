@@ -27,8 +27,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
-    private static final Logger LOG = LoggerFactory.getLogger(
-            AlandsBankenSEConfiguration.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSEConfiguration.class);
 
     @Override
     public String getBaseUrl() {
@@ -57,8 +56,10 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
             accountHolderName = new HolderName(account.getAccountOwnerName());
         }
 
-        return TransactionalAccount.builder(account.translateAccountType(), account.getAccountId(),
-                new Amount(account.getCurrency(), account.getBalance()))
+        return TransactionalAccount.builder(
+                        account.translateAccountType(),
+                        account.getAccountId(),
+                        new Amount(account.getCurrency(), account.getBalance()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .addIdentifiers(getIdentifiers(account))
@@ -98,9 +99,11 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
     private void logIncomingTransaction(CrossKeyTransaction transaction) {
         try {
             if (transaction.isIncoming()) {
-                LOG.info(String.format("%s - %s",
-                        AlandsBankenSEConstants.Fetcher.TRANSACTION_LOGGING,
-                        SerializationUtils.serializeToString(transaction)));
+                LOG.info(
+                        String.format(
+                                "%s - %s",
+                                AlandsBankenSEConstants.Fetcher.TRANSACTION_LOGGING,
+                                SerializationUtils.serializeToString(transaction)));
             }
         } catch (Exception e) {
             LOG.debug("Could not log transaction " + e.getMessage());
@@ -122,7 +125,8 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
     private String createDescription(CrossKeyTransaction transaction) {
         if (!Strings.isNullOrEmpty(transaction.getOwnNote())) {
             return transaction.getOwnNote();
-        } else if (!transaction.isIncoming() && !Strings.isNullOrEmpty(transaction.getReceiverName())) {
+        } else if (!transaction.isIncoming()
+                && !Strings.isNullOrEmpty(transaction.getReceiverName())) {
             return transaction.getReceiverName();
         }
 
@@ -133,7 +137,9 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
     public LoanAccount parseLoanAccount(CrossKeyAccount account, LoanDetailsEntity loanDetails) {
         LoanDetails details = getLoanDetails(account, loanDetails);
 
-        return LoanAccount.builder(account.getAccountId(), new Amount(account.getCurrency(), account.getBalance()))
+        return LoanAccount.builder(
+                        account.getAccountId(),
+                        new Amount(account.getCurrency(), account.getBalance()))
                 .setAccountNumber(account.getBbanFormatted())
                 .setName(account.getAccountNickname())
                 .setInterestRate(account.getInterestRate())
@@ -145,14 +151,15 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
     private LoanDetails getLoanDetails(CrossKeyAccount account, LoanDetailsEntity loanDetails) {
         return LoanDetails.builder(account.getLoanType())
                 .setLoanNumber(account.getBban())
-                .setInitialBalance(new Amount(account.getCurrency(), loanDetails.getGrantedAmount()))
+                .setInitialBalance(
+                        new Amount(account.getCurrency(), loanDetails.getGrantedAmount()))
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
     }
+
     @Override
     protected Optional<String> getAppVersion() {
         return Optional.of(AlandsBankenSEConstants.APP_VERSION);
     }
-
 }

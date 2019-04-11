@@ -22,7 +22,6 @@ public class SwedbankSeSerializationUtils {
         Matcher matcher = amountPattern.matcher(input);
         if (!matcher.find()) {
             throw new IllegalArgumentException("Cannot parse amount: " + input);
-
         }
         int sign = "-".equals(matcher.group(1)) ? -1 : 1;
         Double amountInDouble = StringUtils.parseAmount(matcher.group(2)) * sign;
@@ -38,9 +37,7 @@ public class SwedbankSeSerializationUtils {
         return interestRate;
     }
 
-    /**
-     * Converts a time string into a number of months, e.g. 3 mån -> 3 and 5 år -> 60.
-     */
+    /** Converts a time string into a number of months, e.g. 3 mån -> 3 and 5 år -> 60. */
     public static int parseNumMonthsBound(String fixedInterestPeriod) {
         if (fixedInterestPeriod != null && fixedInterestPeriod.indexOf(' ') != -1) {
 

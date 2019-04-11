@@ -13,6 +13,7 @@ public class UpcomingInvoiceEntity {
     @JsonProperty("chargeDate")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
+
     private List<ExpenseEntity> expenses;
 
     public AmountEntity getTotalAmount() {

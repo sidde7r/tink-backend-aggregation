@@ -14,7 +14,8 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
     private final IcaBankenApiClient apiClient;
     private final IcaBankenExecutorHelper executorHelper;
 
-    public IcaBankenPaymentExecutor(IcaBankenApiClient apiClient, IcaBankenExecutorHelper executorHelper) {
+    public IcaBankenPaymentExecutor(
+            IcaBankenApiClient apiClient, IcaBankenExecutorHelper executorHelper) {
         this.apiClient = apiClient;
         this.executorHelper = executorHelper;
     }
@@ -24,11 +25,14 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
         executorHelper.validateNoUnsignedTransfers();
 
         Collection<AccountEntity> ownAccounts = apiClient.fetchAccounts().getOwnAccounts();
-        AccountEntity sourceAccount = executorHelper.findSourceAccount(transfer.getSource(), ownAccounts);
+        AccountEntity sourceAccount =
+                executorHelper.findSourceAccount(transfer.getSource(), ownAccounts);
 
-        RecipientEntity destinationAccount = executorHelper.findDestinationAccount(transfer.getDestination());
+        RecipientEntity destinationAccount =
+                executorHelper.findDestinationAccount(transfer.getDestination());
 
-        PaymentRequest paymentRequest = PaymentRequest.create(transfer, sourceAccount, destinationAccount);
+        PaymentRequest paymentRequest =
+                PaymentRequest.create(transfer, sourceAccount, destinationAccount);
 
         executorHelper.putTransferInOutbox(paymentRequest);
 

@@ -2,40 +2,52 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inve
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-
-import java.util.List;
 
 @JsonObject
 public class DepotEntity {
     @JsonProperty("InvestmentAccountType")
     private String investmentAccountType;
+
     @JsonProperty("Balance")
     private double balance;
+
     @JsonProperty("Reserved")
     private double reserved;
+
     @JsonProperty("Disposable")
     private double disposable;
+
     @JsonProperty("TotalDepotValue")
     private double totalDepotValue;
+
     @JsonProperty("Interests")
     private InterestsEntity interests;
+
     @JsonProperty("InternetClientId")
     private String internetClientId;
+
     @JsonProperty("DepotNumber")
     private String depotNumber;
+
     @JsonProperty("DepotName")
     private String depotName;
+
     @JsonProperty("InvestedAmount")
     private double investedAmount;
+
     @JsonProperty("FundHoldings")
     private List<FundHoldingsEntity> fundHoldings;
+
     @JsonProperty("IsLocked")
     private boolean isLocked;
+
     @JsonProperty("OwnerIsMinor")
     private boolean ownerIsMinor;
+
     @JsonProperty("OwnerCustomerId")
     private String ownerCustomerId;
 
@@ -113,8 +125,8 @@ public class DepotEntity {
         return ownerCustomerId;
     }
 
-    public Portfolio.Type getPortfolioType(){
-        switch(investmentAccountType.toLowerCase()){
+    public Portfolio.Type getPortfolioType() {
+        switch (investmentAccountType.toLowerCase()) {
             case IcaBankenConstants.AccountTypes.ISK_ACCOUNT:
                 return Portfolio.Type.ISK;
             case IcaBankenConstants.AccountTypes.DEPOT_ACCOUNT:

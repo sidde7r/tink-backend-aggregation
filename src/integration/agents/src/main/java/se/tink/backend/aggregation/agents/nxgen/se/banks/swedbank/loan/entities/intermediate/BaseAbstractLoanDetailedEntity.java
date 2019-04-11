@@ -18,14 +18,14 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
         super(loanOverview);
     }
 
-    protected BaseAbstractLoanDetailedEntity(DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
+    protected BaseAbstractLoanDetailedEntity(
+            DetailedLoanResponse loanDetails, LoanEntity loanOverview) {
         super(loanDetails, loanOverview);
     }
 
     protected List<String> getBorrowers() {
-        return loanDetails
-                .map(LoanDetailsAccountEntity::getBorrowers).orElseGet(Collections::emptyList)
-                .stream()
+        return loanDetails.map(LoanDetailsAccountEntity::getBorrowers)
+                .orElseGet(Collections::emptyList).stream()
                 .map(BorrowerEntity::getName)
                 .collect(Collectors.toList());
     }
@@ -37,9 +37,16 @@ public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEnt
     protected Amount getMonthlyAmortization() {
         return allLoanDetails
                 .filter(ld -> Objects.nonNull(ld.getUpcomingInvoice()))
-                .map(ld -> ld.getUpcomingInvoice().getExpenses().stream()
-                        .filter(ex -> SwedbankSEConstants.AMORTIZATION.equals(ex.getDescription()))
-                        .map(ex -> ex.getAmount().getTinkAmount()).findFirst().orElse(null))
+                .map(
+                        ld ->
+                                ld.getUpcomingInvoice().getExpenses().stream()
+                                        .filter(
+                                                ex ->
+                                                        SwedbankSEConstants.AMORTIZATION.equals(
+                                                                ex.getDescription()))
+                                        .map(ex -> ex.getAmount().getTinkAmount())
+                                        .findFirst()
+                                        .orElse(null))
                 .orElse(null);
     }
 }

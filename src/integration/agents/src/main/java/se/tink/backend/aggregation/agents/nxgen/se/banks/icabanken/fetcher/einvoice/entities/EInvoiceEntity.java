@@ -10,35 +10,44 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorUtils;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.i18n.Catalog;
 
 @JsonObject
 public class EInvoiceEntity {
     @JsonProperty("UniqueId")
     private String uniqueId;
+
     @JsonProperty("RecipientName")
     private String recipientName;
+
     @JsonProperty("RecipientType")
     private String recipientType;
+
     @JsonProperty("RecipientAccountNumber")
     private String recipientAccountNumber;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("PayDate")
     private Date payDate;
+
     @JsonDouble
     @JsonProperty("Amount")
     private double amount;
+
     @JsonProperty("IsChangeableAmount")
     private boolean isChangeableAmount;
+
     @JsonProperty("HasLink")
     private boolean hasLink;
+
     @JsonProperty("InvoiceLink")
     private String invoiceLink;
+
     @JsonProperty("IsRecipientConfirmed")
     private boolean isRecipientConfirmed;
 
@@ -49,7 +58,8 @@ public class EInvoiceEntity {
 
         Transfer transfer = new Transfer();
 
-        Preconditions.checkState(!Strings.isNullOrEmpty(uniqueId), "Could not find Unique ID for invoice");
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(uniqueId), "Could not find Unique ID for invoice");
         transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, uniqueId);
 
         transfer.setAmount(Amount.inSEK(getAmount()));
@@ -58,10 +68,12 @@ public class EInvoiceEntity {
         transfer.setType(TransferType.EINVOICE);
         transfer.setSourceMessage(recipientName);
 
-        // ICA Banken doesn't supply a message or OCR to us, but the app requires that we fill in that field to confirm
+        // ICA Banken doesn't supply a message or OCR to us, but the app requires that we fill in
+        // that field to confirm
         // the payment. Using a prepopulated value here. We later make sure that the user hasn't
         // changed this field.
-        transfer.setDestinationMessage(catalog.getString(IcaBankenConstants.IdTags.NOT_AVAILABLE_TAG));
+        transfer.setDestinationMessage(
+                catalog.getString(IcaBankenConstants.IdTags.NOT_AVAILABLE_TAG));
 
         return transfer;
     }
@@ -69,10 +81,12 @@ public class EInvoiceEntity {
     @JsonIgnore
     private AccountIdentifier getIdentifier() {
 
-        AccountIdentifier.Type type = IcaBankenExecutorUtils.paymentTypeToIdentifierType(recipientType);
+        AccountIdentifier.Type type =
+                IcaBankenExecutorUtils.paymentTypeToIdentifierType(recipientType);
         Preconditions.checkNotNull(type, "Invalid identifier type. It must not be null.");
 
-        Preconditions.checkState(!Strings.isNullOrEmpty(recipientAccountNumber), "No destination accountNumber");
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(recipientAccountNumber), "No destination accountNumber");
 
         return AccountIdentifier.create(type, recipientAccountNumber, recipientName);
     }

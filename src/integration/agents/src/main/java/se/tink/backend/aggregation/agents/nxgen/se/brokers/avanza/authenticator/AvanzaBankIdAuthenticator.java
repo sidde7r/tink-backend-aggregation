@@ -113,7 +113,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                 throw BankIdError.CANCELLED.exception();
             }
 
-            LOGGER.error("Avanza BankID poll failed with error message: {}", errorResponse.getMessage());
+            LOGGER.error(
+                    "Avanza BankID poll failed with error message: {}", errorResponse.getMessage());
         }
     }
 
@@ -126,9 +127,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
             throws AuthenticationException, AuthorizationException {
         final String transactionId = reference.getTransactionId();
         final List<BankIdCompleteResponse> collect =
-                reference
-                        .getLogins()
-                        .stream()
+                reference.getLogins().stream()
                         .map(l -> apiClient.completeBankId(transactionId, l.getCustomerId()))
                         .map(this::injectSecurityToken)
                         .collect(Collectors.toList());

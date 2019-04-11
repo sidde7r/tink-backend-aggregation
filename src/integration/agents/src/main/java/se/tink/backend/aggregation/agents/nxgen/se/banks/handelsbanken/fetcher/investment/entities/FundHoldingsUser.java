@@ -4,11 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class FundHoldingsUser {
@@ -44,7 +44,8 @@ public class FundHoldingsUser {
         if (fundHoldingList == null) {
             return Collections.emptyList();
         }
-        return fundHoldingList.stream().map(FundHolding::toInstrument)
+        return fundHoldingList.stream()
+                .map(FundHolding::toInstrument)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

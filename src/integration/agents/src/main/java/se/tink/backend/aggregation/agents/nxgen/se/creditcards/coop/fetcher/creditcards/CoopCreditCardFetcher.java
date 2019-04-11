@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class CoopCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionPagePaginator<CreditCardAccount> {
+public class CoopCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
     private final CoopApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -24,8 +24,10 @@ public class CoopCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         UserSummaryResponse userSummary =
-                sessionStorage.get(CoopConstants.Storage.USER_SUMMARY, UserSummaryResponse.class)
-                .orElseThrow(() -> new IllegalStateException("No user data in Session storage"));
+                sessionStorage
+                        .get(CoopConstants.Storage.USER_SUMMARY, UserSummaryResponse.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException("No user data in Session storage"));
 
         String credentialsId = sessionStorage.get(CoopConstants.Storage.CREDENTIALS_ID);
         return userSummary.toTinkCards(credentialsId);

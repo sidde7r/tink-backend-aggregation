@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TradingHoursEntity {
     @JsonProperty("Affärsdagar vid köp")
     private String businessDaysWhenBuy;
+
     @JsonProperty("Affärsdagar vid sälj")
     private String businessDaysWhenSell;
+
     @JsonProperty("Bryttid")
     private String cutoffTime;
+
     @JsonProperty("Syns på fondsparandet")
     private String visibleInFundSavings;
 

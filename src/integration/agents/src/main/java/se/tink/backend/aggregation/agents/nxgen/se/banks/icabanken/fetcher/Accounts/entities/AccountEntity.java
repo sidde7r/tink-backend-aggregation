@@ -5,62 +5,76 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity implements GeneralAccountEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(AccountEntity.class);
 
     @JsonProperty("Type")
     private String type;
+
     @JsonProperty("AccountId")
     private String accountId;
+
     @JsonProperty("AccountNumber")
     private String accountNumber;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonDouble
     @JsonProperty("AvailableAmount")
     private double availableAmount;
+
     @JsonDouble
     @JsonProperty("CurrentAmount")
     private double currentAmount;
+
     @JsonDouble
     @JsonProperty("OutstandingAmount")
     private double outstandingAmount;
+
     @JsonDouble
     @JsonProperty("CreditLimit")
     private double creditLimit;
+
     @JsonProperty("ValidFor")
     private List<String> validFor;
+
     @JsonProperty("IBAN")
     private String iban;
+
     @JsonProperty("BIC")
     private String bic;
+
     @JsonProperty("Address")
     private String address;
+
     @JsonProperty("Holder")
     private String holder;
+
     @JsonProperty("Services")
     private List<String> services;
+
     @JsonProperty("AccountOwner")
     private AccountOwnerEntity accountOwner;
 
     @JsonIgnore
     public TransactionalAccount toTinkTransactionalAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inSEK(availableAmount))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(), accountNumber, Amount.inSEK(availableAmount))
                 .setAccountNumber(accountNumber)
                 .setName(name)
                 .setHolderName(new HolderName(holder))
@@ -145,8 +159,9 @@ public class AccountEntity implements GeneralAccountEntity {
     public String generalGetBank() {
         AccountIdentifier accountIdentifier = generalGetAccountIdentifier();
 
-        return accountIdentifier.isValid() ?
-                accountIdentifier.to(SwedishIdentifier.class).getBankName() : null;
+        return accountIdentifier.isValid()
+                ? accountIdentifier.to(SwedishIdentifier.class).getBankName()
+                : null;
     }
 
     @JsonIgnore

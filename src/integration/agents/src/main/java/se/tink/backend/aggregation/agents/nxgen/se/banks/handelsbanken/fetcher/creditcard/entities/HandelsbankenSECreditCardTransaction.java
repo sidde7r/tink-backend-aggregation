@@ -5,24 +5,28 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.StringCleaningDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.StringCleaningDeserializer;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class HandelsbankenSECreditCardTransaction {
-    private static final Pattern PENDING_PATTERN = Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PENDING_PATTERN =
+            Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
 
     private HandelsbankenAmount amount;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     @JsonDeserialize(using = StringCleaningDeserializer.class)
     private String description;
 
-    private CreditCardTransaction toTinkTransaction(CreditCardAccount account, boolean invertAmount) {
+    private CreditCardTransaction toTinkTransaction(
+            CreditCardAccount account, boolean invertAmount) {
         String formattedDescription = description;
         boolean pending = false;
 
@@ -41,7 +45,8 @@ public class HandelsbankenSECreditCardTransaction {
                 .build();
     }
 
-    public CreditCardTransaction toTinkTransaction(HandelsbankenSECreditCard creditcard, CreditCardAccount account) {
+    public CreditCardTransaction toTinkTransaction(
+            HandelsbankenSECreditCard creditcard, CreditCardAccount account) {
         return toTinkTransaction(account, creditcard.hasInvertedTransactions());
     }
 

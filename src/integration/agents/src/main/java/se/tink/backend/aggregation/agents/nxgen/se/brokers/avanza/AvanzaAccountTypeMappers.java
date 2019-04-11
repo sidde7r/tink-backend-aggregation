@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.AvanzaAccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.AvanzaFallbackAccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.LogTags;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
 
 public final class AvanzaAccountTypeMappers {

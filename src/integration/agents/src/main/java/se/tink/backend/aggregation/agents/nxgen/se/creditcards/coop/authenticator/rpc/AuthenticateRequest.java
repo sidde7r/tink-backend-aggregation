@@ -12,4 +12,3 @@ public class AuthenticateRequest {
         this.password = password;
     }
 }
-

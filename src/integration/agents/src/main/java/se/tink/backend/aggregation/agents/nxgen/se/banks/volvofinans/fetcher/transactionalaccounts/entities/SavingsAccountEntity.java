@@ -7,26 +7,33 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class SavingsAccountEntity {
     @JsonProperty("kontoId")
     private String accountId;
+
     @JsonProperty("kontonummer")
     private String accountNumber;
+
     @JsonProperty("produkt")
     private String product;
+
     @JsonProperty("namn")
     private String name;
+
     @JsonProperty("saldo")
     private double balance;
+
     @JsonProperty("rantesats")
     private double interestRate;
+
     @JsonProperty("kontoRoll")
     private String accountRole;
+
     @JsonProperty("intressenter")
     private List<AccountHolderEntity> accountHolders;
 
@@ -47,17 +54,21 @@ public class SavingsAccountEntity {
 
     @JsonIgnore
     public boolean isAccountHolder() {
-        return VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT.equalsIgnoreCase(accountRole);
+        return VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT.equalsIgnoreCase(
+                accountRole);
     }
 
     @JsonIgnore
     private HolderName getHolderName() {
         return Optional.ofNullable(accountHolders).orElse(Collections.emptyList()).stream()
-                .filter(holder ->
-                        VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT.equalsIgnoreCase(holder.getRole()))
+                .filter(
+                        holder ->
+                                VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT
+                                        .equalsIgnoreCase(holder.getRole()))
                 .findFirst()
                 .map(AccountHolderEntity::getName)
-                .map(HolderName::new).orElse(null);
+                .map(HolderName::new)
+                .orElse(null);
     }
 
     public String getAccountId() {

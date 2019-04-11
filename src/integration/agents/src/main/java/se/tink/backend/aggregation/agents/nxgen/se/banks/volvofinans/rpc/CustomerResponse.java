@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerResponse {
     @JsonProperty("namn")
     private String name;
+
     @JsonProperty("kort")
     private boolean card;
+
     @JsonProperty("spar")
     private boolean savings;
+
     @JsonProperty("finansiering")
     private boolean finance;
 

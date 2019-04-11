@@ -16,8 +16,10 @@ public class LoanDetailsAccountEntity {
     private String paymentIntervalAmortization;
     private String paymentIntervalInterest;
     private String fixedInterestPeriod;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date interestFixedToDate;
+
     private int remainingRepaymentTime;
     private List<CollateralsEntity> collaterals;
     private List<BorrowerEntity> borrowers;

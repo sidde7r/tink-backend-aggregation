@@ -9,40 +9,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.CoopConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class AccountEntity {
     @JsonProperty("AccountType")
     private int accountType;
+
     @JsonProperty("Balance")
     private double balance;
+
     @JsonProperty("CanSetInternetAndForeignPayments")
     private boolean canSetInternetAndForeignPayments;
+
     @JsonProperty("CreditLimit")
     private int creditLimit;
+
     @JsonProperty("Details")
     private List<DetailsEntity> details;
+
     @JsonProperty("Name")
     private String accountName;
+
     @JsonProperty("TotalBalance")
     private double totalBalance;
 
     /**
-     * To be able to easily do transfers to the account we can add the plusgiro identifier with OCR that should be
-     * available on all coop accounts that you can pay to. There might be accounts that are special, so we only add
-     * those with valid ocr and plusgiro.
+     * To be able to easily do transfers to the account we can add the plusgiro identifier with OCR
+     * that should be available on all coop accounts that you can pay to. There might be accounts
+     * that are special, so we only add those with valid ocr and plusgiro.
      */
-    private static List<AccountIdentifier> getAccountIdentifier(Map<String, String> accountDetailsMap) {
+    private static List<AccountIdentifier> getAccountIdentifier(
+            Map<String, String> accountDetailsMap) {
         String plusGiro = accountDetailsMap.get(CoopConstants.Account.PG_NUMBER);
         String ocr = accountDetailsMap.get(CoopConstants.Account.OCR_NUMBER);
 
@@ -81,15 +88,16 @@ public class AccountEntity {
 
         List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
 
-        CreditCardAccount card = CreditCardAccount.builder(getUniqueId(credentialsId, accountNumber))
-                .setName(accountName)
-                .setAccountNumber(accountNumber)
-                .setBalance(Amount.inSEK(totalBalance))
-                .setHolderName(holdername)
-                .setBankIdentifier(String.valueOf(this.accountType))
-                .setAvailableCredit(Amount.inSEK(balance))
-                .addIdentifiers(identifiers)
-                .build();
+        CreditCardAccount card =
+                CreditCardAccount.builder(getUniqueId(credentialsId, accountNumber))
+                        .setName(accountName)
+                        .setAccountNumber(accountNumber)
+                        .setBalance(Amount.inSEK(totalBalance))
+                        .setHolderName(holdername)
+                        .setBankIdentifier(String.valueOf(this.accountType))
+                        .setAvailableCredit(Amount.inSEK(balance))
+                        .addIdentifiers(identifiers)
+                        .build();
 
         return Optional.of(card);
     }
@@ -112,7 +120,8 @@ public class AccountEntity {
         List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
 
         TransactionalAccount account =
-                TransactionalAccount.builder(AccountTypes.OTHER, getUniqueId(credentialsId, accountNumber))
+                TransactionalAccount.builder(
+                                AccountTypes.OTHER, getUniqueId(credentialsId, accountNumber))
                         .setName(accountName)
                         .setAccountNumber(accountNumber)
                         .setBalance(Amount.inSEK(totalBalance))
@@ -126,22 +135,21 @@ public class AccountEntity {
 
     @JsonIgnore
     private Map<String, String> getAccountDetailsMap() {
-        return Optional.ofNullable(details).orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(details).orElse(Collections.emptyList()).stream()
                 .collect(Collectors.toMap(DetailsEntity::getIdLowerCase, DetailsEntity::getValue));
     }
 
     @JsonIgnore
     private String getUniqueId(String credentialsId, String accountNumber) {
-        // THIS IS TO AVOID Migration of unique ID until we find a way to handle Migrations in a better way than today.
+        // THIS IS TO AVOID Migration of unique ID until we find a way to handle Migrations in a
+        // better way than today.
         //        return accountNumber;
         return hashLegacyBankId(credentialsId, coopAccountType());
     }
 
     /**
-     * <p>
-     * Preferrably we'd use the account number instead, but that'll require merging of data since V1 version of Coop
-     * used same kind of logic for hashing the BankId.
+     * Preferrably we'd use the account number instead, but that'll require merging of data since V1
+     * version of Coop used same kind of logic for hashing the BankId.
      */
     private String hashLegacyBankId(String credentialsId, CoopConstants.AccountType accountType) {
         return StringUtils.hashAsStringMD5(credentialsId + accountType.getLegacyBankIdPart());
@@ -167,17 +175,16 @@ public class AccountEntity {
         }
 
         switch (accountType) {
-        case MEDMERA_MER:
-        case MEDMERA_EFTER_1:
-        case MEDMERA_EFTER_2:
-        case MEDMERA_FORE:
-        case MEDMERA_FAKTURA:
-        case MEDMERA_VISA:
-            return AccountTypes.CREDIT_CARD;
-        case MEDMERA_KONTO:
-        default:
-            return AccountTypes.OTHER;
+            case MEDMERA_MER:
+            case MEDMERA_EFTER_1:
+            case MEDMERA_EFTER_2:
+            case MEDMERA_FORE:
+            case MEDMERA_FAKTURA:
+            case MEDMERA_VISA:
+                return AccountTypes.CREDIT_CARD;
+            case MEDMERA_KONTO:
+            default:
+                return AccountTypes.OTHER;
         }
     }
-
 }

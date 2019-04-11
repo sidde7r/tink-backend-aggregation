@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
 import java.util.Optional;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FundHolding {
@@ -10,7 +10,8 @@ public class FundHolding {
     private FundHoldingDetail fundHoldingDetail;
     private String fundName;
     // Not sure that the following fields are always returned...
-    // They are not part of Handelsbanken App, but seem to be part of the server response at the moment (2018-01-19)
+    // They are not part of Handelsbanken App, but seem to be part of the server response at the
+    // moment (2018-01-19)
     private String currency;
     private String isin;
     private String companyName;
@@ -22,11 +23,12 @@ public class FundHolding {
 
         return Optional.of(new Instrument())
                 .map(this::applyTo)
-                .flatMap(instrument -> Optional.ofNullable(fundHoldingDetail)
-                        .map(fundHoldingDetail ->
-                                fundHoldingDetail.applyTo(instrument)
-                        )
-                );
+                .flatMap(
+                        instrument ->
+                                Optional.ofNullable(fundHoldingDetail)
+                                        .map(
+                                                fundHoldingDetail ->
+                                                        fundHoldingDetail.applyTo(instrument)));
     }
 
     private Instrument applyTo(Instrument instrument) {
@@ -38,5 +40,4 @@ public class FundHolding {
         instrument.setIsin(isin);
         return instrument;
     }
-
 }

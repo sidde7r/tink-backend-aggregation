@@ -12,7 +12,8 @@ public class IcaBankenSessionHandler implements SessionHandler {
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
 
-    public IcaBankenSessionHandler(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
+    public IcaBankenSessionHandler(
+            IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
         this.apiClient = apiClient;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
     }
@@ -27,7 +28,8 @@ public class IcaBankenSessionHandler implements SessionHandler {
         }
 
         try {
-            // The keep alive keeps the session alive but doesn't indicate when the session has expired,
+            // The keep alive keeps the session alive but doesn't indicate when the session has
+            // expired,
             // this is why we also try to fetch accounts
             apiClient.keepAlive();
             apiClient.fetchAccounts();

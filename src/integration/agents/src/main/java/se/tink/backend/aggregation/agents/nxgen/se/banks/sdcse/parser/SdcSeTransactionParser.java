@@ -30,7 +30,8 @@ public class SdcSeTransactionParser implements SdcTransactionParser {
     }
 
     @Override
-    public CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
+    public CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcTransaction bankTransaction) {
         return CreditCardTransaction.builder()
                 .setAmount(bankTransaction.getAmount().toTinkAmount())
                 .setDate(DateUtils.parseDate(bankTransaction.getPaymentDate()))
@@ -40,7 +41,8 @@ public class SdcSeTransactionParser implements SdcTransactionParser {
     }
 
     @Override
-    public CreditCardTransaction parseCreditCardTransaction(CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
+    public CreditCardTransaction parseCreditCardTransaction(
+            CreditCardAccount creditCardAccount, SdcReservation bankReservation) {
         return CreditCardTransaction.builder()
                 .setAmount(bankReservation.getAmount().toTinkAmount())
                 .setDate(DateUtils.parseDate(bankReservation.getCreateDate()))

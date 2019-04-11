@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum IcaDestinationType {
-    PAYMENT("PaymentBg", "PaymentPg"), TRANSFER("TransferTo", "Transfer");
+    PAYMENT("PaymentBg", "PaymentPg"),
+    TRANSFER("TransferTo", "Transfer");
 
     private List<String> destinationType;
 

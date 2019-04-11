@@ -17,59 +17,69 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
-/**
- * The logic in this util class is directly ported from the old ICABanken agent.
- */
+/** The logic in this util class is directly ported from the old ICABanken agent. */
 public class IcaBankenExecutorUtils {
 
-    public static Optional<AccountEntity> tryFindOwnAccount(final AccountIdentifier accountIdentifier,
-            Collection<AccountEntity> accounts) {
+    public static Optional<AccountEntity> tryFindOwnAccount(
+            final AccountIdentifier accountIdentifier, Collection<AccountEntity> accounts) {
 
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .filter(accountEntity -> (
-                        accountIdentifier.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
-                        .equals(accountEntity.getUnformattedAccountNumber())))
+                .filter(
+                        accountEntity ->
+                                (accountIdentifier
+                                        .getIdentifier(
+                                                IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
+                                        .equals(accountEntity.getUnformattedAccountNumber())))
                 .findFirst();
     }
 
-    static Optional<RecipientEntity> tryFindRegisteredTransferAccount(final AccountIdentifier accountIdentifier,
-            List<RecipientEntity> recipientAccounts) {
+    static Optional<RecipientEntity> tryFindRegisteredTransferAccount(
+            final AccountIdentifier accountIdentifier, List<RecipientEntity> recipientAccounts) {
 
         return Optional.ofNullable(recipientAccounts).orElse(Collections.emptyList()).stream()
-                .filter(recipientEntity -> (
-                        accountIdentifier.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
-                        .equals(recipientEntity.getUnformattedAccountNumber())))
+                .filter(
+                        recipientEntity ->
+                                (accountIdentifier
+                                        .getIdentifier(
+                                                IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
+                                        .equals(recipientEntity.getUnformattedAccountNumber())))
                 .findFirst();
     }
 
-    static Optional<RecipientEntity> tryFindRegisteredPaymentAccount(final AccountIdentifier accountIdentifier,
-            List<RecipientEntity> recipientAccounts) {
+    static Optional<RecipientEntity> tryFindRegisteredPaymentAccount(
+            final AccountIdentifier accountIdentifier, List<RecipientEntity> recipientAccounts) {
 
         return Optional.ofNullable(recipientAccounts).orElse(Collections.emptyList()).stream()
-                .filter(recipientEntity -> (
-                        accountIdentifier.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
-                        .equals(recipientEntity.getAccountNumber())))
+                .filter(
+                        recipientEntity ->
+                                (accountIdentifier
+                                        .getIdentifier(
+                                                IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER)
+                                        .equals(recipientEntity.getAccountNumber())))
                 .findFirst();
     }
 
-    public static Optional<TransferBankEntity> findBankForAccountNumber(String destinationAccount,
-            List<TransferBankEntity> transferBanks) {
+    public static Optional<TransferBankEntity> findBankForAccountNumber(
+            String destinationAccount, List<TransferBankEntity> transferBanks) {
 
-        if (transferBanks == null ||transferBanks.isEmpty()) {
+        if (transferBanks == null || transferBanks.isEmpty()) {
             return Optional.empty();
         }
 
-        ImmutableMap<Integer, TransferBankEntity> banksByClearingNumber = Maps.uniqueIndex(transferBanks,
-                transferBankEntity -> Integer.parseInt(transferBankEntity.getTransferBankId()));
+        ImmutableMap<Integer, TransferBankEntity> banksByClearingNumber =
+                Maps.uniqueIndex(
+                        transferBanks,
+                        transferBankEntity ->
+                                Integer.parseInt(transferBankEntity.getTransferBankId()));
 
         List<Integer> clearingNumbers = new ArrayList<>(banksByClearingNumber.keySet());
         Collections.sort(clearingNumbers);
@@ -92,23 +102,23 @@ public class IcaBankenExecutorUtils {
         return Optional.ofNullable(banksByClearingNumber.get(bankClearingNumber));
     }
 
-    static boolean isMatchingTransfers(Transfer transfer, UpcomingTransactionEntity upcomingTransaction) {
-        return !(transfer == null || upcomingTransaction == null) &&
-                transfer.getHash().equalsIgnoreCase(upcomingTransaction.getHash(false));
+    static boolean isMatchingTransfers(
+            Transfer transfer, UpcomingTransactionEntity upcomingTransaction) {
+        return !(transfer == null || upcomingTransaction == null)
+                && transfer.getHash().equalsIgnoreCase(upcomingTransaction.getHash(false));
     }
 
     public static String findOrCreateDueDateFor(Transfer transfer) {
         if (transfer.getType().equals(TransferType.PAYMENT)) {
-            return (transfer.getDueDate() != null) ?
-                    ThreadSafeDateFormat.FORMATTER_DAILY
-                            .format(DateUtils.getCurrentOrNextBusinessDay(transfer.getDueDate()))
-                    : ThreadSafeDateFormat.FORMATTER_DAILY
-                    .format(DateUtils.getNextBusinessDay(new Date()));
+            return (transfer.getDueDate() != null)
+                    ? ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                            DateUtils.getCurrentOrNextBusinessDay(transfer.getDueDate()))
+                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                            DateUtils.getNextBusinessDay(new Date()));
         } else {
-            return (transfer.getDueDate() != null) ? ThreadSafeDateFormat.FORMATTER_DAILY
-                    .format(transfer.getDueDate())
-                    : ThreadSafeDateFormat.FORMATTER_DAILY
-                    .format(new Date());
+            return (transfer.getDueDate() != null)
+                    ? ThreadSafeDateFormat.FORMATTER_DAILY.format(transfer.getDueDate())
+                    : ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date());
         }
     }
 
@@ -128,23 +138,25 @@ public class IcaBankenExecutorUtils {
 
     public static AccountIdentifier.Type paymentTypeToIdentifierType(String type) {
         switch (type.toLowerCase()) {
-        case IcaBankenConstants.AccountTypes.PAYMENT_BG:
-            return AccountIdentifier.Type.SE_BG;
-        case IcaBankenConstants.AccountTypes.PAYMENT_PG:
-            return AccountIdentifier.Type.SE_PG;
-        default:
-            throw new IllegalArgumentException(String.format("Unused payment type identifier: %s", type));
+            case IcaBankenConstants.AccountTypes.PAYMENT_BG:
+                return AccountIdentifier.Type.SE_BG;
+            case IcaBankenConstants.AccountTypes.PAYMENT_PG:
+                return AccountIdentifier.Type.SE_PG;
+            default:
+                throw new IllegalArgumentException(
+                        String.format("Unused payment type identifier: %s", type));
         }
     }
 
-    /**
-     * ICA Banken uses numbers to identify reference type: 1 = OCR, 2 = Message
-     */
+    /** ICA Banken uses numbers to identify reference type: 1 = OCR, 2 = Message */
     public static String getReferenceTypeFor(Transfer transfer) {
-        GiroMessageValidator giroValidator = GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
-        Optional<String> validOcr = giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
+        GiroMessageValidator giroValidator =
+                GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
+        Optional<String> validOcr =
+                giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
 
-        return validOcr.isPresent() ? IcaBankenConstants.Transfers.OCR : IcaBankenConstants.Transfers.MESSAGE;
+        return validOcr.isPresent()
+                ? IcaBankenConstants.Transfers.OCR
+                : IcaBankenConstants.Transfers.MESSAGE;
     }
-
 }

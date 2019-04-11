@@ -14,14 +14,17 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class AuthenticateResponse extends BaseResponse {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(AuthenticateResponse.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(AuthenticateResponse.class);
 
     public BankIdStatus toBankIdStatus() throws AuthenticationException {
         String authenticateResult = getResult();
-        if (HandelsbankenSEConstants.BankIdAuthentication.DONE.equalsIgnoreCase(authenticateResult)) {
+        if (HandelsbankenSEConstants.BankIdAuthentication.DONE.equalsIgnoreCase(
+                authenticateResult)) {
             return BankIdStatus.DONE;
         }
-        if (HandelsbankenSEConstants.BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(authenticateResult)) {
+        if (HandelsbankenSEConstants.BankIdAuthentication.MUST_ACTIVATE.equalsIgnoreCase(
+                authenticateResult)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception(
                     HandelsbankenSEConstants.BankIdUserMessages.ACTIVATION_NEEDED);
         }
@@ -29,23 +32,22 @@ public class AuthenticateResponse extends BaseResponse {
         String statusCode = getCode();
 
         if (!Strings.isNullOrEmpty(statusCode)) {
-            LOGGER.info(String.format(
-                    "BankID authentication failed with response: %s",
-                    MoreObjects.toStringHelper(this)
-                            .add("result", authenticateResult)
-                            .add("code", statusCode)
-                            .add("message", getMessage())
-                            .add("errors", getErrors())
-            ));
+            LOGGER.info(
+                    String.format(
+                            "BankID authentication failed with response: %s",
+                            MoreObjects.toStringHelper(this)
+                                    .add("result", authenticateResult)
+                                    .add("code", statusCode)
+                                    .add("message", getMessage())
+                                    .add("errors", getErrors())));
             switch (statusCode) {
                 case HandelsbankenSEConstants.BankIdAuthentication.UNKNOWN_BANKID:
                     throw BankIdError.BLOCKED.exception();
                 case HandelsbankenSEConstants.BankIdAuthentication.CANCELLED:
                     return BankIdStatus.CANCELLED;
-            case HandelsbankenSEConstants.BankIdAuthentication.TIMEOUT:
-                return BankIdStatus.TIMEOUT;
+                case HandelsbankenSEConstants.BankIdAuthentication.TIMEOUT:
+                    return BankIdStatus.TIMEOUT;
             }
-
         }
 
         return BankIdStatus.WAITING;

@@ -14,8 +14,9 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class CoopTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionPagePaginator<TransactionalAccount> {
+public class CoopTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPagePaginator<TransactionalAccount> {
 
     private final CoopApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -29,8 +30,10 @@ public class CoopTransactionalAccountFetcher implements AccountFetcher<Transacti
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         UserSummaryResponse userSummary =
-                sessionStorage.get(CoopConstants.Storage.USER_SUMMARY, UserSummaryResponse.class)
-                .orElseThrow(() -> new IllegalStateException("No user data in Session storage"));
+                sessionStorage
+                        .get(CoopConstants.Storage.USER_SUMMARY, UserSummaryResponse.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException("No user data in Session storage"));
 
         String credentialsId = sessionStorage.get(CoopConstants.Storage.CREDENTIALS_ID);
         return userSummary.toTinkAccounts(credentialsId);

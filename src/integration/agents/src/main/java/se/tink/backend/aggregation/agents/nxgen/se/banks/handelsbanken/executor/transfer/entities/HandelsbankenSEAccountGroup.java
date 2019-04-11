@@ -6,10 +6,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class HandelsbankenSEAccountGroup {
@@ -34,10 +34,10 @@ public class HandelsbankenSEAccountGroup {
     }
 
     private Optional<HandelsbankenSEPaymentAccount> findAccount(AccountIdentifier identifier) {
-        Optional<HandelsbankenSEPaymentAccount> paymentAccount = findPaymentAccount(
-                identifier.getIdentifier(new DefaultAccountIdentifierFormatter())
-        );
-        if (paymentAccount.isPresent()){
+        Optional<HandelsbankenSEPaymentAccount> paymentAccount =
+                findPaymentAccount(
+                        identifier.getIdentifier(new DefaultAccountIdentifierFormatter()));
+        if (paymentAccount.isPresent()) {
             return paymentAccount;
         }
         if (identifier.getType() == AccountIdentifier.Type.SE) {
@@ -48,17 +48,20 @@ public class HandelsbankenSEAccountGroup {
     }
 
     private Optional<HandelsbankenSEPaymentAccount> findPaymentAccount(String identifier) {
-        return Optional.ofNullable(accounts).map(Collection::stream)
-                    .flatMap(accounts -> accounts
-                            .filter(account -> account.hasIdentifier(identifier))
-                            .findFirst()
-                    );
+        return Optional.ofNullable(accounts)
+                .map(Collection::stream)
+                .flatMap(
+                        accounts ->
+                                accounts.filter(account -> account.hasIdentifier(identifier))
+                                        .findFirst());
     }
 
     public Stream<GeneralAccountEntity> asGeneralAccountEntities() {
         return Optional.ofNullable(accounts)
                 .map(Collection::stream)
-                .map(accounts -> accounts.map(HandelsbankenSEPaymentAccount::toGeneralAccountEntity))
+                .map(
+                        accounts ->
+                                accounts.map(HandelsbankenSEPaymentAccount::toGeneralAccountEntity))
                 .orElse(Stream.empty());
     }
 }

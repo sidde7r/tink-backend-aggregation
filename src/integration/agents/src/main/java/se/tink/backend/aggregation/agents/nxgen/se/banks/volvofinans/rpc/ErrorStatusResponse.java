@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ErrorStatusResponse {
     private String status;
+
     @JsonProperty("meddelande")
     private String message;
 

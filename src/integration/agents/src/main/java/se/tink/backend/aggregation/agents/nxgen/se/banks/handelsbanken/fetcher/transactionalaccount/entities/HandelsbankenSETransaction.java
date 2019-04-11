@@ -18,6 +18,7 @@ public class HandelsbankenSETransaction extends BaseResponse {
 
     private HandelsbankenAmount amount;
     private HandelsbankenRecipient recipient;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
 
@@ -25,7 +26,8 @@ public class HandelsbankenSETransaction extends BaseResponse {
         String description = recipient.getAdditionalInfo();
         boolean pending = false;
 
-        Matcher matcher = HandelsbankenSEConstants.Fetcher.Transactions.PENDING_PATTERN.matcher(description);
+        Matcher matcher =
+                HandelsbankenSEConstants.Fetcher.Transactions.PENDING_PATTERN.matcher(description);
         if (matcher.find()) {
             description = matcher.replaceFirst("");
             pending = true;

@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class InitBankIdResponse extends BaseResponse {
 
-    public InitBankIdResponse validate(Supplier<InitBankIdResponse> retryAction) throws BankIdException {
+    public InitBankIdResponse validate(Supplier<InitBankIdResponse> retryAction)
+            throws BankIdException {
 
         String initCode = getCode();
 

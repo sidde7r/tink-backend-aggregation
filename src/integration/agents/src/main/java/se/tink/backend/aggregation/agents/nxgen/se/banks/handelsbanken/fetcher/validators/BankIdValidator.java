@@ -6,7 +6,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 public class BankIdValidator {
     public static void validate(String bankId) {
         Preconditions.checkState(
-                HandelsbankenConstants.BANKID_PATTERN.matcher(Preconditions.checkNotNull(bankId)).matches(),
-                "Unexpected account.bankid '%s'. Reformatted?", bankId);
+                HandelsbankenConstants.BANKID_PATTERN
+                        .matcher(Preconditions.checkNotNull(bankId))
+                        .matches(),
+                "Unexpected account.bankid '%s'. Reformatted?",
+                bankId);
     }
 }

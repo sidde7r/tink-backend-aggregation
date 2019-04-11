@@ -8,10 +8,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AuthenticateResultEntity {
     @JsonProperty("MemberAccountType")
     private int memberAccountType;
+
     @JsonProperty("Token")
     private String token;
+
     @JsonProperty("UserID")
     private int userId;
+
     @JsonProperty("UserSummary")
     private UserSummaryResponse userSummary;
 

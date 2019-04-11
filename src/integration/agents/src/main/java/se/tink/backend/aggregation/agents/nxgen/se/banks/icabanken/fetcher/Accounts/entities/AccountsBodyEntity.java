@@ -7,24 +7,34 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountsBodyEntity {
     @JsonProperty("OwnAccountsTotalCurrentAmount")
     private double ownAccountsTotalCurrentAmount;
+
     @JsonProperty("OwnAccountsTotalAvailableAmount")
     private double ownAccountsTotalAvailableAmount;
+
     @JsonProperty("JointAccountsTotalCurrentAmount")
     private double jointAccountsTotalCurrentAmount;
+
     @JsonProperty("JointAccountsTotalAvailableAmount")
     private double jointAccountsTotalAvailableAmount;
+
     @JsonProperty("MinorsAccountsTotalCurrentAmount")
     private double minorsAccountsTotalCurrentAmount;
+
     @JsonProperty("MinorsAccountsTotalAvailableAmount")
     private double minorsAccountsTotalAvailableAmount;
+
     @JsonProperty("DefaultAccountIdForPayments")
     private String defaultAccountIdForPayments;
+
     @JsonProperty("DefaultAccountIdForTransfers")
     private String defaultAccountIdForTransfers;
+
     @JsonProperty("DefaultAccountIdForEgiros")
     private String defaultAccountIdForEgiros;
+
     @JsonProperty("DefaultAccountIdForInvest")
     private String defaultAccountIdForInvest;
+
     @JsonProperty("Accounts")
     private AccountsEntity accounts;
 

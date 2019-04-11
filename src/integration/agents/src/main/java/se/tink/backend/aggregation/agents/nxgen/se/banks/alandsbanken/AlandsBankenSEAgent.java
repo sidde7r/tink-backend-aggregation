@@ -13,18 +13,24 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AlandsBankenSEAgent extends CrossKeyAgent {
 
-    public AlandsBankenSEAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AlandsBankenSEAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AlandsBankenSEConfiguration());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
 
-        return new AutoAuthenticationController(request, systemUpdater,
-                new KeyCardAuthenticationController(catalog,
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new KeyCardAuthenticationController(
+                        catalog,
                         supplementalInformationHelper,
-                        new CrossKeyKeyCardAuthenticator(apiClient, agentConfiguration, agentPersistentStorage, credentials),
+                        new CrossKeyKeyCardAuthenticator(
+                                apiClient, agentConfiguration, agentPersistentStorage, credentials),
                         CrossKeyConstants.MultiFactorAuthentication.KEYCARD_PIN_LENGTH),
-                new CrossKeyAutoAuthenticator(this.apiClient, agentPersistentStorage, this.credentials));
+                new CrossKeyAutoAuthenticator(
+                        this.apiClient, agentPersistentStorage, this.credentials));
     }
 }

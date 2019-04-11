@@ -16,27 +16,30 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 @JsonObject
 public class LoanEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(LoanEntity.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(LoanEntity.class);
 
     private String loanName;
     private double initialDebt;
     private double interestRate;
     private long initialDate;
     private String applicants;
+
     @JsonProperty("InterestRatesDetails")
     private List<Map<String, String>> interestRatesDetails;
+
     @JsonProperty("LoanDetails")
     private List<Map<String, String>> loanDetails;
+
     @JsonProperty("LoanNumber")
     private String loanNumber;
+
     @JsonProperty("PresentDebt")
     private String presentDebt;
+
     @JsonProperty("Type")
     private String type;
 
-    @JsonIgnore
-    private Map<String, String> transformedLoanDetails;
+    @JsonIgnore private Map<String, String> transformedLoanDetails;
 
     public String getLoanNumber() {
         return loanNumber;
@@ -64,7 +67,8 @@ public class LoanEntity {
         Map<String, String> map = Maps.newHashMap();
 
         for (Map<String, String> keyValuePair : loanDetails) {
-            map.put(keyValuePair.get(IcaBankenConstants.IdTags.KEY_TAG).toLowerCase().trim(),
+            map.put(
+                    keyValuePair.get(IcaBankenConstants.IdTags.KEY_TAG).toLowerCase().trim(),
                     keyValuePair.get(IcaBankenConstants.IdTags.VALUE_TAG));
         }
 
@@ -73,7 +77,8 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoan() {
-        IcaBankenLoanParsingHelper loanParsingHelper = new IcaBankenLoanParsingHelper(transformedLoanDetails);
+        IcaBankenLoanParsingHelper loanParsingHelper =
+                new IcaBankenLoanParsingHelper(transformedLoanDetails);
 
         return LoanAccount.builder(loanNumber, loanParsingHelper.getBalance(presentDebt))
                 .setAccountNumber(loanNumber)
@@ -99,7 +104,8 @@ public class LoanEntity {
     }
 
     private void logLoanType() {
-        log.info("Unknown loan type: Name: {}, Type: {}",
+        log.info(
+                "Unknown loan type: Name: {}, Type: {}",
                 Optional.ofNullable(loanName).orElse("Not present"),
                 Optional.ofNullable(type).orElse("Not present"));
     }

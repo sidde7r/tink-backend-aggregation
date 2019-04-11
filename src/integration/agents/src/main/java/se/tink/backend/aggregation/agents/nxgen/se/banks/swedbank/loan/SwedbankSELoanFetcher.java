@@ -52,7 +52,8 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
         return loanAccounts;
     }
 
-    void fetchLoans(ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
+    void fetchLoans(
+            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
         fetchCollateralLoans(loanAccounts, loanOverviewResponse);
 
         fetchCarLoans(loanAccounts, loanOverviewResponse);
@@ -60,37 +61,53 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
         fetchConsumptionLoans(loanAccounts, loanOverviewResponse);
     }
 
-    private void fetchCollateralLoans(ArrayList<LoanAccount> loanAccounts,
-            LoanOverviewResponse loanOverviewResponse) {
+    private void fetchCollateralLoans(
+            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
         List<CollateralsEntity> collaterals = loanOverviewResponse.getCollaterals();
 
-        List<LoanAccount> collateralLoans = Optional.ofNullable(collaterals).orElseGet(Collections::emptyList)
-                .stream()
-                .flatMap(collateral -> collateral.getLoans().stream())
-                .map(l -> createLoanAccountFromLoanInformation(l, CollateralsLoanEntity.class))
-                .collect(Collectors.toList());
+        List<LoanAccount> collateralLoans =
+                Optional.ofNullable(collaterals).orElseGet(Collections::emptyList).stream()
+                        .flatMap(collateral -> collateral.getLoans().stream())
+                        .map(
+                                l ->
+                                        createLoanAccountFromLoanInformation(
+                                                l, CollateralsLoanEntity.class))
+                        .collect(Collectors.toList());
 
         loanAccounts.addAll(collateralLoans);
     }
 
-    private void fetchCarLoans(ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
-        List<LoanAccount> carLoans = loanOverviewResponse.getCarLoans().stream()
-                .map(loan -> createLoanAccountFromLoanInformation(loan, CarLoanEntity.class))
-                .collect(Collectors.toList());
+    private void fetchCarLoans(
+            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
+        List<LoanAccount> carLoans =
+                loanOverviewResponse.getCarLoans().stream()
+                        .map(
+                                loan ->
+                                        createLoanAccountFromLoanInformation(
+                                                loan, CarLoanEntity.class))
+                        .collect(Collectors.toList());
 
         loanAccounts.addAll(carLoans);
     }
 
-    private void fetchConsumptionLoans(ArrayList<LoanAccount> loanAccounts,
-            LoanOverviewResponse loanOverviewResponse) {
+    private void fetchConsumptionLoans(
+            ArrayList<LoanAccount> loanAccounts, LoanOverviewResponse loanOverviewResponse) {
 
         EngagementOverviewResponse engagementOverviewResponse = apiClient.engagementOverview();
 
-        // Filter out any account that is present in the engagementOverviewResponse::transactionAccounts list.
-        List<LoanAccount> consumptionLoans = loanOverviewResponse.getConsumptionLoans().stream()
-                .filter(loan -> !engagementOverviewResponse.hasTransactionAccount(loan.getAccount()))
-                .map(loan -> createLoanAccountFromLoanInformation(loan, ConsumptionLoanEntity.class))
-                .collect(Collectors.toList());
+        // Filter out any account that is present in the
+        // engagementOverviewResponse::transactionAccounts list.
+        List<LoanAccount> consumptionLoans =
+                loanOverviewResponse.getConsumptionLoans().stream()
+                        .filter(
+                                loan ->
+                                        !engagementOverviewResponse.hasTransactionAccount(
+                                                loan.getAccount()))
+                        .map(
+                                loan ->
+                                        createLoanAccountFromLoanInformation(
+                                                loan, ConsumptionLoanEntity.class))
+                        .collect(Collectors.toList());
 
         loanAccounts.addAll(consumptionLoans);
     }
@@ -98,12 +115,13 @@ public class SwedbankSELoanFetcher extends SwedbankDefaultLoanFetcher {
     private <T extends BaseAbstractLoanEntity> LoanAccount createLoanAccountFromLoanInformation(
             LoanEntity loanEntity, Class<T> loanType) {
         return Optional.of(loanEntity)
-                .map(loan -> {
-                    DetailedLoanResponse loanDetails = getLoanDetails(loan);
-                    return Optional.ofNullable(loanDetails)
-                            .map(ld -> loanEntityFactory.create(loanType, loan, ld))
-                            .orElseGet(() -> loanEntityFactory.create(loanType, loan));
-                })
+                .map(
+                        loan -> {
+                            DetailedLoanResponse loanDetails = getLoanDetails(loan);
+                            return Optional.ofNullable(loanDetails)
+                                    .map(ld -> loanEntityFactory.create(loanType, loan, ld))
+                                    .orElseGet(() -> loanEntityFactory.create(loanType, loan));
+                        })
                 .map(BaseAbstractLoanEntity::toTinkLoan)
                 .orElseThrow(IllegalStateException::new);
     }

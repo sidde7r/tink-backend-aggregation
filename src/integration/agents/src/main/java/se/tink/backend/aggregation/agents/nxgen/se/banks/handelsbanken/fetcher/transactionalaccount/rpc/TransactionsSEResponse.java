@@ -18,8 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsSEResponse extends TransactionsResponse
-        implements PaginatorResponse {
+public class TransactionsSEResponse extends TransactionsResponse implements PaginatorResponse {
 
     private HandelsbankenSEAccount account;
     private List<HandelsbankenSETransaction> transactions;
@@ -55,8 +54,7 @@ public class TransactionsSEResponse extends TransactionsResponse
     public Stream<HandelsbankenSETransaction> getTodaysTransactions() {
         LocalDate today = LocalDate.now();
 
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
                 .filter(transaction -> Objects.equal(today, transaction.dueDateAsLocalDate()));
     }
 }

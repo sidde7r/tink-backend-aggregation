@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountOwnerEntity {
     @JsonProperty("FullName")
     private String fullName;
+
     @JsonProperty("NationalIdWithCentury")
     private String nationalIdWithCentury;
 }

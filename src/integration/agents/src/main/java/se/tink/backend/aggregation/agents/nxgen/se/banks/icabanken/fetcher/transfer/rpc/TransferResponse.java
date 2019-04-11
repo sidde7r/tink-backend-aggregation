@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseRespo
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class TransferResponse extends BaseResponse<TransferResponseBody> {
-}
+public class TransferResponse extends BaseResponse<TransferResponseBody> {}

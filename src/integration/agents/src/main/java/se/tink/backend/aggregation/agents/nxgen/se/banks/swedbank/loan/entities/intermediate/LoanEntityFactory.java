@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.Detai
 
 public class LoanEntityFactory {
 
-    public <T extends BaseAbstractLoanEntity> T create(Class<T> type, LoanEntity loanOverview,
-            DetailedLoanResponse loanDetails) {
+    public <T extends BaseAbstractLoanEntity> T create(
+            Class<T> type, LoanEntity loanOverview, DetailedLoanResponse loanDetails) {
 
         if (CarLoanEntity.class.equals(type)) {
             return (T) CarLoanEntity.create(loanOverview, loanDetails);

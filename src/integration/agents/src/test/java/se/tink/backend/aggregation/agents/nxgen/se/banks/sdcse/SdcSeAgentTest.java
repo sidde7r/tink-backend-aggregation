@@ -11,13 +11,12 @@ public class SdcSeAgentTest {
 
     @Test
     public void testRegisterAndRefresh() throws Exception {
-        AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("se", "sparbankensyd-bankid")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true);
+        AgentIntegrationTest.Builder builder =
+                new AgentIntegrationTest.Builder("se", "sparbankensyd-bankid")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(true);
 
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
-
 }

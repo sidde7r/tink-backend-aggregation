@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseRespo
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EInvoiceResponse extends BaseResponse<EInvoiceBodyEntity> {
-}
+public class EInvoiceResponse extends BaseResponse<EInvoiceBodyEntity> {}

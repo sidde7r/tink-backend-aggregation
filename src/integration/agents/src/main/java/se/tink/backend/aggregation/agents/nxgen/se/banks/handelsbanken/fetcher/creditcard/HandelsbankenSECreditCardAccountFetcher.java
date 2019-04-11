@@ -17,8 +17,8 @@ public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<C
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
 
-    public HandelsbankenSECreditCardAccountFetcher(HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+    public HandelsbankenSECreditCardAccountFetcher(
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
@@ -28,24 +28,32 @@ public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<C
         // Credit cards that are sent through the account listing.
         List<CreditCardAccount> creditCardAccounts = new ArrayList<>();
 
-        creditCardAccounts.addAll(sessionStorage.applicationEntryPoint()
-                .map(applicationEntryPoint -> {
-                            AccountListResponse accountList = client.accountList(applicationEntryPoint);
-                            sessionStorage.persist(accountList);
-                            return accountList.toTinkCreditCard(client).collect(Collectors.toList());
-                        }
-                ).orElse(Collections.emptyList()));
+        creditCardAccounts.addAll(
+                sessionStorage
+                        .applicationEntryPoint()
+                        .map(
+                                applicationEntryPoint -> {
+                                    AccountListResponse accountList =
+                                            client.accountList(applicationEntryPoint);
+                                    sessionStorage.persist(accountList);
+                                    return accountList
+                                            .toTinkCreditCard(client)
+                                            .collect(Collectors.toList());
+                                })
+                        .orElse(Collections.emptyList()));
 
         creditCardAccounts.addAll(
-                sessionStorage.applicationEntryPoint().map(applicationEntryPointResponse -> {
-                            CreditCardsSEResponse cards = client.creditCards(applicationEntryPointResponse);
-                            sessionStorage.persist(cards);
-                            return cards.toTinkAccounts(client);
-                        }
-                ).orElse(Collections.emptyList())
-        );
+                sessionStorage
+                        .applicationEntryPoint()
+                        .map(
+                                applicationEntryPointResponse -> {
+                                    CreditCardsSEResponse cards =
+                                            client.creditCards(applicationEntryPointResponse);
+                                    sessionStorage.persist(cards);
+                                    return cards.toTinkAccounts(client);
+                                })
+                        .orElse(Collections.emptyList()));
 
         return creditCardAccounts;
     }
-
 }

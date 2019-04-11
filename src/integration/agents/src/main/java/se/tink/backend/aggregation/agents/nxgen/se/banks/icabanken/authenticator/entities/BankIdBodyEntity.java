@@ -9,10 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BankIdBodyEntity {
     @JsonProperty("RequestId")
     protected String requestId;
+
     @JsonProperty("Status")
     protected String status;
+
     @JsonProperty("SessionId")
     private String sessionId;
+
     @JsonProperty("AutostartToken")
     private String autostartToken;
 
@@ -30,7 +33,10 @@ public class BankIdBodyEntity {
 
     public String getSessionId() {
         return Optional.ofNullable(sessionId)
-                .orElseThrow(() -> new IllegalStateException("Expected sessionId to be set but it was null"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Expected sessionId to be set but it was null"));
     }
 
     public boolean isTimeOut() {

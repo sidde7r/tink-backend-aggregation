@@ -30,5 +30,4 @@ public class SdcSeConfiguration extends SdcConfiguration {
     public LogTag getInvestmentsLogTag() {
         return SdcSeConstants.Fetcher.INVESTMENTS_LOGGING;
     }
-
 }

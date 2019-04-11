@@ -10,69 +10,95 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.TransferType;
 
 @JsonObject
 public class UpcomingTransactionEntity {
     @JsonProperty("IsRejected")
     private boolean isRejected;
+
     @JsonProperty("EventId")
     private String eventId;
+
     @JsonProperty("Type")
     private String type;
+
     @JsonProperty("FromAccountId")
     private String fromAccountId;
+
     @JsonProperty("FromAccountName")
     private String fromAccountName;
+
     @JsonProperty("FromAccountNumber")
     private String fromAccountNumber;
+
     @JsonProperty("RecipientId")
     private String recipientId;
+
     @JsonProperty("RecipientName")
     private String recipientName;
+
     @JsonProperty("RecipientAccountNumber")
     private String recipientAccountNumber;
+
     @JsonProperty("RecipientType")
     private String recipientType;
+
     @JsonDouble
     @JsonProperty("Amount")
     private double amount;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("DueDate")
     private Date dueDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("DrawDate")
     private Date drawDate;
+
     @JsonProperty("Memo")
     private String memo;
+
     @JsonProperty("ReferenceType")
     private String referenceType;
+
     @JsonProperty("Reference")
     private String reference;
+
     @JsonProperty("IsStandingTransaction")
     private boolean isStandingTransaction;
+
     @JsonProperty("EgiroHasLink")
     private boolean egiroHasLink;
+
     @JsonProperty("IsUpdateable")
     private boolean isUpdateable;
+
     @JsonProperty("FormattedRate")
     private String formattedRate;
+
     @JsonProperty("Rate")
     private double rate;
+
     @JsonProperty("AmountInGivenCurrency")
     private double amountInGivenCurrency;
+
     @JsonProperty("ApproximateAmount")
     private double approximateAmount;
+
     @JsonProperty("TransferCost")
     private double transferCost;
+
     @JsonProperty("AmountWithoutTransferCost")
     private double amountWithoutTransferCost;
+
     @JsonProperty("IsProcessing")
     private boolean isProcessing;
+
     @JsonProperty("RejectedIsViewed")
     private boolean rejectedIsViewed;
 
@@ -90,15 +116,17 @@ public class UpcomingTransactionEntity {
         AccountIdentifier source = getSource();
         AccountIdentifier destination = getDestination();
 
-        return String.valueOf(java.util.Objects.hash(
-                getTypeForHash().name(),
-                amount,
-                destination != null ? destination.toURIWithoutName() : null,
-                reference,
-                // if ignoreSource is true, set source to null, otherwise use it if it exists
-                (ignoreSource || source == null) ? null : source.toURIWithoutName(),
-                memo,
-                dueDate));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getTypeForHash().name(),
+                        amount,
+                        destination != null ? destination.toURIWithoutName() : null,
+                        reference,
+                        // if ignoreSource is true, set source to null, otherwise use it if it
+                        // exists
+                        (ignoreSource || source == null) ? null : source.toURIWithoutName(),
+                        memo,
+                        dueDate));
     }
 
     @JsonIgnore
@@ -134,12 +162,12 @@ public class UpcomingTransactionEntity {
     @JsonIgnore
     private TransferType getTypeForHash() {
         switch (type.toLowerCase()) {
-        case IcaBankenConstants.AccountTypes.PAYMENT:
-        case IcaBankenConstants.AccountTypes.PAYMENT_BG:
-        case IcaBankenConstants.AccountTypes.PAYMENT_PG:
-            return TransferType.PAYMENT;
-        default:
-            return TransferType.BANK_TRANSFER;
+            case IcaBankenConstants.AccountTypes.PAYMENT:
+            case IcaBankenConstants.AccountTypes.PAYMENT_BG:
+            case IcaBankenConstants.AccountTypes.PAYMENT_PG:
+                return TransferType.PAYMENT;
+            default:
+                return TransferType.BANK_TRANSFER;
         }
     }
 

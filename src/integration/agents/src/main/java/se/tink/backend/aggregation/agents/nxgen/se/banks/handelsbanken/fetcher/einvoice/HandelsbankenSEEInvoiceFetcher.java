@@ -13,15 +13,17 @@ public class HandelsbankenSEEInvoiceFetcher implements EInvoiceFetcher {
     private final HandelsbankenSEApiClient client;
     private final HandelsbankenSessionStorage sessionStorage;
 
-    public HandelsbankenSEEInvoiceFetcher(HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+    public HandelsbankenSEEInvoiceFetcher(
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<Transfer> fetchEInvoices() {
-        return sessionStorage.applicationEntryPoint().map(client::pendingEInvoices)
+        return sessionStorage
+                .applicationEntryPoint()
+                .map(client::pendingEInvoices)
                 .map(PendingEInvoicesResponse::toTinkTransfers)
                 .orElse(Collections.emptyList());
     }

@@ -26,41 +26,47 @@ public class VolvoFinansAgent extends NextGenerationAgent {
 
     private final VolvoFinansApiClient apiClient;
 
-    public VolvoFinansAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public VolvoFinansAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new VolvoFinansApiClient(client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester, new VolvoFinansBankIdAutenticator(apiClient, sessionStorage));
+                supplementalRequester,
+                new VolvoFinansBankIdAutenticator(apiClient, sessionStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new VolvoFinansTransactionalAccountFetcher(apiClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new VolvoFinansTransactionalAccountFetcher(apiClient)))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new VolvoFinansTransactionalAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new VolvoFinansTransactionalAccountFetcher(apiClient)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                new VolvoFinansCreditCardFetcher(apiClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new VolvoFinansCreditCardFetcher(apiClient)))));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new VolvoFinansCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new VolvoFinansCreditCardFetcher(apiClient)))));
     }
 
     @Override
@@ -79,7 +85,8 @@ public class VolvoFinansAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

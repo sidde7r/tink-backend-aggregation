@@ -32,7 +32,9 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     private String autostarttoken;
     private int pollCounter = 0;
 
-    public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage,
+    public IcaBankenBankIdAuthenticator(
+            IcaBankenApiClient apiClient,
+            IcaBankenSessionStorage icaBankenSessionStorage,
             IcabankenPersistentStorage icabankenPersistentStorage) {
         this.apiClient = apiClient;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
@@ -55,7 +57,8 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(String reference)
+            throws AuthenticationException, AuthorizationException {
 
         BankIdResponse response = getPollResponse(reference);
         BankIdStatus bankIdStatus = response.getBankIdStatus();
@@ -128,20 +131,26 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             throw BankIdError.TIMEOUT.exception();
         }
 
-        // We sometimes see these temporary errors from Icabanken that we have deemed to be on their side
-        // as users that have gotten this error have manged to update at a later time. Setting a condition
-        // that we have managed to poll at least once before getting the error. Getting errors on first poll
+        // We sometimes see these temporary errors from Icabanken that we have deemed to be on their
+        // side
+        // as users that have gotten this error have manged to update at a later time. Setting a
+        // condition
+        // that we have managed to poll at least once before getting the error. Getting errors on
+        // first poll
         // may indicate that something's wrong on our side.
-        if (bankIdBodyEntity.isFailed() && responseStatus.isSomethingWentWrong() && pollCounter > 0) {
+        if (bankIdBodyEntity.isFailed()
+                && responseStatus.isSomethingWentWrong()
+                && pollCounter > 0) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 
     /**
-     * The application id seems to be random generated from the app installation UUID, so if this is first time for the
-     * credential we won't have any deviceApplicationId stored from before. Then generate one for this credential.
+     * The application id seems to be random generated from the app installation UUID, so if this is
+     * first time for the credential we won't have any deviceApplicationId stored from before. Then
+     * generate one for this credential.
      *
-     * This ID is later used as query param when upon fetching the SessionResponse.
+     * <p>This ID is later used as query param when upon fetching the SessionResponse.
      */
     private void persistNewDeviceApplicationIdIfMissing() {
         String deviceApplicationId = icabankenPersistentStorage.getDeviceApplicationId();
@@ -152,9 +161,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         }
     }
 
-    /**
-     * After the userInstallationId has been set it is added to the headers of all requests.
-     */
+    /** After the userInstallationId has been set it is added to the headers of all requests. */
     private void persistUserInstallationIdIfMissing(SessionBodyEntity sessionBodyEntity) {
         String userInstallationId = icabankenPersistentStorage.getUserInstallationId();
 

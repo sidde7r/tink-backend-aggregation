@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class SecurityHoldingList {
@@ -15,7 +15,6 @@ public class SecurityHoldingList {
         if (holdingList == null) {
             return Stream.empty();
         }
-        return holdingList.stream()
-                .map(holdingList -> holdingList.toInstrument(client));
+        return holdingList.stream().map(holdingList -> holdingList.toInstrument(client));
     }
 }

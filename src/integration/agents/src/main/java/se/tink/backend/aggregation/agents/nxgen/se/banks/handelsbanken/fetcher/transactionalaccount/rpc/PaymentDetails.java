@@ -13,15 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.libraries.date.DateUtils;
 
 public class PaymentDetails extends BaseResponse implements UpdatablePayment {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
+
     private HandelsbankenAmount amount;
     private HandelsbankenSEPaymentDetailRecipient recipient;
     private HandelsbankenSEAccount account;
@@ -54,7 +55,7 @@ public class PaymentDetails extends BaseResponse implements UpdatablePayment {
         return searchLink(HandelsbankenConstants.URLS.Links.UPDATE);
     }
 
-    public Optional<URL> toSignature () {
+    public Optional<URL> toSignature() {
         return searchLink(HandelsbankenConstants.URLS.Links.SIGNATURE);
     }
 

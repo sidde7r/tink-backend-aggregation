@@ -17,20 +17,25 @@ public class AccountListSEResponse extends AccountListResponse {
 
     @Override
     public Stream<TransactionalAccount> toTinkAccounts(HandelsbankenApiClient client) {
-        return accountGroups == null ? Stream.empty() : accountGroups.stream()
-                .flatMap(accountGroup -> accountGroup.toAccounts(client));
+        return accountGroups == null
+                ? Stream.empty()
+                : accountGroups.stream().flatMap(accountGroup -> accountGroup.toAccounts(client));
     }
 
     @Override
     public Stream<CreditCardAccount> toTinkCreditCard(HandelsbankenApiClient client) {
-        return accountGroups == null ? Stream.empty() : accountGroups.stream()
-                .flatMap(accountGroup -> accountGroup.toTinkCreditCard(client));
+        return accountGroups == null
+                ? Stream.empty()
+                : accountGroups.stream()
+                        .flatMap(accountGroup -> accountGroup.toTinkCreditCard(client));
     }
 
     @Override
     public Optional<? extends HandelsbankenAccount> find(Account account) {
-        return accountGroups == null ? Optional.empty() : accountGroups.stream()
-                .flatMap(accountGroup -> accountGroup.find(account))
-                .findFirst();
+        return accountGroups == null
+                ? Optional.empty()
+                : accountGroups.stream()
+                        .flatMap(accountGroup -> accountGroup.find(account))
+                        .findFirst();
     }
 }

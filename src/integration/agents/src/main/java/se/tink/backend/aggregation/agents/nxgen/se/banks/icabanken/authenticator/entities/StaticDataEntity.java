@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class StaticDataEntity {
     @JsonProperty("NextMonthlyDrawDate")
     private String nextMonthlyDrawDate;
+
     @JsonProperty("FundTradingHours")
     private FundTradingHoursEntity fundTradingHours;
+
     @JsonProperty("SecurityLevels")
     private List<SecurityLevelsEntity> securityLevels;
 

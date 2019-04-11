@@ -6,12 +6,16 @@ import java.util.List;
 public class SessionBodyEntity {
     @JsonProperty("Session")
     private SessionEntity session;
+
     @JsonProperty("Customer")
     private CustomerEntity customer;
+
     @JsonProperty("Settings")
     private SettingsEntity settings;
+
     @JsonProperty("ClosedChannels")
     private List<Object> closedChannels;
+
     @JsonProperty("StaticData")
     private StaticDataEntity staticData;
 

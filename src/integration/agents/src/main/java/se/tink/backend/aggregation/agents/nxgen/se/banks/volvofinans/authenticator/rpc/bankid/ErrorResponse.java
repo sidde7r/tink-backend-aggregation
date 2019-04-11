@@ -11,8 +11,8 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean isBankIdAlreadyInProgressError() {
-        return !Strings.isNullOrEmpty(message) &&
-                message.contains(VolvoFinansConstants.Message.ALREADY_IN_PROGRESS);
+        return !Strings.isNullOrEmpty(message)
+                && message.contains(VolvoFinansConstants.Message.ALREADY_IN_PROGRESS);
     }
 
     public String getMessage() {
