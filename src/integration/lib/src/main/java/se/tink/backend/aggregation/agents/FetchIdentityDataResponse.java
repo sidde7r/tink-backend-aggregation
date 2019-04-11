@@ -5,8 +5,8 @@ import se.tink.libraries.identitydata.IdentityData;
 public final class FetchIdentityDataResponse {
     private final IdentityData identityData;
 
-    public FetchIdentityDataResponse(final IdentityData customerInfo) {
-        this.identityData = customerInfo;
+    public FetchIdentityDataResponse(final IdentityData identityData) {
+        this.identityData = identityData;
     }
 
     public IdentityData getIdentityData() {
