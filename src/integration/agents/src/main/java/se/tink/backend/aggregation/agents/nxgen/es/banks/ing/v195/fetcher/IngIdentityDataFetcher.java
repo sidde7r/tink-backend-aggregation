@@ -10,10 +10,10 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
-public class IngCustomerInfoFetcher implements IdentityDataFetcher {
+public class IngIdentityDataFetcher implements IdentityDataFetcher {
     private IngApiClient ingApiClient;
 
-    public IngCustomerInfoFetcher(IngApiClient ingApiClient) {
+    public IngIdentityDataFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
     }
 
