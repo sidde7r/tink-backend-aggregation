@@ -11,11 +11,11 @@ public interface IdentityDataCacher {
      *
      * @param customerInfo Customer identity data
      */
-    void updateCustomerInfo(IdentityData customerInfo);
+    void updateIdentityData(IdentityData customerInfo);
 
     /**
      * @return The customer identity data previously stored using {@code
-     *     IdentityDataCacher::updateCustomerInfo}, or Optional.empty() if none exists
+     *     IdentityDataCacher::updateIdentityData}, or Optional.empty() if none exists
      */
     Optional<IdentityData> getCustomerInfo();
 }

@@ -308,7 +308,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public void updateCustomerInfo(IdentityData customerInfo) {
+    public void updateIdentityData(IdentityData customerInfo) {
         this.identityData = customerInfo;
     }
 

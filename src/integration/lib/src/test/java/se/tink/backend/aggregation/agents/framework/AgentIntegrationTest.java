@@ -238,7 +238,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 if (item == RefreshableItem.IDENTITY
                         && agent instanceof RefreshIdentityDataExecutor) {
 
-                    context.updateCustomerInfo(
+                    context.updateIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getCustomerInfo());
