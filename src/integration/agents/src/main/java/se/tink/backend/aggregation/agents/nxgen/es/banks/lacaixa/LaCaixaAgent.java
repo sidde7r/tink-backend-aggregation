@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
@@ -116,8 +116,8 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshIdentity
     }
 
     @Override
-    public FetchCustomerInfoResponse fetchCustomerInfo() {
+    public FetchIdentityDataResponse fetchCustomerInfo() {
         final CustomerInfoFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
-        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
+        return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
     }
 }

@@ -11,5 +11,5 @@ public interface RefreshIdentityDataExecutor {
      *
      * @return fetch customer identity data response
      */
-    FetchCustomerInfoResponse fetchCustomerInfo();
+    FetchIdentityDataResponse fetchCustomerInfo();
 }

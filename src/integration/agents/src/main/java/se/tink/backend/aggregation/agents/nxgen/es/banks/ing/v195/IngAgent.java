@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
@@ -159,8 +159,8 @@ public class IngAgent extends NextGenerationAgent implements RefreshIdentityData
     }
 
     @Override
-    public FetchCustomerInfoResponse fetchCustomerInfo() {
+    public FetchIdentityDataResponse fetchCustomerInfo() {
         final CustomerInfoFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
-        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
+        return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
     }
 }
