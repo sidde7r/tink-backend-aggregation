@@ -17,27 +17,23 @@ import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class RaiffeisenAuthenticator implements OAuth2Authenticator {
     private final RaiffeisenApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public RaiffeisenAuthenticator(
-            RaiffeisenApiClient apiClient,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public RaiffeisenAuthenticator(RaiffeisenApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        final String iban = apiClient.getConfiguration().getIban();
+
         List<AccountInfoEntity> accountInfoEntityList =
-                Collections.singletonList(
-                        new AccountInfoEntity(
-                                apiClient.getConfiguration().getIban(), Market.CURRENCY));
+                Collections.singletonList(new AccountInfoEntity(iban, Market.CURRENCY));
 
         GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
@@ -52,16 +48,21 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
 
         GetConsentResponse getConsentResponse = apiClient.getConsent(getConsentRequest);
         sessionStorage.put(StorageKeys.CONSENT_ID, getConsentResponse.getConsentId());
+
         return apiClient.getUrl(state, getConsentResponse);
     }
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+        final String clientId = apiClient.getConfiguration().getClientId();
+        final String clientSecret = apiClient.getConfiguration().getClientSecret();
+        final String redirectUri = apiClient.getConfiguration().getRedirectUri();
+
         GetTokenForm getTokenForm =
                 GetTokenForm.builder()
-                        .setClientId(apiClient.getConfiguration().getClientId())
-                        .setClientSecret(apiClient.getConfiguration().getClientSecret())
-                        .setRedirectUri(apiClient.getConfiguration().getRedirectUri())
+                        .setClientId(clientId)
+                        .setClientSecret(clientSecret)
+                        .setRedirectUri(redirectUri)
                         .setGrantType(FormValues.AUTHORIZATION_CODE)
                         .setCode(code)
                         .build();
@@ -72,11 +73,13 @@ public class RaiffeisenAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
+        final String clientId = apiClient.getConfiguration().getClientId();
+        final String clientSecret = apiClient.getConfiguration().getClientSecret();
 
         RefreshTokenForm refreshTokenForm =
                 RefreshTokenForm.builder()
-                        .setClientId(apiClient.getConfiguration().getClientId())
-                        .setClientSecret(apiClient.getConfiguration().getClientSecret())
+                        .setClientId(clientId)
+                        .setClientSecret(clientSecret)
                         .setGrantType(FormValues.REFRESH_TOKEN)
                         .setRefreshToken(refreshToken)
                         .build();

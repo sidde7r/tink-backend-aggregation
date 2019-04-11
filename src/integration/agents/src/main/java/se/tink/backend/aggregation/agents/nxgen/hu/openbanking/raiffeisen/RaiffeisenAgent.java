@@ -62,7 +62,7 @@ public final class RaiffeisenAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         RaiffeisenAuthenticator authenticator =
-                new RaiffeisenAuthenticator(apiClient, sessionStorage, persistentStorage);
+                new RaiffeisenAuthenticator(apiClient, sessionStorage);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);

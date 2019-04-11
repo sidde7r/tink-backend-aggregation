@@ -58,25 +58,32 @@ public final class RaiffeisenApiClient {
     }
 
     private RequestBuilder createFetchingRequest(URL url) {
+        final String clientId = configuration.getClientId();
+
         return createRequestInSession(url)
                 .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
-                .header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId());
+                .header(HeaderKeys.X_IBM_CLIENT_ID, clientId);
     }
 
     public GetConsentResponse getConsent(GetConsentRequest getConsentRequest) {
+        final String clientId = configuration.getClientId();
+
         return createRequest(Urls.GET_CONSENT)
-                .header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
+                .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
                 .post(GetConsentResponse.class, getConsentRequest);
     }
 
     public URL getUrl(String state, GetConsentResponse getConsentResponse) {
+        final String clientId = configuration.getClientId();
+        final String redirectUri = configuration.getRedirectUri();
+
         return createRequest(Urls.AUTHORIZE)
-                .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.SCOPE, QueryValues.AISP)
-                .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUri())
+                .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.CONSENT_ID, getConsentResponse.getConsentId())
                 .queryParam(QueryKeys.STATE, state)
                 .getUrl();
