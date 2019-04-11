@@ -15,7 +15,6 @@ public enum RefreshableItem {
     TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
     EINVOICES,
     TRANSFER_DESTINATIONS,
-    IDENTITY_DATA,
 
     CHECKING_ACCOUNTS(AccountTypes.CHECKING, AccountTypes.OTHER),
     CHECKING_TRANSACTIONS(AccountTypes.CHECKING, AccountTypes.OTHER),
@@ -26,7 +25,9 @@ public enum RefreshableItem {
     LOAN_ACCOUNTS(AccountTypes.LOAN, AccountTypes.MORTGAGE),
     LOAN_TRANSACTIONS(AccountTypes.LOAN, AccountTypes.MORTGAGE),
     INVESTMENT_ACCOUNTS(AccountTypes.INVESTMENT),
-    INVESTMENT_TRANSACTIONS(AccountTypes.INVESTMENT);
+    INVESTMENT_TRANSACTIONS(AccountTypes.INVESTMENT),
+
+    IDENTITY_DATA;
 
     private final List<AccountTypes> accountTypes;
 
