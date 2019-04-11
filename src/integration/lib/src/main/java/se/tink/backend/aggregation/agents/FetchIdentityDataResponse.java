@@ -9,7 +9,7 @@ public final class FetchIdentityDataResponse {
         this.customerInfo = customerInfo;
     }
 
-    public IdentityData getCustomerInfo() {
+    public IdentityData getIdentityData() {
         return customerInfo;
     }
 }

@@ -241,7 +241,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     context.updateIdentityData(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
-                                    .getCustomerInfo());
+                                    .getIdentityData());
                 } else {
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
