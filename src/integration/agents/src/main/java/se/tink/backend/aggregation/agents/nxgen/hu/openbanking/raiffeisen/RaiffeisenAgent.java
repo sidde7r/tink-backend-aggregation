@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.RaiffeisenConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.RaiffeisenAuthenticator;
@@ -62,7 +63,8 @@ public final class RaiffeisenAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         RaiffeisenAuthenticator authenticator =
-                new RaiffeisenAuthenticator(apiClient, sessionStorage);
+                new RaiffeisenAuthenticator(
+                        apiClient, sessionStorage, credentials.getField(CredentialKeys.IBAN));
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);

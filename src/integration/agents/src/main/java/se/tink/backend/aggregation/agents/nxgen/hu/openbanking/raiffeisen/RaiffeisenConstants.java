@@ -101,4 +101,8 @@ public final class RaiffeisenConstants {
     public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "Configuration is missing!";
     }
+
+    public static class CredentialKeys {
+        public static final String IBAN = "iban";
+    }
 }

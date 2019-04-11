@@ -9,7 +9,6 @@ public class RaiffeisenConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUri;
-    @JsonProperty private String iban;
 
     public String getClientId() {
         return clientId;
@@ -21,9 +20,5 @@ public class RaiffeisenConfiguration implements ClientConfiguration {
 
     public String getRedirectUri() {
         return redirectUri;
-    }
-
-    public String getIban() {
-        return iban;
     }
 }

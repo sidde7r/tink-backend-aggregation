@@ -22,16 +22,17 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class RaiffeisenAuthenticator implements OAuth2Authenticator {
     private final RaiffeisenApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private final String iban;
 
-    public RaiffeisenAuthenticator(RaiffeisenApiClient apiClient, SessionStorage sessionStorage) {
+    public RaiffeisenAuthenticator(
+            RaiffeisenApiClient apiClient, SessionStorage sessionStorage, String iban) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+        this.iban = iban;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        final String iban = apiClient.getConfiguration().getIban();
-
         List<AccountInfoEntity> accountInfoEntityList =
                 Collections.singletonList(new AccountInfoEntity(iban, Market.CURRENCY));
 
