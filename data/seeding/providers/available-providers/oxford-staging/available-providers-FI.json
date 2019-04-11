@@ -1,19 +1,18 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [
-    "fi-americanexpress-password",
-    "fi-omasp-codecard",
-    "fi-op-codecard",
-    "fi-alandsbanken-codecard",
-    "fi-poppankki-codecard",
-    "fi-saastopankki-codecard",
-    "fi-spankki-codecard",
-    "fi-nordea-thirdpartyapp",
-    "fi-handelsbanken-codecard",
-    "fi-danskebank-codecard",
-    "fi-aktia-codecard",
-    "fi-test-password",
-    "fi-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-staging",
+    "providers": [
+        "fi-americanexpress-password",
+        "fi-omasp-codecard",
+        "fi-op-codecard",
+        "fi-alandsbanken-codecard",
+        "fi-poppankki-codecard",
+        "fi-saastopankki-codecard",
+        "fi-spankki-codecard",
+        "fi-nordea-thirdpartyapp",
+        "fi-handelsbanken-codecard",
+        "fi-danskebank-codecard",
+        "fi-aktia-codecard",
+        "fi-test-password",
+        "fi-test-multi-supplemental"
+    ]
 }
-

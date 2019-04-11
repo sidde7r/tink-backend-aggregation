@@ -8,17 +8,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class AsLhvTransactionalAccountTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class AsLhvTransactionalAccountTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
     private final AsLhvTransactionFetcher transactionFetcher;
 
     public AsLhvTransactionalAccountTransactionFetcher(
-            final AsLhvApiClient apiClient,
-            final AsLhvSessionStorage sessionStorage) {
+            final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
         transactionFetcher = new AsLhvTransactionFetcher(apiClient, sessionStorage);
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         return transactionFetcher.getTransactionsFor(account, fromDate, toDate);
     }
 }

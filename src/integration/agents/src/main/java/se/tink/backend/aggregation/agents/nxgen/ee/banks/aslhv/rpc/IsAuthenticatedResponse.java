@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class IsAuthenticatedResponse extends BaseResponse {
     boolean authenticated;
+
     @JsonProperty("user_id")
     int userId;
+
     @JsonProperty("current_user")
     CurrentUser currentUser;
 

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
+import java.util.Date;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
@@ -12,8 +13,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-
-import java.util.Date;
 
 public class AsLhvApiClient {
 

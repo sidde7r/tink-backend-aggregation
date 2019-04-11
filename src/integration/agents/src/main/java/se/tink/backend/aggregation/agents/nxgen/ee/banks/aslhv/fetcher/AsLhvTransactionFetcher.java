@@ -15,26 +15,26 @@ public class AsLhvTransactionFetcher {
     private final AsLhvSessionStorage sessionStorage;
     private final AsLhvApiClient apiClient;
 
-    public AsLhvTransactionFetcher(final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
+    public AsLhvTransactionFetcher(
+            final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     public <T extends Account> PaginatorResponse getTransactionsFor(
-            final T account,
-            final Date fromDate,
-            final Date toDate) {
+            final T account, final Date fromDate, final Date toDate) {
         final GetAccountTransactionsResponse response =
                 apiClient.getAccountTransactions(account.getBankIdentifier(), fromDate, toDate);
         if (!response.requestSuccessful()) {
-            throw new IllegalStateException(String.format("Transaction fetch request failed: %s",
-                    response.getErrorMessage()));
+            throw new IllegalStateException(
+                    String.format(
+                            "Transaction fetch request failed: %s", response.getErrorMessage()));
         }
 
-        final Collection<? extends Transaction> transactions = response.getTransactions(sessionStorage)
-                .stream()
-                .filter(transaction -> !transaction.getAmount().isZero())
-                .collect(Collectors.toSet());
+        final Collection<? extends Transaction> transactions =
+                response.getTransactions(sessionStorage).stream()
+                        .filter(transaction -> !transaction.getAmount().isZero())
+                        .collect(Collectors.toSet());
         return PaginatorResponseImpl.create(transactions);
     }
 }

@@ -8,10 +8,12 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class AsLhvCreditCardAccountFetcher extends AsLhvAccountFetcher implements AccountFetcher<CreditCardAccount> {
+public class AsLhvCreditCardAccountFetcher extends AsLhvAccountFetcher
+        implements AccountFetcher<CreditCardAccount> {
     private final AsLhvSessionStorage sessionStorage;
 
-    public AsLhvCreditCardAccountFetcher(final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
+    public AsLhvCreditCardAccountFetcher(
+            final AsLhvApiClient apiClient, final AsLhvSessionStorage sessionStorage) {
         super(apiClient);
         this.sessionStorage = sessionStorage;
     }
@@ -25,4 +27,3 @@ public class AsLhvCreditCardAccountFetcher extends AsLhvAccountFetcher implement
                 sessionStorage.getBaseCurrencyId());
     }
 }
-

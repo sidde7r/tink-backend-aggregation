@@ -1,22 +1,22 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "es-americanexpress-password",
-    "es-bancopopular-password",
-    "es-bancosabadell-password",
-    "es-bancosantander-password",
-    "es-bankia-password",
-    "es-bbva-password",
-    "es-evobanco-password",
-    "es-ibercaja-password",
-    "es-imaginbank-password",
-    "es-ing-password",
-    "es-lacaixa-password",
-    "es-n26-password",
-    "es-openbank-password",
-    "es-revolut-password",
-    "es-targobank-password",
-    "es-test-password",
-    "es-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "es-americanexpress-password",
+        "es-bancopopular-password",
+        "es-bancosabadell-password",
+        "es-bancosantander-password",
+        "es-bankia-password",
+        "es-bbva-password",
+        "es-evobanco-password",
+        "es-ibercaja-password",
+        "es-imaginbank-password",
+        "es-ing-password",
+        "es-lacaixa-password",
+        "es-n26-password",
+        "es-openbank-password",
+        "es-revolut-password",
+        "es-targobank-password",
+        "es-test-password",
+        "es-test-multi-supplemental"
+    ]
 }

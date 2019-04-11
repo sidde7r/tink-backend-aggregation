@@ -12,6 +12,7 @@ public class BaseResponse {
 
     @JsonProperty("error")
     List<String> error;
+
     @JsonProperty("error_fields")
     List<String> errorFields;
 

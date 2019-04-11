@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 public class AsLhvAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
 
-    private final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("ee",
-            "ee-aslhv-password")
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("ee", "ee-aslhv-password")
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
 
     @Before
     public void before() {

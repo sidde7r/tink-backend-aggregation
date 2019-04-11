@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse extends BaseResponse {
     @JsonProperty("authentication")
     boolean authentication;
+
     @JsonProperty("user_id")
     int userId;
 
@@ -32,8 +33,8 @@ public class LoginResponse extends BaseResponse {
 
             if (error.get(0).equalsIgnoreCase(AsLhvConstants.Messages.INVALID_PARAMETERS)) {
                 if (errorFields != null || !errorFields.isEmpty()) {
-                    if (errorFields.contains(AsLhvConstants.Form.PASSWORD_PARAMETER) ||
-                            errorFields.contains(AsLhvConstants.Form.USERNAME_PARAMETER)) {
+                    if (errorFields.contains(AsLhvConstants.Form.PASSWORD_PARAMETER)
+                            || errorFields.contains(AsLhvConstants.Form.USERNAME_PARAMETER)) {
                         result = true;
                     }
                 }
