@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.configuration.DemoFakeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankTransactionalAccountsFetcher;
@@ -28,12 +29,16 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
 
 public final class DemoFakeBankAgent extends NextGenerationAgent {
+
+    private final String clientName;
     private final DemoFakeBankApiClient apiClient;
     private final SessionStorage sessionStorage;
 
     public DemoFakeBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+
+        clientName = request.getProvider().getPayload();
         apiClient = new DemoFakeBankApiClient(client, persistentStorage);
         sessionStorage = new SessionStorage();
     }
@@ -42,16 +47,17 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        DemoFakeBankConfiguration demoFakeBankConfiguration = configuration
-                .getIntegrations()
-                .getIntegration(
-                        DemoFakeBankConstants.INTEGRATION_NAME, DemoFakeBankConfiguration.class)
-                .orElseThrow(() ->
-                        new IllegalStateException(
-                                String.format(
-                                        "Demo fake bank integration not configured")));
+        apiClient.setConfiguration(getClientConfiguration());
+    }
 
-        persistentStorage.put(DemoFakeBankConstants.Storage.BASE_URL, demoFakeBankConfiguration.getBaseUrl());
+    public DemoFakeBankConfiguration getClientConfiguration() {
+        return configuration
+                .getIntegrations()
+                .getClientConfiguration(
+                        DemoFakeBankConstants.INTEGRATION_NAME,
+                        clientName,
+                        DemoFakeBankConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -66,7 +72,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        DemoFakeBankTransactionalAccountsFetcher transactionalAccountsFetcher =
+        final DemoFakeBankTransactionalAccountsFetcher transactionalAccountsFetcher =
                 new DemoFakeBankTransactionalAccountsFetcher(apiClient, sessionStorage);
 
         return Optional.of(
