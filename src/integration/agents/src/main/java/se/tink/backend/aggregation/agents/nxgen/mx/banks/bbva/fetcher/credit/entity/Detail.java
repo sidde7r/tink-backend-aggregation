@@ -17,8 +17,7 @@ public class Detail {
     private String agreementContract;
 
     public Amount getBalance() {
-        return specificAmounts
-                .stream()
+        return specificAmounts.stream()
                 .filter(x -> BbvaMxConstants.VALUES.CURRENT_BALANCE.equalsIgnoreCase(x.getId()))
                 .findFirst()
                 .get()
@@ -28,8 +27,7 @@ public class Detail {
     }
 
     public Amount getAvailableCredit() {
-        return specificAmounts
-                .stream()
+        return specificAmounts.stream()
                 .filter(x -> BbvaMxConstants.VALUES.AVAILABLE_BALANCE.equalsIgnoreCase(x.getId()))
                 .findFirst()
                 .get()

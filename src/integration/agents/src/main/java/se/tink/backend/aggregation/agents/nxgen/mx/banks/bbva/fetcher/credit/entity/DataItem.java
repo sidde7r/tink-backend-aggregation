@@ -29,7 +29,8 @@ public class DataItem {
 
     private Date getDate() {
         try {
-            return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(operationDate.substring(0, 23));
+            return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(
+                    operationDate.substring(0, 23));
         } catch (ParseException e) {
             logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString());
             throw new IllegalStateException("Date is invalid");
@@ -46,7 +47,9 @@ public class DataItem {
                             .build());
         } catch (Exception e) {
             logger.error(
-                    "{} {}", BbvaMxConstants.LOGGING.CREDIT_TRANSACTION_PARSING_ERROR, e.toString());
+                    "{} {}",
+                    BbvaMxConstants.LOGGING.CREDIT_TRANSACTION_PARSING_ERROR,
+                    e.toString());
             return Optional.empty();
         }
     }

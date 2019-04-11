@@ -12,8 +12,7 @@ public class DataEntity {
     private List<FamilyItemEntity> family;
 
     public Collection<TransactionalAccount> toTransactionalAccounts(String holderName) {
-        return contracts
-                .stream()
+        return contracts.stream()
                 .filter(ContractsItemEntity::isValid)
                 .map(x -> x.toTransactionalAccount(holderName))
                 .collect(Collectors.toList());

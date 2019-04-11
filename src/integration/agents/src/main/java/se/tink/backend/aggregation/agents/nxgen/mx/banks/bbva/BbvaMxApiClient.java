@@ -53,7 +53,9 @@ public class BbvaMxApiClient {
                         .header(
                                 BbvaMxConstants.HEADERS.DEVICE_SCREEN_SIZE,
                                 BbvaMxConstants.VALUES.DEVICE_SCREEN_SIZE)
-                        .header(BbvaMxConstants.HEADERS.DEVICE_DPI, BbvaMxConstants.VALUES.DEVICE_DPI)
+                        .header(
+                                BbvaMxConstants.HEADERS.DEVICE_DPI,
+                                BbvaMxConstants.VALUES.DEVICE_DPI)
                         .header(
                                 BbvaMxConstants.HEADERS.DEVICE_OS_VERSION,
                                 BbvaMxConstants.VALUES.DEVICE_OS_VERSION)
@@ -97,7 +99,8 @@ public class BbvaMxApiClient {
     }
 
     public ValidateSubscriptionResponse validateSubscription(ValidateSubscriptionRequest request) {
-        return getGlomoRequest(BbvaMxConstants.URLS.VALIDATE_SUBSCRIPTION, MediaType.APPLICATION_JSON)
+        return getGlomoRequest(
+                        BbvaMxConstants.URLS.VALIDATE_SUBSCRIPTION, MediaType.APPLICATION_JSON)
                 .post(
                         ValidateSubscriptionResponse.class,
                         SerializationUtils.serializeToString(request));
@@ -106,7 +109,8 @@ public class BbvaMxApiClient {
     public HttpResponse activateDevice(DeviceActivationRequest request, String boundary) {
         String boundaryWithoutDashes = boundary.substring(2, boundary.length());
         String contentType =
-                String.format(BbvaMxConstants.HEADERS.CONTENT_TYPE_MULTIPART, boundaryWithoutDashes);
+                String.format(
+                        BbvaMxConstants.HEADERS.CONTENT_TYPE_MULTIPART, boundaryWithoutDashes);
         return getGlomoRequest(BbvaMxConstants.URLS.DEVICE_ACTIVATION, contentType)
                 .post(HttpResponse.class, BbvaMxUtils.getActivationDataBoundary(request, boundary));
     }
@@ -198,7 +202,8 @@ public class BbvaMxApiClient {
                         BbvaMxConstants.DATE.DATE_FORMAT.format(fromDate))
                 .queryParam(BbvaMxConstants.QUERY.PAGE_SIZE, BbvaMxConstants.QUERY.PAGE_SIZE_VALUE)
                 .queryParam(
-                        BbvaMxConstants.QUERY.TO_DATE, BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
+                        BbvaMxConstants.QUERY.TO_DATE,
+                        BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
                 .get(TransactionsResponse.class);
     }
 
@@ -211,7 +216,8 @@ public class BbvaMxApiClient {
                         BbvaMxConstants.DATE.DATE_FORMAT.format(fromDate))
                 .queryParam(BbvaMxConstants.QUERY.PAGE_SIZE, BbvaMxConstants.QUERY.PAGE_SIZE_VALUE)
                 .queryParam(
-                        BbvaMxConstants.QUERY.TO_DATE, BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
+                        BbvaMxConstants.QUERY.TO_DATE,
+                        BbvaMxConstants.DATE.DATE_FORMAT.format(toDate))
                 .get(CreditTransactionsResponse.class);
     }
 

@@ -83,8 +83,7 @@ public class BbvaMxAuthenticator implements Authenticator {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            if (BbvaMxConstants.ERROR.USER_BLOCKED.equalsIgnoreCase(
-                    err.getErrorCode())) {
+            if (BbvaMxConstants.ERROR.USER_BLOCKED.equalsIgnoreCase(err.getErrorCode())) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
 

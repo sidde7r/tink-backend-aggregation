@@ -12,8 +12,7 @@ public class Data {
     private List<ContractsItem> contracts;
 
     public Collection<CreditCardAccount> getCreditCardAccounts(String holdername) {
-        return contracts
-                .stream()
+        return contracts.stream()
                 .map(x -> x.toCreditCardAccount(holdername))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

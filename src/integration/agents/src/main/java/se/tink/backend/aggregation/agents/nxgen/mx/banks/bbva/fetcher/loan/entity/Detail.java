@@ -10,8 +10,7 @@ public class Detail {
     private List<SpecificAmountsItem> specificAmounts;
 
     public Amount getBalance() {
-        return specificAmounts
-                .stream()
+        return specificAmounts.stream()
                 .filter(x -> x.getId().equalsIgnoreCase(BbvaMxConstants.VALUES.LOAN_BALANCE))
                 .findFirst()
                 .get()
