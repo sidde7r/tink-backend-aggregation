@@ -12,19 +12,19 @@ public class CreditorAccount {
     @JsonProperty("currency")
     private String currency;
 
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
-
     public String getIban() {
         return iban;
     }
 
-    public void setCurrency(final String currency) {
-        this.currency = currency;
+    public void setIban(final String iban) {
+        this.iban = iban;
     }
 
     public String getCurrency() {
         return currency;
+    }
+
+    public void setCurrency(final String currency) {
+        this.currency = currency;
     }
 }

@@ -15,27 +15,27 @@ public class BalancesItem {
     @JsonProperty("balanceAmount")
     private BalanceAmount balanceAmount;
 
-    public void setBalanceType(final String balanceType) {
-        this.balanceType = balanceType;
-    }
-
     public String getBalanceType() {
         return balanceType;
     }
 
-    public void setLastChangeDateTime(final String lastChangeDateTime) {
-        this.lastChangeDateTime = lastChangeDateTime;
+    public void setBalanceType(final String balanceType) {
+        this.balanceType = balanceType;
     }
 
     public String getLastChangeDateTime() {
         return lastChangeDateTime;
     }
 
-    public void setBalanceAmount(final BalanceAmount balanceAmount) {
-        this.balanceAmount = balanceAmount;
+    public void setLastChangeDateTime(final String lastChangeDateTime) {
+        this.lastChangeDateTime = lastChangeDateTime;
     }
 
     public BalanceAmount getBalanceAmount() {
         return balanceAmount;
+    }
+
+    public void setBalanceAmount(final BalanceAmount balanceAmount) {
+        this.balanceAmount = balanceAmount;
     }
 }

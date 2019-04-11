@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.assertj.core.util.Lists;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -26,20 +26,20 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
 
     @JsonIgnore private int currentPage;
 
-    public void setTransactions(final Transactions transactions) {
-        this.transactions = transactions;
-    }
-
     public Transactions getTransactions() {
         return transactions;
     }
 
-    public void setAccount(final Account account) {
-        this.account = account;
+    public void setTransactions(final Transactions transactions) {
+        this.transactions = transactions;
     }
 
     public Account getAccount() {
         return account;
+    }
+
+    public void setAccount(final Account account) {
+        this.account = account;
     }
 
     @JsonIgnore
@@ -84,7 +84,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
             final int idx = pair.indexOf("=");
             query_pairs.put(pair.substring(0, idx), pair.substring(idx + 1));
         }
-        final String lastPage = query_pairs.get(RabobankConstants.QueryParams.PAGE);
+        final String lastPage = query_pairs.get(QueryParams.PAGE);
         return Integer.parseInt(lastPage);
     }
 

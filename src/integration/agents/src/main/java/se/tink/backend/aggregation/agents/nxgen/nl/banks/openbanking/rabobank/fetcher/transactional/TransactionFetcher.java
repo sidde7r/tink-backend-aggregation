@@ -19,6 +19,7 @@ public class TransactionFetcher implements TransactionPagePaginator<Transactiona
             final TransactionalAccount account, final int page) {
         final TransactionalTransactionsResponse resp = apiClient.getTransactions(account, page);
         resp.setCurrentPage(page);
+
         return resp;
     }
 }

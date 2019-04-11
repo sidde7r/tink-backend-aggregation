@@ -17,27 +17,27 @@ public class Transactions {
     @JsonProperty("_links")
     private Links links;
 
-    public void setBooked(final List<TransactionItem> booked) {
-        this.booked = booked;
-    }
-
     public Optional<List<TransactionItem>> getBooked() {
         return Optional.ofNullable(booked);
     }
 
-    public void setPending(final List<TransactionItem> pending) {
-        this.pending = pending;
+    public void setBooked(final List<TransactionItem> booked) {
+        this.booked = booked;
     }
 
     public Optional<List<TransactionItem>> getPending() {
         return Optional.ofNullable(pending);
     }
 
-    public void setLinks(final Links links) {
-        this.links = links;
+    public void setPending(final List<TransactionItem> pending) {
+        this.pending = pending;
     }
 
     public Links getLinks() {
         return links;
+    }
+
+    public void setLinks(final Links links) {
+        this.links = links;
     }
 }

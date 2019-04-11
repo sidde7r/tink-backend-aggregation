@@ -13,19 +13,19 @@ public class TransactionAmount {
     @JsonProperty("currency")
     private String currency;
 
-    public void setAmount(final double amount) {
-        this.amount = amount;
-    }
-
     public Amount getAmount() {
         return new Amount(currency, amount);
     }
 
-    public void setCurrency(final String currency) {
-        this.currency = currency;
+    public void setAmount(final double amount) {
+        this.amount = amount;
     }
 
     public String getCurrency() {
         return currency;
+    }
+
+    public void setCurrency(final String currency) {
+        this.currency = currency;
     }
 }

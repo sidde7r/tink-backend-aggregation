@@ -20,6 +20,8 @@ import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -37,19 +39,16 @@ public class RabobankUtils {
 
     public static OAuth2Token getOauthToken(final PersistentStorage persistentStorage) {
         return persistentStorage
-                .get(RabobankConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                .get(StorageKey.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new NoSuchElementException("Missing Oauth token!"));
     }
 
     public static String createSignatureString(
             final String date, final String digest, final String requestId) {
-        String result = RabobankConstants.Signature.SIGNING_STRING_DATE + date + "\n";
+        String result = Signature.SIGNING_STRING_DATE + date + "\n";
         result +=
-                RabobankConstants.Signature.SIGNING_STRING_DIGEST
-                        + RabobankConstants.Signature.SIGNING_STRING_SHA_512
-                        + digest
-                        + "\n";
-        result += RabobankConstants.Signature.SIGNING_STRING_REQUEST_ID + requestId;
+                Signature.SIGNING_STRING_DIGEST + Signature.SIGNING_STRING_SHA_512 + digest + "\n";
+        result += Signature.SIGNING_STRING_REQUEST_ID + requestId;
         return result;
     }
 
