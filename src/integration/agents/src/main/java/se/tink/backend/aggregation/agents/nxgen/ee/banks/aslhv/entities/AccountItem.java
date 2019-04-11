@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountItem {
@@ -76,10 +76,10 @@ public class AccountItem {
     @JsonIgnore
     private boolean isInvalidAccount() {
         // portfolioId is required to fetch transactions.
-        return !AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).isPresent() ||
-                iban == null ||
-                number == null ||
-                portfolioId == null;
+        return !AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).isPresent()
+                || iban == null
+                || number == null
+                || portfolioId == null;
     }
 
     @JsonIgnore
@@ -92,9 +92,7 @@ public class AccountItem {
 
     @JsonIgnore
     public Optional<CreditCardAccount> buildCreditCardAccount(
-            final int baseCurrencyId,
-            final String currency,
-            final String currentUser) {
+            final int baseCurrencyId, final String currency, final String currentUser) {
         if (isInvalidAccount()) {
             return Optional.empty();
         }
@@ -107,21 +105,20 @@ public class AccountItem {
         double freeCredit = getFreeCredit(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
         Amount availableCredit = new Amount(currency, freeCredit);
-        return Optional.of(CreditCardAccount.builder(iban, accountBalance, availableCredit)
-                .addIdentifier(new IbanIdentifier(iban))
-                .setBalance(accountBalance)
-                .setName(getAccountName())
-                .setHolderName(new HolderName(currentUser))
-                .setBankIdentifier(portfolioId)
-                .setAccountNumber(number)
-                .build());
+        return Optional.of(
+                CreditCardAccount.builder(iban, accountBalance, availableCredit)
+                        .addIdentifier(new IbanIdentifier(iban))
+                        .setBalance(accountBalance)
+                        .setName(getAccountName())
+                        .setHolderName(new HolderName(currentUser))
+                        .setBankIdentifier(portfolioId)
+                        .setAccountNumber(number)
+                        .build());
     }
 
     @JsonIgnore
     public Optional<TransactionalAccount> buildTransactionalAccount(
-            final int baseCurrencyId,
-            final String currency,
-            final String currentUser) {
+            final int baseCurrencyId, final String currency, final String currentUser) {
         if (isInvalidAccount()) {
             return Optional.empty();
         }
@@ -133,13 +130,14 @@ public class AccountItem {
         AccountTypes accountType = AsLhvConstants.ACCOUNT_TYPE_MAPPER.translate(type).get();
         double balance = getBalance(baseCurrencyId);
         Amount accountBalance = new Amount(currency, balance);
-        return Optional.of(TransactionalAccount.builder(accountType, iban)
-                .addIdentifier(new IbanIdentifier(iban))
-                .setBalance(accountBalance)
-                .setName(getAccountName())
-                .setHolderName(new HolderName(currentUser))
-                .setBankIdentifier(portfolioId)
-                .setAccountNumber(number)
-                .build());
+        return Optional.of(
+                TransactionalAccount.builder(accountType, iban)
+                        .addIdentifier(new IbanIdentifier(iban))
+                        .setBalance(accountBalance)
+                        .setName(getAccountName())
+                        .setHolderName(new HolderName(currentUser))
+                        .setBankIdentifier(portfolioId)
+                        .setAccountNumber(number)
+                        .build());
     }
 }

@@ -28,11 +28,12 @@ public class GetUserDataResponse extends BaseResponse {
 
     @JsonIgnore
     public Collection<TransactionalAccount> getTransactionalAccounts(
-            final String currentUser,
-            final String currency,
-            final int baseCurrencyId) {
+            final String currentUser, final String currency, final int baseCurrencyId) {
         return accounts.stream()
-                .map(account -> account.buildTransactionalAccount(baseCurrencyId, currency, currentUser))
+                .map(
+                        account ->
+                                account.buildTransactionalAccount(
+                                        baseCurrencyId, currency, currentUser))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
@@ -40,11 +41,12 @@ public class GetUserDataResponse extends BaseResponse {
 
     @JsonIgnore
     public Collection<CreditCardAccount> getCreditCardAccounts(
-            final String currentUser,
-            final String currency,
-            final int baseCurrencyId) {
+            final String currentUser, final String currency, final int baseCurrencyId) {
         return accounts.stream()
-                .map(account -> account.buildCreditCardAccount(baseCurrencyId, currency, currentUser))
+                .map(
+                        account ->
+                                account.buildCreditCardAccount(
+                                        baseCurrencyId, currency, currentUser))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());

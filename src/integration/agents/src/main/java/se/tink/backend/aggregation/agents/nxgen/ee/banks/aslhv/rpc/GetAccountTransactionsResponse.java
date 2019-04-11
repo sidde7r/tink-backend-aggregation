@@ -24,8 +24,7 @@ public class GetAccountTransactionsResponse extends BaseResponse {
 
     @JsonIgnore
     private Optional<? extends Transaction> buildTransaction(
-            final TransactionItem transaction,
-            final AsLhvSessionStorage storage) {
+            final TransactionItem transaction, final AsLhvSessionStorage storage) {
         double amount = transaction.getAmount();
         String currency = storage.getCurrency(transaction.getCurrencyId());
         Optional<Date> date = transaction.getDate();
@@ -36,11 +35,12 @@ public class GetAccountTransactionsResponse extends BaseResponse {
 
         Optional<String> description = transaction.getDescription();
 
-        return Optional.of(Transaction.builder()
-                .setAmount(new Amount(currency, amount))
-                .setDate(date.get())
-                .setDescription(description.isPresent() ? description.get(): "")
-                .build());
+        return Optional.of(
+                Transaction.builder()
+                        .setAmount(new Amount(currency, amount))
+                        .setDate(date.get())
+                        .setDescription(description.isPresent() ? description.get() : "")
+                        .build());
     }
 
     @JsonIgnore

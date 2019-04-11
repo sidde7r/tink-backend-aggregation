@@ -17,7 +17,8 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
     private final AsLhvApiClient apiClient;
     private final AsLhvSessionStorage sessionStorage;
 
-    public AsLhvPasswordAuthenticator(final AsLhvApiClient client, final AsLhvSessionStorage sessionStorage) {
+    public AsLhvPasswordAuthenticator(
+            final AsLhvApiClient client, final AsLhvSessionStorage sessionStorage) {
         this.apiClient = client;
         this.sessionStorage = sessionStorage;
     }
@@ -35,17 +36,19 @@ public class AsLhvPasswordAuthenticator implements PasswordAuthenticator {
             } else {
                 GetCurrenciesResponse getCurrenciesResponse = apiClient.getCurrencies();
                 if (getCurrenciesResponse.requestFailed()) {
-                    final String errorMessage = String.format(
-                            "Failed to fetch currencies: %s",
-                            getCurrenciesResponse.getErrorMessage());
+                    final String errorMessage =
+                            String.format(
+                                    "Failed to fetch currencies: %s",
+                                    getCurrenciesResponse.getErrorMessage());
                     throw new IllegalStateException(errorMessage);
                 }
 
                 IsAuthenticatedResponse isAuthenticatedResponse = apiClient.isAuthenticated();
                 if (isAuthenticatedResponse.requestFailed()) {
-                    final String errorMessage = String.format(
-                            "Authentication information request failed: %s",
-                            isAuthenticatedResponse.getErrorMessage());
+                    final String errorMessage =
+                            String.format(
+                                    "Authentication information request failed: %s",
+                                    isAuthenticatedResponse.getErrorMessage());
                     throw new IllegalStateException(errorMessage);
                 }
 

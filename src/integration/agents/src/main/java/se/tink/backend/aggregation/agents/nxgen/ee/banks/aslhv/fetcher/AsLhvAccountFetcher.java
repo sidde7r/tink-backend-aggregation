@@ -13,9 +13,9 @@ public class AsLhvAccountFetcher {
     public GetUserDataResponse fetchUserData() {
         GetUserDataResponse userDataResponse = apiClient.getUserData();
         if (userDataResponse.requestFailed()) {
-            final String errorMessage = String.format(
-                    "Failed to fetch user data: %s",
-                    userDataResponse.getErrorMessage());
+            final String errorMessage =
+                    String.format(
+                            "Failed to fetch user data: %s", userDataResponse.getErrorMessage());
             throw new IllegalStateException(errorMessage);
         }
         return userDataResponse;

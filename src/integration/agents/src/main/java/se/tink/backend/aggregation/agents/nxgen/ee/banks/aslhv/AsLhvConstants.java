@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AsLhvConstants {
 
     public static final ThreadSafeDateFormat DATE_FORMAT = ThreadSafeDateFormat.FORMATTER_DAILY;
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, 11001)
-            .put(AccountTypes.SAVINGS, 11002)
-            .put(AccountTypes.CREDIT_CARD, 11009)
-            .build();
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, 11001)
+                    .put(AccountTypes.SAVINGS, 11002)
+                    .put(AccountTypes.CREDIT_CARD, 11009)
+                    .build();
 
     public static class Storage {
         public static final String USER_ID = "userId";
@@ -26,12 +27,16 @@ public class AsLhvConstants {
         public static final String JSON_ENDPOINT = "/json/";
         public static final String AUTH_ENDPOINT = "/auth";
         public static final String PORTFOLIO_ENDPOINT = "/portfolio";
-        public static final String GET_USER_DATA_ENDPOINT = PORTFOLIO_ENDPOINT + "/get_user_data" + JSON_ENDPOINT;
-        public static final String GET_CURRENCIES_ENDPOINT = PORTFOLIO_ENDPOINT + "/get_currencies" + JSON_ENDPOINT;
+        public static final String GET_USER_DATA_ENDPOINT =
+                PORTFOLIO_ENDPOINT + "/get_user_data" + JSON_ENDPOINT;
+        public static final String GET_CURRENCIES_ENDPOINT =
+                PORTFOLIO_ENDPOINT + "/get_currencies" + JSON_ENDPOINT;
         public static final String GET_ACCOUNT_TRANSACTIONS_ENDPOINT =
                 PORTFOLIO_ENDPOINT + "/get_account_transaction_history" + JSON_ENDPOINT;
-        public static final String AUTH_IS_AUTHENTICATED_ENDPOINT = AUTH_ENDPOINT + "/is_authenticated" + JSON_ENDPOINT;
-        public static final String AUTH_PASSWORD_ENDPOINT = AUTH_ENDPOINT + "/login_password" + JSON_ENDPOINT;
+        public static final String AUTH_IS_AUTHENTICATED_ENDPOINT =
+                AUTH_ENDPOINT + "/is_authenticated" + JSON_ENDPOINT;
+        public static final String AUTH_PASSWORD_ENDPOINT =
+                AUTH_ENDPOINT + "/login_password" + JSON_ENDPOINT;
         public static final String AUTH_LOGOUT_ENDPOINT = AUTH_ENDPOINT + "/logout" + JSON_ENDPOINT;
         public static final String BASE_URL = "www.lhv.ee";
     }
@@ -40,7 +45,8 @@ public class AsLhvConstants {
         public static final String ACCEPT_ALL = "*/*";
         public static final String ACCEPT_JSON = "application/json";
         public static final String ACCEPT_LANGUAGE = "us;q=1";
-        public static final String CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
+        public static final String CONTENT_TYPE_FORM_URLENCODED =
+                "application/x-www-form-urlencoded";
         public static final String LHV_APPLICATION_LANGUAGE_HEADER = "LHV-Application-Language";
         public static final String LHV_APPLICATION_LANUGAGE_US = "us";
     }
@@ -55,6 +61,7 @@ public class AsLhvConstants {
 
     public static class Messages {
         public static final String INCORRECT_CREDENTIALS = "Incorrect username or password.";
-        public static final String INVALID_PARAMETERS = "Invalid parameters - please check the marked fields.";
+        public static final String INVALID_PARAMETERS =
+                "Invalid parameters - please check the marked fields.";
     }
 }

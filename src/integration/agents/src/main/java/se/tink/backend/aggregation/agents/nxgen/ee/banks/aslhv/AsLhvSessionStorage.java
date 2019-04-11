@@ -23,7 +23,10 @@ public class AsLhvSessionStorage {
 
     public String getCurrentUser() {
         return Optional.ofNullable(sessionStorage.get(AsLhvConstants.Storage.CURRENT_USER))
-                .orElseThrow(() -> new IllegalStateException("Current user was not set during session."));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Current user was not set during session."));
     }
 
     private HashMap<Integer, String> convertCurrenciesToMap(List<CurrenciesItem> currencies) {
@@ -43,12 +46,15 @@ public class AsLhvSessionStorage {
 
     public String getCurrency(int currencyId) {
         return translateCurrency(currencyId)
-                .orElseThrow(() -> new IllegalStateException("Base currency could not be mapped during session."));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Base currency could not be mapped during session."));
     }
 
     private Optional<String> translateCurrency(int currencyId) {
-        Optional<GetCurrenciesResponse> res = sessionStorage.get(AsLhvConstants.Storage.CURRENCIES,
-                GetCurrenciesResponse.class);
+        Optional<GetCurrenciesResponse> res =
+                sessionStorage.get(AsLhvConstants.Storage.CURRENCIES, GetCurrenciesResponse.class);
         if (!res.isPresent()) {
             return Optional.empty();
         }
@@ -67,8 +73,12 @@ public class AsLhvSessionStorage {
     }
 
     public int getBaseCurrencyId() {
-        return sessionStorage.get(AsLhvConstants.Storage.BASE_CURRENCY_ID, Integer.class)
-                .orElseThrow(() -> new IllegalStateException("Base currency was not set during session."));
+        return sessionStorage
+                .get(AsLhvConstants.Storage.BASE_CURRENCY_ID, Integer.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Base currency was not set during session."));
     }
 
     public void setUserData(final GetUserDataResponse userData) {
@@ -81,13 +91,15 @@ public class AsLhvSessionStorage {
         if (!userData.isPresent()) {
             throw new IllegalStateException("No user data found.");
         } else if (!userData.get().requestSuccessful()) {
-            final String message = String.format("User data request failed: %s", userData.get().getErrorMessage());
+            final String message =
+                    String.format("User data request failed: %s", userData.get().getErrorMessage());
             throw new IllegalStateException(message);
         }
         return userData.get();
     }
 
-    public void setIsAuthenticatedResponseData(final IsAuthenticatedResponse isAuthenticatedResponse) {
+    public void setIsAuthenticatedResponseData(
+            final IsAuthenticatedResponse isAuthenticatedResponse) {
         Optional<CurrentUser> currentUser = isAuthenticatedResponse.getCurrentUser();
         if (currentUser.isPresent()) {
             Optional<String> name = currentUser.get().getName();
