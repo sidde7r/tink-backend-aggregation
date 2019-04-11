@@ -40,12 +40,13 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
             throws AuthenticationException, AuthorizationException {
         try {
             if (!forceAutoAuthentication()
-                    && (Objects.equals(
-                                    manualAuthenticator.getType(),
-                                    authenticationRequest.getCredentials().getType())
-                            || (request.isUpdate()
-                                    && !Objects.equals(
-                                            request.getType(), CredentialsRequestType.TRANSFER)))
+                            && (Objects.equals(
+                                            manualAuthenticator.getType(),
+                                            authenticationRequest.getCredentials().getType())
+                                    || (request.isUpdate()
+                                            && !Objects.equals(
+                                                    request.getType(),
+                                                    CredentialsRequestType.TRANSFER)))
                     || request.getCredentials().forceManualAuthentication()) {
                 return manualProgressive(authenticationRequest);
             } else {
@@ -73,10 +74,11 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
             throws AuthenticationException, AuthorizationException {
         try {
             if (!forceAutoAuthentication()
-                    && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
-                            || (request.isUpdate()
-                                    && !Objects.equals(
-                                            request.getType(), CredentialsRequestType.TRANSFER)))
+                            && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
+                                    || (request.isUpdate()
+                                            && !Objects.equals(
+                                                    request.getType(),
+                                                    CredentialsRequestType.TRANSFER)))
                     || credentials.forceManualAuthentication()) {
                 manual(credentials);
             } else {
