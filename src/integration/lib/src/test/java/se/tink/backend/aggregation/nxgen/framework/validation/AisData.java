@@ -14,10 +14,10 @@ public final class AisData {
     public AisData(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
-            IdentityData customerInfo) {
+            IdentityData identityData) {
         this.accounts = accounts;
         this.transactions = transactions;
-        this.identityData = customerInfo;
+        this.identityData = identityData;
     }
 
     public Collection<Account> getAccounts() {
