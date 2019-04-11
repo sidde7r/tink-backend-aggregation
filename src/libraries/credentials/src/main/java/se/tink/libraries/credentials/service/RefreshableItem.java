@@ -15,7 +15,7 @@ public enum RefreshableItem {
     TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
     EINVOICES,
     TRANSFER_DESTINATIONS,
-    IDENTITY,
+    IDENTITY_DATA,
 
     CHECKING_ACCOUNTS(AccountTypes.CHECKING, AccountTypes.OTHER),
     CHECKING_TRANSACTIONS(AccountTypes.CHECKING, AccountTypes.OTHER),
@@ -52,7 +52,7 @@ public enum RefreshableItem {
                             RefreshableItem.TRANSFER_DESTINATIONS,
                             RefreshableItem.ACCOUNTS,
                             RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS,
-                            RefreshableItem.IDENTITY));
+                            RefreshableItem.IDENTITY_DATA));
 
     public static final ImmutableSet<RefreshableItem> REFRESHABLE_ITEMS_ACCOUNTS =
             ImmutableSet.<RefreshableItem>builder()
@@ -87,7 +87,7 @@ public enum RefreshableItem {
                     .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
                     .add(RefreshableItem.EINVOICES)
                     .add(RefreshableItem.TRANSFER_DESTINATIONS)
-                    .add(RefreshableItem.IDENTITY)
+                    .add(RefreshableItem.IDENTITY_DATA)
                     .build();
 
     public boolean isAccountType(AccountTypes type) {
