@@ -313,7 +313,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public Optional<IdentityData> getCustomerInfo() {
+    public Optional<IdentityData> getIdentityData() {
         return Optional.ofNullable(identityData);
     }
 

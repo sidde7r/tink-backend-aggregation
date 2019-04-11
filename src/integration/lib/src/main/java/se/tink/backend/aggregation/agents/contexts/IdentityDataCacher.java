@@ -7,7 +7,7 @@ public interface IdentityDataCacher {
 
     /**
      * Caches {@code customerInfo}, making {@code customerInfo} retrievable via {@code
-     * IdentityDataCacher::getCustomerInfo} after this method has been executed.
+     * IdentityDataCacher::getIdentityData} after this method has been executed.
      *
      * @param customerInfo Customer identity data
      */
@@ -17,5 +17,5 @@ public interface IdentityDataCacher {
      * @return The customer identity data previously stored using {@code
      *     IdentityDataCacher::updateIdentityData}, or Optional.empty() if none exists
      */
-    Optional<IdentityData> getCustomerInfo();
+    Optional<IdentityData> getIdentityData();
 }
