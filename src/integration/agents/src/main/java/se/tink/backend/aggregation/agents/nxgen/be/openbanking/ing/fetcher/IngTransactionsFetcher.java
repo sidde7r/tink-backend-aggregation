@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -19,14 +18,11 @@ public class IngTransactionsFetcher implements TransactionDatePaginator<Transact
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        final FetchTransactionsResponse response =
-                apiClient.fetchTransactions(
+        return apiClient
+                .fetchTransactions(
                         account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL),
                         fromDate,
-                        toDate);
-
-        response.setFetchNextConsumer(apiClient::fetchTransactions);
-
-        return response;
+                        toDate)
+                .setFetchNextFunction(apiClient::fetchTransactions);
     }
 }

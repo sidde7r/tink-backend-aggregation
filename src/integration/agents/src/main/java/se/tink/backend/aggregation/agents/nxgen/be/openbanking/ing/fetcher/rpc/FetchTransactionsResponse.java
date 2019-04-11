@@ -22,13 +22,13 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     @JsonProperty("_links")
     private LinkEntity links;
 
-    @JsonIgnore private Function<String, FetchTransactionsResponse> fetchNextConsumer;
+    @JsonIgnore private Function<String, FetchTransactionsResponse> fetchNextFunction;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .map(TransactionsEntity::toTinkTransactions)
-                .map(ts -> Stream.concat(ts, hasNextLink() ? fetchNext() : Stream.empty()))
+                .map(ts -> Stream.concat(ts, fetchNext()))
                 .orElse(Stream.empty())
                 .collect(Collectors.toList());
     }
@@ -38,12 +38,17 @@ public class FetchTransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
-    public void setFetchNextConsumer(Function<String, FetchTransactionsResponse> consumer) {
-        this.fetchNextConsumer = consumer;
+    public FetchTransactionsResponse setFetchNextFunction(
+            Function<String, FetchTransactionsResponse> consumer) {
+        fetchNextFunction = consumer;
+        return this;
     }
 
     private Stream<? extends Transaction> fetchNext() {
-        return fetchNextConsumer.apply(links.getHref()).getTinkTransactions().stream();
+        return hasNextLink()
+                ? fetchNextFunction.apply(links.getHref()).setFetchNextFunction(fetchNextFunction)
+                        .getTinkTransactions().stream()
+                : Stream.empty();
     }
 
     private boolean hasNextLink() {
