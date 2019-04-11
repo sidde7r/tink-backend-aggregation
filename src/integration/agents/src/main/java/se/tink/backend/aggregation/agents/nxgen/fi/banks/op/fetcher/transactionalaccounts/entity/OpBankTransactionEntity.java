@@ -23,12 +23,16 @@ public class OpBankTransactionEntity {
     private String transactionTypeDescription;
     private String transactionMessage;
     private String total;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfEntry;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfValue;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfPayment;
+
     private boolean deposit;
     private boolean ownTransfer;
     private boolean withdrawal;
@@ -66,7 +70,8 @@ public class OpBankTransactionEntity {
         return transactionTypeDescription;
     }
 
-    // This logic is a bit arbitrary, of what we've seen these contain the same dates. Using entry date as fallback
+    // This logic is a bit arbitrary, of what we've seen these contain the same dates. Using entry
+    // date as fallback
     // in case the others are null.
     @JsonIgnore
     private Date getDate() {

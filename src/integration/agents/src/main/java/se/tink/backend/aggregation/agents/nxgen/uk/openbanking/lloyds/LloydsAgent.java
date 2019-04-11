@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LloydsAgent extends UkOpenBankingBaseAgent {
-    public LloydsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public LloydsAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -27,12 +28,8 @@ public class LloydsAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configureAisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 }

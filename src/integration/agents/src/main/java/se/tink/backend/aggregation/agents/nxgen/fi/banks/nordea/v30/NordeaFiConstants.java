@@ -1,13 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30;
 
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaFiConstants {
@@ -27,10 +27,10 @@ public class NordeaFiConstants {
 
         public static final URL AUTHENTICATE = new URL(URL_BASE + ApiServices.AUTHENTICATE_PATH);
         public static final URL FETCH_PRODUCT = new URL(URL_BASE + ApiServices.PRODUCT_PATH);
-        public static final URL FETCH_TRANSACTIONS = new URL(
-                URL_BASE + ApiServices.TRANSACTIONS_PATH);
-        public static final URL FETCH_CARDS_DETAILED = new URL(
-                URL_BASE + ApiServices.CARDS_DETAILED_PATH);
+        public static final URL FETCH_TRANSACTIONS =
+                new URL(URL_BASE + ApiServices.TRANSACTIONS_PATH);
+        public static final URL FETCH_CARDS_DETAILED =
+                new URL(URL_BASE + ApiServices.CARDS_DETAILED_PATH);
         public static final URL FETCH_SAVINGS = new URL(URL_BASE + ApiServices.SAVINGS_PATH);
         public static final URL LOGOUT = new URL(URL_BASE + ApiServices.LOGOUT_PATH);
     }
@@ -82,8 +82,10 @@ public class NordeaFiConstants {
 
     public static class ErrorCodes {
         // user has no agreement (for investments)
-        public static final String AGREEMENT_NOT_CONFIRMED = "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
-        public static final String CLASSIFICATION_NOT_CONFIRMED = "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
+        public static final String AGREEMENT_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
+        public static final String CLASSIFICATION_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
 
         // user has no account connected to depot, cannot fetch investments
         public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
@@ -91,22 +93,23 @@ public class NordeaFiConstants {
         public static final String INVALID_TOKEN = "invalid_token";
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
-
     }
 
     public static class NordeaCodesPayload {
 
-        private static final LocalizableKey DOWNLOAD_TITLE = new LocalizableKey(
-                "Download Nordea Codes");
-        private static final LocalizableKey DOWNLOAD_MESSAGE = new LocalizableKey(
-                "You need to download the Nordea Codes app in order to continue.");
-        private static final LocalizableKey UPGRADE_TITLE = new LocalizableKey(
-                "Upgrade Nordea Codes");
-        private static final LocalizableKey UPGRADE_MESSAGE = new LocalizableKey(
-                "You need to upgrade the Nordea Codes app in order to continue.");
+        private static final LocalizableKey DOWNLOAD_TITLE =
+                new LocalizableKey("Download Nordea Codes");
+        private static final LocalizableKey DOWNLOAD_MESSAGE =
+                new LocalizableKey(
+                        "You need to download the Nordea Codes app in order to continue.");
+        private static final LocalizableKey UPGRADE_TITLE =
+                new LocalizableKey("Upgrade Nordea Codes");
+        private static final LocalizableKey UPGRADE_MESSAGE =
+                new LocalizableKey(
+                        "You need to upgrade the Nordea Codes app in order to continue.");
 
-        private static final String CODES_APP_STORE_URL = "https://itunes.apple"
-                + ".com/se/app/nordea-codes/id995971128";
+        private static final String CODES_APP_STORE_URL =
+                "https://itunes.apple" + ".com/se/app/nordea-codes/id995971128";
         private static final String CODES_APP_SCHEME = "nordeamta://";
         private static final String CODES_RETURN_LINK = "confirm?returnUrl=tink://";
         private static final String CODES_ANDROID_PACKAGE_NAME = "com.nordea.mobiletoken";
@@ -124,16 +127,16 @@ public class NordeaFiConstants {
             payload.setUpgradeMessage(UPGRADE_MESSAGE.get());
 
             // iOS details
-            ThirdPartyAppAuthenticationPayload.Ios iosPayload = new
-                    ThirdPartyAppAuthenticationPayload.Ios();
+            ThirdPartyAppAuthenticationPayload.Ios iosPayload =
+                    new ThirdPartyAppAuthenticationPayload.Ios();
             iosPayload.setAppScheme(CODES_APP_SCHEME);
             iosPayload.setDeepLinkUrl(CODES_APP_SCHEME + CODES_RETURN_LINK);
             iosPayload.setAppStoreUrl(CODES_APP_STORE_URL);
             payload.setIos(iosPayload);
 
             // Android details
-            ThirdPartyAppAuthenticationPayload.Android androidPayload = new
-                    ThirdPartyAppAuthenticationPayload.Android();
+            ThirdPartyAppAuthenticationPayload.Android androidPayload =
+                    new ThirdPartyAppAuthenticationPayload.Android();
             androidPayload.setPackageName(CODES_ANDROID_PACKAGE_NAME);
             androidPayload.setRequiredVersion(CODES_REQUIRED_ANDROID_VERSION);
             androidPayload.setIntent(CODES_APP_SCHEME + CODES_RETURN_LINK);
@@ -155,47 +158,52 @@ public class NordeaFiConstants {
 
     public static final ImmutableMap<ThirdPartyAppStatus, LocalizableKey>
             AUTHENTICATION_ERROR_MESSAGE =
-            ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
-                    .put(ThirdPartyAppStatus.CANCELLED, new LocalizableKey(
-                            "Authentication cancelled by the Codes app. Please try again."))
-                    .put(ThirdPartyAppStatus.TIMED_OUT,
-                            new LocalizableKey("Authentication timed out."))
-                    .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
-                            new LocalizableKey("Another client is already trying to sign in. \nPlease close the Codes app and try again."))
+                    ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
+                            .put(
+                                    ThirdPartyAppStatus.CANCELLED,
+                                    new LocalizableKey(
+                                            "Authentication cancelled by the Codes app. Please try again."))
+                            .put(
+                                    ThirdPartyAppStatus.TIMED_OUT,
+                                    new LocalizableKey("Authentication timed out."))
+                            .put(
+                                    ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
+                                    new LocalizableKey(
+                                            "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
+                            .build();
+
+    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
+            ImmutableMap.<String, AccountTypes>builder()
+                    .put("savings", AccountTypes.SAVINGS)
+                    .put("transaction", AccountTypes.CHECKING)
                     .build();
 
-    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String,
-            AccountTypes>builder()
-            .put("savings", AccountTypes.SAVINGS)
-            .put("transaction", AccountTypes.CHECKING)
-            .build();
+    public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.AUTH_METHOD, "mta")
+                    .put(FormParams.CLIENT_ID, "NDHMFI")
+                    .put(FormParams.COUNTRY, "FI")
+                    .put(FormParams.GRANT_TYPE, "password")
+                    .put(FormParams.SCOPE, "ndf")
+                    .build();
 
-    public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS = ImmutableMap.<String,
-            String>builder()
-            .put(FormParams.AUTH_METHOD, "mta")
-            .put(FormParams.CLIENT_ID, "NDHMFI")
-            .put(FormParams.COUNTRY, "FI")
-            .put(FormParams.GRANT_TYPE, "password")
-            .put(FormParams.SCOPE, "ndf")
-            .build();
-
-    private static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPE_MAP = ImmutableMap
-            .<String, Instrument.Type>builder()
-            .put("FUND", Instrument.Type.FUND)
-            .put("EQUITY", Instrument.Type.STOCK)
-            .build();
+    private static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPE_MAP =
+            ImmutableMap.<String, Instrument.Type>builder()
+                    .put("FUND", Instrument.Type.FUND)
+                    .put("EQUITY", Instrument.Type.STOCK)
+                    .build();
 
     public static Instrument.Type GET_INSTRUMENT_TYPE(String rawType) {
         return INSTRUMENT_TYPE_MAP.getOrDefault(rawType.toUpperCase(), Instrument.Type.OTHER);
     }
 
-    private static final ImmutableMap<String, Portfolio.Type> PORTFOLIO_TYPE_MAP = ImmutableMap
-            .<String, Portfolio.Type>builder()
-            .put("FONDA", Portfolio.Type.DEPOT)
-            .put("ISK", Portfolio.Type.ISK)
-            .put("ISP", Portfolio.Type.PENSION)
-            .put("ASBS", Portfolio.Type.DEPOT)
-            .build();
+    private static final ImmutableMap<String, Portfolio.Type> PORTFOLIO_TYPE_MAP =
+            ImmutableMap.<String, Portfolio.Type>builder()
+                    .put("FONDA", Portfolio.Type.DEPOT)
+                    .put("ISK", Portfolio.Type.ISK)
+                    .put("ISP", Portfolio.Type.PENSION)
+                    .put("ASBS", Portfolio.Type.DEPOT)
+                    .build();
 
     public static Portfolio.Type GET_PORTFOLIO_TYPE(String rawType) {
         return PORTFOLIO_TYPE_MAP.getOrDefault(rawType.toUpperCase(), Portfolio.Type.OTHER);

@@ -24,23 +24,25 @@ public class NordeaFIApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaFIApiClient(TinkHttpClient httpClient,
-            SessionStorage sessionStorage) {
+    public NordeaFIApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
     }
 
     public AuthenticateResponse initCodesAuthentication() throws HttpResponseException {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(NordeaFIConstants.FormParams.USERNAME,
+        formBuilder.put(
+                NordeaFIConstants.FormParams.USERNAME,
                 sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
 
         return sendAuthenticateRequest(formBuilder);
     }
 
-    public AuthenticateResponse pollCodesAuthentication(String reference) throws HttpResponseException {
+    public AuthenticateResponse pollCodesAuthentication(String reference)
+            throws HttpResponseException {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(NordeaFIConstants.FormParams.USERNAME,
+        formBuilder.put(
+                NordeaFIConstants.FormParams.USERNAME,
                 sessionStorage.get(NordeaFIConstants.SessionStorage.USERNAME));
         formBuilder.put(NordeaFIConstants.FormParams.CODE, reference);
 
@@ -48,45 +50,72 @@ public class NordeaFIApiClient {
     }
 
     private AuthenticateResponse sendAuthenticateRequest(Form form) throws HttpResponseException {
-        return httpClient.request(NordeaFIConstants.Urls.AUTHENTICATE)
+        return httpClient
+                .request(NordeaFIConstants.Urls.AUTHENTICATE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(AuthenticateResponse.class);
     }
 
     public FetchTransactionalAccountResponse fetchAccounts() {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_ACCOUNTS)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder request =
+                httpClient
+                        .request(NordeaFIConstants.Urls.FETCH_ACCOUNTS)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
         return requestRefreshableGet(request, FetchTransactionalAccountResponse.class);
     }
 
     public FetchTransactionResponse fetchTransactions(int offset, int limit, String accountId) {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_ACCOUNTS
-                .concat(accountId + NordeaFIConstants.ApiService.FETCH_TRANSACTIONS)
-                .queryParam(NordeaFIConstants.QueryParams.OFFSET, Integer.toString(offset))
-                .queryParam(NordeaFIConstants.QueryParams.LIMIT, Integer.toString(limit)))
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaFIConstants.Urls.FETCH_ACCOUNTS
+                                        .concat(
+                                                accountId
+                                                        + NordeaFIConstants.ApiService
+                                                                .FETCH_TRANSACTIONS)
+                                        .queryParam(
+                                                NordeaFIConstants.QueryParams.OFFSET,
+                                                Integer.toString(offset))
+                                        .queryParam(
+                                                NordeaFIConstants.QueryParams.LIMIT,
+                                                Integer.toString(limit)))
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
         return requestRefreshableGet(request, FetchTransactionResponse.class);
     }
 
     public FetchCardsResponse fetchCards() {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_CARDS)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder request =
+                httpClient
+                        .request(NordeaFIConstants.Urls.FETCH_CARDS)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
         return requestRefreshableGet(request, FetchCardsResponse.class);
     }
 
     public FetchCardTransactionsResponse fetchCardTransactions(int page, String accountId) {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_CARDS
-                .concat(accountId + NordeaFIConstants.ApiService.FETCH_TRANSACTIONS)
-                .queryParam(NordeaFIConstants.QueryParams.PAGE, Integer.toString(page))
-                .queryParam(NordeaFIConstants.QueryParams.PAGE_SIZE, NordeaFIConstants.QueryParams.PAGE_SIZE_LIMIT))
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaFIConstants.Urls.FETCH_CARDS
+                                        .concat(
+                                                accountId
+                                                        + NordeaFIConstants.ApiService
+                                                                .FETCH_TRANSACTIONS)
+                                        .queryParam(
+                                                NordeaFIConstants.QueryParams.PAGE,
+                                                Integer.toString(page))
+                                        .queryParam(
+                                                NordeaFIConstants.QueryParams.PAGE_SIZE,
+                                                NordeaFIConstants.QueryParams.PAGE_SIZE_LIMIT))
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
         return requestRefreshableGet(request, FetchCardTransactionsResponse.class);
     }
 
     public FetchInvestmentResponse fetchInvestments() {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_INVESTMENTS)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        RequestBuilder request =
+                httpClient
+                        .request(NordeaFIConstants.Urls.FETCH_INVESTMENTS)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
         return requestRefreshableGet(request, FetchInvestmentResponse.class);
     }
 
@@ -96,7 +125,8 @@ public class NordeaFIApiClient {
     }
 
     public FetchLoanDetailsResponse fetchLoanDetails(String accountId) {
-        RequestBuilder request = httpClient.request(NordeaFIConstants.Urls.FETCH_LOANS.concat(accountId));
+        RequestBuilder request =
+                httpClient.request(NordeaFIConstants.Urls.FETCH_LOANS.concat(accountId));
         return requestRefreshableGet(request, FetchLoanDetailsResponse.class);
     }
 
@@ -124,15 +154,16 @@ public class NordeaFIApiClient {
     // access token during a request. This method should be used by all data fetching calls
     private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
-            return request
-                    .header(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
+            return request.header(
+                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
                     .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaFIConstants.HeaderParams.LANGUAGE)
                     .get(responseType);
 
         } catch (HttpResponseException hre) {
             tryRefreshAccessToken(hre);
             // use the new access token
-            request.overrideHeader(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+            request.overrideHeader(
+                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
         }
 
         // retry request with new access token
@@ -152,7 +183,9 @@ public class NordeaFIApiClient {
 
     private void refreshAccessToken(String refreshToken) {
         Form formBuilder = new Form(NordeaFIConstants.DEFAULT_FORM_PARAMS);
-        formBuilder.put(NordeaFIConstants.FormParams.GRANT_TYPE, NordeaFIConstants.SessionStorage.REFRESH_TOKEN);
+        formBuilder.put(
+                NordeaFIConstants.FormParams.GRANT_TYPE,
+                NordeaFIConstants.SessionStorage.REFRESH_TOKEN);
         formBuilder.put(NordeaFIConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
 
         AuthenticateResponse response = sendAuthenticateRequest(formBuilder);
@@ -164,7 +197,8 @@ public class NordeaFIApiClient {
         formBuilder.put(NordeaFIConstants.FormParams.TOKEN, getAccessToken());
         formBuilder.put(NordeaFIConstants.FormParams.TOKEN_TYPE_HINT, "access_token");
 
-        httpClient.request(NordeaFIConstants.Urls.LOGOUT)
+        httpClient
+                .request(NordeaFIConstants.Urls.LOGOUT)
                 .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
                 .post();
     }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 
+import java.util.Arrays;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -13,20 +14,21 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
-import java.util.Arrays;
-
 public class SpankkiConstants {
     private static final String BASE_URL = "https://mobile.s-pankki.fi";
 
     public static class Authentication {
         public static final String REQUEST_TOKEN_RANDOM_STRING = "6b6e21bc4e6e4a2c8caf49042220b554";
-        public static final String CHALLENGE_RESPONSE_RANDOM_STRING = "5f41cbaea5a74b3c886216ebc5bcefd8";
+        public static final String CHALLENGE_RESPONSE_RANDOM_STRING =
+                "5f41cbaea5a74b3c886216ebc5bcefd8";
 
         public static final String USER_DEVICE_NAME = "Tink";
         public static final int KEY_CARD_VALUE_LENGTH = 4;
 
         public static final String PASSWORD_STATUS_CHANGE = "CHANGE";
-        public static final LocalizableKey PASSWORD_CHANGE_MSG = new LocalizableKey("You need to change your password at S-Pankki before you can login.");
+        public static final LocalizableKey PASSWORD_CHANGE_MSG =
+                new LocalizableKey(
+                        "You need to change your password at S-Pankki before you can login.");
     }
 
     public enum AccountType {
@@ -99,11 +101,15 @@ public class SpankkiConstants {
 
         public static ServerResponse getMessage(StatusEntity status) {
             return Arrays.stream(ServerResponse.values())
-                    .filter(serverMessage -> status.getStatusCode() == serverMessage.getStatusCode()).findFirst()
+                    .filter(
+                            serverMessage ->
+                                    status.getStatusCode() == serverMessage.getStatusCode())
+                    .findFirst()
                     .orElse(ServerResponse.UNKNOWN_ERROR);
         }
 
-        public static void throwIfError(StatusEntity status) throws AuthenticationException, AuthorizationException {
+        public static void throwIfError(StatusEntity status)
+                throws AuthenticationException, AuthorizationException {
 
             ServerResponse serverResponse = ServerResponse.getMessage(status);
 
@@ -115,7 +121,8 @@ public class SpankkiConstants {
             }
         }
 
-        private static void throwAgentError(Throwable e) throws AuthenticationException, AuthorizationException {
+        private static void throwAgentError(Throwable e)
+                throws AuthenticationException, AuthorizationException {
             if (e instanceof AuthenticationException) {
                 throw (AuthenticationException) e;
             } else if (e instanceof AuthorizationException) {
@@ -131,14 +138,22 @@ public class SpankkiConstants {
     public enum Url {
         REQUEST_CHALLENGE(new URL(BASE_URL + "/smob/rest/v1/device/authenticate/chreq"), ""),
         RESPOND_TO_CHALLENGE(new URL(BASE_URL + "/smob/rest/v1/device/authenticate/chresp"), ""),
-        LOGIN_USERNAME_PASSWORD(new URL(BASE_URL + "/smob/rest/v1/customer/login/usrpwd"), "crSessionToken"),
+        LOGIN_USERNAME_PASSWORD(
+                new URL(BASE_URL + "/smob/rest/v1/customer/login/usrpwd"), "crSessionToken"),
         LOGIN_PIN(new URL(BASE_URL + "/smob/rest/v1/customer/login/pin"), "crSessionToken"),
-        LOGIN_DEVICE_TOKEN(new URL(BASE_URL + "/smob/rest/v1/customer/login/token"), "tokenLogin-request-token"),
+        LOGIN_DEVICE_TOKEN(
+                new URL(BASE_URL + "/smob/rest/v1/customer/login/token"),
+                "tokenLogin-request-token"),
         ADD_DEVICE(new URL(BASE_URL + "/smob/rest/v1/customer/devices/add"), "adddeviceReqToken"),
-        GET_ACCOUNTS(new URL(BASE_URL + "/smob/rest/v1/customer/accounts/get"), "get-accounts-token"),
-        GET_TRANSACTIONS(new URL(BASE_URL + "/smob/rest/v1/customer/transactions/get"), "get-transactions-token"),
+        GET_ACCOUNTS(
+                new URL(BASE_URL + "/smob/rest/v1/customer/accounts/get"), "get-accounts-token"),
+        GET_TRANSACTIONS(
+                new URL(BASE_URL + "/smob/rest/v1/customer/transactions/get"),
+                "get-transactions-token"),
         RESERVATIONS(new URL(BASE_URL + "/smob/rest/v1/reservations"), ""),
-        CARDS_OVERVIEW(new URL(BASE_URL + "/smob/rest/v1/customer/cards/overview"), "get-cardsoverview-token"),
+        CARDS_OVERVIEW(
+                new URL(BASE_URL + "/smob/rest/v1/customer/cards/overview"),
+                "get-cardsoverview-token"),
         LOAN_OVERVIEW(new URL(BASE_URL + "/smob/rest/v1/loan/loanOverview"), "BaseRequest-token"),
         LOAN_DETAILS(new URL(BASE_URL + "/smob/rest/v1/loan/loanDetails"), "BaseRequest-token"),
         FUNDS_PORTFOLIOS(new URL(BASE_URL + "/smob/rest/v1/customer/funds/portfolios"), ""),
@@ -192,7 +207,8 @@ public class SpankkiConstants {
 
             public static Portfolio.Type toTinkType(String sPortfolioType) {
                 for (PortfolioType portfolioType : PortfolioType.values()) {
-                    if ((""+sPortfolioType).toUpperCase()
+                    if (("" + sPortfolioType)
+                            .toUpperCase()
                             .contains(portfolioType.sPankkiPortfolioType.toUpperCase())) {
                         return portfolioType.tinkType;
                     }
@@ -205,6 +221,5 @@ public class SpankkiConstants {
                 return tinkType;
             }
         }
-
     }
 }

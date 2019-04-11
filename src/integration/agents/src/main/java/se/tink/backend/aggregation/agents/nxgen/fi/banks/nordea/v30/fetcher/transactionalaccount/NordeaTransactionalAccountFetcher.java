@@ -9,8 +9,7 @@ public class NordeaTransactionalAccountFetcher implements AccountFetcher<Transac
 
     private final NordeaFiApiClient apiClient;
 
-    public NordeaTransactionalAccountFetcher(
-            NordeaFiApiClient apiClient) {
+    public NordeaTransactionalAccountFetcher(NordeaFiApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

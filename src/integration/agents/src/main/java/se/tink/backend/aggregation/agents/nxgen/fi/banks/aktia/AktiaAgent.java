@@ -29,18 +29,20 @@ public class AktiaAgent extends NextGenerationAgent {
     private final AktiaApiClient apiClient;
     private final EncapClient encapClient;
 
-    public AktiaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AktiaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         this.apiClient = new AktiaApiClient(client);
 
-        this.encapClient = new EncapClient(
-                context,
-                request,
-                signatureKeyPair,
-                persistentStorage,
-                new AktiaEncapConfiguration(),
-                AktiaConstants.DEVICE_PROFILE);
+        this.encapClient =
+                new EncapClient(
+                        context,
+                        request,
+                        signatureKeyPair,
+                        persistentStorage,
+                        new AktiaEncapConfiguration(),
+                        AktiaConstants.DEVICE_PROFILE);
     }
 
     @Override
@@ -57,16 +59,15 @@ public class AktiaAgent extends NextGenerationAgent {
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new AktiaKeyCardAuthenticator(apiClient, encapClient)
-                ),
-                new AktiaAutoAuthenticator(apiClient, encapClient)
-        );
+                        new AktiaKeyCardAuthenticator(apiClient, encapClient)),
+                new AktiaAutoAuthenticator(apiClient, encapClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        AktiaTransactionalAccountFetcher aktiaTransactionalAccountFetcher = new AktiaTransactionalAccountFetcher(
-                apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        AktiaTransactionalAccountFetcher aktiaTransactionalAccountFetcher =
+                new AktiaTransactionalAccountFetcher(apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -76,11 +77,7 @@ public class AktiaAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
-                                        aktiaTransactionalAccountFetcher
-                                )
-                        )
-                )
-        );
+                                        aktiaTransactionalAccountFetcher))));
     }
 
     @Override
@@ -104,7 +101,8 @@ public class AktiaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

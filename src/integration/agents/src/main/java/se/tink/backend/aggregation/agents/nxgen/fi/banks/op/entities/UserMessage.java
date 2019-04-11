@@ -31,13 +31,10 @@ public class UserMessage {
         return messages;
     }
 
-    public UserMessage setMessages(
-            List<Message> messages) {
+    public UserMessage setMessages(List<Message> messages) {
         this.messages = messages;
         return this;
     }
-
-
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Message {
@@ -46,10 +43,7 @@ public class UserMessage {
 
         @Override
         public String toString() {
-            return new ToStringBuilder(this)
-                    .append("key", key)
-                    .append("value", value)
-                    .toString();
+            return new ToStringBuilder(this).append("key", key).append("value", value).toString();
         }
 
         public String getKey() {

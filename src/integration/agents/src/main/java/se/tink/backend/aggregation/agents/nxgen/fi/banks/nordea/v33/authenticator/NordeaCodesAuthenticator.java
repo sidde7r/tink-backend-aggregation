@@ -36,8 +36,9 @@ public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<Stri
             return response;
         }
         // Initialization of Nordea Codes should always generate a http error.
-        throw new IllegalStateException("Initialization of Nordea Codes should always generate "
-                + "http error and therefore never reach this point.");
+        throw new IllegalStateException(
+                "Initialization of Nordea Codes should always generate "
+                        + "http error and therefore never reach this point.");
     }
 
     @Override
@@ -62,8 +63,7 @@ public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<Stri
 
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
-        return Optional.ofNullable(NordeaFIConstants
-                .AUTHENTICATION_ERROR_MESSAGE
-                .getOrDefault(status, null));
+        return Optional.ofNullable(
+                NordeaFIConstants.AUTHENTICATION_ERROR_MESSAGE.getOrDefault(status, null));
     }
 }

@@ -34,7 +34,7 @@ public class ErrorResponse {
 
     @JsonIgnore
     public boolean isIncorrectLoginCredentials() {
-        return OpBankConstants.Authentication.FALSE_CREDENTIALS.equalsIgnoreCase(errorCode) ||
-                OpBankConstants.Authentication.UNAUTHENTICATED_PIN.equalsIgnoreCase(errorCode);
+        return OpBankConstants.Authentication.FALSE_CREDENTIALS.equalsIgnoreCase(errorCode)
+                || OpBankConstants.Authentication.UNAUTHENTICATED_PIN.equalsIgnoreCase(errorCode);
     }
 }

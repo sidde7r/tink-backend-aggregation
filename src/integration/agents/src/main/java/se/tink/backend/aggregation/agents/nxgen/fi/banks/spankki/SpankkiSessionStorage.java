@@ -16,7 +16,8 @@ public class SpankkiSessionStorage {
     }
 
     public String getSessionId() {
-        return Optional.ofNullable(sessionStorage.get(SpankkiConstants.Storage.SESSION_ID)).orElse("");
+        return Optional.ofNullable(sessionStorage.get(SpankkiConstants.Storage.SESSION_ID))
+                .orElse("");
     }
 
     public void putCustomerId(String customerId) {

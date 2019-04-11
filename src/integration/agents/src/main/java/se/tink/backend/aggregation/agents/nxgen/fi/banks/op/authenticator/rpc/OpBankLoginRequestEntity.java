@@ -22,9 +22,8 @@ public class OpBankLoginRequestEntity {
         return this;
     }
 
-    public OpBankLoginRequestEntity setApplicationInstanceId(String applicationInstanceId){
+    public OpBankLoginRequestEntity setApplicationInstanceId(String applicationInstanceId) {
         this.applicationInstanceId = applicationInstanceId;
         return this;
     }
-
 }

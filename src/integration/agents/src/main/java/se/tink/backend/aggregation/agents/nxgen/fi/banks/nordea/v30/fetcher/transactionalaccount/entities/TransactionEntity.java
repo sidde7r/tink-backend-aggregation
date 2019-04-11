@@ -21,8 +21,7 @@ public class TransactionEntity {
     @JsonProperty("booked")
     private boolean booked;
 
-    @JsonUnwrapped
-    private AmountEntity amount;
+    @JsonUnwrapped private AmountEntity amount;
 
     @JsonProperty("transaction_type")
     private String transactionType;

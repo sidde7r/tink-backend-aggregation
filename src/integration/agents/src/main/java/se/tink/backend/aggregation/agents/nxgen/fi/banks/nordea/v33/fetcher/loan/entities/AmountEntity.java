@@ -5,16 +5,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AmountEntity {
-    @JsonProperty
-    private double granted;
-    @JsonProperty
-    private double drawn;
-    @JsonProperty
-    private double undrawn;
-    @JsonProperty
-    private double paid;
-    @JsonProperty
-    private double balance;
+    @JsonProperty private double granted;
+    @JsonProperty private double drawn;
+    @JsonProperty private double undrawn;
+    @JsonProperty private double paid;
+    @JsonProperty private double balance;
 
     public double getGranted() {
         return granted;

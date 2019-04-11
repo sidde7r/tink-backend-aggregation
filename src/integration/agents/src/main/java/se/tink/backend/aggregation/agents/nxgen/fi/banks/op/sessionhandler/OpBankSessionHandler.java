@@ -27,5 +27,4 @@ public class OpBankSessionHandler implements SessionHandler {
     public void keepAlive() throws SessionException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
-
 }

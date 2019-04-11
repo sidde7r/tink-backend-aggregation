@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.account.identifiers.SortCodeIdentifier;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 
 @JsonObject
 public class PayeeEntity {

@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class OwnersEntity {
-    @JsonProperty
-    private String name;
+    @JsonProperty private String name;
 
     @Override
     public String toString() {

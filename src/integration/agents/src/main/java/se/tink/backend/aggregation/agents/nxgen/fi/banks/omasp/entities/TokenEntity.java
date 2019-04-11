@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TokenEntity {
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("backend_timestamp")
     private Long backendTimestamp;
 

@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class RegisterDeviceRequest {
     private String timestamp;
+
     @JsonProperty("mac")
     private String hmac;
+
     private SecurityKeyRequestEntity securityKey = new SecurityKeyRequestEntity();
 
     public RegisterDeviceRequest() {

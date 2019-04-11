@@ -39,7 +39,8 @@ public class OpBankCreditEntity {
 
     @JsonIgnore
     private LoanDetails.Type getLoanType(OpBankCreditEntity creditEntity) {
-        if (!OpBankConstants.Fetcher.COLLATERAL_CREDIT.equalsIgnoreCase(creditEntity.getCreditType())) {
+        if (!OpBankConstants.Fetcher.COLLATERAL_CREDIT.equalsIgnoreCase(
+                creditEntity.getCreditType())) {
             return LoanDetails.Type.OTHER;
         }
 
@@ -49,11 +50,12 @@ public class OpBankCreditEntity {
     // this credit account is continuing credit
     @JsonIgnore
     public CreditCardAccount toTinkCreditAccount() {
-        return CreditCardAccount.builder(agreementNumberIban,
-                Amount.inEUR(balance),
-                Amount.inEUR(AgentParsingUtils.parseAmount(withdrawableAmount)))
+        return CreditCardAccount.builder(
+                        agreementNumberIban,
+                        Amount.inEUR(balance),
+                        Amount.inEUR(AgentParsingUtils.parseAmount(withdrawableAmount)))
                 .setAccountNumber(agreementNumberIban)
-                .setBankIdentifier(encryptedAgreementNumber)  // to fetch transactions
+                .setBankIdentifier(encryptedAgreementNumber) // to fetch transactions
                 .setName(getCreditAccountName())
                 .build();
     }

@@ -17,7 +17,8 @@ public class AktiaConstants {
         public static final String BASIC_AUTH_USERNAME = "vPzvzS9loHWg";
         public static final String BASIC_AUTH_PASSWORD = "zvn5vHAXlL2W99epdEejBVypJJujBVVgRBSU5hb4";
 
-        public static final String USER_AGENT = "MobileBank/2.0.1 (com.aktia.mobilebank; build:174; iOS 10.3.1) Alamofire/4.5.1";
+        public static final String USER_AGENT =
+                "MobileBank/2.0.1 (com.aktia.mobilebank; build:174; iOS 10.3.1) Alamofire/4.5.1";
     }
 
     public static class Oauth2Scopes {
@@ -39,20 +40,25 @@ public class AktiaConstants {
     }
 
     public static class Url {
-        private static final String OAUTH2_BASE = "https://mobile-auth.aktia.fi/mobileauth/oauth2/access_token?realm=/mobileauth&scope=";
+        private static final String OAUTH2_BASE =
+                "https://mobile-auth.aktia.fi/mobileauth/oauth2/access_token?realm=/mobileauth&scope=";
 
-        public static final URL OAUTH2_REGISTRATION_INIT = new URL(OAUTH2_BASE + Oauth2Scopes.REGISTRATION_INIT);
-        public static final URL OAUTH2_AUTHENTICATION_INIT = new URL(OAUTH2_BASE + Oauth2Scopes.AUTHENTICATION_INIT);
-        public static final URL OAUTH2_AUTHENTICATION_COMPLETE = new URL(OAUTH2_BASE +
-                Oauth2Scopes.AUTHENTICATION_COMPLETE);
+        public static final URL OAUTH2_REGISTRATION_INIT =
+                new URL(OAUTH2_BASE + Oauth2Scopes.REGISTRATION_INIT);
+        public static final URL OAUTH2_AUTHENTICATION_INIT =
+                new URL(OAUTH2_BASE + Oauth2Scopes.AUTHENTICATION_INIT);
+        public static final URL OAUTH2_AUTHENTICATION_COMPLETE =
+                new URL(OAUTH2_BASE + Oauth2Scopes.AUTHENTICATION_COMPLETE);
 
         private static final String GATEWAY_BASE = "https://mobile-gateway.aktia.fi/api";
 
         // Note: it's meant to be double slashes for these urls.
-        public static final URL REGISTRATION_INIT = new URL(GATEWAY_BASE + "//avainregistration/initiate");
-        public static final URL REGISTRATION_COMPLETE = new URL(GATEWAY_BASE + "//avainregistration/complete");
-        public static final URL AUTHENTICATION_INIT = new URL(GATEWAY_BASE + "//avain/login/mobile/initiate");
-
+        public static final URL REGISTRATION_INIT =
+                new URL(GATEWAY_BASE + "//avainregistration/initiate");
+        public static final URL REGISTRATION_COMPLETE =
+                new URL(GATEWAY_BASE + "//avainregistration/complete");
+        public static final URL AUTHENTICATION_INIT =
+                new URL(GATEWAY_BASE + "//avain/login/mobile/initiate");
 
         private static final String API_BASE = GATEWAY_BASE + "/mgw";
 
@@ -65,12 +71,16 @@ public class AktiaConstants {
 
         public static final URL ACCOUNT_DETAILS = new URL(API_BASE + "/account/{accountId}");
 
-        public static final URL ACCOUNT_TRANSACTIONS = new URL(API_BASE +
-                String.format("/account/{%s}/transactionsAndLockedEvents", HttpParameters.ACCOUNT_ID));
+        public static final URL ACCOUNT_TRANSACTIONS =
+                new URL(
+                        API_BASE
+                                + String.format(
+                                        "/account/{%s}/transactionsAndLockedEvents",
+                                        HttpParameters.ACCOUNT_ID));
 
         // Example: `/card/transactions/68A3DD.../2?cardId=FFF9DE9...`
-        public static final URL CARD_TRANSACTIONS = new URL(API_BASE +
-                "/card/transactions/{evryCardId}/{evryCardVersion}");
+        public static final URL CARD_TRANSACTIONS =
+                new URL(API_BASE + "/card/transactions/{evryCardId}/{evryCardVersion}");
     }
 
     public static class Avain {
@@ -81,8 +91,9 @@ public class AktiaConstants {
         public static final String AUTHENTICATION_ID_TYPE = "com.evry.sam.appcontext";
     }
 
-    public static final TypeMapper<AccountTypes> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "CURRENT_ACCOUNT")
-            .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
-            .build();
+    public static final TypeMapper<AccountTypes> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "CURRENT_ACCOUNT")
+                    .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
+                    .build();
 }

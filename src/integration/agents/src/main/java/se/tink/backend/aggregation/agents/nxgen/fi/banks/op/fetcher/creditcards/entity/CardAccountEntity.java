@@ -20,14 +20,17 @@ public class CardAccountEntity {
 
     @JsonIgnore
     public boolean isActiveCreditCard() {
-        return card != null && !card.isClosedCard() &&
-                OpBankConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(card.getCardType()) ;
+        return card != null
+                && !card.isClosedCard()
+                && OpBankConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(card.getCardType());
     }
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
-        return CreditCardAccount.builder(creditAccountIBAN, Amount.inEUR(statementBalanceAmount),
-                Amount.inEUR(amountAvailable))
+        return CreditCardAccount.builder(
+                        creditAccountIBAN,
+                        Amount.inEUR(statementBalanceAmount),
+                        Amount.inEUR(amountAvailable))
                 .setAccountNumber(card.getCardNumberMasked())
                 .setName(getName())
                 .setBankIdentifier(card.getEncryptedCardNumber())

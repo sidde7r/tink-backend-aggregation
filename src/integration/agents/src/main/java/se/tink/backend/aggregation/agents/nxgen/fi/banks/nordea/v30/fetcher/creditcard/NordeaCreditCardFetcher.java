@@ -9,30 +9,32 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class NordeaCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionIndexPaginator<CreditCardAccount> {
+public class NordeaCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionIndexPaginator<CreditCardAccount> {
 
     private final NordeaFiApiClient apiClient;
 
-    public NordeaCreditCardFetcher(
-            NordeaFiApiClient client) {
+    public NordeaCreditCardFetcher(NordeaFiApiClient client) {
         this.apiClient = client;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
 
-        return apiClient
-                .fetchCards()
-                .toTinkCards();
+        return apiClient.fetchCards().toTinkCards();
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int numberOfTransactions, int startIndex) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, int numberOfTransactions, int startIndex) {
 
         return apiClient
-                .fetchTransactions(startIndex, numberOfTransactions, account.getBankIdentifier(),
-                        NordeaFiConstants.Products.CARD, FetchCardTransactionResponse.class)
+                .fetchTransactions(
+                        startIndex,
+                        numberOfTransactions,
+                        account.getBankIdentifier(),
+                        NordeaFiConstants.Products.CARD,
+                        FetchCardTransactionResponse.class)
                 .toPaginatorResponse(account);
     }
 }

@@ -9,9 +9,8 @@ public class OpBankPostLoginRequest {
     private String touchIdEnabled = OpBankConstants.LoginConstants.TOUCH_ID_ENABLED;
     private String applicationInstanceId = "";
 
-    public OpBankPostLoginRequest setApplicationInstanceId(String appid){
+    public OpBankPostLoginRequest setApplicationInstanceId(String appid) {
         this.applicationInstanceId = appid;
         return this;
     }
 }
-

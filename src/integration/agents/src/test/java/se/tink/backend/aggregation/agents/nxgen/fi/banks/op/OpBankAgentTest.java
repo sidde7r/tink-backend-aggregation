@@ -21,17 +21,11 @@ public class OpBankAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        builder()
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true)
-                .build().testRefresh();
+        builder().loadCredentialsBefore(false).saveCredentialsAfter(true).build().testRefresh();
     }
 
     @Test
     public void testAutoRefresh() throws Exception {
-        builder()
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
-                .build().testRefresh();
+        builder().loadCredentialsBefore(true).saveCredentialsAfter(true).build().testRefresh();
     }
 }

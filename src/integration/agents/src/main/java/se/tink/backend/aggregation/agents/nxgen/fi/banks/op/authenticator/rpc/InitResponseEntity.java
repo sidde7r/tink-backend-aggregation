@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -14,11 +13,14 @@ public class InitResponseEntity extends OpBankResponseEntity {
     // validate we get a response we can process
     public void validateResponse() {
         if (!this.isSuccess()) {
-            throw new IllegalStateException("Unable to start session, response: " + this.toString());
+            throw new IllegalStateException(
+                    "Unable to start session, response: " + this.toString());
         } else if (!this.isAppVersionAccepted()) {
-            throw new IllegalStateException("App version not accepted, response: " + this.toString());
+            throw new IllegalStateException(
+                    "App version not accepted, response: " + this.toString());
         } else if (!this.isAppVersionAccepted()) {
-            throw new IllegalStateException("OS version not accepted, response: " + this.toString());
+            throw new IllegalStateException(
+                    "OS version not accepted, response: " + this.toString());
         }
     }
 

@@ -13,12 +13,14 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class DanskeBankFIAgent extends DanskeBankAgent {
-    public DanskeBankFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DanskeBankFIAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankFIConfiguration());
     }
 
     @Override
-    protected DanskeBankApiClient createApiClient(TinkHttpClient client, DanskeBankConfiguration configuration) {
+    protected DanskeBankApiClient createApiClient(
+            TinkHttpClient client, DanskeBankConfiguration configuration) {
         return new DanskeBankFIApiClient(client, (DanskeBankFIConfiguration) configuration);
     }
 
@@ -29,10 +31,17 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator = new DanskeBankChallengeAuthenticator(
-                (DanskeBankFIApiClient) apiClient, persistentStorage, credentials, deviceId, configuration);
+        DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator =
+                new DanskeBankChallengeAuthenticator(
+                        (DanskeBankFIApiClient) apiClient,
+                        persistentStorage,
+                        credentials,
+                        deviceId,
+                        configuration);
 
-        return new AutoAuthenticationController(request, systemUpdater,
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog, supplementalInformationHelper, danskeBankChallengeAuthenticator),
                 danskeBankChallengeAuthenticator);

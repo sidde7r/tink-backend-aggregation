@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditEntity {
     @JsonProperty("masked_credit_card_number")
     private String maskedCreditCardNumber;
+
     @JsonProperty("credit_available_balance")
     private double creditAvailableBalance;
+
     @JsonProperty("credit_booked_balance")
     private double creditBookedBalance;
 
@@ -19,7 +21,8 @@ public class CreditEntity {
     public double getCreditAvailableBalance() {
         return creditAvailableBalance;
     }
-    public double getCreditBookedBalance(){
+
+    public double getCreditBookedBalance() {
         return creditBookedBalance;
     }
 }

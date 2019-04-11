@@ -22,16 +22,17 @@ public class NordeaLoanFetcher implements AccountFetcher<LoanAccount> {
     @Override
     public Collection<LoanAccount> fetchAccounts() {
 
-        try{
+        try {
             HttpResponse response = apiClient.fetchLoans();
 
-            // TODO Loan entity is built from test data found in the Nordea App. Remove when verified.
-            log.infoExtraLong(response.getBody(String.class), NordeaFiConstants.LogTags.NORDEA_FI_LOAN);
+            // TODO Loan entity is built from test data found in the Nordea App. Remove when
+            // verified.
+            log.infoExtraLong(
+                    response.getBody(String.class), NordeaFiConstants.LogTags.NORDEA_FI_LOAN);
             return response.getBody(FetchLoanResponse.class).toTinkLoanAccounts();
-        }catch (Exception e){
+        } catch (Exception e) {
 
             return Collections.emptyList();
         }
-
     }
 }

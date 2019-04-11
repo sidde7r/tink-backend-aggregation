@@ -22,7 +22,7 @@ public class AuthenticateStatus implements ThirdPartyAppResponse<String> {
         return code;
     }
 
-    private ThirdPartyAppStatus logUnknownError(){
+    private ThirdPartyAppStatus logUnknownError() {
         log.infoExtraLong(error, NordeaFIConstants.LogTags.NORDEA_FI_AUTHENTICATE);
         return ThirdPartyAppStatus.UNKNOWN;
     }

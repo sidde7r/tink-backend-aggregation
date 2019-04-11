@@ -8,6 +8,7 @@ public class PermissionsEntity {
 
     @JsonProperty("can_view_transactions")
     private boolean canViewTransactions;
+
     @JsonProperty("can_transfer_from_credit")
     private boolean canTransferFromCredit;
 }

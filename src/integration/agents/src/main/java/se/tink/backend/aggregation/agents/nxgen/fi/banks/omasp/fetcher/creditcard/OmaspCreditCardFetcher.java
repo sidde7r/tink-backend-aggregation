@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class OmaspCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
+public class OmaspCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
     private final OmaspApiClient apiClient;
 
     public OmaspCreditCardFetcher(OmaspApiClient apiClient) {
@@ -30,7 +31,8 @@ public class OmaspCreditCardFetcher implements AccountFetcher<CreditCardAccount>
 
     @Override
     public List<AggregationTransaction> fetchTransactionsFor(CreditCardAccount account) {
-        CreditCardDetailsResponse cardDetails = apiClient.getCreditCardDetails(account.getBankIdentifier());
+        CreditCardDetailsResponse cardDetails =
+                apiClient.getCreditCardDetails(account.getBankIdentifier());
         return cardDetails.getTransactions().stream()
                 .map(transaction -> transaction.toTinkTransaction(account))
                 .collect(Collectors.toList());

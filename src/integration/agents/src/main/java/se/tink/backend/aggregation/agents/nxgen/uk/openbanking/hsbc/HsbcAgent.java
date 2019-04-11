@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HsbcAgent extends UkOpenBankingBaseAgent {
-    public HsbcAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public HsbcAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -26,12 +27,8 @@ public class HsbcAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configureAisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 }

@@ -27,8 +27,7 @@ public class SpankkiRequest {
         return this;
     }
 
-    public void setClientInfo(
-            ClientInfoEntity clientInfo) {
+    public void setClientInfo(ClientInfoEntity clientInfo) {
         this.clientInfo = clientInfo;
     }
 }

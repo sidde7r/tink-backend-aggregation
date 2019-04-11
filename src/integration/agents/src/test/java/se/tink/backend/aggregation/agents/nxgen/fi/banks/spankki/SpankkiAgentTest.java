@@ -25,8 +25,6 @@ public class SpankkiAgentTest {
 
     @Test
     public void testAutoRefresh() throws Exception {
-        builder()
-                .loadCredentialsBefore(true)
-                .build().testRefresh();
+        builder().loadCredentialsBefore(true).build().testRefresh();
     }
 }

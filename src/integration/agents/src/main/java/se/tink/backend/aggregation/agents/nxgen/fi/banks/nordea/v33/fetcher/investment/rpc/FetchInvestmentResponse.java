@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 
 @JsonObject
 public class FetchInvestmentResponse {
-    @JsonProperty
-    private List<InvestmentAccountEntity> accounts;
+    @JsonProperty private List<InvestmentAccountEntity> accounts;
 
     public List<InvestmentAccount> toTinkInvestmentAccounts() {
         return accounts.stream()

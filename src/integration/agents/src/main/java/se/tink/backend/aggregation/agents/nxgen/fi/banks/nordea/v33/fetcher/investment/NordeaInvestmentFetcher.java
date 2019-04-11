@@ -17,18 +17,16 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaInvestmentFetcher(NordeaFIApiClient apiClient,
-            SessionStorage sessionStorage) {
+    public NordeaInvestmentFetcher(NordeaFIApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        try{
+        try {
             return apiClient.fetchInvestments().toTinkInvestmentAccounts();
-        }
-        catch (HttpResponseException e) {
+        } catch (HttpResponseException e) {
             if (isShouldNotFetchInvestmentError(e.getResponse())) {
                 return Collections.emptyList();
             }
@@ -55,7 +53,8 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         }
 
         // custody account is missing care account
-        // Your custody account is missing a care account. It blocks access to the investment section.
+        // Your custody account is missing a care account. It blocks access to the investment
+        // section.
         if (errorResponse.hasNoConnectedAccount()) {
 
             LOG.debug("No account connected to custody account");

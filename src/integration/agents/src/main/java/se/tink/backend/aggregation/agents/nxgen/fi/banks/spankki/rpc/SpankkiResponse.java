@@ -11,7 +11,6 @@ public class SpankkiResponse {
     private String requestToken;
     private boolean isLoggedIn;
 
-
     public StatusEntity getStatus() {
         return status;
     }

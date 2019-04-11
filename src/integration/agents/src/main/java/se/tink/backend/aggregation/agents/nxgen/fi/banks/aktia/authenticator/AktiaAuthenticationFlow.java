@@ -30,22 +30,27 @@ public class AktiaAuthenticationFlow {
     }
 
     // Both registration (keyCard) and authentication (autoAuth) must login. Share the logic here.
-    public void authenticate() throws SessionException, BankServiceException, AuthorizationException {
+    public void authenticate()
+            throws SessionException, BankServiceException, AuthorizationException {
         try {
-            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice(
-                    AuthenticationMethod.DEVICE);
+            DeviceAuthenticationResponse authenticationResponse =
+                    encapClient.authenticateDevice(AuthenticationMethod.DEVICE);
 
-            AuthenticationInitResponse authenticationInitResponse = apiClient.authenticationInit(
-                    authenticationResponse.getDeviceToken());
+            AuthenticationInitResponse authenticationInitResponse =
+                    apiClient.authenticationInit(authenticationResponse.getDeviceToken());
 
-            String authenticationId = apiClient.getAuthenticationId(authenticationInitResponse.getToken())
-                    .orElseThrow(AuthorizationError.NO_VALID_PROFILE::exception);
+            String authenticationId =
+                    apiClient
+                            .getAuthenticationId(authenticationInitResponse.getToken())
+                            .orElseThrow(AuthorizationError.NO_VALID_PROFILE::exception);
 
-            authenticationResponse = encapClient.authenticateDevice(
-                    AuthenticationMethod.DEVICE_AND_PIN,
-                    createAktiaAuthenticationId(authenticationId));
+            authenticationResponse =
+                    encapClient.authenticateDevice(
+                            AuthenticationMethod.DEVICE_AND_PIN,
+                            createAktiaAuthenticationId(authenticationId));
 
-            OAuth2Token token = apiClient.getAndSaveAuthenticatedToken(authenticationResponse.getDeviceToken());
+            OAuth2Token token =
+                    apiClient.getAndSaveAuthenticatedToken(authenticationResponse.getDeviceToken());
             if (!token.isValid()) {
                 // This should not happen!
                 throw new IllegalStateException("Expected to be logged in but token is invalid.");

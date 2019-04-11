@@ -8,8 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanDetailsRequest extends SpankkiRequest {
     private LoanDetailsIdentity loanDetails;
 
-    public LoanDetailsRequest setLoanDetails(
-            LoanDetailsIdentity loanDetails) {
+    public LoanDetailsRequest setLoanDetails(LoanDetailsIdentity loanDetails) {
         this.loanDetails = loanDetails;
         return this;
     }

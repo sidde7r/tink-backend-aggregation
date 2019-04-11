@@ -12,24 +12,30 @@ import se.tink.libraries.amount.Amount;
 public class CardTransactionEntity {
     @JsonProperty("transaction_id")
     private String transactionId;
+
     @JsonProperty("booked")
     private boolean booked;
-    @JsonProperty
-    private double amount;
-    @JsonProperty
-    private String currency;
+
+    @JsonProperty private double amount;
+    @JsonProperty private String currency;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("booking_date")
     private Date bookingDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("transaction_date")
     private Date transactionDate;
+
     @JsonProperty("interest_date")
     private String interestDate;
+
     @JsonProperty("title")
     private String title;
+
     @JsonProperty("balance_after")
     private double balanceAfter;
+
     @JsonProperty("transaction_type")
     private String transactionType;
 
@@ -43,7 +49,7 @@ public class CardTransactionEntity {
                 .build();
     }
 
-    private Date getDate(){
+    private Date getDate() {
         return booked ? bookingDate : transactionDate;
     }
 }

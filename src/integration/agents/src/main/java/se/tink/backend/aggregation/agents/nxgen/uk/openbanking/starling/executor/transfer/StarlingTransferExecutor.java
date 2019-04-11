@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer;
 
 import com.google.common.base.Preconditions;
+import java.security.PrivateKey;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -29,9 +31,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.security.PrivateKey;
-import java.util.Optional;
 
 @JsonObject
 public class StarlingTransferExecutor implements BankTransferExecutor {
@@ -102,7 +101,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         paymentApprovalToken);
 
         final TransferStatusEntity status =
-                apiClient.checkTransferStatus(paymentResponse.getPaymentOrderUid(), paymentApprovalToken);
+                apiClient.checkTransferStatus(
+                        paymentResponse.getPaymentOrderUid(), paymentApprovalToken);
 
         if (!status.isOk()) {
             throw getTransferException(
@@ -172,7 +172,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                 // TODO: Temporary fix for app 2 app demo, should be set to previous value after
                 // successful demo
                 .setPayeeName(destination.getName().orElse("Test Payee"))
-//                .setPayeeName(payee.getPayeeName())
+                //                .setPayeeName(payee.getPayeeName())
                 .setCountryCode(COUNTRY_CODE)
                 .setPayeeType(INDIVIDUAL)
                 .build();

@@ -11,10 +11,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TradingAssetsPortfoliosResponse extends ArrayList<OpBankTradingAssetPortfolio> {
     @JsonIgnore
     public List<OpBankTradingAssetPortfolio> getPortfolios() {
-        return stream()
-                .filter(OpBankTradingAssetPortfolio::isValid)
-                .collect(Collectors.toList());
+        return stream().filter(OpBankTradingAssetPortfolio::isValid).collect(Collectors.toList());
     }
 }
-
-

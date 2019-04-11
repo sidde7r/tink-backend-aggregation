@@ -42,9 +42,9 @@ public class CardEntity {
     public CreditCardAccount toTinkCard() {
 
         return CreditCardAccount.builder(
-                credit.getMaskedCreditCardNumber(),
-                new Amount(currency, credit.getSignedBalance()),
-                new Amount(currency, credit.getAvailableCredit()))
+                        credit.getMaskedCreditCardNumber(),
+                        new Amount(currency, credit.getSignedBalance()),
+                        new Amount(currency, credit.getAvailableCredit()))
                 .setAccountNumber(credit.getMaskedCreditCardNumber())
                 .setHolderName(new HolderName(cardholderName))
                 .setName(nickname)
@@ -52,7 +52,7 @@ public class CardEntity {
                 .build();
     }
 
-    public boolean isCreditCard(){
+    public boolean isCreditCard() {
         return credit != null;
     }
 }

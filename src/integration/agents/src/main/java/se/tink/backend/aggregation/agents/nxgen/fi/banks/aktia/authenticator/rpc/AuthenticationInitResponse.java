@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AuthenticationInitResponse extends TokenResponse {
     // This is populated from http headers
-    @JsonIgnore
-    private String loginStatus;
+    @JsonIgnore private String loginStatus;
 
     public String getLoginStatus() {
         return loginStatus;

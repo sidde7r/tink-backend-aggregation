@@ -30,8 +30,10 @@ public class StarlingAgentTest {
         Transfer transfer = new Transfer();
 
         transfer.setType(TransferType.BANK_TRANSFER);
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_SOURCE));
-        transfer.setDestination(AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_DEST));
+        transfer.setSource(
+                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_SOURCE));
+        transfer.setDestination(
+                AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, TRANSFER_DEST));
         transfer.setAmount(Amount.valueOf("GBP", 1050, 2));
         transfer.setSourceMessage("Message!");
 

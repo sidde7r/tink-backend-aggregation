@@ -31,16 +31,16 @@ public class NordeaFiAgent extends NextGenerationAgent {
 
     private final NordeaFiApiClient apiClient;
 
-    public NordeaFiAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public NordeaFiAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new NordeaFiApiClient(client, sessionStorage, credentials.getField(Field.Key.USERNAME));
+        this.apiClient =
+                new NordeaFiApiClient(
+                        client, sessionStorage, credentials.getField(Field.Key.USERNAME));
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -50,41 +50,54 @@ public class NordeaFiAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        NordeaTransactionalAccountFetcher accountFetcher = new NordeaTransactionalAccountFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        NordeaTransactionalAccountFetcher accountFetcher =
+                new NordeaTransactionalAccountFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(new NordeaTransactionFetcher(apiClient)))));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionIndexPaginationController<>(
+                                        new NordeaTransactionFetcher(apiClient)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
         NordeaCreditCardFetcher creditCardFetcher = new NordeaCreditCardFetcher(apiClient);
-        return Optional.of(new CreditCardRefreshController(metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionIndexPaginationController<>(creditCardFetcher))));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionIndexPaginationController<>(creditCardFetcher))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
 
-        return Optional.of(new InvestmentRefreshController(metricRefreshController,
-                updateController,
-                new NordeaInvestmentFetcher(apiClient)));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaInvestmentFetcher(apiClient)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
 
-        return Optional.of(new LoanRefreshController(metricRefreshController,
-                updateController,
-                new NordeaLoanFetcher(apiClient)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaLoanFetcher(apiClient)));
     }
 
     @Override
@@ -93,7 +106,8 @@ public class NordeaFiAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

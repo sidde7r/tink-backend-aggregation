@@ -8,8 +8,7 @@ public class NordeaSessionHandler implements SessionHandler {
 
     private final NordeaFiApiClient apiClient;
 
-    public NordeaSessionHandler(
-            NordeaFiApiClient apiClient) {
+    public NordeaSessionHandler(NordeaFiApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

@@ -9,7 +9,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ErrorResponse {
     @JsonProperty("http_status")
     private int httpStatus;
+
     private String error;
+
     @JsonProperty("error_description")
     private String errorDescription;
 

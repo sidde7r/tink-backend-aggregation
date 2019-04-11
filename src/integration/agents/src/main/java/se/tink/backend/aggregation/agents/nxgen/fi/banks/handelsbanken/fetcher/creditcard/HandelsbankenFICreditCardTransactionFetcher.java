@@ -20,20 +20,19 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class HandelsbankenFICreditCardTransactionFetcher extends
-        HandelsbankenCreditCardTransactionPaginator<HandelsbankenFIApiClient> {
-    private final AggregationLogger log = new AggregationLogger(
-            HandelsbankenFICreditCardTransactionFetcher.class);
+public class HandelsbankenFICreditCardTransactionFetcher
+        extends HandelsbankenCreditCardTransactionPaginator<HandelsbankenFIApiClient> {
+    private final AggregationLogger log =
+            new AggregationLogger(HandelsbankenFICreditCardTransactionFetcher.class);
 
     public HandelsbankenFICreditCardTransactionFetcher(
-            HandelsbankenFIApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         super(client, sessionStorage);
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(CreditCardAccount account,
-            URL key) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            CreditCardAccount account, URL key) {
 
         /*
          * Try pagination implementation, which is only tested for HandelsbankenSE.
@@ -49,8 +48,8 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
         } catch (Exception e) {
 
             log.error("Pagination failed, paginator is likely incorrectly implemented.", e);
-            return new HandelsbankenPaginatorResponse(fetchTransactionsFor(account),
-                    Optional.empty());
+            return new HandelsbankenPaginatorResponse(
+                    fetchTransactionsFor(account), Optional.empty());
         }
     }
 
@@ -58,27 +57,37 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
     public List<Transaction> fetchTransactionsFor(CreditCardAccount account) {
         // Fetch transactions for creditcards that are accounts.
         // They will have both account transactions and credit card transactions.
-        List<Transaction> accountTransactions = sessionStorage.accountList()
-                .flatMap(accountList -> accountList.find(account))
-                .filter(HandelsbankenAccount::isCreditCard)
-                .map(handelsbankenAccount -> {
-                    // Fetch the account transactions and filter out the summary transactions.
-                    List<Transaction> subTransactions = removeSummaryTransactions(
-                            client.transactions(handelsbankenAccount).toTinkTransactions());
-                    // Fetch the card transactions.
-                    subTransactions.addAll(
-                            client.creditCardTransactions(handelsbankenAccount.getCardTransactionsUrl())
-                                    .tinkTransactions(account)
-                    );
-                    return subTransactions;
-                })
-                .orElse(Collections.emptyList());
+        List<Transaction> accountTransactions =
+                sessionStorage
+                        .accountList()
+                        .flatMap(accountList -> accountList.find(account))
+                        .filter(HandelsbankenAccount::isCreditCard)
+                        .map(
+                                handelsbankenAccount -> {
+                                    // Fetch the account transactions and filter out the summary
+                                    // transactions.
+                                    List<Transaction> subTransactions =
+                                            removeSummaryTransactions(
+                                                    client.transactions(handelsbankenAccount)
+                                                            .toTinkTransactions());
+                                    // Fetch the card transactions.
+                                    subTransactions.addAll(
+                                            client.creditCardTransactions(
+                                                            handelsbankenAccount
+                                                                    .getCardTransactionsUrl())
+                                                    .tinkTransactions(account));
+                                    return subTransactions;
+                                })
+                        .orElse(Collections.emptyList());
         List<Transaction> transactions = new ArrayList<>(accountTransactions);
         List<CreditCardTransaction> creditCardTransactions =
-                sessionStorage.<HandelsbankenFICreditCard>creditCards()
+                sessionStorage
+                        .<HandelsbankenFICreditCard>creditCards()
                         .flatMap(creditCards -> creditCards.find(account))
-                        .map(creditCard -> client.creditCardTransactions(creditCard)
-                                .tinkTransactions(creditCard, account))
+                        .map(
+                                creditCard ->
+                                        client.creditCardTransactions(creditCard)
+                                                .tinkTransactions(creditCard, account))
                         .orElse(Collections.emptyList());
         transactions.addAll(creditCardTransactions);
 
@@ -87,25 +96,26 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
 
     private List<Transaction> removeSummaryTransactions(List<Transaction> transactions) {
         return transactions.stream()
-                .filter(transaction -> !HandelsbankenConstants.TransactionFiltering.CREDIT_CARD_SUMMARY
-                        .equalsIgnoreCase(transaction.getDescription()))
+                .filter(
+                        transaction ->
+                                !HandelsbankenConstants.TransactionFiltering.CREDIT_CARD_SUMMARY
+                                        .equalsIgnoreCase(transaction.getDescription()))
                 .collect(Collectors.toList());
-
     }
 
     @Override
     protected List<Transaction> fetchAccountTransactions(
             HandelsbankenAccount handelsbankenAccount) {
 
-        HandelsbankenFIAccountTransactionPaginator paginator = new HandelsbankenFIAccountTransactionPaginator(
-                client, sessionStorage);
+        HandelsbankenFIAccountTransactionPaginator paginator =
+                new HandelsbankenFIAccountTransactionPaginator(client, sessionStorage);
 
         List<Transaction> transactions = new ArrayList<>();
         URL nextKey = null;
         do {
 
-            TransactionKeyPaginatorResponse<URL> response = paginator
-                    .getTransactionsFor(handelsbankenAccount, nextKey);
+            TransactionKeyPaginatorResponse<URL> response =
+                    paginator.getTransactionsFor(handelsbankenAccount, nextKey);
             transactions.addAll(response.getTinkTransactions());
             nextKey = response.nextKey();
 
@@ -113,5 +123,4 @@ public class HandelsbankenFICreditCardTransactionFetcher extends
 
         return transactions;
     }
-
 }

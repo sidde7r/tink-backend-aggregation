@@ -22,13 +22,16 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class OpAuthenticator  implements KeyCardAuthenticator {
+public class OpAuthenticator implements KeyCardAuthenticator {
     public final OpBankApiClient apiClient;
     public final OpBankPersistentStorage persistentStorage;
     private String authToken;
     private Credentials credentials;
 
-    public OpAuthenticator(OpBankApiClient client, OpBankPersistentStorage persistentStorage, Credentials credentials){
+    public OpAuthenticator(
+            OpBankApiClient client,
+            OpBankPersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
@@ -36,7 +39,7 @@ public class OpAuthenticator  implements KeyCardAuthenticator {
 
     @Override
     public KeyCardInitValues init(String username, String password) throws LoginException {
-        InitResponseEntity iResponse =  apiClient.init(new InitRequestEntity());
+        InitResponseEntity iResponse = apiClient.init(new InitRequestEntity());
         String authToken = OpAuthenticationTokenGenerator.calculateAuthToken(iResponse.getSeed());
         this.authToken = authToken;
 
@@ -66,8 +69,9 @@ public class OpAuthenticator  implements KeyCardAuthenticator {
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
 
         try {
-            OpBankAuthenticateResponse response = apiClient
-                    .authenticate(new OpBankAuthenticateCodeRequest().setLang("en").setUserkey(code));
+            OpBankAuthenticateResponse response =
+                    apiClient.authenticate(
+                            new OpBankAuthenticateCodeRequest().setLang("en").setUserkey(code));
         } catch (HttpResponseException e) {
             handleAuthenticationException(e);
         }
@@ -94,11 +98,13 @@ public class OpAuthenticator  implements KeyCardAuthenticator {
     }
 
     private void pinDeviceOrThrow(String appInstanceId) throws LoginException {
-        OpBankMobileConfigurationsEntity registerDevice = apiClient.enableExtendedMobileServices(appInstanceId);
-        if(registerDevice.getStatus() != 0){
+        OpBankMobileConfigurationsEntity registerDevice =
+                apiClient.enableExtendedMobileServices(appInstanceId);
+        if (registerDevice.getStatus() != 0) {
             throw LoginError.REGISTER_DEVICE_ERROR.exception();
         }
 
-        persistentStorage.put(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, appInstanceId);
+        persistentStorage.put(
+                OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, appInstanceId);
     }
 }

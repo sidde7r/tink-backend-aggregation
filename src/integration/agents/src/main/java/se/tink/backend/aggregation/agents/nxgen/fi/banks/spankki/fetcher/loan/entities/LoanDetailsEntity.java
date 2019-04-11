@@ -13,10 +13,12 @@ public class LoanDetailsEntity extends LoanOverviewEntity {
 
     public LoanAccount toTinkLoanAccount() {
         if (loanCBS == null && loanS == null) {
-            throw new IllegalStateException("Unknown loan data received: " + SerializationUtils.serializeToString(this));
+            throw new IllegalStateException(
+                    "Unknown loan data received: " + SerializationUtils.serializeToString(this));
         }
 
-        LoanAccount.Builder<?, ?> loanAccountBuilder = LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()));
+        LoanAccount.Builder<?, ?> loanAccountBuilder =
+                LoanAccount.builder(getLoanNumber(), Amount.inEUR(-getBalance()));
         loanAccountBuilder
                 .setAccountNumber(getLoanNumber())
                 .setName(getLoanName().getFi())
@@ -24,14 +26,10 @@ public class LoanDetailsEntity extends LoanOverviewEntity {
                 .setInterestRate(getInterestRate());
 
         if (loanCBS != null) {
-            return loanAccountBuilder
-                    .setDetails(loanCBS.toTinkLoan(this))
-                    .build();
+            return loanAccountBuilder.setDetails(loanCBS.toTinkLoan(this)).build();
         }
 
-        return loanAccountBuilder
-                .setDetails(loanS.toTinkLoan(this))
-                .build();
+        return loanAccountBuilder.setDetails(loanS.toTinkLoan(this)).build();
     }
 
     public String getCustomerName() {

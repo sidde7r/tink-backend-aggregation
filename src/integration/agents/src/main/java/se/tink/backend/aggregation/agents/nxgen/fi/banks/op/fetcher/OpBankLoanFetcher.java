@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher;
 
 import java.util.ArrayList;
@@ -35,8 +34,10 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
         FetchCreditsResponse fetchCreditsResponse = client.fetchCredits();
 
         if (!fetchCreditsResponse.isSuccess()) {
-            LOGGER.warn(String.format("Fetch loans returned error: %s",
-                    SerializationUtils.serializeToString(fetchCreditsResponse)));
+            LOGGER.warn(
+                    String.format(
+                            "Fetch loans returned error: %s",
+                            SerializationUtils.serializeToString(fetchCreditsResponse)));
             return Collections.emptyList();
         }
 
@@ -44,27 +45,32 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
 
             if (OpBankConstants.Fetcher.FLEXI_CREDIT.equalsIgnoreCase(credit.getCreditType())) {
 
-                CreditDetailsResponse loanDetailsResponse = client
-                        .fetchFlexiCreditDetails(credit.getEncryptedAgreementNumber());
+                CreditDetailsResponse loanDetailsResponse =
+                        client.fetchFlexiCreditDetails(credit.getEncryptedAgreementNumber());
                 loansAccounts.add(loanDetailsResponse.toLoanAccount(credit));
 
-            } else if (OpBankConstants.Fetcher.SPECIAL_CREDIT.equalsIgnoreCase(credit.getCreditType())) {
+            } else if (OpBankConstants.Fetcher.SPECIAL_CREDIT.equalsIgnoreCase(
+                    credit.getCreditType())) {
 
-                CreditDetailsResponse loanDetailsResponse = client
-                        .fetchSpecialCreditDetails(credit.getEncryptedAgreementNumber());
+                CreditDetailsResponse loanDetailsResponse =
+                        client.fetchSpecialCreditDetails(credit.getEncryptedAgreementNumber());
                 loansAccounts.add(loanDetailsResponse.toLoanAccount(credit));
 
-            } else if (OpBankConstants.Fetcher.COLLATERAL_CREDIT.equalsIgnoreCase(credit.getCreditType())) {
+            } else if (OpBankConstants.Fetcher.COLLATERAL_CREDIT.equalsIgnoreCase(
+                    credit.getCreditType())) {
 
-                CollateralCreditDetailsResponse response = client
-                        .fetchCollateralCreditDetails(credit.getEncryptedAgreementNumber());
+                CollateralCreditDetailsResponse response =
+                        client.fetchCollateralCreditDetails(credit.getEncryptedAgreementNumber());
                 loansAccounts.add(response.toLoanAccount(credit));
 
             } else {
-                // continuing credit is handled as credit card (credit account) by the credit card fetcher
-                if (!OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(credit.getCreditType())) {
+                // continuing credit is handled as credit card (credit account) by the credit card
+                // fetcher
+                if (!OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(
+                        credit.getCreditType())) {
                     // log the last of them, haven seen it yet
-                    LOGGER.infoExtraLong(SerializationUtils.serializeToString(credit),
+                    LOGGER.infoExtraLong(
+                            SerializationUtils.serializeToString(credit),
                             OpBankConstants.Fetcher.LOAN_LOGGING);
                 }
             }

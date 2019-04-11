@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util;
 
 import com.google.common.base.Preconditions;
-import joptsimple.internal.Strings;
-import se.tink.backend.aggregation.nxgen.http.HttpMethod;
-
 import java.net.URI;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -15,6 +12,8 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import joptsimple.internal.Strings;
+import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 
 public class PaymentSignature {
 
@@ -57,14 +56,14 @@ public class PaymentSignature {
         private static final String SIGN_ALGORITHM_ID = "SHA512withRSA";
         private static final String HEADERS = "(request-target) Date Digest";
 
-        private static final String SIGN_STRING_TEMPLATE = "(request-target): %s\n" +
-                "Date: %s\n" +
-                "Digest: %s";
-        private static final String AUTH_HEADER_TEMPLATE = "Bearer %s;" +
-                "Signature keyid=\"%s\"," +
-                "algorithm=\"%s\"," +
-                "headers=\"%s\"," +
-                "signature=\"%s\"";
+        private static final String SIGN_STRING_TEMPLATE =
+                "(request-target): %s\n" + "Date: %s\n" + "Digest: %s";
+        private static final String AUTH_HEADER_TEMPLATE =
+                "Bearer %s;"
+                        + "Signature keyid=\"%s\","
+                        + "algorithm=\"%s\","
+                        + "headers=\"%s\","
+                        + "signature=\"%s\"";
 
         private final String keyUid;
         private final Signature signature;
@@ -103,7 +102,8 @@ public class PaymentSignature {
             Preconditions.checkNotNull(httpMethod);
             Preconditions.checkNotNull(uri);
 
-            this.requestTarget = String.format("%s %s",  httpMethod.toString().toLowerCase(), uri.getPath());
+            this.requestTarget =
+                    String.format("%s %s", httpMethod.toString().toLowerCase(), uri.getPath());
             return this;
         }
 
@@ -117,18 +117,24 @@ public class PaymentSignature {
 
         public PaymentSignature build() {
 
-            DateTimeFormatter format =  DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+            DateTimeFormatter format = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
             final String timeStamp = format.format(Instant.now().atZone(ZoneId.of("UTC+1")));
 
-            final String stringToSign = String.format(
-                    SIGN_STRING_TEMPLATE, requestTarget,
-                    timeStamp, payloadDigest);
+            final String stringToSign =
+                    String.format(
+                            SIGN_STRING_TEMPLATE, requestTarget,
+                            timeStamp, payloadDigest);
 
             final String signature = getSignatureFor(stringToSign);
 
-            final String authHeader = String.format(
-                    AUTH_HEADER_TEMPLATE, accessToken, keyUid,
-                    SIGN_ALGORITHM_NAME, HEADERS, signature);
+            final String authHeader =
+                    String.format(
+                            AUTH_HEADER_TEMPLATE,
+                            accessToken,
+                            keyUid,
+                            SIGN_ALGORITHM_NAME,
+                            HEADERS,
+                            signature);
 
             return new PaymentSignature(payloadDigest, signature, authHeader, timeStamp);
         }

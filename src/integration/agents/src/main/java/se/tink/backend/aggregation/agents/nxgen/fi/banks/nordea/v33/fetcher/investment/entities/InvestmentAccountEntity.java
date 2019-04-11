@@ -15,24 +15,27 @@ import se.tink.libraries.amount.Amount;
 public class InvestmentAccountEntity {
     @JsonProperty("account_number")
     private String accountNumber;
+
     @JsonProperty("has_additional_info")
     private boolean hasMoreInfo;
+
     @JsonProperty("profit_loss")
     private double profitLoss;
+
     @JsonProperty("profit_loss_valid")
     private boolean profitLossValid;
+
     @JsonProperty("cash_amount")
     private double balance;
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private String id;
-    @JsonProperty
-    private String classification;
+
+    @JsonProperty private String name;
+    @JsonProperty private String id;
+    @JsonProperty private String classification;
+
     @JsonProperty("market_value")
     private double value;
-    @JsonProperty
-    private List<HoldingEntity> holdings;
+
+    @JsonProperty private List<HoldingEntity> holdings;
 
     public InvestmentAccount toTinkInvestmentAccount() {
         return InvestmentAccount.builder(id)
@@ -48,7 +51,10 @@ public class InvestmentAccountEntity {
         Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(id);
         portfolio.setRawType(getRawType());
-        portfolio.setType(NordeaFIConstants.PORTFOLIO_TYPE_MAP.translate(getRawType()).orElse(Portfolio.Type.OTHER));
+        portfolio.setType(
+                NordeaFIConstants.PORTFOLIO_TYPE_MAP
+                        .translate(getRawType())
+                        .orElse(Portfolio.Type.OTHER));
         portfolio.setCashValue(balance);
         portfolio.setTotalValue(balance);
         portfolio.setTotalProfit(profitLoss);

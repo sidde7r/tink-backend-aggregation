@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -23,12 +24,11 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class HandelsbankenFIAgent
         extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
-    public HandelsbankenFIAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public HandelsbankenFIAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenFIConfiguration());
     }
 
@@ -45,18 +45,19 @@ public class HandelsbankenFIAgent
             HandelsbankenPersistentStorage handelsbankenPersistentStorage,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
         return new TypedAuthenticator[] {
-                constructAutoAuthenticationController(
-                        new HandelsbankenFICardDeviceAuthenticator(bankClient,
-                                handelsbankenPersistentStorage,
-                                new SupplementalInformationController(this.supplementalRequester,
-                                        this.credentials),
-                                handelsbankenConfiguration,
-                                new HandelsbankenAutoAuthenticator(bankClient,
-                                        handelsbankenPersistentStorage,
-                                        this.credentials,
-                                        handelsbankenSessionStorage, handelsbankenConfiguration)
-                        )
-                )
+            constructAutoAuthenticationController(
+                    new HandelsbankenFICardDeviceAuthenticator(
+                            bankClient,
+                            handelsbankenPersistentStorage,
+                            new SupplementalInformationController(
+                                    this.supplementalRequester, this.credentials),
+                            handelsbankenConfiguration,
+                            new HandelsbankenAutoAuthenticator(
+                                    bankClient,
+                                    handelsbankenPersistentStorage,
+                                    this.credentials,
+                                    handelsbankenSessionStorage,
+                                    handelsbankenConfiguration)))
         };
     }
 
@@ -69,21 +70,22 @@ public class HandelsbankenFIAgent
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(
-            HandelsbankenFIApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
+            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
     }
 
     @Override
     protected Optional<TransferController> constructTransferController(
             HandelsbankenFIApiClient client,
-            HandelsbankenSessionStorage sessionStorage, AgentContext context) {
+            HandelsbankenSessionStorage sessionStorage,
+            AgentContext context) {
         return Optional.empty();
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController(
-            HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController(
+                    HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return Optional.empty();
     }
 
@@ -110,7 +112,6 @@ public class HandelsbankenFIAgent
     protected TransactionPaginator<CreditCardAccount> constructCreditCardTransactionPaginator(
             HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return new TransactionKeyPaginationController<>(
-                new HandelsbankenFICreditCardTransactionFetcher(client, sessionStorage)
-        );
+                new HandelsbankenFICreditCardTransactionFetcher(client, sessionStorage));
     }
 }

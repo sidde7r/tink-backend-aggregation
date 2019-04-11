@@ -18,19 +18,20 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
 
-    public HandelsbankenFIApiClient(TinkHttpClient client,
-            HandelsbankenFIConfiguration handelsbankenConfiguration) {
+    public HandelsbankenFIApiClient(
+            TinkHttpClient client, HandelsbankenFIConfiguration handelsbankenConfiguration) {
         super(client, handelsbankenConfiguration);
     }
 
-    public SecurityCardResponse authenticate(InitNewProfileResponse initNewProfile,
+    public SecurityCardResponse authenticate(
+            InitNewProfileResponse initNewProfile,
             EncryptedUserCredentialsRequest encryptedUserCredentialsRequest) {
-        return createPostRequest(initNewProfile.toAuthenticate()).post(SecurityCardResponse.class,
-                encryptedUserCredentialsRequest);
+        return createPostRequest(initNewProfile.toAuthenticate())
+                .post(SecurityCardResponse.class, encryptedUserCredentialsRequest);
     }
 
-    public VerifySecurityCodeResponse verifySecurityCode(SecurityCardResponse authenticate,
-            EncryptedSecurityCodeRequest code) {
+    public VerifySecurityCodeResponse verifySecurityCode(
+            SecurityCardResponse authenticate, EncryptedSecurityCodeRequest code) {
         return createPostRequest(authenticate.toVerifySecurityCode())
                 .post(VerifySecurityCodeResponse.class, code);
     }
@@ -55,7 +56,7 @@ public class HandelsbankenFIApiClient extends HandelsbankenApiClient {
     }
 
     @Override
-    public  CreditCardFITransactionsResponse creditCardTransactions(
+    public CreditCardFITransactionsResponse creditCardTransactions(
             HandelsbankenCreditCard creditcard) {
         return createRequest(creditcard.getCardTransactionsUrl())
                 .get(CreditCardFITransactionsResponse.class);

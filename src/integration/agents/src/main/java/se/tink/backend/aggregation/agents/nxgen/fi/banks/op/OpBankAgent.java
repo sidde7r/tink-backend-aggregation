@@ -34,22 +34,24 @@ public class OpBankAgent extends NextGenerationAgent {
     private final OpBankApiClient bankClient;
     private OpBankPersistentStorage opBankPersistentStorage;
 
-
-    public OpBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public OpBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         bankClient = new OpBankApiClient(client);
-        this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);;
+        this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
+        ;
     }
-
 
     @Override
-    public void configureHttpClient(TinkHttpClient client) {
-    }
+    public void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, systemUpdater,
-                new KeyCardAuthenticationController(catalog,
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new KeyCardAuthenticationController(
+                        catalog,
                         supplementalInformationHelper,
                         new OpAuthenticator(bankClient, opBankPersistentStorage, credentials),
                         OpBankConstants.KEYCARD_PIN_LENGTH),
@@ -57,34 +59,51 @@ public class OpBankAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new OpBankTransactionalAccountsFetcher(bankClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(new OpBankTransactionalAccountsFetcher(bankClient)))));
+    public Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new OpBankTransactionalAccountsFetcher(bankClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new OpBankTransactionalAccountsFetcher(bankClient)))));
     }
 
     @Override
     public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         OpBankCreditCardFetcher creditCardFetcher = new OpBankCreditCardFetcher(bankClient);
-        TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher = new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(creditCardFetcher));
+        TransactionFetcher<CreditCardAccount> creditCardTransactionFetcher =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardFetcher));
 
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController, creditCardFetcher,
-                creditCardTransactionFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        creditCardTransactionFetcher));
     }
 
     @Override
     public Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new OpBankInvestmentFetcher(bankClient, credentials)));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new OpBankInvestmentFetcher(bankClient, credentials)));
     }
 
     @Override
     public Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController,
-                new OpBankLoanFetcher(bankClient, credentials)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new OpBankLoanFetcher(bankClient, credentials)));
     }
 
     @Override
@@ -93,7 +112,8 @@ public class OpBankAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    public Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

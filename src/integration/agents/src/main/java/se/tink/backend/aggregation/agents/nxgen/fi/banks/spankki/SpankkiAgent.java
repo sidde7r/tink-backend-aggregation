@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.loan.Sp
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.SpankkiTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.transactionalaccount.SpankkiTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.sessionhandler.SpankkiSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -26,64 +27,87 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class SpankkiAgent extends NextGenerationAgent {
     private final SpankkiSessionStorage spankkiSessionStorage;
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
 
-    public SpankkiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SpankkiAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.spankkiSessionStorage = new SpankkiSessionStorage(this.sessionStorage);
         this.spankkiPersistentStorage = new SpankkiPersistentStorage(this.persistentStorage);
-        this.apiClient = new SpankkiApiClient(this.client, this.spankkiSessionStorage,
-                this.spankkiPersistentStorage);
+        this.apiClient =
+                new SpankkiApiClient(
+                        this.client, this.spankkiSessionStorage, this.spankkiPersistentStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KeyCardAuthenticationController keyCardCtrl = new KeyCardAuthenticationController(this.catalog,
-                this.supplementalInformationHelper,
-                new SpankkiKeyCardAuthenticator(this.apiClient, this.spankkiPersistentStorage,
-                        this.spankkiSessionStorage
-                ), SpankkiConstants.Authentication.KEY_CARD_VALUE_LENGTH);
+        KeyCardAuthenticationController keyCardCtrl =
+                new KeyCardAuthenticationController(
+                        this.catalog,
+                        this.supplementalInformationHelper,
+                        new SpankkiKeyCardAuthenticator(
+                                this.apiClient,
+                                this.spankkiPersistentStorage,
+                                this.spankkiSessionStorage),
+                        SpankkiConstants.Authentication.KEY_CARD_VALUE_LENGTH);
 
-        return new AutoAuthenticationController(this.request, this.context, keyCardCtrl,
-                new SpankkiAutoAuthenticator(this.apiClient, this.spankkiPersistentStorage, this.spankkiSessionStorage,
+        return new AutoAuthenticationController(
+                this.request,
+                this.context,
+                keyCardCtrl,
+                new SpankkiAutoAuthenticator(
+                        this.apiClient,
+                        this.spankkiPersistentStorage,
+                        this.spankkiSessionStorage,
                         this.credentials));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(this.metricRefreshController,
-                this.updateController,
-                new SpankkiTransactionalAccountFetcher(this.apiClient),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(new SpankkiTransactionFetcher(this.apiClient)))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new SpankkiTransactionalAccountFetcher(this.apiClient),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new SpankkiTransactionFetcher(this.apiClient)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         SpankkiCreditCardFetcher creditcardFetcher = new SpankkiCreditCardFetcher(this.apiClient);
-        return Optional.of(new CreditCardRefreshController(this.metricRefreshController, this.updateController, creditcardFetcher,
-                creditcardFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        creditcardFetcher,
+                        creditcardFetcher));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         SpankkiInvestmentFetcher investmentFetcher = new SpankkiInvestmentFetcher(this.apiClient);
-        return Optional.of(new InvestmentRefreshController(this.metricRefreshController, this.updateController, investmentFetcher));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        this.metricRefreshController, this.updateController, investmentFetcher));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         SpankkiLoanFetcher loanFetcher = new SpankkiLoanFetcher(this.apiClient);
-        return Optional.of(new LoanRefreshController(this.metricRefreshController, this.updateController, loanFetcher));
+        return Optional.of(
+                new LoanRefreshController(
+                        this.metricRefreshController, this.updateController, loanFetcher));
     }
 
     @Override
@@ -97,7 +121,8 @@ public class SpankkiAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

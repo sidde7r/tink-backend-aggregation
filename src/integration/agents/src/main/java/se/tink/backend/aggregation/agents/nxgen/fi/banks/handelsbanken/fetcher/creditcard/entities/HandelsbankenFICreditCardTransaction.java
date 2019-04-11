@@ -14,8 +14,10 @@ import se.tink.libraries.amount.Amount;
 public class HandelsbankenFICreditCardTransaction {
 
     private HandelsbankenAmount amount;
+
     @JsonFormat(pattern = "d.M.y")
     private Date date;
+
     @JsonDeserialize(using = StringCleaningDeserializer.class)
     private String description;
 

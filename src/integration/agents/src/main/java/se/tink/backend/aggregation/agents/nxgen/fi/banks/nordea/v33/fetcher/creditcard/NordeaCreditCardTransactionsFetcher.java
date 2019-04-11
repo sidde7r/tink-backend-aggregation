@@ -11,8 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class NordeaCreditCardTransactionsFetcher implements TransactionPagePaginator<CreditCardAccount> {
-    private static final Logger logger = LoggerFactory.getLogger(NordeaCreditCardTransactionsFetcher.class);
+public class NordeaCreditCardTransactionsFetcher
+        implements TransactionPagePaginator<CreditCardAccount> {
+    private static final Logger logger =
+            LoggerFactory.getLogger(NordeaCreditCardTransactionsFetcher.class);
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -26,15 +28,18 @@ public class NordeaCreditCardTransactionsFetcher implements TransactionPagePagin
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         String accountId = account.getBankIdentifier();
 
-        if(Strings.isNullOrEmpty(accountId)){
+        if (Strings.isNullOrEmpty(accountId)) {
             return PaginatorResponseImpl.createEmpty(false);
         }
 
         try {
             return apiClient.fetchCardTransactions(page, accountId);
-        }
-        catch (Exception e){
-            logger.error(String.format("%s: %s", NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(), e.toString()));
+        } catch (Exception e) {
+            logger.error(
+                    String.format(
+                            "%s: %s",
+                            NordeaFIConstants.LogTags.CREDIT_TRANSACTIONS_ERROR.toString(),
+                            e.toString()));
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

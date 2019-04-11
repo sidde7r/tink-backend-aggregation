@@ -8,14 +8,19 @@ public class CreditEntity {
 
     @JsonProperty("masked_credit_card_number")
     private String maskedCreditCardNumber;
+
     @JsonProperty("credit_limit")
     private double creditLimit;
+
     @JsonProperty("credit_booked_balance")
     private double creditBookedBalance;
+
     @JsonProperty("credit_available_balance")
     private double creditAvailableBalance;
+
     @JsonProperty("prev_min_instalment_amount")
     private double prevMinInstalmentAmount;
+
     @JsonProperty("instalment_min_percent")
     private double instalmentMinPercent;
 

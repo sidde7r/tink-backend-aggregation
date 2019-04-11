@@ -24,10 +24,13 @@ public class CreditDetailsResponse {
                 .setInterestRate(totalInterestRate)
                 .setBankIdentifier(creditEntity.getAgreementNumberIban())
                 .setName(creditEntity.getLoanName())
-                .setDetails(LoanDetails.builder(OpBankConstants.LoanType.findLoanType(creditEntity.getUsage()).getTinkType())
-                        .setLoanNumber(creditEntity.getAgreementNumberIban())
-                        .build()
-                )
+                .setDetails(
+                        LoanDetails.builder(
+                                        OpBankConstants.LoanType.findLoanType(
+                                                        creditEntity.getUsage())
+                                                .getTinkType())
+                                .setLoanNumber(creditEntity.getAgreementNumberIban())
+                                .build())
                 .build();
     }
 }

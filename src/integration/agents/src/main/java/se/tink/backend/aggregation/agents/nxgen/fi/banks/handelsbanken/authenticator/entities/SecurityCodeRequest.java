@@ -8,14 +8,10 @@ public class SecurityCodeRequest {
     private SecurityCode securityCode;
 
     public static SecurityCodeRequest create(String code) {
-        return new SecurityCodeRequest()
-                .setSecurityCode(
-                        SecurityCode.create(code)
-                );
+        return new SecurityCodeRequest().setSecurityCode(SecurityCode.create(code));
     }
 
-    private SecurityCodeRequest setSecurityCode(
-            SecurityCode securityCode) {
+    private SecurityCodeRequest setSecurityCode(SecurityCode securityCode) {
         this.securityCode = securityCode;
         return this;
     }

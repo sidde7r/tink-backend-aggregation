@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
-
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
 public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
@@ -20,7 +19,8 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET = "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
+    private static final String CLIENT_SECRET =
+            "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
     private static final String APP_VERSION_HEADER = "MobileBank ios FI 1315101";
 
     @Override
@@ -85,7 +85,8 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
                 .add("80X")
                 .add("76P")
                 .add("72R")
-                .add("80D").build();
+                .add("80D")
+                .build();
     }
 
     @Override
@@ -95,7 +96,8 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
                 .add("76S")
                 .add("76V")
                 .add("71P")
-                .add("79U").build();
+                .add("79U")
+                .build();
     }
 
     @Override
@@ -107,7 +109,8 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
                 .put("79G", Loan.Type.MORTGAGE)
                 .put("77P", Loan.Type.MORTGAGE)
                 .put("77S", Loan.Type.STUDENT)
-                .put("73D", Loan.Type.STUDENT).build();
+                .put("73D", Loan.Type.STUDENT)
+                .build();
     }
 
     public String getDeviceSerialNumberKey() {

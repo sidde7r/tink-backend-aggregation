@@ -7,7 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressFIAgent extends AmericanExpressV62Agent {
 
-    public AmericanExpressFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AmericanExpressFIAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AmericanExpressFIConfiguration());
     }
 }

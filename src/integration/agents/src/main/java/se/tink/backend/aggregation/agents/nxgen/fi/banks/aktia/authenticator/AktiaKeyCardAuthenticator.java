@@ -38,23 +38,27 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
 
         this.username = username;
         this.registrationToken = response.getToken();
-        return KeyCardInitValues.createFromCardIdAndCardIndex(response.getOtpCard(), response.getOtpIndex());
+        return KeyCardInitValues.createFromCardIdAndCardIndex(
+                response.getOtpCard(), response.getOtpIndex());
     }
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
-        RegistrationOtpResponse otpResponse = apiClient.registrationOtpChallengeResponse(registrationToken, code);
+        RegistrationOtpResponse otpResponse =
+                apiClient.registrationOtpChallengeResponse(registrationToken, code);
         if (!otpResponse.isSuccess() || Objects.isNull(otpResponse.getDeviceActivationCode())) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
 
         String activationCode = otpResponse.getDeviceActivationCode();
         try {
-            DeviceRegistrationResponse registrationResponse = encapClient.registerDevice(username, activationCode);
-            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice(
-                    AuthenticationMethod.DEVICE);
+            DeviceRegistrationResponse registrationResponse =
+                    encapClient.registerDevice(username, activationCode);
+            DeviceAuthenticationResponse authenticationResponse =
+                    encapClient.authenticateDevice(AuthenticationMethod.DEVICE);
 
-            if (!apiClient.registrationComplete(registrationToken, authenticationResponse.getDeviceToken())) {
+            if (!apiClient.registrationComplete(
+                    registrationToken, authenticationResponse.getDeviceToken())) {
                 // This should not happen.
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }

@@ -5,7 +5,12 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class CodeExchangeForm extends AbstractForm {
 
-    private CodeExchangeForm(String code, String clientId, String clientSecret, String grantType, String redirectUri) {
+    private CodeExchangeForm(
+            String code,
+            String clientId,
+            String clientSecret,
+            String grantType,
+            String redirectUri) {
         put(StarlingConstants.RequestKey.CODE, code);
         put(StarlingConstants.RequestKey.CLIENT_ID, clientId);
         put(StarlingConstants.RequestKey.CLIENT_SECRET, clientSecret);
@@ -43,7 +48,8 @@ public class CodeExchangeForm extends AbstractForm {
         }
 
         public CodeExchangeForm build() {
-            return new CodeExchangeForm(code, clientId, clientSecret, AUTHORIZATION_CODE, redirectUri);
+            return new CodeExchangeForm(
+                    code, clientId, clientSecret, AUTHORIZATION_CODE, redirectUri);
         }
     }
 }

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import java.security.PrivateKey;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -29,9 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.security.PrivateKey;
-import java.util.Optional;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 public class StarlingAgent extends NextGenerationAgent {

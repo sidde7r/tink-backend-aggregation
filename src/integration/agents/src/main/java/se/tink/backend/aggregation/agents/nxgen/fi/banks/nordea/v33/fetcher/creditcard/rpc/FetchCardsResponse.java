@@ -12,13 +12,15 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 @JsonObject
 public class FetchCardsResponse {
-    @JsonProperty
-    private List<CardsEntity> cards;
+    @JsonProperty private List<CardsEntity> cards;
 
     public List<CreditCardAccount> toTinkCards() {
         return cards.stream()
-                .filter(entity -> NordeaFIConstants.ACCOUNT_TYPE_MAPPER.translate(entity.getCardCategory()).equals(
-                        Optional.of(AccountTypes.CREDIT_CARD)))
+                .filter(
+                        entity ->
+                                NordeaFIConstants.ACCOUNT_TYPE_MAPPER
+                                        .translate(entity.getCardCategory())
+                                        .equals(Optional.of(AccountTypes.CREDIT_CARD)))
                 .map(CardsEntity::toTinkCard)
                 .collect(Collectors.toList());
     }

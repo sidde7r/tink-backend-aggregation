@@ -14,11 +14,12 @@ public class NordeaFiAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("fi", "fi-nordea-thirdpartyapp")
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
-                .doLogout(true);
+        builder =
+                new AgentIntegrationTest.Builder("fi", "fi-nordea-thirdpartyapp")
+                        .addCredentialField(Field.Key.USERNAME, USERNAME)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .doLogout(true);
     }
 
     @Test

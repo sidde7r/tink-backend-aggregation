@@ -61,7 +61,8 @@ public class OpBankCreditCardTransaction {
         try {
             return ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.parse(transactionDate);
         } catch (ParseException e) {
-            throw new IllegalStateException("Unable to parse transaction date: " + transactionDate, e);
+            throw new IllegalStateException(
+                    "Unable to parse transaction date: " + transactionDate, e);
         }
     }
 

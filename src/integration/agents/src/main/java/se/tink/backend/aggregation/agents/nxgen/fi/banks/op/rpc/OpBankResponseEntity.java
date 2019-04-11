@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.entities.UserMessage;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -36,8 +35,7 @@ public class OpBankResponseEntity {
         return userMessageList;
     }
 
-    public OpBankResponseEntity setUserMessageList(
-            UserMessage userMessageList) {
+    public OpBankResponseEntity setUserMessageList(UserMessage userMessageList) {
         this.userMessageList = userMessageList;
         return this;
     }

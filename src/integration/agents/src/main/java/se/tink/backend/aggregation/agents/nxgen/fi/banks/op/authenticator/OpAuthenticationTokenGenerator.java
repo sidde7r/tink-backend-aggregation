@@ -29,16 +29,16 @@ public class OpAuthenticationTokenGenerator {
     private static char pickChar(int paramInt) {
         int i = (paramInt & 0x3F) % 127;
         switch ((paramInt & 0xC0) >> 6) {
-        case 0:
-            return OpBankConstants.KeyGenerator.CHAR_STRING_1.charAt(i);
-        case 1:
-            return OpBankConstants.KeyGenerator.CHAR_STRING_2.charAt(i);
-        case 2:
-            return OpBankConstants.KeyGenerator.CHAR_STRING_3.charAt(i);
-        case 3:
-            return OpBankConstants.KeyGenerator.CHAR_STRING_4.charAt(i);
-        default:
-            return 'A';
+            case 0:
+                return OpBankConstants.KeyGenerator.CHAR_STRING_1.charAt(i);
+            case 1:
+                return OpBankConstants.KeyGenerator.CHAR_STRING_2.charAt(i);
+            case 2:
+                return OpBankConstants.KeyGenerator.CHAR_STRING_3.charAt(i);
+            case 3:
+                return OpBankConstants.KeyGenerator.CHAR_STRING_4.charAt(i);
+            default:
+                return 'A';
         }
     }
 
@@ -81,5 +81,4 @@ public class OpAuthenticationTokenGenerator {
             throw new IllegalStateException(e);
         }
     }
-
 }

@@ -13,16 +13,16 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class FetchCardTransactionsResponse implements PaginatorResponse {
-    @JsonProperty
-    private List<CardTransactionEntity> transactions;
-    @JsonProperty
-    private int size;
+    @JsonProperty private List<CardTransactionEntity> transactions;
+    @JsonProperty private int size;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions != null ? transactions.stream()
-                .map(CardTransactionEntity::toTinkCreditCardTransaction)
-                .collect(Collectors.toList()) : Collections.emptyList();
+        return transactions != null
+                ? transactions.stream()
+                        .map(CardTransactionEntity::toTinkCreditCardTransaction)
+                        .collect(Collectors.toList())
+                : Collections.emptyList();
     }
 
     @Override

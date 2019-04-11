@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Arrays;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -25,7 +21,7 @@ public class OpBankMobileConfigurationsEntity extends OpBankResponseEntity {
         return this;
     }
 
-    public int getStatus(){
+    public int getStatus() {
         return status;
     }
 }

@@ -15,8 +15,10 @@ public class LoanDetailsCBSLoan {
     private double unwithdrawnAmount;
     private double withdrawnAmount;
     private String interestBinding;
+
     @JsonFormat(pattern = "yyyyMMdd")
     private Date openingDate; // ": "20161129",
+
     private String endDate;
     private boolean endDateEstimated;
     private String dueDate;
@@ -71,7 +73,8 @@ public class LoanDetailsCBSLoan {
 
     @JsonIgnore
     private LoanDetails.Type getTinkLoanType(String loanNameFI) {
-        if (loanNameFI == null || !loanNameFI.toUpperCase().contains(SpankkiConstants.Loan.STUDENT_LOAN_NAME_FI)) {
+        if (loanNameFI == null
+                || !loanNameFI.toUpperCase().contains(SpankkiConstants.Loan.STUDENT_LOAN_NAME_FI)) {
             return LoanDetails.Type.MORTGAGE;
         }
 

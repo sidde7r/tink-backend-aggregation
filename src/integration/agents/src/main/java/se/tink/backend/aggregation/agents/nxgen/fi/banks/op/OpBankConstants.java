@@ -37,45 +37,80 @@ public class OpBankConstants {
                 new URL(BASE_URL + "/mobile/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
         public static final URL ACCOUNTS_URI = new URL(BASE_URL + "/mobile/accounts");
         public static final URL INIT_URI = new URL(BASE_URL + "/mobile/device/mob/version");
-        public static final URL LOGIN_URI = new URL(BASE_URL + "/authentication/keylist/rest/login");
+        public static final URL LOGIN_URI =
+                new URL(BASE_URL + "/authentication/keylist/rest/login");
         public static final URL REFRESH_SESSION_URI = new URL(BASE_URL + "/mobile/refreshSession");
-        public static final URL LOGOUT_URI = new URL(BASE_URL + "/authentication/common/rest/logout");
-        public static final URL AUTHENTICATE_URI = new URL(BASE_URL + "/authentication/keylist/rest/authenticate");
+        public static final URL LOGOUT_URI =
+                new URL(BASE_URL + "/authentication/common/rest/logout");
+        public static final URL AUTHENTICATE_URI =
+                new URL(BASE_URL + "/authentication/keylist/rest/authenticate");
         public static final URL CONFIGURATION_URI = new URL(BASE_URL + "/mobile/configuration/mob");
-        public static final URL REPRESENTATION_TYPE = new URL(BASE_URL + "/authentication/common/rest/select-representation");
+        public static final URL REPRESENTATION_TYPE =
+                new URL(BASE_URL + "/authentication/common/rest/select-representation");
         public static final URL POSTLOGIN = new URL(BASE_URL + "/mobile/postlogin");
-        public static final URL AUTH_TOKEN_CONFIG = new URL(BASE_URL + "/mobile/configuration/{identifier}/adobeAnalytics");
+        public static final URL AUTH_TOKEN_CONFIG =
+                new URL(BASE_URL + "/mobile/configuration/{identifier}/adobeAnalytics");
 
-        public static final URL LEGACY_CREDIT_CARD_TRANSACTIONS_URL = new URL(
-                BASE_URL + "/mobile/cards/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
+        public static final URL LEGACY_CREDIT_CARD_TRANSACTIONS_URL =
+                new URL(
+                        BASE_URL
+                                + "/mobile/cards/transactions/{"
+                                + PARAM_ENCRYPTED_ACCOUNT_NUMBER
+                                + "}");
 
-        //TODO: BELOW ARE NOT TESTED!! FIND THE STRUCTURES IN LOGGING
-        public static final URL TRADING_ASSETS_SUMMARY = new URL(BASE_URL + "/mobile/trading/assets/summary");
-        public static final URL TRADING_ASSETS_PORTFOLIOS = new URL(BASE_URL + "/mobile/trading/assets/portfolios");
-        // -- Should look like this when tested/mobile/trading/assets/portfolio/" + string + "?type=all"
-        public static final URL TRADING_ASSETS_PORTFOLIO_DETAILS = new URL(BASE_URL + "/mobile/trading/assets/portfolio/{" + PARAM_NAME_PORTFOLIO_ID + "}");
+        // TODO: BELOW ARE NOT TESTED!! FIND THE STRUCTURES IN LOGGING
+        public static final URL TRADING_ASSETS_SUMMARY =
+                new URL(BASE_URL + "/mobile/trading/assets/summary");
+        public static final URL TRADING_ASSETS_PORTFOLIOS =
+                new URL(BASE_URL + "/mobile/trading/assets/portfolios");
+        // -- Should look like this when tested/mobile/trading/assets/portfolio/" + string +
+        // "?type=all"
+        public static final URL TRADING_ASSETS_PORTFOLIO_DETAILS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/trading/assets/portfolio/{"
+                                + PARAM_NAME_PORTFOLIO_ID
+                                + "}");
         public static final URL TRADING_FUNDS = new URL(BASE_URL + "/mobile/trading/funds");
         public static final URL CREDITS = new URL(BASE_URL + "/mobile/credits");
 
-        public static final URL COLLATERAL_CREDITS_DETAILS = new URL(
-                BASE_URL + "/mobile/creditdetails/{" + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
-                       + "}/WITH_COLLATERAL");
+        public static final URL COLLATERAL_CREDITS_DETAILS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/creditdetails/{"
+                                + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
+                                + "}/WITH_COLLATERAL");
 
-        public static final URL FLEXI_CREDITS_DETAILS = new URL(
-                BASE_URL + "/mobile/creditdetails/{" + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
-                        + "}/FLEXI_CREDIT");
+        public static final URL FLEXI_CREDITS_DETAILS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/creditdetails/{"
+                                + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
+                                + "}/FLEXI_CREDIT");
 
-        public static final URL SPECIAL_CREDITS_DETAILS = new URL(
-                BASE_URL + "/mobile/creditdetails/{" + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
-                        + "}/SPECIAL_CREDIT");
+        public static final URL SPECIAL_CREDITS_DETAILS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/creditdetails/{"
+                                + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
+                                + "}/SPECIAL_CREDIT");
 
-        public static final URL CONTINUING_CREDITS_TRANSACTIONS = new URL(
-                BASE_URL + "/mobile/creditdetails/{" + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
-                       + "}/CONTINUING_CREDIT/transactions");
+        public static final URL CONTINUING_CREDITS_TRANSACTIONS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/creditdetails/{"
+                                + PARAM_NAME_AGREEMENT_NUMBER_ENCRYPTED
+                                + "}/CONTINUING_CREDIT/transactions");
         public static final URL CARDS = new URL(BASE_URL + "/mobile/cards");
 
-        public static final URL CARDS_DETAILS = new URL(
-                BASE_URL + "/mobile/cards/{" + PARAM_NAME_CARD_NUMBER + "}/details/{" + PARAM_NAME_EXPIRY_DATE + "}");
+        public static final URL CARDS_DETAILS =
+                new URL(
+                        BASE_URL
+                                + "/mobile/cards/{"
+                                + PARAM_NAME_CARD_NUMBER
+                                + "}/details/{"
+                                + PARAM_NAME_EXPIRY_DATE
+                                + "}");
     }
 
     public static class Headers {
@@ -83,13 +118,12 @@ public class OpBankConstants {
         public static final String API_VERSION_VALUE = "57";
     }
 
-    public static class IdTags{
+    public static class IdTags {
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String AUTH_TOKEN_TAG = "authToken";
         public static final String REPTYPE_TAG = "REPTYPE";
         public static final String REPTYPE_PERSON_TAG = "PERSON";
     }
-
 
     public static class Init {
         public static final String OS_NAME = "ios";
@@ -120,8 +154,7 @@ public class OpBankConstants {
         public static final int RAND_INT_D = 88675123;
     }
 
-
-    public static class LoginConstants{
+    public static class LoginConstants {
         public static final String GROUP_ID = "mob";
         public static final String TOUCH_ID_ENABLED = "false";
     }
@@ -139,7 +172,7 @@ public class OpBankConstants {
         }
     }
 
-    public static class RequestParameters{
+    public static class RequestParameters {
         public static final String FILTER_ALL_PARAM = "filter";
         public static final String FILTER_ALL_VALUE = "all";
         public static final String OVERRIDE_PARAM = "override";
@@ -164,11 +197,14 @@ public class OpBankConstants {
         public static final LogTag INVESTMENT_LOGGING = LogTag.from("#opbank_investment_logging");
         public static final LogTag LOAN_LOGGING = LogTag.from("#opbank_loan_logging");
         public static final LogTag CREDIT_LOGGING = LogTag.from("#opbank_credit_logging");
-        public static final LogTag CREDIT_CARD_TRX_LOGGING_NEW = LogTag.from("#opbank_creditcard_transactions_new");
-        public static final LogTag CREDIT_CARD_TRX_LOGGING_OLD = LogTag.from("#opbank_creditcard_transactions_old");
+        public static final LogTag CREDIT_CARD_TRX_LOGGING_NEW =
+                LogTag.from("#opbank_creditcard_transactions_new");
+        public static final LogTag CREDIT_CARD_TRX_LOGGING_OLD =
+                LogTag.from("#opbank_creditcard_transactions_old");
         public static final String CREDIT_CARD_TRX_FAILED = "#opbank_creditcard_fetching_failed";
 
-        public static final ImmutableList<String> KNOWN_PORTFOLIO_TYPES = ImmutableList.of("funds", "stocks", "bonds");
+        public static final ImmutableList<String> KNOWN_PORTFOLIO_TYPES =
+                ImmutableList.of("funds", "stocks", "bonds");
         public static final Pattern EXTRACT_INSTRUMENT_GROUP_PATTERN =
                 Pattern.compile("\"instrumentGroup([a-z0-9]+)\"", Pattern.CASE_INSENSITIVE);
         public static final String INSTRUMENT_TYPE_BOND = "310";
@@ -193,7 +229,9 @@ public class OpBankConstants {
 
         public static LoanType findLoanType(String usage) {
             return Arrays.stream(LoanType.values())
-                    .filter(loanType -> loanType.usage.equalsIgnoreCase(usage)).findFirst().orElse(OTHER_LOAN);
+                    .filter(loanType -> loanType.usage.equalsIgnoreCase(usage))
+                    .findFirst()
+                    .orElse(OTHER_LOAN);
         }
 
         public static boolean isHandled(String name) {
@@ -203,18 +241,19 @@ public class OpBankConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING,
-                            "710001",
-                            "710002")
-                    .put(AccountTypes.SAVINGS,
-                            "711030",  // Goal savings account
+                    .put(AccountTypes.CHECKING, "710001", "710002")
+                    .put(
+                            AccountTypes.SAVINGS,
+                            "711030", // Goal savings account
                             "712035", // Growth interest rate (Tillväxtränta)
                             "712007", // Time bound interest account
                             "712008", // Continuous interest account
                             "712015", // Continuous interest account
                             "712050", // Group interest account
-                            "711037") // TODO: Pension account, should be parsed as pension account when possible
-                    .put(AccountTypes.OTHER,
+                            "711037") // TODO: Pension account, should be parsed as pension account
+                    // when possible
+                    .put(
+                            AccountTypes.OTHER,
                             "710011",
                             "710012",
                             "710013",

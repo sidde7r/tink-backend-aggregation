@@ -12,6 +12,7 @@ public class TimelineUKRequest extends TimelineRequest {
     private boolean payWithPointsEnabled;
     private boolean payYourWayEnabled;
     private boolean pushEnabled;
+
     @JsonProperty("sortedIndex")
     private String sortedIndexUK;
 

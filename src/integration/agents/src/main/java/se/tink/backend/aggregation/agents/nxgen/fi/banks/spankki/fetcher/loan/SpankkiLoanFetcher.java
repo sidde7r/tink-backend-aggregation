@@ -21,13 +21,15 @@ public class SpankkiLoanFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         List<LoanAccount> loanAccounts = new ArrayList<>();
 
-        List<LoanOverviewEntity> loanOverviews = this.apiClient.fetchLoanOverview().getLoanOverviews();
+        List<LoanOverviewEntity> loanOverviews =
+                this.apiClient.fetchLoanOverview().getLoanOverviews();
 
         if (loanOverviews != null) {
 
             for (LoanOverviewEntity loanOverview : loanOverviews) {
-                LoanDetailsResponse loandetailsResponse = this.apiClient
-                        .fetchLoanDetails(loanOverview.getLoanNumber(), loanOverview.getLoanType());
+                LoanDetailsResponse loandetailsResponse =
+                        this.apiClient.fetchLoanDetails(
+                                loanOverview.getLoanNumber(), loanOverview.getLoanType());
 
                 loanAccounts.add(loandetailsResponse.toTinkLoanAccount());
             }

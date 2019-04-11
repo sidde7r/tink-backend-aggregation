@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class TransactionsFIResponse extends TransactionsResponse implements
-        TransactionKeyPaginatorResponse<URL> {
+public class TransactionsFIResponse extends TransactionsResponse
+        implements TransactionKeyPaginatorResponse<URL> {
 
     private List<HandelsbankenFITransaction> transactions;
 

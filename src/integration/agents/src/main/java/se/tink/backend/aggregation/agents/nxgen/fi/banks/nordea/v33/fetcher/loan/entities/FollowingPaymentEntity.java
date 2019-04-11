@@ -5,16 +5,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FollowingPaymentEntity {
-    @JsonProperty
-    private double instalment;
-    @JsonProperty
-    private double interest;
-    @JsonProperty
-    private int fees;
-    @JsonProperty
-    private double total;
-    @JsonProperty
-    private String date;
+    @JsonProperty private double instalment;
+    @JsonProperty private double interest;
+    @JsonProperty private int fees;
+    @JsonProperty private double total;
+    @JsonProperty private String date;
 
     public double getInstalment() {
         return instalment;

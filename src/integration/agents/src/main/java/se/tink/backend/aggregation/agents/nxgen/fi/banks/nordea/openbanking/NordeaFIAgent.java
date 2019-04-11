@@ -17,7 +17,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaFIAgent extends NordeaBaseAgent {
 
-    public NordeaFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NordeaFIAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         getNordeaPersistentStorage().setCountry(NordeaFIConstants.COUNTRY);
     }
@@ -25,12 +26,17 @@ public class NordeaFIAgent extends NordeaBaseAgent {
     @Override
     protected Authenticator constructAuthenticator(NordeaBaseApiClient apiClient) {
 
-        OAuth2Authenticator oauthAuthenticator = new NordeaOauthAuthenticator(apiClient,
-                new NordeaSessionStorage(sessionStorage),
-                getNordeaPersistentStorage());
+        OAuth2Authenticator oauthAuthenticator =
+                new NordeaOauthAuthenticator(
+                        apiClient,
+                        new NordeaSessionStorage(sessionStorage),
+                        getNordeaPersistentStorage());
 
-        return OAuth2AuthenticationFlow.create(request, systemUpdater,
-                persistentStorage, supplementalInformationHelper,
+        return OAuth2AuthenticationFlow.create(
+                request,
+                systemUpdater,
+                persistentStorage,
+                supplementalInformationHelper,
                 oauthAuthenticator);
     }
 

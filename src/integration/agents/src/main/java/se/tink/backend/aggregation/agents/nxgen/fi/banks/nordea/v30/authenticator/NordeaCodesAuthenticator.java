@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<String> {
@@ -21,8 +21,7 @@ public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<Stri
 
     private String authReference;
 
-    public NordeaCodesAuthenticator(
-            NordeaFiApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaCodesAuthenticator(NordeaFiApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -40,8 +39,9 @@ public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<Stri
         }
 
         // Initialization of Nordea Codes should always generate a http error.
-        throw new IllegalStateException("Initialization of Nordea Codes should always generate "
-                + "http error and therefore never reach this point.");
+        throw new IllegalStateException(
+                "Initialization of Nordea Codes should always generate "
+                        + "http error and therefore never reach this point.");
     }
 
     @Override
@@ -75,8 +75,7 @@ public class NordeaCodesAuthenticator implements ThirdPartyAppAuthenticator<Stri
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
 
-        return Optional.ofNullable(NordeaFiConstants
-                .AUTHENTICATION_ERROR_MESSAGE
-                .getOrDefault(status, null));
+        return Optional.ofNullable(
+                NordeaFiConstants.AUTHENTICATION_ERROR_MESSAGE.getOrDefault(status, null));
     }
 }

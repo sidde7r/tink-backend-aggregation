@@ -9,14 +9,12 @@ public class EncryptedSecurityCodeRequest {
 
     private String encSecurityCode;
 
-    private EncryptedSecurityCodeRequest() {
-    }
+    private EncryptedSecurityCodeRequest() {}
 
-    public static EncryptedSecurityCodeRequest create(SecurityCodeRequest securityCode, LibTFA tfa) {
+    public static EncryptedSecurityCodeRequest create(
+            SecurityCodeRequest securityCode, LibTFA tfa) {
         return new EncryptedSecurityCodeRequest()
-                .setEncSecurityCode(
-                        tfa.encryptAndEncodeBase64(securityCode)
-                );
+                .setEncSecurityCode(tfa.encryptAndEncodeBase64(securityCode));
     }
 
     private EncryptedSecurityCodeRequest setEncSecurityCode(String encSecurityCode) {

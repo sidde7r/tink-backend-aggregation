@@ -9,41 +9,34 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginRequest extends SpankkiRequest {
     private CredentialsEntity credentials;
 
-    public LoginRequest() {
-    }
+    public LoginRequest() {}
 
     @JsonIgnore
-    public static LoginRequest createUsernamePasswordLoginRequest(String username, String password) {
+    public static LoginRequest createUsernamePasswordLoginRequest(
+            String username, String password) {
         LoginRequest request = new LoginRequest();
-        return request.setCredentials(new CredentialsEntity()
-                .setUsername(username)
-                .setPassword(password)
-        );
+        return request.setCredentials(
+                new CredentialsEntity().setUsername(username).setPassword(password));
     }
 
     @JsonIgnore
     public static LoginRequest createPinLoginRequest(String pin) {
         LoginRequest request = new LoginRequest();
 
-        return request.setCredentials(new CredentialsEntity()
-                .setPin(pin)
-        );
+        return request.setCredentials(new CredentialsEntity().setPin(pin));
     }
 
     @JsonIgnore
-    public static LoginRequest createDeviceTokenLoginRequest(String password, String deviceId, String deviceToken) {
+    public static LoginRequest createDeviceTokenLoginRequest(
+            String password, String deviceId, String deviceToken) {
         LoginRequest request = new LoginRequest();
-        request.setCredentials(new CredentialsEntity()
-                .setPassword(password)
-                .setToken(deviceToken)
-        );
+        request.setCredentials(new CredentialsEntity().setPassword(password).setToken(deviceToken));
         request.setDeviceId(deviceId);
 
         return request;
     }
 
-    public LoginRequest setCredentials(
-            CredentialsEntity credentials) {
+    public LoginRequest setCredentials(CredentialsEntity credentials) {
         this.credentials = credentials;
         return this;
     }

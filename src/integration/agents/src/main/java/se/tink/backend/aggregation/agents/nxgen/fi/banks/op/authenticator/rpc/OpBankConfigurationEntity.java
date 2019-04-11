@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

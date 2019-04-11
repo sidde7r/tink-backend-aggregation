@@ -12,6 +12,7 @@ import se.tink.libraries.amount.Amount;
 public class TransactionsEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
+
     private double amount;
     private String receiverOrPayerName;
     // `reference` is null - cannot define it!

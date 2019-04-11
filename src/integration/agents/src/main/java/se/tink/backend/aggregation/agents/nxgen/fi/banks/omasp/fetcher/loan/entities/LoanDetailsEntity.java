@@ -23,12 +23,14 @@ public class LoanDetailsEntity extends LoanEntity {
         }
         return null;
     }
+
     public boolean isKnownLoanType() {
         return OmaspConstants.LOAN_TYPES.containsKey(loanCategory.toLowerCase());
     }
 
     public LoanDetails.Type getLoanType() {
-        return OmaspConstants.LOAN_TYPES.getOrDefault(loanCategory.toLowerCase(), LoanDetails.Type.OTHER);
+        return OmaspConstants.LOAN_TYPES.getOrDefault(
+                loanCategory.toLowerCase(), LoanDetails.Type.OTHER);
     }
 
     public LoanAccount toTinkAccount() {
@@ -37,11 +39,7 @@ public class LoanDetailsEntity extends LoanEntity {
                 .setInterestRate(getInterestRate())
                 .setBankIdentifier(id)
                 .setName(getName())
-                .setDetails(
-                        LoanDetails.builder(getLoanType())
-                                .setLoanNumber(loanNumber)
-                                .build()
-                )
+                .setDetails(LoanDetails.builder(getLoanType()).setLoanNumber(loanNumber).build())
                 .build();
     }
 }

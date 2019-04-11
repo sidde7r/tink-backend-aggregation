@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-// The access_token changes with every request. This filter picks up the access token from the response and assigns
+// The access_token changes with every request. This filter picks up the access token from the
+// response and assigns
 // it to the next request.
 public class OmaspAccessTokenFilter extends Filter {
     private final SessionStorage sessionStorage;
@@ -19,10 +20,13 @@ public class OmaspAccessTokenFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
 
         if (sessionStorage.containsKey(OmaspConstants.Storage.ACCESS_TOKEN)) {
-            httpRequest.getHeaders().add("Authorization", sessionStorage.get(OmaspConstants.Storage.ACCESS_TOKEN));
+            httpRequest
+                    .getHeaders()
+                    .add("Authorization", sessionStorage.get(OmaspConstants.Storage.ACCESS_TOKEN));
         }
 
         HttpResponse response = nextFilter(httpRequest);
@@ -30,7 +34,9 @@ public class OmaspAccessTokenFilter extends Filter {
         if (response.getStatus() >= 200 && response.getStatus() < 400) {
             OmaspBaseResponse baseResponse = response.getBody(OmaspBaseResponse.class);
             if (!Objects.isNull(baseResponse.getToken())) {
-                sessionStorage.put(OmaspConstants.Storage.ACCESS_TOKEN, baseResponse.getToken().getAccessToken());
+                sessionStorage.put(
+                        OmaspConstants.Storage.ACCESS_TOKEN,
+                        baseResponse.getToken().getAccessToken());
             }
         }
 

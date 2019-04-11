@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.creditcards;
 
 import com.google.common.collect.Lists;
@@ -16,10 +15,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, String> {
+public class OpBankCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(OpBankCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(OpBankCreditCardFetcher.class);
 
     private final OpBankApiClient apiClient;
 
@@ -41,22 +42,24 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(CreditCardAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            CreditCardAccount account, String key) {
         // TODO: Implement credit card transaction fetching. We need credentials for that.
 
-//        if (key == null) {
-//            apiClient.fetchCreditCardTransactions(account);
-//        } else {
-//            apiClient.fetchCreditCardTransactions(account, key);
-//        }
+        //        if (key == null) {
+        //            apiClient.fetchCreditCardTransactions(account);
+        //        } else {
+        //            apiClient.fetchCreditCardTransactions(account, key);
+        //        }
 
-//        try {
-//            String response = apiClient.fetchCreditCardTransactions(account);
-//            LOGGER.infoExtraLong(response, OpBankConstants.Fetcher.CREDIT_CARD_TRX_LOGGING_NEW);
-//        } catch (Exception e){
-//            LOGGER.warn(OpBankConstants.Fetcher.CREDIT_CARD_TRX_FAILED + " new endpoint");
-//            tryFetchFromOldEndpoint(account);
-//        }
+        //        try {
+        //            String response = apiClient.fetchCreditCardTransactions(account);
+        //            LOGGER.infoExtraLong(response,
+        // OpBankConstants.Fetcher.CREDIT_CARD_TRX_LOGGING_NEW);
+        //        } catch (Exception e){
+        //            LOGGER.warn(OpBankConstants.Fetcher.CREDIT_CARD_TRX_FAILED + " new endpoint");
+        //            tryFetchFromOldEndpoint(account);
+        //        }
 
         return TransactionKeyPaginatorResponseImpl.createEmpty();
     }
@@ -78,22 +81,23 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
 
             for (OpBankCreditEntity credit : fetchCreditsResponse.getCredits()) {
 
-                if (OpBankConstants.Fetcher.CONTINUING_CREDIT
-                        .equalsIgnoreCase(credit.getCreditType())) {
+                if (OpBankConstants.Fetcher.CONTINUING_CREDIT.equalsIgnoreCase(
+                        credit.getCreditType())) {
                     creditAccounts.add(credit.toTinkCreditAccount());
                     LOGGER.infoExtraLong(
-                            "CONTINUING CREDIT TX: " + apiClient
-                                    .fetchContinuingCreditTransactions(credit.getEncryptedAgreementNumber()),
+                            "CONTINUING CREDIT TX: "
+                                    + apiClient.fetchContinuingCreditTransactions(
+                                            credit.getEncryptedAgreementNumber()),
                             OpBankConstants.Fetcher.CREDIT_LOGGING);
                 }
             }
         } catch (Exception e) {
-            LOGGER.warnExtraLong("Could not fetch continuing credit ",
-                    OpBankConstants.Fetcher.CREDIT_LOGGING, e);
+            LOGGER.warnExtraLong(
+                    "Could not fetch continuing credit ",
+                    OpBankConstants.Fetcher.CREDIT_LOGGING,
+                    e);
         }
 
         return creditAccounts;
     }
 }
-
-

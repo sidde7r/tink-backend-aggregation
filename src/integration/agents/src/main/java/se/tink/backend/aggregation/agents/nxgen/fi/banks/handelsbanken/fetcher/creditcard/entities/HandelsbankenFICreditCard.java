@@ -21,7 +21,6 @@ public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
         // calculate balance, nordea-presented as positive value, negate
         Amount balance = credLimit.subtract(credAvailable).negate();
 
-
         return CreditCardAccount.builder(numberMasked, balance, credAvailable)
                 .setAccountNumber(numberMasked)
                 .setBankIdentifier(numberMasked)

@@ -14,50 +14,61 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class NordeaFIConstants {
     public static final String CURRENCY = "EUR";
 
-    public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS = ImmutableMap.<String,
-            String>builder()
-            .put(FormParams.AUTH_METHOD, "mta")
-            .put(FormParams.CLIENT_ID, "NDHMFI")
-            .put(FormParams.COUNTRY, "FI")
-            .put(FormParams.GRANT_TYPE, "password")
-            .put(FormParams.SCOPE, "ndf")
-            .build();
+    public static final ImmutableMap<String, String> DEFAULT_FORM_PARAMS =
+            ImmutableMap.<String, String>builder()
+                    .put(FormParams.AUTH_METHOD, "mta")
+                    .put(FormParams.CLIENT_ID, "NDHMFI")
+                    .put(FormParams.COUNTRY, "FI")
+                    .put(FormParams.GRANT_TYPE, "password")
+                    .put(FormParams.SCOPE, "ndf")
+                    .build();
 
-    public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP = TypeMapper.<Instrument.Type>builder()
-            .put(Instrument.Type.FUND, "FUND")
-            .put(Instrument.Type.STOCK, "EQUITY")
-            .build();
+    public static final TypeMapper<Instrument.Type> INSTRUMENT_TYPE_MAP =
+            TypeMapper.<Instrument.Type>builder()
+                    .put(Instrument.Type.FUND, "FUND")
+                    .put(Instrument.Type.STOCK, "EQUITY")
+                    .build();
 
-    public static final TypeMapper<Portfolio.Type> PORTFOLIO_TYPE_MAP = TypeMapper.<Portfolio.Type>builder()
-            .put(Portfolio.Type.DEPOT, "FONDA", "ASBS")
-            .put(Portfolio.Type.ISK, "ISK")
-            .put(Portfolio.Type.PENSION, "ISP", "NLPV2")
-            .build();
+    public static final TypeMapper<Portfolio.Type> PORTFOLIO_TYPE_MAP =
+            TypeMapper.<Portfolio.Type>builder()
+                    .put(Portfolio.Type.DEPOT, "FONDA", "ASBS")
+                    .put(Portfolio.Type.ISK, "ISK")
+                    .put(Portfolio.Type.PENSION, "ISP", "NLPV2")
+                    .build();
 
     public static final ImmutableMap<ThirdPartyAppStatus, LocalizableKey>
             AUTHENTICATION_ERROR_MESSAGE =
-            ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
-                    .put(ThirdPartyAppStatus.CANCELLED, new LocalizableKey(
-                            "Authentication cancelled by the Codes app. Please try again."))
-                    .put(ThirdPartyAppStatus.TIMED_OUT,
-                            new LocalizableKey("Authentication timed out."))
-                    .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
-                            new LocalizableKey(
-                                    "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
+                    ImmutableMap.<ThirdPartyAppStatus, LocalizableKey>builder()
+                            .put(
+                                    ThirdPartyAppStatus.CANCELLED,
+                                    new LocalizableKey(
+                                            "Authentication cancelled by the Codes app. Please try again."))
+                            .put(
+                                    ThirdPartyAppStatus.TIMED_OUT,
+                                    new LocalizableKey("Authentication timed out."))
+                            .put(
+                                    ThirdPartyAppStatus.ALREADY_IN_PROGRESS,
+                                    new LocalizableKey(
+                                            "Another client is already trying to sign in. \nPlease close the Codes app and try again."))
+                            .build();
+
+    public static TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE =
+            TypeMapper.<ThirdPartyAppStatus>builder()
+                    .put(
+                            ThirdPartyAppStatus.WAITING,
+                            "external_authentication_required",
+                            "external_authentication_pending")
+                    .put(ThirdPartyAppStatus.CANCELLED, "authentication_cancelled")
+                    .put(ThirdPartyAppStatus.TIMED_OUT, "authentication_failed", "invalid_request")
+                    .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
                     .build();
 
-    public static TypeMapper<ThirdPartyAppStatus> AUTHENTICATION_RESPONSE = TypeMapper.<ThirdPartyAppStatus>builder()
-            .put(ThirdPartyAppStatus.WAITING, "external_authentication_required", "external_authentication_pending")
-            .put(ThirdPartyAppStatus.CANCELLED, "authentication_cancelled")
-            .put(ThirdPartyAppStatus.TIMED_OUT, "authentication_failed", "invalid_request")
-            .put(ThirdPartyAppStatus.ALREADY_IN_PROGRESS, "authentication_collision")
-            .build();
-
-    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "transaction", "savings")
-            .put(AccountTypes.CREDIT_CARD, "credit", "combined")
-            .put(AccountTypes.LOAN, "mortgage")
-            .build();
+    public static TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "transaction", "savings")
+                    .put(AccountTypes.CREDIT_CARD, "credit", "combined")
+                    .put(AccountTypes.LOAN, "mortgage")
+                    .build();
 
     public static class Urls {
         private static final String BASE = "https://private.nordea.fi/api/dbf/ca";
@@ -125,33 +136,38 @@ public class NordeaFIConstants {
 
     public static class ErrorCodes {
         // user has no agreement (for investments)
-        public static final String AGREEMENT_NOT_CONFIRMED = "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
-        public static final String CLASSIFICATION_NOT_CONFIRMED = "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
+        public static final String AGREEMENT_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
+        public static final String CLASSIFICATION_NOT_CONFIRMED =
+                "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
         // user has no account connected to depot, cannot fetch investments
         public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
         // access token has expired
         public static final String INVALID_TOKEN = "invalid_token";
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
-
     }
 
     public static class LogTags {
-        public static final LogTag CREDIT_TRANSACTIONS_ERROR = LogTag.from("NORDEA_FI_TRANSACTIONS_ERROR");
-        public static final LogTag NORDEA_FI_AUTHENTICATE = LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
+        public static final LogTag CREDIT_TRANSACTIONS_ERROR =
+                LogTag.from("NORDEA_FI_TRANSACTIONS_ERROR");
+        public static final LogTag NORDEA_FI_AUTHENTICATE =
+                LogTag.from("NORDEA_FI_AUTHENTICATION_ERROR");
     }
 
     public static class NordeaCodesPayload {
-        private static final LocalizableKey DOWNLOAD_TITLE = new LocalizableKey(
-                "Download Nordea Codes");
-        private static final LocalizableKey DOWNLOAD_MESSAGE = new LocalizableKey(
-                "You need to download the Nordea Codes app in order to continue.");
-        private static final LocalizableKey UPGRADE_TITLE = new LocalizableKey(
-                "Upgrade Nordea Codes");
-        private static final LocalizableKey UPGRADE_MESSAGE = new LocalizableKey(
-                "You need to upgrade the Nordea Codes app in order to continue.");
-        private static final String CODES_APP_STORE_URL = "https://itunes.apple"
-                + ".com/se/app/nordea-codes/id995971128";
+        private static final LocalizableKey DOWNLOAD_TITLE =
+                new LocalizableKey("Download Nordea Codes");
+        private static final LocalizableKey DOWNLOAD_MESSAGE =
+                new LocalizableKey(
+                        "You need to download the Nordea Codes app in order to continue.");
+        private static final LocalizableKey UPGRADE_TITLE =
+                new LocalizableKey("Upgrade Nordea Codes");
+        private static final LocalizableKey UPGRADE_MESSAGE =
+                new LocalizableKey(
+                        "You need to upgrade the Nordea Codes app in order to continue.");
+        private static final String CODES_APP_STORE_URL =
+                "https://itunes.apple" + ".com/se/app/nordea-codes/id995971128";
         private static final String CODES_APP_SCHEME = "nordeamta://";
         private static final String CODES_RETURN_LINK = "confirm?returnUrl=tink://";
         private static final String CODES_ANDROID_PACKAGE_NAME = "com.nordea.mobiletoken";
@@ -168,16 +184,16 @@ public class NordeaFIConstants {
             payload.setUpgradeMessage(UPGRADE_MESSAGE.get());
 
             // iOS details
-            ThirdPartyAppAuthenticationPayload.Ios iosPayload = new
-                    ThirdPartyAppAuthenticationPayload.Ios();
+            ThirdPartyAppAuthenticationPayload.Ios iosPayload =
+                    new ThirdPartyAppAuthenticationPayload.Ios();
             iosPayload.setAppScheme(CODES_APP_SCHEME);
             iosPayload.setDeepLinkUrl(CODES_APP_SCHEME + CODES_RETURN_LINK);
             iosPayload.setAppStoreUrl(CODES_APP_STORE_URL);
             payload.setIos(iosPayload);
 
             // Android details
-            ThirdPartyAppAuthenticationPayload.Android androidPayload = new
-                    ThirdPartyAppAuthenticationPayload.Android();
+            ThirdPartyAppAuthenticationPayload.Android androidPayload =
+                    new ThirdPartyAppAuthenticationPayload.Android();
             androidPayload.setPackageName(CODES_ANDROID_PACKAGE_NAME);
             androidPayload.setRequiredVersion(CODES_REQUIRED_ANDROID_VERSION);
             androidPayload.setIntent(CODES_APP_SCHEME + CODES_RETURN_LINK);

@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.messagebodyreaders;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.apache.commons.io.IOUtils.toInputStream;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.io.Charsets;
@@ -7,14 +13,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.messagebodyreaders.CrossKeyMessageBodyReader;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.apache.commons.io.IOUtils.toInputStream;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 
 public class CrossKeyMessageBodyReaderTest {
-
 
     private CrossKeyMessageBodyReader crossKeyMessageBodyReader;
 
@@ -75,12 +75,13 @@ public class CrossKeyMessageBodyReaderTest {
     }
 
     private String testRemoveUnwantedCharacters(String input) throws IOException {
-        return IOUtils.toString(testRemoveUnwantedCharacters(toInputStream(input, Charsets.UTF_8)), Charsets.UTF_8);
+        return IOUtils.toString(
+                testRemoveUnwantedCharacters(toInputStream(input, Charsets.UTF_8)), Charsets.UTF_8);
     }
 
     private InputStream testRemoveUnwantedCharacters(InputStream entityStream) throws IOException {
         return crossKeyMessageBodyReader.removeUnwantedCharacters(entityStream);
     }
 
-    private class TestObject{}
+    private class TestObject {}
 }

@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.investment.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class FundsPortfoliosResponse extends SpankkiResponse {
@@ -27,7 +27,8 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
         return showCreateNewPortfolioOption;
     }
 
-    public Collection<InvestmentAccount> toTinkInvestmentAccounts(Map<String, String> fundIdIsinMapper) {
+    public Collection<InvestmentAccount> toTinkInvestmentAccounts(
+            Map<String, String> fundIdIsinMapper) {
         List<InvestmentAccount> investmentAccounts = new ArrayList<>();
 
         if (portfolios == null) {
@@ -39,7 +40,8 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
         // group portfolios by customer id, kind of account
         for (PortfolioEntity portfolio : portfolios) {
             if (portfolio.isPortfolio()) {
-                String accountId = SpankkiConstants.Investment.ACCOUNT_ID_PREFIX + portfolio.getCustomerId();
+                String accountId =
+                        SpankkiConstants.Investment.ACCOUNT_ID_PREFIX + portfolio.getCustomerId();
 
                 AccountData accountData = accounts.get(accountId);
                 // new account
@@ -69,8 +71,7 @@ public class FundsPortfoliosResponse extends SpankkiResponse {
                             .setPortfolios(accountData.portfolios)
                             .setName(accountData.name)
                             .setBankIdentifier(accountData.id)
-                            .build()
-            );
+                            .build());
         }
 
         return investmentAccounts;

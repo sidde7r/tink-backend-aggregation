@@ -17,7 +17,9 @@ public class VerifySecurityCodeResponseValidator extends HandelsbankenValidator<
     public void validate() throws AuthenticationException, AuthorizationException {
         String statusCode = getCode();
         if (!Strings.isNullOrEmpty(statusCode)) {
-            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(this, () ->
+            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(
+                    this,
+                    () ->
                             new IllegalStateException(
                                     String.format(
                                             HandelsbankenFIConstants.Authentication.LOG_TAG

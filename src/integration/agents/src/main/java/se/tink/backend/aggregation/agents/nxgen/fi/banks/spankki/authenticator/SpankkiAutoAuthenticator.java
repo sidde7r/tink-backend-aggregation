@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiSessionS
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.rpc.TokenLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class SpankkiAutoAuthenticator implements AutoAuthenticator {
 
@@ -24,8 +24,11 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
     private final SpankkiSessionStorage sessionStorage;
     private final Credentials credentials;
 
-    public SpankkiAutoAuthenticator(SpankkiApiClient apiClient, SpankkiPersistentStorage persistentStorage,
-            SpankkiSessionStorage sessionStorage, Credentials credentials) {
+    public SpankkiAutoAuthenticator(
+            SpankkiApiClient apiClient,
+            SpankkiPersistentStorage persistentStorage,
+            SpankkiSessionStorage sessionStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
@@ -39,8 +42,10 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
         String deviceId = this.persistentStorage.getDeviceId();
         String deviceToken = this.persistentStorage.getDeviceToken();
 
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(deviceId) ||
-                Strings.isNullOrEmpty(deviceToken)) {
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(password)
+                || Strings.isNullOrEmpty(deviceId)
+                || Strings.isNullOrEmpty(deviceToken)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -48,9 +53,11 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
             SpankkiResponse challengeResponse = this.apiClient.handleSetupChallenge();
             this.sessionStorage.putSessionId(challengeResponse.getSessionId());
 
-            TokenLoginResponse loginResponse = this.apiClient.loginWithToken(password, deviceId, deviceToken);
+            TokenLoginResponse loginResponse =
+                    this.apiClient.loginWithToken(password, deviceId, deviceToken);
             if (loginResponse.isMustChangePassword()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(SpankkiConstants.Authentication.PASSWORD_CHANGE_MSG);
+                throw LoginError.INCORRECT_CREDENTIALS.exception(
+                        SpankkiConstants.Authentication.PASSWORD_CHANGE_MSG);
             }
 
             deviceToken = loginResponse.getNewToken();

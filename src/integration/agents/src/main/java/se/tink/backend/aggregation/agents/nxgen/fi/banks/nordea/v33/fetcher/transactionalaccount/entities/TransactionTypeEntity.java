@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionTypeEntity {
     @JsonProperty("transaction_code")
     private String transactionCode;
+
     @JsonProperty("transaction_code_text")
     private String transactionCodeText;
 

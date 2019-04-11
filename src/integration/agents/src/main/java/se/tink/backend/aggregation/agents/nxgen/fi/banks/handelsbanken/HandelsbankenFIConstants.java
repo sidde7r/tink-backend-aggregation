@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class HandelsbankenFIConstants {
 
     public static final class Urls {
-        public static final URL ENTRY_POINT = new URL("https://m.handelsbanken.se/open/entrypoint/fipriv");
+        public static final URL ENTRY_POINT =
+                new URL("https://m.handelsbanken.se/open/entrypoint/fipriv");
     }
 
     public static final class Authentication {
@@ -54,7 +55,9 @@ public class HandelsbankenFIConstants {
 
         public static LoanType findLoanType(String name) {
             return Arrays.stream(LoanType.values())
-                    .filter(loanType -> loanType.name.equalsIgnoreCase(name)).findFirst().orElse(OTHER_LOAN);
+                    .filter(loanType -> loanType.name.equalsIgnoreCase(name))
+                    .findFirst()
+                    .orElse(OTHER_LOAN);
         }
     }
 }

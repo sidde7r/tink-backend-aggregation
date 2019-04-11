@@ -19,10 +19,13 @@ public class SecurityCardResponseValidator extends HandelsbankenValidator<BaseRe
         String statusCode = getCode();
 
         if (!Strings.isNullOrEmpty(statusCode)) {
-            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(this, () ->
+            HandelsbankenConstants.DeviceAuthentication.BankCheckedUserError.throwException(
+                    this,
+                    () ->
                             new IllegalStateException(
                                     String.format(
-                                            HandelsbankenFIConstants.Authentication.LOG_TAG + " - Login failed "
+                                            HandelsbankenFIConstants.Authentication.LOG_TAG
+                                                    + " - Login failed "
                                                     + "(securityCardResponse) with message "
                                                     + "%s, code %s, error message %s",
                                             getMessage(),
