@@ -112,7 +112,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             return;
         }
 
-        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
 
         // Tell the agent to store data onto the credential (cookies etcetera)
         persistentAgent.persistLoginSession();
@@ -149,7 +149,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             return false;
         }
 
-        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
 
         persistentAgent.loadLoginSession();
         if (!persistentAgent.isLoggedIn()) {
