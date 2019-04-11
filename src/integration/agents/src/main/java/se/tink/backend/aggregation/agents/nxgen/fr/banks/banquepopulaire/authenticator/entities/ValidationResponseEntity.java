@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ValidationResponseEntity {
     private String status;
+
     @JsonProperty("saml2_post")
     private Saml2PostEntity saml2Post;
 
@@ -17,4 +18,3 @@ public class ValidationResponseEntity {
         return status;
     }
 }
-

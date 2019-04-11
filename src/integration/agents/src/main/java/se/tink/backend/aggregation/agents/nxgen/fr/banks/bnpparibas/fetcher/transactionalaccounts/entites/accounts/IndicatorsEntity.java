@@ -5,19 +5,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class IndicatorsEntity {
     @JsonProperty("indicAgenceNet")
     private boolean isAgencyNet;
+
     @JsonProperty("indicAgentBNP")
     private String agencyBnpIndicator;
+
     @JsonProperty("indicBanquePrive")
     private boolean isPrivateBank;
+
     private int indicDematerialisation;
+
     @JsonProperty("indicTypeBPF")
     private int bpfType;
+
     private boolean indicPriority;
     private boolean indicTypePro;
+
     @JsonProperty("indicTypeHB")
     private boolean indicTypehb;
+
     @JsonProperty("indicAgregation")
     private boolean hasAggergation;
+
     @JsonProperty("indicVirInternational")
     private boolean allowsInternationalTransfers;
 

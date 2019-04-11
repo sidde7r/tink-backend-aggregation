@@ -7,57 +7,84 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountLoginEntity {
     @JsonProperty("agence")
     private String agency;
+
     @JsonProperty("agenceGestion")
     private String managementAgency;
+
     @JsonProperty("cleRIB")
     private String cleRib;
+
     @JsonProperty("codeBanque")
     private String bankCode;
+
     @JsonProperty("codeFamilleCompte")
     private String familyCodeAccount;
+
     @JsonProperty("compte")
     private String accountNumber;
+
     @JsonProperty("encoursCB")
     private String encoursCb;
+
     @JsonProperty("lettreCle")
     private String cleLetter;
+
     @JsonProperty("natureCode")
     private String typeCode;
+
     @JsonProperty("natureLibelle")
     private String typeLabel;
+
     @JsonProperty("natureLibelleOriginal")
     private String originalTypeLabel;
+
     @JsonProperty("signeencours")
     private String outstandingSign;
+
     @JsonProperty("soldeComptable")
     private String accountingBalance;
+
     @JsonProperty("soldeComptableEnCentime")
     private String accountingBalanceInCentime;
+
     @JsonProperty("soldeComptableSigne")
     private String accountingBalanceSign;
+
     @JsonProperty("soldeEnValeur")
     private String valueBalance;
+
     @JsonProperty("soldeEnValeurEnCentimes")
     private String balanceInValueInCentimes;
+
     @JsonProperty("soldeEnValeurSigne")
     private String balanceInValueSign;
+
     private String topDevise;
+
     @JsonProperty("topEncoursCB")
     private String topOutstandingCb;
+
     @JsonProperty("supportEffectifCB")
     private boolean effectiveSupportCb;
+
     private int nbMvtG3P;
     private int soldeG3P;
+
     @JsonProperty("soldeDispoCentimeDevise")
     private String balanceDisposibleCentimeCurrency;
+
     @JsonProperty("soldeDispoCentimeDeviseSigne")
     private String balanceAvailableCentimeCurrencySign;
+
     @JsonProperty("soldeDisponible")
     private String availableBalance;
+
     @JsonProperty("soldeDisponibleSigne")
     private String balanceAvailableSign;
+
     @JsonProperty("soldeOperNonCompriseSigne")
     private String operBalanceNotIncludedSign;
+
     @JsonProperty("soldeOperNonComprise")
     private String balanceOperationsNotIncluded;
 

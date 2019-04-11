@@ -10,10 +10,13 @@ import se.tink.libraries.amount.Amount;
 public class AmountEntity {
     @JsonProperty("valeur")
     private String value;
+
     @JsonProperty("devise")
     private String currency;
 
     public Amount toTinkAmount() {
-        return new Amount(BanquePopulaireConstants.Currency.toTinkCurrency(currency), AgentParsingUtils.parseAmount(value));
+        return new Amount(
+                BanquePopulaireConstants.Currency.toTinkCurrency(currency),
+                AgentParsingUtils.parseAmount(value));
     }
 }

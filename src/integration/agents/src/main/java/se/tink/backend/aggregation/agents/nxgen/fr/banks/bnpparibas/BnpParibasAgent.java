@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.BnpParibasTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.session.BnpParibasSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.storage.BnpParibasPersistentStorage;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -22,13 +23,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class BnpParibasAgent extends NextGenerationAgent {
     private final BnpParibasApiClient apiClient;
     private final BnpParibasPersistentStorage bnpParibasPersistentStorage;
 
-    public BnpParibasAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BnpParibasAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new BnpParibasApiClient(client);
         this.bnpParibasPersistentStorage = new BnpParibasPersistentStorage(persistentStorage);
@@ -42,28 +43,26 @@ public class BnpParibasAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new BnpParibasAuthenticator(apiClient, bnpParibasPersistentStorage)
-        );
+                new BnpParibasAuthenticator(apiClient, bnpParibasPersistentStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         BnpParibasTransactionalAccountFetcher accountFetcher =
                 new BnpParibasTransactionalAccountFetcher(apiClient);
 
         BnpParibasTransactionalAccountTransactionFetcher transactionFetcher =
                 new BnpParibasTransactionalAccountTransactionFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(
+        return Optional.of(
+                new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         accountFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher)
-                        )
-                )
-        );
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
@@ -87,7 +86,8 @@ public class BnpParibasAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

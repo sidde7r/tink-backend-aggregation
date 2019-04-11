@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditEntity {
     @JsonProperty("conditionsCredit")
     private CreditConditionsEntity creditConditions;
+
     @JsonProperty("conditionsAmortissement")
     private AmortizationConditionsEntity amortizationsConditions;
 

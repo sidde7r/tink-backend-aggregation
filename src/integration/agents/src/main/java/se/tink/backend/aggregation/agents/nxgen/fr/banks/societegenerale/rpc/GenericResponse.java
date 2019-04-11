@@ -8,14 +8,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public abstract class GenericResponse<T> {
 
-    public static final class Any extends GenericResponse<Object> {
-
-    }
+    public static final class Any extends GenericResponse<Object> {}
 
     @JsonProperty("caract")
     private CharacterEntity character;
+
     @JsonProperty("donnees")
     private T data;
+
     @JsonProperty("commun")
     private CommonEntity common;
 
@@ -34,5 +34,4 @@ public abstract class GenericResponse<T> {
     public boolean isCompressed() {
         return character != null && character.isCompressed();
     }
-
 }

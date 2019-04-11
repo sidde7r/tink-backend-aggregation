@@ -11,6 +11,6 @@ public class BanqueTransatlantiqueConstants {
         public static final String APP_VERSION_KEY = "_appversion";
         public static final String APP_VERSION_VALUE = "3.36.4.408";
         public static final String APPLICATION_CODE_KEY = "applicationCode";
-        public static final String APPLICATION_CODE_VALUE= "CICBT";
+        public static final String APPLICATION_CODE_VALUE = "CICBT";
     }
 }

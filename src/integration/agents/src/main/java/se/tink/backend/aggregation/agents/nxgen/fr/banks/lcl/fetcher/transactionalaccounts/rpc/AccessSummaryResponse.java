@@ -9,24 +9,34 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccessSummaryResponse {
     @JsonProperty("situationGlobale")
     private String totalSummary;
+
     private String clientApplication;
     private String typePers;
     private boolean errorPerso;
+
     @JsonProperty("situationEpargne")
     private String savingsSummary;
+
     private boolean isOpNCBlooped;
     private boolean persoIsActive;
+
     @JsonProperty("clientAffichageSite")
     private String clientDisplaySite;
+
     @JsonProperty("famille")
     private List<AccountGroupEntity> accountGroupList;
+
     @JsonProperty("clientIsBanquePrivee")
     private boolean clientIsPrivateBanking;
+
     @JsonProperty("TimeoutPerso")
     private String timeoutPerso;
+
     private String clientApplicationOrigine;
+
     @JsonProperty("libellePers")
     private String ownerName;
+
     @JsonProperty("situationHorsEpargne")
     private String summaryExclSavings;
 

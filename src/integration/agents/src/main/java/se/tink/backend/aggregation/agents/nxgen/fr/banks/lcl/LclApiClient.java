@@ -38,8 +38,8 @@ public class LclApiClient {
     public void configureDevice() {
         DeviceConfigurationRequest request = DeviceConfigurationRequest.build();
 
-        DeviceConfigurationResponse response = getDeviceConfigRequest()
-                .post(DeviceConfigurationResponse.class, request);
+        DeviceConfigurationResponse response =
+                getDeviceConfigRequest().post(DeviceConfigurationResponse.class, request);
 
         if (!response.isResponse()) {
             throw new IllegalStateException("Expected response to be true");
@@ -47,64 +47,75 @@ public class LclApiClient {
     }
 
     public String getXorKey() {
-        return getPostFormRequest(LclConstants.Urls.SET_IDENTITY)
-                .post(String.class);
+        return getPostFormRequest(LclConstants.Urls.SET_IDENTITY).post(String.class);
     }
 
     public LoginResponse login(String username, String bpiMetaData, String xorPin) {
         LoginRequest body = LoginRequest.create(username, bpiMetaData, xorPin);
 
-        return postFormAndGetJsonResponse(getPostFormRequest(LclConstants.Urls.LOGIN),
-                body.getBodyValue(), LoginResponse.class);
+        return postFormAndGetJsonResponse(
+                getPostFormRequest(LclConstants.Urls.LOGIN),
+                body.getBodyValue(),
+                LoginResponse.class);
     }
 
     public boolean isAlive() {
-        HttpResponse httpResponse = client.request(LclConstants.Urls.KEEP_ALIVE)
-                .queryParam(LclConstants.AuthenticationValuePairs.AUDIENCE.getKey(),
-                        LclConstants.AuthenticationValuePairs.AUDIENCE.getValue())
-                .get(HttpResponse.class);
+        HttpResponse httpResponse =
+                client.request(LclConstants.Urls.KEEP_ALIVE)
+                        .queryParam(
+                                LclConstants.AuthenticationValuePairs.AUDIENCE.getKey(),
+                                LclConstants.AuthenticationValuePairs.AUDIENCE.getValue())
+                        .get(HttpResponse.class);
 
         return httpResponse.getRedirects().size() == 0;
     }
 
-    public AccountDetailsEntity getAccountDetails(String agency, String accountNumber, String cleLetter) {
+    public AccountDetailsEntity getAccountDetails(
+            String agency, String accountNumber, String cleLetter) {
         BaseMobileRequest detailListRequest = BaseMobileRequest.create();
 
-        // We have to make this request in order to not get a redirect when fetching the account details for a
+        // We have to make this request in order to not get a redirect when fetching the account
+        // details for a
         // specific account. The returned value is not needed.
-        client.request(getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS_LIST)
-                .post(String.class, detailListRequest.getBodyValue()));
+        client.request(
+                getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS_LIST)
+                        .post(String.class, detailListRequest.getBodyValue()));
 
-        AccountDetailsRequest detailsRequest = AccountDetailsRequest.create(agency, accountNumber, cleLetter);
+        AccountDetailsRequest detailsRequest =
+                AccountDetailsRequest.create(agency, accountNumber, cleLetter);
 
         // Fetching the account details for a specific account
-        AccountDetailsResponse detailsResponse = postFormAndGetJsonResponse(
-                getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS), detailsRequest.getBodyValue(),
-                AccountDetailsResponse.class);
+        AccountDetailsResponse detailsResponse =
+                postFormAndGetJsonResponse(
+                        getPostFormRequest(LclConstants.Urls.ACCOUNT_DETAILS),
+                        detailsRequest.getBodyValue(),
+                        AccountDetailsResponse.class);
 
         return detailsResponse.getAccountDetails();
     }
 
-
     public Optional<AccountGroupEntity> getCheckingAccountGroup() {
         BaseMobileRequest body = BaseMobileRequest.create();
 
-        AccessSummaryResponse response = postFormAndGetJsonResponse(
-                getPostFormRequest(LclConstants.Urls.ACCESS_SUMMARY), body.getBodyValue(),
-                AccessSummaryResponse.class);
+        AccessSummaryResponse response =
+                postFormAndGetJsonResponse(
+                        getPostFormRequest(LclConstants.Urls.ACCESS_SUMMARY),
+                        body.getBodyValue(),
+                        AccessSummaryResponse.class);
 
-        return Optional.ofNullable(response.getAccountGroupList())
-                .orElse(Collections.emptyList())
+        return Optional.ofNullable(response.getAccountGroupList()).orElse(Collections.emptyList())
                 .stream()
-                .filter(AccountGroupEntity::isCheckingAccountGroup).findFirst();
-        }
-
+                .filter(AccountGroupEntity::isCheckingAccountGroup)
+                .findFirst();
+    }
 
     public TransactionsResponse getTransactions(AccountDetailsEntity accountDetailsEntity) {
         TransactionsRequest body = TransactionsRequest.create(accountDetailsEntity);
 
-        return postFormAndGetJsonResponse(getPostFormRequest(LclConstants.Urls.TRANSACTIONS),
-                body.getBodyValue(), TransactionsResponse.class);
+        return postFormAndGetJsonResponse(
+                getPostFormRequest(LclConstants.Urls.TRANSACTIONS),
+                body.getBodyValue(),
+                TransactionsResponse.class);
     }
 
     private RequestBuilder getPostFormRequest(URL url) {
@@ -114,24 +125,30 @@ public class LclApiClient {
     }
 
     private RequestBuilder getDeviceConfigRequest() {
-        RequestBuilder builder = client.request(LclConstants.Urls.DEVICE_CONFIGURATION)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header(LclConstants.DeviceConfiguration.USER_AGENT,
-                        client.getUserAgent())
-                .header(LclConstants.HeaderValuePairs.X_AP_NETWORK.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_NETWORK.getValue())
-                .header(LclConstants.HeaderValuePairs.X_AP_SCREEN.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_SCREEN.getValue())
-                .header(LclConstants.HeaderValuePairs.X_AP_OS.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_OS.getValue())
-                .header(LclConstants.HeaderValuePairs.X_AP_SDK_VERSION.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_SDK_VERSION.getValue())
-                .header(LclConstants.HeaderValuePairs.X_AP_APP_VERSION.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_APP_VERSION.getValue())
-                .header(LclConstants.HeaderValuePairs.X_AP_KEY.getKey(),
-                        LclConstants.HeaderValuePairs.X_AP_KEY.getValue())
-                .header(LclConstants.Headers.X_AP_REALTIME, System.currentTimeMillis());
+        RequestBuilder builder =
+                client.request(LclConstants.Urls.DEVICE_CONFIGURATION)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header(LclConstants.DeviceConfiguration.USER_AGENT, client.getUserAgent())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_NETWORK.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_NETWORK.getValue())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_SCREEN.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_SCREEN.getValue())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_OS.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_OS.getValue())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_SDK_VERSION.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_SDK_VERSION.getValue())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_APP_VERSION.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_APP_VERSION.getValue())
+                        .header(
+                                LclConstants.HeaderValuePairs.X_AP_KEY.getKey(),
+                                LclConstants.HeaderValuePairs.X_AP_KEY.getValue())
+                        .header(LclConstants.Headers.X_AP_REALTIME, System.currentTimeMillis());
 
         String deviceId = lclPersistentStorage.getDeviceId();
 
@@ -143,10 +160,11 @@ public class LclApiClient {
     }
 
     /**
-     * LCL returns JSON data with a text/html header which leads to parsing errors. This method posts the given
-     * form request and returns the response as a JSON object.
+     * LCL returns JSON data with a text/html header which leads to parsing errors. This method
+     * posts the given form request and returns the response as a JSON object.
      */
-    private <T> T postFormAndGetJsonResponse(RequestBuilder postFormRequest, String body, Class<T> responseClass) {
+    private <T> T postFormAndGetJsonResponse(
+            RequestBuilder postFormRequest, String body, Class<T> responseClass) {
         String responseString = postFormRequest.post(String.class, body);
         return SerializationUtils.deserializeFromString(responseString, responseClass);
     }

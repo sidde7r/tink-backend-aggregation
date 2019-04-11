@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class CreditMutuelApiClientFactory implements EuroInformationApiClientFactory {
     @Override
-    public CreditMutuelApiClient getApiClient(TinkHttpClient client,
+    public CreditMutuelApiClient getApiClient(
+            TinkHttpClient client,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config) {
         return new CreditMutuelApiClient(client, sessionStorage, config);

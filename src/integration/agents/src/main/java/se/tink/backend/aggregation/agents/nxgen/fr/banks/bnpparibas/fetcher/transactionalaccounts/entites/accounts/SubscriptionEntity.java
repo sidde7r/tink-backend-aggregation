@@ -7,20 +7,29 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SubscriptionEntity {
     @JsonProperty("codeBanque")
     private String bankCode;
+
     @JsonProperty("codeBanqueDomiciliation")
     private String codeBankDomiciliation;
+
     @JsonProperty("codeProduitAbonnement")
     private String productCodeSubscription;
+
     private String codeSegmentClientele;
+
     @JsonProperty("codeSegmentMarche")
     private String marketCodeSegment;
+
     @JsonProperty("codeMotifOrigineClient")
     private String originalCustomerCodePattern;
+
     @JsonProperty("nombreMessageBMMNonLus")
     private int numberBmmMessagesUnread;
+
     @JsonProperty("nombreMessageBilatNonLus")
     private int numberBilatMessagesUnread;
+
     private int typeResident;
+
     @JsonProperty("typeUtilisateur")
     private int userType;
 

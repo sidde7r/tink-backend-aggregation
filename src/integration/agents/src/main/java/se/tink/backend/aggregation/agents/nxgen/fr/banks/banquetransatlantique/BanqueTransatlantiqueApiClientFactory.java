@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BanqueTransatlantiqueApiClientFactory implements EuroInformationApiClientFactory {
     @Override
-    public BanqueTransatlantiqueApiClient getApiClient(TinkHttpClient client,
+    public BanqueTransatlantiqueApiClient getApiClient(
+            TinkHttpClient client,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config) {
         return new BanqueTransatlantiqueApiClient(client, sessionStorage, config);

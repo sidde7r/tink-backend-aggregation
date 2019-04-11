@@ -9,20 +9,28 @@ public class AuthenticationData {
 
     @JsonProperty("code_etoile")
     private String codeEtoile;
+
     @JsonProperty("date_dern_con")
     private String dateDernCon;
+
     @JsonProperty("canal_dern_con")
     private String canalDernCon;
+
     @JsonProperty("droits")
     private List<String> rights;
+
     @JsonProperty("clesession")
     private String sessionKey;
+
     @JsonProperty("id_cle")
     private String keyId;
+
     @JsonProperty("jeton")
     private String token;
+
     @JsonProperty("id_stat")
     private String idStat;
+
     @JsonProperty("profil_tiers")
     private ThirdPartyProfileEntity thirdPartyProfile;
 
@@ -37,5 +45,4 @@ public class AuthenticationData {
     public String getToken() {
         return token;
     }
-
 }

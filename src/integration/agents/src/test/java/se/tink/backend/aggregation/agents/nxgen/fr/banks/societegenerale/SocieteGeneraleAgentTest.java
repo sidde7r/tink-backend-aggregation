@@ -13,7 +13,8 @@ public class SocieteGeneraleAgentTest {
 
     @Test
     public void testLoginRefresh() throws Exception {
-        new AgentIntegrationTest.Builder(SocieteGeneraleConstants.MARKET, SocieteGeneraleConstants.PROVIDER_NAME)
+        new AgentIntegrationTest.Builder(
+                        SocieteGeneraleConstants.MARKET, SocieteGeneraleConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
@@ -21,5 +22,4 @@ public class SocieteGeneraleAgentTest {
                 .build()
                 .testRefresh();
     }
-
 }

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetche
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -14,15 +15,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.agents.rpc.AccountTypes;
 
-public class LaBanquePostaleTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionPagePaginator<TransactionalAccount> {
+public class LaBanquePostaleTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionPagePaginator<TransactionalAccount> {
 
     private final LaBanquePostaleApiClient apiClient;
 
-    public LaBanquePostaleTransactionalAccountFetcher(
-            LaBanquePostaleApiClient apiClient) {
+    public LaBanquePostaleTransactionalAccountFetcher(LaBanquePostaleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -40,18 +40,19 @@ public class LaBanquePostaleTransactionalAccountFetcher implements AccountFetche
                 .filter(LaBanquePostaleTransactionalAccountFetcher::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
-
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
 
-        TransactionsResponse response = apiClient.getTransactions(account.getBankIdentifier(), account.getType());
+        TransactionsResponse response =
+                apiClient.getTransactions(account.getBankIdentifier(), account.getType());
 
-        List<Transaction> transactions = response.getTransactions().stream().map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        List<Transaction> transactions =
+                response.getTransactions().stream()
+                        .map(TransactionEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions, false);
     }
-
 }

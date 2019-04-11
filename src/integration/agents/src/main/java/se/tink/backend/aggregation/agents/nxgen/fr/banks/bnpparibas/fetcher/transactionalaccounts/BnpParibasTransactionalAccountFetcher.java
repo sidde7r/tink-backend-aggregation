@@ -26,8 +26,8 @@ public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<Tra
             return Collections.emptyList();
         }
 
-        return Optional.ofNullable(userOverview.getContract().getAccounts()).orElseGet(Collections::emptyList)
-                .stream()
+        return Optional.ofNullable(userOverview.getContract().getAccounts())
+                .orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isKnownAccountType)
                 .map(this::convertToTinkAccount)
                 .collect(Collectors.toList());

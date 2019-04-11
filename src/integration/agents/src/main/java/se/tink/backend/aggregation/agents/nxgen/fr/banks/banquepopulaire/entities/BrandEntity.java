@@ -15,7 +15,6 @@ public class BrandEntity {
 
     @JsonIgnore
     public Map<String, BankEntity> getBankConfiguration() {
-        return banks.stream()
-                .collect(Collectors.toMap(BankEntity::getId, Function.identity()));
+        return banks.stream().collect(Collectors.toMap(BankEntity::getId, Function.identity()));
     }
 }

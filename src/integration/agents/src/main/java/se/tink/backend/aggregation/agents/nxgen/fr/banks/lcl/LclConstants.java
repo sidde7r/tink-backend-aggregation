@@ -10,13 +10,18 @@ public class LclConstants {
         private static final String SECURITY_HOST = "https://mobile.particuliers.secure.lcl.fr/";
 
         public static final URL DEVICE_CONFIGURATION = new URL(HOST + "v4/sdk/devices");
-        public static final URL SET_IDENTITY = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/setIdentSC");
+        public static final URL SET_IDENTITY =
+                new URL(SECURITY_HOST + "outil/UAUT/AccueilService/setIdentSC");
         public static final URL LOGIN = new URL(SECURITY_HOST + "outil/UAUT/AccueilService/login");
-        public static final URL KEEP_ALIVE = new URL(SECURITY_HOST + "outil/UWOA/api/v2/auth/token");
+        public static final URL KEEP_ALIVE =
+                new URL(SECURITY_HOST + "outil/UWOA/api/v2/auth/token");
 
-        public static final URL ACCOUNT_DETAILS_LIST = new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
-        public static final URL ACCOUNT_DETAILS = new URL(SECURITY_HOST + "outil/UWRI/AccueilService/detailRib");
-        public static final URL ACCESS_SUMMARY = new URL(SECURITY_HOST + "outil/UWSP/Synthese/accesSynthese");
+        public static final URL ACCOUNT_DETAILS_LIST =
+                new URL(SECURITY_HOST + "outil/UWRI/AccueilService");
+        public static final URL ACCOUNT_DETAILS =
+                new URL(SECURITY_HOST + "outil/UWRI/AccueilService/detailRib");
+        public static final URL ACCESS_SUMMARY =
+                new URL(SECURITY_HOST + "outil/UWSP/Synthese/accesSynthese");
         public static final URL TRANSACTIONS =
                 new URL(SECURITY_HOST + "outil/UWLM/ListeMouvementsPar/accesListeMouvementsPar");
     }
@@ -133,8 +138,9 @@ public class LclConstants {
     public static final class TransactionDescrFormatting {
         public static final String DATE_PATTERN = "dd/MM/yyyy";
         public static final String MERCHANT_NAME = "merchantName";
-        public static final String REGEX = String.format(
-                "^CB\\s*(?<%s>.*)\\s*([0-9]{2}\\/[0-9]{2}\\/[0-9]{2})+$", MERCHANT_NAME);
+        public static final String REGEX =
+                String.format(
+                        "^CB\\s*(?<%s>.*)\\s*([0-9]{2}\\/[0-9]{2}\\/[0-9]{2})+$", MERCHANT_NAME);
     }
 
     public static final class Logs {

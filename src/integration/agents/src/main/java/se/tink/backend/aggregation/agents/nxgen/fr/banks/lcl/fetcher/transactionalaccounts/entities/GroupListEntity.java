@@ -8,14 +8,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class GroupListEntity {
     @JsonProperty("idGroupe")
     private String groupId;
+
     @JsonProperty("libelle")
     private String label;
+
     @JsonProperty("indice")
     private int index;
+
     @JsonProperty("groupeDefault")
     private boolean defaultGroup;
+
     @JsonProperty("listCompte")
     private List<AccountEntity> accountList;
+
     private boolean topCache;
 
     public String getGroupId() {

@@ -10,31 +10,38 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JacksonXmlRootElement(localName = "Authentifier")
 @JsonPropertyOrder({
-        "numeroAbonne",
-        "password",
-        "numUsager",
-        "niveauService",
-        "modeALD",
-        "idTerminal",
-        "etablissement",
-        "apiKey"
+    "numeroAbonne",
+    "password",
+    "numUsager",
+    "niveauService",
+    "modeALD",
+    "idTerminal",
+    "etablissement",
+    "apiKey"
 })
 public class AuthenticationRequest extends GenericRequest {
 
     @JacksonXmlProperty(localName = "numeroAbonne")
     private String username;
+
     @JacksonXmlProperty(localName = "password")
     private String password;
+
     @JacksonXmlProperty(localName = "numUsager")
     private String numUsager = null;
+
     @JacksonXmlProperty(localName = "niveauService")
     private String serviceLevel = CaisseEpargneConstants.RequestValue.SERVICE_LEVEL;
+
     @JacksonXmlProperty(localName = "modeALD")
     private int modeALD = CaisseEpargneConstants.RequestValue.MODE_ALD;
+
     @JacksonXmlProperty(localName = "idTerminal")
     private String deviceId;
+
     @JacksonXmlProperty(localName = "etablissement")
     private String institution = CaisseEpargneConstants.RequestValue.INSTITUTION;
+
     @JacksonXmlProperty(localName = "apiKey")
     private String apiKey = null;
 
@@ -58,5 +65,4 @@ public class AuthenticationRequest extends GenericRequest {
     public String action() {
         return CaisseEpargneConstants.SoapAction.AUTHENTIFIER;
     }
-
 }

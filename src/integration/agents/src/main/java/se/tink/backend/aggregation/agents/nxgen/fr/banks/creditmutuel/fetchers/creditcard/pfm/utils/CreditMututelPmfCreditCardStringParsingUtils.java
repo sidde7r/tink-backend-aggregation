@@ -18,17 +18,19 @@ public class CreditMututelPmfCreditCardStringParsingUtils {
     // Input example:
     // Name Surname \r\n 123X XXXX XXXX 5678 - 01/2010\r\n Active
     public static String parseCreditCardNumber(String creditCardNumberString) {
-        return Optional.ofNullable(creditCardNumberString).map(s -> {
-            String onlyCardNumber = extractOnlyCardNumber(s);
-            String lastFourDigits = getLastFourDigits(onlyCardNumber);
+        return Optional.ofNullable(creditCardNumberString)
+                .map(
+                        s -> {
+                            String onlyCardNumber = extractOnlyCardNumber(s);
+                            String lastFourDigits = getLastFourDigits(onlyCardNumber);
 
-            return (new StringBuilder())
-                    .append(MASKED_NUMBERS)
-                    .append(MASKED_NUMBERS)
-                    .append(MASKED_NUMBERS)
-                    .append(lastFourDigits)
-                    .toString();
-        })
+                            return (new StringBuilder())
+                                    .append(MASKED_NUMBERS)
+                                    .append(MASKED_NUMBERS)
+                                    .append(MASKED_NUMBERS)
+                                    .append(lastFourDigits)
+                                    .toString();
+                        })
                 .orElseThrow(IllegalStateException::new);
     }
 
@@ -55,5 +57,4 @@ public class CreditMututelPmfCreditCardStringParsingUtils {
         String currency = matcher.group(2);
         return new Amount(currency, StringUtils.parseAmount(amount));
     }
-
 }

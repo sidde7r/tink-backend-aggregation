@@ -16,14 +16,16 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
     private final BnpParibasApiClient apiClient;
     private final BnpParibasPersistentStorage bnpParibasPersistentStorage;
 
-    public BnpParibasAuthenticator(BnpParibasApiClient apiClient,
+    public BnpParibasAuthenticator(
+            BnpParibasApiClient apiClient,
             BnpParibasPersistentStorage bnpParibasPersistentStorage) {
         this.apiClient = apiClient;
         this.bnpParibasPersistentStorage = bnpParibasPersistentStorage;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         if (!bnpParibasPersistentStorage.isRegisteredDevice()) {
             registerAndLogin(username, password);
         } else {
@@ -39,13 +41,12 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
         bnpParibasPersistentStorage.saveLoginId(loginData.getLoginId());
     }
 
-
     private LoginDataEntity login(String username, String password) {
         NumpadDataEntity numpadData = apiClient.getNumpadParams();
         String passwordIndices = getIndexStringFromPassword(numpadData.getGrid(), password);
 
-        return apiClient.login(username, numpadData.getGridId(),
-                passwordIndices, bnpParibasPersistentStorage);
+        return apiClient.login(
+                username, numpadData.getGridId(), passwordIndices, bnpParibasPersistentStorage);
     }
 
     private String getIndexStringFromPassword(String base64Image, String password) {
@@ -58,8 +59,8 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
     }
 
     /**
-     * The digits in the numpad are indexed ij, where i is 0 based and j is 1 based, i.e.
-     * 01, 02, 03, 04, 05, 06, 07, 08, 09, 11
+     * The digits in the numpad are indexed ij, where i is 0 based and j is 1 based, i.e. 01, 02,
+     * 03, 04, 05, 06, 07, 08, 09, 11
      */
     private Map<Character, String> getIndexByDigitMap(String parsedDigits) {
         Map<Character, String> indexByDigit = Maps.newHashMap();
@@ -69,8 +70,8 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
             assertNoDuplicateDigits(indexByDigit, digit);
 
             if (i == BnpParibasConstants.Auth.NUMPAD_SIZE - 1) {
-                indexByDigit.put(digit,
-                        BnpParibasConstants.Auth.INDEX_1 + BnpParibasConstants.Auth.INDEX_1);
+                indexByDigit.put(
+                        digit, BnpParibasConstants.Auth.INDEX_1 + BnpParibasConstants.Auth.INDEX_1);
                 continue;
             }
 
@@ -91,7 +92,7 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
         return sb.toString();
     }
 
-    private void assertNoDuplicateDigits(Map<Character,String> indexByDigit, Character digit) {
+    private void assertNoDuplicateDigits(Map<Character, String> indexByDigit, Character digit) {
         if (indexByDigit.containsKey(digit)) {
             throw new IllegalStateException(
                     "Couldn't parse numpad correctly. Found duplicate digits");
@@ -100,9 +101,10 @@ public class BnpParibasAuthenticator implements PasswordAuthenticator {
 
     private void assertCorrectNumpadSize(int numParsedDigits) {
         if (numParsedDigits != BnpParibasConstants.Auth.NUMPAD_SIZE) {
-            throw new IllegalStateException(String.format(
-                    "Couldn't parse numpad correctly. Found %d digits, expected %d.",
-                    numParsedDigits, BnpParibasConstants.Auth.NUMPAD_SIZE));
+            throw new IllegalStateException(
+                    String.format(
+                            "Couldn't parse numpad correctly. Found %d digits, expected %d.",
+                            numParsedDigits, BnpParibasConstants.Auth.NUMPAD_SIZE));
         }
     }
 }

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.BanquePopulaireLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.transactionalaccounts.BanquePopulaireTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.session.BanquePopulaireSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -22,17 +23,17 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class BanquePopulaireAgent extends NextGenerationAgent {
     private BanquePopulaireApiClient apiClient;
 
-    public BanquePopulaireAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public BanquePopulaireAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BanquePopulaireApiClient(client, sessionStorage, request.getProvider().getPayload());
+        apiClient =
+                new BanquePopulaireApiClient(
+                        client, sessionStorage, request.getProvider().getPayload());
     }
 
     @Override
@@ -42,33 +43,42 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BanquePopulaireAuthenticator authenticator = new BanquePopulaireAuthenticator(apiClient, sessionStorage);
+        BanquePopulaireAuthenticator authenticator =
+                new BanquePopulaireAuthenticator(apiClient, sessionStorage);
 
         return new PasswordAuthenticationController(authenticator);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         BanquePopulaireTransactionalAccountsFetcher transactionalAccountFetcher =
                 new BanquePopulaireTransactionalAccountsFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                transactionalAccountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(transactionalAccountFetcher))));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        transactionalAccountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        transactionalAccountFetcher))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BanquePopulaireCreditCardFetcher creditCardFetcher = new BanquePopulaireCreditCardFetcher(apiClient);
+        BanquePopulaireCreditCardFetcher creditCardFetcher =
+                new BanquePopulaireCreditCardFetcher(apiClient);
 
-        CreditCardRefreshController creditCardController = new CreditCardRefreshController(metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(creditCardFetcher)));
+        CreditCardRefreshController creditCardController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(creditCardFetcher)));
 
         return Optional.of(creditCardController);
     }
@@ -80,9 +90,11 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController,
-                updateController,
-                new BanquePopulaireLoanFetcher(apiClient)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BanquePopulaireLoanFetcher(apiClient)));
     }
 
     @Override
@@ -91,7 +103,8 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

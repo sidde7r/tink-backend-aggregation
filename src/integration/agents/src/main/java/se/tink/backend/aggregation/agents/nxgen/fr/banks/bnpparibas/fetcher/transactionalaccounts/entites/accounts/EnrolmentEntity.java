@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class EnrolmentEntity {
     @JsonProperty("pageAccueil")
     private int homePage;
+
     @JsonProperty("derniereModificationProfil")
     private long lastModificationProfile;
+
     @JsonProperty("statut")
     private int status;
+
     @JsonProperty("compteFavoris")
     private AccountEntity favoriteAccount;
 

@@ -5,5 +5,4 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PasswordCredentialsEntity extends HashMap<String, List<PasswordCredentials>> {
-}
+public class PasswordCredentialsEntity extends HashMap<String, List<PasswordCredentials>> {}

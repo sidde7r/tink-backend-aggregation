@@ -4,9 +4,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class SocieteGeneraleConstants {
 
@@ -55,36 +55,38 @@ public class SocieteGeneraleConstants {
         public static final URL SEC_VK_GEN_UI = new URL(HOST + "/sec/vk/gen_ui");
         public static final URL SEC_VK_AUTHENT = new URL(HOST + "/sec/vk/authent.json");
         public static final URL GET_AUTH_INFO = new URL(HOST + "/getauthinfo.json");
-        public static final URL SBM_MOB_MOB_SBM_RLV_SNT_CPT = new URL(HOST + "/sbm-mob/mob/sbm-rlv-snt-cpt.json");
-        public static final URL ABM_RESTIT_CAV_LISTE_OPERATIONS = new URL(
-                HOST + "/abm/restit/cav/listeOperations.json");
+        public static final URL SBM_MOB_MOB_SBM_RLV_SNT_CPT =
+                new URL(HOST + "/sbm-mob/mob/sbm-rlv-snt-cpt.json");
+        public static final URL ABM_RESTIT_CAV_LISTE_OPERATIONS =
+                new URL(HOST + "/abm/restit/cav/listeOperations.json");
         public static final URL LOGOUT = new URL(HOST + "/logout.json");
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from(PROVIDER_NAME + "-unknown-account-type");
         public static final LogTag PARSE_FAILURE = LogTag.from(PROVIDER_NAME + "-parse-failure");
         public static final LogTag REQUEST_NOT_OK = LogTag.from(PROVIDER_NAME + "-request-nok");
     }
 
     public static class AccountType {
 
-        /**
-         * SocGen product code -> Tink account type
-         */
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP = ImmutableMap.<String, AccountTypes>builder()
-                .put("050", AccountTypes.CHECKING)
-                .build();
+        /** SocGen product code -> Tink account type */
+        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
+                ImmutableMap.<String, AccountTypes>builder()
+                        .put("050", AccountTypes.CHECKING)
+                        .build();
 
         /**
-         * null/empty means the product code is unknown, and {@link AccountTypes#OTHER} means the (known) product code
-         * should be disregarded (not mapped to any Tink object).
+         * null/empty means the product code is unknown, and {@link AccountTypes#OTHER} means the
+         * (known) product code should be disregarded (not mapped to any Tink object).
          */
         public static Optional<AccountTypes> translate(String productCode) {
             if (Strings.isNullOrEmpty(productCode)) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(ACCOUNT_TYPES_MAP.getOrDefault(productCode.toLowerCase(), null));
+            return Optional.ofNullable(
+                    ACCOUNT_TYPES_MAP.getOrDefault(productCode.toLowerCase(), null));
         }
     }
 
@@ -95,5 +97,4 @@ public class SocieteGeneraleConstants {
         public static final String TECHNICAL_ID = "technicalId";
         public static final String TECHNICAL_CARD_ID = "technicalCardId";
     }
-
 }

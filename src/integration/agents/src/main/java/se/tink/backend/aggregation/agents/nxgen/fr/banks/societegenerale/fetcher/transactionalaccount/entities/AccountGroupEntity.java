@@ -9,11 +9,11 @@ public class AccountGroupEntity {
 
     @JsonProperty("codeGroupe")
     private String groupCode;
+
     @JsonProperty("prestations")
     private List<AccountEntity> benefits;
 
     public List<AccountEntity> getBenefits() {
         return benefits;
     }
-
 }

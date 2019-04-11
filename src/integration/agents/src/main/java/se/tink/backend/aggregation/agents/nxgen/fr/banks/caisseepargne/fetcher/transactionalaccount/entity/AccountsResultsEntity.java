@@ -13,13 +13,14 @@ public class AccountsResultsEntity {
 
     @JacksonXmlProperty(localName = "NumeroAbonne")
     private String username;
+
     @JacksonXmlElementWrapper(localName = "lstComptesInternesTit")
     private List<AccountEntity> accounts;
+
     @JacksonXmlProperty(localName = "lstComptesInternesAutre")
     private Object otherAccounts;
 
     public Stream<AccountEntity> stream() {
         return accounts.stream();
     }
-
 }

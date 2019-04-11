@@ -8,8 +8,7 @@ public class LaBanquePostaleSessionHandler implements SessionHandler {
 
     private final LaBanquePostaleApiClient apiClient;
 
-    public LaBanquePostaleSessionHandler(
-            LaBanquePostaleApiClient apiClient) {
+    public LaBanquePostaleSessionHandler(LaBanquePostaleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

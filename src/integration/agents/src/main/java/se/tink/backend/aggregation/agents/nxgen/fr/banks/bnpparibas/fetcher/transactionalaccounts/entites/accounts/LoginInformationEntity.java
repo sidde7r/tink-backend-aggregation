@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginInformationEntity {
     @JsonProperty("dateDerniereIdentification")
     private String dateLastLogin;
+
     @JsonProperty("heureDerniereIdentification")
     private String timeLastLogin;
+
     @JsonProperty("typeGrille")
     private String gridType;
 

@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ContractEntity {
     @JsonProperty("compteFacturation")
     private AccountEntity billingAccount;
+
     @JsonProperty("comptePrincipal")
     private AccountEntity mainAccount;
+
     @JsonProperty("comptes")
     private List<AccountEntity> accounts;
 

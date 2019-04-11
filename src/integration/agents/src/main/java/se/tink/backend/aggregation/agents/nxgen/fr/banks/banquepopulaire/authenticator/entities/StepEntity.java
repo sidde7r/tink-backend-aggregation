@@ -12,5 +12,3 @@ public class StepEntity {
         return validationUnits;
     }
 }
-
-

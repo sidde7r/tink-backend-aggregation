@@ -59,10 +59,10 @@ public class CaisseEpargneApiClient {
 
         RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        String response =
+                builder.header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                        .body(this.write(request), MediaType.TEXT_XML)
+                        .post(String.class);
 
         return read(response, AccountsResponse.class);
     }
@@ -71,10 +71,10 @@ public class CaisseEpargneApiClient {
 
         RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        String response =
+                builder.header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                        .body(this.write(request), MediaType.TEXT_XML)
+                        .post(String.class);
 
         return read(response, TransactionsResponse.class);
     }
@@ -83,10 +83,10 @@ public class CaisseEpargneApiClient {
 
         RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        String response =
+                builder.header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                        .body(this.write(request), MediaType.TEXT_XML)
+                        .post(String.class);
 
         return this.read(response, ClientInformationResponse.class);
     }
@@ -95,10 +95,10 @@ public class CaisseEpargneApiClient {
 
         RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        String response =
+                builder.header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                        .body(this.write(request), MediaType.TEXT_XML)
+                        .post(String.class);
 
         return this.read(response, DisconnectResponse.class);
     }
@@ -107,14 +107,17 @@ public class CaisseEpargneApiClient {
 
         String requestAsString = null;
         try {
-            requestAsString = mapper.writeValueAsString(request)
-                    .replace(CaisseEpargneConstants.SoapXmlFragment.XMLNS_TO_REMOVE,
-                            CaisseEpargneConstants.SoapXmlFragment.XMLNS_TO_ADD);
+            requestAsString =
+                    mapper.writeValueAsString(request)
+                            .replace(
+                                    CaisseEpargneConstants.SoapXmlFragment.XMLNS_TO_REMOVE,
+                                    CaisseEpargneConstants.SoapXmlFragment.XMLNS_TO_ADD);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
 
-        return CaisseEpargneConstants.SoapXmlFragment.PREFIX + requestAsString
+        return CaisseEpargneConstants.SoapXmlFragment.PREFIX
+                + requestAsString
                 + CaisseEpargneConstants.SoapXmlFragment.POSTFIX;
     }
 
@@ -141,14 +144,14 @@ public class CaisseEpargneApiClient {
 
         RequestBuilder builder = client.request(CaisseEpargneConstants.Url.WS_BAD);
 
-        String response = builder
-                .header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
-                .header(CaisseEpargneConstants.HeaderKey.X_AUTH_KEY,
-                        toAuthKey(request.getUsername()))
-                .body(this.write(request), MediaType.TEXT_XML)
-                .post(String.class);
+        String response =
+                builder.header(CaisseEpargneConstants.HeaderKey.SOAP_ACTION, request.action())
+                        .header(
+                                CaisseEpargneConstants.HeaderKey.X_AUTH_KEY,
+                                toAuthKey(request.getUsername()))
+                        .body(this.write(request), MediaType.TEXT_XML)
+                        .post(String.class);
 
         return this.read(response, AuthenticationResponse.class);
     }
-
 }

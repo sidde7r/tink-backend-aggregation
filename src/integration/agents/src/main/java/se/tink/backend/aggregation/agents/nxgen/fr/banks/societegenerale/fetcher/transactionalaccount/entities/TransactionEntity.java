@@ -17,13 +17,19 @@ public class TransactionEntity {
 
     @JsonProperty("montant")
     private AmountEntity amount;
+
     @JsonProperty("dateJournal")
     private String date;
+
     @JsonProperty("libelle")
     private String label;
 
     private static Date toJavaLangDate(LocalDate localDate) {
-        return new Date(localDate.atStartOfDay(SocieteGeneraleConstants.ZONE_ID).toInstant().toEpochMilli());
+        return new Date(
+                localDate
+                        .atStartOfDay(SocieteGeneraleConstants.ZONE_ID)
+                        .toInstant()
+                        .toEpochMilli());
     }
 
     private static Date toJavaLangDate(String dateAsString) {
@@ -36,8 +42,10 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction() {
-        return Transaction.builder().setDate(toJavaLangDate(date)).setAmount(amount.toTinkAmount()).setDescription(label)
+        return Transaction.builder()
+                .setDate(toJavaLangDate(date))
+                .setAmount(amount.toTinkAmount())
+                .setDescription(label)
                 .build();
     }
-
 }

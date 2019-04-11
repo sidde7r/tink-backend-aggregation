@@ -7,9 +7,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BaseErrorResponse {
     private String errorCode;
     private String error;
+
     @JsonProperty("aleatoire")
     private String random;
+
     private String from;
+
     @JsonProperty("msgErreur")
     private String errorMessage;
 

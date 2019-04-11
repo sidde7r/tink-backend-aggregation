@@ -8,21 +8,30 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InfoUdcEntity {
     @JsonProperty("premierTauxRepartition")
     private int firstRateDistribution;
+
     @JsonProperty("deuxiemeTauxRepartition")
     private int secondRateDistribution;
+
     @JsonProperty("urlAiguillage")
     private String urlReferrals;
+
     @JsonProperty("titulaireConnecte")
     private ConnectedHolderEntity connectedHolder;
+
     @JsonProperty("familleCompte")
     private List<AccountGroupEntity> accountGroup;
+
     private int categorisationAuto;
+
     @JsonProperty("clientBD")
     private boolean clientbd;
+
     private int cslProduction;
     private int cslModification;
+
     @JsonProperty("indicBCapitalTitre")
     private int indicbCapitalTitle;
+
     private boolean indicServiceHomeConnecte;
 
     public int getFirstRateDistribution() {

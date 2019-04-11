@@ -6,5 +6,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonRootName("subItems")
-public class SubItemsEntity extends ArrayList<ItemEntity> {
-}
+public class SubItemsEntity extends ArrayList<ItemEntity> {}

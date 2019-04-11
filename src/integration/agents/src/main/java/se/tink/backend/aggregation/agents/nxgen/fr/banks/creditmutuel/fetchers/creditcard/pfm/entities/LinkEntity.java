@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 @JsonRootName("link")
 public class LinkEntity {
-   private String method;
-   private String type;
-   private String url;
+    private String method;
+    private String type;
+    private String url;
 }

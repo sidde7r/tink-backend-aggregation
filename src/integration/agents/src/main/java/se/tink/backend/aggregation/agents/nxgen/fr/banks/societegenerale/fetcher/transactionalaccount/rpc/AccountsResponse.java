@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.societegenerale.rpc.Gen
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountsResponse extends GenericResponse<AccountsData> {
-
-}
+public class AccountsResponse extends GenericResponse<AccountsData> {}

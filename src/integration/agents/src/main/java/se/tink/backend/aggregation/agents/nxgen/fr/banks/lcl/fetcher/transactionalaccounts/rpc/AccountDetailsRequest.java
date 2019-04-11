@@ -7,15 +7,18 @@ public class AccountDetailsRequest extends AbstractForm {
 
     private AccountDetailsRequest(String accountNumber) {
         this.put(LclConstants.AccountDetailsRequest.ACCOUNT, accountNumber);
-        this.put(LclConstants.AuthenticationValuePairs.MOBILE.getKey(),
+        this.put(
+                LclConstants.AuthenticationValuePairs.MOBILE.getKey(),
                 LclConstants.AuthenticationValuePairs.MOBILE.getValue());
     }
 
-    public static AccountDetailsRequest create(String agency, String accountNumber, String cleLetter) {
+    public static AccountDetailsRequest create(
+            String agency, String accountNumber, String cleLetter) {
         return new AccountDetailsRequest(formatAccountNumber(agency, accountNumber, cleLetter));
     }
 
-    private static String formatAccountNumber(String agency, String accountNumber, String cleLetter) {
+    private static String formatAccountNumber(
+            String agency, String accountNumber, String cleLetter) {
         return String.format("%s/%s/%s", agency, accountNumber, cleLetter);
     }
 }

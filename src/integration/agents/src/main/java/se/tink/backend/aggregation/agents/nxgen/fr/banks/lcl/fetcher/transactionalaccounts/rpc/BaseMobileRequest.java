@@ -6,7 +6,8 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 public class BaseMobileRequest extends AbstractForm {
 
     private BaseMobileRequest() {
-        this.put(LclConstants.AuthenticationValuePairs.MOBILE.getKey(),
+        this.put(
+                LclConstants.AuthenticationValuePairs.MOBILE.getKey(),
                 LclConstants.AuthenticationValuePairs.MOBILE.getValue());
     }
 

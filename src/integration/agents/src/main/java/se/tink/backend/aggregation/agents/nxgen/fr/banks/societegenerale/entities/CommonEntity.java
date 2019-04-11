@@ -8,14 +8,16 @@ public class CommonEntity {
 
     @JsonProperty("statut")
     private String status;
+
     @JsonProperty("raison")
     private String reason;
+
     private String action;
+
     @JsonProperty("origine")
     private String origin;
 
     public String getStatus() {
         return status;
     }
-
 }

@@ -11,8 +11,7 @@ public class CaisseEpargneSessionHandler implements SessionHandler {
 
     private final CaisseEpargneApiClient apiClient;
 
-    public CaisseEpargneSessionHandler(
-            CaisseEpargneApiClient apiClient) {
+    public CaisseEpargneSessionHandler(CaisseEpargneApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -30,5 +29,4 @@ public class CaisseEpargneSessionHandler implements SessionHandler {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
-
 }

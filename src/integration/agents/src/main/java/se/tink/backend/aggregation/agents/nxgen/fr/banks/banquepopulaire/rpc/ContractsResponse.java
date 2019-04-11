@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entitie
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ContractsResponse extends ArrayList<ContractOverviewEntity> {
-}
+public class ContractsResponse extends ArrayList<ContractOverviewEntity> {}

@@ -4,5 +4,4 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
 
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
-public class SectionEntity extends ArrayList<NoNameEntity> {
-}
+public class SectionEntity extends ArrayList<NoNameEntity> {}

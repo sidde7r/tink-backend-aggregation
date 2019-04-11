@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class BnpParibasTransactionalAccountTransactionFetcher implements
-        TransactionDatePaginator<TransactionalAccount> {
+public class BnpParibasTransactionalAccountTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
     private final BnpParibasApiClient apiClient;
 
     public BnpParibasTransactionalAccountTransactionFetcher(BnpParibasApiClient apiClient) {
@@ -19,12 +19,14 @@ public class BnpParibasTransactionalAccountTransactionFetcher implements
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         String ibanKey = account.getFromTemporaryStorage(BnpParibasConstants.Storage.IBAN_KEY);
 
-        Collection<? extends Transaction> transactions = apiClient
-                .getTransactionalAccountTransactions(fromDate, toDate, ibanKey)
-                .toTinkTransactions();
+        Collection<? extends Transaction> transactions =
+                apiClient
+                        .getTransactionalAccountTransactions(fromDate, toDate, ibanKey)
+                        .toTinkTransactions();
 
         return PaginatorResponseImpl.create(transactions);
     }

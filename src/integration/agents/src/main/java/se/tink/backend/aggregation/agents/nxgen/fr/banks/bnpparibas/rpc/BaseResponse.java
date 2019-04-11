@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BaseResponse {
     @JsonProperty("codeRetour")
     private int returnCode;
+
     private String message;
 
     public int getReturnCode() {
@@ -20,9 +21,10 @@ public class BaseResponse {
 
     public void assertReturnCodeOk() {
         if (returnCode != 0) {
-            throw new IllegalStateException(String.format(
-                    "Something went wrong with the request, did not receive an ok response: %s", getMessage())
-            );
+            throw new IllegalStateException(
+                    String.format(
+                            "Something went wrong with the request, did not receive an ok response: %s",
+                            getMessage()));
         }
     }
 }

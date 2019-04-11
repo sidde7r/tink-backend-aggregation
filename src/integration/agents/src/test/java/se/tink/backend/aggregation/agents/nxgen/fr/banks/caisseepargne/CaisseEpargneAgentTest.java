@@ -14,7 +14,8 @@ public class CaisseEpargneAgentTest {
     @Test
     public void testLoginRefresh() throws Exception {
 
-        new AgentIntegrationTest.Builder(CaisseEpargneConstants.MARKET, CaisseEpargneConstants.PROVIDER_NAME)
+        new AgentIntegrationTest.Builder(
+                        CaisseEpargneConstants.MARKET, CaisseEpargneConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, USERNAME)
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
@@ -22,5 +23,4 @@ public class CaisseEpargneAgentTest {
                 .build()
                 .testRefresh();
     }
-
 }

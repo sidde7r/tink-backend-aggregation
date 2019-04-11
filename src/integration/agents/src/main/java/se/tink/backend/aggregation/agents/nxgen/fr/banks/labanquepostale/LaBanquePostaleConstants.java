@@ -6,9 +6,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class LaBanquePostaleConstants {
 
@@ -16,14 +16,17 @@ public class LaBanquePostaleConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Paris");
     public static final String MARKET = "fr";
     public static final String PROVIDER_NAME = "fr-labanquepostale-password";
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static class Regex {
 
         static final String NUMPAD_URL_GROUP_NAME = "numpadquery";
-        static final Pattern NUMPAD_QUERY_PATTERN = Pattern.compile(
-                String.format("(?:background:url\\()(?<%s>loginform\\?.+)(?:\\))",
-                        NUMPAD_URL_GROUP_NAME));
+        static final Pattern NUMPAD_QUERY_PATTERN =
+                Pattern.compile(
+                        String.format(
+                                "(?:background:url\\()(?<%s>loginform\\?.+)(?:\\))",
+                                NUMPAD_URL_GROUP_NAME));
     }
 
     private static class ApiServices {
@@ -33,10 +36,14 @@ public class LaBanquePostaleConstants {
         static final String INIT_LOGIN_PATH = "/wsost/OstBrokerWeb/pagehandler";
         static final String GET_NUMPAD_BASE_PATH = "wsost/OstBrokerWeb/";
         static final String SUBMIT_LOGIN_PATH = "wsost/OstBrokerWeb/auth";
-        static final String EQUIPMENTS_COMPTES = "ws_qh5/bad/mobile/canalREST/equipements/comptes_2.0.0.ea";
-        static final String LISTE_MOUBVEMENTS_CNE = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCNE.ea";
-        static final String LISTE_MOUBVEMENTS_CPP = "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCCP.ea";
-        static final String DECONNEXION = "ws_qh5/bad/mobile/canalJSON/authentification/deconnexion.ea";
+        static final String EQUIPMENTS_COMPTES =
+                "ws_qh5/bad/mobile/canalREST/equipements/comptes_2.0.0.ea";
+        static final String LISTE_MOUBVEMENTS_CNE =
+                "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCNE.ea";
+        static final String LISTE_MOUBVEMENTS_CPP =
+                "ws_qh5/bad/mobile/canalREST/listemouvements/listeMouvementsCCP.ea";
+        static final String DECONNEXION =
+                "ws_qh5/bad/mobile/canalJSON/authentification/deconnexion.ea";
     }
 
     public static class Urls {
@@ -48,8 +55,10 @@ public class LaBanquePostaleConstants {
         public static final URL GET_NUMPAD_BASE = new URL(BASE + ApiServices.GET_NUMPAD_BASE_PATH);
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiServices.SUBMIT_LOGIN_PATH);
         public static final URL ACCOUNTS = new URL(BASE + ApiServices.EQUIPMENTS_COMPTES);
-        public static final URL TRANSACTIONS_SAVINGS_ACCOUNTS = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
-        public static final URL TRANSACTIONS_CHECKING_ACCOUNTS = new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
+        public static final URL TRANSACTIONS_SAVINGS_ACCOUNTS =
+                new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CNE);
+        public static final URL TRANSACTIONS_CHECKING_ACCOUNTS =
+                new URL(BASE + ApiServices.LISTE_MOUBVEMENTS_CPP);
         public static final URL DISCONNECTION = new URL(BASE + ApiServices.DECONNEXION);
     }
 
@@ -102,8 +111,8 @@ public class LaBanquePostaleConstants {
         public static final String COULD_NOT_HANDLE_REQUEST =
                 "Server could not handle the request.";
         public static final String WRONG_DIGIT_COUNT =
-                String.format("Wrong number of keys found. Expected: %s",
-                        AuthConfig.PASSWORD_LENGTH);
+                String.format(
+                        "Wrong number of keys found. Expected: %s", AuthConfig.PASSWORD_LENGTH);
     }
 
     public static class ErrorCodes {
@@ -113,21 +122,23 @@ public class LaBanquePostaleConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from(PROVIDER_NAME + "-unknown-account-type");
     }
 
     public static class AccountType {
-        private static final ImmutableMap<String, AccountTypes> KNOWN_PRODUCT_CODES = ImmutableMap.<String, AccountTypes>builder()
-                .put("000001", AccountTypes.CHECKING)
-                .put("000002", AccountTypes.SAVINGS)
-                .build();
+        private static final ImmutableMap<String, AccountTypes> KNOWN_PRODUCT_CODES =
+                ImmutableMap.<String, AccountTypes>builder()
+                        .put("000001", AccountTypes.CHECKING)
+                        .put("000002", AccountTypes.SAVINGS)
+                        .build();
 
         public static Optional<AccountTypes> translate(String productCode) {
             if (Strings.isNullOrEmpty(productCode)) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(KNOWN_PRODUCT_CODES.getOrDefault(productCode.toUpperCase(), null));
+            return Optional.ofNullable(
+                    KNOWN_PRODUCT_CODES.getOrDefault(productCode.toUpperCase(), null));
         }
     }
-
 }

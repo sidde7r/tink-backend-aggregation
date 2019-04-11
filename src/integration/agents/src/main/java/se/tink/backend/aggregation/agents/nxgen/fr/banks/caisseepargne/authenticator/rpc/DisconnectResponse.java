@@ -2,6 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenti
 
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc.GenericResponse;
 
-public class DisconnectResponse extends GenericResponse<Object> {
-
-}
+public class DisconnectResponse extends GenericResponse<Object> {}

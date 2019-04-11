@@ -13,8 +13,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class BanquePopulaireTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, String> {
+public class BanquePopulaireTransactionalAccountsFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String> {
     private static final AggregationLogger LOGGER =
             new AggregationLogger(BanquePopulaireTransactionalAccountsFetcher.class);
 
@@ -36,7 +37,8 @@ public class BanquePopulaireTransactionalAccountsFetcher implements AccountFetch
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
         return Optional.ofNullable(apiClient.getAccountTransactions(account, key))
                 .orElse(BanquePopulaireTransactionsResponse.empty());
     }

@@ -12,7 +12,8 @@ public class TransactionEntityTest {
     @Test
     public void ensureMerchantDescriptionsAreModified() {
         String descriptionString1 = "FACTURE CARTE DU 010101 SPOTIFY CARTE 1234XXXXXXXX";
-        String descriptionString2 = "FACTURE CARTE DU 010101 LONG MERCHANT NAME WITH SPACES CARTE 12";
+        String descriptionString2 =
+                "FACTURE CARTE DU 010101 LONG MERCHANT NAME WITH SPACES CARTE 12";
         String descriptionString3 = "FACTURE CARTE DU 010101 RESTAURANT PARIS CARTE 1234X";
 
         Transaction t1 = createTransactionEntityWithDescription(descriptionString1);

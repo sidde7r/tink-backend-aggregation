@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerInfoEntity {
     @JsonProperty("adresse")
     private String address;
+
     @JsonProperty("nom")
     private String name;
+
     @JsonProperty("ville")
     private String city;
 

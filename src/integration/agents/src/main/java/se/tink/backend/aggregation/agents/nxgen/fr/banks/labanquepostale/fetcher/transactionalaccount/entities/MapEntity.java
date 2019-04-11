@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class MapEntity {
     @JsonProperty("numero")
     private String number;
+
     @JsonProperty("codeVarianteProduit")
     private String productVariantCode;
+
     @JsonProperty("gammeProduit")
     private String productRange;
 }

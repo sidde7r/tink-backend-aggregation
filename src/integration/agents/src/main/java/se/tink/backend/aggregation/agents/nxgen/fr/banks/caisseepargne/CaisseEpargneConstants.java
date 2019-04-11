@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class CaisseEpargneConstants {
 
@@ -15,17 +15,19 @@ public class CaisseEpargneConstants {
 
     public static class AccountType {
 
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP = ImmutableMap.<String, AccountTypes>builder()
-                .put("02", AccountTypes.CHECKING)
-                .put("04", AccountTypes.CHECKING)
-                .put("10", AccountTypes.SAVINGS)
-                .build();
+        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
+                ImmutableMap.<String, AccountTypes>builder()
+                        .put("02", AccountTypes.CHECKING)
+                        .put("04", AccountTypes.CHECKING)
+                        .put("10", AccountTypes.SAVINGS)
+                        .build();
 
         public static Optional<AccountTypes> translate(String productCode) {
             if (Strings.isNullOrEmpty(productCode)) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(ACCOUNT_TYPES_MAP.getOrDefault(productCode.toLowerCase(), null));
+            return Optional.ofNullable(
+                    ACCOUNT_TYPES_MAP.getOrDefault(productCode.toLowerCase(), null));
         }
     }
 
@@ -39,12 +41,16 @@ public class CaisseEpargneConstants {
     }
 
     public static class LogTag {
-        public static final se.tink.backend.aggregation.agents.utils.log.LogTag UNKNOWN_ACCOUNT_TYPE = se.tink.backend.aggregation.agents.utils.log.LogTag
-                .from(PROVIDER_NAME + "-unknown-account-type");
-        public static final se.tink.backend.aggregation.agents.utils.log.LogTag PARSE_FAILURE = se.tink.backend.aggregation.agents.utils.log.LogTag
-                .from(PROVIDER_NAME + "-parse-failure");
-        public static final se.tink.backend.aggregation.agents.utils.log.LogTag REQUEST_NOT_OK = se.tink.backend.aggregation.agents.utils.log.LogTag
-                .from(PROVIDER_NAME + "-request-nok");
+        public static final se.tink.backend.aggregation.agents.utils.log.LogTag
+                UNKNOWN_ACCOUNT_TYPE =
+                        se.tink.backend.aggregation.agents.utils.log.LogTag.from(
+                                PROVIDER_NAME + "-unknown-account-type");
+        public static final se.tink.backend.aggregation.agents.utils.log.LogTag PARSE_FAILURE =
+                se.tink.backend.aggregation.agents.utils.log.LogTag.from(
+                        PROVIDER_NAME + "-parse-failure");
+        public static final se.tink.backend.aggregation.agents.utils.log.LogTag REQUEST_NOT_OK =
+                se.tink.backend.aggregation.agents.utils.log.LogTag.from(
+                        PROVIDER_NAME + "-request-nok");
     }
 
     public static class RequestValue {
@@ -62,11 +68,15 @@ public class CaisseEpargneConstants {
     }
 
     public static class SoapAction {
-        public static final String AUTHENTIFIER = "http://caisse-epargne.fr/webservices/Authentifier";
-        public static final String GET_INFOS_CLIENT = "http://caisse-epargne.fr/webservices/GetInfosClient";
+        public static final String AUTHENTIFIER =
+                "http://caisse-epargne.fr/webservices/Authentifier";
+        public static final String GET_INFOS_CLIENT =
+                "http://caisse-epargne.fr/webservices/GetInfosClient";
         public static final String DECONNEXION = "http://caisse-epargne.fr/webservices/Deconnexion";
-        public static final String GET_SYNTHESE_CPTE_ABONNEMENT = "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
-        public static final String GET_HISTORIQUE_OPERATIONS_BY_COMPTE = "http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte";
+        public static final String GET_SYNTHESE_CPTE_ABONNEMENT =
+                "http://caisse-epargne.fr/webservices/GetSyntheseCpteAbonnement";
+        public static final String GET_HISTORIQUE_OPERATIONS_BY_COMPTE =
+                "http://caisse-epargne.fr/webservices/GetHistoriqueOperationsByCompte";
     }
 
     public static class SoapXmlFragment {
@@ -84,5 +94,4 @@ public class CaisseEpargneConstants {
     public static class Url {
         public static final URL WS_BAD = new URL(BASE_URL + "/V22/WsBad/WsBad.asmx");
     }
-
 }

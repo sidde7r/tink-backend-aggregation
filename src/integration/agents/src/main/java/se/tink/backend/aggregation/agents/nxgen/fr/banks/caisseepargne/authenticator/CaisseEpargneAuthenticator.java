@@ -15,13 +15,15 @@ public class CaisseEpargneAuthenticator implements PasswordAuthenticator {
     private final CaisseEpargneApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
-    public CaisseEpargneAuthenticator(CaisseEpargneApiClient apiClient, PersistentStorage persistentStorage) {
+    public CaisseEpargneAuthenticator(
+            CaisseEpargneApiClient apiClient, PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
         AuthenticationRequest request = new AuthenticationRequest();
         request.setUsername(username);
@@ -34,5 +36,4 @@ public class CaisseEpargneAuthenticator implements PasswordAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
-
 }

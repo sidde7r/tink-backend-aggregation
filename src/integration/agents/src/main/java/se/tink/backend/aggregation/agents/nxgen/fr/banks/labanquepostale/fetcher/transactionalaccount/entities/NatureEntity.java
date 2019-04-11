@@ -7,17 +7,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class NatureEntity {
 
     private String code;
+
     @JsonProperty("libelleLong")
     private String longLibel;
+
     @JsonProperty("indicateurMasquage")
     private String hidingIndicator;
+
     @JsonProperty("libelleCourt")
     private String shortLabel;
+
     @JsonProperty("libelleMoyen")
     private String middleWord;
 
     String getLabel() {
         return middleWord;
     }
-
 }

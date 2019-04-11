@@ -14,22 +14,27 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class AccountTransactionsEntity {
     @JsonProperty("dateSoldeDispo")
     private String dateBalanceAvailable;
+
     @JsonProperty("devise")
     private String currency;
+
     private String key;
+
     @JsonProperty("nbJourDebiteur")
     private int debtorDay;
+
     @JsonProperty("operationPassee")
     private List<TransactionEntity> transactionList;
+
     @JsonProperty("soldeAVenir")
     private double soldeaVenir;
+
     @JsonProperty("soldeDispo")
     private double disposableBalance;
 
     @JsonIgnore
-    public Collection<Transaction> toTinkTransactions(){
-        return Optional.ofNullable(transactionList).orElseGet(Collections::emptyList)
-                .stream()
+    public Collection<Transaction> toTinkTransactions() {
+        return Optional.ofNullable(transactionList).orElseGet(Collections::emptyList).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

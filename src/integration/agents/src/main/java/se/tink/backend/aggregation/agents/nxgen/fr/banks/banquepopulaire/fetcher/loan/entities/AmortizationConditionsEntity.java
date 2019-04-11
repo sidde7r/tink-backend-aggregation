@@ -12,10 +12,13 @@ public class AmortizationConditionsEntity {
     @JsonProperty("dateProchaineEcheance")
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date nextDueDate;
+
     @JsonProperty("montantProchaineEcheance")
     private MontantEntity amountDueNext;
+
     @JsonProperty("tauxNominal")
     private double nominalRate;
+
     @JsonProperty("typeRemboursement")
     private TypeEntity refundType;
 

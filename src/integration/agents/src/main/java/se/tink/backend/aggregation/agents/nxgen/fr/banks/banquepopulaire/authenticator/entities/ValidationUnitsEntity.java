@@ -5,5 +5,4 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ValidationUnitsEntity extends HashMap<String, List<ValidationUnit>> {
-}
+public class ValidationUnitsEntity extends HashMap<String, List<ValidationUnit>> {}

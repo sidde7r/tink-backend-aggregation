@@ -28,10 +28,10 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
     public static final String TITLE = "title";
     public static final String AMOUNT = "AMOUNT";
     public static final String MAX_PAYMENTS_LIMIT = "secondaryValueTitle";
-    private static final Logger LOGGER = LoggerFactory.getLogger(
-            CreditMutuelPfmCreditCardFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(
-            CreditMutuelPfmCreditCardFetcher.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CreditMutuelPfmCreditCardFetcher.class);
+    private static final AggregationLogger AGGREGATION_LOGGER =
+            new AggregationLogger(CreditMutuelPfmCreditCardFetcher.class);
     private final CreditMutuelApiClient apiClient;
 
     private CreditMutuelPfmCreditCardFetcher(CreditMutuelApiClient apiClient) {
@@ -48,65 +48,95 @@ public class CreditMutuelPfmCreditCardFetcher implements AccountFetcher<CreditCa
 
         String returnCode = creditCardResponse.getReturnCode();
         if (!EuroInformationUtils.isSuccess(returnCode)) {
-            LOGGER.info("Error while fetching credit cards by PFM endpoint: " + EuroInformationErrorCodes
-                    .getByCodeNumber(returnCode) + " " + SerializationUtils.serializeToString(creditCardResponse));
+            LOGGER.info(
+                    "Error while fetching credit cards by PFM endpoint: "
+                            + EuroInformationErrorCodes.getByCodeNumber(returnCode)
+                            + " "
+                            + SerializationUtils.serializeToString(creditCardResponse));
             return Collections.emptyList();
         }
 
-        AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(creditCardResponse),
+        AGGREGATION_LOGGER.infoExtraLong(
+                SerializationUtils.serializeToString(creditCardResponse),
                 EuroInformationConstants.LoggingTags.creditcardLogTag);
 
-        //TODO: Need to double check how multiple cards are handled in the response
+        // TODO: Need to double check how multiple cards are handled in the response
 
-        List<ValueEntity> valueEntityList = CreditMutuelPmfPredicates.getItemEntitiesFromResponse
-                .apply(creditCardResponse).collect(Collectors.toList());
+        List<ValueEntity> valueEntityList =
+                CreditMutuelPmfPredicates.getItemEntitiesFromResponse
+                        .apply(creditCardResponse)
+                        .collect(Collectors.toList());
 
         // Parsing Card number
-        Optional<ValueEntity> subtitle = valueEntityList.stream()
-                .filter(CreditMutuelPmfPredicates.filterValueEntityByName(SUBTITLE))
-                .findFirst();
+        Optional<ValueEntity> subtitle =
+                valueEntityList.stream()
+                        .filter(CreditMutuelPmfPredicates.filterValueEntityByName(SUBTITLE))
+                        .findFirst();
 
-        String cardNumber = subtitle.map(s -> s.getValue())
-                .map(s -> CreditMututelPmfCreditCardStringParsingUtils.parseCreditCardNumber(s))
-                .orElseThrow(IllegalStateException::new);
+        String cardNumber =
+                subtitle.map(s -> s.getValue())
+                        .map(
+                                s ->
+                                        CreditMututelPmfCreditCardStringParsingUtils
+                                                .parseCreditCardNumber(s))
+                        .orElseThrow(IllegalStateException::new);
 
         // Parsing card name
-        Optional<ValueEntity> title = valueEntityList.stream()
-                .filter(CreditMutuelPmfPredicates.filterValueEntityByName(TITLE))
-                .findFirst();
+        Optional<ValueEntity> title =
+                valueEntityList.stream()
+                        .filter(CreditMutuelPmfPredicates.filterValueEntityByName(TITLE))
+                        .findFirst();
 
         // Parsing card limits
-        List<SubItemsEntity> subItemsEntityList = CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
-                .apply(creditCardResponse).collect(Collectors.toList());
+        List<SubItemsEntity> subItemsEntityList =
+                CreditMutuelPmfPredicates.getSubItemsValueStreamFromResponse
+                        .apply(creditCardResponse)
+                        .collect(Collectors.toList());
 
-        List<ValueEntity> outputsEntityList = subItemsEntityList.stream().flatMap(s -> s.stream())
-                .flatMap(s -> s.getOutputs().stream()).collect(Collectors.toList());
+        List<ValueEntity> outputsEntityList =
+                subItemsEntityList.stream()
+                        .flatMap(s -> s.stream())
+                        .flatMap(s -> s.getOutputs().stream())
+                        .collect(Collectors.toList());
 
-        String paymentLimitString = outputsEntityList
-                .stream()
-                //TODO: Double check if it should be secondaryValueTitle which contains limit for payments
-                //TODO: or valueTitle which contains limit for withdrawals
-                .filter(CreditMutuelPmfPredicates.filterValueEntityByName(MAX_PAYMENTS_LIMIT))
-                .findFirst().orElseThrow(IllegalStateException::new).getValue();
+        String paymentLimitString =
+                outputsEntityList.stream()
+                        // TODO: Double check if it should be secondaryValueTitle which contains
+                        // limit for payments
+                        // TODO: or valueTitle which contains limit for withdrawals
+                        .filter(
+                                CreditMutuelPmfPredicates.filterValueEntityByName(
+                                        MAX_PAYMENTS_LIMIT))
+                        .findFirst()
+                        .orElseThrow(IllegalStateException::new)
+                        .getValue();
 
-        Amount paymentLimit = CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(paymentLimitString);
+        Amount paymentLimit =
+                CreditMututelPmfCreditCardStringParsingUtils.extractAmountFromString(
+                        paymentLimitString);
 
         // Parsing card balance
-        String amount = outputsEntityList.stream()
-                .filter(CreditMutuelPmfPredicates.filterValueEntityByType(AMOUNT))
-                .findFirst().orElseThrow(IllegalStateException::new).getValue();
+        String amount =
+                outputsEntityList.stream()
+                        .filter(CreditMutuelPmfPredicates.filterValueEntityByType(AMOUNT))
+                        .findFirst()
+                        .orElseThrow(IllegalStateException::new)
+                        .getValue();
         Amount balance = EuroInformationUtils.parseAmount(amount);
 
-        CreditCardAccount build = CreditCardAccount.builder(cardNumber)
-                .setAccountNumber(cardNumber)
-                .setBalance(balance)
-                .setAvailableCredit(balance.add(paymentLimit))
-                .setName(title.map(t -> t.getValue()).orElse("")).build();
+        CreditCardAccount build =
+                CreditCardAccount.builder(cardNumber)
+                        .setAccountNumber(cardNumber)
+                        .setBalance(balance)
+                        .setAvailableCredit(balance.add(paymentLimit))
+                        .setName(title.map(t -> t.getValue()).orElse(""))
+                        .build();
 
-        AGGREGATION_LOGGER.infoExtraLong(SerializationUtils.serializeToString(build),
+        AGGREGATION_LOGGER.infoExtraLong(
+                SerializationUtils.serializeToString(build),
                 EuroInformationConstants.LoggingTags.creditcardLogTag);
 
-        //TODO: Return empty list till we learn how to handle multiple cards
+        // TODO: Return empty list till we learn how to handle multiple cards
         return Collections.emptyList();
     }
 }

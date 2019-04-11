@@ -8,17 +8,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsData {
 
     private String audience;
+
     @JsonProperty("codeGroupeProduitBancaire")
     private String bankProductGroupCode;
+
     @JsonProperty("caractUrlWP")
     private String characterUrlwp;
+
     @JsonProperty("isCDD")
     private boolean iscdd;
+
     @JsonProperty("blocOperations")
     private TransactionGroupEntity block;
 
     public Stream<TransactionEntity> getTransactions() {
         return block.getElements().stream();
     }
-
 }

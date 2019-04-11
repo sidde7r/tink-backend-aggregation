@@ -10,18 +10,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JacksonXmlRootElement(localName = "GetHistoriqueOperationsByCompte")
-@JsonPropertyOrder({
-        "cpt",
-        "nbOp",
-        "typeDemandeNav",
-        "bufferNav"
-})
+@JsonPropertyOrder({"cpt", "nbOp", "typeDemandeNav", "bufferNav"})
 public class TransactionsRequest extends GenericRequest {
 
     @JacksonXmlProperty(localName = "cpt")
     private String account;
+
     @JacksonXmlProperty(localName = "nbOp")
     private int pageSize = CaisseEpargneConstants.RequestValue.PAGE_SIZE;
+
     @JacksonXmlProperty(localName = "bufferNav")
     private String paginationKey;
 
@@ -40,7 +37,8 @@ public class TransactionsRequest extends GenericRequest {
 
     @JacksonXmlProperty(localName = "typeDemandeNav")
     public String getRequestType() {
-        return Strings.isNullOrEmpty(paginationKey) ? CaisseEpargneConstants.RequestValue.REQUEST_TYPE_INITIAL :
-                CaisseEpargneConstants.RequestValue.REQUEST_TYPE_SUBSEQUENT;
+        return Strings.isNullOrEmpty(paginationKey)
+                ? CaisseEpargneConstants.RequestValue.REQUEST_TYPE_INITIAL
+                : CaisseEpargneConstants.RequestValue.REQUEST_TYPE_SUBSEQUENT;
     }
 }

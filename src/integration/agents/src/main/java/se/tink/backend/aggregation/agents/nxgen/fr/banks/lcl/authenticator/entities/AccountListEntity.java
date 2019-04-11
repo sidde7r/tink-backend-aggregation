@@ -2,5 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.authenticator.enti
 
 import java.util.ArrayList;
 
-public class AccountListEntity extends ArrayList<AccountLoginEntity> {
-}
+public class AccountListEntity extends ArrayList<AccountLoginEntity> {}

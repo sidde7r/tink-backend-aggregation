@@ -11,6 +11,7 @@ public class AccountsData {
 
     @JsonProperty("groupesRoles")
     private List<AccountGroupEntity> groups;
+
     @JsonProperty("sommeTotaleEpargne")
     private AmountEntity totalSavingsAmount;
 
@@ -21,5 +22,4 @@ public class AccountsData {
     public Stream<AccountEntity> getBenefits() {
         return groups.stream().flatMap(g -> g.getBenefits().stream());
     }
-
 }
