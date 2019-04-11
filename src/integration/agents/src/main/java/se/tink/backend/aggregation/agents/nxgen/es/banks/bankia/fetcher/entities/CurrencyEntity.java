@@ -33,5 +33,4 @@ public class CurrencyEntity {
     public void setDigitControlCurrency(String digitControlCurrency) {
         this.control = digitControlCurrency;
     }
-
 }

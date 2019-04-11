@@ -31,7 +31,8 @@ public class ServicingFundsAccountDetailsRequest {
 
         request.description = account.getDescription();
         request.mobileWarning = account.getMobileWarning();
-        request.amount = new AmountEntity(account.getAmount().getValue(), account.getAmount().getCurrency());
+        request.amount =
+                new AmountEntity(account.getAmount().getValue(), account.getAmount().getCurrency());
         request.owner = account.getOwner();
         request.product = account.getProduct();
         request.isOwner = String.valueOf(account.isOwner());

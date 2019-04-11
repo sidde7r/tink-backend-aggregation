@@ -30,8 +30,7 @@ public class BancoPopularContracts {
         return contracts;
     }
 
-    public BancoPopularContracts setContracts(
-            List<BancoPopularContract> contracts) {
+    public BancoPopularContracts setContracts(List<BancoPopularContract> contracts) {
         this.contracts = contracts;
         return this;
     }

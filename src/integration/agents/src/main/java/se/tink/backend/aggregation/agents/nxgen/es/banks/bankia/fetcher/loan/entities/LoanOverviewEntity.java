@@ -11,10 +11,13 @@ public class LoanOverviewEntity {
     private String aliasUrl;
     private String identificador;
     private boolean saldoInformado;
+
     @JsonProperty("saldoDisponible")
     private double availableBalance; // current balance for loan?
+
     @JsonProperty("saldoInicial")
     private int initialBalance;
+
     private String divisa;
     private String codigoFamilia;
     private String nivelOperatividad;

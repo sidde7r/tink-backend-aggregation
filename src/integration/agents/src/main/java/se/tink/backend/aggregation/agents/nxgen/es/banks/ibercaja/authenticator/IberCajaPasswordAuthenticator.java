@@ -23,15 +23,22 @@ public class IberCajaPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
         // Construct session request from username and password
-        SessionResponse sessionResponse = bankClient.initializeSession(
-                new SessionRequest(username, password, IberCajaConstants.DefaultRequestParams.CARD,
-                        IberCajaConstants.DefaultRequestParams.LAST_ACCESS));
+        SessionResponse sessionResponse =
+                bankClient.initializeSession(
+                        new SessionRequest(
+                                username,
+                                password,
+                                IberCajaConstants.DefaultRequestParams.CARD,
+                                IberCajaConstants.DefaultRequestParams.LAST_ACCESS));
 
-        LoginResponse loginResponse = bankClient
-                .login(new LoginRequest(sessionResponse.getNici()), sessionResponse.getTicket(),
+        LoginResponse loginResponse =
+                bankClient.login(
+                        new LoginRequest(sessionResponse.getNici()),
+                        sessionResponse.getTicket(),
                         sessionResponse.getUser());
 
         loginResponse.saveResponse(storage);

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioContentEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
@@ -15,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -43,9 +43,7 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
         // stocks
-        Optional.ofNullable(loginResponse.getPortfolios())
-                .orElse(Collections.emptyList())
-                .stream()
+        Optional.ofNullable(loginResponse.getPortfolios()).orElse(Collections.emptyList()).stream()
                 .map(
                         portfolio ->
                                 parsePortfolioAccount(
@@ -55,9 +53,7 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
                 .forEach(accounts::add);
 
         // funds
-        Optional.ofNullable(loginResponse.getFunds())
-                .orElse(Collections.emptyList())
-                .stream()
+        Optional.ofNullable(loginResponse.getFunds()).orElse(Collections.emptyList()).stream()
                 .map(fund -> parseFundAccount(fund, userDataXml))
                 .forEach(accounts::add);
 

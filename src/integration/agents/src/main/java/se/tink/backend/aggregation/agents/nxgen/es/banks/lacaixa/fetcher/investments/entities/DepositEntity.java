@@ -11,16 +11,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DepositEntity {
     private String id;
     private String codemian;
+
     @JsonProperty("nombre")
     private String name;
+
     @JsonProperty("numeroTitulos")
     private int quantity;
+
     private boolean cotizaEnTitulos;
+
     @JsonProperty("valoracion")
     private BalanceEntity currentValue;
+
     private boolean mostrarValoracion;
+
     @JsonProperty("plusvalia")
     private BalanceEntity valueChange;
+
     private boolean mostrarPlusvaliaRentabilidad;
     private BalanceEntity ultimaCotizacion;
     private boolean mostrarUltimaCotizacion;
@@ -50,7 +57,8 @@ public class DepositEntity {
         return valueChange;
     }
 
-    public Instrument toTinkInstrument(PositionDetailsResponse positionDetailsResponse, Map<String, String> contractToCode) {
+    public Instrument toTinkInstrument(
+            PositionDetailsResponse positionDetailsResponse, Map<String, String> contractToCode) {
         return positionDetailsResponse.toTinkInstrument(name, contractToCode);
     }
 }

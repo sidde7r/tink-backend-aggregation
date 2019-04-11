@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LaCaixaErrorResponse {
     @JsonProperty("codigo")
     private String code;
+
     @JsonProperty("mensaje")
     private String message;
 

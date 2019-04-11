@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 public class BankiaAgentTest {
 
     private AgentIntegrationTest.Builder builder() {
-        return new AgentIntegrationTest.Builder(BankiaConstants.MARKET, BankiaConstants.PROVIDER_NAME)
+        return new AgentIntegrationTest.Builder(
+                        BankiaConstants.MARKET, BankiaConstants.PROVIDER_NAME)
                 .addCredentialField(Field.Key.USERNAME, "")
                 .addCredentialField(Field.Key.PASSWORD, "")
                 .loadCredentialsBefore(false)
@@ -20,5 +21,4 @@ public class BankiaAgentTest {
     public void testRefresh() throws Exception {
         builder().build().testRefresh();
     }
-
 }

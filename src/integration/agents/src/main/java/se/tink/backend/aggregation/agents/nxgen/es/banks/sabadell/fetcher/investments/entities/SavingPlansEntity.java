@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.HashMap;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonObject
 public class SavingPlansEntity {

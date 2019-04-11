@@ -36,8 +36,9 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
-        EngagementResponse engagements = apiClient
-                .fetchEngagements(LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_P);
+        EngagementResponse engagements =
+                apiClient.fetchEngagements(
+                        LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_P);
 
         List<InvestmentAccount> investments = new ArrayList<>();
         investments.addAll(getStockInvestments(userDataResponse, engagements));
@@ -50,31 +51,35 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
         return investments;
     }
 
-    private List<InvestmentAccount> getFundInvestments(UserDataResponse userDataResponse,
-            EngagementResponse engagements) {
+    private List<InvestmentAccount> getFundInvestments(
+            UserDataResponse userDataResponse, EngagementResponse engagements) {
 
         List<InvestmentAccount> fundInvestments = new ArrayList<>();
         boolean moreData = false;
         do {
             FundsListResponse fundsListResponse = apiClient.fetchFundList(moreData);
             moreData = fundsListResponse.isMoreData();
-            fundInvestments.addAll(fundsListResponse
-                    .getTinkInvestments(apiClient, userDataResponse.getHolderName(), engagements));
+            fundInvestments.addAll(
+                    fundsListResponse.getTinkInvestments(
+                            apiClient, userDataResponse.getHolderName(), engagements));
         } while (moreData);
 
         return fundInvestments;
     }
 
-    private List<InvestmentAccount> getStockInvestments(UserDataResponse userDataResponse,
-            EngagementResponse engagements) {
+    private List<InvestmentAccount> getStockInvestments(
+            UserDataResponse userDataResponse, EngagementResponse engagements) {
         try {
             Map<String, String> contractToCode = engagements.getProductCodeByContractNumber();
             List<PortfolioEntity> portfolios = getStockPortfolios();
 
             return portfolios.stream()
-                    .map(portfolioEntity -> parseStockInvestmentAccount(userDataResponse.getHolderName(),
-                            contractToCode,
-                            portfolioEntity))
+                    .map(
+                            portfolioEntity ->
+                                    parseStockInvestmentAccount(
+                                            userDataResponse.getHolderName(),
+                                            contractToCode,
+                                            portfolioEntity))
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
@@ -94,30 +99,38 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
         return false;
     }
 
-    private InvestmentAccount parseStockInvestmentAccount(HolderName holderName, Map<String, String> contractToCode,
+    private InvestmentAccount parseStockInvestmentAccount(
+            HolderName holderName,
+            Map<String, String> contractToCode,
             PortfolioEntity portfolioEntity) {
         List<Instrument> instruments = getStockInstruments(contractToCode, portfolioEntity);
 
         return portfolioEntity.toInvestmentAccount(holderName, instruments);
     }
 
-    private List<Instrument> getStockInstruments(Map<String, String> contractToCode, PortfolioEntity portfolioEntity) {
+    private List<Instrument> getStockInstruments(
+            Map<String, String> contractToCode, PortfolioEntity portfolioEntity) {
         boolean fetchMore = false;
         List<Instrument> instruments = new ArrayList<>();
 
         instruments.addAll(
-                apiClient.fetchDeposit(portfolioEntity.getId(), fetchMore).getPortfolioContents().stream()
+                apiClient.fetchDeposit(portfolioEntity.getId(), fetchMore).getPortfolioContents()
+                        .stream()
                         .flatMap(portfolioContent -> portfolioContent.getDepositList().stream())
-                        .map(depositEntity -> depositEntity.toTinkInstrument(
-                                apiClient.fetchPositionDetails(portfolioEntity.getId(), depositEntity.getId()),
-                                contractToCode))
-                        .collect(Collectors.toList())
-        );
+                        .map(
+                                depositEntity ->
+                                        depositEntity.toTinkInstrument(
+                                                apiClient.fetchPositionDetails(
+                                                        portfolioEntity.getId(),
+                                                        depositEntity.getId()),
+                                                contractToCode))
+                        .collect(Collectors.toList()));
 
         return instruments;
     }
 
     private List<PortfolioEntity> getStockPortfolios() {
-        return Optional.ofNullable(apiClient.fetchDepositList().getPortfolioList()).orElse(Collections.emptyList());
+        return Optional.ofNullable(apiClient.fetchDepositList().getPortfolioList())
+                .orElse(Collections.emptyList());
     }
 }

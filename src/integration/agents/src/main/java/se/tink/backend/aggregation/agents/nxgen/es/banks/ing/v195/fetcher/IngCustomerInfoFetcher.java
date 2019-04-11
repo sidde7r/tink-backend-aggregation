@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
@@ -7,8 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
-
-import java.time.LocalDate;
 
 public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
     private IngApiClient ingApiClient;

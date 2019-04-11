@@ -26,26 +26,29 @@ public class ImaginBankConstants {
     public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
-        public static final URL INIT_LOGIN = new URL(
-                BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
+        public static final URL INIT_LOGIN =
+                new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiService.LOGIN_SUBMIT_PATH);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT_PATH);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.ACCOUNTS_PATH);
 
         public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO_PATH);
-        public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
+        public static final URL FETCH_ACCOUNT_TRANSACTION =
+                new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.CARDS_PATH);
-        public static final URL INITIATE_CARD_FETCHING = new URL(BASE + ApiService.INITIATE_CARD_FETCHING_PATH);
+        public static final URL INITIATE_CARD_FETCHING =
+                new URL(BASE + ApiService.INITIATE_CARD_FETCHING_PATH);
 
-
-        public static final URL FETCH_CARD_TRANSACTIONS = new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
     }
 
     public static class DefaultRequestParams {
         public static final String LANGUAGE_EN = "en";
         public static final String ORIGIN = "13190";
         public static final String CHANNEL = "3";
-        public static final String INSTALLATION_ID = "eIAPPLPh8,1+SfeQDnFvsPWCKY4QFdUJ9ofXhc="; // App install ID
+        public static final String INSTALLATION_ID =
+                "eIAPPLPh8,1+SfeQDnFvsPWCKY4QFdUJ9ofXhc="; // App install ID
         public static final String VIRTUAL_KEYBOARD = "false";
         public static final String DEMO = "false";
         public static final String ALTA_IMAGINE = "false";
@@ -88,7 +91,8 @@ public class ImaginBankConstants {
     }
 
     public static class LogTags {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("imaginbank_unknown_accountype");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from("imaginbank_unknown_accountype");
         public static final LogTag MULTIPLE_ACCOUNTS = LogTag.from("imaginbank_multiple_accounts");
         public static final LogTag CREDIT_CARD = LogTag.from("imaginbank_credit_card");
     }

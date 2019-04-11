@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.SabadellAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
@@ -29,19 +30,19 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public class SabadellAgent extends NextGenerationAgent {
     private final SabadellApiClient apiClient;
 
-    public SabadellAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SabadellAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new SabadellApiClient(client);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.addMessageWriter(new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
+        client.addMessageWriter(
+                new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));
     }
 
     @Override
@@ -50,41 +51,48 @@ public class SabadellAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
                         new SabadellAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
-                                        new SabadellTransactionFetcher(apiClient))))
-        );
+                                        new SabadellTransactionFetcher(apiClient)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         return Optional.of(
-                new CreditCardRefreshController(metricRefreshController, updateController,
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
                         new SabadellCreditCardFetcher(apiClient),
-                        new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
-                                        new SabadellCreditCardTransactionFetcher(apiClient), 1)))
-        );
+                                        new SabadellCreditCardTransactionFetcher(apiClient), 1))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(
-                new InvestmentRefreshController(metricRefreshController, updateController,
-                        new SabadellInvestmentFetcher(apiClient))
-        );
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SabadellInvestmentFetcher(apiClient)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController,
-                        new SabadellLoanFetcher(apiClient))
-        );
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SabadellLoanFetcher(apiClient)));
     }
 
     @Override
@@ -93,7 +101,8 @@ public class SabadellAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -106,5 +115,4 @@ public class SabadellAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
-
 }

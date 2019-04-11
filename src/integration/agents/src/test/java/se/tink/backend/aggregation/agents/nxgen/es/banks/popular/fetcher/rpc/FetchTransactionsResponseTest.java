@@ -9,7 +9,8 @@ public class FetchTransactionsResponseTest {
 
     @Test
     public void fetchTransactionsFor() throws Exception {
-        FetchTransactionsResponse fetchTransactionsResponse = FetchTransactionsResponseTestData.getTestData();
+        FetchTransactionsResponse fetchTransactionsResponse =
+                FetchTransactionsResponseTestData.getTestData();
         Collection<Transaction> transactions = fetchTransactionsResponse.getTinkTransactions();
 
         for (Transaction transaction : transactions) {

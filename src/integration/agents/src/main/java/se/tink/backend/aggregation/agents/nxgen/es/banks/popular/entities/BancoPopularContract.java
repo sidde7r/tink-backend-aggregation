@@ -11,14 +11,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BancoPopularContract {
     @JsonProperty("nItnCont")
     private long contractNumber;
+
     @JsonProperty("oficina")
     private int office;
+
     @JsonProperty("banco")
     private int bank;
 
-    public BancoPopularContract() {
-
-    }
+    public BancoPopularContract() {}
 
     private BancoPopularContract(BancoPopularLoginContract loginContract) {
         this.contractNumber = loginContract.getContractNumber();

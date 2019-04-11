@@ -19,10 +19,12 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BankiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionDatePaginator<TransactionalAccount> {
+public class BankiaTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
 
-    private static final Logger log = LoggerFactory.getLogger(BankiaTransactionalAccountFetcher.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(BankiaTransactionalAccountFetcher.class);
     private final BankiaApiClient apiClient;
     private final LocalDate nowInLocalDate;
 
@@ -33,20 +35,23 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccounts()
-                .stream()
-                .filter(account-> {
-                    // Temporary logging of unknown types.
-                    // Todo: change this to `.filter(AccountEntity::isAccountTypeTransactional)`
+        return apiClient.getAccounts().stream()
+                .filter(
+                        account -> {
+                            // Temporary logging of unknown types.
+                            // Todo: change this to
+                            // `.filter(AccountEntity::isAccountTypeTransactional)`
 
-                    if (account.isAccountTypeTransactional()) {
-                        return true;
-                    }
+                            if (account.isAccountTypeTransactional()) {
+                                return true;
+                            }
 
-                    log.info("{} Unknown account type: {}", SerializationUtils.serializeToString(account),
-                            account.getBankiaAccountType());
-                    return false;
-                })
+                            log.info(
+                                    "{} Unknown account type: {}",
+                                    SerializationUtils.serializeToString(account),
+                                    account.getBankiaAccountType());
+                            return false;
+                        })
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
@@ -56,13 +61,15 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         try {
             return apiClient.getTransactions(account, fromDate, toDate);
         } catch (HttpResponseException hre) {
-            if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR &&
-                    toDate.before(getOneYearOldDate())) {
-                // We will get status code 500 if we try to fetch too far back in time. If this happens we
+            if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                    && toDate.before(getOneYearOldDate())) {
+                // We will get status code 500 if we try to fetch too far back in time. If this
+                // happens we
                 // indicate to the paginator that we cannot fetch more.
                 return PaginatorResponseImpl.createEmpty(false);
             }

@@ -9,10 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProductInformationEntity {
     @JsonProperty("fechaFormalizacion")
     private DateEntity initialDate;
+
     @JsonProperty("nombreProductoContratado")
     private String productName;
+
     @JsonProperty("identificadorCuentaAsociada")
     private AccountIdentifierEntity associatedAccountIdentifier;
+
     @JsonProperty("fechaFinContratoReal")
     private DateEntity endDate;
 

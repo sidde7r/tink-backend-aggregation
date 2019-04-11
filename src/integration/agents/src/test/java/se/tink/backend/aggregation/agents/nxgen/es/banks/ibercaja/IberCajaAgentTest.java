@@ -16,12 +16,13 @@ public class IberCajaAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("es", "es-ibercaja-password")
-                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false).expectLoggedIn(false);
-
+        builder =
+                new AgentIntegrationTest.Builder("es", "es-ibercaja-password")
+                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false);
     }
 
     @Test

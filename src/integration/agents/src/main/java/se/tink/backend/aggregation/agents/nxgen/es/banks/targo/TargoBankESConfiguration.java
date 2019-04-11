@@ -16,7 +16,7 @@ public class TargoBankESConfiguration implements EuroInformationConfiguration {
 
     @Override
     public String getAppVersion() {
-       return TargoBankESConstants.APP_VERSION;
+        return TargoBankESConstants.APP_VERSION;
     }
 
     @Override

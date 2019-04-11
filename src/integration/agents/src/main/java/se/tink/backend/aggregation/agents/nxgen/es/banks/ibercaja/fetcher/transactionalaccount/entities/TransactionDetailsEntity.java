@@ -15,19 +15,24 @@ import se.tink.libraries.amount.Amount;
 public class TransactionDetailsEntity {
     @JsonProperty("ConceptoMovimiento")
     private String transactionType;
+
     @JsonProperty("FechaOperacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOfTransaction;
+
     @JsonProperty("Importe")
     private double amount;
+
     @JsonProperty("IdMovimientoPFM")
     private String idMovimientopfm;
+
     @JsonProperty("Registros")
     private List<String> descriptions;
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
-        return Transaction.builder().setAmount(new Amount(IberCajaConstants.currency, amount))
+        return Transaction.builder()
+                .setAmount(new Amount(IberCajaConstants.currency, amount))
                 .setDate(dateOfTransaction)
                 .setDescription(getDescription())
                 .setExternalId(idMovimientopfm)
@@ -37,10 +42,8 @@ public class TransactionDetailsEntity {
     @JsonIgnore
     private String getDescription() {
         if (descriptions != null) {
-            //some transaction descriptions have a lot of whitespace that needs to be trimmed
-            return descriptions.stream()
-                    .map(this::trimWhiteSpace)
-                    .collect(Collectors.joining(" "));
+            // some transaction descriptions have a lot of whitespace that needs to be trimmed
+            return descriptions.stream().map(this::trimWhiteSpace).collect(Collectors.joining(" "));
         }
         return transactionType;
     }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
 import com.google.common.base.Preconditions;
-
 import java.util.regex.Pattern;
 
 public class BankiaUtils {

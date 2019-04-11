@@ -26,9 +26,7 @@ public class UserDataDeserializer extends JsonDeserializer<Map<String, String>> 
         Map<String, String> userData = new HashMap<>(numElements);
 
         // Extract key/value pairs and populate map.
-        node.forEach(child ->
-            userData.put(child.get("key").asText(), child.get("value").asText())
-        );
+        node.forEach(child -> userData.put(child.get("key").asText(), child.get("value").asText()));
 
         return userData;
     }

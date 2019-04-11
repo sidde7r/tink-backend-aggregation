@@ -17,5 +17,4 @@ public class AmericanExpressESConstants extends AmericanExpressConstants {
         public static final String LOCALE = "es_ES";
         public static final String CLIENT_VERSION = "6.10.0";
     }
-
 }

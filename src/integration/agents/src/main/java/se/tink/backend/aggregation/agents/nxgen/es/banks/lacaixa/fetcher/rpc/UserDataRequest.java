@@ -11,7 +11,7 @@ public class UserDataRequest {
     @JsonProperty("datosUsuario")
     private List<String> dataRequests;
 
-    public UserDataRequest(String ... dataRequests) {
+    public UserDataRequest(String... dataRequests) {
         this.dataRequests = Arrays.asList(dataRequests);
     }
 }

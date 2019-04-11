@@ -30,7 +30,8 @@ public class LoanDetailsAggregate {
 
         final LoanAccount loanAccount =
                 LoanAccount.builder(loanDetailsResponse.getContractEntity().getContractNumber())
-                        .setInterestRate(StringUtils.parseAmount(loanDetailsResponse.getInterestl()))
+                        .setInterestRate(
+                                StringUtils.parseAmount(loanDetailsResponse.getInterestl()))
                         .setAccountNumber(loanDetailsResponse.getAssociateAccountNumber())
                         .setBalance(loanEntity.getBalance().getTinkAmount())
                         .setName(loanEntity.getGeneralInfo().getAlias())
@@ -49,9 +50,7 @@ public class LoanDetailsAggregate {
 
     // logging method to discover different types of loans than mortgage
     private void logLoanData(
-            LoanAccount loanAccount,
-            LoanEntity loanEntity,
-            LoanDetailsEntity loanDetailsResponse) {
+            LoanAccount loanAccount, LoanEntity loanEntity, LoanDetailsEntity loanDetailsResponse) {
         if (LoanDetails.Type.OTHER == loanAccount.getDetails().getType()) {
             LOGGER.info(
                     "Unknown loan type: {} {}",

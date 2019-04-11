@@ -14,5 +14,3 @@ public class LoginRequest {
         this.nici = nici;
     }
 }
-
-

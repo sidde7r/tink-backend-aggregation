@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class StatementEntity {
     private String id;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date initialDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date endDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date statementDate;
 }

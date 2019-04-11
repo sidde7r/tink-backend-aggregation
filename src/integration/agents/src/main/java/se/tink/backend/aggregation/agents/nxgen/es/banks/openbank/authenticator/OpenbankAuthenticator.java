@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INCORRECT_CREDENTIALS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INVALID_LOGIN_USERNAME_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.IS_OPENBANK_ERROR_RESPONSE;
+
 import com.google.common.base.Strings;
 import io.vavr.control.Try;
 import se.tink.backend.agents.rpc.Credentials;
@@ -18,12 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INCORRECT_CREDENTIALS;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INVALID_LOGIN_USERNAME_TYPE;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.IS_OPENBANK_ERROR_RESPONSE;
 
 public class OpenbankAuthenticator implements Authenticator {
     private final OpenbankApiClient apiClient;

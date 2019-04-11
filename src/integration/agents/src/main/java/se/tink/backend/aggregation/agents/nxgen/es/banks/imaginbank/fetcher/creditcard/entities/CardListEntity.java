@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CardListEntity {
     @JsonProperty("tarjeta")
     private List<CardEntity> cards;
+
     @JsonProperty("masDatos")
     private boolean moreData;
 

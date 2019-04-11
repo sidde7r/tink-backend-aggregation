@@ -18,22 +18,34 @@ public class FetchAccountResponse {
 
     public List<TransactionalAccount> getAccounts() {
         return accounts.stream()
-                .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(entity.getType()))
+                .filter(
+                        entity ->
+                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
+                                        entity.getType()))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     public List<InvestmentAccount> getInvestmentAccounts() {
         return accounts.stream()
-                .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isInvestmentAccount(entity.getType()))
+                .filter(
+                        entity ->
+                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isInvestmentAccount(
+                                        entity.getType()))
                 .map(AccountEntity::toTinkInvestmentAccount)
                 .collect(Collectors.toList());
     }
 
     public List<CreditCardAccount> getCreditCardAccounts() {
         return accounts.stream()
-                .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(entity.getType()))
-                .filter(entity -> IberCajaConstants.CARD_TYPE_MAPPER.isCreditCardAccount(entity.getTypeCard()))
+                .filter(
+                        entity ->
+                                IberCajaConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(
+                                        entity.getType()))
+                .filter(
+                        entity ->
+                                IberCajaConstants.CARD_TYPE_MAPPER.isCreditCardAccount(
+                                        entity.getTypeCard()))
                 .map(AccountEntity::toTinkCreditCardAccount)
                 .collect(Collectors.toList());
     }

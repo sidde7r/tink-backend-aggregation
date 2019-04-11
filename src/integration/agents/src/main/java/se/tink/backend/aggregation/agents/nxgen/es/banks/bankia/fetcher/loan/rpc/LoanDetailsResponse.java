@@ -31,26 +31,37 @@ import se.tink.libraries.amount.Amount;
 public class LoanDetailsResponse {
     @JsonProperty("amortizacionLiquidacionPrestamo")
     private AmortizationLiquidationEntity amortizationLiquidation;
+
     @JsonProperty("comisiones")
     private CommissionsEntity commissions;
+
     @JsonProperty("cuantiaPrestamo")
     private LoanAmountEntity loanAmountEntity;
+
     @JsonProperty("plazosYPeriodicidadesPrestamo")
     private TermsAndPeriodicitiesEntity termsAndPeriodicities;
+
     @JsonProperty("fechasPago")
     private PaymentDatesEntity paymentDates;
+
     @JsonProperty("tiposInteres")
     private InterestTypesEntity interestTypes;
+
     @JsonProperty("cuotasPrestamo")
     private LoanInstallmentsEntity loanInstallments;
+
     @JsonProperty("informacionProducto")
     private ProductInformationEntity productInformation;
+
     @JsonProperty("intervinientes")
     private List<DebtorEntity> debtors;
+
     @JsonProperty("clavePaginacionSalida")
     private String exitPageKey;
+
     @JsonProperty("numeroIntervinientes")
     private int numberDebtors;
+
     @JsonProperty("indicadorMasIntervinientes")
     private boolean moreDebtors;
 
@@ -66,7 +77,8 @@ public class LoanDetailsResponse {
                 .setInitialBalance(grantedAmount.toTinkAmount())
                 .setInitialDate(productInformation.getInitialDate().toJavaLangDate())
                 .setLoanNumber(loan.getLoanIdentifier())
-                .setMonthlyAmortization(getMonthlyAmortization(grantedAmount.toTinkAmount().getCurrency()))
+                .setMonthlyAmortization(
+                        getMonthlyAmortization(grantedAmount.toTinkAmount().getCurrency()))
                 .setApplicants(applicants)
                 .setCoApplicant(applicants.size() > 1)
                 .build();
@@ -93,15 +105,19 @@ public class LoanDetailsResponse {
 
     @JsonIgnore
     private LoanDetails.Type getType(LoanAccountEntity loan) {
-        return BankiaConstants.LOAN_TYPE_MAPPER.translate(loan.getContract().getCustomizedProductCode())
-            .orElse(Type.OTHER);
+        return BankiaConstants.LOAN_TYPE_MAPPER
+                .translate(loan.getContract().getCustomizedProductCode())
+                .orElse(Type.OTHER);
     }
 
     @JsonIgnore
     private List<String> getApplicants() {
         return Optional.ofNullable(debtors).orElse(Collections.emptyList()).stream()
                 .filter(Predicates.not(debtor -> Strings.isNullOrEmpty(debtor.getDebtorName())))
-                .filter(debtor -> BankiaConstants.Loans.DEBTOR_CODE.equalsIgnoreCase(debtor.getDebtorRoleCode()))
+                .filter(
+                        debtor ->
+                                BankiaConstants.Loans.DEBTOR_CODE.equalsIgnoreCase(
+                                        debtor.getDebtorRoleCode()))
                 .map(DebtorEntity::getDebtorName)
                 .collect(Collectors.toList());
     }
@@ -113,16 +129,15 @@ public class LoanDetailsResponse {
 
     @JsonIgnore
     public HolderName getHolderName() {
-        return getApplicants().stream()
-                .findFirst()
-                .map(HolderName::new)
-                .orElse(null);
+        return getApplicants().stream().findFirst().map(HolderName::new).orElse(null);
     }
 
     @JsonIgnore
     public double getInterestRate() {
 
-        return interestTypes.getPercentageContract().percentageValue()
+        return interestTypes
+                .getPercentageContract()
+                .percentageValue()
                 .divide(BigDecimal.valueOf(100, 0))
                 .doubleValue();
     }

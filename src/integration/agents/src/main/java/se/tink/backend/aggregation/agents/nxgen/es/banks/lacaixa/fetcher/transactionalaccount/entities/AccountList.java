@@ -20,7 +20,7 @@ public class AccountList {
         return accounts;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return accounts.isEmpty();
     }
 }

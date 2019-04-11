@@ -8,22 +8,32 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsWrapperEntity {
     @JsonProperty("hayMas")
     private String hasMore;
+
     @JsonProperty("fechasaldo")
     private long dateBalance;
+
     @JsonProperty("saldo")
     private int balance;
+
     @JsonProperty("signosaldo")
     private String signBalance;
+
     @JsonProperty("fechasaldoval")
     private long dateBalanceValue;
+
     @JsonProperty("saldoval")
     private int balanceValue;
+
     @JsonProperty("signosaldoval")
     private String signBalanceValue;
+
     private String codmonedacta;
+
     @JsonProperty("indicadorRecibos")
     private String receiptsIndicator;
+
     private int noccurspartemv;
+
     @JsonProperty("customEccas211SPARTEMV")
     private List<TransactionEntity> transactionList;
 

@@ -20,19 +20,19 @@ public class EvoBancoSessionHandler implements SessionHandler {
     }
 
     @Override
-    public void logout() { }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {
-        EeISessionMaintainerEntity eeISessionMaintainerEntity = new EeISessionMaintainerEntity(
-                sessionStorage.get(EvoBancoConstants.Storage.USER_BE),
-                sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE),
-                sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE)
-        );
+        EeISessionMaintainerEntity eeISessionMaintainerEntity =
+                new EeISessionMaintainerEntity(
+                        sessionStorage.get(EvoBancoConstants.Storage.USER_BE),
+                        sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE),
+                        sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE));
 
         KeepAliveRequest keepAliveRequest = new KeepAliveRequest(eeISessionMaintainerEntity);
 
-        if(!apiClient.isAlive(keepAliveRequest)){
+        if (!apiClient.isAlive(keepAliveRequest)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

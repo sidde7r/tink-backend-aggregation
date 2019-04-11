@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class PortfolioContentEntity {
     private String id;
+
     @JsonProperty("listaDepositos")
     private List<DepositEntity> depositList;
+
     @JsonProperty("masDatos")
     private boolean moreData;
 

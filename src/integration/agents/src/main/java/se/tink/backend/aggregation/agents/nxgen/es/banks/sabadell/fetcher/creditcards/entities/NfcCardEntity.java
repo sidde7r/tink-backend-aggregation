@@ -23,4 +23,3 @@ public class NfcCardEntity {
         return expirationDate;
     }
 }
-

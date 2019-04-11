@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans;
 
+import java.util.Collection;
+import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
@@ -10,9 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
     private final AggregationLogger log = new AggregationLogger(SabadellLoanFetcher.class);
@@ -31,11 +30,18 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
                         SerializationUtils.serializeToString(loansResponse),
                         SabadellConstants.Tags.LOANS);
 
-                loansResponse.getAccounts().forEach(account -> {
-                    String loanDetailsResponse = apiClient.fetchLoanDetails(new LoanDetailsRequest(account));
+                loansResponse
+                        .getAccounts()
+                        .forEach(
+                                account -> {
+                                    String loanDetailsResponse =
+                                            apiClient.fetchLoanDetails(
+                                                    new LoanDetailsRequest(account));
 
-                    log.infoExtraLong(loanDetailsResponse, SabadellConstants.Tags.LOAN_DETAILS);
-                });
+                                    log.infoExtraLong(
+                                            loanDetailsResponse,
+                                            SabadellConstants.Tags.LOAN_DETAILS);
+                                });
             }
         } catch (HttpResponseException e) {
             ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);

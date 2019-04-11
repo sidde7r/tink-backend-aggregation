@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
@@ -9,10 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
@@ -25,9 +24,7 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
 
-        return this.ingApiClient.getApiRestProducts()
-                .getProducts()
-                .stream()
+        return this.ingApiClient.getApiRestProducts().getProducts().stream()
                 .filter(Product::isActiveInvestmentAccount)
                 .map(product -> mapProductToInvestmentAccount(product))
                 .collect(Collectors.toList());
@@ -43,7 +40,8 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
         instrument.setCurrency(product.getCurrency());
         instrument.setMarketValue(product.getBalance());
         if (product.getNumberOfShares() > 0) {
-            instrument.setAverageAcquisitionPrice(product.getInvestment() / product.getNumberOfShares());
+            instrument.setAverageAcquisitionPrice(
+                    product.getInvestment() / product.getNumberOfShares());
         } else {
             instrument.setAverageAcquisitionPrice(0D);
         }

@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoanAmountEntity {
     @JsonProperty("importeCapitalAmortizado")
     private AmountEntity amortizedAmount;
+
     @JsonProperty("importeCapitalConcedido")
     private AmountEntity grantedAmount;
+
     private AmountEntity importeCapitalPendienteNoVencido;
     private AmountEntity importeCapitalPendienteVencido;
     private AmountEntity importeDeudaVencida;

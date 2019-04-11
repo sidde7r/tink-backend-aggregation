@@ -13,10 +13,13 @@ import se.tink.libraries.amount.Amount;
 public class CardEntity {
     @JsonProperty("contrato")
     private ContractEntity contract;
+
     @JsonProperty("saldoInformado")
     private boolean informedBalance;
+
     @JsonProperty("saldoDisponible")
     private AmountEntity availableBalance;
+
     @JsonProperty("limiteCredito")
     private AmountEntity creditLimit;
 
@@ -37,7 +40,8 @@ public class CardEntity {
     private Amount getBalance() {
         if (creditLimit.toTinkAmount().isPositive()) {
             return availableBalance.toTinkAmount().subtract(creditLimit.toTinkAmount());
-        } return availableBalance.toTinkAmount();
+        }
+        return availableBalance.toTinkAmount();
     }
 
     @JsonIgnore

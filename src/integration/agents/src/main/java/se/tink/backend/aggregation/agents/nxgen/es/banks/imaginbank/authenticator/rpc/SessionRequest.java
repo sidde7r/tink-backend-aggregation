@@ -21,7 +21,12 @@ public class SessionRequest {
     @JsonProperty("tecladoVirtual")
     private String virtualKeyboard;
 
-    public SessionRequest(String idioma, String origen, String canal, String idInstalacion, String virtualKeyboard) {
+    public SessionRequest(
+            String idioma,
+            String origen,
+            String canal,
+            String idInstalacion,
+            String virtualKeyboard) {
         this.language = idioma;
         this.origin = origen;
         this.channel = canal;

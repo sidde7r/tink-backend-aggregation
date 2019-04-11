@@ -24,7 +24,7 @@ public class LoginResponse {
         return RefreshToken;
     }
 
-    public void saveResponse(SessionStorage storage){
+    public void saveResponse(SessionStorage storage) {
 
         storage.put(IberCajaConstants.Storage.ACCESS_TOKEN, AccessToken);
         storage.put(IberCajaConstants.Storage.REFRESH_TOKEN, RefreshToken);

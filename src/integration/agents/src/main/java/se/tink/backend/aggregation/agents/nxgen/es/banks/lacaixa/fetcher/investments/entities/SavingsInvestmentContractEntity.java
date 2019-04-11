@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SavingsInvestmentContractEntity {
     @JsonProperty("contratosAgrupados")
     private List<ContractGroupEntity> contractGroups;
+
     private boolean masDatos;
 
     @JsonIgnore
@@ -20,7 +21,9 @@ public class SavingsInvestmentContractEntity {
         Map<String, String> response = new HashMap<>();
 
         Optional.ofNullable(contractGroups).orElse(Collections.emptyList()).stream()
-                .forEach(contractGroup -> response.putAll(contractGroup.getProductCodeByContractNumber()));
+                .forEach(
+                        contractGroup ->
+                                response.putAll(contractGroup.getProductCodeByContractNumber()));
 
         return response;
     }
@@ -30,7 +33,10 @@ public class SavingsInvestmentContractEntity {
         return Optional.ofNullable(contractGroups).orElse(Collections.emptyList()).stream()
                 .map(ContractGroupEntity::getContracts)
                 .flatMap(List::stream)
-                .filter(contract -> contractNumber.equalsIgnoreCase(contract.getContractNumberFormatted()))
+                .filter(
+                        contract ->
+                                contractNumber.equalsIgnoreCase(
+                                        contract.getContractNumberFormatted()))
                 .map(ContractEntity::getContractAlias)
                 .findFirst();
     }

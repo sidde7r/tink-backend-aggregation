@@ -34,57 +34,64 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshCustomer
 
     private final LaCaixaApiClient apiClient;
 
-    public LaCaixaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public LaCaixaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new LaCaixaApiClient(client);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new LaCaixaPasswordAuthenticator(apiClient)
-        );
+        return new PasswordAuthenticationController(new LaCaixaPasswordAuthenticator(apiClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         LaCaixaAccountFetcher accountFetcher = new LaCaixaAccountFetcher(apiClient);
         LaCaixaTransactionFetcher transactionFetcher = new LaCaixaTransactionFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(transactionFetcher, 0))));
-
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(transactionFetcher, 0))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         LaCaixaCreditCardFetcher creditCardFetcher = new LaCaixaCreditCardFetcher(apiClient);
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, new TransactionFetcherController<>(this.transactionPaginationHelper,
-                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         LaCaixaInvestmentFetcher investmentFetcher = new LaCaixaInvestmentFetcher(apiClient);
         return Optional.of(
-                new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher)
-        );
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController, new LaCaixaLoanFetcher(
-                        apiClient))
-        );
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new LaCaixaLoanFetcher(apiClient)));
     }
 
     @Override
@@ -93,7 +100,8 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshCustomer
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

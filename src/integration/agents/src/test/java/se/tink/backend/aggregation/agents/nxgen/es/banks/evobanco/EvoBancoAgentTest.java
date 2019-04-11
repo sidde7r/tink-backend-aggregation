@@ -14,16 +14,17 @@ public class EvoBancoAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     @Before
-    public void setup(){
-        builder = new AgentIntegrationTest.Builder("es", "es-evobanco-password")
-                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true);
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder("es", "es-evobanco-password")
+                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                        .loadCredentialsBefore(true)
+                        .saveCredentialsAfter(true);
     }
 
     @Test
-    public void testRefresh() throws Exception{
+    public void testRefresh() throws Exception {
 
         builder.build().testRefresh();
     }

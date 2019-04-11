@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static io.vavr.control.Try.run;
+
 import io.vavr.control.Try;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -15,10 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
-import static io.vavr.control.Try.run;
 
 public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaLoanFetcher.class);

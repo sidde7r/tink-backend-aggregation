@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.SavingPlansEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public class SavingsResponse {

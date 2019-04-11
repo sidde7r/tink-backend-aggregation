@@ -9,12 +9,16 @@ public class LiquidationDataEntity {
 
     @JsonProperty("saldoPrepago")
     private double prepaidAmount;
+
     @JsonProperty("saldoDisponible")
     private double availableCredit;
+
     @JsonProperty("saldoDispuesto")
     private double balance;
+
     @JsonProperty("gastoMesDebito")
     private String spendingMonthDebit;
+
     @JsonProperty("datosUltimoMovimiento")
     private LastMovementDataEntity lastMovementData;
 
@@ -29,5 +33,4 @@ public class LiquidationDataEntity {
     public Amount getBalance() {
         return Amount.inEUR(balance);
     }
-
 }

@@ -13,10 +13,13 @@ public class GenericCardsResponse {
 
     @JsonProperty("listaTarjetasGenerica")
     private CardsListEntity cards;
+
     @JsonProperty("numTarjsRetornadas")
     private String onAReturnedTargets;
+
     @JsonProperty("claveContinuacionTcrindco")
     private String keyContinuationTcrindco;
+
     @JsonProperty("claveContinuacionNumtar")
     private String keyContinuationNumtar;
 
@@ -26,5 +29,4 @@ public class GenericCardsResponse {
                 .map(GenericCardEntity::toTinkCard)
                 .collect(Collectors.toList());
     }
-
 }

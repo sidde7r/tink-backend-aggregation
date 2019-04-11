@@ -29,7 +29,7 @@ public class SabadellCreditCardFetcher implements AccountFetcher<CreditCardAccou
     private boolean isCreditCard(CreditCardEntity cardEntity) {
         String subType = cardEntity.getCardType().getSubtype();
 
-        return SabadellConstants.AccountTypes.CREDIT_CARD_CREDIT.equalsIgnoreCase(subType) ||
-                SabadellConstants.AccountTypes.CREDIT_CARD_SIN.equalsIgnoreCase(subType);
+        return SabadellConstants.AccountTypes.CREDIT_CARD_CREDIT.equalsIgnoreCase(subType)
+                || SabadellConstants.AccountTypes.CREDIT_CARD_SIN.equalsIgnoreCase(subType);
     }
 }

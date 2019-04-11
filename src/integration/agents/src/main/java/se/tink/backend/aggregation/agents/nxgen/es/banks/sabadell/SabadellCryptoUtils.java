@@ -13,7 +13,8 @@ public class SabadellCryptoUtils {
     }
 
     private static byte[] encryptData(byte[] input) {
-        byte[] pubKeyBytes = EncodingUtils.decodeBase64String(SabadellConstants.Authentication.PUBLIC_KEY_B64);
+        byte[] pubKeyBytes =
+                EncodingUtils.decodeBase64String(SabadellConstants.Authentication.PUBLIC_KEY_B64);
         RSAPublicKey publicKey = RSA.getPubKeyFromBytes(pubKeyBytes);
         return RSA.encryptEcbPkcs1(publicKey, input);
     }

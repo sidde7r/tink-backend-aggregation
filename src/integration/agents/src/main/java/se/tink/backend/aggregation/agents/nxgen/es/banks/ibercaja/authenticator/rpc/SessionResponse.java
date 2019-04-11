@@ -8,8 +8,10 @@ public class SessionResponse {
 
     @JsonProperty("NICI")
     private int nici;
+
     @JsonProperty("Ticket")
     private String ticket;
+
     @JsonProperty("CodigoUsuario")
     private String user;
 
@@ -27,5 +29,4 @@ public class SessionResponse {
 
         return user;
     }
-
 }

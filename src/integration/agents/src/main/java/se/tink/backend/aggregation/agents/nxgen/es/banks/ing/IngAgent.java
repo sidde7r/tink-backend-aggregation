@@ -26,14 +26,14 @@ public class IngAgent extends NextGenerationAgent {
 
     private final IngApiClient apiClient;
 
-    public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new IngApiClient(client);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -41,18 +41,21 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
 
         IngTransactionalAccountFetcher fetcher = new IngTransactionalAccountFetcher(apiClient);
 
-        TransactionMonthPaginationController<TransactionalAccount> paginationController = new TransactionMonthPaginationController<>(
-                fetcher, IngConstants.ZONE_ID);
+        TransactionMonthPaginationController<TransactionalAccount> paginationController =
+                new TransactionMonthPaginationController<>(fetcher, IngConstants.ZONE_ID);
 
-        TransactionFetcherController<TransactionalAccount> fetcherController = new TransactionFetcherController<>(
-                transactionPaginationHelper, paginationController);
+        TransactionFetcherController<TransactionalAccount> fetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper, paginationController);
 
-        TransactionalAccountRefreshController refreshController = new TransactionalAccountRefreshController(
-                metricRefreshController, updateController, fetcher, fetcherController);
+        TransactionalAccountRefreshController refreshController =
+                new TransactionalAccountRefreshController(
+                        metricRefreshController, updateController, fetcher, fetcherController);
 
         return Optional.of(refreshController);
     }
@@ -60,18 +63,20 @@ public class IngAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
-//        IngCreditCardFetcher fetcher = new IngCreditCardFetcher(apiClient);
-//
-//        TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
-//                fetcher, IngConstants.ZONE_ID);
-//
-//        TransactionFetcherController<CreditCardAccount> fetcherController = new TransactionFetcherController<>(
-//                transactionPaginationHelper, paginationController);
-//
-//        CreditCardRefreshController refreshController = new CreditCardRefreshController(
-//                metricRefreshController, updateController, fetcher, fetcherController);
-//
-//        return Optional.of(refreshController);
+        //        IngCreditCardFetcher fetcher = new IngCreditCardFetcher(apiClient);
+        //
+        //        TransactionMonthPaginationController<CreditCardAccount> paginationController = new
+        // TransactionMonthPaginationController<>(
+        //                fetcher, IngConstants.ZONE_ID);
+        //
+        //        TransactionFetcherController<CreditCardAccount> fetcherController = new
+        // TransactionFetcherController<>(
+        //                transactionPaginationHelper, paginationController);
+        //
+        //        CreditCardRefreshController refreshController = new CreditCardRefreshController(
+        //                metricRefreshController, updateController, fetcher, fetcherController);
+        //
+        //        return Optional.of(refreshController);
         return Optional.empty();
     }
 
@@ -91,7 +96,8 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

@@ -18,7 +18,8 @@ public final class BankiaAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         LoginResponse initiateLoginResponse = apiClient.initiateLogin();
         String execution = initiateLoginResponse.getExecution();
 

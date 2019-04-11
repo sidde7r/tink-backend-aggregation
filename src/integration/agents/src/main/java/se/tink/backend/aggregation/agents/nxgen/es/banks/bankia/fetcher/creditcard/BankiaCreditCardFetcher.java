@@ -13,11 +13,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
+public class BankiaCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {
 
-public class BankiaCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionFetcher<CreditCardAccount> {
-
-    private static final AggregationLogger LOGGER = new AggregationLogger(BankiaCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(BankiaCreditCardFetcher.class);
     private final BankiaApiClient apiClient;
 
     public BankiaCreditCardFetcher(BankiaApiClient apiClient) {
@@ -40,7 +40,8 @@ public class BankiaCreditCardFetcher implements AccountFetcher<CreditCardAccount
         // criteria one can set in the request, but these cause a 500 response when applied to
         // fetching of card transactions.
         //
-        //  *   hasMore showed false when there were two existing transactions, but only one was requested.
+        //  *   hasMore showed false when there were two existing transactions, but only one was
+        // requested.
         //  *   repeatedly querying the endpoint gives the same transactions over and over again
         //  *   fetching up to 999 is allowed, more transactions results in a 500 response
         //  *   providing 20 (app default) transactions in the response and setting hasMore to true
@@ -51,14 +52,16 @@ public class BankiaCreditCardFetcher implements AccountFetcher<CreditCardAccount
         int maxLimit = 100;
         CardTransactionsResponse response = apiClient.getCardTransactions(id, maxLimit);
         boolean hasMore = response.isIndicateMoreTransactions();
-        List<AggregationTransaction> transactions = response.getTransactions()
-                .stream()
-                .map(CardTransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        List<AggregationTransaction> transactions =
+                response.getTransactions().stream()
+                        .map(CardTransactionEntity::toTinkTransaction)
+                        .collect(Collectors.toList());
 
         if (hasMore) {
-            LOGGER.warn(String.format("Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
-                    transactions.size(), maxLimit, Boolean.toString(hasMore)));
+            LOGGER.warn(
+                    String.format(
+                            "Fetched %d transactions when limit was set to %d. hasMore was set to %s.",
+                            transactions.size(), maxLimit, Boolean.toString(hasMore)));
         }
 
         return transactions;

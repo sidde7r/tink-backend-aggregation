@@ -8,12 +8,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SearchCriteriaEntity {
     @JsonProperty("cantidadUltimosMovimientos")
     private String quantityLastMovements;
+
     @JsonProperty("fechaOperacionDesde")
     private DateEntity dateOperationFrom;
+
     @JsonProperty("fechaOperacionHasta")
     private DateEntity operationDateUntil;
+
     @JsonProperty("tipoCriterioImporte")
     private String typeCriterionAmount;
+
     @JsonProperty("importeConsulta")
     private String consultationAmount;
 
@@ -21,13 +25,11 @@ public class SearchCriteriaEntity {
         this.quantityLastMovements = quantityLastMovements;
     }
 
-    public void setDateOperationFrom(
-            DateEntity dateOperationFrom) {
+    public void setDateOperationFrom(DateEntity dateOperationFrom) {
         this.dateOperationFrom = dateOperationFrom;
     }
 
-    public void setOperationDateUntil(
-            DateEntity operationDateUntil) {
+    public void setOperationDateUntil(DateEntity operationDateUntil) {
         this.operationDateUntil = operationDateUntil;
     }
 

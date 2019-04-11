@@ -15,20 +15,25 @@ public class CardTransactionsResponse implements PaginatorResponse {
 
     @JsonProperty("movimiento")
     private List<MovementEntity> movement;
+
     @JsonProperty("masDatos")
     private boolean moreData;
+
     private int itemsTotales;
 
     @Override
     public List<CreditCardTransaction> getTinkTransactions() {
-        return movement != null ?
-                movement.stream().map(MovementEntity::toTinkTransaction).collect(Collectors.toList()) :
-                Collections.emptyList();
+        return movement != null
+                ? movement.stream()
+                        .map(MovementEntity::toTinkTransaction)
+                        .collect(Collectors.toList())
+                : Collections.emptyList();
     }
 
     /**
-     * If true, this simply indicates that the same request needs to be made again to get additional data. The request
-     * object has a boolean that indicates if it's a new (first) request or a continuation of a previous request.
+     * If true, this simply indicates that the same request needs to be made again to get additional
+     * data. The request object has a boolean that indicates if it's a new (first) request or a
+     * continuation of a previous request.
      */
     @Override
     public Optional<Boolean> canFetchMore() {

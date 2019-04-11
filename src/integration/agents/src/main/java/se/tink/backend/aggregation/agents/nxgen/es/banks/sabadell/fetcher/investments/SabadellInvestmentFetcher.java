@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
@@ -17,13 +23,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AggregationLogger log = new AggregationLogger(SabadellInvestmentFetcher.class);
@@ -160,7 +159,8 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                         .forEach(
                                 savingsPlan -> {
                                     String detailsResponse =
-                                            apiClient.fetchSavingsPlanDetails(savingsPlan.getQueryParamsForDetailsRequest());
+                                            apiClient.fetchSavingsPlanDetails(
+                                                    savingsPlan.getQueryParamsForDetailsRequest());
 
                                     log.infoExtraLong(
                                             detailsResponse,

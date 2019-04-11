@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorRespo
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-
 public class SabadellAuthenticator implements PasswordAuthenticator {
     private final SabadellApiClient apiClient;
 
@@ -18,7 +17,8 @@ public class SabadellAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         try {
             apiClient.initiateSession(username, password);
         } catch (HttpResponseException e) {
@@ -29,11 +29,12 @@ public class SabadellAuthenticator implements PasswordAuthenticator {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            throw new IllegalStateException(String.format(
-                    "%s: Login failed with error code: %s, error message: %s",
-                    SabadellConstants.Tags.LOGIN_ERROR,
-                    response.getErrorCode(),
-                    response.getErrorMessage()));
+            throw new IllegalStateException(
+                    String.format(
+                            "%s: Login failed with error code: %s, error message: %s",
+                            SabadellConstants.Tags.LOGIN_ERROR,
+                            response.getErrorCode(),
+                            response.getErrorMessage()));
         }
     }
 }

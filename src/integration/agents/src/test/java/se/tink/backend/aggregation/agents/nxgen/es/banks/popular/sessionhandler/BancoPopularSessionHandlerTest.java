@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularTes
 
 public class BancoPopularSessionHandlerTest extends BancoPopularTestBase {
 
-
     private BancoPopularSessionHandler sessionHandler;
 
     @Before
@@ -21,5 +20,4 @@ public class BancoPopularSessionHandlerTest extends BancoPopularTestBase {
 
         sessionHandler.keepAlive();
     }
-
 }

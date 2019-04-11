@@ -22,18 +22,24 @@ import se.tink.libraries.amount.Amount;
 public class FundsListEntity {
     @JsonProperty("expediente")
     private String accountId;
+
     @JsonProperty("titulares")
     private List<String> holders;
+
     @JsonProperty("titularitatConjunta")
     private boolean jointOwnership;
+
     private boolean noOperarExpediente;
+
     @JsonProperty("tablaFondos")
     private List<FundEntity> fundsList;
+
     @JsonProperty("totalExpediente")
     private BalanceEntity totalBalance;
 
     @JsonIgnore
-    public Optional<InvestmentAccount> toTinkInvestment(LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
+    public Optional<InvestmentAccount> toTinkInvestment(
+            LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
         if (totalBalance == null) {
             return Optional.empty();
         }
@@ -44,24 +50,30 @@ public class FundsListEntity {
 
         Portfolio portfolio = getPortfolio(instruments);
 
-        return Optional.of(InvestmentAccount.builder(sanitizeUniqueIdentifier())
-                .setAccountNumber(accountId)
-                .setHolderName(holderName)
-                .setName(investmentName)
-                .setCashBalance(Amount.valueOf(totalBalance.getCurrency(), 0, 2))
-                .setPortfolios(Lists.newArrayList(portfolio))
-                .build());
+        return Optional.of(
+                InvestmentAccount.builder(sanitizeUniqueIdentifier())
+                        .setAccountNumber(accountId)
+                        .setHolderName(holderName)
+                        .setName(investmentName)
+                        .setCashBalance(Amount.valueOf(totalBalance.getCurrency(), 0, 2))
+                        .setPortfolios(Lists.newArrayList(portfolio))
+                        .build());
     }
 
     @JsonIgnore
     private List<Instrument> getInstruments(LaCaixaApiClient apiClient) {
         List<Instrument> instruments = new ArrayList<>();
-        Optional.ofNullable(fundsList).orElse(Collections.emptyList())
-                .forEach(fund -> {
-                    FundDetailsResponse fundDetails = apiClient
-                            .fetchFundDetails(fund.getFundReference(), fund.getFundCode(), fund.getCurrency());
-                    instruments.add(fundDetails.toTinkInstruments());
-                });
+        Optional.ofNullable(fundsList)
+                .orElse(Collections.emptyList())
+                .forEach(
+                        fund -> {
+                            FundDetailsResponse fundDetails =
+                                    apiClient.fetchFundDetails(
+                                            fund.getFundReference(),
+                                            fund.getFundCode(),
+                                            fund.getCurrency());
+                            instruments.add(fundDetails.toTinkInstruments());
+                        });
         return instruments;
     }
 
@@ -79,9 +91,7 @@ public class FundsListEntity {
 
     @JsonIgnore
     private Double getTotalProfit(List<Instrument> instruments) {
-        return instruments.stream()
-                .mapToDouble(Instrument::getProfit)
-                .sum();
+        return instruments.stream().mapToDouble(Instrument::getProfit).sum();
     }
 
     @JsonIgnore

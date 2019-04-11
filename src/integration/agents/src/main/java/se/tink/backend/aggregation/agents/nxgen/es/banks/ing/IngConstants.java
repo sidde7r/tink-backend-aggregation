@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing;
 
 import java.time.ZoneId;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Product;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class IngConstants {
@@ -21,13 +21,18 @@ public abstract class IngConstants {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngConstants.class);
 
     public final class Url {
-        public static final String GENOMA_LOGIN_REST_SESSION = URL_BASE + "/genoma_login/rest/session";
-        public static final String GENOMA_API_REST_COMMUNICATION = URL_BASE + "/genoma_api/rest/communication/";
+        public static final String GENOMA_LOGIN_REST_SESSION =
+                URL_BASE + "/genoma_login/rest/session";
+        public static final String GENOMA_API_REST_COMMUNICATION =
+                URL_BASE + "/genoma_api/rest/communication/";
         public static final String GENOMA_API_REST_SESSION = URL_BASE + "/genoma_api/rest/session";
         public static final String GENOMA_API_REST_CLIENT = URL_BASE + "/genoma_api/rest/client";
-        public static final String GENOMA_API_REST_PRODUCTS = URL_BASE + "/genoma_api/rest/products";
-        public static final String GENOMA_API_REST_PRODUCTS_MOVEMENTS = URL_BASE + "/genoma_api/rest/products/{product}/movements";
-        public static final String GENOMA_API_LOGIN_AUTH_RESPONSE = URL_BASE + "/genoma_api/login/auth/response";
+        public static final String GENOMA_API_REST_PRODUCTS =
+                URL_BASE + "/genoma_api/rest/products";
+        public static final String GENOMA_API_REST_PRODUCTS_MOVEMENTS =
+                URL_BASE + "/genoma_api/rest/products/{product}/movements";
+        public static final String GENOMA_API_LOGIN_AUTH_RESPONSE =
+                URL_BASE + "/genoma_api/login/auth/response";
     }
 
     public static class Default {
@@ -44,78 +49,61 @@ public abstract class IngConstants {
     }
 
     public static class ErrorCode {
-        public static final String INVALID_LOGIN_DOCUMENT_TYPE = "ESValidLoginDocument.loginDocument";
+        public static final String INVALID_LOGIN_DOCUMENT_TYPE =
+                "ESValidLoginDocument.loginDocument";
     }
 
     public static class ProductType {
 
-        /**
-         * Tarjeta Débito
-         */
+        /** Tarjeta Débito */
         private static final int DEBIT_CARD = 1;
-        /**
-         * Tarjeta Crédito
-         */
+        /** Tarjeta Crédito */
         private static final int CREDIT_CARD = 3;
-        /**
-         * Cuenta de efectivo
-         */
+        /** Cuenta de efectivo */
         private static final int CASH_ACCOUNT = 10;
-        /**
-         * Cuenta sin nomina
-         */
+        /** Cuenta sin nomina */
         private static final int ACCOUNT_WITHOUT_PAYROLL = 17;
-        /**
-         * Cuenta NARANJA
-         */
+        /** Cuenta NARANJA */
         private static final int ORANGE_ACCOUNT_20 = 20;
+
         private static final int ORANGE_ACCOUNT_26 = 26;
-        /**
-         * Fondo Dinámico, Fondo Renta Fija, Fondo S&P 500, Fondo Ibex 35...
-         */
+        /** Fondo Dinámico, Fondo Renta Fija, Fondo S&P 500, Fondo Ibex 35... */
         private static final int INVESTMENT_FUND = 40;
-        /**
-         * Plan 2050
-         */
+        /** Plan 2050 */
         private static final int PENSION_PLAN_2050 = 41;
-        /**
-         * Cuenta de valores
-         */
+        /** Cuenta de valores */
         private static final int VALUE_ACCOUNT = 42;
-        /**
-         * Préstamo NARANJA
-         */
+        /** Préstamo NARANJA */
         private static final int ORANGE_LOAN = 77;
-        /**
-         * MINI Cuota
-         */
+        /** MINI Cuota */
         private static final int LIFE_INSURANCE_MINI_CUOTA = 100;
 
         public static Optional<AccountTypes> translate(Product product) {
 
             switch (product.getType()) {
-            case DEBIT_CARD:
-            case VALUE_ACCOUNT:
-            case LIFE_INSURANCE_MINI_CUOTA:
-                return Optional.empty();
-            case CREDIT_CARD:
-                return Optional.of(AccountTypes.CREDIT_CARD);
-            case CASH_ACCOUNT:
-            case ACCOUNT_WITHOUT_PAYROLL:
-                return Optional.of(AccountTypes.CHECKING);
-            case ORANGE_ACCOUNT_20:
-            case ORANGE_ACCOUNT_26:
-                return Optional.of(AccountTypes.SAVINGS);
-            case INVESTMENT_FUND:
-                return Optional.of(AccountTypes.INVESTMENT);
-            case PENSION_PLAN_2050:
-                return Optional.of(AccountTypes.PENSION);
-            case ORANGE_LOAN:
-                return Optional.of(AccountTypes.LOAN);
-            default:
-                LOGGER.infoExtraLong(SerializationUtils.serializeToString(product),
-                        IngConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
-                return Optional.empty();
+                case DEBIT_CARD:
+                case VALUE_ACCOUNT:
+                case LIFE_INSURANCE_MINI_CUOTA:
+                    return Optional.empty();
+                case CREDIT_CARD:
+                    return Optional.of(AccountTypes.CREDIT_CARD);
+                case CASH_ACCOUNT:
+                case ACCOUNT_WITHOUT_PAYROLL:
+                    return Optional.of(AccountTypes.CHECKING);
+                case ORANGE_ACCOUNT_20:
+                case ORANGE_ACCOUNT_26:
+                    return Optional.of(AccountTypes.SAVINGS);
+                case INVESTMENT_FUND:
+                    return Optional.of(AccountTypes.INVESTMENT);
+                case PENSION_PLAN_2050:
+                    return Optional.of(AccountTypes.PENSION);
+                case ORANGE_LOAN:
+                    return Optional.of(AccountTypes.LOAN);
+                default:
+                    LOGGER.infoExtraLong(
+                            SerializationUtils.serializeToString(product),
+                            IngConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
+                    return Optional.empty();
             }
         }
     }
@@ -138,6 +126,7 @@ public abstract class IngConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("IngDirect_unknown_account_type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from("IngDirect_unknown_account_type");
     }
 }

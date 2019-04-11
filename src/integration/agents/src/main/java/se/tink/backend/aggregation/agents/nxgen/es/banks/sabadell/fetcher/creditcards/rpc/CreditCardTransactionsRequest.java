@@ -14,15 +14,18 @@ public class CreditCardTransactionsRequest {
     private PaginatorEntity paginator;
 
     @JsonIgnore
-    public static CreditCardTransactionsRequest build(CreditCardEntity cardEntity, int totalItems, int page) {
+    public static CreditCardTransactionsRequest build(
+            CreditCardEntity cardEntity, int totalItems, int page) {
         PaginatorEntity cardPaginator = new PaginatorEntity();
-        cardPaginator.setItemsPerPage(SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE);
+        cardPaginator.setItemsPerPage(
+                SabadellConstants.CreditCardTransactionsRequest.ITEMS_PER_PAGE);
         cardPaginator.setOrder(SabadellConstants.CreditCardTransactionsRequest.ORDER_DESC);
         cardPaginator.setTotalItems(totalItems);
         cardPaginator.setPage(page);
 
         CreditCardTransactionsRequest cardTransactionsRequest = new CreditCardTransactionsRequest();
-        cardTransactionsRequest.setDateFrom(SabadellConstants.CreditCardTransactionsRequest.DATE_FROM);
+        cardTransactionsRequest.setDateFrom(
+                SabadellConstants.CreditCardTransactionsRequest.DATE_FROM);
         cardTransactionsRequest.setDateTo(SabadellConstants.CreditCardTransactionsRequest.DATE_TO);
         cardTransactionsRequest.setCard(cardEntity);
         cardTransactionsRequest.setPaginator(cardPaginator);
@@ -58,8 +61,7 @@ public class CreditCardTransactionsRequest {
         return paginator;
     }
 
-    public void setPaginator(
-            PaginatorEntity paginator) {
+    public void setPaginator(PaginatorEntity paginator) {
         this.paginator = paginator;
     }
 }

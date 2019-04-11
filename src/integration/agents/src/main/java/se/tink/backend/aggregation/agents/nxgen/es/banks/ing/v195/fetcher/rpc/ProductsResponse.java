@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public class ProductsResponse {

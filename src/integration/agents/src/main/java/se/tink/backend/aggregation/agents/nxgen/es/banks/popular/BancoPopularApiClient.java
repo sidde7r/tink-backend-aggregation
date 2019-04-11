@@ -43,15 +43,19 @@ public class BancoPopularApiClient {
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
         try {
 
-            HttpResponse rawResponse = createRequest(BancoPopularConstants.Urls.LOGIN_URL,
-                    BancoPopularConstants.ApiService.LOGIN_PATH,
-                    loginRequest)
-                    .post(HttpResponse.class, loginRequest);
+            HttpResponse rawResponse =
+                    createRequest(
+                                    BancoPopularConstants.Urls.LOGIN_URL,
+                                    BancoPopularConstants.ApiService.LOGIN_PATH,
+                                    loginRequest)
+                            .post(HttpResponse.class, loginRequest);
 
             handleResponse(rawResponse);
 
-            String clientIp = rawResponse.getHeaders()
-                    .getFirst(BancoPopularConstants.Authentication.HEADER_X_CLIENT_IP);
+            String clientIp =
+                    rawResponse
+                            .getHeaders()
+                            .getFirst(BancoPopularConstants.Authentication.HEADER_X_CLIENT_IP);
             setClientIP(clientIp);
 
             return rawResponse.getBody(LoginResponse.class);
@@ -71,10 +75,12 @@ public class BancoPopularApiClient {
     public SetContractResponse setContract(SetContractRequest request) {
         request.setIp(getClientIP());
 
-        HttpResponse rawResponse = createRequest(BancoPopularConstants.Urls.SET_CONTRACT_URL,
-                BancoPopularConstants.ApiService.SET_CONTRACT_PATH,
-                request)
-                .post(HttpResponse.class, request);
+        HttpResponse rawResponse =
+                createRequest(
+                                BancoPopularConstants.Urls.SET_CONTRACT_URL,
+                                BancoPopularConstants.ApiService.SET_CONTRACT_PATH,
+                                request)
+                        .post(HttpResponse.class, request);
 
         handleResponse(rawResponse);
 
@@ -82,10 +88,12 @@ public class BancoPopularApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts(FetchAccountsRequest request) {
-        HttpResponse rawResponse = createRequest(BancoPopularConstants.Urls.FETCH_ACCOUNTS_URL,
-                BancoPopularConstants.ApiService.ACCOUNTS_PATH,
-                request)
-                .post(HttpResponse.class, request);
+        HttpResponse rawResponse =
+                createRequest(
+                                BancoPopularConstants.Urls.FETCH_ACCOUNTS_URL,
+                                BancoPopularConstants.ApiService.ACCOUNTS_PATH,
+                                request)
+                        .post(HttpResponse.class, request);
 
         handleResponse(rawResponse);
 
@@ -94,10 +102,12 @@ public class BancoPopularApiClient {
 
     // Method for fetching misc accounts for logging purposes
     public String fetchMiscAccountsForLogging(FetchAccountsRequest request) {
-        HttpResponse rawResponse = createRequest(BancoPopularConstants.Urls.FETCH_ACCOUNTS_URL,
-                BancoPopularConstants.ApiService.ACCOUNTS_PATH,
-                request)
-                .post(HttpResponse.class, request);
+        HttpResponse rawResponse =
+                createRequest(
+                                BancoPopularConstants.Urls.FETCH_ACCOUNTS_URL,
+                                BancoPopularConstants.ApiService.ACCOUNTS_PATH,
+                                request)
+                        .post(HttpResponse.class, request);
 
         handleResponse(rawResponse);
 
@@ -127,10 +137,11 @@ public class BancoPopularApiClient {
     public FetchTransactionsResponse fetchTransactions(
             FetchTransactionsRequest fetchTransactionsRequest) {
         HttpResponse rawResponse =
-                createRequest(BancoPopularConstants.Urls.FETCH_TRANSACTIONS_URL,
-                BancoPopularConstants.ApiService.TRANSACTIONS_PATH,
-                fetchTransactionsRequest)
-                .post(HttpResponse.class, fetchTransactionsRequest);
+                createRequest(
+                                BancoPopularConstants.Urls.FETCH_TRANSACTIONS_URL,
+                                BancoPopularConstants.ApiService.TRANSACTIONS_PATH,
+                                fetchTransactionsRequest)
+                        .post(HttpResponse.class, fetchTransactionsRequest);
 
         handleResponse(rawResponse);
 
@@ -139,10 +150,12 @@ public class BancoPopularApiClient {
 
     public KeepAliveResponse keepAlive() throws SessionException {
         try {
-            HttpResponse rawResponse = createRequest(BancoPopularConstants.Urls.KEEP_ALIVE_URL,
-                    BancoPopularConstants.ApiService.KEEP_ALIVE_PATH,
-                    Collections.EMPTY_MAP)
-                    .post(HttpResponse.class, Collections.EMPTY_MAP);
+            HttpResponse rawResponse =
+                    createRequest(
+                                    BancoPopularConstants.Urls.KEEP_ALIVE_URL,
+                                    BancoPopularConstants.ApiService.KEEP_ALIVE_PATH,
+                                    Collections.EMPTY_MAP)
+                            .post(HttpResponse.class, Collections.EMPTY_MAP);
 
             handleResponse(rawResponse);
 
@@ -164,8 +177,8 @@ public class BancoPopularApiClient {
             LOGGER.trace("Login failed, incorrect username/password");
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        if (statusCode == BancoPopularConstants.StatusCodes.INCORRECT_TOKEN) {   // bad TKN_CRC
-            setAuthorization("");  // reset Authorization to start with a fresh value
+        if (statusCode == BancoPopularConstants.StatusCodes.INCORRECT_TOKEN) { // bad TKN_CRC
+            setAuthorization(""); // reset Authorization to start with a fresh value
             client.clearPersistentHeaders();
 
             LOGGER.trace("Login failed, incorrect TKN_CRC");
@@ -185,14 +198,13 @@ public class BancoPopularApiClient {
      * Create a base request with default fields set
      */
     private RequestBuilder createRequest(URL url, String path, Object request) {
-        String token = calculateToken(
-                path, request);
+        String token = calculateToken(path, request);
 
-        return client
-                .request(url)
+        return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header(BancoPopularConstants.Authentication.HEADER_COD_PLATAFORMA,
+                .header(
+                        BancoPopularConstants.Authentication.HEADER_COD_PLATAFORMA,
                         BancoPopularConstants.Authentication.PLATAFORMA)
                 .header(BancoPopularConstants.Authentication.HEADER_TKN_CRC, token)
                 .header(HttpHeaders.AUTHORIZATION, getAuthorization());
@@ -207,8 +219,8 @@ public class BancoPopularApiClient {
             byte[] byteKey = cryptoKey.getBytes("UTF-8");
 
             Mac sha512_HMAC = Mac.getInstance(BancoPopularConstants.Authentication.CRYPTO_ALG);
-            SecretKeySpec keySpec = new SecretKeySpec(byteKey,
-                    BancoPopularConstants.Authentication.CRYPTO_ALG);
+            SecretKeySpec keySpec =
+                    new SecretKeySpec(byteKey, BancoPopularConstants.Authentication.CRYPTO_ALG);
             sha512_HMAC.init(keySpec);
             byte[] macAsBytes = sha512_HMAC.doFinal(message.getBytes());
 

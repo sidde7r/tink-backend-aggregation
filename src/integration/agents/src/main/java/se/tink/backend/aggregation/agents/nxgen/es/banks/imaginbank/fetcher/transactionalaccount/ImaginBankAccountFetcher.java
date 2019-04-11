@@ -7,15 +7,16 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankAp
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class ImaginBankAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage sessionStorage;
 
-    public ImaginBankAccountFetcher(ImaginBankApiClient apiClient, ImaginBankSessionStorage sessionStorage) {
+    public ImaginBankAccountFetcher(
+            ImaginBankApiClient apiClient, ImaginBankSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }

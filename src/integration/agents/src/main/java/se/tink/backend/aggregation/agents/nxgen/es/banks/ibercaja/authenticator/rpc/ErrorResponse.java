@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ErrorResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorResponse.class);
+
     @JsonProperty("Numero")
     private int number;
+
     @JsonProperty("Descripcion")
     private String description;
 

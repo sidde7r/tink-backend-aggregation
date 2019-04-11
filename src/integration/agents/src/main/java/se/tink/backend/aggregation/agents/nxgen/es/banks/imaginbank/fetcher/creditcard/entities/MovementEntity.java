@@ -14,37 +14,54 @@ public class MovementEntity {
 
     @JsonProperty("numeroMov")
     private int movNumber;
+
     @JsonProperty("descMov")
     private String description;
+
     @JsonProperty("fechaMov")
     private String transactionDate;
+
     @JsonProperty("horaMov")
     private String movTime;
+
     @JsonProperty("estadoMov")
     private String movStatus;
+
     @JsonProperty("importeMov")
     private Amount amount;
+
     @JsonProperty("fechaLiqMov")
     private String leahMoe;
+
     @JsonProperty("numContratoMov")
     private String inAMovAgreement;
+
     private String numTarjetaMov;
+
     @JsonProperty("aliasTarjetaMov")
     private String aliasMovCard;
+
     @JsonProperty("tipoTarjetaMov")
     private String movCardType;
+
     @JsonProperty("codCategoriaMov")
     private int codeMovCategory;
+
     @JsonProperty("numComercioMov")
     private long inATradingMov;
+
     @JsonProperty("ramoComercioMov")
     private String movTradeBouquet;
+
     @JsonProperty("indAdjuntos")
     private String intoAdjuntos;
+
     @JsonProperty("indLeido")
     private String inLeido;
+
     @JsonProperty("indFraccionable")
     private String inFraccionable;
+
     @JsonProperty("accesoDetalleMovimiento")
     private String accessDetailMovement;
 

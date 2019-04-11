@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -26,14 +26,17 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount(HolderName holderName) {
         // Imagin Bank only allows one account, a checking account
-        // the api client logs if we receive more than one account because that would imply a major change
-        return TransactionalAccount.builder(AccountTypes.CHECKING,
-                identifiers.getIban(),
-                new Amount(currency, availableBalance))
+        // the api client logs if we receive more than one account because that would imply a major
+        // change
+        return TransactionalAccount.builder(
+                        AccountTypes.CHECKING,
+                        identifiers.getIban(),
+                        new Amount(currency, availableBalance))
                 .setAccountNumber(identifiers.getIban())
                 .setName(alias)
                 .addIdentifiers(identifiers.getIdentifiers())
-                .putInTemporaryStorage(ImaginBankConstants.TemporaryStorage.ACCOUNT_REFERENCE,
+                .putInTemporaryStorage(
+                        ImaginBankConstants.TemporaryStorage.ACCOUNT_REFERENCE,
                         identifiers.getAccountReference())
                 .setHolderName(holderName)
                 .build();

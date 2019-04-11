@@ -2,5 +2,4 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.EeOBaseEntity;
 
-public class EuOLogoutEntity extends EeOBaseEntity {
-}
+public class EuOLogoutEntity extends EeOBaseEntity {}

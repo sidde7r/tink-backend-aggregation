@@ -59,8 +59,10 @@ public class CreditCardEntity {
     public CreditCardAccount toTinkAccount() {
         String bankIdentifier = Hash.sha1AsHex(number);
 
-        return CreditCardAccount.builder(number, balance.parseToNegativeTinkAmount(),
-                availableBalance.parseToTinkAmount())
+        return CreditCardAccount.builder(
+                        number,
+                        balance.parseToNegativeTinkAmount(),
+                        availableBalance.parseToTinkAmount())
                 .setAccountNumber(number)
                 .setName(description)
                 .setHolderName(new HolderName(name))
@@ -237,7 +239,7 @@ public class CreditCardEntity {
         return deteriorationLock;
     }
 
-   @JsonProperty("isPrepaidAnonymous")
+    @JsonProperty("isPrepaidAnonymous")
     public boolean isPrepaidAnonymous() {
         return isPrepaidAnonymous;
     }

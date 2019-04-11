@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class IberCajaCreditCardTransactionalFetcher implements TransactionDatePaginator<CreditCardAccount> {
+public class IberCajaCreditCardTransactionalFetcher
+        implements TransactionDatePaginator<CreditCardAccount> {
 
     private final IberCajaApiClient bankClient;
 
@@ -24,12 +25,14 @@ public class IberCajaCreditCardTransactionalFetcher implements TransactionDatePa
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
 
         return bankClient.fetchCreditCardsTransactionList(
                 account.getBankIdentifier(),
                 IberCajaConstants.DefaultRequestParams.REQUEST_ORDER,
                 IberCajaConstants.DefaultRequestParams.REQUEST_TYPE,
-                format(fromDate), format(toDate));
+                format(fromDate),
+                format(toDate));
     }
 }

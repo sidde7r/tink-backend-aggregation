@@ -13,8 +13,11 @@ public class BancoPopularPersistentStorage {
     }
 
     public BancoPopularContracts getLoginContracts() {
-        return persistentStorage.get(BancoPopularConstants.PersistentStorage.LOGIN_CONTRACTS,
-                BancoPopularContracts.class).orElse(new BancoPopularContracts());
+        return persistentStorage
+                .get(
+                        BancoPopularConstants.PersistentStorage.LOGIN_CONTRACTS,
+                        BancoPopularContracts.class)
+                .orElse(new BancoPopularContracts());
     }
 
     public void setContracts(BancoPopularContracts contracts) {

@@ -9,20 +9,26 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountTransactionsRequest {
     @JsonProperty("identificadorCuenta")
     private AccountIdentifierEntity accountIdentifier;
+
     @JsonProperty("criteriosBusquedaCuenta")
     private SearchCriteriaEntity criteriaSearchAccount;
+
     @JsonProperty("idioma")
     private String language;
 
-    private AccountTransactionsRequest(AccountIdentifierEntity accountIdentifier, SearchCriteriaEntity criteriaSearchAccount,
+    private AccountTransactionsRequest(
+            AccountIdentifierEntity accountIdentifier,
+            SearchCriteriaEntity criteriaSearchAccount,
             String language) {
         this.accountIdentifier = accountIdentifier;
         this.criteriaSearchAccount = criteriaSearchAccount;
         this.language = language;
     }
 
-    public static AccountTransactionsRequest create(AccountIdentifierEntity accountIdentifier,
-            SearchCriteriaEntity criteriaSearchAccount, String language) {
+    public static AccountTransactionsRequest create(
+            AccountIdentifierEntity accountIdentifier,
+            SearchCriteriaEntity criteriaSearchAccount,
+            String language) {
         return new AccountTransactionsRequest(accountIdentifier, criteriaSearchAccount, language);
     }
 }

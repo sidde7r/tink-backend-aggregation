@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CardTransactionsResponse {
     @JsonProperty("movimientosTarjeta")
     private List<CardTransactionEntity> transactions;
+
     @JsonProperty("indicadorMasMovimientos")
     private boolean indicateMoreTransactions;
 

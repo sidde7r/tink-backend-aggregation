@@ -7,26 +7,37 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BancoPopularLoginContract {
     @JsonProperty("nItnCont")
     private long contractNumber;
+
     @JsonProperty("nOrdIntc")
     private int contractOrder;
+
     @JsonProperty("cuenta")
     private int account;
+
     @JsonProperty("oficina")
     private int office;
+
     private int foIntabr;
+
     @JsonProperty("formaIntervJurContrato")
     private String intervFormJurContract;
+
     @JsonProperty("nomTitContrato")
     private String contractHolderName;
+
     private int cCuadNorm;
     private int cOnline;
     private int codResOper;
+
     @JsonProperty("codigo")
     private int code;
+
     @JsonProperty("banco")
     private int bank;
+
     @JsonProperty("desAlias")
     private String aliases;
+
     @JsonProperty("estadoMigracion")
     private int establishMigration;
 

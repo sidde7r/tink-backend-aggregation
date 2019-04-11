@@ -9,6 +9,7 @@ public class CardsListEntity {
 
     @JsonProperty("tarjetaGenerica")
     private List<GenericCardEntity> cards;
+
     @JsonProperty("masDatos")
     private boolean moreData;
 

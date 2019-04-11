@@ -8,24 +8,31 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PortfolioEntity {
     @JsonProperty("idExpediente")
     private String id;
+
     private String alias;
+
     @JsonProperty("numeroExpediente")
     private String contractNumber;
+
     @JsonProperty("numeroExpediente28")
     private String accountNumber;
+
     private String cuentaAsociada;
+
     @JsonProperty("valoracion")
     private BalanceEntity currentValue;
+
     @JsonProperty("plusvalia")
     private BalanceEntity valueChange;
+
     private boolean mostrarPlusvaliaRentabilidad;
     private boolean favorito;
 
@@ -54,7 +61,8 @@ public class PortfolioEntity {
     }
 
     @JsonIgnore
-    public InvestmentAccount toInvestmentAccount(HolderName holderName, List<Instrument> instruments) {
+    public InvestmentAccount toInvestmentAccount(
+            HolderName holderName, List<Instrument> instruments) {
         return InvestmentAccount.builder(accountNumber)
                 .setCashBalance(new Amount(currentValue.getCurrency(), 0.0))
                 .setAccountNumber(contractNumber)

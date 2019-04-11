@@ -11,6 +11,7 @@ public class DateEntity {
 
     @JsonProperty("mes")
     private String month;
+
     @JsonProperty("anyo")
     private String year;
 

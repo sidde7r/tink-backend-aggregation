@@ -22,5 +22,4 @@ public abstract class EEBaseLoginResponse implements EERpcResponse {
             }
         }
     }
-
 }

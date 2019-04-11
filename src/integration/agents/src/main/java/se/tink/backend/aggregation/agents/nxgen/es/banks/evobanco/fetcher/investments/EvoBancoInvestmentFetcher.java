@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments;
 
+import java.util.Collection;
+import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc.InvestmentsResponse;
@@ -7,9 +9,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public class EvoBancoInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AggregationLogger log = new AggregationLogger(EvoBancoInvestmentFetcher.class);

@@ -22,7 +22,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class ImaginBankApiClient {
-    private static final AggregationLogger LOGGER = new AggregationLogger(ImaginBankApiClient.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(ImaginBankApiClient.class);
 
     private final TinkHttpClient client;
 
@@ -33,13 +34,13 @@ public class ImaginBankApiClient {
 
     public SessionResponse initializeSession() {
 
-        SessionRequest request = new SessionRequest(
-                ImaginBankConstants.DefaultRequestParams.LANGUAGE_EN,
-                ImaginBankConstants.DefaultRequestParams.ORIGIN,
-                ImaginBankConstants.DefaultRequestParams.CHANNEL,
-                ImaginBankConstants.DefaultRequestParams.INSTALLATION_ID,
-                ImaginBankConstants.DefaultRequestParams.VIRTUAL_KEYBOARD
-        );
+        SessionRequest request =
+                new SessionRequest(
+                        ImaginBankConstants.DefaultRequestParams.LANGUAGE_EN,
+                        ImaginBankConstants.DefaultRequestParams.ORIGIN,
+                        ImaginBankConstants.DefaultRequestParams.CHANNEL,
+                        ImaginBankConstants.DefaultRequestParams.INSTALLATION_ID,
+                        ImaginBankConstants.DefaultRequestParams.VIRTUAL_KEYBOARD);
 
         return createRequest(ImaginBankConstants.Urls.INIT_LOGIN)
                 .post(SessionResponse.class, request);
@@ -65,22 +66,28 @@ public class ImaginBankApiClient {
 
     public AccountsResponse fetchAccounts(boolean fromBegin) {
 
-        String accountsResponseRaw = createRequest(ImaginBankConstants.Urls.FETCH_ACCOUNTS
-                .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, String.valueOf(fromBegin)))
-                .get(String.class);
+        String accountsResponseRaw =
+                createRequest(
+                                ImaginBankConstants.Urls.FETCH_ACCOUNTS.queryParam(
+                                        ImaginBankConstants.QueryParams.FROM_BEGIN,
+                                        String.valueOf(fromBegin)))
+                        .get(String.class);
 
         AccountsResponse accountsResponse =
-                SerializationUtils.deserializeFromString(accountsResponseRaw, AccountsResponse.class);
+                SerializationUtils.deserializeFromString(
+                        accountsResponseRaw, AccountsResponse.class);
 
         // currently imagin bank only allows one account for a customer, log if we get more
         if (accountsResponse != null && accountsResponse.getNumberOfAccounts() > 1) {
-            LOGGER.warnExtraLong(accountsResponseRaw, ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
+            LOGGER.warnExtraLong(
+                    accountsResponseRaw, ImaginBankConstants.LogTags.MULTIPLE_ACCOUNTS);
         }
 
         return accountsResponse;
     }
 
-    public AccountTransactionResponse fetchNextAccountTransactions(String accountReference, boolean fromBegin) {
+    public AccountTransactionResponse fetchNextAccountTransactions(
+            String accountReference, boolean fromBegin) {
 
         return createRequest(ImaginBankConstants.Urls.FETCH_ACCOUNT_TRANSACTION)
                 .queryParam(ImaginBankConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
@@ -89,38 +96,42 @@ public class ImaginBankApiClient {
     }
 
     public void initiateCardFetching() {
-        String initCardsResponse = createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
-                .post(String.class, "{}");
+        String initCardsResponse =
+                createRequest(ImaginBankConstants.Urls.INITIATE_CARD_FETCHING)
+                        .post(String.class, "{}");
         LOGGER.info("Initiated card fetching " + initCardsResponse);
     }
 
     public CardsResponse fetchCards() {
         return createRequest(
-                ImaginBankConstants.Urls.FETCH_CARDS
-                        .queryParam(ImaginBankConstants.QueryParams.INITIALIZED_BOXES,
-                                ImaginBankConstants.QueryParams.INITIALIZED_BOXES_VALUE)
-                        .queryParam(ImaginBankConstants.QueryParams.CARD_STATUS,
-                                ImaginBankConstants.QueryParams.CARD_STATUS_VALUE)
-                        .queryParam(ImaginBankConstants.QueryParams.MORE_DATA,
-                                ImaginBankConstants.QueryParams.MORE_DATA_VALUE)
-                        .queryParam(ImaginBankConstants.QueryParams.PROFILE,
-                                ImaginBankConstants.QueryParams.PROFILE_VALUE))
+                        ImaginBankConstants.Urls.FETCH_CARDS
+                                .queryParam(
+                                        ImaginBankConstants.QueryParams.INITIALIZED_BOXES,
+                                        ImaginBankConstants.QueryParams.INITIALIZED_BOXES_VALUE)
+                                .queryParam(
+                                        ImaginBankConstants.QueryParams.CARD_STATUS,
+                                        ImaginBankConstants.QueryParams.CARD_STATUS_VALUE)
+                                .queryParam(
+                                        ImaginBankConstants.QueryParams.MORE_DATA,
+                                        ImaginBankConstants.QueryParams.MORE_DATA_VALUE)
+                                .queryParam(
+                                        ImaginBankConstants.QueryParams.PROFILE,
+                                        ImaginBankConstants.QueryParams.PROFILE_VALUE))
                 .get(CardsResponse.class);
     }
 
-    public CardTransactionsResponse fetchCardTransactions(String cardKey, LocalDate fromDate,
-            LocalDate toDate, boolean moreData) {
+    public CardTransactionsResponse fetchCardTransactions(
+            String cardKey, LocalDate fromDate, LocalDate toDate, boolean moreData) {
         CardTransactionsRequest request =
-                CardTransactionsRequest.createCardTransactionsRequest(moreData,
-                        cardKey, fromDate, toDate);
+                CardTransactionsRequest.createCardTransactionsRequest(
+                        moreData, cardKey, fromDate, toDate);
 
         return createRequest(ImaginBankConstants.Urls.FETCH_CARD_TRANSACTIONS)
                 .post(CardTransactionsResponse.class, request);
     }
 
     public void logout() {
-        createRequest(ImaginBankConstants.Urls.LOGOUT)
-                .post();
+        createRequest(ImaginBankConstants.Urls.LOGOUT).post();
     }
 
     public boolean isAlive() {
@@ -138,8 +149,7 @@ public class ImaginBankApiClient {
 
     private RequestBuilder createRequest(URL url) {
 
-        return client
-                .request(url)
+        return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

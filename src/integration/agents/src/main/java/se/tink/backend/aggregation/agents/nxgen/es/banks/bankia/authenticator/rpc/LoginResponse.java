@@ -7,33 +7,48 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse {
     @JsonProperty("resultadoCorrecto")
     private boolean correctResult;
+
     @JsonProperty("resultadoMensaje")
     private String resultMessage;
+
     @JsonProperty("nombreCompletoUsuario")
     private String fullNameUser;
+
     @JsonProperty("esMulticanal")
     private boolean isMultichannel;
+
     @JsonProperty("catalogacionCliente")
     private String customerCataloging;
+
     @JsonProperty("segmentoEtiquetado")
     private String segmentLabeling;
+
     private String ursusHash;
+
     @JsonProperty("mostrarZonaGestorAceptacionApps")
     private boolean showZoneManagerAcceptanceApps;
+
     @JsonProperty("mostrarBandejaDeTareasPG")
     private boolean showTaskTrayPg;
+
     @JsonProperty("mostrarGestorBpApps")
     private boolean showGestorBpApps;
+
     @JsonProperty("nombreUsuario")
     private String username;
+
     @JsonProperty("apellido1Usuario")
     private String surname1User;
+
     @JsonProperty("apellido2Usuario")
     private String surname2User;
+
     @JsonProperty("tramoEdad")
     private int ageSection;
+
     @JsonProperty("rangoEdad")
     private String ageRange;
+
     private String execution;
 
     public String getExecution() {

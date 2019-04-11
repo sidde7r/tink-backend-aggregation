@@ -73,7 +73,8 @@ public class EeILinkingAndLoginEntity {
             return this;
         }
 
-        public EeILinkingAndLoginEntity.Builder withSignatureData(SignatureDataEntity signatureData) {
+        public EeILinkingAndLoginEntity.Builder withSignatureData(
+                SignatureDataEntity signatureData) {
             this.signatureData = signatureData;
             return this;
         }

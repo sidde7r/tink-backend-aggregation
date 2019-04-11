@@ -15,19 +15,26 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 public class CardEntity {
     @JsonProperty("aliasTarjeta")
     private String cardAlias;
+
     @JsonProperty("claveTarjeta")
     private String cardKey;
+
     private String marcaTarjetaDescripcion;
     private NumeroContratoEntity numeroContrato;
     private String numeroContrato28;
+
     @JsonProperty("numeroTarjeta")
     private String cardNumber;
+
     @JsonProperty("tipoCargoTarjeta")
     private String cardType;
+
     private String binTarjeta;
     private String affinityTarjeta;
+
     @JsonProperty("descripcionTarjeta")
     private String cardDescription;
+
     private String formatoTap;
     private String permiteHCE;
     private String permiteTandem;
@@ -36,12 +43,16 @@ public class CardEntity {
     private String codigoEstado;
     private String permiteModificarPin;
     private String tipoTarjetaMovil;
+
     @JsonProperty("saldoDisponible")
     private BalanceEntity availbaleCredit;
+
     @JsonProperty("saldoDispuesto")
     private BalanceEntity balance;
+
     @JsonProperty("saldoLimite")
     private BalanceEntity creditLimit;
+
     private String refValInformacionContrato;
     private String refValInformacionTarjeta;
     private String identificadorImagen;
@@ -49,20 +60,25 @@ public class CardEntity {
     private boolean recuperarSaldoPrepago;
     private BalanceEntity saldoDisponiblePrepago;
     private String titularidad;
+
     @JsonProperty("titularTarjeta")
     private String cardHolder;
+
     private String personaBeneficiario;
     private BalanceEntity saldoDispuestoYRetenido;
     private BalanceEntity saldoRetenido;
     private String colectivo;
     private String tipoContratacion;
     private String idPeticion;
+
     @JsonProperty("tarjetaFinancieraMovil")
     private boolean mobileCard;
+
     private String bine9Cifras;
     private String contrato2;
     private String plastico;
     private String tipoTarjeta;
+
     @JsonProperty("formatoLargo")
     private String formattedAccountNumber;
 
@@ -89,17 +105,13 @@ public class CardEntity {
 
     @JsonIgnore
     private HolderName getHolderName() {
-        return Optional.ofNullable(cardHolder)
-                .map(HolderName::new)
-                .orElse(null);
+        return Optional.ofNullable(cardHolder).map(HolderName::new).orElse(null);
     }
 
     @JsonIgnore
     private String getName() {
         if (Strings.isNullOrEmpty(cardAlias)) {
-            return String.format("%s %s",
-                    cardDescription,
-                    getPartialCardNumber());
+            return String.format("%s %s", cardDescription, getPartialCardNumber());
         }
 
         return cardAlias;

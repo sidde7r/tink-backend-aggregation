@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc;
 
+import static io.vavr.Predicates.not;
+
 import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import static io.vavr.Predicates.not;
 
 @JsonObject
 public class LoginResponse {

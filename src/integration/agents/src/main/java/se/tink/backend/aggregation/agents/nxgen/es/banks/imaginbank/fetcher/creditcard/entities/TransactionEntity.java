@@ -11,13 +11,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class TransactionEntity {
     private String id;
     private String idMovimiento;
+
     @JsonProperty("concepto")
     private String text;
+
     @JsonProperty("fecha")
     private DateEntity date;
+
     private DateEntity hora;
+
     @JsonProperty("importe")
     private BalanceEntity amount;
+
     private boolean estaLeido;
     private boolean tieneDocumento;
     private String idCategoriaMovimiento;

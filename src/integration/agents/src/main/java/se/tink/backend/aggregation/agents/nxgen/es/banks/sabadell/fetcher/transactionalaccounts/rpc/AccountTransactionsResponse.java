@@ -28,8 +28,10 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(periodMovementModelList).orElseGet(Collections::emptyList)
                 .stream()
-                .flatMap(periodMovementModelListEntity ->
-                        periodMovementModelListEntity.getGenericMovementWrapperList().getMovements().stream())
+                .flatMap(
+                        periodMovementModelListEntity ->
+                                periodMovementModelListEntity.getGenericMovementWrapperList()
+                                        .getMovements().stream())
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

@@ -14,8 +14,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class AcountTransactionsResponse implements PaginatorResponse {
     @JsonProperty("indicadorPaginacion")
     private boolean paginacionIndicator;
+
     @JsonProperty("movimientos")
     private List<TransactionEntity> transactions;
+
     @JsonProperty("indicadorMasRegistros")
     private boolean moreRecordsIndicator;
 

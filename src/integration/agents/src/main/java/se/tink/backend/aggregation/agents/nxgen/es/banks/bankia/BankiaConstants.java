@@ -25,7 +25,8 @@ public abstract class BankiaConstants {
         public static final String GLOBAL_POSITION_CLIENT_SCENARIO =
                 URL_BASE_OIP + "/api/microservicios/2.0/posicionglobal/escenariocliente";
         public static final String DISCONNECT = URL_BASE_OIP + "/es/desconectar";
-        public static final String SERVICES_CONTRACTS = URL_BASE_OIP + "/api/1.0/servicios/contratos/4.0/contratos";
+        public static final String SERVICES_CONTRACTS =
+                URL_BASE_OIP + "/api/1.0/servicios/contratos/4.0/contratos";
         public static final String SERVICES_ACCOUNT_MOVEMENT =
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
         public static final String CREDIT_CARD_TRANSACTIONS =
@@ -40,7 +41,6 @@ public abstract class BankiaConstants {
     public static class Parameter {
         public static final String ALIAS = "ALIAS";
     }
-
 
     public static class Query {
         public static final String CM_FORCED_DEVICE_TYPE = "cm-forced-device-type";
@@ -95,17 +95,13 @@ public abstract class BankiaConstants {
         public static final String DEVICE_ID_BASE_64_URL = "DEVICE_ID_BASE64_URL";
         public static final String COUNTRY = "country";
         public static final String CONTROL_DIGITS = "control_digits";
-
     }
 
     public static final TypeMapper<Type> LOAN_TYPE_MAPPER =
-        TypeMapper.<LoanDetails.Type>builder()
-            .put(LoanDetails.Type.MORTGAGE,
-                "13157",
-                "13135")
-            .put(LoanDetails.Type.BLANCO,
-                "10060") // CREDITO INMEDIATO
-            .build();
+            TypeMapper.<LoanDetails.Type>builder()
+                    .put(LoanDetails.Type.MORTGAGE, "13157", "13135")
+                    .put(LoanDetails.Type.BLANCO, "10060") // CREDITO INMEDIATO
+                    .build();
 
     public static class AccountType {
         private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
@@ -128,7 +124,8 @@ public abstract class BankiaConstants {
             if (Strings.isNullOrEmpty(bankiaProductCode)) {
                 return Optional.empty();
             }
-            return Optional.ofNullable(ACCOUNT_TYPES_MAP.getOrDefault(bankiaProductCode.toLowerCase(), null));
+            return Optional.ofNullable(
+                    ACCOUNT_TYPES_MAP.getOrDefault(bankiaProductCode.toLowerCase(), null));
         }
     }
 
@@ -140,7 +137,6 @@ public abstract class BankiaConstants {
         public static final String DEBTOR_CODE = "010";
     }
 
-
     public static class InstrumentTypes {
         public static final String STOCK = "01"; // Type description (in Spanish): ACCIONES
     }
@@ -150,9 +146,12 @@ public abstract class BankiaConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bankia_unknown_account_type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from("bankia_unknown_account_type");
         public static final LogTag LOAN = LogTag.from("bankia_loan");
-        public static final LogTag UNKNOWN_INSTRUMENT_TYPE = LogTag.from("bankia_unknown_instrument_type");
-        public static final LogTag INSTRUMENT_FETCHING_ERROR = LogTag.from("bankia_error_instrument_fetch");
+        public static final LogTag UNKNOWN_INSTRUMENT_TYPE =
+                LogTag.from("bankia_unknown_instrument_type");
+        public static final LogTag INSTRUMENT_FETCHING_ERROR =
+                LogTag.from("bankia_error_instrument_fetch");
     }
 }

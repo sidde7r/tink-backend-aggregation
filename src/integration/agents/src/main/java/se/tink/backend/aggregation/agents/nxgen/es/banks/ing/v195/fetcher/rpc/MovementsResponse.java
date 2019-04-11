@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Element;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Element;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class MovementsResponse {
