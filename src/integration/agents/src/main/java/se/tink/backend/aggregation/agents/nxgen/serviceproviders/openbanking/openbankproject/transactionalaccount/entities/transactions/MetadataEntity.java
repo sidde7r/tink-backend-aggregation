@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.transactionalaccount.entities.transactions;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -9,7 +10,10 @@ public class MetadataEntity {
     private String privateAlias;
     private String moreInfo;
     private String url;
-    private String imageURL;
+
+    @JsonProperty("imageURL")
+    private String imageUrl;
+
     private String openCorporatesUrl;
     private CorporateLocationEntity corporateLocation;
 
@@ -39,8 +43,8 @@ public class MetadataEntity {
         return url;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public String getOpenCorporatesUrl() {
