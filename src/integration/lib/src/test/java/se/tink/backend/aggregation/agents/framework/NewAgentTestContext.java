@@ -40,9 +40,9 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
@@ -365,7 +365,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                 accountsByBankId.values(),
                 transactionsByAccountBankId.values().stream()
                         .collect(ArrayList::new, List::addAll, List::addAll),
-            identityData);
+                identityData);
     }
 
     private void printLoanDetails(List<Loan> loans) {
