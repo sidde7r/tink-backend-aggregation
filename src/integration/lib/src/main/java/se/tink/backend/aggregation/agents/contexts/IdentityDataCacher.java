@@ -6,12 +6,12 @@ import se.tink.libraries.identitydata.IdentityData;
 public interface IdentityDataCacher {
 
     /**
-     * Caches {@code customerInfo}, making {@code customerInfo} retrievable via {@code
+     * Caches {@code identityData}, making {@code identityData} retrievable via {@code
      * IdentityDataCacher::getIdentityData} after this method has been executed.
      *
-     * @param customerInfo Customer identity data
+     * @param identityData Customer identity data
      */
-    void updateIdentityData(IdentityData customerInfo);
+    void updateIdentityData(IdentityData identityData);
 
     /**
      * @return The customer identity data previously stored using {@code
