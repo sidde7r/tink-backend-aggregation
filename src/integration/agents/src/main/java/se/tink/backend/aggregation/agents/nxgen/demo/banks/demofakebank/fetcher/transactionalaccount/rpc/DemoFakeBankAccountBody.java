@@ -5,10 +5,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DemoFakeBankAccountBody {
-    @JsonProperty
-    private String username;
-    @JsonProperty
-    private String token;
+    @JsonProperty private String username;
+    @JsonProperty private String token;
 
     public DemoFakeBankAccountBody(String username, String token) {
         this.username = username;

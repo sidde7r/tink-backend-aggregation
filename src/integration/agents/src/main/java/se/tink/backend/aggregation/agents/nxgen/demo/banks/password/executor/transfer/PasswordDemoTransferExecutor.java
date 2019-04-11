@@ -11,8 +11,8 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -52,7 +52,7 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
-        System.out.println("username: "+ credentials.getField("username"));
+        System.out.println("username: " + credentials.getField("username"));
         if (!Objects.equal(credentials.getField("username"), "201212121212")) {
             String response = requestChallengeResponse(credentials, "code1");
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {

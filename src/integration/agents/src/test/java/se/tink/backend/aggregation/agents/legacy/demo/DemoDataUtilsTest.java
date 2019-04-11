@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.demo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DemoDataUtilsTest {

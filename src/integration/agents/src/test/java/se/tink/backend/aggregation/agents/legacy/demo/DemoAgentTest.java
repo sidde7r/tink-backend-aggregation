@@ -18,12 +18,12 @@ public class DemoAgentTest extends AbstractAgentTest<DemoAgent> {
     public void testUserSwe() throws Exception {
         testAgent(DemoCredentials.USER4.getUsername(), "demo");
     }
-    
+
     @Test
     public void testUserSupplementalInformation() throws Exception {
         testAgent(DemoCredentials.USER8.getUsername(), "demo");
-    } 
-    
+    }
+
     @Test
     public void testUserBankId() throws Exception {
         testAgent(DemoCredentials.USER9.getUsername(), "demo");

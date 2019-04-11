@@ -16,14 +16,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-
 public class BankIdDemoAgent extends NextGenerationDemoAgent {
 
     private DemoBankIdAuthenticator authenticator;
 
-    public BankIdDemoAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public BankIdDemoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new DemoBankIdAuthenticator(credentials, true);
     }
@@ -134,11 +132,13 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
 
             @Override
             public double getBalance() {
-                return  26245.33;
+                return 26245.33;
             }
 
             @Override
-            public AccountIdentifier getIdentifier() { return null; }
+            public AccountIdentifier getIdentifier() {
+                return null;
+            }
         };
     }
 
