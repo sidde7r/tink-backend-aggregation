@@ -126,7 +126,6 @@ public class StarlingApiClient {
             client.request(
                             StarlingConstants.Url.GET_PAYMENT_STATUS.parameter(
                                     StarlingConstants.UrlParams.PAYMENT_ORDER_UID, paymentOrderUid))
-
                     .addBearerToken(paymentToken)
                     .accept(MediaType.APPLICATION_JSON)
                     .get(HttpResponse.class);

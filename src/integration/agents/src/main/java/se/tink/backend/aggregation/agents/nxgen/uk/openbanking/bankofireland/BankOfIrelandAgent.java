@@ -13,7 +13,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
 
-    public BankOfIrelandAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BankOfIrelandAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -28,12 +29,8 @@ public class BankOfIrelandAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configureAisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 }

@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FirstDirectAgent extends UkOpenBankingBaseAgent {
-    public FirstDirectAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public FirstDirectAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
@@ -26,12 +27,8 @@ public class FirstDirectAgent extends UkOpenBankingBaseAgent {
     }
 
     @Override
-    protected void configureAisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configureAisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
-    protected void configurePisHttpClient(TinkHttpClient httpClient) {
-
-    }
+    protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 }

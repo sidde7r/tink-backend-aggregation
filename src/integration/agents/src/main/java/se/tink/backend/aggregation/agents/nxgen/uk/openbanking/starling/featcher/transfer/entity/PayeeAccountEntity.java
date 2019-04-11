@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
-
-import java.util.Optional;
 
 @JsonObject
 public class PayeeAccountEntity {
@@ -48,8 +47,8 @@ public class PayeeAccountEntity {
     }
 
     public boolean equalsSortCodeIdentifer(SortCodeIdentifier identifier) {
-        return identifier.getSortCode().equalsIgnoreCase(bankIdentifier) &&
-                identifier.getAccountNumber().equalsIgnoreCase(accountIdentifier);
+        return identifier.getSortCode().equalsIgnoreCase(bankIdentifier)
+                && identifier.getAccountNumber().equalsIgnoreCase(accountIdentifier);
     }
 
     public Optional<PayeeGeneralAccount> toGeneralAccountEntity() {
@@ -58,10 +57,13 @@ public class PayeeAccountEntity {
                 StarlingConstants.ACCOUNT_IDENTIFIER_MAPPER.translate(bankIdentifierType);
 
         // Returns empty if identifier is not one supported by Tink
-        return type.map(idType -> new PayeeGeneralAccount(
-                AccountIdentifier.create(idType, bankIdentifier + accountIdentifier),
-                bankIdentifier,
-                description));
+        return type.map(
+                idType ->
+                        new PayeeGeneralAccount(
+                                AccountIdentifier.create(
+                                        idType, bankIdentifier + accountIdentifier),
+                                bankIdentifier,
+                                description));
     }
 
     public class PayeeGeneralAccount implements GeneralAccountEntity {

@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class TokenRefreshForm extends AbstractForm {
 
-    private TokenRefreshForm(String refreshToken, String clientId, String clientSecret, String grantType) {
+    private TokenRefreshForm(
+            String refreshToken, String clientId, String clientSecret, String grantType) {
         put(StarlingConstants.RequestKey.REFRESH_TOKEN, refreshToken);
         put(StarlingConstants.RequestKey.CLIENT_ID, clientId);
         put(StarlingConstants.RequestKey.CLIENT_SECRET, clientSecret);

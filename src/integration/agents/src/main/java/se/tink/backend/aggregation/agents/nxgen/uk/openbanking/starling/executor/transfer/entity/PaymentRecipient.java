@@ -55,7 +55,7 @@ public class PaymentRecipient {
         }
 
         public Builder setDestinationAccount(SortCodeIdentifier identifier) {
-            this.bankIdentifier= identifier.getSortCode();
+            this.bankIdentifier = identifier.getSortCode();
             this.accountIdentifier = identifier.getAccountNumber();
             this.bankIdentifierType = "SORT_CODE";
             return this;
