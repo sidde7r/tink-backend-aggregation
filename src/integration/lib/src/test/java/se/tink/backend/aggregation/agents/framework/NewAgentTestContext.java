@@ -601,7 +601,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                                     })
                             .collect(Collectors.toList());
 
-            CliPrintUtils.printTable(0, "custInfo", table);
+            CliPrintUtils.printTable(0, "identityData", table);
         }
     }
 
