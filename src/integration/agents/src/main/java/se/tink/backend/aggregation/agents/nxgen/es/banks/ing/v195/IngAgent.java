@@ -161,6 +161,6 @@ public class IngAgent extends NextGenerationAgent implements RefreshIdentityData
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         final IdentityDataFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
-        return new FetchIdentityDataResponse(fetcher.fetchCustomerInfo());
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

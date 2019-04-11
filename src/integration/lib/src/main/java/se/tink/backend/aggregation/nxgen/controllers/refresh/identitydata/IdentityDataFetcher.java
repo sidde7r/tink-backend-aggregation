@@ -4,5 +4,5 @@ import se.tink.libraries.identitydata.IdentityData;
 
 public interface IdentityDataFetcher {
 
-    IdentityData fetchCustomerInfo();
+    IdentityData fetchIdentityData();
 }

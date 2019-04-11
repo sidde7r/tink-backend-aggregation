@@ -20,7 +20,7 @@ public class LaCaixaIdentityDataFetcher implements IdentityDataFetcher {
     }
 
     @Override
-    public IdentityData fetchCustomerInfo() {
+    public IdentityData fetchIdentityData() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
         EsIdentityDataBuilder builder = EsIdentityData.builder();

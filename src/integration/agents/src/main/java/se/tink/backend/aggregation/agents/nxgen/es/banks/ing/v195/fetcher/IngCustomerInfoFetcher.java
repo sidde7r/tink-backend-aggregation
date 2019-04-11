@@ -18,7 +18,7 @@ public class IngCustomerInfoFetcher implements IdentityDataFetcher {
     }
 
     @Override
-    public IdentityData fetchCustomerInfo() {
+    public IdentityData fetchIdentityData() {
         ClientResponse client = ingApiClient.getApiRestClient();
 
         EsIdentityDataBuilder builder = EsIdentityData.builder();
