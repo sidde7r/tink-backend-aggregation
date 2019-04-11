@@ -3,7 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.op
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.ParameterKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.ParameterValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.authenticator.rpc.DirectLoginTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.configuration.OpenBankProjectConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.transactionalaccount.entities.accounts.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.transactionalaccount.rpc.FetchAccountsResponse;
@@ -12,21 +19,17 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class OpenBankProjectApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
+    private OpenBankProjectConfiguration configuration;
 
     public OpenBankProjectApiClient(
-            final TinkHttpClient client,
-            final SessionStorage sessionStorage,
-            final PersistentStorage persistentStorage) {
+            final TinkHttpClient client, final SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
     private RequestBuilder createRequestInSession(final URL url) {
@@ -39,17 +42,14 @@ public final class OpenBankProjectApiClient {
     }
 
     private URL getBaseUrl() {
-        return new URL(persistentStorage.get(OpenBankProjectConstants.StorageKeys.BASE_URL));
+        return new URL(configuration.getBaseUrl());
     }
 
     public FetchAccountsResponse fetchAccounts() {
         final URL fetchAccountsUrl =
                 getBaseUrl()
-                        .concat(OpenBankProjectConstants.Urls.ACCOUNTS)
-                        .parameter(
-                                OpenBankProjectConstants.ParameterKeys.BANK_ID,
-                                persistentStorage.get(
-                                        OpenBankProjectConstants.StorageKeys.BANK_ID));
+                        .concat(Urls.ACCOUNTS)
+                        .parameter(ParameterKeys.BANK_ID, configuration.getBankId());
 
         return createRequestInSession(fetchAccountsUrl).get(FetchAccountsResponse.class);
     }
@@ -59,37 +59,27 @@ public final class OpenBankProjectApiClient {
 
         final URL fetchTransactionsUrl =
                 getBaseUrl()
-                        .concat(OpenBankProjectConstants.Urls.TRANSACTIONS)
+                        .concat(Urls.TRANSACTIONS)
                         .parameter(
-                                OpenBankProjectConstants.ParameterKeys.BANK_ID,
-                                account.getFromTemporaryStorage(
-                                        OpenBankProjectConstants.ParameterKeys.BANK_ID))
+                                ParameterKeys.BANK_ID,
+                                account.getFromTemporaryStorage(ParameterKeys.BANK_ID))
                         .parameter(
-                                OpenBankProjectConstants.ParameterKeys.ACCOUNT_ID,
-                                account.getFromTemporaryStorage(
-                                        OpenBankProjectConstants.ParameterKeys.ACCOUNT_ID))
-                        .parameter(
-                                OpenBankProjectConstants.ParameterKeys.VIEW_ID,
-                                OpenBankProjectConstants.ParameterValues.OWNER_VIEW_ID);
+                                ParameterKeys.ACCOUNT_ID,
+                                account.getFromTemporaryStorage(ParameterKeys.ACCOUNT_ID))
+                        .parameter(ParameterKeys.VIEW_ID, ParameterValues.OWNER_VIEW_ID);
 
         return createRequestInSession(fetchTransactionsUrl)
-                .queryParam(
-                        OpenBankProjectConstants.QueryKeys.SORT_DIRECTION,
-                        OpenBankProjectConstants.QueryValues.DESC)
-                .queryParam(OpenBankProjectConstants.QueryKeys.OFFSET, Integer.toString(page))
+                .queryParam(QueryKeys.SORT_DIRECTION, QueryValues.DESC)
+                .queryParam(QueryKeys.OFFSET, Integer.toString(page))
                 .get(FetchTransactionsResponse.class);
     }
 
     public FetchAccountResponse fetchAccount(final AccountEntity accountEntity) {
         final URL fetchAccountUrl =
                 getBaseUrl()
-                        .concat(OpenBankProjectConstants.Urls.ACCOUNT)
-                        .parameter(
-                                OpenBankProjectConstants.StorageKeys.BANK_ID,
-                                accountEntity.getBankId())
-                        .parameter(
-                                OpenBankProjectConstants.StorageKeys.ACCOUNT_ID,
-                                accountEntity.getId());
+                        .concat(Urls.ACCOUNT)
+                        .parameter(StorageKeys.BANK_ID, accountEntity.getBankId())
+                        .parameter(StorageKeys.ACCOUNT_ID, accountEntity.getId());
 
         return createRequestInSession(fetchAccountUrl).get(FetchAccountResponse.class);
     }
@@ -103,13 +93,14 @@ public final class OpenBankProjectApiClient {
     public DirectLoginTokenResponse getToken(final String username, final String password) {
         final String headerValue =
                 String.format(
-                        HeaderValues.DIRECT_LOGIN,
-                        username,
-                        password,
-                        persistentStorage.get(OpenBankProjectConstants.StorageKeys.CLIENT_ID));
+                        HeaderValues.DIRECT_LOGIN, username, password, configuration.getClientId());
 
-        return createRequest(getBaseUrl().concat(OpenBankProjectConstants.Urls.DIRECT_LOGIN_URL))
+        return createRequest(getBaseUrl().concat(Urls.DIRECT_LOGIN_URL))
                 .header(HeaderKeys.AUTHORIZATION, headerValue)
                 .post(DirectLoginTokenResponse.class);
+    }
+
+    public void setConfiguration(OpenBankProjectConfiguration openBankProjectConfiguration) {
+        this.configuration = openBankProjectConfiguration;
     }
 }

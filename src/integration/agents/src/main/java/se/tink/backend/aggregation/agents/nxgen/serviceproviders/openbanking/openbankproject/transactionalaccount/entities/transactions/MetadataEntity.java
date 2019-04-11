@@ -8,18 +8,19 @@ public class MetadataEntity {
     private String publicAlias;
     private String privateAlias;
     private String moreInfo;
-    private String uRL;
+    private String url;
     private String imageURL;
-    private String openCorporatesURL;
-    private CorporateLocationEntity corporate_location;
+    private String openCorporatesUrl;
+    private CorporateLocationEntity corporateLocation;
+
     private PhysicalLocationEntity physicalLocation;
 
-    public CorporateLocationEntity getCorporate_location() {
-        return corporate_location;
+    public CorporateLocationEntity getCorporateLocation() {
+        return corporateLocation;
     }
 
-    public void setCorporate_location(CorporateLocationEntity corporate_location) {
-        this.corporate_location = corporate_location;
+    public void setCorporateLocation(CorporateLocationEntity corporateLocation) {
+        this.corporateLocation = corporateLocation;
     }
 
     public String getPublicAlias() {
@@ -34,16 +35,16 @@ public class MetadataEntity {
         return moreInfo;
     }
 
-    public String getuRL() {
-        return uRL;
+    public String getUrl() {
+        return url;
     }
 
     public String getImageURL() {
         return imageURL;
     }
 
-    public String getOpenCorporatesURL() {
-        return openCorporatesURL;
+    public String getOpenCorporatesUrl() {
+        return openCorporatesUrl;
     }
 
     public PhysicalLocationEntity getPhysicalLocation() {

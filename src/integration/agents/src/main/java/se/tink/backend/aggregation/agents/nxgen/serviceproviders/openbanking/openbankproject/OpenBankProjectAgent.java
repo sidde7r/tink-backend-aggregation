@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.op
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.OpenBankProjectConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.authenticator.OpenBankProjectAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.configuration.OpenBankProjectConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.openbankproject.transactionalaccount.OpenBankProjectTransactionFetcher;
@@ -33,7 +34,7 @@ public abstract class OpenBankProjectAgent extends NextGenerationAgent {
             final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new OpenBankProjectApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new OpenBankProjectApiClient(client, sessionStorage);
     }
 
     public abstract String getIntegrationName();
@@ -54,27 +55,12 @@ public abstract class OpenBankProjectAgent extends NextGenerationAgent {
                         .orElseThrow(
                                 () ->
                                         new IllegalArgumentException(
-                                                OpenBankProjectConstants.Exceptions
-                                                        .MISSING_CONFIGURATION));
+                                                ErrorMessages.MISSING_CONFIGURATION));
         if (!openBankProjectConfiguration.isValid()) {
-            throw new IllegalStateException(OpenBankProjectConstants.Exceptions.BAD_CONFIGURATION);
+            throw new IllegalStateException(ErrorMessages.BAD_CONFIGURATION);
         }
 
-        persistentStorage.put(
-                OpenBankProjectConstants.StorageKeys.BASE_URL,
-                openBankProjectConfiguration.getBaseUrl());
-        persistentStorage.put(
-                OpenBankProjectConstants.StorageKeys.CLIENT_ID,
-                openBankProjectConfiguration.getClientId());
-        persistentStorage.put(
-                OpenBankProjectConstants.StorageKeys.CLIENT_SECRET,
-                openBankProjectConfiguration.getClientSecret());
-        persistentStorage.put(
-                OpenBankProjectConstants.StorageKeys.REDIRECT_URI,
-                openBankProjectConfiguration.getRedirectUrl());
-        persistentStorage.put(
-                OpenBankProjectConstants.StorageKeys.BANK_ID,
-                openBankProjectConfiguration.getBankId());
+        apiClient.setConfiguration(openBankProjectConfiguration);
     }
 
     @Override

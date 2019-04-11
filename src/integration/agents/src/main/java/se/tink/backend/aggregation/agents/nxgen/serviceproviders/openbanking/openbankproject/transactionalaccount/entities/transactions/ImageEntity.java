@@ -7,7 +7,7 @@ public class ImageEntity {
 
     private String id;
     private String label;
-    private String uRL;
+    private String url;
     private String date;
     private UserEntity user;
 }

@@ -54,7 +54,7 @@ public final class OpenBankProjectConstants {
                 "DirectLogin username=%s, password=%s, consumer_key=%s";
     }
 
-    public static class Exceptions {
+    public static class ErrorMessages {
         public static final String BAD_CONFIGURATION = "OpenBankProject configuration is invalid.";
         public static final String MISSING_CONFIGURATION = "OpenBankProject configuration missing.";
     }
