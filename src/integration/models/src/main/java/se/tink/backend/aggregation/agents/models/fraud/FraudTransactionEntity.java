@@ -9,8 +9,7 @@ public class FraudTransactionEntity {
     private double amount;
     private String categoryId;
 
-    public FraudTransactionEntity() {
-    }
+    public FraudTransactionEntity() {}
 
     public String getId() {
         return id;

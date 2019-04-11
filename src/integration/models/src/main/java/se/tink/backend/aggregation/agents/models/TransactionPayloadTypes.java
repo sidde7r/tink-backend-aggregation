@@ -128,13 +128,9 @@ public enum TransactionPayloadTypes {
      */
     LINK_COUNTERPART_PROMPT_ANSWER,
 
-    /**
-     * {@see se.tink.backend.core.TransactionPayloadTypes.CREDIT_CARD_NUMBER}
-     */
+    /** {@see se.tink.backend.core.TransactionPayloadTypes.CREDIT_CARD_NUMBER} */
     CREDIT_CARD_NUMBER,
 
-    /**
-     * {@see se.tink.backend.core.TransactionPayloadTypes.CREDIT_CARD_HOLDER}
-     */
+    /** {@see se.tink.backend.core.TransactionPayloadTypes.CREDIT_CARD_HOLDER} */
     CREDIT_CARD_HOLDER
 }

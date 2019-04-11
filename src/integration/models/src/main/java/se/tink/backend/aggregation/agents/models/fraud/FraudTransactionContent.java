@@ -17,7 +17,7 @@ public class FraudTransactionContent extends FraudDetailsContent {
         if (transactionIds == null) {
             return "null";
         }
-        
+
         if (transactions != null && transactions.size() != 0) {
 
             Date date = transactions.get(0).getDate();

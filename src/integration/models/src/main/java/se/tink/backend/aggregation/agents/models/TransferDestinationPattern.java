@@ -76,7 +76,8 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
         this.name = name;
     }
 
-    public static TransferDestinationPattern createForMultiMatch(AccountIdentifier.Type type, String pattern) {
+    public static TransferDestinationPattern createForMultiMatch(
+            AccountIdentifier.Type type, String pattern) {
         TransferDestinationPattern destination = new TransferDestinationPattern();
         destination.setMatchesMultiple(true);
         destination.setType(type);
@@ -88,8 +89,8 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
         return createForMultiMatch(type, ALL);
     }
 
-    public static TransferDestinationPattern createForSingleMatch(AccountIdentifier identifier, String name,
-            String bank) {
+    public static TransferDestinationPattern createForSingleMatch(
+            AccountIdentifier identifier, String name, String bank) {
 
         TransferDestinationPattern destination = new TransferDestinationPattern();
         destination.setMatchesMultiple(false);
@@ -102,8 +103,11 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
     }
 
     public static TransferDestinationPattern createForSingleMatch(SwedishIdentifier identifier) {
-        return createForSingleMatch(identifier,
-                identifier.getName().orElse(identifier.getIdentifier(new DisplayAccountIdentifierFormatter())),
+        return createForSingleMatch(
+                identifier,
+                identifier
+                        .getName()
+                        .orElse(identifier.getIdentifier(new DisplayAccountIdentifierFormatter())),
                 identifier.getBankName());
     }
 
@@ -151,7 +155,11 @@ public class TransferDestinationPattern implements Comparable<TransferDestinatio
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this.getClass()).add("type", type).add("pattern", pattern)
-                .add("name", name).add("bank", bank).toString();
+        return MoreObjects.toStringHelper(this.getClass())
+                .add("type", type)
+                .add("pattern", pattern)
+                .add("name", name)
+                .add("bank", bank)
+                .toString();
     }
 }

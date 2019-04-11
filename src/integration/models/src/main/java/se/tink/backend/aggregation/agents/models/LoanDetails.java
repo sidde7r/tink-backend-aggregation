@@ -12,9 +12,7 @@ public class LoanDetails {
     private String applicants;
     private String loanSecurity;
 
-    public LoanDetails() {
-
-    }
+    public LoanDetails() {}
 
     public UUID getAccountId() {
         return accountId;
@@ -25,7 +23,8 @@ public class LoanDetails {
     }
 
     public List<String> getApplicants() {
-        List<String> applicantsAsList = SerializationUtils.deserializeFromString(applicants, List.class);
+        List<String> applicantsAsList =
+                SerializationUtils.deserializeFromString(applicants, List.class);
         return applicantsAsList;
     }
 
@@ -34,7 +33,6 @@ public class LoanDetails {
         if (serializedApplicants != null) {
             this.applicants = serializedApplicants.toLowerCase();
         }
-
     }
 
     public String getLoanSecurity() {
@@ -74,10 +72,10 @@ public class LoanDetails {
 
         LoanDetails that = (LoanDetails) o;
 
-        return Objects.equal(this.accountId, that.accountId) &&
-                Objects.equal(this.coApplicant, that.coApplicant) &&
-                Objects.equal(this.applicants, that.applicants) &&
-                Objects.equal(this.loanSecurity, that.loanSecurity);
+        return Objects.equal(this.accountId, that.accountId)
+                && Objects.equal(this.coApplicant, that.coApplicant)
+                && Objects.equal(this.applicants, that.applicants)
+                && Objects.equal(this.loanSecurity, that.loanSecurity);
     }
 
     @Override

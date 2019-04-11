@@ -38,10 +38,29 @@ public class FraudCompanyContent extends FraudDetailsContent {
                 directorsBuffer.append(director.getName());
             }
         }
-        return String.valueOf(Objects.hash(itemType(), orgNumber, name, address, town, zipcode, ftax, moms,
-                latestRegname, type, status, creditRating, nbrEmployees, revenue,
-                profitAfterTax, netProfit, totalCapital, grossProfitMarginPercentage,
-                quickRatioPercent, solidityPercentage, directorsBuffer.toString()));
+        return String.valueOf(
+                Objects.hash(
+                        itemType(),
+                        orgNumber,
+                        name,
+                        address,
+                        town,
+                        zipcode,
+                        ftax,
+                        moms,
+                        latestRegname,
+                        type,
+                        status,
+                        creditRating,
+                        nbrEmployees,
+                        revenue,
+                        profitAfterTax,
+                        netProfit,
+                        totalCapital,
+                        grossProfitMarginPercentage,
+                        quickRatioPercent,
+                        solidityPercentage,
+                        directorsBuffer.toString()));
     }
 
     public String getAddress() {
@@ -220,5 +239,4 @@ public class FraudCompanyContent extends FraudDetailsContent {
     public void setNbrEmployees(Integer nbrEmployees) {
         this.nbrEmployees = nbrEmployees;
     }
-
 }

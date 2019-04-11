@@ -9,14 +9,19 @@ import se.tink.libraries.amount.Amount;
 public class Instrument {
 
     public enum Type {
-        FUND, STOCK, OTHER
+        FUND,
+        STOCK,
+        OTHER
     }
 
     // Normally the uniqueIdentifier should be isin + market.
-    // If isin and market is hard to get hold of and the bank / broker have some other way to identify the instrument
+    // If isin and market is hard to get hold of and the bank / broker have some other way to
+    // identify the instrument
     // we can use that.
     private String uniqueIdentifier;
-    private String isin; // An International Securities Identification Number (ISIN) uniquely identifies a security.
+    private String
+            isin; // An International Securities Identification Number (ISIN) uniquely identifies a
+    // security.
     private String marketPlace;
     private Double averageAcquisitionPrice;
     private String currency;
@@ -155,8 +160,6 @@ public class Instrument {
 
     @JsonIgnore
     private static Double getAmountValue(Amount amount) {
-        return Optional.ofNullable(amount)
-                .map(Amount::getValue)
-                .orElse(null);
+        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
     }
 }
