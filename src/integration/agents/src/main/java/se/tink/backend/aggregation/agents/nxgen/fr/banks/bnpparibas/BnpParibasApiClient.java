@@ -29,22 +29,28 @@ public class BnpParibasApiClient {
     public NumpadDataEntity getNumpadParams() {
         NumpadRequest formBody = NumpadRequest.create();
 
-        NumpadResponse response = client.request(BnpParibasConstants.Urls.NUMPAD)
-                .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(NumpadResponse.class);
+        NumpadResponse response =
+                client.request(BnpParibasConstants.Urls.NUMPAD)
+                        .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(NumpadResponse.class);
 
         response.assertReturnCodeOk();
 
         return response.getData();
     }
 
-    public LoginDataEntity login(String username, String gridId, String passwordIndices,
+    public LoginDataEntity login(
+            String username,
+            String gridId,
+            String passwordIndices,
             BnpParibasPersistentStorage bnpParibasPersistentStorage) {
-        LoginRequest formBody = LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
+        LoginRequest formBody =
+                LoginRequest.create(username, gridId, passwordIndices, bnpParibasPersistentStorage);
 
-        LoginResponse response = client.request(BnpParibasConstants.Urls.LOGIN)
-                .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(LoginResponse.class);
+        LoginResponse response =
+                client.request(BnpParibasConstants.Urls.LOGIN)
+                        .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(LoginResponse.class);
 
         response.assertReturnCodeOk();
 
@@ -52,17 +58,19 @@ public class BnpParibasApiClient {
     }
 
     public void keepAlive() {
-        BaseResponse response = client.request(BnpParibasConstants.Urls.KEEP_ALIVE)
-                .get(BaseResponse.class);
+        BaseResponse response =
+                client.request(BnpParibasConstants.Urls.KEEP_ALIVE).get(BaseResponse.class);
 
         response.assertReturnCodeOk();
     }
 
     public UserOverviewDataEntity getUserOverview() {
-        UserOverviewResponse response = client.request(BnpParibasConstants.Urls.USER_OVERVIEW)
-                .queryParam(BnpParibasConstants.QueryParams.MODE_APPEL,
-                        BnpParibasConstants.QueryParams.MODE_APPEL_0)
-                .get(UserOverviewResponse.class);
+        UserOverviewResponse response =
+                client.request(BnpParibasConstants.Urls.USER_OVERVIEW)
+                        .queryParam(
+                                BnpParibasConstants.QueryParams.MODE_APPEL,
+                                BnpParibasConstants.QueryParams.MODE_APPEL_0)
+                        .get(UserOverviewResponse.class);
 
         response.assertReturnCodeOk();
 
@@ -70,22 +78,24 @@ public class BnpParibasApiClient {
     }
 
     public RibListEntity getAccountDetails(String ibanKey) {
-        AccountDetailsResponse response = client.request(BnpParibasConstants.Urls.ACCOUNT_DETAILS)
-                .queryParam(BnpParibasConstants.QueryParams.SERVICE,
-                        BnpParibasConstants.QueryParams.SERVICE_RIB)
-                .queryParam(BnpParibasConstants.QueryParams.ACCOUNT_NUMBER, ibanKey)
-                .get(AccountDetailsResponse.class);
+        AccountDetailsResponse response =
+                client.request(BnpParibasConstants.Urls.ACCOUNT_DETAILS)
+                        .queryParam(
+                                BnpParibasConstants.QueryParams.SERVICE,
+                                BnpParibasConstants.QueryParams.SERVICE_RIB)
+                        .queryParam(BnpParibasConstants.QueryParams.ACCOUNT_NUMBER, ibanKey)
+                        .get(AccountDetailsResponse.class);
 
         response.getSmc().assertReturnCodeOk();
 
         return response.getSmc().getData();
     }
 
-    public AccountTransactionsEntity getTransactionalAccountTransactions(Date fromDate, Date toDate,
-            String ibanKey) {
+    public AccountTransactionsEntity getTransactionalAccountTransactions(
+            Date fromDate, Date toDate, String ibanKey) {
 
-        TransactionalAccountTransactionsRequest request = TransactionalAccountTransactionsRequest.create(
-                fromDate, toDate, ibanKey);
+        TransactionalAccountTransactionsRequest request =
+                TransactionalAccountTransactionsRequest.create(fromDate, toDate, ibanKey);
 
         TransactionalAccountTransactionsResponse response =
                 client.request(BnpParibasConstants.Urls.TRANSACTIONAL_ACCOUNT_TRANSACTIONS)

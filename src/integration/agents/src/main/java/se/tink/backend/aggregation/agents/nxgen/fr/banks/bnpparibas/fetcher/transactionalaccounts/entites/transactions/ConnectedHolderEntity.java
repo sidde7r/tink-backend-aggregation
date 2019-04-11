@@ -7,11 +7,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ConnectedHolderEntity {
     @JsonProperty("civilite")
     private String civilState;
+
     @JsonProperty("idCivilite")
     private int civilStateId;
+
     private String ikpi;
+
     @JsonProperty("nomComplet")
     private String fullName;
+
     @JsonProperty("derniereConnexion")
     private String lastConnection;
 

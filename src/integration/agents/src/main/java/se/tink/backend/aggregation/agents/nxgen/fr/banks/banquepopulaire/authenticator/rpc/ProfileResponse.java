@@ -12,13 +12,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProfileResponse {
     @JsonProperty("idAbonne")
     private IdentifierEntity idSubscriber;
+
     private String codeEtablissement;
     private IdentifierEntity idClient;
     private TypeEntity natureClient;
+
     @JsonProperty("identitePersonnePhysique")
     private UserEntity userData;
+
     @JsonProperty("dateDerniereConnexion")
     private String dateLastLogin;
+
     private List<String> habilitations;
     private String typeAbonnement;
     private String typeAbonnementSegment;

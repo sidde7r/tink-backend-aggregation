@@ -10,11 +10,11 @@ public class AccountsGroupEntity {
 
     @JsonProperty("totalSolde")
     private double totalBalance;
+
     @JsonProperty("comptes")
     private List<AccountEntity> accounts;
 
     public List<AccountEntity> getAccounts() {
         return accounts != null ? accounts : Collections.emptyList();
     }
-
 }

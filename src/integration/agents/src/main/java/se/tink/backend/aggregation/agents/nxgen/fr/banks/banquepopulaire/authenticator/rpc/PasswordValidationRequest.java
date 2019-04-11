@@ -9,13 +9,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PasswordValidationRequest {
     private PasswordCredentialsEntity validate;
 
-    public PasswordValidationRequest(
-            PasswordCredentialsEntity validate) {
+    public PasswordValidationRequest(PasswordCredentialsEntity validate) {
         this.validate = validate;
     }
 
-    public static PasswordValidationRequest create(String validationId, String password, String id, String login, String type) {
-        PasswordCredentials passwordCredentials = PasswordCredentials.create(password, id, login, type);
+    public static PasswordValidationRequest create(
+            String validationId, String password, String id, String login, String type) {
+        PasswordCredentials passwordCredentials =
+                PasswordCredentials.create(password, id, login, type);
         PasswordCredentialsEntity passwordCredentialsEntity = new PasswordCredentialsEntity();
         passwordCredentialsEntity.put(validationId, Lists.newArrayList((passwordCredentials)));
 

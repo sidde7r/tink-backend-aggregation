@@ -15,26 +15,29 @@ public class AccountsResponse {
 
     @JsonProperty("dateSysteme")
     private String dateSystem;
+
     @JsonProperty("heureSysteme")
     private String systemTime;
+
     @JsonProperty("intituleAbonneBAD")
     private String titledAbonnebad;
+
     @JsonProperty("codeCRSFProductionContrat")
     private String codecrsfProductionContract;
+
     @JsonProperty("demandeMajCollecteEmail")
     private boolean requestShiftEmailCollection;
-    /**
-     * Regular/checking accounts
-     */
+    /** Regular/checking accounts */
     private AccountsGroupEntity ccp;
-    /**
-     * Savings accounts
-     */
+    /** Savings accounts */
     private AccountsGroupEntity cne;
+
     private Object assurances;
     private PretsEntity prets;
+
     @JsonProperty("pretsCristal")
     private CristalLoansEntity cristalLoans;
+
     @JsonProperty("titres")
     private SecuritiesEntity securities;
 
@@ -48,5 +51,4 @@ public class AccountsResponse {
         }
         return retVal;
     }
-
 }

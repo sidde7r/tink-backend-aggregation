@@ -9,8 +9,7 @@ public class SocieteGeneraleSessionHandler implements SessionHandler {
 
     private final SocieteGeneraleApiClient apiClient;
 
-    public SocieteGeneraleSessionHandler(
-            SocieteGeneraleApiClient apiClient) {
+    public SocieteGeneraleSessionHandler(SocieteGeneraleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -28,5 +27,4 @@ public class SocieteGeneraleSessionHandler implements SessionHandler {
             throw new SessionException(SessionError.SESSION_EXPIRED);
         }
     }
-
 }

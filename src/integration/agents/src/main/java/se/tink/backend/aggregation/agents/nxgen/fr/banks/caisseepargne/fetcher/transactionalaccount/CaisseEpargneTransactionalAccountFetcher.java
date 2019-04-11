@@ -11,8 +11,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class CaisseEpargneTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, String> {
+public class CaisseEpargneTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String> {
 
     private final CaisseEpargneApiClient apiClient;
 
@@ -32,7 +33,8 @@ public class CaisseEpargneTransactionalAccountFetcher implements AccountFetcher<
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
 
         TransactionsRequest request = new TransactionsRequest();
         request.setAccount(account.getBankIdentifier());

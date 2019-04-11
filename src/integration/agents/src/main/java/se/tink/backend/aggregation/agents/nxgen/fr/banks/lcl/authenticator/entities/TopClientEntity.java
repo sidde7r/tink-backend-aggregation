@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TopClientEntity {
     @JsonProperty("banquePrivee")
     private boolean privateBank;
+
     @JsonProperty("topCLP")
     private boolean topclp;
+
     private boolean topMif;
     private boolean isBourse;
     private boolean topDemat;

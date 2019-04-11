@@ -13,6 +13,4 @@ public class AccountsRequest extends GenericRequest {
     public String action() {
         return CaisseEpargneConstants.SoapAction.GET_SYNTHESE_CPTE_ABONNEMENT;
     }
-
-
 }

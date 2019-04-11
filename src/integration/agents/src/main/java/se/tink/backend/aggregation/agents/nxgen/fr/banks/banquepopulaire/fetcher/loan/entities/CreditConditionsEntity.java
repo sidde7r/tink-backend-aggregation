@@ -8,12 +8,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CreditConditionsEntity {
     private String dateRealisation;
+
     @JsonProperty("dureePret")
     private int loanDuration;
+
     @JsonProperty("montantNominal")
     private MontantEntity loanLimit;
+
     @JsonProperty("montantRestantDebloquer")
     private MontantEntity remainingAmountToWithdraw;
+
     @JsonProperty("libelleBien")
     private TypeEntity libelleBien;
 }

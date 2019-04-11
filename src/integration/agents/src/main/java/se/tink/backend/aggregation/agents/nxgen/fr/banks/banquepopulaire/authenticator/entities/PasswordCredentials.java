@@ -16,7 +16,8 @@ public class PasswordCredentials {
         this.type = type;
     }
 
-    public static PasswordCredentials create(String password, String id, String login, String type) {
+    public static PasswordCredentials create(
+            String password, String id, String login, String type) {
         return new PasswordCredentials(password, id, login, type);
     }
 }

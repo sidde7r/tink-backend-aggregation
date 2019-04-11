@@ -7,28 +7,42 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InfoClientEntity {
     @JsonProperty("raisonSociale")
     private String socialReason;
+
     private String lcFavori;
+
     @JsonProperty("user_id_AT")
     private String userIdAt;
+
     @JsonProperty("nomPatronymique")
     private String surname;
+
     @JsonProperty("nomMarital")
     private String marriedName;
+
     @JsonProperty("compteFavori")
     private String accountFavorite;
+
     private String libelleCivilite;
+
     @JsonProperty("idBel")
     private String butRather;
+
     private String idPart;
+
     @JsonProperty("nomUsuel")
     private String usualName;
+
     @JsonProperty("premierPrenom")
     private String firstName;
+
     private String tagTurn;
+
     @JsonProperty("dateConnexion")
     private String dateConnection;
+
     @JsonProperty("agenceFavori")
     private String agencyFavorite;
+
     @JsonProperty("heureConnexion")
     private String timeLogin;
 

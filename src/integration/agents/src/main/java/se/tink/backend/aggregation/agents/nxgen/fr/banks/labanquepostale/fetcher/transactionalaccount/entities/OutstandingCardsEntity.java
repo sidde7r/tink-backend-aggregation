@@ -7,5 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OutstandingCardsEntity {
     @JsonProperty("cumul")
     private double plurality;
+
     private Object dateImputation;
 }

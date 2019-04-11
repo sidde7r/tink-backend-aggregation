@@ -9,6 +9,7 @@ import se.tink.libraries.amount.Amount;
 public class MontantEntity {
     @JsonProperty("devise")
     private String currency;
+
     @JsonProperty("valeur")
     private Double value;
 

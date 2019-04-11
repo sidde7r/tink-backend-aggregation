@@ -13,8 +13,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BanquePopulaireCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionKeyPaginator<CreditCardAccount, String> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(BanquePopulaireCreditCardFetcher.class);
+public class BanquePopulaireCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(BanquePopulaireCreditCardFetcher.class);
 
     private final BanquePopulaireApiClient apiClient;
 
@@ -28,7 +31,8 @@ public class BanquePopulaireCreditCardFetcher implements AccountFetcher<CreditCa
 
         try {
             String cardsResponse = apiClient.getAllCards();
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(cardsResponse),
+            LOGGER.infoExtraLong(
+                    SerializationUtils.serializeToString(cardsResponse),
                     BanquePopulaireConstants.LogTags.CREDIT_CARD);
         } catch (Exception e) {
             LOGGER.info("Failed to fetch cards");
@@ -38,7 +42,8 @@ public class BanquePopulaireCreditCardFetcher implements AccountFetcher<CreditCa
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(CreditCardAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            CreditCardAccount account, String key) {
         return BanquePopulaireTransactionsResponse.empty();
     }
 }

@@ -10,9 +10,11 @@ import se.tink.libraries.amount.Amount;
 public class TransactionAmountEntity {
     private String currency;
     private String executionDate;
+
     @JsonDouble
     @JsonProperty("montant")
     private double amount;
+
     private String valueDate;
 
     @JsonIgnore

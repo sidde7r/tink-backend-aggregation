@@ -9,21 +9,25 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanqueP
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.ContractOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.entities.CreditEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class LoanDetailsResponse {
     @JsonProperty("libelleProduit")
     private String productLabel;
+
     @JsonProperty("refExterneContrat")
     private String externalReference;
+
     private String statutJuridique;
     private boolean topAffichageMontantAuto;
+
     @JsonProperty("dateOuverture")
     @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Date openingDate;
+
     private String dateEcheance;
     private CreditEntity credit;
 
@@ -31,17 +35,20 @@ public class LoanDetailsResponse {
     public LoanAccount toTinkLoanAccount(ContractOverviewEntity account) {
         String holderName = account.getClient().getDescriptionClient();
         return LoanAccount.builder(externalReference, account.getBalance().toTinkAmount().negate())
-                .setInterestRate(credit.getAmortizationsConditions().getNominalRate()/100.0)
+                .setInterestRate(credit.getAmortizationsConditions().getNominalRate() / 100.0)
                 .setAccountNumber(externalReference)
                 .setName(productLabel)
                 .setHolderName(new HolderName(holderName))
                 .setDetails(
-                        LoanDetails.builder(BanquePopulaireConstants.Loan.toTinkLoanType(account.getProductId().getCode()))
-                        .setApplicants(ImmutableList.of(holderName))
-                        .setLoanNumber(externalReference)
-                        .setInitialDate(openingDate)
-                        .setNextDayOfTermsChange(credit.getAmortizationsConditions().getNextDueDate())
-                                .build()
-                ).build();
+                        LoanDetails.builder(
+                                        BanquePopulaireConstants.Loan.toTinkLoanType(
+                                                account.getProductId().getCode()))
+                                .setApplicants(ImmutableList.of(holderName))
+                                .setLoanNumber(externalReference)
+                                .setInitialDate(openingDate)
+                                .setNextDayOfTermsChange(
+                                        credit.getAmortizationsConditions().getNextDueDate())
+                                .build())
+                .build();
     }
 }

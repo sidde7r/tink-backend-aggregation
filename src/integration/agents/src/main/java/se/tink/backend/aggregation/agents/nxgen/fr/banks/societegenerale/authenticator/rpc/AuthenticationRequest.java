@@ -5,10 +5,12 @@ import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class AuthenticationRequest extends AbstractForm {
 
-    public static AuthenticationRequest create(String user_id, String cryptocvcs, String codsec,
-            String deviceId, String token) {
+    public static AuthenticationRequest create(
+            String user_id, String cryptocvcs, String codsec, String deviceId, String token) {
         AuthenticationRequest retVal = new AuthenticationRequest();
-        retVal.put(SocieteGeneraleConstants.FormParam.BIO_TOKEN, SocieteGeneraleConstants.Default.EMPTY);
+        retVal.put(
+                SocieteGeneraleConstants.FormParam.BIO_TOKEN,
+                SocieteGeneraleConstants.Default.EMPTY);
         retVal.put(SocieteGeneraleConstants.FormParam.CIBLE, SocieteGeneraleConstants.Default._300);
         retVal.put(SocieteGeneraleConstants.FormParam.CODSEC, codsec);
         retVal.put(SocieteGeneraleConstants.FormParam.CRYPTOCVCS, cryptocvcs);
@@ -18,5 +20,4 @@ public class AuthenticationRequest extends AbstractForm {
         retVal.put(SocieteGeneraleConstants.FormParam.VK_OP, SocieteGeneraleConstants.Default.AUTH);
         return retVal;
     }
-
 }

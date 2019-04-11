@@ -25,5 +25,4 @@ public class CreditMutuelAgentTest {
                 .build()
                 .testRefresh();
     }
-
 }

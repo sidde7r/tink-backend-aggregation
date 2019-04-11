@@ -15,24 +15,31 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionEntity {
     @JsonProperty("categorie")
     private String category;
+
     @JsonFormat(pattern = "dd-MM-yyyy")
     @JsonProperty("dateOperation")
     private Date transactionDate;
+
     @JsonProperty("idCategorie")
     private int categoryId;
+
     @JsonProperty("idOperation")
     private String transactionId;
+
     @JsonProperty("libelleOperation")
     private String transactionLabel;
+
     @JsonProperty("montant")
     private TransactionAmountEntity amount;
+
     @JsonProperty("operationType")
     private TransactionTypeEntity transactionType;
+
     @JsonProperty("pointage")
     private int tally;
 
     @JsonIgnore
-    public Transaction toTinkTransaction(){
+    public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDescription(getFormattedDescription())
                 .setDate(transactionDate)
@@ -42,10 +49,13 @@ public class TransactionEntity {
 
     @JsonIgnore
     private String getFormattedDescription() {
-        Matcher matcher = BnpParibasFormatUtils.TRANSACTION_DESCRIPTION_PATTERN.matcher(getTransactionLabel());
+        Matcher matcher =
+                BnpParibasFormatUtils.TRANSACTION_DESCRIPTION_PATTERN.matcher(
+                        getTransactionLabel());
 
         if (matcher.find()) {
-            return matcher.group(BnpParibasConstants.TransactionDescriptionFormatting.MERCHANT_NAME);
+            return matcher.group(
+                    BnpParibasConstants.TransactionDescriptionFormatting.MERCHANT_NAME);
         }
 
         return getTransactionLabel();

@@ -13,5 +13,4 @@ public class ClientInformationRequest extends GenericRequest {
     public String action() {
         return CaisseEpargneConstants.SoapAction.GET_INFOS_CLIENT;
     }
-
 }

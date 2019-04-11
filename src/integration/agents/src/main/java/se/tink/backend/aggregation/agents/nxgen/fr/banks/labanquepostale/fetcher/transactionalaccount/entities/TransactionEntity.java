@@ -11,8 +11,10 @@ import se.tink.libraries.amount.Amount;
 public class TransactionEntity {
 
     private LocalDate date;
+
     @JsonProperty("montant")
     private Amount amount;
+
     @JsonProperty("libelle")
     private String label;
 
@@ -34,5 +36,4 @@ public class TransactionEntity {
 
         return builder.build();
     }
-
 }

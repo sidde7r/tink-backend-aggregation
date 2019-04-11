@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.imageio.ImageIO;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,15 +16,13 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.utils.ImageRecognizer;
 
 public class LaBanquePostaleAuthenticator implements Authenticator {
 
     private final LaBanquePostaleApiClient apiClient;
 
-    public LaBanquePostaleAuthenticator(
-            LaBanquePostaleApiClient apiClient) {
+    public LaBanquePostaleAuthenticator(LaBanquePostaleApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -36,26 +35,23 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
         Map<Integer, String> numpad = parseNumpad(numpadImg);
         String password = buildPassword(credentials.getField(Field.Key.PASSWORD), numpad);
 
-        Optional<String> errorCode = apiClient.submitLogin(
-                credentials.getField(Field.Key.USERNAME),
-                password);
+        Optional<String> errorCode =
+                apiClient.submitLogin(credentials.getField(Field.Key.USERNAME), password);
 
         if (errorCode.isPresent()) {
             switch (errorCode.get()) {
-
-            case LaBanquePostaleConstants.ErrorCodes.INCORRECT_CREDENTIALS:
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            default:
-                throw new IllegalStateException(
-                        String.format(LaBanquePostaleConstants.ErrorMessages.UNKNOWN_ERROR,
-                                errorCode.get()));
+                case LaBanquePostaleConstants.ErrorCodes.INCORRECT_CREDENTIALS:
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    LaBanquePostaleConstants.ErrorMessages.UNKNOWN_ERROR,
+                                    errorCode.get()));
             }
         }
     }
 
-    /**
-     * Simulates entering the passcode on the numpad, returning the result.
-     */
+    /** Simulates entering the passcode on the numpad, returning the result. */
     private String buildPassword(String passCode, Map<Integer, String> numpad) {
 
         StringBuilder result = new StringBuilder();
@@ -67,9 +63,7 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
         return result.toString();
     }
 
-    /**
-     * Splits the numpad into an array of images where each image represent one key.
-     */
+    /** Splits the numpad into an array of images where each image represent one key. */
     private BufferedImage[] splitNumpad(BufferedImage source) {
 
         final int width = LaBanquePostaleConstants.AuthConfig.NUMPAD_WIDTH;
@@ -85,11 +79,12 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
             for (int y = 0; y < height; y++) {
 
                 int index = x + y * width;
-                keys[index] = source.getSubimage(
-                        x * chunkWidth + padding,
-                        y * chunkHeight + padding,
-                        chunkWidth - 2 * padding,
-                        chunkHeight - 2 * padding);
+                keys[index] =
+                        source.getSubimage(
+                                x * chunkWidth + padding,
+                                y * chunkHeight + padding,
+                                chunkWidth - 2 * padding,
+                                chunkHeight - 2 * padding);
             }
         }
 
@@ -100,8 +95,7 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
      * Convert numpad byte[] image to a map of (keyIndex -> keyValue)
      *
      * @throws IllegalStateException - If an error in image recognition is found. (Duplicate or
-     *                               missing keys) And if byte[] cannot be converted into a
-     *                               BufferedImage.
+     *     missing keys) And if byte[] cannot be converted into a BufferedImage.
      */
     private Map<Integer, String> parseNumpad(byte[] numpadBytes) {
 
@@ -121,12 +115,12 @@ public class LaBanquePostaleAuthenticator implements Authenticator {
      * decided by their location on the numpad. Empty keys are discaded.
      *
      * @throws IllegalStateException - If an error in image recognition is found. (Duplicate or
-     *                               missing keys)
+     *     missing keys)
      */
     private Map<Integer, String> parseNumpad(BufferedImage[] images) {
 
-        Map<Integer, String> numpad = new HashMap<>(
-                LaBanquePostaleConstants.AuthConfig.PASSWORD_LENGTH);
+        Map<Integer, String> numpad =
+                new HashMap<>(LaBanquePostaleConstants.AuthConfig.PASSWORD_LENGTH);
 
         for (int keyIndex = 0; keyIndex < images.length; keyIndex++) {
             String parsedDigit = ImageRecognizer.ocr(images[keyIndex], Color.BLUE);

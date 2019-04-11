@@ -7,34 +7,50 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginDataEntity {
     @JsonProperty("statut")
     private String status;
+
     private String message;
+
     @JsonProperty("identifiant")
     private String loginId;
+
     private String canal;
     private String segment;
     private String communaute;
+
     @JsonProperty("nom")
     private String name;
+
     @JsonProperty("dateDerniereConnexion")
     private String dateLastLogin;
+
     @JsonProperty("IDSeconde")
     private String secondId;
+
     @JsonProperty("identifiantCommunaute")
     private String communityId;
+
     @JsonProperty("codeEnseigne")
     private String codeSign;
+
     @JsonProperty("libelleEnseigne")
     private String wordingSign;
+
     @JsonProperty("datePriseEffetCommunauteBD")
     private String dateTakeEffectCommunitybd;
+
     @JsonProperty("iKpiPersonnePhysique")
     private String iKpiPhysicalPerson;
+
     @JsonProperty("iKpiPersonne")
     private String iKpiPerson;
+
     private boolean eligibleAuthentForte;
+
     @JsonProperty("eligibleAuthentForteSC")
     private boolean eligibleAuthentFortesc;
+
     private boolean indicPresentationKyc;
+
     @JsonProperty("codeMotifOrigineClient")
     private String codeOriginOriginCustomer;
 

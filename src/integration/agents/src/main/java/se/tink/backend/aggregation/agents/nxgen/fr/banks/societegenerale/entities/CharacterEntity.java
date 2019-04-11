@@ -8,10 +8,13 @@ public class CharacterEntity {
 
     @JsonProperty("must_recheck")
     private int mustRecheck;
+
     @JsonProperty("delai_val")
     private int delaiVal;
+
     @JsonProperty("chiffrement")
     private boolean encrypted;
+
     @JsonProperty("compression")
     private boolean compressed;
 

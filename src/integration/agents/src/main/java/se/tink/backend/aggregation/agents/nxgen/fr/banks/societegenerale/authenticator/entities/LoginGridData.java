@@ -8,8 +8,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginGridData {
 
     private String crypto;
+
     @JsonProperty("grid")
     private List<Integer> oneTimePad;
+
     private int nbrows;
     private int nbcols;
 
@@ -20,5 +22,4 @@ public class LoginGridData {
     public List<Integer> getOneTimePad() {
         return oneTimePad;
     }
-    
 }

@@ -15,26 +15,36 @@ public class AccountTransaction {
     private static final AggregationLogger LOGGER = new AggregationLogger(AccountTransaction.class);
 
     private String beneficiaire;
+
     @JsonProperty("idMouvement")
     private String transactionId;
+
     @JsonProperty("libelleMouvement")
     private String transactionLabel;
+
     @JsonProperty("libelle1ODC")
     private String secondTransactionLabel;
+
     private String libelle2ODC;
+
     @JsonProperty("dateOperation")
     private Date transactionDate;
+
     private String referenceMouvement;
+
     @JsonProperty("montant")
     private MontantEntity amount;
+
     private MontantEntity soldeEvolutif;
     private TypeEntity familleOperation;
     private CodeOperationEntity codeOperation;
     private long dateComptable;
     private long dateValeur;
     private TypeEntity typeOperation;
+
     @JsonProperty("statutMouvement")
     private TypeEntity transactionStatus;
+
     private boolean isOperationDuJour;
 
     @JsonIgnore
@@ -49,17 +59,22 @@ public class AccountTransaction {
     }
 
     private String getTransactionDescription() {
-        return BanquePopulaireConstants.Fetcher.CARD_TRANSACTION_DESCRIPTION_PATTERN.matcher(transactionLabel)
-                .matches() ? secondTransactionLabel : transactionLabel;
+        return BanquePopulaireConstants.Fetcher.CARD_TRANSACTION_DESCRIPTION_PATTERN
+                        .matcher(transactionLabel)
+                        .matches()
+                ? secondTransactionLabel
+                : transactionLabel;
     }
 
     private boolean isPending() {
-        if (!BanquePopulaireConstants.Status.TRANSACTION_STATUS_MAPPER.containsKey(transactionStatus.getCode())) {
-            LOGGER.info(BanquePopulaireConstants.LogTags.UNKNOWN_TRANSACTION_STATUS.toString() +
-                    "  " +
-                    SerializationUtils.serializeToString(transactionStatus));
+        if (!BanquePopulaireConstants.Status.TRANSACTION_STATUS_MAPPER.containsKey(
+                transactionStatus.getCode())) {
+            LOGGER.info(
+                    BanquePopulaireConstants.LogTags.UNKNOWN_TRANSACTION_STATUS.toString()
+                            + "  "
+                            + SerializationUtils.serializeToString(transactionStatus));
         }
-        return BanquePopulaireConstants.Status.TRANSACTION_STATUS_MAPPER
-                .getOrDefault(transactionStatus.getCode(), false);
+        return BanquePopulaireConstants.Status.TRANSACTION_STATUS_MAPPER.getOrDefault(
+                transactionStatus.getCode(), false);
     }
 }

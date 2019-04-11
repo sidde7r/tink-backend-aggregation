@@ -16,9 +16,11 @@ public class InitiateSessionResponse {
     public String getId() {
         return id;
     }
+
     @JsonIgnore
     public HashMap<String, List<ValidationUnit>> getFirstValidationUnit() {
         return step.getValidationUnits().stream()
-                .findFirst().orElseThrow(() -> new IllegalStateException("Could not find validation unit"));
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Could not find validation unit"));
     }
 }

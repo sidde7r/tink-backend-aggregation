@@ -7,14 +7,20 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UserOverviewDataEntity {
     @JsonProperty("abonnement")
     private SubscriptionEntity subscription;
+
     private CustomerEntity client;
+
     @JsonProperty("contrat")
     private ContractEntity contract;
+
     private EvaluationClientEntity evaluationClient;
+
     @JsonProperty("indicateurs")
     private IndicatorsEntity indicators;
+
     @JsonProperty("informationsIdentification")
     private LoginInformationEntity loginInformation;
+
     private EnrolmentEntity enrolement;
 
     public SubscriptionEntity getSubscription() {

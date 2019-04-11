@@ -10,18 +10,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class CreditMutuelPfmCreditCardTransactionsFetcher implements TransactionFetcher<CreditCardAccount> {
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(
-                    CreditMutuelPfmCreditCardTransactionsFetcher.class);
-    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(EuroInformationApiClient.class);
+public class CreditMutuelPfmCreditCardTransactionsFetcher
+        implements TransactionFetcher<CreditCardAccount> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(CreditMutuelPfmCreditCardTransactionsFetcher.class);
+    private static final AggregationLogger AGGREGATION_LOGGER =
+            new AggregationLogger(EuroInformationApiClient.class);
     private final EuroInformationApiClient apiClient;
 
     private CreditMutuelPfmCreditCardTransactionsFetcher(EuroInformationApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    public static CreditMutuelPfmCreditCardTransactionsFetcher create(EuroInformationApiClient apiClient) {
+    public static CreditMutuelPfmCreditCardTransactionsFetcher create(
+            EuroInformationApiClient apiClient) {
         return new CreditMutuelPfmCreditCardTransactionsFetcher(apiClient);
     }
 

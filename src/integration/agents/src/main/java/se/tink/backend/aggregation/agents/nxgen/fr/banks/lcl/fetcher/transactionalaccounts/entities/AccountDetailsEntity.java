@@ -6,50 +6,74 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccountDetailsEntity {
     private int id;
+
     @JsonProperty("agence")
     private String agency;
+
     @JsonProperty("agenceGestion")
     private String managementAgency;
+
     @JsonProperty("compte")
     private String accountNumber;
+
     @JsonProperty("compteSurOnzeCaractere")
     private String accountOnElevenCharacters;
+
     @JsonProperty("lettreClef")
     private String clefLetter;
+
     private String natureCode;
+
     @JsonProperty("natureLibelle")
     private String typeLabel;
+
     @JsonProperty("titulaireIdentifiant")
     private String holderId;
+
     @JsonProperty("titulaireTypePersonne")
     private String holderPersonType;
+
     @JsonProperty("titulaireCivilite")
     private String holderName;
+
     @JsonProperty("titulaireNomPatronimique")
     private String holderPatronymicName;
+
     @JsonProperty("titulairePrenom")
     private String holderFirstName;
+
     @JsonProperty("titulaireNomMarital")
     private String holderLastName;
+
     @JsonProperty("titulaireNomUsuel")
     private String holderUsualName;
+
     @JsonProperty("titulaireRaisonSociale")
     private String holderCorporateName;
+
     @JsonProperty("titulaireIntitule")
     private String holderTitle;
+
     @JsonProperty("agenceGestionLibelle")
     private String managementAgencyLabel;
+
     @JsonProperty("compteBIC")
     private String accountBic;
+
     @JsonProperty("nbRibImpression")
     private int ribPrinting;
+
     @JsonProperty("ribGuichet")
     private String ribCounter;
+
     private String ribClef;
+
     @JsonProperty("ribBanque")
     private String ribBank;
+
     @JsonProperty("cleIBAN")
     private String iban;
+
     private String codePaysIBAN;
     private String topICI;
     private String urlPdf;

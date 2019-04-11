@@ -14,6 +14,7 @@ public class BankEntity {
     private String anoBaseUrl;
     private String applicationAPIContextRoot;
     private String webMobileContextRoot;
+
     @JsonProperty("welcome-msg")
     private String welcomeMsg;
 

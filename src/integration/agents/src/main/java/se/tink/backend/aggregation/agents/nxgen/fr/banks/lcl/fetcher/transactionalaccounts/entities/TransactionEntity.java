@@ -21,37 +21,54 @@ public class TransactionEntity {
 
     @JsonProperty("codeOperation")
     private String operationCode;
+
     @JsonProperty("dateMouvement")
     private String transactionDate;
+
     @JsonProperty("dateValeur")
     private String valueDate;
+
     @JsonProperty("deviseCompte")
     private String accountCurrency;
+
     @JsonProperty("deviseMouvement")
     private String transactionCurrency;
+
     @JsonProperty("libelleMouvement1")
     private String transactionDescription1;
+
     @JsonProperty("libelleMouvement2")
     private String transactionDescription2;
+
     @JsonProperty("libelleMouvement3")
     private String transactionDescription3;
+
     @JsonProperty("libelleMouvement4")
     private String transactionDescription4;
+
     @JsonProperty("libelleMouvement")
     private String transactionDescription;
+
     @JsonProperty("montantMouvement")
     private String transactionAmount;
+
     @JsonProperty("valeurMontantMouvement")
     private int valueTransactionAmount;
+
     @JsonProperty("montantCredit")
     private String amountCredit;
+
     @JsonProperty("montantDebit")
     private String amountDebit;
+
     @JsonProperty("rubriqueCompte")
     private String accountTitle;
+
     @JsonProperty("numMouvementCompte")
     private String transactionNumber;
+
     private String ddname;
+
     @JsonProperty("dateTraitement")
     private String processingDate;
 
@@ -97,13 +114,13 @@ public class TransactionEntity {
         Matcher matcher = TRANSACTION_DESCRIPTION_PATTERN.matcher(trimmedTransactionDescription);
 
         if (matcher.find()) {
-            String merchantGroup = matcher.group(LclConstants.TransactionDescrFormatting.MERCHANT_NAME);
+            String merchantGroup =
+                    matcher.group(LclConstants.TransactionDescrFormatting.MERCHANT_NAME);
             return merchantGroup.trim();
         }
 
         return trimmedTransactionDescription;
     }
-
 
     public String getOperationCode() {
         return operationCode;

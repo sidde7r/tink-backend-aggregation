@@ -7,18 +7,25 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerEntity {
     @JsonProperty("civilite")
     private int civilState;
+
     @JsonProperty("dateNaissance")
     private String dateOfBirth;
+
     @JsonProperty("ikpiPersonne")
     private String personIkpi;
+
     @JsonProperty("ikpiPersonnePhysique")
     private String physicalPersonIkpi;
+
     @JsonProperty("indicMineur")
     private boolean indicMinor;
+
     @JsonProperty("indicTitulaireCollectif")
     private boolean indicativeCollectiveHolder;
+
     @JsonProperty("nomComplet")
     private String fullName;
+
     @JsonProperty("prenom")
     private String firstName;
 

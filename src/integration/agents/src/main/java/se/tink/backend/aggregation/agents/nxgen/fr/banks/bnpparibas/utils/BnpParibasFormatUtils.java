@@ -10,5 +10,4 @@ public class BnpParibasFormatUtils {
 
     public static final Pattern TRANSACTION_DESCRIPTION_PATTERN =
             Pattern.compile(BnpParibasConstants.TransactionDescriptionFormatting.REGEX);
-
 }

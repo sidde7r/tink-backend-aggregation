@@ -14,5 +14,4 @@ public class ViewEntity {
     public SectionEntity getSections() {
         return sections;
     }
-
 }

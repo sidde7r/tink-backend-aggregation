@@ -32,7 +32,9 @@ public class SocieteGeneraleApiClient {
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
 
-    public SocieteGeneraleApiClient(TinkHttpClient client, PersistentStorage persistentStorage,
+    public SocieteGeneraleApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
             SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
@@ -41,32 +43,36 @@ public class SocieteGeneraleApiClient {
 
     public Optional<AccountsData> getAccounts() {
 
-        String raw = client
-                .request(SocieteGeneraleConstants.Url.SBM_MOB_MOB_SBM_RLV_SNT_CPT)
-                .get(String.class);
+        String raw =
+                client.request(SocieteGeneraleConstants.Url.SBM_MOB_MOB_SBM_RLV_SNT_CPT)
+                        .get(String.class);
 
         return extractData(raw, AccountsResponse.class, AccountsData.class);
     }
 
     public GenericResponse<?> getAuthInfo() {
         return client.request(SocieteGeneraleConstants.Url.GET_AUTH_INFO)
-                .queryParam(SocieteGeneraleConstants.QueryParam.NIV_AUTHENT,
+                .queryParam(
+                        SocieteGeneraleConstants.QueryParam.NIV_AUTHENT,
                         SocieteGeneraleConstants.Default.AUTHENTIFIE)
                 .get(GenericResponse.Any.class);
     }
 
     public Optional<LoginGridData> getLoginGrid() {
 
-        String raw = client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_CRYPTO)
-                .get(String.class);
+        String raw =
+                client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_CRYPTO).get(String.class);
 
         return extractData(raw, LoginGridResponse.class, LoginGridData.class);
     }
 
     public byte[] getLoginNumPadImage(String crypto) {
         return client.request(SocieteGeneraleConstants.Url.SEC_VK_GEN_UI)
-                .queryParam(SocieteGeneraleConstants.QueryParam.MODE_CLAVIER, SocieteGeneraleConstants.Default.ZERO)
-                .queryParam(SocieteGeneraleConstants.QueryParam.VK_VISUEL,
+                .queryParam(
+                        SocieteGeneraleConstants.QueryParam.MODE_CLAVIER,
+                        SocieteGeneraleConstants.Default.ZERO)
+                .queryParam(
+                        SocieteGeneraleConstants.QueryParam.VK_VISUEL,
                         SocieteGeneraleConstants.Default.VK_WIDESCREEN)
                 .queryParam(SocieteGeneraleConstants.QueryParam.CRYPTOGRAMME, crypto)
                 .get(byte[].class);
@@ -76,38 +82,48 @@ public class SocieteGeneraleApiClient {
         return client.request(SocieteGeneraleConstants.Url.LOGOUT).get(GenericResponse.Any.class);
     }
 
-    public Optional<TransactionsData> getTransactions(String technicalId, String technicalCardId, int page,
-            int pageSize) {
+    public Optional<TransactionsData> getTransactions(
+            String technicalId, String technicalCardId, int page, int pageSize) {
 
-        String raw = client
-                .request(SocieteGeneraleConstants.Url.ABM_RESTIT_CAV_LISTE_OPERATIONS)
-                .queryParam(SocieteGeneraleConstants.QueryParam.B_64_ID_PRESTA, technicalId)
-                .queryParam(SocieteGeneraleConstants.QueryParam.B_64_NUMERO_CARTE, technicalCardId)
-                .queryParam(SocieteGeneraleConstants.QueryParam.A_100_TIMESTAMPREF,
-                        SocieteGeneraleConstants.Default.EMPTY)
-                .queryParam(SocieteGeneraleConstants.QueryParam.N_15_NB_OCC, Integer.toString(pageSize))
-                .queryParam(SocieteGeneraleConstants.QueryParam.N_15_RANG_OCC, Integer.toString(1 + (page * pageSize)))
-                .get(String.class);
+        String raw =
+                client.request(SocieteGeneraleConstants.Url.ABM_RESTIT_CAV_LISTE_OPERATIONS)
+                        .queryParam(SocieteGeneraleConstants.QueryParam.B_64_ID_PRESTA, technicalId)
+                        .queryParam(
+                                SocieteGeneraleConstants.QueryParam.B_64_NUMERO_CARTE,
+                                technicalCardId)
+                        .queryParam(
+                                SocieteGeneraleConstants.QueryParam.A_100_TIMESTAMPREF,
+                                SocieteGeneraleConstants.Default.EMPTY)
+                        .queryParam(
+                                SocieteGeneraleConstants.QueryParam.N_15_NB_OCC,
+                                Integer.toString(pageSize))
+                        .queryParam(
+                                SocieteGeneraleConstants.QueryParam.N_15_RANG_OCC,
+                                Integer.toString(1 + (page * pageSize)))
+                        .get(String.class);
 
         return extractData(raw, TransactionsResponse.class, TransactionsData.class);
     }
 
-    public Optional<AuthenticationData> postAuthentication(String user_id, String cryptocvcs, String codsec) {
+    public Optional<AuthenticationData> postAuthentication(
+            String user_id, String cryptocvcs, String codsec) {
 
         String deviceId = getDeviceId();
         String token = getToken();
 
-        AuthenticationRequest formBody = AuthenticationRequest.create(user_id, cryptocvcs, codsec, deviceId, token);
+        AuthenticationRequest formBody =
+                AuthenticationRequest.create(user_id, cryptocvcs, codsec, deviceId, token);
 
-        String raw = client.request(SocieteGeneraleConstants.Url.SEC_VK_AUTHENT)
-                .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(String.class);
+        String raw =
+                client.request(SocieteGeneraleConstants.Url.SEC_VK_AUTHENT)
+                        .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(String.class);
 
         return extractData(raw, AuthenticationResponse.class, AuthenticationData.class);
     }
 
-    private <T> Optional<T> extractData(String raw, Class<? extends GenericResponse<T>> wrapperClass,
-            Class<T> valueType) {
+    private <T> Optional<T> extractData(
+            String raw, Class<? extends GenericResponse<T>> wrapperClass, Class<T> valueType) {
 
         T retVal = null;
 
@@ -130,11 +146,15 @@ public class SocieteGeneraleApiClient {
 
             } else {
 
-                logger.error("{} Request NOK: {}", SocieteGeneraleConstants.Logging.REQUEST_NOT_OK, raw);
+                logger.error(
+                        "{} Request NOK: {}", SocieteGeneraleConstants.Logging.REQUEST_NOT_OK, raw);
             }
 
         } catch (IOException e) {
-            logger.error("{} Failed to parse (or decrypt): {}", SocieteGeneraleConstants.Logging.PARSE_FAILURE, raw);
+            logger.error(
+                    "{} Failed to parse (or decrypt): {}",
+                    SocieteGeneraleConstants.Logging.PARSE_FAILURE,
+                    raw);
             throw new IllegalStateException(e);
         }
 
@@ -177,7 +197,8 @@ public class SocieteGeneraleApiClient {
 
         // key == "clesession" in response from POST /sec/vk/authent.json HTTP/1.1.
         // This key is associated with a keyId, which is the value of "id_cle" in the same response.
-        // The app keeps a dictionary of <keyId, key>, they might send us multiple keys at a later point.
+        // The app keeps a dictionary of <keyId, key>, they might send us multiple keys at a later
+        // point.
 
         String sessionKey = getSessionKey();
         byte[] key = EncodingUtils.decodeBase64String(sessionKey);
@@ -191,5 +212,4 @@ public class SocieteGeneraleApiClient {
 
         return new String(plainText);
     }
-
 }

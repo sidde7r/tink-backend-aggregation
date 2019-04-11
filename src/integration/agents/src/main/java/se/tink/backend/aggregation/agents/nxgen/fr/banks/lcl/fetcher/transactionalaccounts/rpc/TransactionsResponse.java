@@ -11,25 +11,36 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsResponse {
     @JsonProperty("opNC_I")
     private OpNcIEntity opNcI;
+
     @JsonProperty("releveMoisActuelPasse")
     private boolean passesUnderCurrentMonth;
+
     @JsonProperty("lesTypesEpargne")
     private List<String> savingsTypes;
+
     @JsonProperty("listeMvt")
     private List<TransactionEntity> transactionsList;
+
     private boolean isOpNCBlooped;
+
     @JsonProperty("formatEnteteConcatene")
     private String concatenatedAgreementFormat;
+
     @JsonProperty("natureCompte")
     private String accountType;
+
     @JsonProperty("degradeCompteAbsent")
     private String degradedAbsentAccount;
+
     @JsonProperty("listeEntete")
     private AgreementListEntity agreementList;
+
     @JsonProperty("dateDernierJourOuvre")
     private String lastWorkingDayDate;
+
     @JsonProperty("moisActuel")
     private int currentMonth;
+
     @JsonProperty("formatPaginDB2Concatene")
     private String concatenatedPageDb2Format;
 

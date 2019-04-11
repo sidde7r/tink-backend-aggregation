@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BanqueTransatlantiqueApiClient extends EuroInformationApiClient {
-    public BanqueTransatlantiqueApiClient(TinkHttpClient client,
+    public BanqueTransatlantiqueApiClient(
+            TinkHttpClient client,
             SessionStorage sessionStorage,
             EuroInformationConfiguration config) {
         super(client, sessionStorage, config);
@@ -17,12 +18,13 @@ public class BanqueTransatlantiqueApiClient extends EuroInformationApiClient {
     @Override
     public LoginResponse logon(String username, String password) {
         return buildRequestHeaders(config.getLoginSubpage())
-                .body(new BanqueTranatlantiqueLoginRequest(
-                        username,
-                        password,
-                        config.getAppVersionKey(),
-                        config.getAppVersion(),
-                        config.getTarget()))
+                .body(
+                        new BanqueTranatlantiqueLoginRequest(
+                                username,
+                                password,
+                                config.getAppVersionKey(),
+                                config.getAppVersion(),
+                                config.getTarget()))
                 .post(LoginResponse.class);
     }
 }

@@ -6,13 +6,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionsInfoEntity {
     private InfoUdcEntity infoUdc;
+
     @JsonProperty("dateDuJour")
     private String todaySDate;
+
     private String pagination;
+
     @JsonProperty("urlAiguillage")
     private String urlReferrals;
+
     private int cslProduction;
     private int cslModification;
+
     @JsonProperty("compte")
     private AccountTransactionsEntity accountTransactions;
 

@@ -30,18 +30,22 @@ public class LclAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         configureDeviceIfNotConfigured();
         String agentKey = getAgentKeyForSessionId();
         String sessionId = generateSessionId(agentKey);
 
         BpiMetaData bpiMetaDataEntity = BpiMetaData.create(sessionId);
-        String bpiMetaDataB64String = EncodingUtils.encodeAsBase64String(
-                Objects.requireNonNull(SerializationUtils.serializeToString(bpiMetaDataEntity)));
+        String bpiMetaDataB64String =
+                EncodingUtils.encodeAsBase64String(
+                        Objects.requireNonNull(
+                                SerializationUtils.serializeToString(bpiMetaDataEntity)));
 
         String xorPinB64String = getXorPinInB64(password);
 
-        LoginResponse loginResponse = apiClient.login(username, bpiMetaDataB64String, xorPinB64String);
+        LoginResponse loginResponse =
+                apiClient.login(username, bpiMetaDataB64String, xorPinB64String);
 
         checkForErrors(loginResponse);
     }
@@ -50,15 +54,16 @@ public class LclAuthenticator implements PasswordAuthenticator {
         if (LclConstants.Authentication.ERROR_TRUE.equalsIgnoreCase(loginResponse.getError())) {
             String errorCode = Optional.ofNullable(loginResponse.getErrorCode()).orElse("");
 
-            if (LclConstants.Authentication.INCORRECT_LOGIN_CREDENTIALS.equalsIgnoreCase(errorCode) ||
-                    LclConstants.Authentication.INCORRECT_PASSWORD.equalsIgnoreCase(errorCode)) {
+            if (LclConstants.Authentication.INCORRECT_LOGIN_CREDENTIALS.equalsIgnoreCase(errorCode)
+                    || LclConstants.Authentication.INCORRECT_PASSWORD.equalsIgnoreCase(errorCode)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            throw new IllegalStateException(String.format(
-                    "Could not authenticate user: errorCode %s, errorMessage: %s",
-                    errorCode,
-                    Optional.ofNullable(loginResponse.getErrorMessage()).orElse("")));
+            throw new IllegalStateException(
+                    String.format(
+                            "Could not authenticate user: errorCode %s, errorMessage: %s",
+                            errorCode,
+                            Optional.ofNullable(loginResponse.getErrorMessage()).orElse("")));
         }
     }
 
@@ -78,8 +83,9 @@ public class LclAuthenticator implements PasswordAuthenticator {
         byte[] bytes = new byte[26];
         RANDOM.nextBytes(bytes);
 
-        String agentKey = EncodingUtils.encodeHexAsString(bytes).toUpperCase() +
-                LclConstants.Authentication.IDENTIFIER_FOR_VENDOR_IN_HEX;
+        String agentKey =
+                EncodingUtils.encodeHexAsString(bytes).toUpperCase()
+                        + LclConstants.Authentication.IDENTIFIER_FOR_VENDOR_IN_HEX;
 
         lclPersistentStorage.saveAgentKey(agentKey);
         return agentKey;
@@ -96,7 +102,6 @@ public class LclAuthenticator implements PasswordAuthenticator {
         String htmlResponse = apiClient.getXorKey();
         int xorKey = Integer.parseInt(htmlResponse);
 
-        return EncodingUtils.encodeAsBase64String(
-                LclCryptoUtils.computeXorPin(password, xorKey));
+        return EncodingUtils.encodeAsBase64String(LclCryptoUtils.computeXorPin(password, xorKey));
     }
 }

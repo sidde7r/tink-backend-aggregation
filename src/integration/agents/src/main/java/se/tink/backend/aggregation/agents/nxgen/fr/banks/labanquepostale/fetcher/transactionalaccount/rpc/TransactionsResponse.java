@@ -11,26 +11,35 @@ public class TransactionsResponse {
 
     @JsonProperty("code_ret")
     private String codeRet;
+
     @JsonProperty("code_media")
     private String codeMedia;
+
     private String message;
+
     @JsonProperty("compteNumero")
     private String compteNumber;
+
     @JsonProperty("libelleNatureCompte")
     private String libelleNatureAccount;
+
     @JsonProperty("typePartenaire")
     private String partnerType;
+
     private String devise;
+
     @JsonProperty("avoirDispo")
     private double haveDispo;
+
     @JsonProperty("heureSoldeOp")
     private String hourBalanceOp;
+
     private int nbOperations;
+
     @JsonProperty("operations")
     private List<TransactionEntity> transactions;
 
     public List<TransactionEntity> getTransactions() {
         return transactions != null ? transactions : Collections.emptyList();
     }
-
 }

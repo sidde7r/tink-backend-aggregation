@@ -25,33 +25,49 @@ public class BanquePopulaireAuthenticator implements PasswordAuthenticator {
     private final BanquePopulaireApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public BanquePopulaireAuthenticator(BanquePopulaireApiClient apiClient, SessionStorage sessionStorage) {
+    public BanquePopulaireAuthenticator(
+            BanquePopulaireApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         apiClient.getConfiguration();
 
         HttpResponse rawInitiateResponse = apiClient.initiateSession();
         List<URI> redirects = rawInitiateResponse.getRedirects();
         String baseAuthUrl = redirects.get(redirects.size() - 1).toString();
 
-        InitiateSessionResponse initiateSessionResponse = rawInitiateResponse.getBody(InitiateSessionResponse.class);
-        HashMap<String, List<ValidationUnit>> validationUnit = initiateSessionResponse.getFirstValidationUnit();
+        InitiateSessionResponse initiateSessionResponse =
+                rawInitiateResponse.getBody(InitiateSessionResponse.class);
+        HashMap<String, List<ValidationUnit>> validationUnit =
+                initiateSessionResponse.getFirstValidationUnit();
 
-        Map.Entry<String, List<ValidationUnit>> unit = validationUnit.entrySet().stream()
-                .findFirst().orElseThrow(() -> new IllegalStateException("No validation unit found"));
+        Map.Entry<String, List<ValidationUnit>> unit =
+                validationUnit.entrySet().stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No validation unit found"));
 
         String validationId = unit.getKey();
-        ValidationUnit validationData = unit.getValue().stream()
-                .findFirst().orElseThrow(() -> new IllegalStateException("No validation data found"));
+        ValidationUnit validationData =
+                unit.getValue().stream()
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No validation data found"));
 
-        PasswordValidationRequest passwordValidationRequest = PasswordValidationRequest.create(validationId, password, validationData.getId(), username, validationData.getType());
+        PasswordValidationRequest passwordValidationRequest =
+                PasswordValidationRequest.create(
+                        validationId,
+                        password,
+                        validationData.getId(),
+                        username,
+                        validationData.getType());
 
-        PasswordValidationResponse validationResponse = apiClient.authenticate(baseAuthUrl, passwordValidationRequest);
-        if (!BanquePopulaireConstants.Authentication.AUTHENTICATION_SUCCESS.equalsIgnoreCase(validationResponse.getValidationStatus())) {
+        PasswordValidationResponse validationResponse =
+                apiClient.authenticate(baseAuthUrl, passwordValidationRequest);
+        if (!BanquePopulaireConstants.Authentication.AUTHENTICATION_SUCCESS.equalsIgnoreCase(
+                validationResponse.getValidationStatus())) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
@@ -59,9 +75,9 @@ public class BanquePopulaireAuthenticator implements PasswordAuthenticator {
             apiClient.authenticateSaml2(validationResponse);
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
-            if (response != null &&(
-                    response.getStatus() == HttpStatus.SC_UNAUTHORIZED ||
-                            response.getStatus() == HttpStatus.SC_FORBIDDEN)) {
+            if (response != null
+                    && (response.getStatus() == HttpStatus.SC_UNAUTHORIZED
+                            || response.getStatus() == HttpStatus.SC_FORBIDDEN)) {
                 throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
             }
             // if not auth error throw

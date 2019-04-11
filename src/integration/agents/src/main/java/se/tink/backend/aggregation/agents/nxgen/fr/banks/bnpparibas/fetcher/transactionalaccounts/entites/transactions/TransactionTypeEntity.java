@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionTypeEntity {
     @JsonProperty("codeFamille")
     private int groupCode;
+
     @JsonProperty("libelle")
     private String label;
 

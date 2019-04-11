@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class OpNcIEntity {
     private int totalDebitOperations;
     private int totalCreditOperations;
+
     @JsonProperty("signeSoldeOperations")
     private String signBalanceOperations;
+
     @JsonProperty("valeurSoldeOperations")
     private int valueBalanceOperations;
+
     private String tri;
     private String signeMntTotalCpt;
     private int mntTotalCpt;

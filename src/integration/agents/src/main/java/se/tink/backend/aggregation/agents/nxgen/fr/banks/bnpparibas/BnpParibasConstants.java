@@ -8,10 +8,14 @@ public class BnpParibasConstants {
         public static final String HOST = "https://m-service.bnpparibas.net/";
         public static final URL NUMPAD = new URL(HOST + "ident-mobile-wspl/rpc/grille.do");
         public static final URL LOGIN = new URL(HOST + "SEEA-pa01/devServer/seeaserver");
-        public static final URL KEEP_ALIVE = new URL(HOST + "authentforte-wspl/rpc/recupererStatut");
-        public static final URL USER_OVERVIEW = new URL(HOST + "serviceinfosclient-wspl/rpc/InfosClient");
-        public static final URL ACCOUNT_DETAILS = new URL(HOST + "SmcDiversPresentationWeb/EntryPointSmcDiversServlet");
-        public static final URL TRANSACTIONAL_ACCOUNT_TRANSACTIONS = new URL(HOST + "rop-wspl/rest/releveOp");
+        public static final URL KEEP_ALIVE =
+                new URL(HOST + "authentforte-wspl/rpc/recupererStatut");
+        public static final URL USER_OVERVIEW =
+                new URL(HOST + "serviceinfosclient-wspl/rpc/InfosClient");
+        public static final URL ACCOUNT_DETAILS =
+                new URL(HOST + "SmcDiversPresentationWeb/EntryPointSmcDiversServlet");
+        public static final URL TRANSACTIONAL_ACCOUNT_TRANSACTIONS =
+                new URL(HOST + "rop-wspl/rest/releveOp");
     }
 
     public static final class Storage {
@@ -75,8 +79,8 @@ public class BnpParibasConstants {
 
     public static final class TransactionDescriptionFormatting {
         public static final String MERCHANT_NAME = "merchantName";
-        public static final String REGEX = String.format(
-                "^FACTURE CARTE DU [0-9]+ (?<%s>.*) CARTE [0-9X]+$", MERCHANT_NAME);
+        public static final String REGEX =
+                String.format("^FACTURE CARTE DU [0-9]+ (?<%s>.*) CARTE [0-9X]+$", MERCHANT_NAME);
     }
 
     public static final class Tags {

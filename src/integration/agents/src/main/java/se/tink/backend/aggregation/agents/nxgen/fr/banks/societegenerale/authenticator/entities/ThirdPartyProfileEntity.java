@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ThirdPartyProfileEntity {
     @JsonProperty("HI469")
     private String hi469;
+
     @JsonProperty("HI52")
     private String hi52;
 }

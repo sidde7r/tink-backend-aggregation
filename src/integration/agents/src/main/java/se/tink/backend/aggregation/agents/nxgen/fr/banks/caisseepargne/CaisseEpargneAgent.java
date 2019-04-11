@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.authenticator.CaisseEpargneAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.transactionalaccount.CaisseEpargneTransactionalAccountFetcher;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -19,16 +20,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class CaisseEpargneAgent extends NextGenerationAgent {
 
     private final CaisseEpargneApiClient apiClient;
 
-    public CaisseEpargneAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public CaisseEpargneAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
 
         super(request, context, signatureKeyPair);
 
@@ -48,15 +47,23 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new CaisseEpargneAuthenticator(apiClient, persistentStorage));
+        return new PasswordAuthenticationController(
+                new CaisseEpargneAuthenticator(apiClient, persistentStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        CaisseEpargneTransactionalAccountFetcher fetcher = new CaisseEpargneTransactionalAccountFetcher(apiClient);
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                fetcher, new TransactionFetcherController<>(transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(fetcher))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        CaisseEpargneTransactionalAccountFetcher fetcher =
+                new CaisseEpargneTransactionalAccountFetcher(apiClient);
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        fetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(fetcher))));
     }
 
     @Override
@@ -80,7 +87,8 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -93,5 +101,4 @@ public class CaisseEpargneAgent extends NextGenerationAgent {
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
     }
-
 }

@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BpiMetaData {
     private String sessionId;
+
     @JsonProperty("mobile_data")
     private String mobileData;
+
     private String channel;
 
     private BpiMetaData(String sessionId) {

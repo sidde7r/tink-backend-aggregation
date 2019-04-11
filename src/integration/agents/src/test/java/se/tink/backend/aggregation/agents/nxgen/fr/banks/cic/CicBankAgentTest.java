@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.cic;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
 
 @Ignore
 public class CicBankAgentTest extends NextGenerationAgentTest<CicBankAgent> {

@@ -13,5 +13,4 @@ public class AccountantBalanceEntity extends Amount {
     public AccountantBalanceEntity(@JsonProperty("solde") double balance) {
         super(LaBanquePostaleConstants.CURRENCY, balance);
     }
-
 }

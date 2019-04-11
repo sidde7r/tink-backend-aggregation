@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.fetche
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class PersonalLoanOffersEntity {
-}
+public class PersonalLoanOffersEntity {}

@@ -10,12 +10,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountGroupEntity {
     @JsonProperty("libelle")
     private String label;
+
     @JsonProperty("indice")
     private int index;
+
     @JsonProperty("listGroupe")
     private List<GroupListEntity> groupList;
+
     @JsonProperty("tagHtml")
     private String groupType;
+
     private boolean topCache;
 
     @JsonIgnore

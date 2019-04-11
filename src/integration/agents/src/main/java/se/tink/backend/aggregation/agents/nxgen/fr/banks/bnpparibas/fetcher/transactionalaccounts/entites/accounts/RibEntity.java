@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class RibEntity {
     @JsonProperty("infoAgence")
     private AgencyInfoEntity agencyInfo;
+
     @JsonProperty("infoClient")
     private CustomerInfoEntity customerInfo;
+
     @JsonProperty("infoCompte")
     private AccountEntity.AccountInfoEntity accountInfo;
 

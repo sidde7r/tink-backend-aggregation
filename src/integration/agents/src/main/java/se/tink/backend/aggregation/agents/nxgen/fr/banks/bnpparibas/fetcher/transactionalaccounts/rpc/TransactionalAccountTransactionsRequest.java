@@ -13,7 +13,8 @@ public class TransactionalAccountTransactionsRequest {
     private String ibanCrypte;
     private String endDate;
 
-    private TransactionalAccountTransactionsRequest(String startDate, String endDate, String ibanKey) {
+    private TransactionalAccountTransactionsRequest(
+            String startDate, String endDate, String ibanKey) {
         this.triAV = BnpParibasConstants.TransactionalAccountTransactions.TRIAV;
         this.startDate = startDate;
         this.pastOrPending = BnpParibasConstants.TransactionalAccountTransactions.PAST_OR_PENDING;
@@ -21,8 +22,8 @@ public class TransactionalAccountTransactionsRequest {
         this.endDate = endDate;
     }
 
-    public static TransactionalAccountTransactionsRequest create(Date fromDate, Date toDate,
-            String ibanKey) {
+    public static TransactionalAccountTransactionsRequest create(
+            Date fromDate, Date toDate, String ibanKey) {
         String startDate = BnpParibasFormatUtils.TRANSACTION_DATE_FORMATTER.format(fromDate);
         String endDate = BnpParibasFormatUtils.TRANSACTION_DATE_FORMATTER.format(toDate);
 

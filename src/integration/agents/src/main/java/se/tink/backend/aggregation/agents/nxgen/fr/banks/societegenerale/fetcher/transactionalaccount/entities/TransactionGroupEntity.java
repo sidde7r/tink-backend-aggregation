@@ -12,5 +12,4 @@ public class TransactionGroupEntity {
     public List<TransactionEntity> getElements() {
         return elements;
     }
-
 }

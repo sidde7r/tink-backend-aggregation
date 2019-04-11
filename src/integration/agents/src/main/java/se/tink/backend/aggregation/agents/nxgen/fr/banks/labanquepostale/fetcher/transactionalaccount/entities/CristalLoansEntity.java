@@ -8,12 +8,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CristalLoansEntity {
     @JsonProperty("problemeTechnique")
     private boolean technicalProblem;
+
     @JsonProperty("offresCreditRenouvelable")
     private List<RenewableCreditOffersEntity> renewableCreditOffers;
+
     @JsonProperty("offresPretPersonnel")
     private List<PersonalLoanOffersEntity> personalLoanOffers;
+
     @JsonProperty("offresPretsEtudiantApprentis")
     private List<StudentLoanStudentLoansEntity> studentLoanStudentLoans;
+
     @JsonProperty("offresRachatCredit")
     private List<CreditBuybackOffersEntity> creditBuybackOffers;
 }

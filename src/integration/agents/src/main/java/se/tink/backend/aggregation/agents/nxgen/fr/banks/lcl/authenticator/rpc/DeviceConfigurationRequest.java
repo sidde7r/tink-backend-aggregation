@@ -8,18 +8,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DeviceConfigurationRequest {
     @JsonProperty("model_version")
     private String modelVersion;
+
     private String appname;
     private String appversion;
     private String sdkversion;
     private String os;
     private String fuseau;
+
     @JsonProperty("connection_type")
     private String connectionType;
+
     private String manufacturer;
     private String lang;
     private String timezone;
+
     @JsonProperty("os_version")
     private String osVersion;
+
     private String model;
     private String name;
 

@@ -14,20 +14,22 @@ public class BanquePopulaireSessionHandler implements SessionHandler {
     private final BanquePopulaireApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public BanquePopulaireSessionHandler(BanquePopulaireApiClient apiClient, SessionStorage sessionStorage) {
+    public BanquePopulaireSessionHandler(
+            BanquePopulaireApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void logout() {
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {
-        sessionStorage.get(BanquePopulaireConstants.Storage.BANK_ENTITY, BankEntity.class)
+        sessionStorage
+                .get(BanquePopulaireConstants.Storage.BANK_ENTITY, BankEntity.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        sessionStorage.get(BanquePopulaireConstants.Storage.APP_CONFIGURATION, AppConfigEntity.class)
+        sessionStorage
+                .get(BanquePopulaireConstants.Storage.APP_CONFIGURATION, AppConfigEntity.class)
                 .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         try {

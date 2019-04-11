@@ -14,29 +14,37 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 @JacksonXmlRootElement
-public class TransactionsResultsEntity implements
-        TransactionKeyPaginatorResponse<String> {
+public class TransactionsResultsEntity implements TransactionKeyPaginatorResponse<String> {
 
     @JacksonXmlProperty(localName = "IndicateurNav")
     private String navIndicator;
+
     @JacksonXmlProperty(localName = "BufferSuite")
     private String paginationKey;
+
     @JacksonXmlProperty(localName = "Nb_Op")
     private String nbOp;
+
     @JacksonXmlProperty(localName = "Nb_Op_Tot")
     private String nbOpTot;
+
     @JacksonXmlProperty(localName = "IndiceExaustif")
     private String exaustifIndex;
+
     @JacksonXmlElementWrapper(localName = "ListHistoCpt")
     private List<TransactionEntity> transactions;
+
     @JacksonXmlProperty(localName = "MttSoldeCompte")
     private String mttBalanceAccount;
+
     @JacksonXmlProperty(localName = "SensSoldeCompte")
     private String accountBalanceAccount;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream().map(TransactionEntity::toTinkTransaction).collect(Collectors.toList());
+        return transactions.stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override

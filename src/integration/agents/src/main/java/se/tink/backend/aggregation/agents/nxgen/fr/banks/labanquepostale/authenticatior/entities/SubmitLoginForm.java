@@ -11,17 +11,17 @@ public class SubmitLoginForm extends AbstractForm {
         Preconditions.checkState(!Strings.isNullOrEmpty(username));
         Preconditions.checkState(!Strings.isNullOrEmpty(password));
 
-        put(LaBanquePostaleConstants.QueryParams.URL_BACKEND,
+        put(
+                LaBanquePostaleConstants.QueryParams.URL_BACKEND,
                 LaBanquePostaleConstants.QueryDefaultValues.MOBILE_AUTH_BACKEND);
-        put(LaBanquePostaleConstants.QueryParams.ORIGIN,
+        put(
+                LaBanquePostaleConstants.QueryParams.ORIGIN,
                 LaBanquePostaleConstants.QueryDefaultValues.TACTILE);
-        put(LaBanquePostaleConstants.QueryParams.CV,
+        put(
+                LaBanquePostaleConstants.QueryParams.CV,
                 LaBanquePostaleConstants.QueryDefaultValues.TRUE);
-        put(LaBanquePostaleConstants.QueryParams.CVVS,
-                "");
-        put(LaBanquePostaleConstants.QueryParams.PASSWORD,
-                password);
-        put(LaBanquePostaleConstants.QueryParams.USERNAME,
-                username);
+        put(LaBanquePostaleConstants.QueryParams.CVVS, "");
+        put(LaBanquePostaleConstants.QueryParams.PASSWORD, password);
+        put(LaBanquePostaleConstants.QueryParams.USERNAME, username);
     }
 }

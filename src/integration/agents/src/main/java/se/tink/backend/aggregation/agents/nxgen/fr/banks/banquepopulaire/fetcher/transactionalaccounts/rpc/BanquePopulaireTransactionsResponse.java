@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class BanquePopulaireTransactionsResponse extends ArrayList<AccountTransaction> implements
-        TransactionKeyPaginatorResponse<String> {
+public class BanquePopulaireTransactionsResponse extends ArrayList<AccountTransaction>
+        implements TransactionKeyPaginatorResponse<String> {
 
     public static BanquePopulaireTransactionsResponse empty() {
         return new BanquePopulaireTransactionsResponse();
@@ -24,9 +24,7 @@ public class BanquePopulaireTransactionsResponse extends ArrayList<AccountTransa
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return stream()
-                .map(AccountTransaction::toTinkTransaction)
-                .collect(Collectors.toList());
+        return stream().map(AccountTransaction::toTinkTransaction).collect(Collectors.toList());
     }
 
     @Override

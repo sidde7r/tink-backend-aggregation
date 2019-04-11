@@ -16,12 +16,14 @@ public class LaBanquePostaleAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder(LaBanquePostaleConstants.MARKET,
-                LaBanquePostaleConstants.PROVIDER_NAME)
-                .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder(
+                                LaBanquePostaleConstants.MARKET,
+                                LaBanquePostaleConstants.PROVIDER_NAME)
+                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
+                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

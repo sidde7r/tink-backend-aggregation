@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AccountGroupEntity {
     @JsonProperty("libelleFamilleCompte")
     private String accountGroupLabel;
+
     @JsonProperty("idFamilleCompte")
     private int accountGroupId;
 

@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.rpc.Gener
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class TransactionsResponse extends GenericResponse<TransactionsResultsEntity> implements
-        TransactionKeyPaginatorResponse<String> {
+public class TransactionsResponse extends GenericResponse<TransactionsResultsEntity>
+        implements TransactionKeyPaginatorResponse<String> {
 
     @Override
     public String nextKey() {

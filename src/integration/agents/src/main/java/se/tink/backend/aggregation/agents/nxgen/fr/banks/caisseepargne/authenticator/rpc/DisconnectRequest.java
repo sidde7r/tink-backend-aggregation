@@ -13,5 +13,4 @@ public class DisconnectRequest extends GenericRequest {
     public String action() {
         return CaisseEpargneConstants.SoapAction.DECONNEXION;
     }
-    
 }

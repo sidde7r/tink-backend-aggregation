@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class NumpadDataEntity {
     @JsonProperty("idGrille")
     private String gridId;
+
     @JsonProperty("grille")
     private String grid;
+
     private String template;
 
     public String getGridId() {
