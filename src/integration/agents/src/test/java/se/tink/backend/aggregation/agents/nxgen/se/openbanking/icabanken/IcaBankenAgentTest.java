@@ -12,10 +12,11 @@ public class IcaBankenAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
-            .loadCredentialsBefore(false)
-            .expectLoggedIn(false)
-            .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder("se", "se-icabanken-oauth2")
+                        .loadCredentialsBefore(false)
+                        .expectLoggedIn(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

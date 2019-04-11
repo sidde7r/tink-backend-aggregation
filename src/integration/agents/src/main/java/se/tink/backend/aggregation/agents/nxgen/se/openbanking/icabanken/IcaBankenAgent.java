@@ -59,7 +59,7 @@ public final class IcaBankenAgent extends NextGenerationAgent {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                            ErrorMessages.MISSING_CONFIGURATION));
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
         apiClient.setConfiguration(icaBankenConfiguration);
     }
