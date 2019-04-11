@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.account;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,9 +27,13 @@ public class AccountEntity {
                 .setBalance(getBalance())
                 .setAlias(name)
                 .addAccountIdentifier(new IbanIdentifier(iban))
-                .addHolderName(name)
+                .addHolderName(getOwner())
                 .setApiIdentifier(resourceId)
                 .build();
+    }
+
+    private String getOwner() {
+        return Optional.ofNullable(owner).flatMap(owners -> owners.stream().findFirst()).orElse("");
     }
 
     private Amount getBalance() {

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionFetcher;
@@ -26,12 +27,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public final class IcaBankenAgent extends NextGenerationAgent {
 
     private final IcaBankenApiClient apiClient;
+    private final String clientName;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new IcaBankenApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new IcaBankenApiClient(client, sessionStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
@@ -46,20 +49,19 @@ public final class IcaBankenAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final IcaBankenConfiguration sebConfiguration =
+        final IcaBankenConfiguration icaBankenConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                IcaBankenConstants.Market.INTEGRATION_NAME,
-                                IcaBankenConstants.Market.CLIENT_NAME,
+                                IcaBankenConstants.INTEGRATION_NAME,
+                                clientName,
                                 IcaBankenConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "ICA Banken configuration missing."));
+                                            ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage.put(
-                IcaBankenConstants.StorageKeys.BASE_URL, sebConfiguration.getBaseUrl());
+        apiClient.setConfiguration(icaBankenConfiguration);
     }
 
     @Override
