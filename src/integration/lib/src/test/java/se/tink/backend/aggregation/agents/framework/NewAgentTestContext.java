@@ -111,7 +111,8 @@ public final class NewAgentTestContext extends AgentContext implements IdentityD
 
     @Override
     public void processTransactions() {
-        // noop
+        // Should never be called, and we shouldn't have to implement this method to begin with
+        throw new AssertionError();
     }
 
     private void displaySupplementalInformation(Credentials credentials) {
