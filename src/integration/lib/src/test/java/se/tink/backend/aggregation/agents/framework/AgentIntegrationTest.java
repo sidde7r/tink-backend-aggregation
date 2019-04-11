@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -234,7 +235,16 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
-                RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+                if (item == RefreshableItem.IDENTITY
+                        && agent instanceof RefreshCustomerInfoExecutor) {
+
+                    context.updateCustomerInfo(
+                            ((RefreshCustomerInfoExecutor) agent)
+                                    .fetchCustomerInfo()
+                                    .getCustomerInfo());
+                } else {
+                    RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
+                }
             }
 
             if (RefreshableItem.hasAccounts(sortedItems)) {

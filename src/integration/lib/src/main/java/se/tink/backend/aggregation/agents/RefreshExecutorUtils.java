@@ -73,12 +73,6 @@ public final class RefreshExecutorUtils {
                                     .fetchCheckingAccounts()
                                     .getAccounts());
                     break;
-                case IDENTITY:
-                    context.updateCustomerInfo(
-                            ((RefreshCustomerInfoExecutor) agent)
-                                    .fetchCustomerInfo()
-                                    .getCustomerInfo());
-                    break;
                 case CHECKING_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
                             ((RefreshCheckingAccountsExecutor) agent)

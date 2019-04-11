@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -17,8 +18,6 @@ import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.MetricId;
-
-import java.util.List;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final Logger log = LoggerFactory.getLogger(RefreshItemAgentWorkerCommand.class);

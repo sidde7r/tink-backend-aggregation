@@ -17,35 +17,34 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.libraries.customerinfo.CustomerInfo;
-import se.tink.libraries.pair.Pair;
-import se.tink.libraries.documentcontainer.DocumentContainer;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.libraries.enums.StatisticMode;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.documentcontainer.DocumentContainer;
+import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.pair.Pair;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -67,8 +66,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     // a collection of account to keep a record of what accounts we should aggregate data after opt-in flow,
     // selecting white listed accounts and eliminating blacklisted accounts
     protected List<Account> accountsToAggregate;
-    // Customer identity data
-    private CustomerInfo customerInfo;
     // a collection of account numbers that the Opt-in user selected during the opt-in flow
     // True or false if system has been requested to process transactions.
     protected boolean isSystemProcessingTransactions;
@@ -291,16 +288,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeaturesToCache));
-    }
-
-    @Override
-    public void updateCustomerInfo(final CustomerInfo customerInfo) {
-        this.customerInfo = customerInfo;
-    }
-
-    @Override
-    public Optional<CustomerInfo> getCustomerInfo() {
-        return Optional.ofNullable(customerInfo);
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
