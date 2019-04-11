@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.integration.api.rpc.CheckingAccountsResponse;
 import se.tink.backend.integration.api.rpc.IntegrationRequest;
 import se.tink.backend.integration.api.services.FetchServiceGrpc;
+import se.tink.backend.integration.fetchservice.controller.FetchController;
 import se.tink.backend.integration.fetchservice.converters.CoreToGrpcConverter;
 import se.tink.backend.integration.fetchservice.converters.GrpcToCoreConverter;
-import se.tink.backend.integration.fetchservice.controller.FetchController;
 
 public class FetchService extends FetchServiceGrpc.FetchServiceImplBase {
 
@@ -21,16 +21,20 @@ public class FetchService extends FetchServiceGrpc.FetchServiceImplBase {
     }
 
     @Override
-    public void checkingAccounts(IntegrationRequest request,
-            StreamObserver<CheckingAccountsResponse> responseObserver) {
+    public void checkingAccounts(
+            IntegrationRequest request, StreamObserver<CheckingAccountsResponse> responseObserver) {
         try {
-            FetchAccountsResponse fetchAccountsResponse = fetchController.execute(GrpcToCoreConverter.convert(request));
+            FetchAccountsResponse fetchAccountsResponse =
+                    fetchController.execute(GrpcToCoreConverter.convert(request));
             responseObserver.onNext(CoreToGrpcConverter.convert(fetchAccountsResponse));
             responseObserver.onCompleted();
 
         } catch (Exception e) {
             responseObserver.onError(
-                    Status.INTERNAL.withDescription(e.getMessage()).withCause(e.getCause()).asRuntimeException());
+                    Status.INTERNAL
+                            .withDescription(e.getMessage())
+                            .withCause(e.getCause())
+                            .asRuntimeException());
         }
     }
 }

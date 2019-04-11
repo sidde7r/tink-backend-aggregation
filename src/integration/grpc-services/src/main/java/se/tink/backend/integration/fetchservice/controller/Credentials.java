@@ -40,11 +40,13 @@ public class Credentials {
         Preconditions.checkNotNull(fieldsSerialized);
         Preconditions.checkArgument(!Objects.isNull(type));
         return new Credentials(id, userId, fieldsSerialized, type);
-
     }
 
     public enum Type {
-        UNKNOWN, PASSWORD, THIRD_PARTY_AUTHENTICATION, KEYFOB, FRAUD;
+        UNKNOWN,
+        PASSWORD,
+        THIRD_PARTY_AUTHENTICATION,
+        KEYFOB,
+        FRAUD;
     }
-
 }

@@ -26,4 +26,3 @@ public class AggregatorInfo {
         return aggregatorIdentifier;
     }
 }
-
