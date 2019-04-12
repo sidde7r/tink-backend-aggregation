@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountReq
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
@@ -107,5 +108,9 @@ public class ControllerWrapper {
 
     public Response checkConnectivity() {
         return client.checkConnectivity(configuration);
+    }
+
+    public void updateIdentityData(UpdateIdentityDataRequest request) {
+        client.updateIdentity(configuration, request);
     }
 }

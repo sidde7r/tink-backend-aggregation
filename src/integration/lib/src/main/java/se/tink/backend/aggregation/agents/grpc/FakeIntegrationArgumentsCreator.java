@@ -147,6 +147,9 @@ public class FakeIntegrationArgumentsCreator {
                     public Account updateAccount(String uniqueId) {
                         return null;
                     }
+
+                    @Override
+                    public void sendIdentityToIdentityService(String uniqueId) {}
                 };
         return context;
     }

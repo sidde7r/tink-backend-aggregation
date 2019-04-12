@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredential
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
@@ -154,5 +155,10 @@ public class AggregationControllerAggregationClient {
 
     public Response checkConnectivity(HostConfiguration hostConfiguration) {
         return getAggregationControllerService(hostConfiguration).connectivityCheck();
+    }
+
+    public void updateIdentity(
+            HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
+        // TODO: Implement this when Identity service up and running!
     }
 }

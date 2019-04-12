@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
@@ -582,6 +583,25 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             // Validation passed.
 
             this.transfers.add(transfer);
+        }
+    }
+
+    @Override
+    public void sendIdentityToIdentityService(String uniqueId) {
+        // TODO: implement sending identity data
+        UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
+        updateIdentityDataRequest.setName("Test name");
+        updateIdentityDataRequest.setSsn("123-45-yu-89");
+
+        try {
+            controllerWrapper.updateIdentityData(updateIdentityDataRequest);
+        } catch (UniformInterfaceException e) {
+            log.error(
+                    "Identity update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
+            throw e;
         }
     }
 }
