@@ -1,4 +1,4 @@
-# tink-backend-aggregartion
+# tink-backend-aggregation
 
 ## config maps
 
@@ -42,7 +42,7 @@ Every day the cronjob runs and checks if we have any missing client-configuratio
 
 ### How to add Clients
 
-- Based on the jira card, add the client configuration in the [values](.charts/tink-backend-aggregation/values/aggregation-production.yaml).
+- Based on the request from the TAMs, add the client configuration in the [values](.charts/tink-backend-aggregation/values/aggregation-production.yaml).
 - Deploy aggregation production.
 - Command will provision the client the next time it runs.
 - Next steps should be similar to before (map the apiKey to the aggregation-controller secrets).
