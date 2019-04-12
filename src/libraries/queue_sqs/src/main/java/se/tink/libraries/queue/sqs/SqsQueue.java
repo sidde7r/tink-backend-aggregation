@@ -106,7 +106,8 @@ public class SqsQueue {
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 logger.warn(
-                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.", e);
+                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.",
+                        e);
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 retries++;
             }
