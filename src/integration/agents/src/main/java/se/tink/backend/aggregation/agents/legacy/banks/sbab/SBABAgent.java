@@ -130,12 +130,15 @@ public class SBABAgent extends AbstractAgent
                             clientWithoutSSL, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         } else {
             clientWithoutSSL = null;
-            bankIdSignClient = new BankIdSignClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+            bankIdSignClient =
+                    new BankIdSignClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         }
 
-        authenticationClient = new AuthenticationClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        authenticationClient =
+                new AuthenticationClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         userDataClient = new UserDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
-        transferClient = new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
+        transferClient =
+                new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override
