@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -137,5 +138,12 @@ public class NordeaBaseApiClient {
                         : NordeaBaseConstants.Urls.CONFIRM_SEPA_PAYMENT.parameter(
                                 NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId);
         return createRequestInSession(url).put(ConfirmPaymentResponse.class);
+    }
+
+    public GetPaymentResponse getPayment(String paymentId) {
+        return createRequestInSession(
+                        NordeaBaseConstants.Urls.GET_DOMESTIC_PAYMENT.parameter(
+                                NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
+                .get(GetPaymentResponse.class);
     }
 }

@@ -8,7 +8,7 @@ public class PaymentController {
     }
 
     public PaymentResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        return paymentExecutor.fetchPaymentStatus(paymentRequest);
+        return paymentExecutor.fetchPayment(paymentRequest);
     }
 
     public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {

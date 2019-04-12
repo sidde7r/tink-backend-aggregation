@@ -29,6 +29,8 @@ public final class NordeaBaseConstants {
                 new URL(BASE_URL + ApiService.INITIATE_DOMESTIC_PAYMENT);
         public static final URL CONFIRM_DOMESTIC_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_DOMESTIC_PAYMENT);
         public static final URL CONFIRM_SEPA_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_SEPA_PAYMENT);
+        public static final URL GET_DOMESTIC_PAYMENT =
+                new URL(BASE_URL + ApiService.GET_DOMESTIC_PAYMENT);
     }
 
     public static class ApiService {
@@ -39,6 +41,7 @@ public final class NordeaBaseConstants {
         public static final String INITIATE_DOMESTIC_PAYMENT = "/v3/payments/domestic";
         public static final String CONFIRM_DOMESTIC_PAYMENT = "/v3/payments/domestic/{paymentId}/confirm";
         public static final String CONFIRM_SEPA_PAYMENT = "/v3/payments/sepa/{paymentId}/confirm";
+        public static final String GET_DOMESTIC_PAYMENT = "/v3/payments/domestic/{paymentId}";
     }
 
     public static class StorageKeys {

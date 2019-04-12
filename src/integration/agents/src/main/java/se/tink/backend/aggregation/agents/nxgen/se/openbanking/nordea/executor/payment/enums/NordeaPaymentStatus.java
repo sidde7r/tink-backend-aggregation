@@ -29,6 +29,7 @@ public enum NordeaPaymentStatus {
         nordeaPaymentStatusToTinkMapper.put(PAID, PaymentStatus.PAID);
         nordeaPaymentStatusToTinkMapper.put(REJECTED, PaymentStatus.REJECTED);
         nordeaPaymentStatusToTinkMapper.put(PENDING_USER_APPROVAL, PaymentStatus.PENDING);
+        nordeaPaymentStatusToTinkMapper.put(PENDING_CONFIRMATION, PaymentStatus.PENDING);
         nordeaPaymentStatusToTinkMapper.put(UNKNOWN, PaymentStatus.UNDEFINED);
     }
 

@@ -10,8 +10,10 @@ import java.util.List;
 public class PaymentResponseEntity {
     @JsonProperty("_id")
     private String todoWhichId;
+
     @JsonProperty("payment_status")
     private String paymentStatus;
+
     @JsonProperty("_links")
     private List<LinkEntity> links;
 

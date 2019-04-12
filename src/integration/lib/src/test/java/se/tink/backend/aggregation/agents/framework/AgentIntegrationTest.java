@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
@@ -56,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -296,12 +299,17 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                             .orElseThrow(Exception::new)
                             .getPaymentExecutor();
 
-            PaymentResponse paymentResponse =
+            PaymentResponse createPaymentResponse =
                     paymentExecutor.createPayment(new PaymentRequest(payment));
+
+            PaymentResponse fetchPaymentResponse =
+                    paymentExecutor.fetchPayment(new PaymentRequest(payment));
+
+            assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
 
             PaymentMultiStepRequest paymentMultiStepRequest =
                     new PaymentMultiStepRequest(
-                            paymentResponse.getPayment(),
+                            createPaymentResponse.getPayment(),
                             AuthenticationStepConstants.STEP_INIT,
                             Collections.emptyList(),
                             Collections.emptyList());
@@ -329,6 +337,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                                             new ArrayList<>(map.values())));
                 }
             }
+
+            Thread.sleep(5000);
+
+            PaymentResponse fetchPaymentResponseAfterSign =
+                    paymentExecutor.fetchPayment(new PaymentRequest(payment));
+
+            assertEquals(PaymentStatus.SIGNED, fetchPaymentResponseAfterSign.getPayment().getStatus());
 
         } else {
             throw new AssertionError(

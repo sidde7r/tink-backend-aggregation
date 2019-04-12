@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.p
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -46,18 +47,25 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
+                        // TBD: Remoe substring limitation when Nordea fixes the bug that limits
+                        // the length of the external_id field:
+                        //      https://support.nordeaopenbanking.com/hc/en-us/community/topics
                         .withExternalId(
                                 paymentRequest.getPayment().getId().toString().substring(0, 29))
                         .build();
 
         CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
 
-        return assemblePaymentResponseFromCreate(createPaymentResponse, paymentRequest.getPayment());
+        return assemblePaymentResponseFromCreate(
+                createPaymentResponse, paymentRequest.getPayment());
     }
 
     @Override
-    public PaymentResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
-        return null;
+    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+        GetPaymentResponse getPaymentResponse =
+                apiClient.getPayment(paymentRequest.getPayment().getProviderId());
+
+        return assemblePaymentResponseFromFetch(getPaymentResponse, paymentRequest.getPayment());
     }
 
     @Override
@@ -152,6 +160,18 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
     private PaymentResponse assemblePaymentResponseFromCreate(
             CreatePaymentResponse createPaymentResponse, Payment payment) {
         payment.setProviderId(createPaymentResponse.getResponse().getId());
+        payment.setStatus(
+                NordeaPaymentStatus.mapToTinkPaymentStatus(
+                        NordeaPaymentStatus.fromString(
+                                createPaymentResponse.getResponse().getPaymentStatus())));
+        return new PaymentResponse(payment);
+    }
+
+    private PaymentResponse assemblePaymentResponseFromFetch(
+            GetPaymentResponse getPaymentResponse, Payment payment) {
+        payment.setStatus(NordeaPaymentStatus.mapToTinkPaymentStatus(
+                NordeaPaymentStatus.fromString(
+                        getPaymentResponse.getResponse().getPaymentStatus())));
         return new PaymentResponse(payment);
     }
 }
