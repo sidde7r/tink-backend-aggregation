@@ -15,11 +15,23 @@ public class Payment {
     private String providerId;
     private PaymentStatus status;
 
-    public Payment(Creditor creditor, Debtor debtor, Amount amount, LocalDate executionDate) {
+    public String getCurrency() {
+        return currency;
+    }
+
+    private String currency;
+
+    public Payment(
+            Creditor creditor,
+            Debtor debtor,
+            Amount amount,
+            LocalDate executionDate,
+            String currency) {
         this.creditor = creditor;
         this.debtor = debtor;
         this.amount = amount;
         this.executionDate = executionDate;
+        this.currency = currency;
         this.id = UUID.randomUUID();
         this.setStatus(PaymentStatus.UNDEFINED);
     }

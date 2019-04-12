@@ -1,15 +1,31 @@
 package se.tink.libraries.payment.rpc;
 
-import se.tink.libraries.account.rpc.Account;
+import se.tink.libraries.account.AccountIdentifier;
 
 public class Debtor {
-    private Account account;
+    private AccountIdentifier accountIdentifier;
+    private String currency;
+    private String ownMessage;
 
-    public Debtor(Account account) {
-        this.account = account;
+    public Debtor(AccountIdentifier accountIdentifier, String currency, String ownMessage) {
+        this.accountIdentifier = accountIdentifier;
+        this.currency = currency;
+        this.ownMessage = ownMessage;
     }
 
-    public Account getAccount() {
-        return account;
+    public AccountIdentifier.Type getAccountIdentifierType() {
+        return accountIdentifier.getType();
+    }
+
+    public String getAccountNumber() {
+        return accountIdentifier.getIdentifier();
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getOwnMessage() {
+        return ownMessage;
     }
 }

@@ -7,15 +7,15 @@ public class PaymentController {
         this.paymentExecutor = paymentExecutor;
     }
 
-    public PaymentResponse fetchPaymentStatus(PaymentRequest payment) {
-        return paymentExecutor.fetchPaymentStatus(payment);
+    public PaymentResponse fetchPaymentStatus(PaymentRequest paymentRequest) {
+        return paymentExecutor.fetchPaymentStatus(paymentRequest);
     }
 
-    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest payment) {
-        return paymentExecutor.signPayment(payment);
+    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
+        return paymentExecutor.signPayment(paymentRequest);
     }
 
-    public PaymentResponse cancelPayments(PaymentRequest payment) {
-        return paymentExecutor.cancelPayment(payment);
+    public PaymentResponse cancelPayments(PaymentRequest paymentRequest) {
+        return paymentExecutor.cancelPayment(paymentRequest);
     }
 }

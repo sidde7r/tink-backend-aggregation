@@ -19,6 +19,8 @@ java_library(
         "//src/libraries/credentials:enums",
         "//src/libraries/credentials:rpc",
         "//src/libraries/credentials:service",
+        "//src/libraries/payment:enums",
+        "//src/libraries/payment:rpc",
         "//src/libraries/date",
         "//src/libraries/document_container",
         "//src/libraries/enums",

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
@@ -47,11 +48,11 @@ public final class NordeaSeAgent extends NordeaBaseAgent  {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.empty();
+        return Optional.of(
+                new PaymentController(new NordeaSePaymentExecutor(apiClient)));
     }
 
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
-
 }

@@ -9,7 +9,6 @@ public class PaymentRequest {
         this.payment = payment;
     }
 
-
     public Payment getPayment() {
         return payment;
     }
