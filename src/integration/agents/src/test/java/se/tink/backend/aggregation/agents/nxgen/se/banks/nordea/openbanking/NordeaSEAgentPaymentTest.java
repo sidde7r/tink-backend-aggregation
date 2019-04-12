@@ -4,13 +4,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 import java.time.LocalDate;
+
+import static org.mockito.Mockito.mock;
 
 @Ignore
 public class NordeaSEAgentPaymentTest {
@@ -25,12 +26,14 @@ public class NordeaSEAgentPaymentTest {
                         .addCredentialField(Field.Key.USERNAME, SANDBOX_SE_TEST_USER)
                         .expectLoggedIn(false);
 
-        Creditor creditor = new Creditor(new Account());
-        Debtor debtor = new Debtor(new Account());
+
+        Creditor creditor = mock(Creditor.class);
+        Debtor debtor = mock(Debtor.class);
         Amount amount = Amount.inSEK(10);
         LocalDate executionDate = LocalDate.now();
+        String currency = "SEK";
 
-        Payment payment = new Payment(creditor, debtor, amount, executionDate);
+        Payment payment = new Payment(creditor, debtor, amount, executionDate, currency);
         builder.build().testPaymentRevamp(payment);
     }
 }

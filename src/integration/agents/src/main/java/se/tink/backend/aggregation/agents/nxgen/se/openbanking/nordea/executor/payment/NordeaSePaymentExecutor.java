@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.p
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
@@ -48,7 +49,7 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentMultiStepResponse signPayment(PaymentRequest paymentRequest) {
+    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
         return null;
     }
 

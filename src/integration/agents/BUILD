@@ -118,6 +118,8 @@ junit_test(
         "//src/libraries/credentials:demo",
         "//src/libraries/credentials:enums",
         "//src/libraries/credentials:service",
+        "//src/libraries/payment:enums",
+        "//src/libraries/payment:rpc",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/enums",
