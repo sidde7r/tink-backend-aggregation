@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.common.base.Preconditions;
 import javax.ws.rs.core.Response;
-
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;

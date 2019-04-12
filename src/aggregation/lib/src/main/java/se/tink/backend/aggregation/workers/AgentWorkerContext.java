@@ -21,7 +21,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -596,10 +595,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);
-        }
-        catch (UniformInterfaceException e) {
-            log.error("Identity update request failed, response: " +
-                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+        } catch (UniformInterfaceException e) {
+            log.error(
+                    "Identity update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
             throw e;
         }
     }

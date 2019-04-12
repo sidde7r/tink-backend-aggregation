@@ -157,7 +157,8 @@ public class AggregationControllerAggregationClient {
         return getAggregationControllerService(hostConfiguration).connectivityCheck();
     }
 
-    public void updateIdentity(HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
+    public void updateIdentity(
+            HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
         // TODO: Implement this when Identity service up and running!
     }
 }
