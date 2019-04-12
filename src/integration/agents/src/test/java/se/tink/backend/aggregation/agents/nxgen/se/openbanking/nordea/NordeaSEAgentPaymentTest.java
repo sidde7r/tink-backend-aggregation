@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 public class NordeaSEAgentPaymentTest {
 
     @Test
-    public void testRefresh() throws Exception {
+    public void testPayments() throws Exception {
         AgentIntegrationTest.Builder builder =
                 new AgentIntegrationTest.Builder("SE", "se-nordea-oauth2")
                         .expectLoggedIn(false)

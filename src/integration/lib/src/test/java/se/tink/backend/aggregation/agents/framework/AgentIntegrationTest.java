@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -338,12 +339,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
             }
 
-            Thread.sleep(5000);
+            Thread.sleep(10000);
 
             PaymentResponse fetchPaymentResponseAfterSign =
                     paymentExecutor.fetchPayment(new PaymentRequest(payment));
 
-            assertEquals(PaymentStatus.SIGNED, fetchPaymentResponseAfterSign.getPayment().getStatus());
+            Assert.assertThat(
+                    fetchPaymentResponseAfterSign.getPayment().getStatus(),
+                    Matchers.anyOf(
+                            Matchers.is(PaymentStatus.SIGNED), Matchers.is(PaymentStatus.PAID)));
 
         } else {
             throw new AssertionError(

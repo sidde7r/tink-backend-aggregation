@@ -31,6 +31,7 @@ public final class NordeaBaseConstants {
         public static final URL CONFIRM_SEPA_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_SEPA_PAYMENT);
         public static final URL GET_DOMESTIC_PAYMENT =
                 new URL(BASE_URL + ApiService.GET_DOMESTIC_PAYMENT);
+        public static final URL GET_DOMESTIC_PAYMENTS = new URL(BASE_URL + ApiService.INITIATE_DOMESTIC_PAYMENT);
     }
 
     public static class ApiService {
