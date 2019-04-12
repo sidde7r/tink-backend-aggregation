@@ -40,6 +40,7 @@ public class Credentials implements Cloneable {
     @JsonInclude(Include.NON_NULL)
     private String secretKey;
 
+    private Date sessionExpiryDate;
     private CredentialsStatus status;
     private String statusPayload;
     private String statusPrompt;
@@ -125,6 +126,10 @@ public class Credentials implements Cloneable {
 
     public String getProviderName() {
         return this.providerName;
+    }
+
+    public Date getSessionExpiryDate() {
+        return sessionExpiryDate;
     }
 
     public String getSensitivePayloadSerialized() {
@@ -296,6 +301,10 @@ public class Credentials implements Cloneable {
 
     public void setProviderName(String provider) {
         this.providerName = provider;
+    }
+
+    public void setSessionExpiryDate(Date sessionExpiryDate) {
+        this.sessionExpiryDate = sessionExpiryDate;
     }
 
     public void setSensitivePayloadSerialized(String sensitivePayloadSerialized) {
