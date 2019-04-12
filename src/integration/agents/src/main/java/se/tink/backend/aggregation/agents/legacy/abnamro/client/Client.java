@@ -17,11 +17,10 @@ import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.TrustStoreConfiguration;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.net.BasicJerseyClientFactory;
 
 public abstract class Client {
-
-    private static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
     protected Logger log;
     private final String hostname;
@@ -52,7 +51,7 @@ public abstract class Client {
         return client.resource("https://" + hostname + path)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .header("User-Agent", DEFAULT_USER_AGENT);
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     protected static SSLContext createSslContext(TrustStoreConfiguration trustStoreConfiguration)
