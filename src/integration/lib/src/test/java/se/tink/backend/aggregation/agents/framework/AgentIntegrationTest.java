@@ -3,15 +3,6 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,18 +25,37 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
+import se.tink.backend.aggregation.nxgen.agents.ConstructPaymentsRevampController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -275,6 +285,56 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
+    private void doRevampBankTransfer(Agent agent, Payment payment) throws Exception {
+        log.info("Executing bank transfer.");
+
+        if (agent instanceof TransferExecutorNxgen) {
+            PaymentExecutor paymentExecutor = (PaymentExecutor) agent;
+            PaymentResponse paymentResponse =
+                    paymentExecutor.createPayment(new PaymentRequest(payment));
+
+            PaymentMultiStepRequest paymentMultiStepRequest =
+                    new PaymentMultiStepRequest(
+                            paymentResponse.getPayment(),
+                            AuthenticationStepConstants.STEP_INIT,
+                            Collections.emptyList(),
+                            Collections.emptyList());
+
+            PaymentMultiStepResponse paymentMultiStepResponse =
+                    paymentExecutor.signPayment(paymentMultiStepRequest);
+
+            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(
+                    paymentMultiStepResponse.getStep())) {
+                // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+                // etc.
+                if (paymentMultiStepRequest.getStep().equalsIgnoreCase("ThirdParty"))
+                {
+                    throw new NotImplementedException("Thirdparty not implemented yet");
+                } else {
+                    List<Field> fields = paymentMultiStepResponse.getFields();
+                    Map<String, String> map =
+                            supplementalInformationController.askSupplementalInformation(
+                                    fields.toArray(new Field[fields.size()]));
+                    paymentMultiStepResponse =
+                            paymentExecutor.signPayment(
+                                    new PaymentMultiStepRequest(
+                                            paymentMultiStepResponse.getPayment(),
+                                            paymentMultiStepRequest.getStep(),
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                }
+            }
+
+        } else {
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
+        }
+
+        log.info("Done with bank transfer.");
+    }
+
     private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
         log.info("Executing bank transfer.");
 
@@ -343,8 +403,30 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-
             doBankTransfer(agent, transfer);
+            Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
+
+            if (doLogout) {
+                logout(agent);
+            }
+        } finally {
+            saveCredentials(agent);
+        }
+
+        context.printCollectedData();
+    }
+
+    public void testPaymentRevamp(Payment payment) throws Exception {
+        initiateCredentials();
+        Agent agent = createAgent(createRefreshInformationRequest());
+        try {
+            login(agent);
+            if (agent instanceof ConstructPaymentsRevampController) {
+                doRevampBankTransfer(agent, payment);
+            } else {
+                throw new NotImplementedException(
+                        String.format("%s", agent.getAgentClass().getSimpleName()));
+            }
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {

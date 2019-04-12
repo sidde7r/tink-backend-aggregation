@@ -11,7 +11,7 @@ public class PaymentController {
         return paymentExecutor.fetchPaymentStatus(payment);
     }
 
-    public PaymentMultiStepResponse signPayment(PaymentRequest payment) {
+    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest payment) {
         return paymentExecutor.signPayment(payment);
     }
 
