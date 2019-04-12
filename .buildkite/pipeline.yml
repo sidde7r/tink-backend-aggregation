@@ -29,14 +29,14 @@ steps:
     name: ':bazel: Check BUILD style'
     timeout_in_minutes: 10
 
-  #- command: .buildkite/check-java-style.sh
-  #  plugins:
-  #    docker-compose#v2.5.1:
-  #      run: app
-  #      config: docker/docker-compose.bazel.yml
-  #  branches: '!master'
-  #  name: ':java: Check Java style'
-  #  timeout_in_minutes: 30
+  - command: .buildkite/check-java-style.sh
+    plugins:
+      docker-compose#v2.5.1:
+        run: app
+        config: docker/docker-compose.bazel.yml
+    branches: '!master'
+    name: ':java: Check Java style'
+    timeout_in_minutes: 30
 
   - wait
 

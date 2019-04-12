@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
@@ -57,11 +56,13 @@ public class RabobankAgent extends NextGenerationAgent {
     public RabobankConfiguration getClientConfiguration() {
         // TODO: Remove once https://tinkab.atlassian.net/browse/MIYAG-350 is resolved
         return new RabobankConfiguration();
-        //return configuration
+        // return configuration
         //        .getIntegrations()
         //        .getClientConfiguration(
-        //                RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
-        //        .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        //                RabobankConstants.INTEGRATION_NAME, clientName,
+        // RabobankConfiguration.class)
+        //        .orElseThrow(() -> new
+        // IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
