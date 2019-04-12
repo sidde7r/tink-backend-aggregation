@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.libraries.documentcontainer.DocumentContainer;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public interface SystemUpdater {
@@ -34,5 +35,5 @@ public interface SystemUpdater {
 
     void setWaitingOnConnectorTransactions(boolean waitingOnConnectorTransactions);
 
-    void sendIdentityToIdentityService(String uniqueId);
+    void sendIdentityToIdentityService(IdentityData identityData);
 }

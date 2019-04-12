@@ -348,7 +348,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public void sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(IdentityData identityData) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }

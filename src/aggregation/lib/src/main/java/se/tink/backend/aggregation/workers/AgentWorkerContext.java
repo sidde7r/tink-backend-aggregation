@@ -43,6 +43,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.enums.StatisticMode;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -587,11 +588,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(IdentityData identityData) {
         // TODO: implement sending identity data
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
-        updateIdentityDataRequest.setName("Test name");
-        updateIdentityDataRequest.setSsn("123-45-yu-89");
+        updateIdentityDataRequest.setName(identityData.getFullName());
+        updateIdentityDataRequest.setSsn(identityData.getSsn());
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);
