@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.configuration.DemoFakeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.sessionhandler.DemoFakeBankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -14,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -28,7 +32,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
 
-public final class DemoFakeBankAgent extends NextGenerationAgent {
+public final class DemoFakeBankAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
 
     private final String clientName;
     private final DemoFakeBankApiClient apiClient;
@@ -120,5 +125,11 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IdentityDataFetcher fetcher = new DemoFakeBankIdentityDataFetcher();
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

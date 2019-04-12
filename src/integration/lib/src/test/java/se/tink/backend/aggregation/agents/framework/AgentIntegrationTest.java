@@ -235,7 +235,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
-                if (item == RefreshableItem.IDENTITY
+                if (item == RefreshableItem.IDENTITY_DATA
                         && agent instanceof RefreshIdentityDataExecutor) {
 
                     context.updateIdentityData(
