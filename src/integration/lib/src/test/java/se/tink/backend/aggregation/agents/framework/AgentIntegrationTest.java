@@ -48,6 +48,7 @@ import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
 public final class AgentIntegrationTest extends AbstractConfigurationBase {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
