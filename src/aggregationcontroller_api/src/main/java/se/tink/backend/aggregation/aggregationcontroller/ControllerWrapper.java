@@ -5,7 +5,6 @@ import javax.ws.rs.core.Response;
 
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.GenerateStatisticsAndActivitiesRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -112,7 +111,7 @@ public class ControllerWrapper {
         return client.checkConnectivity(configuration);
     }
 
-    public Identity updateIdentityData(UpdateIdentityDataRequest request) {
-        return client.updateIdentity(configuration, request);
+    public void updateIdentityData(UpdateIdentityDataRequest request) {
+        client.updateIdentity(configuration, request);
     }
 }

@@ -17,7 +17,6 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -315,7 +314,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public Identity sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(String uniqueId) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }

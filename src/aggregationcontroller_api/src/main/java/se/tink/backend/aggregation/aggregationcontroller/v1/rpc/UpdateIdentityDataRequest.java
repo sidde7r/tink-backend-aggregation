@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateIdentityDataRequest {
     private String name;
     private String ssn;

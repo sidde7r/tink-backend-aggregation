@@ -26,7 +26,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.contexts.IdentityDataCacher;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -349,7 +348,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public Identity sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(String uniqueId) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }

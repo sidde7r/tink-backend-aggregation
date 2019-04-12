@@ -7,7 +7,6 @@ import com.sun.jersey.api.client.Client;
 import javax.ws.rs.core.Response;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
@@ -158,8 +157,7 @@ public class AggregationControllerAggregationClient {
         return getAggregationControllerService(hostConfiguration).connectivityCheck();
     }
 
-    public Identity updateIdentity(HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
+    public void updateIdentity(HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
         // TODO: Implement this when Identity service up and running!
-        return null;
     }
 }

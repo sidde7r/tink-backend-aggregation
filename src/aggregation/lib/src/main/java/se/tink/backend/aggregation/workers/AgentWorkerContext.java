@@ -21,7 +21,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Identity;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
@@ -34,6 +33,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
@@ -588,26 +588,19 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public Identity sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(String uniqueId) {
         // TODO: implement sending identity data
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest updateIdentityDataRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateIdentityDataRequest();
-
+        UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
         updateIdentityDataRequest.setName("Test name");
         updateIdentityDataRequest.setSsn("123-45-yu-89");
 
-        Identity updatedIdentity;
-
         try {
-            updatedIdentity = controllerWrapper.updateIdentityData(updateIdentityDataRequest);
+            controllerWrapper.updateIdentityData(updateIdentityDataRequest);
         }
-        catch(UniformInterfaceException e) {
+        catch (UniformInterfaceException e) {
             log.error("Identity update request failed, response: " +
                     (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
             throw e;
         }
-
-        return updatedIdentity;
     }
-
 }

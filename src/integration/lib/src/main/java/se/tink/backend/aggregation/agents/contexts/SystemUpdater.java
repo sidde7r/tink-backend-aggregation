@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Identity;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.libraries.documentcontainer.DocumentContainer;
@@ -35,5 +34,5 @@ public interface SystemUpdater {
 
     void setWaitingOnConnectorTransactions(boolean waitingOnConnectorTransactions);
 
-    Identity sendIdentityToIdentityService(String uniqueId);
+    void sendIdentityToIdentityService(String uniqueId);
 }
