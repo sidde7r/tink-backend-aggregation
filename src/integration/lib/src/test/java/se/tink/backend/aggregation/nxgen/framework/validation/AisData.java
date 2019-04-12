@@ -3,21 +3,21 @@ package se.tink.backend.aggregation.nxgen.framework.validation;
 import java.util.Collection;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.identitydata.IdentityData;
 
 /** A collection of aggregated data, i.e. accounts and transactions. */
 public final class AisData {
     private final Collection<Account> accounts;
     private final Collection<Transaction> transactions;
-    private final CustomerInfo customerInfo;
+    private final IdentityData identityData;
 
-    public AisData(
+    AisData(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
-            CustomerInfo customerInfo) {
+            final IdentityData identityData) {
         this.accounts = accounts;
         this.transactions = transactions;
-        this.customerInfo = customerInfo;
+        this.identityData = identityData;
     }
 
     public Collection<Account> getAccounts() {
@@ -28,12 +28,12 @@ public final class AisData {
         return transactions;
     }
 
-    public CustomerInfo getCustomerInfo() {
-        return customerInfo;
+    public IdentityData getIdentityData() {
+        return identityData;
     }
 
     @Override
     public String toString() {
-        return String.format("AisData(%s, %s, %s)", accounts, transactions, customerInfo);
+        return String.format("AisData(%s, %s, %s)", accounts, transactions, identityData);
     }
 }

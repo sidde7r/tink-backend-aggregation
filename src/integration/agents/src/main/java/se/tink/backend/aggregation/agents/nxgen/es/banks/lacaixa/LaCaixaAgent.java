@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
-import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.LaCaixaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.LaCaixaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.identitydata.LaCaixaIdentityDataFetcher;
@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class LaCaixaAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
+public class LaCaixaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final LaCaixaApiClient apiClient;
 
@@ -116,8 +116,8 @@ public class LaCaixaAgent extends NextGenerationAgent implements RefreshCustomer
     }
 
     @Override
-    public FetchCustomerInfoResponse fetchCustomerInfo() {
-        final CustomerInfoFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
-        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IdentityDataFetcher fetcher = new LaCaixaIdentityDataFetcher(apiClient);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

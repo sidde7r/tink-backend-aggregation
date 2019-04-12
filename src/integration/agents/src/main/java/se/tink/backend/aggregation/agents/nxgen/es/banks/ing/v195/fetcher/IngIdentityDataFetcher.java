@@ -5,22 +5,23 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.CustomerInfo;
-import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.EsIdentityData;
+import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
-public class IngCustomerInfoFetcher implements CustomerInfoFetcher {
+public class IngIdentityDataFetcher implements IdentityDataFetcher {
     private IngApiClient ingApiClient;
 
-    public IngCustomerInfoFetcher(IngApiClient ingApiClient) {
+    public IngIdentityDataFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
     }
 
     @Override
-    public CustomerInfo fetchCustomerInfo() {
+    public IdentityData fetchIdentityData() {
         ClientResponse client = ingApiClient.getApiRestClient();
 
-        EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();
+        EsIdentityDataBuilder builder = EsIdentityData.builder();
 
         switch (client.getDocumentType()) {
             case IngConstants.UsernameTypes.NIF:

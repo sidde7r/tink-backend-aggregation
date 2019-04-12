@@ -32,7 +32,7 @@ public final class RefreshExecutorUtils {
                     .put(
                             RefreshableItem.CREDITCARD_TRANSACTIONS,
                             RefreshCreditCardAccountsExecutor.class)
-                    .put(RefreshableItem.IDENTITY, RefreshCustomerInfoExecutor.class)
+                    .put(RefreshableItem.IDENTITY, RefreshIdentityDataExecutor.class)
                     .put(RefreshableItem.LOAN_ACCOUNTS, RefreshLoanAccountsExecutor.class)
                     .put(RefreshableItem.LOAN_TRANSACTIONS, RefreshLoanAccountsExecutor.class)
                     .put(

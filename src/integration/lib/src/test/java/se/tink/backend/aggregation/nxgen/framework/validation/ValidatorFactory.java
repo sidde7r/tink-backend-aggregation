@@ -69,9 +69,9 @@ public final class ValidatorFactory {
                                         "Found at least two transactions with the same date, description, amount and account ID: %s",
                                         dupeFinder.getAnyDuplicates(aisdata.getTransactions())))
                 .rule(
-                        "Customer info is provided",
-                        aisData -> aisData.getCustomerInfo() != null,
-                        aisData -> "Agent did not fetch customer info")
+                        "Identity data is provided",
+                        aisData -> aisData.getIdentityData() != null,
+                        aisData -> "Agent did not fetch identity data")
                 .build();
     }
 }

@@ -8,7 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.identitydata.IdentityData;
 
 public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;
@@ -51,8 +51,8 @@ public final class AisValidator {
     public void validate(
             final Collection<Account> accounts,
             final Collection<Transaction> transactions,
-            final CustomerInfo customerInfo) {
-        validate(new AisData(accounts, transactions, customerInfo));
+            final IdentityData identityData) {
+        validate(new AisData(accounts, transactions, identityData));
     }
 
     public void validate(final AisData aisData) {

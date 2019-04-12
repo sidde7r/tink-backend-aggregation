@@ -40,9 +40,9 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
@@ -59,7 +59,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     private final Map<String, List<TransferDestinationPattern>>
             transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
-    private CustomerInfo customerInfo = null;
+    private IdentityData identityData = null;
 
     private final User user;
     private final Credentials credential;
@@ -308,13 +308,13 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
     }
 
     @Override
-    public void updateCustomerInfo(CustomerInfo customerInfo) {
-        this.customerInfo = customerInfo;
+    public void updateIdentityData(IdentityData identityData) {
+        this.identityData = identityData;
     }
 
     @Override
-    public Optional<CustomerInfo> getCustomerInfo() {
-        return Optional.ofNullable(customerInfo);
+    public Optional<IdentityData> getIdentityData() {
+        return Optional.ofNullable(identityData);
     }
 
     @Override
@@ -365,7 +365,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                 accountsByBankId.values(),
                 transactionsByAccountBankId.values().stream()
                         .collect(ArrayList::new, List::addAll, List::addAll),
-                customerInfo);
+                identityData);
     }
 
     private void printLoanDetails(List<Loan> loans) {
@@ -588,10 +588,10 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
         CliPrintUtils.printTable(0, "transfers", table);
     }
 
-    public void printCustomerInfo() {
-        if (customerInfo != null) {
+    public void printIdentityData() {
+        if (identityData != null) {
             List<Map<String, String>> table =
-                    customerInfo.toMap().entrySet().stream()
+                    identityData.toMap().entrySet().stream()
                             .map(
                                     entry -> {
                                         Map<String, String> row = new LinkedHashMap<>();
@@ -601,7 +601,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                                     })
                             .collect(Collectors.toList());
 
-            CliPrintUtils.printTable(0, "custInfo", table);
+            CliPrintUtils.printTable(0, "identityData", table);
         }
     }
 
@@ -614,7 +614,7 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                     System.out.println("");
                 });
 
-        printCustomerInfo();
+        printIdentityData();
         printTransfers();
     }
 

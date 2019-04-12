@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "customer_info",
+    name = "identity_data",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -16,11 +16,11 @@ java_library(
 )
 
 junit_test(
-    name = "customer_info_test",
+    name = "identity_data_test",
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/customer_info",
+        "//src/libraries/identity_data",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",

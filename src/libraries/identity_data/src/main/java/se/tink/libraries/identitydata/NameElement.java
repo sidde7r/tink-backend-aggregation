@@ -1,4 +1,4 @@
-package se.tink.libraries.customerinfo;
+package se.tink.libraries.identitydata;
 
 public class NameElement {
 

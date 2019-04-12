@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchCustomerInfoResponse;
-import se.tink.backend.aggregation.agents.RefreshCustomerInfoExecutor;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCustomerInfoFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngInvestmentAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionFetcher;
@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfoExecutor {
+public class IngAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final IngApiClient ingApiClient;
 
@@ -159,8 +159,8 @@ public class IngAgent extends NextGenerationAgent implements RefreshCustomerInfo
     }
 
     @Override
-    public FetchCustomerInfoResponse fetchCustomerInfo() {
-        final CustomerInfoFetcher fetcher = new IngCustomerInfoFetcher(ingApiClient);
-        return new FetchCustomerInfoResponse(fetcher.fetchCustomerInfo());
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IdentityDataFetcher fetcher = new IngIdentityDataFetcher(ingApiClient);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

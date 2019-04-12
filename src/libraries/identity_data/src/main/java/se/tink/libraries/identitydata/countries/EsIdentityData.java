@@ -1,58 +1,58 @@
-package se.tink.libraries.customerinfo.countries;
+package se.tink.libraries.identitydata.countries;
 
 import java.util.Map;
-import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class EsCustomerInfo extends CustomerInfo {
+public class EsIdentityData extends IdentityData {
 
     private final String nieNumber;
     private final String nifNumber;
     private final String passportNumber;
 
-    private EsCustomerInfo(Builder builder) {
+    private EsIdentityData(Builder builder) {
         super(builder);
         nieNumber = builder.nieNumber;
         nifNumber = builder.nifNumber;
         passportNumber = builder.passportNumber;
     }
 
-    public static EsCustomerInfoBuilder builder() {
+    public static EsIdentityDataBuilder builder() {
         return new Builder();
     }
 
-    public interface EsCustomerInfoBuilder extends CustomerInfo.InitialBuilderStep {
-        EsCustomerInfoBuilder setNieNumber(String val);
+    public interface EsIdentityDataBuilder extends IdentityData.InitialBuilderStep {
+        EsIdentityDataBuilder setNieNumber(String val);
 
-        EsCustomerInfoBuilder setNifNumber(String val);
+        EsIdentityDataBuilder setNifNumber(String val);
 
-        EsCustomerInfoBuilder setPassportNumber(String val);
+        EsIdentityDataBuilder setPassportNumber(String val);
     }
 
-    public static final class Builder extends CustomerInfo.Builder
-            implements EsCustomerInfoBuilder {
+    public static final class Builder extends IdentityData.Builder
+            implements EsIdentityDataBuilder {
         private String nieNumber;
         private String nifNumber;
         private String passportNumber;
 
         protected Builder() {}
 
-        public EsCustomerInfoBuilder setNieNumber(String val) {
+        public EsIdentityDataBuilder setNieNumber(String val) {
             nieNumber = val;
             return this;
         }
 
-        public EsCustomerInfoBuilder setNifNumber(String val) {
+        public EsIdentityDataBuilder setNifNumber(String val) {
             nifNumber = val;
             return this;
         }
 
-        public EsCustomerInfoBuilder setPassportNumber(String val) {
+        public EsIdentityDataBuilder setPassportNumber(String val) {
             passportNumber = val;
             return this;
         }
 
-        public EsCustomerInfo build() {
-            return new EsCustomerInfo(this);
+        public EsIdentityData build() {
+            return new EsIdentityData(this);
         }
     }
 

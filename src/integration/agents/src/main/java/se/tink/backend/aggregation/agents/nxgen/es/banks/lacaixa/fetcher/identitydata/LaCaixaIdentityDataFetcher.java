@@ -4,11 +4,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.UserDataResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
-import se.tink.libraries.customerinfo.CustomerInfo;
-import se.tink.libraries.customerinfo.countries.EsCustomerInfo;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.EsIdentityData;
+import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
-public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
+public class LaCaixaIdentityDataFetcher implements IdentityDataFetcher {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     private final LaCaixaApiClient apiClient;
@@ -19,10 +20,10 @@ public class LaCaixaIdentityDataFetcher implements CustomerInfoFetcher {
     }
 
     @Override
-    public CustomerInfo fetchCustomerInfo() {
+    public IdentityData fetchIdentityData() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
-        EsCustomerInfo.EsCustomerInfoBuilder builder = EsCustomerInfo.builder();
+        EsIdentityDataBuilder builder = EsIdentityData.builder();
 
         String dni = userDataResponse.getDNI();
 
