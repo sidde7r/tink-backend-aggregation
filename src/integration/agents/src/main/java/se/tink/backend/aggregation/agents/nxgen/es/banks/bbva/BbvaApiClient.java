@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Quer
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
@@ -162,7 +163,19 @@ public class BbvaApiClient {
                         (Supplier<Throwable>) BankServiceError.NO_BANK_SERVICE::exception)
                 .filterTry(BbvaPredicates.RESPONSE_HAS_ERROR.negate(), logAndThrow())
                 .filterTry(BbvaPredicates.IS_RESPONSE_OK, logAndThrow())
-                .peek(response -> setUserId(response.getUser().getId()));
+                .peek(response -> setUserId(response.getUser().getId()))
+                .peek(response -> setIdTypeCode(response.getIdentificationTypeCode()));
+    }
+
+    public IdentityDataResponse fetchIdentityData() {
+        final String url =
+                new URL(BbvaConstants.Url.IDENTITY_DATA)
+                        .parameter(BbvaConstants.Url.PARAM_ID, getUserId())
+                        .get();
+
+        return createRequestInSession(url)
+                .queryParam("isShowSensitive", "false")
+                .get(IdentityDataResponse.class);
     }
 
     private String getUserAgent() {
@@ -179,6 +192,10 @@ public class BbvaApiClient {
 
     public String getUserId() {
         return sessionStorage.get(BbvaConstants.StorageKeys.USER_ID);
+    }
+
+    public void setIdTypeCode(String idTypeCode) {
+        sessionStorage.put(BbvaConstants.StorageKeys.ID_TYPE_CODE, idTypeCode);
     }
 
     public void setUserId(String userId) {
