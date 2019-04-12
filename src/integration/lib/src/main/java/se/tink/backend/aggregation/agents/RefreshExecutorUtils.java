@@ -153,6 +153,11 @@ public final class RefreshExecutorUtils {
                                 accountTransactions.getKey(), accountTransactions.getValue());
                     }
                     break;
+                case IDENTITY_DATA:
+                    context.sendIdentityToIdentityService(
+                            ((RefreshIdentityDataExecutor) agent)
+                                    .fetchIdentityData()
+                                    .getIdentityData());
                 default:
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));
