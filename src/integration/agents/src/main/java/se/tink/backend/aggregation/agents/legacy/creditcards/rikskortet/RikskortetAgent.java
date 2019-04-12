@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -59,13 +60,13 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
     public RikskortetAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
-        userAgentHandler = new SOAPUserAgentHandler(DEFAULT_USER_AGENT);
+        userAgentHandler = new SOAPUserAgentHandler(CommonHeaders.DEFAULT_USER_AGENT);
 
         try {
             credentials = request.getCredentials();
             service = new MobileWSV2(WSDL_FILE.toURI().toURL()).getMobileWSV2Soap();
 
-            addSoapHandlers(service, DEFAULT_USER_AGENT);
+            addSoapHandlers(service, CommonHeaders.DEFAULT_USER_AGENT);
         } catch (Exception e) {
             log.error("Could not initialize client", e);
         }

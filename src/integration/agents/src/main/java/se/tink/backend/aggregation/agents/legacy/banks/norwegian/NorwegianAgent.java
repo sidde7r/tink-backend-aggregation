@@ -47,6 +47,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
@@ -426,7 +427,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
     private WebResource.Builder createClientRequest(String url) {
         return client.resource(url)
-                .header("User-Agent", DEFAULT_USER_AGENT)
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .accept(MediaType.APPLICATION_JSON);
     }
 

@@ -40,6 +40,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
@@ -113,7 +114,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
                 Catalog.format(AUTHENTICATION_BANKID_URL, bankIdMethod, code, product);
 
         String authenticationReponse =
-                createClientRequest(authenticationUrl, client, DEFAULT_USER_AGENT)
+                createClientRequest(authenticationUrl, client, CommonHeaders.DEFAULT_USER_AGENT)
                         .get(String.class);
 
         String bankIdUrl = SignicatParsingUtils.parseBankIdServiceUrl(authenticationReponse);
@@ -124,7 +125,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         orderBankIdRequest.setSubject(credentials.getUsername());
 
         OrderBankIdResponse orderBankIdResponse =
-                createClientRequest(bankIdUrl + "/order", client, DEFAULT_USER_AGENT)
+                createClientRequest(bankIdUrl + "/order", client, CommonHeaders.DEFAULT_USER_AGENT)
                         .type(MediaType.APPLICATION_JSON)
                         .post(OrderBankIdResponse.class, orderBankIdRequest);
 
@@ -153,7 +154,10 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
         for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
             collectBankIdResponse =
-                    createClientRequest(bankIdUrl + "/collect", client, DEFAULT_USER_AGENT)
+                    createClientRequest(
+                                    bankIdUrl + "/collect",
+                                    client,
+                                    CommonHeaders.DEFAULT_USER_AGENT)
                             .type(MediaType.APPLICATION_JSON)
                             .post(CollectBankIdResponse.class, collectBankIdRequest);
 
@@ -176,7 +180,9 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
         String completeBankIdResponse =
                 createClientRequest(
-                                collectBankIdResponse.getCompleteUrl(), client, DEFAULT_USER_AGENT)
+                                collectBankIdResponse.getCompleteUrl(),
+                                client,
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .type(MediaType.APPLICATION_JSON)
                         .post(String.class, collectBankIdRequest);
 
@@ -190,7 +196,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         String endpoint = fixUrlFromSecureToApplication(formElement.attr("action"));
 
         String samlResponse =
-                createClientRequest(endpoint, client, DEFAULT_USER_AGENT)
+                createClientRequest(endpoint, client, CommonHeaders.DEFAULT_USER_AGENT)
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .entity(ElementUtils.parseFormParameters(formElement))
                         .post(String.class);
@@ -203,7 +209,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         String authenticationEndpoint = fixUrlFromSecureToApplication(formElement.attr("action"));
 
         ClientResponse authenticateClientResponse =
-                createClientRequest(authenticationEndpoint, client, DEFAULT_USER_AGENT)
+                createClientRequest(
+                                authenticationEndpoint, client, CommonHeaders.DEFAULT_USER_AGENT)
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .entity(ElementUtils.parseFormParameters(formElement))
                         .post(ClientResponse.class);
@@ -215,7 +222,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
         Preconditions.checkState(
                 loginRedirectUrl != null && loginRedirectUrl.endsWith("validateEidLogin"));
-        createClientRequest(loginRedirectUrl, client, DEFAULT_USER_AGENT).get(String.class);
+        createClientRequest(loginRedirectUrl, client, CommonHeaders.DEFAULT_USER_AGENT)
+                .get(String.class);
         return true;
     }
 
@@ -238,7 +246,10 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
     private List<ContractEntity> fetchContracts() throws Exception {
         ContractsResponse response =
-                createClientRequest(BASE_URL + code + "/a/contracts", client, DEFAULT_USER_AGENT)
+                createClientRequest(
+                                BASE_URL + code + "/a/contracts",
+                                client,
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .get(ContractsResponse.class);
 
         return response.getBody();
@@ -249,7 +260,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
                 createClientRequest(
                                 BASE_URL + code + "/a/invoiceBillingUnits",
                                 client,
-                                DEFAULT_USER_AGENT)
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .type(MediaType.APPLICATION_JSON)
                         .get(InvoiceBillingUnitsResponse.class);
 
@@ -275,7 +286,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
                                         + "/"
                                         + invoice.getInvoiceId(),
                                 client,
-                                DEFAULT_USER_AGENT)
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .get(InvoiceDetailsResponse.class);
 
         if ("GENERIC_VALIDATION_ERROR".equals(response.getErrorCode())) {
@@ -294,7 +305,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
                                         + "/a/invoices/"
                                         + invoiceBillingUnit.getArrangementNumber(),
                                 client,
-                                DEFAULT_USER_AGENT)
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .get(InvoiceBillingUnitResponse.class);
 
         if ("GENERIC_TECHNICAL_ERROR".equals(response.getErrorCode())) {
@@ -313,7 +324,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
                                         + "/a/pendingTransactions/"
                                         + contractEntity.getContractId(),
                                 client,
-                                DEFAULT_USER_AGENT)
+                                CommonHeaders.DEFAULT_USER_AGENT)
                         .get(InvoiceDetailsResponse.class);
 
         return response.getBody();

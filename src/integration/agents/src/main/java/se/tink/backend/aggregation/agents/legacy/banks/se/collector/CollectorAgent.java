@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -63,7 +64,7 @@ public class CollectorAgent extends AbstractAgent
         credentials = request.getCredentials();
         catalog = context.getCatalog();
         httpClient = clientFactory.createCustomClient(context.getLogOutputStream());
-        apiClient = new CollectorApiClient(httpClient, DEFAULT_USER_AGENT);
+        apiClient = new CollectorApiClient(httpClient, CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override

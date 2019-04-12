@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -99,7 +100,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
             throws LoginException, AuthorizationException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
         ClientResponse response =
-                createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
+                createClientRequest(LOGIN_URL, client, CommonHeaders.DEFAULT_USER_AGENT)
                         .post(ClientResponse.class, loginRequest);
 
         ensureLoginSuccessful(response);

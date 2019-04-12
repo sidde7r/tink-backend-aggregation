@@ -138,6 +138,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -1709,7 +1710,8 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private Builder resource(String url) {
-        return client.resource(BASE_URL + url).header("User-Agent", DEFAULT_USER_AGENT);
+        return client.resource(BASE_URL + url)
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override

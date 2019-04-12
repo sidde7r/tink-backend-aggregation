@@ -94,6 +94,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.LocalizableEnum;
@@ -412,7 +413,7 @@ public class SkandiabankenAgent extends AbstractAgent
                         .header("x-smartrefill-marketing-version", "3.1.3")
                         .header("x-smartrefill-application", "se.skandia.skandia")
                         .header("x-smartrefill-language", "sv")
-                        .header("User-Agent", DEFAULT_USER_AGENT);
+                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT);
 
         if (customerId != null) {
             requestBuilder =
@@ -423,7 +424,8 @@ public class SkandiabankenAgent extends AbstractAgent
     }
 
     private Builder createLoginClientRequest(String url, boolean xhr) {
-        Builder requestBuilder = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT);
+        Builder requestBuilder =
+                client.resource(url).header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT);
 
         if (xhr) {
             requestBuilder.header("X-Requested-With", "XMLHttpRequest");

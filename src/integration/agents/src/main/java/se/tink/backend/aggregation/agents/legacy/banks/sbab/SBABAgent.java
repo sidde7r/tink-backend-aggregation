@@ -12,21 +12,42 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.util.Precision;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.*;
+import se.tink.backend.aggregation.agents.AbstractAgent;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.BankIdMessage;
+import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.*;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -38,6 +59,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -104,15 +126,16 @@ public class SBABAgent extends AbstractAgent
         if (payload != null && Objects.equal(payload.get("isSwitchMortgageProviderTest"), "true")) {
             clientWithoutSSL = clientFactory.createCookieClientWithoutSSL();
             bankIdSignClient =
-                    new BankIdSignClient(clientWithoutSSL, credentials, DEFAULT_USER_AGENT);
+                    new BankIdSignClient(
+                            clientWithoutSSL, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         } else {
             clientWithoutSSL = null;
-            bankIdSignClient = new BankIdSignClient(client, credentials, DEFAULT_USER_AGENT);
+            bankIdSignClient = new BankIdSignClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         }
 
-        authenticationClient = new AuthenticationClient(client, credentials, DEFAULT_USER_AGENT);
-        userDataClient = new UserDataClient(client, credentials, DEFAULT_USER_AGENT);
-        transferClient = new TransferClient(client, credentials, catalog, DEFAULT_USER_AGENT);
+        authenticationClient = new AuthenticationClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        userDataClient = new UserDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        transferClient = new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override

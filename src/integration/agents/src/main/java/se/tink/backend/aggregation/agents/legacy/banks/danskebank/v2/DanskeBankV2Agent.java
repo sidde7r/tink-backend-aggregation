@@ -92,6 +92,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
@@ -173,7 +174,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         this.apiClient =
                 new DanskeBankApiClient(
                         httpClient,
-                        DEFAULT_USER_AGENT,
+                        CommonHeaders.DEFAULT_USER_AGENT,
                         bankIdResourceHelper,
                         providerCountry,
                         sessionLanguage);
