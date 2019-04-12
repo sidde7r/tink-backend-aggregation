@@ -14,7 +14,7 @@ public interface MonitoringService {
 
     @GET
     @Path("connectivity/{clusterId}")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.APPLICATION_JSON)
     Response checkConnectivity(@PathParam("clusterId") String clusterId);
 }

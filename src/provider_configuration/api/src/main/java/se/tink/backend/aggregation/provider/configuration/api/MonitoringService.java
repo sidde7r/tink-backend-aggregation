@@ -12,7 +12,7 @@ import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 public interface MonitoringService {
     @GET
     @Path("/ping")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();

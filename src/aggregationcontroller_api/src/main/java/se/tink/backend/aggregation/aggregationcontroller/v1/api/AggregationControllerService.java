@@ -16,7 +16,7 @@ public interface AggregationControllerService {
 
     @POST
     @Path("connectivity")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     Response connectivityCheck();

@@ -32,14 +32,14 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 public interface UpdateService {
     @GET
     @Path("/ping")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.TEXT_PLAIN)
     @AllowAnonymous
     String ping();
 
     @POST
     @Path("/credentials/supplementalInformation")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     SupplementalInformationResponse getSupplementalInformation(
@@ -47,7 +47,7 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Account updateAccount(UpdateAccountRequest request);
@@ -70,35 +70,35 @@ public interface UpdateService {
 
     @POST
     @Path("/accounts/transfer-destinations/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateTransferDestinationPatterns(UpdateTransferDestinationPatternsRequest request);
 
     @POST
     @Path("/accounts/process")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response processAccounts(ProcessAccountsRequest request);
 
     @POST
     @Path("/accounts/opt-out")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response optOutAccounts(OptOutAccountsRequest request);
 
     @POST
     @Path("/credentials/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateCredentials(UpdateCredentialsStatusRequest request);
 
     @POST
     @Path("/credentials/operation/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateSignableOperation(SignableOperation signableOperation);
@@ -112,14 +112,14 @@ public interface UpdateService {
 
     @POST
     @Path("/document")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     UpdateDocumentResponse updateDocument(UpdateDocumentRequest request);
 
     @POST
     @Path("/fraud/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateFraudDetails(UpdateFraudDetailsRequest request);
