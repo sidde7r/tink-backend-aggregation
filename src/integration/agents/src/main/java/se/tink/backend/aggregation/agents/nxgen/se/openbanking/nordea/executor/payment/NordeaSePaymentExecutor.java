@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.p
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -14,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class NordeaSePaymentExecutor implements PaymentExecutor {
     private NordeaBaseApiClient apiClient;
@@ -35,12 +37,13 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
-                        .withExternalId(paymentRequest.getPayment().getId().toString())
+                        .withExternalId(
+                                paymentRequest.getPayment().getId().toString().substring(0, 29))
                         .build();
 
-        apiClient.createPayment(createPaymentRequest);
+        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
 
-        return null;
+        return assemblePaymentResponseFromCreate(createPaymentResponse, paymentRequest.getPayment());
     }
 
     @Override
@@ -74,7 +77,7 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         new AccountEntity(
                                 NordeaAccountType.mapToNordeaAccountType(
                                                 requestCreditor.getAccountIdentifierType())
-                                        .toString(),
+                                        .name(),
                                 requestCreditor.getCurrency(),
                                 requestCreditor.getAccountNumber()))
                 .withMessage(requestCreditor.getMessageToCreditor())
@@ -88,10 +91,16 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         new AccountEntity(
                                 NordeaAccountType.mapToNordeaAccountType(
                                                 requestDebtor.getAccountIdentifierType())
-                                        .toString(),
+                                        .name(),
                                 requestDebtor.getCurrency(),
                                 requestDebtor.getAccountNumber()))
                 .withMessage(requestDebtor.getOwnMessage())
                 .build();
+    }
+
+    private PaymentResponse assemblePaymentResponseFromCreate(
+            CreatePaymentResponse createPaymentResponse, Payment payment) {
+        payment.setProviderId(createPaymentResponse.getResponse().getId());
+        return new PaymentResponse(payment);
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -9,6 +10,9 @@ public class CreditorEntity {
     private String name;
     private ReferenceEntity reference;
 
+    public CreditorEntity() {}
+
+    @JsonIgnore
     private CreditorEntity(Builder builder) {
         this.account = builder.account;
         this.message = builder.message;

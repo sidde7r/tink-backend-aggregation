@@ -288,8 +288,14 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private void doRevampBankTransfer(Agent agent, Payment payment) throws Exception {
         log.info("Executing bank transfer.");
 
-        if (agent instanceof TransferExecutorNxgen) {
-            PaymentExecutor paymentExecutor = (PaymentExecutor) agent;
+        if (agent instanceof ConstructPaymentsRevampController) {
+
+            PaymentExecutor paymentExecutor =
+                    ((ConstructPaymentsRevampController) agent)
+                            .constructPaymentController()
+                            .orElseThrow(Exception::new)
+                            .getPaymentExecutor();
+
             PaymentResponse paymentResponse =
                     paymentExecutor.createPayment(new PaymentRequest(payment));
 
@@ -307,8 +313,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     paymentMultiStepResponse.getStep())) {
                 // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
                 // etc.
-                if (paymentMultiStepRequest.getStep().equalsIgnoreCase("ThirdParty"))
-                {
+                if (paymentMultiStepRequest.getStep().equalsIgnoreCase("ThirdParty")) {
                     throw new NotImplementedException("Thirdparty not implemented yet");
                 } else {
                     List<Field> fields = paymentMultiStepResponse.getFields();

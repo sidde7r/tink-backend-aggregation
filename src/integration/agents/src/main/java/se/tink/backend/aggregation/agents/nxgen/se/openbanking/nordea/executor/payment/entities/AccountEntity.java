@@ -11,8 +11,10 @@ public class AccountEntity {
     private String currency;
     private String value;
 
+    public AccountEntity() {}
+
     public AccountEntity(String type, String currency, String value) {
-        this.type =
+        this.type = type;
         this.currency = currency;
         this.value = value;
     }

@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -122,6 +123,8 @@ public class NordeaBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
-    public void createPayment(CreatePaymentRequest createPaymentRequest) {
+    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest) {
+        return createRequestInSession(NordeaBaseConstants.Urls.INITIATE_DOMESTIC_PAYMENT)
+                .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 }

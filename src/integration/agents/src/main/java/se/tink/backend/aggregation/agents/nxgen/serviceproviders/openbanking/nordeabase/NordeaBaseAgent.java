@@ -49,7 +49,10 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent implements Con
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.setDebugProxy("http://192.168.238.15:8888");
+        client.setDebugOutput(true);
+    }
 
     @Override
     protected abstract Authenticator constructAuthenticator();

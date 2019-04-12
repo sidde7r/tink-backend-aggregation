@@ -25,6 +25,8 @@ public final class NordeaBaseConstants {
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+        public static final URL INITIATE_DOMESTIC_PAYMENT =
+                new URL(BASE_URL + ApiService.INITIATE_DOMESTIC_PAYMENT);
     }
 
     public static class ApiService {
@@ -32,6 +34,7 @@ public final class NordeaBaseConstants {
         public static final String GET_TOKEN = "/v3/authorize/token";
         public static final String GET_ACCOUNTS = "/v3/accounts";
         public static final String GET_TRANSACTIONS = "/v3/accounts/{accountId}/transactions";
+        public static final String INITIATE_DOMESTIC_PAYMENT = "/v3/payments/domestic";
     }
 
     public static class StorageKeys {

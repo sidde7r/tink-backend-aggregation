@@ -18,4 +18,8 @@ public class PaymentController {
     public PaymentResponse cancelPayments(PaymentRequest paymentRequest) {
         return paymentExecutor.cancelPayment(paymentRequest);
     }
+
+    public PaymentExecutor getPaymentExecutor() {
+        return paymentExecutor;
+    }
 }
