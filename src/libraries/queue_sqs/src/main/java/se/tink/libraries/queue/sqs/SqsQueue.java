@@ -84,7 +84,7 @@ public class SqsQueue {
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
             return getQueueUrlResult.getQueueUrl();
         } catch (AmazonSQSException e) {
-            logger.warn("Queue configurations invalid");
+            logger.warn("Queue configurations invalid", e);
             return "";
         }
     }
@@ -100,13 +100,14 @@ public class SqsQueue {
                 return true;
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                    logger.warn("Queue already exists.");
+                    logger.warn("Queue already exists.", e);
                 }
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 logger.warn(
-                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.");
+                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.",
+                        e);
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 retries++;
             }
