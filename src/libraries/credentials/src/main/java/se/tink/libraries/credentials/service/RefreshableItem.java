@@ -88,7 +88,8 @@ public enum RefreshableItem {
                     .add(RefreshableItem.INVESTMENT_TRANSACTIONS)
                     .add(RefreshableItem.EINVOICES)
                     .add(RefreshableItem.TRANSFER_DESTINATIONS)
-                    .add(RefreshableItem.IDENTITY_DATA)
+                    // TODO: Should IDENTITY_DATA be here? If so, make sure this is expected
+                    // everywhere REFRESHABLE_ITEMS_ALL is used.
                     .build();
 
     public boolean isAccountType(AccountTypes type) {
