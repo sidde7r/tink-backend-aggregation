@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HVBAgent extends NextGenerationAgent {
+
     private static final WLConfig wlConfig =
             new WLConfig(
                     HVBConstants.Url.ENDPOINT,
