@@ -1,10 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "lib",
     srcs = glob(
         ["src/main/**/*.java"],
     ),
+    artifactId = "integration-lib",
     data = [
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
@@ -12,6 +14,7 @@ java_library(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
+    groupId = "se.tink.backend.aggregation",
     visibility = ["//visibility:public"],
     deps = [
         "//src/aggregation/api",
