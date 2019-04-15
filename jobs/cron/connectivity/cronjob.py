@@ -6,11 +6,10 @@ import requests
 response = None
 
 try:
-    cluster_id='salt.internal.staging.oxford.tink.network'
-    request_url = 'https://192.168.99.100:31011/monitoring/connectivity/{}'.format(cluster_id)
+    request_url = 'https://192.168.99.100:31011/monitoring/connectivity'
     response = requests.get(request_url, verify=False)
 except requests.exceptions.ConnectionError as error:
-    print("Failed to connect to NASA: " + format(error))
+    print("Failed to connect to Aggregation Service: " + format(error))
     sys.exit(1)
 
 if(response.status_code is 200):
