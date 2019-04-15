@@ -22,7 +22,7 @@ public class ClusterConnectivityController {
         Set<String> clusterIds = controllerWrapperProvider.getClusterIds();
         boolean anyClusterFailed = false;
 
-        for(String clusterId : clusterIds) {
+        for (String clusterId : clusterIds) {
             try {
                 checkConnectivity(clusterId);
             } catch (AggregationControllerNotReachable e) {
@@ -31,7 +31,7 @@ public class ClusterConnectivityController {
             }
         }
 
-        if(anyClusterFailed) {
+        if (anyClusterFailed) {
             throw new AggregationControllerNotReachable();
         }
     }
