@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
 import com.google.common.base.Strings;
+import javax.ws.rs.core.MediaType;
 import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.InitOtpResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.ListOtpResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.PollCodeAppRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.PollCodeAppResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.InvestmentAccountsResponse;
@@ -160,6 +165,25 @@ public class DanskeBankApiClient {
                         .post(String.class, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, ListOtpResponse.class);
+    }
+
+    public InitOtpResponse initOtp(String deviceType, String deviceSerialNo) {
+        InitOtpRequest request = new InitOtpRequest(deviceType, deviceSerialNo);
+
+        String response = client.request(DanskeBankConstants.Url.DEVICE_INIT_OTP)
+                .header("Referer", configuration.getAppReferer())
+                .post(String.class, request);
+
+        return DanskeBankDeserializer.convertStringToObject(response, InitOtpResponse.class);
+    }
+
+    public PollCodeAppResponse pollCodeApp(String url, String ticket) {
+        PollCodeAppRequest request = new PollCodeAppRequest(ticket);
+
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .post(PollCodeAppResponse.class, request);
     }
 
     public CheckDeviceResponse checkDevice(

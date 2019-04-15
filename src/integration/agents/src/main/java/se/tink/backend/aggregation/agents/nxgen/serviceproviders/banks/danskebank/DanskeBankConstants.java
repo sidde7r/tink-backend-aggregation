@@ -20,6 +20,7 @@ public final class DanskeBankConstants {
         public static final String DEVICE_BIND_CHECK = BASE + "/devicebind/check";
         public static final String DEVICE_BIND_BIND = BASE + "/devicebind/bind";
         public static final String DEVICE_LIST_OTP = BASE + "/ListOTP";
+        public static final String DEVICE_INIT_OTP = BASE + "/InitOTP";
 
         public static final String FINALIZE_AUTHENTICATION = BASE + "/logon";
         // == END Authentication ==
@@ -56,7 +57,21 @@ public final class DanskeBankConstants {
         // == START SessionHandler ==
         public static final String EXTEND_SESSION = BASE + "/extend";
         // == END SessionHandler ==
+    }
 
+    public static class Device {
+        public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
+        public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
+        public static final String USER_ID_TYPE = "PRIV";
+        public static final String SUPPRESS_PUSH = "N";
+        public static final String LANGUAGE_CODE = "EN";
+        // This is the text shown in the code app.
+        public static final String REGISTER_TRANSACTION_TEXT = "Register with Danske Mobile Banking";
+    }
+
+    public static class CodeApp {
+        public static final String STATUS_OK = "ok";
+        public static final String STATUS_TIMEOUT = "timeout";
     }
 
     public static class Account {
