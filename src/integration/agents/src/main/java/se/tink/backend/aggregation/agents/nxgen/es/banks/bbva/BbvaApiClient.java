@@ -182,7 +182,7 @@ public class BbvaApiClient {
         return userAgent;
     }
 
-    public String getTsec() {
+    private String getTsec() {
         return sessionStorage.get(BbvaConstants.StorageKeys.TSEC);
     }
 
@@ -194,7 +194,7 @@ public class BbvaApiClient {
         return sessionStorage.get(BbvaConstants.StorageKeys.USER_ID);
     }
 
-    public void setIdTypeCode(String idTypeCode) {
+    private void setIdTypeCode(String idTypeCode) {
         sessionStorage.put(BbvaConstants.StorageKeys.ID_TYPE_CODE, idTypeCode);
     }
 
