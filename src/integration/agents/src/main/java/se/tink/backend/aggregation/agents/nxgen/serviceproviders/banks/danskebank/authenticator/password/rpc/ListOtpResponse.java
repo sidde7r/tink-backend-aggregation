@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.rpc.AbstractResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -12,5 +13,11 @@ public class ListOtpResponse extends AbstractResponse {
 
     public List<DeviceEntity> getDevices() {
         return devices;
+    }
+
+    public Optional<DeviceEntity> getPreferredDevice() {
+        return devices.stream()
+                .filter(DeviceEntity::isPreferredDevice)
+                .findFirst();
     }
 }
