@@ -11,8 +11,7 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionRequest {
-    @JsonIgnore
-    private static final String DEVICE_APP_VERSION = "3.18.1";
+    @JsonIgnore private static final String DEVICE_APP_VERSION = "3.18.1";
     @JsonIgnore private static final String DEVICE_MANUFACTURER = "LGE";
     @JsonIgnore private static final String DEVICE_MODEL = "Nexus 5X";
     @JsonIgnore private static final String DEVICE_OS = "Android";
