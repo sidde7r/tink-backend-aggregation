@@ -22,6 +22,7 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
+    private static final int QUEUE_CREATION_MAX_RETRIES = 60;
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
@@ -111,7 +112,7 @@ public class SqsQueue {
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
                 retries++;
             }
-        } while (retries < 10);
+        } while (retries < QUEUE_CREATION_MAX_RETRIES);
 
         throw new IllegalStateException("No SQS with the current configurations is available.");
     }
