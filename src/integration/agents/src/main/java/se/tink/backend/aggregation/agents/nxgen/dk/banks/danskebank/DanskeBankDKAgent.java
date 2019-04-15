@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -47,13 +46,18 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
     protected Authenticator constructAuthenticator() {
         DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator =
                 new DanskeBankChallengeAuthenticator(
-                        apiClient, persistentStorage, credentials, deviceId, configuration);
+                        catalog,
+                        supplementalInformationHelper,
+                        apiClient,
+                        persistentStorage,
+                        credentials,
+                        deviceId,
+                        configuration);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new KeyCardAuthenticationController(
-                        catalog, supplementalInformationHelper, danskeBankChallengeAuthenticator),
+                danskeBankChallengeAuthenticator,
                 danskeBankChallengeAuthenticator);
     }
 
