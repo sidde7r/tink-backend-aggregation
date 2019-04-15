@@ -13,6 +13,7 @@ import com.amazonaws.services.sqs.model.GetQueueUrlResult;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,8 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
-    private static final int QUEUE_CREATION_MAX_RETRIES = 60;
+    private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
+    private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
@@ -93,8 +95,6 @@ public class SqsQueue {
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
     private boolean isQueueCreated(CreateQueueRequest createRequest) {
-        int retries = 0;
-
         do {
             try {
                 sqs.createQueue(createRequest);
@@ -106,15 +106,20 @@ public class SqsQueue {
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
+                long backoffTime = calculateBackoffTime();
                 logger.warn(
-                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.",
+                        "No SQS with the current configurations is available, sleeping {} ms and then retrying.",
+                        backoffTime,
                         e);
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                retries++;
-            }
-        } while (retries < QUEUE_CREATION_MAX_RETRIES);
 
-        throw new IllegalStateException("No SQS with the current configurations is available.");
+                Uninterruptibles.sleepUninterruptibly(backoffTime, TimeUnit.MILLISECONDS);
+            }
+        } while (true);
+    }
+
+    private static long calculateBackoffTime() {
+        return MINIMUM_SLEEP_TIME_IN_MILLISECONDS
+                * BASE_2_ARRAY[ThreadLocalRandom.current().nextInt(BASE_2_ARRAY.length)];
     }
 
     private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
