@@ -106,12 +106,13 @@ public class SqsQueue {
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
+                long backoffTime = calculateBackoffTime();
                 logger.warn(
-                        "No SQS with the current configurations is available, sleeping 1 second and then retrying.",
+                        "No SQS with the current configurations is available, sleeping {} ms and then retrying.",
+                        backoffTime,
                         e);
 
-                Uninterruptibles.sleepUninterruptibly(
-                        calculateBackoffTime(), TimeUnit.MILLISECONDS);
+                Uninterruptibles.sleepUninterruptibly(backoffTime, TimeUnit.MILLISECONDS);
             }
         } while (true);
     }
