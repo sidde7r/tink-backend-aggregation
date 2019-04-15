@@ -4,8 +4,11 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.identitydata.BankiaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.BankiaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.BankiaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
@@ -17,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -28,7 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class BankiaAgent extends NextGenerationAgent {
+public final class BankiaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final BankiaApiClient apiClient;
 
@@ -130,5 +134,11 @@ public final class BankiaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IdentityDataFetcher fetcher = new BankiaIdentityDataFetcher(apiClient);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

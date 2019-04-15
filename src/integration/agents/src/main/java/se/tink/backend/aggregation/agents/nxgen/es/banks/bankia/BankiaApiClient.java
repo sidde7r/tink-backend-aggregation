@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.identitydata.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.DataHomeModelEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.InvestmentAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.ValueAccountIdentifierEntity;
@@ -155,8 +156,7 @@ public class BankiaApiClient {
     }
 
     public RsaKeyResponse getLoginKey() {
-        return createRequest(BankiaConstants.Url.LOGIN_KEY)
-                .get(RsaKeyResponse.class);
+        return createRequest(BankiaConstants.Url.LOGIN_KEY).get(RsaKeyResponse.class);
     }
 
     public LoginResponse login(
@@ -205,5 +205,14 @@ public class BankiaApiClient {
         return createInSessionRequest(BankiaConstants.Url.LOAN_DETAILS)
                 .body(loanDetailsRequest, MediaType.APPLICATION_JSON)
                 .post(LoanDetailsResponse.class);
+    }
+
+    public IdentityDataResponse fetchIdentityData() {
+        return client.request(BankiaConstants.Url.IDENTITY_DATA)
+                .header(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .header(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.O3)
+                .header(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(IdentityDataResponse.class);
     }
 }
