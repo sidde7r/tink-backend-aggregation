@@ -170,9 +170,10 @@ public class DanskeBankApiClient {
     public InitOtpResponse initOtp(String deviceType, String deviceSerialNo) {
         InitOtpRequest request = new InitOtpRequest(deviceType, deviceSerialNo);
 
-        String response = client.request(DanskeBankConstants.Url.DEVICE_INIT_OTP)
-                .header("Referer", configuration.getAppReferer())
-                .post(String.class, request);
+        String response =
+                client.request(DanskeBankConstants.Url.DEVICE_INIT_OTP)
+                        .header("Referer", configuration.getAppReferer())
+                        .post(String.class, request);
 
         return DanskeBankDeserializer.convertStringToObject(response, InitOtpResponse.class);
     }

@@ -53,8 +53,8 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator implements
-        MultiFactorAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
+public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator
+        implements MultiFactorAuthenticator, AutoAuthenticator, KeyCardAuthenticator {
 
     private static final AggregationLogger log =
             new AggregationLogger(DanskeBankChallengeAuthenticator.class);
@@ -71,10 +71,13 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private WebDriver driver;
     private String keyCardOtpChallenge;
 
-    public DanskeBankChallengeAuthenticator(Catalog catalog,
+    public DanskeBankChallengeAuthenticator(
+            Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
-            DanskeBankApiClient apiClient, PersistentStorage persistentStorage,
-            Credentials credentials, String deviceId,
+            DanskeBankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials,
+            String deviceId,
             DanskeBankConfiguration configuration) {
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -92,7 +95,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         // Determine if we should do KeyCard Authentication or CodeApp Authentication.
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
@@ -127,8 +131,9 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             codeAppAuthentication(username, preferredDevice);
         } else if (preferredDevice.isOtpCard()) {
             this.keyCardOtpChallenge = getKeyCardOtpChallenge(bindDeviceResponse);
-            KeyCardAuthenticationController keyCardAuthenticationController = new KeyCardAuthenticationController(
-                    catalog, supplementalInformationHelper, this);
+            KeyCardAuthenticationController keyCardAuthenticationController =
+                    new KeyCardAuthenticationController(
+                            catalog, supplementalInformationHelper, this);
 
             // Authenticate using key card (supplemental information)
             keyCardAuthenticationController.authenticate(credentials);
@@ -144,7 +149,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     public KeyCardInitValues init(String username, String password)
             throws AuthenticationException, AuthorizationException {
 
-        KeyCardEntity keyCardEntity = decryptOtpChallenge(username, this.keyCardOtpChallenge, KeyCardEntity.class);
+        KeyCardEntity keyCardEntity =
+                decryptOtpChallenge(username, this.keyCardOtpChallenge, KeyCardEntity.class);
         return new KeyCardInitValues(keyCardEntity.getSerialNumber(), keyCardEntity.getChallenge());
     }
 
@@ -155,32 +161,36 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     // --- KeyCardAuthenticator ---
 
     // +++ CodeAppAuthenticator +++
-    private void codeAppAuthentication(String username, DeviceEntity preferredDevice) throws AuthenticationException,
-            AuthorizationException {
+    private void codeAppAuthentication(String username, DeviceEntity preferredDevice)
+            throws AuthenticationException, AuthorizationException {
         // Initiate the code app auth by requesting a new otp challenge.
         // The otp challenge we will get is an encrypted message containing the code app ticket and
         // url to poll the auth status.
         // The user will get a push notification to their device as a result of this request.
-        InitOtpResponse initOtpResponse = this.apiClient.initOtp(
-                preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
+        InitOtpResponse initOtpResponse =
+                this.apiClient.initOtp(
+                        preferredDevice.getDeviceType(), preferredDevice.getDeviceSerialNumber());
 
         String otpChallenge = initOtpResponse.getOtpChallenge();
-        CodeAppEntity codeAppEntity = decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
+        CodeAppEntity codeAppEntity =
+                decryptOtpChallenge(username, otpChallenge, CodeAppEntity.class);
 
-        // This request is a long polling request, i.e. it will respond when either the authentication timed out
+        // This request is a long polling request, i.e. it will respond when either the
+        // authentication timed out
         // or the user signed/cancelled in the code app.
-        PollCodeAppResponse pollResponse = this.apiClient.pollCodeApp(
-                codeAppEntity.getPollURL(), codeAppEntity.getToken());
+        PollCodeAppResponse pollResponse =
+                this.apiClient.pollCodeApp(codeAppEntity.getPollURL(), codeAppEntity.getToken());
 
         String pollStatus = pollResponse.getStatus();
         switch (pollStatus.toLowerCase()) {
-        case DanskeBankConstants.CodeApp.STATUS_OK:
-            break;
-        case DanskeBankConstants.CodeApp.STATUS_TIMEOUT:
-            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
-                    UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
-        default:
-            throw new IllegalStateException(String.format("Unknown code app poll response: %s.", pollStatus));
+            case DanskeBankConstants.CodeApp.STATUS_OK:
+                break;
+            case DanskeBankConstants.CodeApp.STATUS_TIMEOUT:
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
+                        UserMessage.CODE_APP_TIMEOUT_ERROR.getKey());
+            default:
+                throw new IllegalStateException(
+                        String.format("Unknown code app poll response: %s.", pollStatus));
         }
 
         if (!pollResponse.isConfirmation()) {
@@ -189,21 +199,23 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                     UserMessage.CODE_APP_REJECTED_ERROR.getKey());
         }
 
-        CodeAppChallengeAnswerEntity challengeAnswerEntity = CodeAppChallengeAnswerEntity.createFromPollResponse(
-                pollResponse);
+        CodeAppChallengeAnswerEntity challengeAnswerEntity =
+                CodeAppChallengeAnswerEntity.createFromPollResponse(pollResponse);
 
         String challengeAnswer = SerializationUtils.serializeToString(challengeAnswerEntity);
         finalizeChallengeAuthentication(challengeAnswer);
     }
     // --- CodeAppAuthenticator ---
 
-    private void finalizeChallengeAuthentication(String challengeAnswer) throws AuthenticationException,
-            AuthorizationException {
+    private void finalizeChallengeAuthentication(String challengeAnswer)
+            throws AuthenticationException, AuthorizationException {
         try {
             JavascriptExecutor js = (JavascriptExecutor) this.driver;
 
-            js.executeScript(DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
-                    this.bindChallengeResponseBody, StringEscapeUtils.escapeJava(challengeAnswer)));
+            js.executeScript(
+                    DanskeBankJavascriptStringFormatter.createChallengeAnswerJavascript(
+                            this.bindChallengeResponseBody,
+                            StringEscapeUtils.escapeJava(challengeAnswer)));
 
             // Get step up token header
             String stepUpToken =
@@ -249,7 +261,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate()
+            throws SessionException, BankServiceException, AuthorizationException {
         // Login
         try {
             logonStepOne(
@@ -446,14 +459,12 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             JavascriptExecutor js = (JavascriptExecutor) this.driver;
             js.executeScript(
                     DanskeBankJavascriptStringFormatter.createChallengeJavascript(
-                            this.bindChallengeResponseBody,
-                            username,
-                            otpChallenge));
+                            this.bindChallengeResponseBody, username, otpChallenge));
 
-            // The JavaScript populate the DOM element body->challengeInfo with the decrypted result.
-            String decryptedChallenge = this.driver
-                    .findElement(By.tagName("body"))
-                    .getAttribute("challengeInfo");
+            // The JavaScript populate the DOM element body->challengeInfo with the decrypted
+            // result.
+            String decryptedChallenge =
+                    this.driver.findElement(By.tagName("body")).getAttribute("challengeInfo");
             return DanskeBankDeserializer.convertStringToObject(decryptedChallenge, clazz);
         } catch (Exception e) {
             if (this.driver != null) {
@@ -473,9 +484,12 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     }
 
     private DeviceEntity getPreferredDevice() {
-        ListOtpResponse listOtpResponse = this.apiClient.listOtpInformation(ListOtpRequest.create(null));
-        return listOtpResponse.getPreferredDevice()
-                .orElseThrow(() -> new IllegalStateException("User does not have a preferred device."));
+        ListOtpResponse listOtpResponse =
+                this.apiClient.listOtpInformation(ListOtpRequest.create(null));
+        return listOtpResponse
+                .getPreferredDevice()
+                .orElseThrow(
+                        () -> new IllegalStateException("User does not have a preferred device."));
     }
 
     private void setupBindChallengeResponseBody() {
@@ -489,7 +503,8 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                         this.configuration.getMarketCode(),
                         this.configuration.getAppName(),
                         this.configuration.getAppVersion());
-        this.bindChallengeResponseBody = deviceInfoJavascript + challengeResponse.getBody(String.class);
+        this.bindChallengeResponseBody =
+                deviceInfoJavascript + challengeResponse.getBody(String.class);
     }
 
     private String getGenerateResponseJson(String challenge) {
@@ -523,8 +538,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private enum UserMessage implements LocalizableEnum {
         CREDENTIALS_VERIFICATION_ERROR(
                 new LocalizableKey("Wrong challenge response input - Will retry login.")),
-        CODE_APP_TIMEOUT_ERROR(
-                new LocalizableKey("Code app authentication timed out.")),
+        CODE_APP_TIMEOUT_ERROR(new LocalizableKey("Code app authentication timed out.")),
         CODE_APP_REJECTED_ERROR(
                 new LocalizableKey("Code app authentication was rejected by user."));
 

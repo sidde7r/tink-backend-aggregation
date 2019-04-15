@@ -46,16 +46,19 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
     protected Authenticator constructAuthenticator() {
         DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator =
                 new DanskeBankChallengeAuthenticator(
-                        catalog, supplementalInformationHelper, apiClient, persistentStorage, credentials,
-                        deviceId, configuration
-                );
+                        catalog,
+                        supplementalInformationHelper,
+                        apiClient,
+                        persistentStorage,
+                        credentials,
+                        deviceId,
+                        configuration);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 danskeBankChallengeAuthenticator,
-                danskeBankChallengeAuthenticator
-        );
+                danskeBankChallengeAuthenticator);
     }
 
     // DK fetches loans at a separate loan endpoint

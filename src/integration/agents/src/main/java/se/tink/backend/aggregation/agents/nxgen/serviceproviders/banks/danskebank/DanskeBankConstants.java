@@ -66,7 +66,8 @@ public final class DanskeBankConstants {
         public static final String SUPPRESS_PUSH = "N";
         public static final String LANGUAGE_CODE = "EN";
         // This is the text shown in the code app.
-        public static final String REGISTER_TRANSACTION_TEXT = "Register with Danske Mobile Banking";
+        public static final String REGISTER_TRANSACTION_TEXT =
+                "Register with Danske Mobile Banking";
     }
 
     public static class CodeApp {

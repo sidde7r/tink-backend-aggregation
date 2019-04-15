@@ -16,8 +16,6 @@ public class ListOtpResponse extends AbstractResponse {
     }
 
     public Optional<DeviceEntity> getPreferredDevice() {
-        return devices.stream()
-                .filter(DeviceEntity::isPreferredDevice)
-                .findFirst();
+        return devices.stream().filter(DeviceEntity::isPreferredDevice).findFirst();
     }
 }

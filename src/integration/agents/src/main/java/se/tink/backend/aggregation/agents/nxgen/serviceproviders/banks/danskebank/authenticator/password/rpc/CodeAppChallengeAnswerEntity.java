@@ -9,20 +9,20 @@ public class CodeAppChallengeAnswerEntity {
     private String signedResponse;
     private String codeAppIP;
 
-    private CodeAppChallengeAnswerEntity(String codeAppSerialNumber, String response, String signedResponse,
-            String codeAppIP) {
+    private CodeAppChallengeAnswerEntity(
+            String codeAppSerialNumber, String response, String signedResponse, String codeAppIP) {
         this.codeAppSerialNumber = codeAppSerialNumber;
         this.response = response;
         this.signedResponse = signedResponse;
         this.codeAppIP = codeAppIP;
     }
 
-    public static CodeAppChallengeAnswerEntity createFromPollResponse(PollCodeAppResponse response) {
+    public static CodeAppChallengeAnswerEntity createFromPollResponse(
+            PollCodeAppResponse response) {
         return new CodeAppChallengeAnswerEntity(
                 response.getCodeAppSerialNumber(),
                 response.getPayload().getResponse(),
                 response.getPayload().getSignedResponse(),
-                response.getCodeAppIP()
-        );
+                response.getCodeAppIP());
     }
 }

@@ -8,14 +8,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InitOtpRequest {
     @JsonProperty("UserIdType")
     private String userIdType;
+
     @JsonProperty("DeviceType")
     private String deviceType;
+
     @JsonProperty("DeviceSerialNo")
     private String deviceSerialNo;
+
     @JsonProperty("TransactionContext")
     private String transactionContext;
+
     @JsonProperty("SuppressPush")
     private String suppressPush;
+
     @JsonProperty("ISOLanguageCode")
     private String iSOLanguageCode;
 

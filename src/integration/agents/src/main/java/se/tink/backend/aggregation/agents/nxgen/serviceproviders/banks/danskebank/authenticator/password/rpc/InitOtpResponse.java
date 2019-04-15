@@ -6,18 +6,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InitOtpResponse extends AbstractResponse {
-    //@JsonProperty("StatusCode")
+    // @JsonProperty("StatusCode")
     // `StatusCode` is null - cannot define it!
     @JsonProperty("ReasonCode")
     private int reasonCode;
+
     @JsonProperty("DeviceType")
     private String deviceType;
+
     @JsonProperty("DeviceSerialNo")
     private String deviceSerialNo;
+
     @JsonProperty("DeviceCodesLeft")
     private int deviceCodesLeft;
+
     @JsonProperty("MultipleDevices")
     private boolean multipleDevices;
+
     @JsonProperty("OTPChallenge")
     private String otpChallenge;
 
