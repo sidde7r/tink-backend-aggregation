@@ -117,7 +117,6 @@ java_library(
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_xml//jar",
         "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
         "@javax_xml_stream_stax_api//jar",
-        "@org_codehaus_woodstox_stax2_api//jar",
     ],
 )
 
@@ -939,7 +938,6 @@ java_library(
         "@org_apache_curator_curator_recipes//jar",
         "@org_apache_curator_curator_x_discovery//jar",
         "@org_apache_zookeeper_zookeeper//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
         "@org_slf4j_slf4j_api//jar",
     ],
 )
@@ -969,10 +967,6 @@ java_library(
         "@net_java_dev_jets3t_jets3t//jar",
         "@org_apache_commons_commons_math//jar",
         "@org_apache_hadoop_hadoop_core//jar",
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_jaxrs//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-        "@org_codehaus_jackson_jackson_xc//jar",
         "@org_codehaus_jettison_jettison//jar",
         "@org_eclipse_jdt_core//jar",
         "@org_mortbay_jetty_jetty//jar",
@@ -1062,8 +1056,6 @@ java_library(
         "@org_apache_mahout_commons_commons_cli//jar",
         "@org_apache_mahout_mahout_core//jar",
         "@org_apache_mahout_mahout_math//jar",
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
         "@org_slf4j_slf4j_api//jar",
         "@xmlpull_xmlpull//jar",
         "@xpp3_xpp3_min//jar",
@@ -1114,14 +1106,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_bouncycastle_bcprov_jdk15on//jar",
-    ],
-)
-
-java_library(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_codehaus_jackson_jackson_core_asl//jar",
     ],
 )
 

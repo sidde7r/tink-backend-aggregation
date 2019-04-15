@@ -316,12 +316,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_core_asl",
-    artifact = "org.codehaus.jackson:jackson-core-asl:1.8.9",
-    sha1 = "99be07ca979279674ae5b8a886669fb8da491d9d",
-)
-
-maven_jar(
     name = "org_pojava_pojava",
     artifact = "org.pojava:pojava:2.8.1",
     sha1 = "4b9b3afd3c58a6b3eb91c50a4cae1bf58e3e7c73",
@@ -547,12 +541,6 @@ maven_jar(
     name = "org_apache_httpcomponents_httpclient",
     artifact = "org.apache.httpcomponents:httpclient:4.3.4",
     sha1 = "a9a1fef2faefed639ee0d0fba5b3b8e4eb2ff2d8",
-)
-
-maven_jar(
-    name = "org_codehaus_woodstox_stax2_api",
-    artifact = "org.codehaus.woodstox:stax2-api:3.1.1",
-    sha1 = "0466eab062e9d1a3ce2c4631b6d09b5e5c0cbd1b",
 )
 
 maven_jar(
@@ -1589,12 +1577,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_mapper_asl",
-    artifact = "org.codehaus.jackson:jackson-mapper-asl:1.8.9",
-    sha1 = "e430ed24d67dfc126ee16bc23156a044950c3168",
-)
-
-maven_jar(
     name = "org_seleniumhq_selenium_selenium_java",
     artifact = "org.seleniumhq.selenium:selenium-java:2.29.0",
     sha1 = "cb582e26966dcd641910b446ab559e14b71ceb07",
@@ -1679,12 +1661,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_codehaus_jackson_jackson_xc",
-    artifact = "org.codehaus.jackson:jackson-xc:1.7.1",
-    sha1 = "5eb6018a46439ae23afa3699005277ca2a0f7b47",
-)
-
-maven_jar(
     name = "com_sun_jersey_jersey_json",
     artifact = "com.sun.jersey:jersey-json:1.8",
     sha1 = "825621478fec59983106efaa032c679f925b4eff",
@@ -1748,12 +1724,6 @@ maven_jar(
     name = "commons_cli_commons_cli",
     artifact = "commons-cli:commons-cli:1.2",
     sha1 = "2bf96b7aa8b611c177d329452af1dc933e14501c",
-)
-
-maven_jar(
-    name = "org_codehaus_jackson_jackson_jaxrs",
-    artifact = "org.codehaus.jackson:jackson-jaxrs:1.7.1",
-    sha1 = "28dacb717bedc4f6edd9ca088448ef69d4dcd856",
 )
 
 maven_jar(

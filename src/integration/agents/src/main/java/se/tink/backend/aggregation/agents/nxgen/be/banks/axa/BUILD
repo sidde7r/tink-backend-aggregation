@@ -15,7 +15,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:org_apache_commons_commons_lang3",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_slf4j_slf4j_api",
         "@com_fasterxml_jackson_core_jackson_core//jar",

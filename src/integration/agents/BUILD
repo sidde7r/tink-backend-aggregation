@@ -67,7 +67,6 @@ java_library(
         "//third_party:org_apache_pdfbox_pdfbox",
         "//third_party:org_apache_velocity_velocity",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
         "//third_party:org_eclipse_jetty_jetty_servlets",
         "//third_party:org_elasticsearch_elasticsearch",
         "//third_party:org_hibernate_hibernate_entitymanager",

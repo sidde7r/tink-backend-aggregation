@@ -5,39 +5,17 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        # Log
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Auth
-        "//src/libraries/auth",
-
-        # Message builder
         "//src/libraries/access_logging",
-
-        # Metrics (Prometheus)
-        "//src/libraries/metrics",
-
-        # Guava
-        "//third_party:com_google_guava_guava",
-
-        # Guice
-        "//third_party:com_google_inject_guice",
-
-        # Jersey
-        "//third_party:com_sun_jersey_jersey_client",
-
-        # Jackson
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-
-        # Dropwizard
-        "//third_party:io_dropwizard_dropwizard_core",
-
-        # Codehaus Stringutils
-        "//third_party:org_codehaus_plexus_plexus_utils",
-
-        # Api utils
-        "//src/libraries/api_headers",
         "//src/libraries/api_annotations",
+        "//src/libraries/api_headers",
+        "//src/libraries/auth",
+        "//src/libraries/metrics",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:org_codehaus_plexus_plexus_utils",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
 
