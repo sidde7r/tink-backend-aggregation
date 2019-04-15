@@ -17,7 +17,7 @@ import se.tink.libraries.api.annotations.TeamOwnership;
 public interface ProcessService {
     @POST
     @Path("/statisticsandactivities/generate")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response generateStatisticsAndActivityAsynchronously(
@@ -25,7 +25,7 @@ public interface ProcessService {
 
     @POST
     @Path("/transactions/update")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateTransactionsAsynchronously(UpdateTransactionsRequest request);

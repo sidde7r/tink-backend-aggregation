@@ -16,7 +16,7 @@ import se.tink.libraries.api.annotations.TeamOwnership;
 public interface CredentialsService {
     @PUT
     @Path("/sensitive")
-    @TeamOwnership(Team.INTEGRATION)
+    @TeamOwnership(Team.AGGREGATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response updateSensitive(UpdateCredentialsSensitiveRequest request);
