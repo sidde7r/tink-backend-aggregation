@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.ConstructPaymentsRevampController;
+import se.tink.backend.aggregation.nxgen.agents.PaymentsRevampPoCHelperBaseClass;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -292,31 +292,31 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private void doRevampBankTransfer(Agent agent, Payment payment) throws Exception {
         log.info("Executing bank transfer.");
 
-        if (agent instanceof ConstructPaymentsRevampController) {
+        if (agent instanceof PaymentsRevampPoCHelperBaseClass) {
 
             PaymentExecutor paymentExecutor =
-                    ((ConstructPaymentsRevampController) agent)
+                    ((PaymentsRevampPoCHelperBaseClass) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new)
                             .getPaymentExecutor();
 
             PaymentResponse createPaymentResponse =
-                    paymentExecutor.createPayment(new PaymentRequest(payment));
+                    paymentExecutor.create(new PaymentRequest(payment));
 
             PaymentResponse fetchPaymentResponse =
-                    paymentExecutor.fetchPayment(new PaymentRequest(payment));
+                    paymentExecutor.fetch(new PaymentRequest(createPaymentResponse.getPayment()));
 
             assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
 
             PaymentMultiStepRequest paymentMultiStepRequest =
                     new PaymentMultiStepRequest(
-                            createPaymentResponse.getPayment(),
+                            fetchPaymentResponse.getPayment(),
                             AuthenticationStepConstants.STEP_INIT,
                             Collections.emptyList(),
                             Collections.emptyList());
 
             PaymentMultiStepResponse paymentMultiStepResponse =
-                    paymentExecutor.signPayment(paymentMultiStepRequest);
+                    paymentExecutor.sign(paymentMultiStepRequest);
 
             Map<String, String> map;
             List<Field> fields;
@@ -336,7 +336,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
 
                 paymentMultiStepResponse =
-                        paymentExecutor.signPayment(
+                        paymentExecutor.sign(
                                 new PaymentMultiStepRequest(
                                         payment, nextStep, fields, new ArrayList<>(map.values())));
                 nextStep = paymentMultiStepResponse.getStep();
@@ -449,7 +449,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-            if (agent instanceof ConstructPaymentsRevampController) {
+            if (agent instanceof PaymentsRevampPoCHelperBaseClass) {
                 doRevampBankTransfer(agent, payment);
             } else {
                 throw new NotImplementedException(

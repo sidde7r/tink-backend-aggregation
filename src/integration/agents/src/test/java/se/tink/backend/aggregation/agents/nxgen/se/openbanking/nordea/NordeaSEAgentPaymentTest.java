@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-//@Ignore
+@Ignore
 public class NordeaSEAgentPaymentTest {
 
     @Test
@@ -33,15 +34,12 @@ public class NordeaSEAgentPaymentTest {
         doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
         doReturn("SE4550000000058398257466").when(creditor).getAccountNumber();
         doReturn("SEK").when(creditor).getCurrency();
-        doReturn("Jack Bauer").when(creditor).getCreditorName();
-        doReturn("24").when(creditor).getMessageToCreditor();
 
 
         Debtor debtor = mock(Debtor.class);
         doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
         doReturn("41351300039").when(debtor).getAccountNumber();
         doReturn("SEK").when(debtor).getCurrency();
-        doReturn("To Jack").when(debtor).getOwnMessage();
 
         Amount amount = Amount.inSEK(10);
         LocalDate executionDate = LocalDate.now();

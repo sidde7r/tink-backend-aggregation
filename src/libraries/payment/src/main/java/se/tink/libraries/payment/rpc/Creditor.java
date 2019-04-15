@@ -5,18 +5,12 @@ import se.tink.libraries.account.AccountIdentifier;
 public class Creditor {
     private AccountIdentifier accountIdentifier;
     private String currency;
-    private String messageToCreditor;
-    private String creditorName;
 
     public Creditor(
             AccountIdentifier accountIdentifier,
-            String currency,
-            String messageToCreditor,
-            String creditorName) {
+            String currency) {
         this.accountIdentifier = accountIdentifier;
         this.currency = currency;
-        this.messageToCreditor = messageToCreditor;
-        this.creditorName = creditorName;
     }
 
     public AccountIdentifier.Type getAccountIdentifierType() {
@@ -29,13 +23,5 @@ public class Creditor {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getMessageToCreditor() {
-        return messageToCreditor;
-    }
-
-    public String getCreditorName() {
-        return creditorName;
     }
 }

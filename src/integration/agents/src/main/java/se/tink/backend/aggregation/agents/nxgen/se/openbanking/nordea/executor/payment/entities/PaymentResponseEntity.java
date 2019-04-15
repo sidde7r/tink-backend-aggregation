@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums.NordeaPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.rpc.Payment;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @JsonObject
 public class PaymentResponseEntity {
     @JsonProperty("_id")
-    private String todoWhichId;
+    private String id;
 
     @JsonProperty("payment_status")
     private String paymentStatus;
@@ -29,14 +34,36 @@ public class PaymentResponseEntity {
 
     @Override
     public String toString() {
-        return "Payment{" +
-                "paymentStatus='" + paymentStatus + '\'' +
-                ", links=" + links +
-                ", amount=" + amount +
-                ", currency='" + currency + '\'' +
-                ", creditor=" + creditor +
-                ", debtor=" + debtor +
-                '}';
+        return "Payment{"
+                + "paymentStatus='"
+                + paymentStatus
+                + '\''
+                + ", links="
+                + links
+                + ", amount="
+                + amount
+                + ", currency='"
+                + currency
+                + '\''
+                + ", creditor="
+                + creditor
+                + ", debtor="
+                + debtor
+                + '}';
     }
 
+    public PaymentResponse toTinkPaymentResponse() {
+        Payment tinkPayment =
+                new Payment(
+                        creditor.toTinkCreditor(),
+                        debtor.toTinkDebtor(),
+                        Amount.valueOf(currency, Double.valueOf(amount * 100).longValue(), 2),
+                        LocalDate.now(),
+                        currency);
+        tinkPayment.setProviderId(id);
+        tinkPayment.setStatus(
+                NordeaPaymentStatus.mapToTinkPaymentStatus(
+                        NordeaPaymentStatus.fromString(paymentStatus)));
+        return new PaymentResponse(tinkPayment);
+    }
 }

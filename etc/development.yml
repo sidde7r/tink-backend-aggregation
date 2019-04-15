@@ -156,8 +156,8 @@ agentsServiceConfiguration:
       collectorSubscriptionKey: ASK_JOHANNES
     nordea:
       tink:
-        clientId: "8c7518e5-701f-4be5-b580-724e3084f257"
-        clientSecret: "oT0vF1xF5wP0eE3mU1jA3iR7pH4oI7xJ7kW1eX4gV1yR7iL0cI"
+        clientId: ""
+        clientSecret: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     bec:
     sparebank1:
@@ -165,7 +165,7 @@ agentsServiceConfiguration:
     ing:
       tink:
         baseUrl: "https://api.sandbox.ing.com"
-        clientId: "5ca1ab1e-c0ca-c01a-cafe-154deadbea75"
+        clientId: ""
         clientSigningKeyPath: "data/test/cryptography/ing/signing.key"
         clientSigningCertificatePath: "data/test/cryptography/ing/signing.cer"
         clientKeyStorePath: "data/test/cryptography/ing/client.p12"
@@ -174,8 +174,8 @@ agentsServiceConfiguration:
     deutschebank:
       tink:
         baseUrl: "https://simulator-api.db.com"
-        clientId: "54f9cba4-702f-41cb-a5c1-6831f3041c1a"
-        clientSecret: "YOaWhiZjwwMSg2-x-I5Xyd_dxcSp7-UuRhVSYra1tlhqixfdti1s1wvv5ODk4AjfHWTA4Ks2LWJb8XULzpNmzA"
+        clientId: ""
+        clientSecret: ""
         redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     seb:
       tink:

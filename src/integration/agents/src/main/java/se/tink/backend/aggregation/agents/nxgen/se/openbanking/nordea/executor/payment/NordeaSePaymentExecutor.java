@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.DebtorEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums.NordeaPaymentStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.ConfirmPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
@@ -22,8 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
-import se.tink.libraries.payment.rpc.Creditor;
-import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 import java.util.ArrayList;
@@ -37,11 +32,12 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
 
-        CreditorEntity creditorEntity = assembleCreditor(paymentRequest.getPayment().getCreditor());
+        CreditorEntity creditorEntity =
+                CreditorEntity.of(paymentRequest.getPayment().getCreditor());
 
-        DebtorEntity debtorEntity = assembleDebtor(paymentRequest.getPayment().getDebtor());
+        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest.getPayment().getDebtor());
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -49,37 +45,33 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
-                        // TBD: Remove substring limitation when Nordea fixes the bug that limits
+                        // TODO: Remove substring limitation when Nordea fixes the bug that limits
                         // the length of the external_id field:
                         //      https://support.nordeaopenbanking.com/hc/en-us/community/topics
                         .withExternalId(
                                 paymentRequest.getPayment().getId().toString().substring(0, 29))
                         .build();
 
-        CreatePaymentResponse createPaymentResponse = apiClient.createPayment(createPaymentRequest);
-
-        return assemblePaymentResponseFromCreate(
-                createPaymentResponse, paymentRequest.getPayment());
+        return apiClient.createPayment(createPaymentRequest).toTinkPaymentResponse();
     }
 
     @Override
-    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
-        GetPaymentResponse getPaymentResponse =
-                apiClient.getPayment(paymentRequest.getPayment().getProviderId());
-
-        return assemblePaymentResponseFromFetch(getPaymentResponse, paymentRequest.getPayment());
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        return apiClient
+                .getPayment(paymentRequest.getPayment().getProviderId())
+                .toTinkPaymentResponse();
     }
 
     @Override
-    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
-        boolean domestic = bothDebtorAndCreditorSwedish(paymentRequest.getPayment());
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+        boolean isDomestic = bothDebtorAndCreditorSwedish(paymentMultiStepRequest.getPayment());
         PaymentStatus paymentStatus = PaymentStatus.UNDEFINED;
         String nextStep = AuthenticationStepConstants.STEP_FINALIZE;
         List fields = new ArrayList<>();
-        switch (paymentRequest.getStep()) {
+        switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
-                        apiClient.confirmPayment(paymentRequest.getPayment().getProviderId(), true);
+                        apiClient.confirmPayment(paymentMultiStepRequest.getPayment().getProviderId(), true);
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -91,16 +83,16 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
             case NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP:
                 paymentStatus =
                         sampleStepNordeaAutoSignsAfterAFewSeconds(
-                                paymentRequest.getPayment().getProviderId());
+                                paymentMultiStepRequest.getPayment().getProviderId());
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
 
             default:
                 throw new IllegalStateException(
-                        String.format("Unknown step %s", paymentRequest.getStep()));
+                        String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
 
-        Payment payment = paymentRequest.getPayment();
+        Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(paymentStatus);
         return new PaymentMultiStepResponse(payment, nextStep, fields);
     }
@@ -137,59 +129,13 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse cancelPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse cancel(PaymentRequest paymentRequest) {
         return null;
     }
 
     @Override
-    public PaymentListResponse fetchPayments() {
+    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) {
         GetPaymentsResponse getPaymentsResponse = apiClient.fetchPayments();
         return null;
-    }
-
-    private CreditorEntity assembleCreditor(Creditor requestCreditor) {
-        return new CreditorEntity.Builder()
-                .withAccount(
-                        new AccountEntity(
-                                NordeaAccountType.mapToNordeaAccountType(
-                                                requestCreditor.getAccountIdentifierType())
-                                        .name(),
-                                requestCreditor.getCurrency(),
-                                requestCreditor.getAccountNumber()))
-                .withMessage(requestCreditor.getMessageToCreditor())
-                .withName(requestCreditor.getCreditorName())
-                .build();
-    }
-
-    private DebtorEntity assembleDebtor(Debtor requestDebtor) {
-        return new DebtorEntity.Builder()
-                .withAccount(
-                        new AccountEntity(
-                                NordeaAccountType.mapToNordeaAccountType(
-                                                requestDebtor.getAccountIdentifierType())
-                                        .name(),
-                                requestDebtor.getCurrency(),
-                                requestDebtor.getAccountNumber()))
-                .withMessage(requestDebtor.getOwnMessage())
-                .build();
-    }
-
-    private PaymentResponse assemblePaymentResponseFromCreate(
-            CreatePaymentResponse createPaymentResponse, Payment payment) {
-        payment.setProviderId(createPaymentResponse.getResponse().getId());
-        payment.setStatus(
-                NordeaPaymentStatus.mapToTinkPaymentStatus(
-                        NordeaPaymentStatus.fromString(
-                                createPaymentResponse.getResponse().getPaymentStatus())));
-        return new PaymentResponse(payment);
-    }
-
-    private PaymentResponse assemblePaymentResponseFromFetch(
-            GetPaymentResponse getPaymentResponse, Payment payment) {
-        payment.setStatus(
-                NordeaPaymentStatus.mapToTinkPaymentStatus(
-                        NordeaPaymentStatus.fromString(
-                                getPaymentResponse.getResponse().getPaymentStatus())));
-        return new PaymentResponse(payment);
     }
 }

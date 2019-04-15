@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
@@ -12,6 +11,11 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.PaymentsRevampPoCHelperBaseClass;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -27,6 +31,8 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
+
+import java.util.Optional;
 
 public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerCommand
         implements MetricsCommand {
@@ -96,6 +102,21 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     transferExecutorNxgen.update(transfer);
                 } else {
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
+                }
+            } else if (agent instanceof PaymentsRevampPoCHelperBaseClass) {
+                PaymentsRevampPoCHelperBaseClass paymentsRevampPoCHelperBaseClass =
+                        (PaymentsRevampPoCHelperBaseClass) agent;
+                if (transferRequest.isUpdate()) {
+                    PaymentResponse fetchPayment =
+                            paymentsRevampPoCHelperBaseClass.fetchPayment(
+                                    PaymentRequest.of(transferRequest));
+                } else {
+                    PaymentResponse createPaymentResponse =
+                            paymentsRevampPoCHelperBaseClass.createPayment(
+                                    PaymentRequest.of(transferRequest));
+                    PaymentMultiStepResponse signPaymentMultiStepResponse =
+                            paymentsRevampPoCHelperBaseClass.signPayment(
+                                    PaymentMultiStepRequest.of(createPaymentResponse));
                 }
             }
 

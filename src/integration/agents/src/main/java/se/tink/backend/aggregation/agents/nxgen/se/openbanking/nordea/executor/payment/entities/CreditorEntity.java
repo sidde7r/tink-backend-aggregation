@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums.NordeaAccountType;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.payment.rpc.Creditor;
 
 @JsonObject
 public class CreditorEntity {
@@ -18,6 +20,24 @@ public class CreditorEntity {
         this.message = builder.message;
         this.name = builder.name;
         this.reference = builder.reference;
+    }
+
+    @JsonIgnore
+    public static CreditorEntity of(Creditor internalCreditor) {
+        return new CreditorEntity.Builder()
+                .withAccount(
+                        new AccountEntity(
+                                NordeaAccountType.mapToNordeaAccountType(
+                                                internalCreditor.getAccountIdentifierType())
+                                        .name(),
+                                internalCreditor.getCurrency(),
+                                internalCreditor.getAccountNumber()))
+                .build();
+    }
+
+    @JsonIgnore
+    public Creditor toTinkCreditor() {
+        return new Creditor(account.toTinkAccountIdentifier(), account.getCurrency());
     }
 
     public static class Builder {

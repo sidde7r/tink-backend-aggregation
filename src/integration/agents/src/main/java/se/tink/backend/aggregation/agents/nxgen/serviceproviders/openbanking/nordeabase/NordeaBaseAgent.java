@@ -5,8 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.agents.ConstructPaymentsRevampController;
+import se.tink.backend.aggregation.nxgen.agents.PaymentsRevampPoCHelperBaseClass;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -22,7 +21,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 import java.util.Optional;
 
-public abstract class NordeaBaseAgent extends NextGenerationAgent implements ConstructPaymentsRevampController {
+public abstract class NordeaBaseAgent extends PaymentsRevampPoCHelperBaseClass {
     protected NordeaBaseApiClient apiClient;
 
     public NordeaBaseAgent(
@@ -49,9 +48,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent implements Con
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected abstract Authenticator constructAuthenticator();
@@ -95,5 +92,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent implements Con
     }
 
     @Override
-    public Optional<PaymentController> constructPaymentController() { return Optional.empty(); }
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.empty();
+    }
 }

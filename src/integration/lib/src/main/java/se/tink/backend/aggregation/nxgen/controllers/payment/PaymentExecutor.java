@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 public interface PaymentExecutor {
-    PaymentResponse createPayment(PaymentRequest paymentRequest);
-    PaymentResponse fetchPayment(PaymentRequest paymentRequset);
-    PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest);
+    PaymentResponse create(PaymentRequest paymentRequest);
+    PaymentResponse fetch(PaymentRequest paymentRequest);
+    PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest);
     PaymentMultiStepResponse createBeneficiary();
-    PaymentResponse cancelPayment(PaymentRequest paymentRequest);
-    PaymentListResponse fetchPayments();
+    PaymentResponse cancel(PaymentRequest paymentRequest);
+    PaymentListResponse fetchMultiple(PaymentRequest paymentRequest);
 }

@@ -2,17 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.entities.GroupHeaderEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.ResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.PaymentResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 @JsonObject
 public class GetPaymentResponse {
     @JsonProperty("group_header")
     private GroupHeaderEntity groupHeader;
 
-    private ResponseEntity response;
+    private PaymentResponseEntity response;
 
-    public ResponseEntity getResponse() {
+    public PaymentResponseEntity getResponse() {
         return response;
+    }
+
+    public PaymentResponse toTinkPaymentResponse() {
+        return response.toTinkPaymentResponse();
     }
 }

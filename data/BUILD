@@ -64,8 +64,6 @@ filegroup(
     srcs = [
         "test/cryptography/private_rsa_key.pem",
         "test/cryptography/public_rsa_key.pub",
-        "test/cryptography/QWAC-NordeaDevPortal.cer.txt",
-        "test/cryptography/QWAC-NordeaDevPortal.p12",
     ],
     visibility = ["//visibility:public"],
 )

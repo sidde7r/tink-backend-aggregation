@@ -14,6 +14,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/models",
         "//src/libraries/account:enums",
@@ -120,7 +121,6 @@ junit_test(
         "//src/libraries/metrics",
         "//src/libraries/pair",
         "//src/libraries/payment:enums",
-#        "//src/libraries/payment:mocks",
         "//src/libraries/payment:rpc",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
