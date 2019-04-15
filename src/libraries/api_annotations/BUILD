@@ -1,8 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "api_annotations",
     srcs = glob(["src/main/**/*.java"]),
+    artifactId = "apiannotations",
+    groupId = "se.tink.libraries.api",
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
 )

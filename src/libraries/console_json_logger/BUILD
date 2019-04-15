@@ -1,6 +1,9 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "console_json_logger",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.logger.json",
     resources = glob(["src/main/resources/META-INF/services/io.dropwizard.logging.AppenderFactory"]),
     visibility = ["//visibility:public"],
     runtime_deps = ["//third_party:ch_qos_logback_logback_classic"],

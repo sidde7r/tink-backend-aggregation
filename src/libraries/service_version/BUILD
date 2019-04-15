@@ -1,6 +1,9 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "service_version",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.service.version",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/metrics",

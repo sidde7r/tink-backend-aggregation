@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "demo",
     srcs = glob(["src/main/**/demo/*.java"]),
+    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:com_google_guava_guava",
@@ -32,15 +34,17 @@ junit_test(
     ],
 )
 
-java_library(
+java_library_maven(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
+    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
 )
 
-java_library(
+java_library_maven(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
+    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:enums",
@@ -53,9 +57,10 @@ java_library(
     ],
 )
 
-java_library(
+java_library_maven(
     name = "service",
     srcs = glob(["src/main/**/service/*.java"]),
+    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api",

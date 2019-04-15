@@ -1,9 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "jersey_utils",
     srcs = glob(["src/main/**/*.java"]),
     data = ["//data:tink_ca"],
+    groupId = "se.tink.libraries.jersey.utils",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/net",

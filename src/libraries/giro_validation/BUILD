@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "giro_validation",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.giro.validation",
     visibility = ["//visibility:public"],
     deps = [
         # Guava

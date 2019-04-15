@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "generic_application",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.application",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",

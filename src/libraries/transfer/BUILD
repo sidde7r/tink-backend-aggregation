@@ -1,12 +1,16 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
+    groupId = "se.tink.libraries.transfer",
     visibility = ["//visibility:public"],
 )
 
-java_library(
+java_library_maven(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
+    groupId = "se.tink.libraries.transfer",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier",
@@ -23,9 +27,10 @@ java_library(
     ],
 )
 
-java_library(
+java_library_maven(
     name = "mocks",
     srcs = glob(["src/main/**/mocks/*.java"]),
+    groupId = "se.tink.libraries.transfer",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier",

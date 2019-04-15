@@ -1,6 +1,9 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "serialization",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.serialization",
     visibility = ["//visibility:public"],
     deps = [
         # Log

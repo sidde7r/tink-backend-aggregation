@@ -1,6 +1,9 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "creditsafe_consumer_monitoring",
     srcs = glob(["src/main/java/**/*.java"]),
+    groupId = "se.tink.libraries.creditsafe.consumermonitoring",
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

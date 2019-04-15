@@ -1,6 +1,9 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "discovered_web_service",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.discovered",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/discovery",

@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "amount",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.amount",
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

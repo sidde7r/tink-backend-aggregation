@@ -1,15 +1,19 @@
-java_library(
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
+
+java_library_maven(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
+    groupId = "se.tink.libraries.account",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/enums",
     ],
 )
 
-java_library(
+java_library_maven(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
+    groupId = "se.tink.libraries.account",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account:enums",

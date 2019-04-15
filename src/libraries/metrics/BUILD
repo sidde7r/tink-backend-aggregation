@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "metrics",
     srcs = glob(["src/main/**/*.java"]),
+    groupId = "se.tink.libraries.metrics",
     visibility = ["//visibility:public"],
     deps = [
         # Guava
