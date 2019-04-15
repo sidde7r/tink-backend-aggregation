@@ -22,8 +22,6 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
         this.manual = manual;
         this.create = create;
         this.update = update;
-
-        this.getCredentials().setForceManualAuthentication(true);
     }
 
     public ManualAuthenticateRequest(
@@ -43,5 +41,9 @@ public class ManualAuthenticateRequest extends CredentialsRequest {
     @Override
     public boolean isManual() {
         return manual;
+    }
+
+    public void setManualAuthentication() {
+        this.getCredentials().setForceManualAuthentication(true);
     }
 }

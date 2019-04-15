@@ -320,6 +320,8 @@ public class AgentWorkerOperationFactory {
 
         log.debug("Creating Authenticate operation chain for credential");
 
+        request.setManualAuthentication();
+
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clientInfo.getClusterId());
 
