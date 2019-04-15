@@ -10,9 +10,14 @@ public class InitiateSessionResponse extends BbvaResponse {
     private String name;
     private String surname;
     private UserEntity user;
+    private String identificationTypeCode;
 
     public UserEntity getUser() {
         return user;
+    }
+
+    public String getIdentificationTypeCode() {
+        return identificationTypeCode;
     }
 
     @JsonIgnore

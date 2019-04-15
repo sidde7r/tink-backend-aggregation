@@ -29,6 +29,7 @@ public final class BbvaConstants {
         public static final String ACCOUNT_ID = "accountId";
         public static final String HOLDER_NAME = "holderName";
         public static final String USER_ID = "userId";
+        public static final String ID_TYPE_CODE = "idTypeCode";
         public static final String TSEC = "tsec";
     }
 
@@ -48,6 +49,11 @@ public final class BbvaConstants {
         public static final String CONTRACT_ID = "contractId";
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
+        public static final String SHOW_SENSITIVE = "isShowSensitive";
+    }
+
+    public static final class QueryValues {
+        public static final String FALSE = "false";
     }
 
     public static final class LogTags {
@@ -89,6 +95,8 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
         public static final String SECURITY_PROFITABILITY =
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
+        public static final String IDENTITY_DATA =
+                BASE_URL + "/ASO/customers/V02/{" + PARAM_ID + "}";
     }
 
     public enum Headers implements HeaderEnum {
@@ -141,5 +149,10 @@ public final class BbvaConstants {
         public static final String OK = "ok";
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
+    }
+
+    public static final class IdTypeCodes {
+        public static final String NIF = "nif";
+        public static final String NIE = "nie";
     }
 }
