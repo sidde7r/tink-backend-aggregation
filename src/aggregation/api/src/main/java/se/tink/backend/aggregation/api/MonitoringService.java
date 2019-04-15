@@ -11,6 +11,11 @@ import se.tink.libraries.api.annotations.TeamOwnership;
 
 @Path("/monitoring")
 public interface MonitoringService {
+    @GET
+    @Path("connectivity/")
+    @TeamOwnership(Team.AGGREGATION)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response checkConnectivity();
 
     @GET
     @Path("connectivity/{clusterId}")

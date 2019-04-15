@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.util.Map;
+import java.util.Set;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.aggregationcontroller.AggregationControllerAggregationClient;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -25,6 +26,10 @@ public class ControllerWrapperProvider {
             AggregationControllerAggregationClient aggregationControllerAggregationClient) {
         this.clusterConfigurations = clusterConfigurations;
         this.aggregationControllerAggregationClient = aggregationControllerAggregationClient;
+    }
+
+    public Set<String> getClusterIds() {
+        return clusterConfigurations.keySet();
     }
 
     public ControllerWrapper createControllerWrapper(String clusterId) {
