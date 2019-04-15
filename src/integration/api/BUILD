@@ -1,8 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "api",
     srcs = glob(["src/main/**/*.java"]),
+    artifactId = "integration-api",
+    groupId = "se.tink.backend.agents",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account:enums",
