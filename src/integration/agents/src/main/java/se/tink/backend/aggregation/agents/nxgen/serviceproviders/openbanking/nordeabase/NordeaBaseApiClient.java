@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.p
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
@@ -145,5 +146,10 @@ public class NordeaBaseApiClient {
                         NordeaBaseConstants.Urls.GET_DOMESTIC_PAYMENT.parameter(
                                 NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                 .get(GetPaymentResponse.class);
+    }
+
+    public GetPaymentsResponse fetchPayments() {
+        return createRequestInSession(NordeaBaseConstants.Urls.GET_DOMESTIC_PAYMENTS)
+                .get(GetPaymentsResponse.class);
     }
 }

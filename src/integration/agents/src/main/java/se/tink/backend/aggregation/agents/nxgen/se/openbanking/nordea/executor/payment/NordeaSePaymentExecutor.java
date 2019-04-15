@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.p
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -78,7 +79,7 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
-                                paymentRequest.getPayment().getProviderId(), domestic);
+                                paymentRequest.getPayment().getProviderId(), true);
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -127,6 +128,7 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentListResponse fetchPayments() {
+        GetPaymentsResponse getPaymentsResponse = apiClient.fetchPayments();
         return null;
     }
 

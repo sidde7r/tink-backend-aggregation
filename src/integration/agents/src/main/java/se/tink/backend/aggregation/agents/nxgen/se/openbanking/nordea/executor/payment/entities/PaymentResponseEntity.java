@@ -26,4 +26,17 @@ public class PaymentResponseEntity {
     public String getPaymentStatus() {
         return paymentStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "paymentStatus='" + paymentStatus + '\'' +
+                ", links=" + links +
+                ", amount=" + amount +
+                ", currency='" + currency + '\'' +
+                ", creditor=" + creditor +
+                ", debtor=" + debtor +
+                '}';
+    }
+
 }
