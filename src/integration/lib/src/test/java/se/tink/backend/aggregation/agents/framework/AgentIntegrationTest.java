@@ -318,34 +318,34 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             PaymentMultiStepResponse paymentMultiStepResponse =
                     paymentExecutor.signPayment(paymentMultiStepRequest);
 
-            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(
-                    paymentMultiStepResponse.getStep())) {
+            Map<String, String> map;
+            List<Field> fields;
+            String nextStep = paymentMultiStepResponse.getStep();
+            payment = paymentMultiStepResponse.getPayment();
+            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
                 // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
                 // etc.
-                if (paymentMultiStepRequest.getStep().equalsIgnoreCase("ThirdParty")) {
-                    throw new NotImplementedException("Thirdparty not implemented yet");
-                } else {
-                    List<Field> fields = paymentMultiStepResponse.getFields();
-                    Map<String, String> map =
+                if (isSupplementalStep(paymentMultiStepResponse.getStep())) {
+                    fields = paymentMultiStepResponse.getFields();
+                    map =
                             supplementalInformationController.askSupplementalInformation(
                                     fields.toArray(new Field[fields.size()]));
-                    paymentMultiStepResponse =
-                            paymentExecutor.signPayment(
-                                    new PaymentMultiStepRequest(
-                                            paymentMultiStepResponse.getPayment(),
-                                            paymentMultiStepRequest.getStep(),
-                                            fields,
-                                            new ArrayList<>(map.values())));
+                } else {
+                    fields = paymentMultiStepResponse.getFields();
+                    map = Collections.emptyMap();
                 }
+
+                paymentMultiStepResponse =
+                        paymentExecutor.signPayment(
+                                new PaymentMultiStepRequest(
+                                        payment, nextStep, fields, new ArrayList<>(map.values())));
+                nextStep = paymentMultiStepResponse.getStep();
+                fields = paymentMultiStepResponse.getFields();
+                payment = paymentMultiStepResponse.getPayment();
             }
 
-            Thread.sleep(10000);
-
-            PaymentResponse fetchPaymentResponseAfterSign =
-                    paymentExecutor.fetchPayment(new PaymentRequest(payment));
-
             Assert.assertThat(
-                    fetchPaymentResponseAfterSign.getPayment().getStatus(),
+                    paymentMultiStepResponse.getPayment().getStatus(),
                     Matchers.anyOf(
                             Matchers.is(PaymentStatus.SIGNED), Matchers.is(PaymentStatus.PAID)));
 
@@ -357,6 +357,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         log.info("Done with bank transfer.");
+    }
+
+    private boolean isSupplementalStep(String step) {
+        return false;
     }
 
     private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
