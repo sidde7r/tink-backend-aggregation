@@ -61,6 +61,12 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
 )
 
+http_archive(
+    name = "bazel_common",
+    strip_prefix = "bazel-common-f1115e0f777f08c3cdb115526c4e663005bec69b",
+    url = "https://github.com/google/bazel-common/archive/f1115e0f777f08c3cdb115526c4e663005bec69b.zip",
+)
+
 # This is NOT needed when going through the language lang_image
 # "repositories" function(s).
 load(
