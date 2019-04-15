@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.sessionhandler;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
@@ -14,9 +14,12 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.sessionhandler.OpBankSessionHandler;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,9 +28,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticationTokenGenerator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.mocks.ResultCaptor;
