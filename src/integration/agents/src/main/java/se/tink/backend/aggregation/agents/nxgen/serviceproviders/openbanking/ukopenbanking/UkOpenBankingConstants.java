@@ -80,6 +80,47 @@ public abstract class UkOpenBankingConstants {
         }
     }
 
+    /**
+     * https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937623722/Namespaced+Enumerations+-+v3.1#NamespacedEnumerations-v3.1-OBExternalAccountIdentification4Code
+     */
+    public enum ExternalAccountIdentification4Code {
+        BBAN,
+        IBAN,
+        PAYM,
+        SORT_CODE_ACCOUNT_NUMBER,
+        PAN;
+
+        @JsonCreator
+        private static ExternalAccountIdentification3Code fromString(String key) {
+            return (key != null)
+                    ? ExternalAccountIdentification3Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
+        }
+    }
+
+    public enum OBExternalFinancialInstitutionIdentification4Code {
+        BICFI;
+
+        @JsonCreator
+        private static ExternalAccountIdentification3Code fromString(String key) {
+            return (key != null)
+                    ? ExternalAccountIdentification3Code.valueOf(
+                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    : null;
+        }
+
+        @JsonValue
+        public String toValue() {
+            return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
+        }
+    }
+
     public enum ExternalPaymentContext1Code {
         BILL_PAYMENT,
         ECOMMERCE_GOODS,
@@ -219,13 +260,16 @@ public abstract class UkOpenBankingConstants {
     public enum AccountBalanceType {
         CLOSING_AVAILABLE,
         CLOSING_BOOKED,
+        CLOSING_CLEARED,
         EXPECTED,
         FORWARD_AVAILABLE,
         INFORMATION,
         INTERIM_AVAILABLE,
         INTERIM_BOOKED,
+        INTERIM_CLEARED,
         OPENING_AVAILABLE,
         OPENING_BOOKED,
+        OPENING_CLEARED,
         PREVIOUSLY_CLOSED_BOOKED;
 
         private static final ImmutableList<AccountBalanceType> PREFERRED_TYPE_LIST =
