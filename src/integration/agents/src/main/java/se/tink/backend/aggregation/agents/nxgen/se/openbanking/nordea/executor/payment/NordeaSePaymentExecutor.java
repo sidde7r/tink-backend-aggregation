@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment;
 
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.DebtorEntity;
@@ -48,7 +49,7 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
-                        // TBD: Remoe substring limitation when Nordea fixes the bug that limits
+                        // TBD: Remove substring limitation when Nordea fixes the bug that limits
                         // the length of the external_id field:
                         //      https://support.nordeaopenbanking.com/hc/en-us/community/topics
                         .withExternalId(
@@ -71,26 +72,28 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
-        boolean domestic = bothDebotorAndCreditorSwedish(paymentRequest.getPayment());
+        boolean domestic = bothDebtorAndCreditorSwedish(paymentRequest.getPayment());
         PaymentStatus paymentStatus = PaymentStatus.UNDEFINED;
         String nextStep = AuthenticationStepConstants.STEP_FINALIZE;
         List fields = new ArrayList<>();
         switch (paymentRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
-                        apiClient.confirmPayment(
-                                paymentRequest.getPayment().getProviderId(), true);
+                        apiClient.confirmPayment(paymentRequest.getPayment().getProviderId(), true);
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
                                         confirmPaymentsResponse
                                                 .getPaymentResponse()
                                                 .getPaymentStatus()));
+                nextStep = NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP;
+                break;
+            case NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP:
+                paymentStatus =
+                        sampleStepNordeaAutoSignsAfterAFewSeconds(
+                                paymentRequest.getPayment().getProviderId());
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
-            case "BANKID":
-                throw new NotImplementedException(
-                        String.format("Step %s not implemented", paymentRequest.getStep()));
 
             default:
                 throw new IllegalStateException(
@@ -102,7 +105,19 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
         return new PaymentMultiStepResponse(payment, nextStep, fields);
     }
 
-    private boolean bothDebotorAndCreditorSwedish(Payment payment) {
+    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(String providerId) {
+        // Should be enough to get the payment auto signed.
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        GetPaymentResponse paymentResponse = apiClient.getPayment(providerId);
+        return NordeaPaymentStatus.mapToTinkPaymentStatus(
+                NordeaPaymentStatus.fromString(paymentResponse.getResponse().getPaymentStatus()));
+    }
+
+    private boolean bothDebtorAndCreditorSwedish(Payment payment) {
         if (!payment.getCreditor().getAccountIdentifierType().equals(AccountIdentifier.Type.IBAN)) {
             throw new NotImplementedException(
                     String.format(
@@ -171,9 +186,10 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
 
     private PaymentResponse assemblePaymentResponseFromFetch(
             GetPaymentResponse getPaymentResponse, Payment payment) {
-        payment.setStatus(NordeaPaymentStatus.mapToTinkPaymentStatus(
-                NordeaPaymentStatus.fromString(
-                        getPaymentResponse.getResponse().getPaymentStatus())));
+        payment.setStatus(
+                NordeaPaymentStatus.mapToTinkPaymentStatus(
+                        NordeaPaymentStatus.fromString(
+                                getPaymentResponse.getResponse().getPaymentStatus())));
         return new PaymentResponse(payment);
     }
 }
