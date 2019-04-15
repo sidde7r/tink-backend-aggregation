@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
 public class DeviceEntity {
     @JsonProperty("DeviceType")
@@ -36,5 +37,13 @@ public class DeviceEntity {
 
     public boolean isDeviceExpired() {
         return deviceExpired;
+    }
+
+    public boolean isCodeApp() {
+        return DanskeBankConstants.Device.DEVICE_TYPE_CODE_APP.equalsIgnoreCase(deviceType);
+    }
+
+    public boolean isOtpCard() {
+        return DanskeBankConstants.Device.DEVICE_TYPE_OTP_CARD.equalsIgnoreCase(deviceType);
     }
 }
