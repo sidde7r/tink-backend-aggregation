@@ -1,4 +1,4 @@
-package se.tink.libraries.request_tracing;
+package se.tink.libraries.requesttracing;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.security.SecureRandom;

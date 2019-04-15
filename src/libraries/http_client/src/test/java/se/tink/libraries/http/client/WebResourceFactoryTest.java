@@ -23,7 +23,7 @@ import javax.ws.rs.Path;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.libraries.request_tracing.RequestTracer;
+import se.tink.libraries.requesttracing.RequestTracer;
 
 public class WebResourceFactoryTest {
 

@@ -1,11 +1,11 @@
-package se.tink.libraries.request_tracing;
+package se.tink.libraries.requesttracing;
 
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
-import static se.tink.libraries.request_tracing.RequestTracer.REQUEST_ID_LENGTH;
-import static se.tink.libraries.request_tracing.RequestTracer.REQUEST_ID_MDC_KEY;
+import static se.tink.libraries.requesttracing.RequestTracer.REQUEST_ID_LENGTH;
+import static se.tink.libraries.requesttracing.RequestTracer.REQUEST_ID_MDC_KEY;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
