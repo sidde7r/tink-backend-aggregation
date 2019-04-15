@@ -49,6 +49,11 @@ public final class BbvaConstants {
         public static final String CONTRACT_ID = "contractId";
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
+        public static final String SHOW_SENSITIVE = "isShowSensitive";
+    }
+
+    public static final class QueryValues {
+        public static final String FALSE = "false";
     }
 
     public static final class LogTags {

@@ -174,7 +174,7 @@ public class BbvaApiClient {
                         .get();
 
         return createRequestInSession(url)
-                .queryParam("isShowSensitive", "false")
+                .queryParam(BbvaConstants.QueryKeys.SHOW_SENSITIVE, BbvaConstants.QueryValues.FALSE)
                 .get(IdentityDataResponse.class);
     }
 
