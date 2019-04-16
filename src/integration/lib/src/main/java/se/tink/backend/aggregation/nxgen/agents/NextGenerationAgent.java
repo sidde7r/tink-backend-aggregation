@@ -37,6 +37,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
@@ -54,12 +59,14 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.security.Security;
@@ -433,5 +440,44 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
             return new FetchEInvoicesResponse(Collections.emptyList());
         }
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
+    }
+
+    public Optional<PaymentController> constructPaymentController(PaymentType type) {
+        return Optional.empty();
+    }
+
+    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
+        return constructPaymentController(paymentRequest.getPayment().getType())
+                .orElseThrow(
+                        () -> new NotImplementedException("PaymentController not implemented."))
+                .create(paymentRequest);
+    }
+
+    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+        return constructPaymentController(paymentRequest.getPayment().getType())
+                .orElseThrow(
+                        () -> new NotImplementedException("PaymentController not implemented."))
+                .fetch(paymentRequest);
+    }
+
+    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
+        return constructPaymentController(paymentRequest.getPayment().getType())
+                .orElseThrow(
+                        () -> new NotImplementedException("PaymentController not implemented."))
+                .sign(paymentRequest);
+    }
+
+    public PaymentResponse cancelPayment(PaymentRequest paymentRequest) {
+        return constructPaymentController(paymentRequest.getPayment().getType())
+                .orElseThrow(
+                        () -> new NotImplementedException("PaymentController not implemented."))
+                .cancel(paymentRequest);
+    }
+
+    public PaymentListResponse fetchPayments(PaymentRequest paymentRequest) {
+        return constructPaymentController(paymentRequest.getPayment().getType())
+                .orElseThrow(
+                        () -> new NotImplementedException("PaymentController not implemented."))
+                .fetchMultiple(paymentRequest);
     }
 }

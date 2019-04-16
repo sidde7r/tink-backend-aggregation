@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.PaymentsRevampPoCHelperBaseClass;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -292,11 +292,11 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     private void doRevampBankTransfer(Agent agent, Payment payment) throws Exception {
         log.info("Executing bank transfer.");
 
-        if (agent instanceof PaymentsRevampPoCHelperBaseClass) {
+        if (agent instanceof NextGenerationAgent) {
 
             PaymentExecutor paymentExecutor =
-                    ((PaymentsRevampPoCHelperBaseClass) agent)
-                            .constructPaymentController()
+                    ((NextGenerationAgent) agent)
+                            .constructPaymentController(payment.getType())
                             .orElseThrow(Exception::new)
                             .getPaymentExecutor();
 
@@ -449,7 +449,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-            if (agent instanceof PaymentsRevampPoCHelperBaseClass) {
+            if (agent instanceof NextGenerationAgent) {
                 doRevampBankTransfer(agent, payment);
             } else {
                 throw new NotImplementedException(

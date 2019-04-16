@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @JsonObject
@@ -52,14 +52,15 @@ public class PaymentResponseEntity {
                 + '}';
     }
 
-    public PaymentResponse toTinkPaymentResponse() {
+    public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
         Payment tinkPayment =
                 new Payment(
                         creditor.toTinkCreditor(),
                         debtor.toTinkDebtor(),
                         Amount.valueOf(currency, Double.valueOf(amount * 100).longValue(), 2),
-                        LocalDate.now(),
-                        currency);
+                        null,
+                        currency,
+                        paymentType);
         tinkPayment.setProviderId(id);
         tinkPayment.setStatus(
                 NordeaPaymentStatus.mapToTinkPaymentStatus(

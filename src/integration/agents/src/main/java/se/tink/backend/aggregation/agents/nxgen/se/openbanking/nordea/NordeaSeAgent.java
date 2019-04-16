@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.NordeaSeAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSePaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.NordeaSeDomesticPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.fetcher.transactionalaccount.NordeaSeTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.NordeaBaseTransactionalAccountFetcher;
@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.payment.enums.PaymentType;
 
 import java.util.Optional;
 
@@ -47,9 +48,15 @@ public final class NordeaSeAgent extends NordeaBaseAgent  {
     }
 
     @Override
-    public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(
-                new PaymentController(new NordeaSePaymentExecutor(apiClient)));
+    public Optional<PaymentController> constructPaymentController(PaymentType paymentType) {
+        switch (paymentType) {
+            case DOMESTIC:
+                return Optional.of(
+                        new PaymentController(new NordeaSeDomesticPaymentExecutor(apiClient)));
+
+            default:
+                return Optional.empty();
+        }
     }
 
     protected SessionHandler constructSessionHandler() {

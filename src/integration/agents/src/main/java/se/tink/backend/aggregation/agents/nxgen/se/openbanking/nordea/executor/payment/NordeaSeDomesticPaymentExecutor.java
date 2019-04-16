@@ -16,24 +16,21 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NordeaSePaymentExecutor implements PaymentExecutor {
+public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     private NordeaBaseApiClient apiClient;
 
-    public NordeaSePaymentExecutor(NordeaBaseApiClient apiClient) {
+    public NordeaSeDomesticPaymentExecutor(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
-
         CreditorEntity creditorEntity =
                 CreditorEntity.of(paymentRequest.getPayment().getCreditor());
 
@@ -47,26 +44,28 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withDebtor(debtorEntity)
                         .build();
 
-        return apiClient.createPayment(createPaymentRequest).toTinkPaymentResponse();
+        return apiClient
+                .createPayment(createPaymentRequest)
+                .toTinkPaymentResponse(paymentRequest.getPayment().getType());
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getProviderId())
-                .toTinkPaymentResponse();
+                .toTinkPaymentResponse(paymentRequest.getPayment().getType());
     }
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
-        boolean isDomestic = bothDebtorAndCreditorSwedish(paymentMultiStepRequest.getPayment());
-        PaymentStatus paymentStatus = PaymentStatus.UNDEFINED;
-        String nextStep = AuthenticationStepConstants.STEP_FINALIZE;
+        PaymentStatus paymentStatus;
+        String nextStep;
         List fields = new ArrayList<>();
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
-                        apiClient.confirmPayment(paymentMultiStepRequest.getPayment().getProviderId(), true);
+                        apiClient.confirmPayment(
+                                paymentMultiStepRequest.getPayment().getProviderId(), true);
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -102,20 +101,6 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
         GetPaymentResponse paymentResponse = apiClient.getPayment(providerId);
         return NordeaPaymentStatus.mapToTinkPaymentStatus(
                 NordeaPaymentStatus.fromString(paymentResponse.getResponse().getPaymentStatus()));
-    }
-
-    private boolean bothDebtorAndCreditorSwedish(Payment payment) {
-        if (!payment.getCreditor().getAccountIdentifierType().equals(AccountIdentifier.Type.IBAN)) {
-            throw new NotImplementedException(
-                    String.format(
-                            "confirmation of %s payments not available yet",
-                            payment.getCreditor().getAccountIdentifierType().toString()));
-        }
-        return "se".equalsIgnoreCase(payment.getDebtor().getAccountNumber().substring(0, 2))
-                && payment.getDebtor()
-                        .getAccountNumber()
-                        .substring(0, 2)
-                        .equalsIgnoreCase(payment.getCreditor().getAccountNumber().substring(0, 2));
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -45,6 +46,6 @@ public class NordeaSEAgentPaymentTest {
         LocalDate executionDate = LocalDate.now();
         String currency = "SEK";
 
-        return new Payment(creditor, debtor, amount, executionDate, currency);
+        return new Payment(creditor, debtor, amount, executionDate, currency, PaymentType.DOMESTIC);
     }
 }

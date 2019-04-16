@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -29,14 +31,17 @@ public class PaymentRequest {
         // Assumptions for the temporary mapper:
         //  - Creditor and Debtor account currencies are the same as the transfer currency.
         Creditor creditorInRequest =
-                new Creditor(
-                        transfer.getDestination(),
-                        transfer.getAmount().getCurrency());
+                new Creditor(transfer.getDestination(), transfer.getAmount().getCurrency());
 
         Debtor debtorInRequest =
-                new Debtor(
-                        transfer.getSource(),
-                        transfer.getAmount().getCurrency());
+                new Debtor(transfer.getSource(), transfer.getAmount().getCurrency());
+
+        PaymentType paymentType = PaymentType.DOMESTIC;
+        if (transfer.getSource().getType() == transfer.getDestination().getType()) {
+            if (transfer.getSource().getType() == AccountIdentifier.Type.IBAN) {
+                paymentType = PaymentType.SEPA;
+            }
+        }
 
         Payment paymentInRequest =
                 new Payment(
@@ -44,7 +49,8 @@ public class PaymentRequest {
                         debtorInRequest,
                         transfer.getAmount(),
                         DateUtils.toJavaTimeLocalDate(transfer.getDueDate()),
-                        transfer.getAmount().getCurrency());
+                        transfer.getAmount().getCurrency(),
+                        paymentType);
 
         return new PaymentRequest(paymentInRequest);
     }

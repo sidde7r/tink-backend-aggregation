@@ -2,6 +2,7 @@ package se.tink.libraries.payment.rpc;
 
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentStatus;
+import se.tink.libraries.payment.enums.PaymentType;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,6 +15,7 @@ public class Payment {
     private UUID id;
     private String providerId;
     private PaymentStatus status;
+    private PaymentType type;
 
     public String getCurrency() {
         return currency;
@@ -26,14 +28,16 @@ public class Payment {
             Debtor debtor,
             Amount amount,
             LocalDate executionDate,
-            String currency) {
+            String currency,
+            PaymentType type) {
         this.creditor = creditor;
         this.debtor = debtor;
         this.amount = amount;
         this.executionDate = executionDate;
         this.currency = currency;
         this.id = UUID.randomUUID();
-        this.setStatus(PaymentStatus.UNDEFINED);
+        this.type = type;
+        this.status = PaymentStatus.UNDEFINED;
     }
 
     public Creditor getCreditor() {
@@ -70,5 +74,9 @@ public class Payment {
 
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    public PaymentType getType() {
+        return type;
     }
 }
