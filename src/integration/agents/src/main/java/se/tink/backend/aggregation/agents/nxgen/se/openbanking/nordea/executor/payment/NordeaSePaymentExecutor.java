@@ -45,11 +45,6 @@ public class NordeaSePaymentExecutor implements PaymentExecutor {
                         .withCreditor(creditorEntity)
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
-                        // TODO: Remove substring limitation when Nordea fixes the bug that limits
-                        // the length of the external_id field:
-                        //      https://support.nordeaopenbanking.com/hc/en-us/community/topics
-                        .withExternalId(
-                                paymentRequest.getPayment().getId().toString().substring(0, 29))
                         .build();
 
         return apiClient.createPayment(createPaymentRequest).toTinkPaymentResponse();
