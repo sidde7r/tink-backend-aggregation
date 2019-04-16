@@ -40,7 +40,7 @@ public final class OpBankAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://localhost:9011");
+        client.setDebugProxy("https://localhost:9022");
     }
 
     @Override
@@ -52,9 +52,9 @@ public final class OpBankAgent extends NextGenerationAgent {
 
     protected OpBankConfiguration getClientConfiguration() {
         return new OpBankConfiguration(
-                "ja4LscwbpR8W0U9j68uf",
-                "t2yoOjmuWmGshrpFbjla",
-                "https://api.tink.se/api/v1/credentials/third-party/callback",
+                "wBt4qeh628xkOXSw0HdQ",
+                "XjNz8DLZkeLinrUL4ZC7",
+                "https://localhost:7357/api/v1/thirdparty/callback",
                 "AGR0JMwdsJFhdiEM3xbF2wuXHqdWJG8A");
         /*
         return configuration

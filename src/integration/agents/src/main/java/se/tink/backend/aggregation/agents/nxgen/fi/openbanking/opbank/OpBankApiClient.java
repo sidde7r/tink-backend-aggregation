@@ -81,7 +81,7 @@ public final class OpBankApiClient {
     }
 
     public String fetchSignature(String jwt) {
-        return client.request("http://localhost:8080/sign")
+        return client.request("https://localhost:8080/sign")
             .header("Token", jwt)
             .get(String.class);
     }

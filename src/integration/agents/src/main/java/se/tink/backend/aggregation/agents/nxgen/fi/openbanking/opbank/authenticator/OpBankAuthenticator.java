@@ -69,7 +69,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         tokenBody.setIss(configuration.getClientId());
         tokenBody.setResponse_type("code id_token");
         tokenBody.setClient_id(configuration.getClientId());
-        tokenBody.setRedirect_uri("https://api.tink.se/api/v1/credentials/third-party/callback");
+        tokenBody.setRedirect_uri("https://localhost:7357/api/v1/thirdparty/callback");
         tokenBody.setScope("openid accounts");
         tokenBody.setState(UUID.randomUUID().toString());
         tokenBody.setNonce(UUID.randomUUID().toString());
@@ -97,7 +97,6 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
             + "&scope=openid accounts",
             fullToken,
             configuration.getClientId()).replace(" ", "%20");
-
 
         return new URL(authorizationURL);
     }

@@ -27,7 +27,7 @@ public final class OpBankConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
-    private static String BASE_URL = "http://mtls-apis.psd2-sandbox.op.fi";
+    private static String BASE_URL = "https://mtls-apis.psd2-sandbox.op.fi";
 
     public static class Urls {
         public static final String OAUTH_TOKEN = BASE_URL + "/oauth/token";
