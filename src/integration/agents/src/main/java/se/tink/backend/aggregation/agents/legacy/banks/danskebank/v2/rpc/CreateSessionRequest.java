@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.libraries.strings.StringUtils;
