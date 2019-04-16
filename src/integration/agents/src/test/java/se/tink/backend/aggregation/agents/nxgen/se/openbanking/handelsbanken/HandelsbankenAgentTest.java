@@ -13,10 +13,10 @@ public class HandelsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-            new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
-                .expectLoggedIn(false);
+                new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false);
     }
 
     @Test
