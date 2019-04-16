@@ -36,6 +36,9 @@ public abstract class BankiaConstants {
 
         public static final String LOAN_DETAILS =
                 URL_BASE_OIP + "/api/1.0/operativas/1.0/prestamos/ObtenerDatosGeneralesPrestamoSBP";
+
+        public static final String IDENTITY_DATA =
+                URL_BASE_OIP + "/api/1.0/servicios/cliente.datos/2.0/cliente/datos";
     }
 
     public static class Parameter {
