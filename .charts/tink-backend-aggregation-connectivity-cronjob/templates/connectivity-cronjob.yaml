@@ -41,12 +41,6 @@ spec:
                 privileged: false
               command:
                 - "/opt/connectivity/cronjob.py"
-              env:
-                - name: STATUSPAGE_API_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: connectivity-cronjob
-                      key: api-key
 
 {{- if eq "local" .Values.Cluster }}
 ---
