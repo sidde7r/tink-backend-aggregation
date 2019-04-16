@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -313,7 +314,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void sendIdentityToIdentityService(String uniqueId) {
+    public void sendIdentityToIdentityService(IdentityData identityData) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }
