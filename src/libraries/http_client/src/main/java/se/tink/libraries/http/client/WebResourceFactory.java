@@ -78,7 +78,7 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import se.tink.libraries.request_tracing.RequestTracer;
+import se.tink.libraries.requesttracing.RequestTracer;
 
 /**
  * Factory for client-side representation of a resource. See the <a

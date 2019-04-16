@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.op_v1.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc;
 
 import static junit.framework.TestCase.assertEquals;
 

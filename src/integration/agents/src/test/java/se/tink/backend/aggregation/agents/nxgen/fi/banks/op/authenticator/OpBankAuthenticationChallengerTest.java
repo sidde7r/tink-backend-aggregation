@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.op_v1;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -12,7 +12,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 

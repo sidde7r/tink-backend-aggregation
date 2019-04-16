@@ -7,7 +7,7 @@ import com.sun.jersey.spi.container.ContainerResponseFilter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
-import se.tink.libraries.request_tracing.RequestTracer;
+import se.tink.libraries.requesttracing.RequestTracer;
 
 public class RequestTracingFilter implements ContainerRequestFilter, ContainerResponseFilter {
     public static final String REQUEST_ID_HEADER = "Request-ID";
