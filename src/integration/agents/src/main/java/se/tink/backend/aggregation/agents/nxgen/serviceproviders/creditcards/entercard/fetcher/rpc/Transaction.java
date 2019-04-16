@@ -30,7 +30,8 @@ public class Transaction {
 
     public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkTransaction() {
         Amount amount = new Amount(billingCurrency, billingAmount);
-        ZonedDateTime dateTime = ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        ZonedDateTime dateTime =
+                ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         return CreditCardTransaction.builder()
                 .setCreditCard(CreditCard.create(cardHolderName, cardNumber))

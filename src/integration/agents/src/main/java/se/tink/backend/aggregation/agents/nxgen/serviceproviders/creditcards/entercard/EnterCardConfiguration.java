@@ -9,8 +9,11 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public abstract class EnterCardConfiguration {
     public abstract String getServiceHost();
+
     public abstract String getAuthUrl();
+
     protected abstract String getSignicatTemplateName();
+
     public abstract String getJsonVendorMime();
 
     String getSignicatId() {
@@ -22,11 +25,11 @@ public abstract class EnterCardConfiguration {
     }
 
     URL getAccountUrl(String accountIdentifier) {
-        return new URL(getServiceHost() + ACCOUNT_ENDPOINT + accountIdentifier + EnterCardConstants.SLASH);
+        return new URL(
+                getServiceHost() + ACCOUNT_ENDPOINT + accountIdentifier + EnterCardConstants.SLASH);
     }
 
     URL getTransactionsUrl(String accountIdentifier) {
         return getAccountUrl(accountIdentifier).concat(TRANSACTIONS_ENDPOINT);
     }
-
 }

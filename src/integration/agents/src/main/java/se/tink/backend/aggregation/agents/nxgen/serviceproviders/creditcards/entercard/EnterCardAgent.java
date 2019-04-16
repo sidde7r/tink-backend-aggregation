@@ -44,8 +44,7 @@ public class EnterCardAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new EnterCardAuthenticator(apiClient, config));
+                supplementalRequester, new EnterCardAuthenticator(apiClient, config));
     }
 
     @Override

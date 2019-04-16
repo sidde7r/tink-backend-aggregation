@@ -33,12 +33,18 @@ public class BankIdInitResponse {
 
     @Override
     public String toString() {
-        return "BankIdInitResponse{" +
-                "orderRef='" + orderRef + '\'' +
-                ", autoStartToken='" + autoStartToken + '\'' +
-                ", collectUrl=" + collectUrl +
-                ", error=" + error +
-                '}';
+        return "BankIdInitResponse{"
+                + "orderRef='"
+                + orderRef
+                + '\''
+                + ", autoStartToken='"
+                + autoStartToken
+                + '\''
+                + ", collectUrl="
+                + collectUrl
+                + ", error="
+                + error
+                + '}';
     }
 
     public class Error {

@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,5 +16,4 @@ public class Card {
     private boolean canChangePin;
     private boolean isCardCreatedRecently;
     private boolean isCardReplacementAllowed;
-
 }

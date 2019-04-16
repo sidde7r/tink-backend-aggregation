@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 public class EnterCardConstants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    public static final String RESPONSE_FORM_ID = "responseForm";
     static final String SLASH = "/";
     static final String REFERER = "Referer";
-    public static final String RESPONSE_FORM_ID = "responseForm";
     static final String SIGNICAT_ID = "sbid-mobil-2014:%s:sv";
 
     public static class Urls {
