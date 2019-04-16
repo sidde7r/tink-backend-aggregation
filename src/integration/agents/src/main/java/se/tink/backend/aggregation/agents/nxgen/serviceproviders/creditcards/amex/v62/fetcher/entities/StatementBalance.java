@@ -1,0 +1,23 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
+
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public class StatementBalance {
+
+    private String label;
+    private String detail;
+    private String value;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public String getValue() {
+        return value;
+    }
+}

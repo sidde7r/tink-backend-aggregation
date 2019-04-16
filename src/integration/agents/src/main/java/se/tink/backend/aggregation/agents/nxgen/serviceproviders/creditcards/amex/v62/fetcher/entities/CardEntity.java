@@ -1,23 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.ZERO;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.utils.AmericanExpressV62Utils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.libraries.strings.StringUtils;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class CardEntity {
-    public static final String NOT_APPLICABLE = "n/a";
-    public static final String NUMBER_REGEX = "[^0-9,.]";
-    public static final double ZERO = 0d;
     private String cardProductName;
     private int sortedIndex;
     private String cardNumberDisplay;
     private FinancialTab financialTab;
     private Message message;
     private String canceled;
+    private String nameOnCard;
 
     public String getCanceled() {
         return canceled;
@@ -25,14 +26,10 @@ public class CardEntity {
 
     @JsonIgnore
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
-
-        // TODO confirm there is no credit for this account or find credit for this account
-        // currently the credit is set to 0
-        CreditCardAccount.Builder<?, ?> builder =
-                CreditCardAccount.builder(
+        return CreditCardAccount.builder(
                                 cardNumberDisplay,
-                                config.toAmount(getBalanceValue()),
-                                config.toAmount(ZERO))
+                                config.toAmount(getTotalBalance()),
+                                config.toAmount(getAvailableCredit()))
                         .setAccountNumber(cardNumberDisplay)
                         .setName(
                                 cardProductName
@@ -40,17 +37,28 @@ public class CardEntity {
                                         + cardNumberDisplay.substring(
                                                 cardNumberDisplay.length() - 5))
                         // card number display in format "xxxxxx - {last 5 digits in number}"
-                        .setBankIdentifier(String.valueOf(sortedIndex));
-        return builder.build();
+                        .setHolderName(new HolderName(nameOnCard))
+                        .setBankIdentifier(String.valueOf(sortedIndex))
+                        .build();
     }
 
     @JsonIgnore
-    public double getBalanceValue() {
+    private double getTotalBalance() {
         return Optional.ofNullable(financialTab)
-                .map(ft -> ft.getTotalBalance())
-                .map(b -> b.getValue())
-                .filter(value -> !value.equalsIgnoreCase(NOT_APPLICABLE))
-                .map(value -> StringUtils.parseAmount(value.replaceAll(NUMBER_REGEX, "")))
+                .map(FinancialTab::getTotalBalance)
+                .map(TotalBalance::getValue)
+                .filter(AmericanExpressV62Utils::isValidAmount)
+                .map(AmericanExpressV62Utils::parseAmount)
+                .orElse(ZERO);
+    }
+
+    @JsonIgnore
+    private double getAvailableCredit() {
+        return Optional.ofNullable(financialTab)
+                .map(FinancialTab::getAvailableCredit)
+                .map(AvailableCredit::getValue)
+                .filter(AmericanExpressV62Utils::isValidAmount)
+                .map(AmericanExpressV62Utils::parseAmount)
                 .orElse(ZERO);
     }
 

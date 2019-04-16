@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62DateDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -14,11 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionEntity {
     private String suppIndex;
     private String type;
-    // TODO: How do we specify locale, as it's obtained at runtime
-    @JsonProperty("chargeDate")
-    @JsonFormat(pattern = "yyyyMMdd")
-    @JsonDeserialize(using = AmericanExpressV62DateDeserializer.class)
-    private Date date;
+    private ChargeDate chargeDate;
 
     private AmountEntity amount;
     private List<String> description;
@@ -27,18 +21,12 @@ public class TransactionEntity {
         return suppIndex;
     }
 
-    public Transaction toTransaction(AmericanExpressV62Configuration config, boolean isPending) {
-        return Transaction.builder()
-                .setAmount(config.toAmount(amount.getRawValue()))
-                .setDate(getDate())
-                .setPending(isPending)
-                .setDescription(description.get(0))
-                .build();
+    public void setSuppIndex(final String suppIndex) {
+        this.suppIndex = suppIndex;
     }
 
-    // Just a standard defensive copy
-    public Date getDate() {
-        return new Date(date.getTime());
+    private Date getDate() {
+        return chargeDate.toDate();
     }
 
     public List<String> getDescription() {
@@ -51,5 +39,25 @@ public class TransactionEntity {
 
     public AmountEntity getAmount() {
         return amount;
+    }
+
+    public void setAmount(final AmountEntity amount) {
+        this.amount = amount;
+    }
+
+    @JsonIgnore
+    public Transaction toTransaction(AmericanExpressV62Configuration config, boolean isPending) {
+        return Transaction.builder()
+                .setAmount(config.toAmount(amount.getRawValue()))
+                .setDate(getDate())
+                .setPending(isPending)
+                .setDescription(getDescriptionString())
+                .build();
+    }
+
+    @JsonIgnore
+    public String getDescriptionString() {
+        return description.stream()
+                .collect(Collectors.joining("\n"));
     }
 }

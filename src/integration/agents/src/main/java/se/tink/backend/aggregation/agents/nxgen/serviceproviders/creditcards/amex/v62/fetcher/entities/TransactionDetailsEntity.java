@@ -9,6 +9,7 @@ public class TransactionDetailsEntity {
     private String messageType;
     private BillingInfoEntity billingInfo;
     private List<ActivityListEntity> activityList;
+    private FilterOptions filterOptions;
 
     public int getStatus() {
         return status;
@@ -24,5 +25,9 @@ public class TransactionDetailsEntity {
 
     public List<ActivityListEntity> getActivityList() {
         return activityList;
+    }
+
+    public FilterOptions getFilterOptions() {
+        return filterOptions;
     }
 }
