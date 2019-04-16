@@ -55,13 +55,11 @@ public class RabobankAgent extends NextGenerationAgent {
     }
 
     public RabobankConfiguration getClientConfiguration() {
-         return configuration
+        return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        RabobankConstants.INTEGRATION_NAME, clientName,
-         RabobankConfiguration.class)
-                .orElseThrow(() -> new
-         IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                        RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

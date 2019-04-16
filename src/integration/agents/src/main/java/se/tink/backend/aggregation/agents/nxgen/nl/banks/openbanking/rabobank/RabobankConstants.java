@@ -11,10 +11,6 @@ public class RabobankConstants {
     public static final String INTEGRATION_NAME = "rabobank";
 
     public static class URLs {
-        private static final URL API_RABOBANK =
-                new URL("https://api-sandbox.rabobank.nl/openapi/sandbox");
-        public static final URL OAUTH2_RABOBANK = API_RABOBANK.concatWithSeparator("oauth2");
-        public static final URL PAYMENTS_RABOBANK = API_RABOBANK.concatWithSeparator("payments");
         public static final URL AUTHORIZE_RABOBANK =
                 OAUTH2_RABOBANK.concatWithSeparator("authorize");
         public static final URL OAUTH2_TOKEN_RABOBANK =
@@ -26,6 +22,10 @@ public class RabobankConstants {
                         .concatWithSeparator("v3");
         public static final URL AIS_RABOBANK_ACCOUNTS =
                 ACCOUNT_INFORMATION.concatWithSeparator("accounts");
+        private static final URL API_RABOBANK =
+                new URL("https://api-sandbox.rabobank.nl/openapi/sandbox");
+        public static final URL OAUTH2_RABOBANK = API_RABOBANK.concatWithSeparator("oauth2");
+        public static final URL PAYMENTS_RABOBANK = API_RABOBANK.concatWithSeparator("payments");
         private static final String BALANCES_SUFFIX = "balances";
         private static final String TRANSACTIONS_SUFFIX = "transactions";
 
