@@ -30,7 +30,7 @@ spec:
             - name: tests
 
               {{- if eq "local" .Values.Cluster }}
-              image: local_test
+              image: local_connectivity_test
               imagePullPolicy: Never
               {{else}}
               image: gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-connectivity-cronjob.txt" | default "latest" }}
@@ -47,3 +47,11 @@ spec:
                     secretKeyRef:
                       name: connectivity-cronjob
                       key: api-key
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aggregation
+{{ end }}
