@@ -27,7 +27,7 @@ spec:
             runAsGroup: 65535
             fsGroup: 65535
           containers:
-            - name: tests
+            - name: connectivity-cronjob
 
               {{- if eq "local" .Values.Cluster }}
               image: local_connectivity_test
