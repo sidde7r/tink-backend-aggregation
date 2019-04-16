@@ -7,12 +7,10 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
+@SuppressWarnings("unused")
 @JsonObject
 public class BankIdCollectResponse {
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(
-                    se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2
-                            .authenticator.rpc.BankIdCollectResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BankIdCollectResponse.class);
 
     private String progressStatus;
     private URL completeUrl;
