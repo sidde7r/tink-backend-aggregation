@@ -27,19 +27,18 @@ public class CardEntity {
     @JsonIgnore
     public CreditCardAccount toCreditCardAccount(AmericanExpressV62Configuration config) {
         return CreditCardAccount.builder(
-                                cardNumberDisplay,
-                                config.toAmount(getTotalBalance()),
-                                config.toAmount(getAvailableCredit()))
-                        .setAccountNumber(cardNumberDisplay)
-                        .setName(
-                                cardProductName
-                                        + " - "
-                                        + cardNumberDisplay.substring(
-                                                cardNumberDisplay.length() - 5))
-                        // card number display in format "xxxxxx - {last 5 digits in number}"
-                        .setHolderName(new HolderName(nameOnCard))
-                        .setBankIdentifier(String.valueOf(sortedIndex))
-                        .build();
+                        cardNumberDisplay,
+                        config.toAmount(getTotalBalance()),
+                        config.toAmount(getAvailableCredit()))
+                .setAccountNumber(cardNumberDisplay)
+                .setName(
+                        cardProductName
+                                + " - "
+                                + cardNumberDisplay.substring(cardNumberDisplay.length() - 5))
+                // card number display in format "xxxxxx - {last 5 digits in number}"
+                .setHolderName(new HolderName(nameOnCard))
+                .setBankIdentifier(String.valueOf(sortedIndex))
+                .build();
     }
 
     @JsonIgnore

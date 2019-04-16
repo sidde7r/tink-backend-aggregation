@@ -4,26 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ValuesItem{
+public class ValuesItem {
 
-	@JsonProperty("label")
-	private String label;
+    @JsonProperty("label")
+    private String label;
 
-	@JsonProperty("type")
-	private String type;
+    @JsonProperty("type")
+    private String type;
 
-	@JsonProperty("defaultOption")
-	private boolean defaultOption;
+    @JsonProperty("defaultOption")
+    private boolean defaultOption;
 
-	public String getLabel(){
-		return label;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public String getType(){
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public boolean isDefaultOption(){
-		return defaultOption;
-	}
+    public boolean isDefaultOption() {
+        return defaultOption;
+    }
 }

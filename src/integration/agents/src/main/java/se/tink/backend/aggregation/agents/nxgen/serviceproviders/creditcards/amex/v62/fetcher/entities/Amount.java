@@ -4,26 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Amount{
+public class Amount {
 
-	@JsonProperty("rawValue")
-	private double rawValue;
+    @JsonProperty("rawValue")
+    private double rawValue;
 
-	@JsonProperty("formattedAmount")
-	private String formattedAmount;
+    @JsonProperty("formattedAmount")
+    private String formattedAmount;
 
-	@JsonProperty("stringRawValue")
-	private String stringRawValue;
+    @JsonProperty("stringRawValue")
+    private String stringRawValue;
 
-	public double getRawValue(){
-		return rawValue;
-	}
+    public double getRawValue() {
+        return rawValue;
+    }
 
-	public String getFormattedAmount(){
-		return formattedAmount;
-	}
+    public String getFormattedAmount() {
+        return formattedAmount;
+    }
 
-	public String getStringRawValue(){
-		return stringRawValue;
-	}
+    public String getStringRawValue() {
+        return stringRawValue;
+    }
 }

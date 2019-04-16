@@ -11,10 +11,7 @@ public class AmericanExpressV62Predicates {
 
     public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate =
             c -> {
-                if ("true".equals(c.getCanceled())) {
-                    return false;
-                }
-                return true;
+                return !"true".equals(c.getCanceled());
             };
 
     protected static final Function<String, String> getCardEndingNumbers =

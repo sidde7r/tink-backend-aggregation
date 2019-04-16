@@ -19,9 +19,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.PROPER_TRANSACTION_LIST);
-        Collection transactions =
-                transactionResponse
-                        .toTinkTransactions(config, false, "01");
+        Collection transactions = transactionResponse.toTinkTransactions(config, false, "01");
         assertFalse(transactions.isEmpty());
         assertEquals(1, transactions.size());
     }
@@ -32,9 +30,7 @@ public class TransactionResponseTest {
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
 
-        Collection transactions =
-                transactionResponse
-                        .toTinkTransactions(config, false, "01");
+        Collection transactions = transactionResponse.toTinkTransactions(config, false, "01");
         assertTrue(transactions.isEmpty());
     }
 
@@ -43,8 +39,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.ERROR_LIST);
-        boolean canFetchMore =
-                transactionResponse.canFetchMore();
+        boolean canFetchMore = transactionResponse.canFetchMore();
 
         assertFalse(canFetchMore);
     }
@@ -54,8 +49,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
-        boolean canFetchMore =
-                transactionResponse.canFetchMore();
+        boolean canFetchMore = transactionResponse.canFetchMore();
         assertFalse(canFetchMore);
     }
 
@@ -64,8 +58,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.PROPER_TRANSACTION_LIST);
-        boolean canFetchMore =
-                transactionResponse.canFetchMore();
+        boolean canFetchMore = transactionResponse.canFetchMore();
         assertTrue(canFetchMore);
     }
 }

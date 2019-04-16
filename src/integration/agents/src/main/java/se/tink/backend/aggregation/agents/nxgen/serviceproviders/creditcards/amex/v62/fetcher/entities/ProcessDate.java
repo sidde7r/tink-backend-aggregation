@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ProcessDate{
+public class ProcessDate {
 
-	@JsonProperty("rawValue")
-	private int rawValue;
+    @JsonProperty("rawValue")
+    private int rawValue;
 
-	@JsonProperty("formattedDate")
-	private String formattedDate;
+    @JsonProperty("formattedDate")
+    private String formattedDate;
 
-	public int getRawValue(){
-		return rawValue;
-	}
+    public int getRawValue() {
+        return rawValue;
+    }
 
-	public String getFormattedDate(){
-		return formattedDate;
-	}
+    public String getFormattedDate() {
+        return formattedDate;
+    }
 }

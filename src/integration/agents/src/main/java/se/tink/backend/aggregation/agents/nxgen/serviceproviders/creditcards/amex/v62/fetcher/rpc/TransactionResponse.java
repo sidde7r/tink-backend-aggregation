@@ -56,9 +56,12 @@ public class TransactionResponse {
             final boolean isPending,
             final String suppIndex) {
         List<Transaction> transactions = new ArrayList<>();
-        transactionDetails.getActivityList()
-                .forEach(activity -> transactions.addAll(
-                        activity.getTransactions(config, isPending, suppIndex)));
+        transactionDetails
+                .getActivityList()
+                .forEach(
+                        activity ->
+                                transactions.addAll(
+                                        activity.getTransactions(config, isPending, suppIndex)));
         return transactions;
     }
 

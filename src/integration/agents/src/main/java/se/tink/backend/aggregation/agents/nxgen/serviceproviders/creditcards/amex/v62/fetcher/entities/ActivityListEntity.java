@@ -28,9 +28,7 @@ public class ActivityListEntity {
             final boolean isPending,
             final String suppIndex) {
 
-        return Optional.ofNullable(transactionList)
-                .orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(transactionList).orElse(Collections.emptyList()).stream()
                 .filter(t -> suppIndex.equalsIgnoreCase(t.getSuppIndex()))
                 .map(t -> t.toTransaction(configuration, isPending))
                 .collect(Collectors.toList());

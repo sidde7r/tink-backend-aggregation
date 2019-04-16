@@ -4,33 +4,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FilterOptions{
+public class FilterOptions {
 
-	@JsonProperty("transactionTypes")
-	private TransactionTypes transactionTypes;
+    @JsonProperty("transactionTypes")
+    private TransactionTypes transactionTypes;
 
-	@JsonProperty("sort")
-	private Sort sort;
+    @JsonProperty("sort")
+    private Sort sort;
 
-	@JsonProperty("cardmembers")
-	private Cardmembers cardmembers;
+    @JsonProperty("cardmembers")
+    private Cardmembers cardmembers;
 
-	@JsonProperty("title")
-	private String title;
+    @JsonProperty("title")
+    private String title;
 
-	public TransactionTypes getTransactionTypes(){
-		return transactionTypes;
-	}
+    public TransactionTypes getTransactionTypes() {
+        return transactionTypes;
+    }
 
-	public Sort getSort(){
-		return sort;
-	}
+    public Sort getSort() {
+        return sort;
+    }
 
-	public Cardmembers getCardmembers(){
-		return cardmembers;
-	}
+    public Cardmembers getCardmembers() {
+        return cardmembers;
+    }
 
-	public String getTitle(){
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 }

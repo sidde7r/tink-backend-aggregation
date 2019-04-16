@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class SectionHeaders{
+public class SectionHeaders {
 
-	@JsonProperty("previousStatements")
-	private String previousStatements;
+    @JsonProperty("previousStatements")
+    private String previousStatements;
 
-	@JsonProperty("currentStatements")
-	private String currentStatements;
+    @JsonProperty("currentStatements")
+    private String currentStatements;
 
-	public String getPreviousStatements(){
-		return previousStatements;
-	}
+    public String getPreviousStatements() {
+        return previousStatements;
+    }
 
-	public String getCurrentStatements(){
-		return currentStatements;
-	}
+    public String getCurrentStatements() {
+        return currentStatements;
+    }
 }

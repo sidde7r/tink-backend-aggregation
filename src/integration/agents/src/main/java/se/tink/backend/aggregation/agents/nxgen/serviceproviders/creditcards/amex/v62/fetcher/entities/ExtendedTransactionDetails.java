@@ -1,30 +1,30 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ExtendedTransactionDetails{
+public class ExtendedTransactionDetails {
 
-	@JsonProperty("address")
-	private List<String> address;
+    @JsonProperty("address")
+    private List<String> address;
 
-	@JsonProperty("processDate")
-	private ProcessDate processDate;
+    @JsonProperty("processDate")
+    private ProcessDate processDate;
 
-	@JsonProperty("merchantName")
-	private String merchantName;
+    @JsonProperty("merchantName")
+    private String merchantName;
 
-	public List<String> getAddress(){
-		return address;
-	}
+    public List<String> getAddress() {
+        return address;
+    }
 
-	public ProcessDate getProcessDate(){
-		return processDate;
-	}
+    public ProcessDate getProcessDate() {
+        return processDate;
+    }
 
-	public String getMerchantName(){
-		return merchantName;
-	}
+    public String getMerchantName() {
+        return merchantName;
+    }
 }

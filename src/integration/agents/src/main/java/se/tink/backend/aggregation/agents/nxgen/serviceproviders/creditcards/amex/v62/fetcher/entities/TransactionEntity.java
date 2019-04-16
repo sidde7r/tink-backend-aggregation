@@ -57,7 +57,6 @@ public class TransactionEntity {
 
     @JsonIgnore
     public String getDescriptionString() {
-        return description.stream()
-                .collect(Collectors.joining("\n"));
+        return description.stream().collect(Collectors.joining("\n"));
     }
 }
