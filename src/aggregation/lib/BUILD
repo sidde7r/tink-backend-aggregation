@@ -84,6 +84,7 @@ java_library(
         "//third_party:org_apache_pdfbox_fontbox",
         "//third_party:org_apache_pdfbox_pdfbox",
         "//third_party:org_assertj_assertj_core",
+        "//third_party:org_codehaus_jackson_jackson_core_asl",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
         "//third_party:org_jsoup_jsoup",

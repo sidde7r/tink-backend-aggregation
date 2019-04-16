@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

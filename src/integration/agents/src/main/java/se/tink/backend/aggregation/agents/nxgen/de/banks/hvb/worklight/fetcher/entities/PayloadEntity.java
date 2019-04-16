@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

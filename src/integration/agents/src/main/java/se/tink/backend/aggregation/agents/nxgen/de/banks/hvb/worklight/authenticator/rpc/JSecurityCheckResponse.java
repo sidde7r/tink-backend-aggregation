@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.authenticator.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

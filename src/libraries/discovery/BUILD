@@ -12,6 +12,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_lifecycle",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_x_discovery",
+        "//third_party:org_codehaus_jackson_jackson_core_asl",
     ],
 )
 

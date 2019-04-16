@@ -1,9 +1,5 @@
 package se.tink.libraries.discovery;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import io.dropwizard.lifecycle.Managed;
 import java.io.ByteArrayInputStream;
@@ -25,6 +21,10 @@ import org.apache.curator.x.discovery.ServiceInstanceBuilder;
 import org.apache.curator.x.discovery.ServiceType;
 import org.apache.curator.x.discovery.UriSpec;
 import org.apache.curator.x.discovery.details.InstanceSerializer;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -277,7 +277,7 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
             final Class<T> pPayloadClass, final ObjectMapper pMapper) {
         mPayloadClass = pPayloadClass;
         mMapper = pMapper;
-        mMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Override
@@ -346,7 +346,7 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
         return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isNumber())
-                ? pNode.get(pFieldName).intValue()
+                ? pNode.get(pFieldName).getIntValue()
                 : null;
     }
 
@@ -354,7 +354,7 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
         return (pNode.get(pFieldName) != null && pNode.get(pFieldName).isLong())
-                ? pNode.get(pFieldName).longValue()
+                ? pNode.get(pFieldName).getLongValue()
                 : null;
     }
 
@@ -365,7 +365,7 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
         Preconditions.checkNotNull(pFieldName);
         Preconditions.checkNotNull(pObjectClass);
         if (pNode.get(pFieldName) != null && pNode.get(pFieldName).isObject()) {
-            return mMapper.treeToValue(pNode.get(pFieldName), pObjectClass);
+            return mMapper.readValue(pNode.get(pFieldName), pObjectClass);
         } else {
             return null;
         }
@@ -374,7 +374,7 @@ class ModifiedJsonInstanceSerializer<T> implements InstanceSerializer<T> {
     private String getTextField(final JsonNode pNode, final String pFieldName) {
         Preconditions.checkNotNull(pNode);
         Preconditions.checkNotNull(pFieldName);
-        return pNode.get(pFieldName) != null ? pNode.get(pFieldName).textValue() : null;
+        return pNode.get(pFieldName) != null ? pNode.get(pFieldName).getTextValue() : null;
     }
 
     @Override
