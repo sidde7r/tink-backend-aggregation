@@ -132,7 +132,7 @@ public final class AhoiSandboxApiClient {
         final BankingTokenRequestEntity bankingTokenRequestEntity =
                 new BankingTokenRequestEntity(
                         userRegistrationResponse.getInstallation(),
-                        getRequestId(),
+                        UUID.randomUUID().toString(),
                         Instant.now().toString());
 
         final String bankingRequestHeader =
@@ -166,10 +166,6 @@ public final class AhoiSandboxApiClient {
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE)
                 .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
                 .post(RegistrationTokenResponse.class);
-    }
-
-    public static String getRequestId() {
-        return UUID.randomUUID().toString();
     }
 
     public AccountsResponse fetchAccounts() {
