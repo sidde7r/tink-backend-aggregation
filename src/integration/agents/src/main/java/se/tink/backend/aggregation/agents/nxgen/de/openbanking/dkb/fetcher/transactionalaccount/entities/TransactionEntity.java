@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class PendingEntity {
+public class TransactionEntity {
     private TransactionsLinksEntity _links;
     private String additionalInformation;
     private String bankTransactionCode;
@@ -31,12 +31,21 @@ public class PendingEntity {
     private String ultimateDebtor;
     private String valueDate;
 
-    public Transaction toTinkTransaction() {
+    public Transaction toBookedTinkTransaction() {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
                 .setDescription(entryReference)
-                .setPending(true)
+                .setPending(false)
                 .build();
+    }
+
+    public Transaction toPendingTinkTransaction() {
+        return Transaction.builder()
+            .setAmount(transactionAmount.toAmount())
+            .setDate(bookingDate)
+            .setDescription(entryReference)
+            .setPending(true)
+            .build();
     }
 }

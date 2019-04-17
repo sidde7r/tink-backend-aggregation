@@ -15,15 +15,15 @@ public class TransactionsEntity {
     @JsonProperty("_links")
     private TransactionsLinksEntity links;
 
-    private List<BookedEntity> booked;
-    private List<PendingEntity> pending;
+    private List<TransactionEntity> booked;
+    private List<TransactionEntity> pending;
 
     public Collection<? extends Transaction> toTinkTransactions() {
         return Stream.concat(
                         Optional.ofNullable(booked).orElse(Collections.emptyList()).stream()
-                                .map(BookedEntity::toTinkTransaction),
+                                .map(TransactionEntity::toBookedTinkTransaction),
                         Optional.ofNullable(pending).orElse(Collections.emptyList()).stream()
-                                .map(PendingEntity::toTinkTransaction))
+                                .map(TransactionEntity::toPendingTinkTransaction))
                 .collect(Collectors.toList());
     }
 }
