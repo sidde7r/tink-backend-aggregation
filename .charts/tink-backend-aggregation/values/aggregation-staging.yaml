@@ -22,7 +22,7 @@ agents:
     baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
 
   mountCallbackJwtSignaturePair: true
-  callbackJwtSignatureKeyPairEnabled: false
+  callbackJwtSignatureKeyPairEnabled: true
 
 shouldProvisionClients: true
 
