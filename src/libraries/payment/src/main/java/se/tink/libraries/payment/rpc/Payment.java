@@ -17,6 +17,7 @@ public class Payment {
     private PaymentStatus status;
     private PaymentType type;
     private String currency;
+    private Reference reference;
 
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
@@ -27,8 +28,8 @@ public class Payment {
         this.type = builder.type;
         this.status = builder.status;
         this.uniqueId = builder.uniqueId;
+        this.reference = builder.reference;
         this.id = UUID.randomUUID();
-
     }
 
     public String getCurrency() {
@@ -77,9 +78,10 @@ public class Payment {
         private Amount amount;
         private LocalDate executionDate;
         private String uniqueId;
-        private PaymentStatus status;
+        private PaymentStatus status = PaymentStatus.UNDEFINED;
         private PaymentType type;
         private String currency;
+        private Reference reference;
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;
@@ -118,6 +120,11 @@ public class Payment {
 
         public Builder withCurrency(String currency) {
             this.currency = currency;
+            return this;
+        }
+
+        public Builder withReference(Reference reference) {
+            this.reference = reference;
             return this;
         }
 

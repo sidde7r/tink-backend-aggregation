@@ -7,6 +7,8 @@ import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
+import se.tink.libraries.payment.rpc.Reference;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PaymentRequest {
@@ -41,6 +43,12 @@ public class PaymentRequest {
             }
         }
 
+        Reference referenceInRequest = null;
+        if (TransferType.PAYMENT.equals(transfer.getType())) {
+            referenceInRequest =
+                    new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
+        }
+
         Payment paymentInRequest =
                 new Payment.Builder()
                         .withCreditor(creditorInRequest)
@@ -49,6 +57,7 @@ public class PaymentRequest {
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
                         .withType(paymentType)
+                        .withReference(referenceInRequest)
                         .build();
 
         return new PaymentRequest(paymentInRequest);

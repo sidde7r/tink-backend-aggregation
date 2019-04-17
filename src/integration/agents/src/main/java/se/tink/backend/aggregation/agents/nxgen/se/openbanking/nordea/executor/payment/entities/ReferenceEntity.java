@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.payment.rpc.Reference;
 
 @JsonObject
 public class ReferenceEntity {
@@ -13,5 +14,9 @@ public class ReferenceEntity {
     public ReferenceEntity(String type, String value) {
         this.type = type;
         this.value = value;
+    }
+
+    public Reference toTinkReference() {
+        return new Reference(type, value);
     }
 }

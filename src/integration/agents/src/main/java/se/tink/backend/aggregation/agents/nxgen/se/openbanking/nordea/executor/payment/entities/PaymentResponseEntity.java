@@ -67,6 +67,7 @@ public class PaymentResponseEntity {
                                 NordeaPaymentStatus.mapToTinkPaymentStatus(
                                         NordeaPaymentStatus.fromString(paymentStatus)))
                         .withType(paymentType)
+                        .withReference(creditor.getReference().toTinkReference())
                         .build();
 
         return new PaymentResponse(tinkPayment);

@@ -11,10 +11,14 @@ public class CreditorEntity {
     private AccountEntity account;
     private String message;
     private String name;
+
     private ReferenceEntity reference;
 
     public CreditorEntity() {}
 
+    public ReferenceEntity getReference() {
+        return reference;
+    }
     @JsonIgnore
     private CreditorEntity(Builder builder) {
         this.account = builder.account;
