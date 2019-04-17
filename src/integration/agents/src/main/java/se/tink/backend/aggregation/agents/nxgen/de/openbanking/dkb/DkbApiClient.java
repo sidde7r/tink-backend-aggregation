@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -99,7 +98,7 @@ public final class DkbApiClient {
                 .toTinkAccounts();
     }
 
-    public PaginatorResponse getTransactions(
+    public GetTransactionsResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return createFetchingRequest(
                         Urls.GET_TRANSACTIONS.parameter(

@@ -8,11 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.entities.TransactionsLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class GetTransactionsResponse implements PaginatorResponse {
+public class GetTransactionsResponse {
     @JsonProperty("_links")
     private TransactionsLinksEntity links;
 
@@ -20,15 +19,9 @@ public class GetTransactionsResponse implements PaginatorResponse {
     private List<BalanceEntity> balances;
     private TransactionsEntity transactions;
 
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
+    public Collection<? extends Transaction> toTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .orElse(new TransactionsEntity())
                 .toTinkTransactions();
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
     }
 }
