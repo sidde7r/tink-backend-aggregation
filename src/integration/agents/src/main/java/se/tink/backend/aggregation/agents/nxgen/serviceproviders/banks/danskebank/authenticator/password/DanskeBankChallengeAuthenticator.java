@@ -130,7 +130,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         DeviceEntity preferredDevice = getPreferredDevice();
         if (preferredDevice.isCodeApp()) {
             codeAppAuthentication(username, preferredDevice);
-        } else if (preferredDevice.isOtpCard()) {
+        } else if (preferredDevice.isOtpCard() || preferredDevice.isSecCard()) {
             this.keyCardOtpChallenge = getKeyCardOtpChallenge(bindDeviceResponse);
             KeyCardAuthenticationController keyCardAuthenticationController =
                     new KeyCardAuthenticationController(
