@@ -20,9 +20,10 @@ public class NordeaDkTransactionParser implements TransactionParser {
 
     @VisibleForTesting
     protected String getRawDescription(TransactionEntity te) {
-        return CharMatcher.whitespace().trimFrom(
-                Optional.ofNullable(Strings.emptyToNull(te.getText()))
-                        .orElse(te.getCounterPartyName()));
+        return CharMatcher.whitespace()
+                .trimFrom(
+                        Optional.ofNullable(Strings.emptyToNull(te.getText()))
+                                .orElse(te.getCounterPartyName()));
     }
 
     @Override
