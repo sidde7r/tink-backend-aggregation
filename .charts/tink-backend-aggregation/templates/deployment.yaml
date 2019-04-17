@@ -8,7 +8,6 @@ metadata:
   labels:
     app: aggregation-service
 spec:
-  replicas: {{ default "2" .Values.replicas }}
   revisionHistoryLimit: 3
   selector:
     matchLabels:
