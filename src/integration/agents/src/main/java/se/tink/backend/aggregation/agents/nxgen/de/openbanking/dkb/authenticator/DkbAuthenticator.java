@@ -49,7 +49,8 @@ public class DkbAuthenticator implements PasswordAuthenticator {
         final String clientId = configuration.getClientId();
         final String clientSecret = configuration.getClientSecret();
 
-        final OAuth2Token token = apiClient.authenticate(clientId, clientSecret, getTokenForm);
+        final OAuth2Token token =
+                apiClient.authenticate(clientId, clientSecret, getTokenForm).toTinkToken();
 
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
 

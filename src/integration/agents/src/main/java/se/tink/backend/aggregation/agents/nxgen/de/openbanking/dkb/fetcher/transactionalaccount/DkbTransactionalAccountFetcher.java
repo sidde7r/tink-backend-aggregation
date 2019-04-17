@@ -22,7 +22,7 @@ public class DkbTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.getAccounts();
+        return apiClient.getAccounts().toTinkAccounts();
     }
 
     @Override

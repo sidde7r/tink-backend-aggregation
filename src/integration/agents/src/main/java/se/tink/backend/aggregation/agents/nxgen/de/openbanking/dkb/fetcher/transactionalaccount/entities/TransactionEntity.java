@@ -42,10 +42,10 @@ public class TransactionEntity {
 
     public Transaction toPendingTinkTransaction() {
         return Transaction.builder()
-            .setAmount(transactionAmount.toAmount())
-            .setDate(bookingDate)
-            .setDescription(entryReference)
-            .setPending(true)
-            .build();
+                .setAmount(transactionAmount.toAmount())
+                .setDate(bookingDate)
+                .setDescription(entryReference)
+                .setPending(true)
+                .build();
     }
 }

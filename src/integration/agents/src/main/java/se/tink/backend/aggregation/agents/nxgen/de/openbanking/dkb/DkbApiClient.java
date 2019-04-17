@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,13 +76,12 @@ public final class DkbApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public OAuth2Token authenticate(
+    public GetTokenResponse authenticate(
             String clientId, String clientSecret, GetTokenForm getTokenForm) {
         return createRequest(Urls.TOKEN)
                 .addBasicAuth(clientId, clientSecret)
                 .body(getTokenForm, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(GetTokenResponse.class)
-                .toTinkToken();
+                .post(GetTokenResponse.class);
     }
 
     public GetConsentResponse getConsent(GetConsentRequest getConsentRequest) {
@@ -92,10 +90,8 @@ public final class DkbApiClient {
                 .post(GetConsentResponse.class, getConsentRequest);
     }
 
-    public Collection<TransactionalAccount> getAccounts() {
-        return createFetchingRequest(Urls.GET_ACCOUNTS)
-                .get(GetAccountsResponse.class)
-                .toTinkAccounts();
+    public GetAccountsResponse getAccounts() {
+        return createFetchingRequest(Urls.GET_ACCOUNTS).get(GetAccountsResponse.class);
     }
 
     public GetTransactionsResponse getTransactions(
