@@ -9,7 +9,7 @@ public class BelfiusConstants {
 
     public static final ImmutableMap<String, String> HEADERS =
             ImmutableMap.<String, String>builder()
-                    .put("User-Agent", "I/PHONE/BDM/08120/PRD")
+                    .put("User-Agent", "I/PHONE/BDM/09120/PRD")
                     .build();
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
             ImmutableMap.<String, AccountTypes>builder()
@@ -270,12 +270,12 @@ public class BelfiusConstants {
         public static final String APPLICATION_TYPE = "native";
         public static final String LOCALE_DUTCH = "nl_BE";
         public static final String LOCALE_FRENCH = "fr_BE";
-        public static final String APP_RELEASE = "07430";
+        public static final String APP_RELEASE = "9120";
         public static final String PLATFORM = "I";
         public static final String TYPE_DEVICE = "PHONE";
 
         public static final String SYS_VER = "10.02.000";
-        public static final String APP_VER = "07.04.003";
+        public static final String APP_VER = "09.01.002";
 
         public static final String CHECK_STATUS_APPLICATION_ID = "services";
         public static final String CHECK_STATUS_EXECUTION_MODE = "sequential";
