@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AhoiSandboxApiClient {
 
@@ -132,17 +129,12 @@ public final class AhoiSandboxApiClient {
                 new BankingTokenRequest(
                         installationId, UUID.randomUUID().toString(), Instant.now().toString());
 
-        final String bankingRequestHeader =
-                Base64.getUrlEncoder()
-                        .withoutPadding()
-                        .encodeToString(
-                                SerializationUtils.serializeToString(bankingTokenRequest)
-                                        .getBytes(StandardCharsets.UTF_8));
-
         return createRequest(Urls.OAUTH)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE)
                 .addBasicAuth(configuration.getClientId(), configuration.getClientSecret())
-                .header(AhoiSandboxConstants.HeaderKeys.X_AUTHORIZATION_AHOI, bankingRequestHeader)
+                .header(
+                        AhoiSandboxConstants.HeaderKeys.X_AUTHORIZATION_AHOI,
+                        bankingTokenRequest.toBase64Header())
                 .post(BankingTokenResponse.class);
     }
 
