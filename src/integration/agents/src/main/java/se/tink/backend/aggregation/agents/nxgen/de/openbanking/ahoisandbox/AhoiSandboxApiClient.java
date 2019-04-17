@@ -79,10 +79,11 @@ public final class AhoiSandboxApiClient {
         final RegistrationTokenResponse registrationToken = getRegistrationTokenResponse();
 
         final UserRegistrationResponse userRegistrationResponse =
-                getUserRegistrationResponse(registrationToken);
+                getUserRegistrationResponse(registrationToken.getAccessToken());
 
         final BankingTokenResponse bankingTokenResponse =
-                getBankingTokenResponse(userRegistrationResponse); // Banking token = access token
+                getBankingTokenResponse(
+                        userRegistrationResponse.getInstallation()); // Banking token = access token
 
         persistentStorage.put(
                 AhoiSandboxConstants.StorageKeys.ACCESS_TOKEN,
@@ -91,22 +92,22 @@ public final class AhoiSandboxApiClient {
         final ProvidersListRsponse providersListRsponse = getProviderEntities();
 
         final ProviderDetailsResponse providerDetailsResponse =
-                getProviderDetailsResponse(providersListRsponse);
+                getProviderDetailsResponse(providersListRsponse.get(0).getId());
 
         final CreateAccessResponse createAccessResponse =
-                getCreateAcccessResponse(providerDetailsResponse, credentials);
+                getCreateAcccessResponse(providerDetailsResponse.getId(), credentials);
 
         persistentStorage.put(
                 AhoiSandboxConstants.StorageKeys.ACCOUNT_ID, createAccessResponse.getId());
     }
 
     private CreateAccessResponse getCreateAcccessResponse(
-            ProviderDetailsResponse providerDetailsResponse, Credentials credentials) {
+            String providerId, Credentials credentials) {
 
         final AccessRequestEntity accessRequestEntity =
                 new AccessRequestEntity(
                         AhoiSandboxConstants.Forms.ACCESS_TYPE,
-                        providerDetailsResponse.getId(),
+                        providerId,
                         new AccessFieldsEntity(
                                 credentials.getField(Key.USERNAME),
                                 Integer.valueOf(credentials.getField(Key.PASSWORD))));
@@ -115,10 +116,9 @@ public final class AhoiSandboxApiClient {
                 .post(CreateAccessResponse.class, accessRequestEntity);
     }
 
-    private ProviderDetailsResponse getProviderDetailsResponse(
-            ProvidersListRsponse providersListRsponse) {
+    private ProviderDetailsResponse getProviderDetailsResponse(String providerId) {
 
-        return createRequestInSession(new URL(Urls.PROVIDERS + providersListRsponse.get(0).getId()))
+        return createRequestInSession(new URL(Urls.PROVIDERS + providerId))
                 .get(ProviderDetailsResponse.class);
     }
 
@@ -126,14 +126,11 @@ public final class AhoiSandboxApiClient {
         return createRequestInSession(Urls.PROVIDERS).get(ProvidersListRsponse.class);
     }
 
-    private BankingTokenResponse getBankingTokenResponse(
-            UserRegistrationResponse userRegistrationResponse) {
+    private BankingTokenResponse getBankingTokenResponse(String installationId) {
 
         final BankingTokenRequestEntity bankingTokenRequestEntity =
                 new BankingTokenRequestEntity(
-                        userRegistrationResponse.getInstallation(),
-                        UUID.randomUUID().toString(),
-                        Instant.now().toString());
+                        installationId, UUID.randomUUID().toString(), Instant.now().toString());
 
         final String bankingRequestHeader =
                 Base64.getUrlEncoder()
@@ -149,14 +146,12 @@ public final class AhoiSandboxApiClient {
                 .post(BankingTokenResponse.class);
     }
 
-    private UserRegistrationResponse getUserRegistrationResponse(
-            RegistrationTokenResponse registrationToken) {
+    private UserRegistrationResponse getUserRegistrationResponse(String registrationAccessToken) {
 
         return createRequest(Urls.REGISTRATION)
                 .header(
                         AhoiSandboxConstants.HeaderKeys.AUTHORIZATION,
-                        AhoiSandboxConstants.HeaderValues.BEARER_PREFIX
-                                + registrationToken.getAccessToken())
+                        AhoiSandboxConstants.HeaderValues.BEARER_PREFIX + registrationAccessToken)
                 .post(UserRegistrationResponse.class);
     }
 
