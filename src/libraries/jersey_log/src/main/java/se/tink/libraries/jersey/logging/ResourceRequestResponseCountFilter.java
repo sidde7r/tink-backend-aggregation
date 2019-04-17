@@ -1,7 +1,5 @@
 package se.tink.libraries.jersey.logging;
 
-
-
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponse;
@@ -19,7 +17,8 @@ public class ResourceRequestResponseCountFilter
 
     private static final String REQUEST_METRIC_ID_NAME = "api_http_requests";
     private static final String RESPONSE_METRIC_ID_NAME = "api_http_responses";
-    private static final Logger log = LoggerFactory.getLogger(ResourceRequestResponseCountFilter.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(ResourceRequestResponseCountFilter.class);
     private static final String requestCounterKey = "requestCounter";
     private final String path;
     private final Optional<TeamOwnership> teamOwnership;
