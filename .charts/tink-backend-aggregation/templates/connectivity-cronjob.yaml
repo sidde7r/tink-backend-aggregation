@@ -20,27 +20,27 @@ spec:
         spec:
           restartPolicy: OnFailure
           imagePullSecrets:
-            - name: tink-containers
+          - name: tink-containers
           securityContext:
             runAsNonRoot: true
             runAsUser: 65535
             runAsGroup: 65535
             fsGroup: 65535
           containers:
-            - name: connectivity-cronjob
+          - name: connectivity-cronjob
 
-              {{- if eq "local" .Values.Cluster }}
-              image: local_connectivity_test
-              imagePullPolicy: Never
-              {{else}}
-              image: gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-connectivity-cronjob.txt" | default "latest" }}
-              imagePullPolicy: IfNotPresent
-              {{end}}
-              securityContext:
-                readOnlyRootFilesystem: true
-                privileged: false
-              command:
-                - "/opt/connectivity/cronjob.py"
+            {{- if eq "local" .Values.Cluster }}
+            image: local_connectivity_test
+            imagePullPolicy: Never
+            {{else}}
+            image: gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-connectivity-cronjob.txt" | default "latest" }}
+            imagePullPolicy: IfNotPresent
+            {{end}}
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+            command:
+            - "/opt/connectivity/cronjob.py"
 
 {{- if eq "local" .Values.Cluster }}
 ---
