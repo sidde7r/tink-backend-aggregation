@@ -14,12 +14,12 @@ import se.tink.libraries.amount.Amount;
 
 public class NordeaNoTransactionParser implements TransactionParser {
     private static final Splitter CLEANUP_SPLITTER =
-            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+            Splitter.on(CharMatcher.whitespace()).omitEmptyStrings();
     private static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
     @VisibleForTesting
     protected String getRawDescription(TransactionEntity te) {
-        return CharMatcher.WHITESPACE.trimFrom(te.getTransactionText());
+        return CharMatcher.whitespace().trimFrom(te.getTransactionText());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class NordeaNoTransactionParser implements TransactionParser {
 
     @VisibleForTesting
     protected String getRawDescription(PaymentEntity pe) {
-        return CharMatcher.WHITESPACE.trimFrom(pe.getBeneficiaryName());
+        return CharMatcher.whitespace().trimFrom(pe.getBeneficiaryName());
     }
 
     @Override

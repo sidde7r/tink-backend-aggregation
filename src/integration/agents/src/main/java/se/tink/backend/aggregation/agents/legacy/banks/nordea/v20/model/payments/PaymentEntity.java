@@ -174,7 +174,7 @@ public class PaymentEntity {
         transaction.setPending(true);
 
         NordeaAgentUtils.parseTransactionDescription(
-                CharMatcher.WHITESPACE.trimFrom(getBeneficiaryName()), transaction);
+                CharMatcher.whitespace().trimFrom(getBeneficiaryName()), transaction);
 
         return transaction;
     }

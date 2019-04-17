@@ -32,7 +32,7 @@ public class AccessLoggingFilter implements ContainerRequestFilter, ContainerRes
     @Context private HttpServletRequest servletRequest;
 
     private static final Logger log = LoggerFactory.getLogger(AccessLoggingFilter.class);
-    private static final Splitter SPLITTER_SPACE = Splitter.on(CharMatcher.WHITESPACE);
+    private static final Splitter SPLITTER_SPACE = Splitter.on(CharMatcher.whitespace());
     private static final Splitter SPLITTER_SLASH = Splitter.on("/");
     private static final ObjectMapper MAPPER = new ObjectMapper();
 

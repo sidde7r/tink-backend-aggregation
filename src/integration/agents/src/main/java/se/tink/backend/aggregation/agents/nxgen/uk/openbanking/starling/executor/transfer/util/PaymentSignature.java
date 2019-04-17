@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.util;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.net.URI;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -12,7 +13,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 
 public class PaymentSignature {

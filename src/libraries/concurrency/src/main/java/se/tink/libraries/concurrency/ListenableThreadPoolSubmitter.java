@@ -228,7 +228,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         queuedItems.inc();
 
         // Make sure we log errors.
-        Futures.addCallback(future, errorLoggingCallback);
+        Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
 

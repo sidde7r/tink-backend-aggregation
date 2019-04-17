@@ -15,14 +15,15 @@ import se.tink.libraries.amount.Amount;
 
 public class NordeaDkTransactionParser implements TransactionParser {
     private static final Splitter CLEANUP_SPLITTER =
-            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+            Splitter.on(CharMatcher.whitespace()).omitEmptyStrings();
     private static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
     @VisibleForTesting
     protected String getRawDescription(TransactionEntity te) {
-        return CharMatcher.WHITESPACE.trimFrom(
-                Optional.ofNullable(Strings.emptyToNull(te.getText()))
-                        .orElse(te.getCounterPartyName()));
+        return CharMatcher.whitespace()
+                .trimFrom(
+                        Optional.ofNullable(Strings.emptyToNull(te.getText()))
+                                .orElse(te.getCounterPartyName()));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class NordeaDkTransactionParser implements TransactionParser {
 
     @VisibleForTesting
     protected String getRawDescription(PaymentEntity pe) {
-        return CharMatcher.WHITESPACE.trimFrom(pe.getBeneficiaryName());
+        return CharMatcher.whitespace().trimFrom(pe.getBeneficiaryName());
     }
 
     @Override

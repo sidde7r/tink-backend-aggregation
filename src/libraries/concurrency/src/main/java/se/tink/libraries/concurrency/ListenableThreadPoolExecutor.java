@@ -247,7 +247,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         queuedItems.inc();
 
         // Make sure we log errors.
-        Futures.addCallback(future, errorLoggingCallback);
+        Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
 
@@ -270,7 +270,7 @@ public class ListenableThreadPoolExecutor<T extends Runnable>
         queuedItems.inc();
 
         // Make sure we log errors.
-        Futures.addCallback(future, errorLoggingCallback);
+        Futures.addCallback(future, errorLoggingCallback, MoreExecutors.directExecutor());
 
         future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
 

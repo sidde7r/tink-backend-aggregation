@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
-import org.apache.lucene.util.ThreadInterruptedException;
 import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -277,7 +276,7 @@ public class NordeaV20Agent extends AbstractAgent
         }
 
         NordeaAgentUtils.parseTransactionDescription(
-                CharMatcher.WHITESPACE.trimFrom(description), t);
+                CharMatcher.whitespace().trimFrom(description), t);
 
         NordeaAgentUtils.parseTransactionTypeForFI(te.getTransactionTypeForFi(), t);
 
@@ -1732,7 +1731,7 @@ public class NordeaV20Agent extends AbstractAgent
         } catch (Exception e) {
             deleteExternalPayment(paymentToSign.getPaymentId());
 
-            if (e instanceof ThreadInterruptedException) {
+            if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
 

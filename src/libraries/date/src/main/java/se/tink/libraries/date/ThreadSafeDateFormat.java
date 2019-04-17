@@ -19,7 +19,7 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class ThreadSafeDateFormat {
 
-    private static final CharMatcher TRIMMER = CharMatcher.WHITESPACE;
+    private static final CharMatcher TRIMMER = CharMatcher.whitespace();
 
     public static final ThreadSafeDateFormat FORMATTER_YEARLY = new ThreadSafeDateFormat("yyyy");
     public static final ThreadSafeDateFormat FORMATTER_WEEK_YEARLY =
