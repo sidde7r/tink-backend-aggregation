@@ -107,7 +107,7 @@ public class StringUtils {
                         .replace("", "");
 
         cleanDescription =
-                JOINER.join(SPLITTER.split(CharMatcher.WHITESPACE.trimFrom(cleanDescription)));
+                JOINER.join(SPLITTER.split(CharMatcher.whitespace().trimFrom(cleanDescription)));
 
         if (cleanDescription.toUpperCase().startsWith("WWW")) return cleanDescription.toLowerCase();
 
@@ -254,7 +254,7 @@ public class StringUtils {
     public static double parseAmount(String input) {
         if (input == null) return 0;
 
-        String text = CharMatcher.WHITESPACE.removeFrom(input);
+        String text = CharMatcher.whitespace().removeFrom(input);
 
         char decimalSeparator = ' ';
 
@@ -450,7 +450,7 @@ public class StringUtils {
      * @return
      */
     public static String stripExtendedAsciiCharacters(String s) {
-        return CharMatcher.ASCII.retainFrom(s);
+        return CharMatcher.ascii().retainFrom(s);
     }
 
     /**
@@ -465,7 +465,7 @@ public class StringUtils {
     }
 
     public static String trim(String string) {
-        return CharMatcher.WHITESPACE.trimFrom(string);
+        return CharMatcher.whitespace().trimFrom(string);
     }
 
     /**

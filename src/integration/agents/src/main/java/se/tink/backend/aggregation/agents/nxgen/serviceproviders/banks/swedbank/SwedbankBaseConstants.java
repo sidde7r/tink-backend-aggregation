@@ -27,7 +27,7 @@ public class SwedbankBaseConstants {
 
     public static class Description {
         private static final Splitter CLEANUP_SPLITTER =
-                Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+                Splitter.on(CharMatcher.whitespace()).omitEmptyStrings();
         private static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
         public static String clean(String description) {

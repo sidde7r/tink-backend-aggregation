@@ -388,7 +388,7 @@ public class SEBKortParser {
 
     private double parseSebAmount(String amount) {
         return AgentParsingUtils.parseAmount(
-                CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
+                CharMatcher.whitespace().removeFrom(amount.replace("kr", "")));
     }
 
     /**

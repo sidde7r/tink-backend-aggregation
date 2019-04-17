@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 public class AuthorizationResourceFilter implements ContainerRequestFilter, ResourceFilter {
 
     private static final Splitter AUTH_SPLITTER =
-            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults().limit(2);
+            Splitter.on(CharMatcher.whitespace()).omitEmptyStrings().trimResults().limit(2);
 
     private final Logger log;
     private final HttpServletRequest request;

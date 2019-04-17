@@ -39,7 +39,7 @@ public class NordeaAgentUtils {
     protected static final Map<String, AccountTypes> ACCOUNT_TYPES_BY_NAME = Maps.newHashMap();
     private static final Map<String, Loan.Type> LOAN_TYPES_BY_CODE = Maps.newHashMap();
     protected static final Splitter CLEANUP_SPLITTER =
-            Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();
+            Splitter.on(CharMatcher.whitespace()).omitEmptyStrings();
     protected static final Joiner CLEANUP_JOINER = Joiner.on(' ');
 
     /** Standard transaction ordering based on date and inserted. */

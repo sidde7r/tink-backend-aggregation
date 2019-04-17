@@ -277,7 +277,7 @@ public class NordeaV20Agent extends AbstractAgent
         }
 
         NordeaAgentUtils.parseTransactionDescription(
-                CharMatcher.WHITESPACE.trimFrom(description), t);
+                CharMatcher.whitespace().trimFrom(description), t);
 
         NordeaAgentUtils.parseTransactionTypeForFI(te.getTransactionTypeForFi(), t);
 
