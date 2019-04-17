@@ -32,9 +32,9 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
         CreditorEntity creditorEntity =
-                CreditorEntity.of(paymentRequest.getPayment().getCreditor());
+                CreditorEntity.of(paymentRequest);
 
-        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest.getPayment().getDebtor());
+        DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest.Builder()
@@ -52,7 +52,7 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getProviderId())
+                .getPayment(paymentRequest.getPayment().getUniqueId())
                 .toTinkPaymentResponse(paymentRequest.getPayment().getType());
     }
 
@@ -65,7 +65,7 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
-                                paymentMultiStepRequest.getPayment().getProviderId(), true);
+                                paymentMultiStepRequest.getPayment().getUniqueId(), true);
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -77,7 +77,7 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
             case NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP:
                 paymentStatus =
                         sampleStepNordeaAutoSignsAfterAFewSeconds(
-                                paymentMultiStepRequest.getPayment().getProviderId());
+                                paymentMultiStepRequest.getPayment().getUniqueId());
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
 

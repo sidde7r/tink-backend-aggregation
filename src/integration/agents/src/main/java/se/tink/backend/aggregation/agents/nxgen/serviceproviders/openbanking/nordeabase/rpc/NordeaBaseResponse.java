@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class NordeaBaseResponse {
+public abstract class NordeaBaseResponse {
     @JsonProperty("_type")
     private String type;
 
@@ -17,7 +17,7 @@ public class NordeaBaseResponse {
 
     public void checkError() throws Exception {
         if (error != null) {
-              error.parseAndThrow();
+            error.parseAndThrow();
         }
     }
 }

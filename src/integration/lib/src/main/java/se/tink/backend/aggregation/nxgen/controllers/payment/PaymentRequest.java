@@ -28,29 +28,28 @@ public class PaymentRequest {
     public static PaymentRequest of(TransferRequest transferRequest) {
         Transfer transfer = transferRequest.getTransfer();
 
-        // Assumptions for the temporary mapper:
-        //  - Creditor and Debtor account currencies are the same as the transfer currency.
-        Creditor creditorInRequest =
-                new Creditor(transfer.getDestination(), transfer.getAmount().getCurrency());
+        Creditor creditorInRequest = new Creditor(transfer.getDestination());
 
-        Debtor debtorInRequest =
-                new Debtor(transfer.getSource(), transfer.getAmount().getCurrency());
+        Debtor debtorInRequest = new Debtor(transfer.getSource());
 
-        PaymentType paymentType = PaymentType.DOMESTIC;
+        PaymentType paymentType = PaymentType.INTERNATIONAL;
         if (transfer.getSource().getType() == transfer.getDestination().getType()) {
             if (transfer.getSource().getType() == AccountIdentifier.Type.IBAN) {
                 paymentType = PaymentType.SEPA;
+            } else {
+                paymentType = PaymentType.DOMESTIC;
             }
         }
 
         Payment paymentInRequest =
-                new Payment(
-                        creditorInRequest,
-                        debtorInRequest,
-                        transfer.getAmount(),
-                        DateUtils.toJavaTimeLocalDate(transfer.getDueDate()),
-                        transfer.getAmount().getCurrency(),
-                        paymentType);
+                new Payment.Builder()
+                        .withCreditor(creditorInRequest)
+                        .withDebtor(debtorInRequest)
+                        .withAmount(transfer.getAmount())
+                        .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
+                        .withCurrency(transfer.getAmount().getCurrency())
+                        .withType(paymentType)
+                        .build();
 
         return new PaymentRequest(paymentInRequest);
     }

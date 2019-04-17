@@ -54,17 +54,21 @@ public class PaymentResponseEntity {
 
     public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
         Payment tinkPayment =
-                new Payment(
-                        creditor.toTinkCreditor(),
-                        debtor.toTinkDebtor(),
-                        Amount.valueOf(currency, Double.valueOf(amount * 100).longValue(), 2),
-                        null,
-                        currency,
-                        paymentType);
-        tinkPayment.setProviderId(id);
-        tinkPayment.setStatus(
-                NordeaPaymentStatus.mapToTinkPaymentStatus(
-                        NordeaPaymentStatus.fromString(paymentStatus)));
+                new Payment.Builder()
+                        .withCreditor(creditor.toTinkCreditor())
+                        .withDebtor(debtor.toTinkDebtor())
+                        .withAmount(
+                                Amount.valueOf(
+                                        currency, Double.valueOf(amount * 100).longValue(), 2))
+                        .withExecutionDate(null)
+                        .withCurrency(currency)
+                        .withUniqueId(id)
+                        .withStatus(
+                                NordeaPaymentStatus.mapToTinkPaymentStatus(
+                                        NordeaPaymentStatus.fromString(paymentStatus)))
+                        .withType(paymentType)
+                        .build();
+
         return new PaymentResponse(tinkPayment);
     }
 }
