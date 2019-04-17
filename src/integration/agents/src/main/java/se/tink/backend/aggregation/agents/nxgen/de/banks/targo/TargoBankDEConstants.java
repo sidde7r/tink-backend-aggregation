@@ -5,5 +5,5 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 public class TargoBankDEConstants extends EuroInformationConstants {
     public static final String URL = "https://m.targobank.de/wsmobile/en/";
     public static final String TARGET = "TARGO";
-    public static final String APP_VERSION = "4.31.0";
+    public static final String APP_VERSION = "6.10.7.1";
 }
