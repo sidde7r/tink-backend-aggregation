@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -17,7 +17,7 @@ public class DataEntity {
     // Populated in response
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("Status")
-    private UkOpenBankingConstants.TransactionIndividualStatus1Code status;
+    private UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code status;
 
     // Populated in response
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,7 +29,8 @@ public class DataEntity {
 
     private DataEntity(
             @JsonProperty("PaymentId") String paymentId,
-            @JsonProperty("Status") UkOpenBankingConstants.TransactionIndividualStatus1Code status,
+            @JsonProperty("Status")
+                    UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code status,
             @JsonProperty("CreationDateTime") String creationDateTime,
             @JsonProperty("Initiation") InitiationEntity initiation) {
         this.paymentId = paymentId;

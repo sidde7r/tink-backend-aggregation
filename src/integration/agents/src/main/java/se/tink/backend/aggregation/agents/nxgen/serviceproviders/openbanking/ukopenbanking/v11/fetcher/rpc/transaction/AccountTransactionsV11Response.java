@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;

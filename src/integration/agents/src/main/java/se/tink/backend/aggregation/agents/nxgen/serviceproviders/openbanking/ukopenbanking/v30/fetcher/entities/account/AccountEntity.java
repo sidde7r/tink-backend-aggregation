@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;

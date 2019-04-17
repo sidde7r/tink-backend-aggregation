@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public abstract class UkOpenBankingV20Constants extends UkOpenBankingConstants {

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants.ExternalLimitType;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -15,7 +15,7 @@ public class CreditLineEntity {
     private AmountEntity amount;
 
     @JsonProperty("Type")
-    private ExternalLimitType type;
+    private UkOpenBankingApiDefinitions.ExternalLimitType type;
 
     public boolean isIncluded() {
         return included;
@@ -25,7 +25,7 @@ public class CreditLineEntity {
         return amount;
     }
 
-    public ExternalLimitType getType() {
+    public UkOpenBankingApiDefinitions.ExternalLimitType getType() {
         return type;
     }
 }

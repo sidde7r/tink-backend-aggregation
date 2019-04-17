@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -17,10 +17,10 @@ public class AccountBalanceEntity {
     private AmountEntity balance;
 
     @JsonProperty("CreditDebitIndicator")
-    private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
+    private UkOpenBankingApiDefinitions.CreditDebitIndicator creditDebitIndicator;
 
     @JsonProperty("Type")
-    private UkOpenBankingConstants.AccountBalanceType type;
+    private UkOpenBankingApiDefinitions.AccountBalanceType type;
 
     @JsonProperty("DateTime")
     private String dateTime;
@@ -48,7 +48,7 @@ public class AccountBalanceEntity {
         // ExternalLimitType.AVAILABLE is not useful when calculating credit exclusive balance so
         // this is ignored.
         for (CreditLineEntity credit : creditLine) {
-            if (credit.getType() != UkOpenBankingConstants.ExternalLimitType.AVAILABLE) {
+            if (credit.getType() != UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE) {
                 if (credit.isIncluded()) {
                     return total.subtract(credit.getAmount());
                 }
@@ -69,7 +69,7 @@ public class AccountBalanceEntity {
                 .filter(
                         credit ->
                                 credit.getType()
-                                        == UkOpenBankingConstants.ExternalLimitType.AVAILABLE)
+                                        == UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE)
                 .findAny()
                 .map(CreditLineEntity::getAmount);
     }
@@ -79,12 +79,12 @@ public class AccountBalanceEntity {
         Amount unsignedAmount = balance.stripSign();
 
         // Apply sign based on credit/debit indicator
-        return creditDebitIndicator == UkOpenBankingConstants.CreditDebitIndicator.CREDIT
+        return creditDebitIndicator == UkOpenBankingApiDefinitions.CreditDebitIndicator.CREDIT
                 ? unsignedAmount
                 : unsignedAmount.negate();
     }
 
-    public UkOpenBankingConstants.AccountBalanceType getType() {
+    public UkOpenBankingApiDefinitions.AccountBalanceType getType() {
         return type;
     }
 }
