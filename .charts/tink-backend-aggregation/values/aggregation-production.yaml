@@ -75,4 +75,7 @@ clients:
     aggregatorIdentifier: "Evo Banco"
   middelfart-testing:
     aggregatorIdentifier: "Middelfart Sparekasse"
-
+  saxobank-production:
+    aggregatorIdentifier: "SAXO Bank"
+  saxobank-testing:
+    aggregatorIdentifier: "SAXO Bank"
