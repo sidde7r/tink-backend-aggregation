@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Constants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.SabadellAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.SabadellCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.SabadellInvestmentFetcher;
@@ -30,7 +34,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SabadellAgent extends NextGenerationAgent {
+public class SabadellAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final SabadellApiClient apiClient;
 
     public SabadellAgent(
@@ -47,7 +51,8 @@ public class SabadellAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new SabadellAuthenticator(apiClient));
+        return new PasswordAuthenticationController(
+                new SabadellAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
@@ -114,5 +119,14 @@ public class SabadellAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return sessionStorage
+                .get(Constants.SESSION_KEY, SessionResponse.class)
+                .orElseThrow(IllegalStateException::new)
+                .getUser()
+                .toTinkIdentity();
     }
 }

@@ -33,6 +33,10 @@ public class AccountEntity {
     private String joint;
     private String mobileWarning;
 
+    public static Logger getLog() {
+        return log;
+    }
+
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), iban, amount.parseToTinkAmount())
@@ -67,10 +71,6 @@ public class AccountEntity {
     @JsonIgnore
     private String getTinkName() {
         return !Strings.isNullOrEmpty(alias) ? alias : description;
-    }
-
-    public static Logger getLog() {
-        return log;
     }
 
     public String getAlias() {
