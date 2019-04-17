@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
+import se.tink.libraries.jersey.logging.ResourceCounterFilterFactory;
 import se.tink.libraries.jersey.logging.ResourceTimerFilterFactory;
 
 public class AggregationModule extends AbstractModule {
@@ -63,6 +64,8 @@ public class AggregationModule extends AbstractModule {
                 .binder(binder())
                 .jersey(jersey)
                 .addFilterFactories(ResourceTimerFilterFactory.class)
+                .addFilterFactories(
+                        ResourceTimerFilterFactory.class, ResourceCounterFilterFactory.class)
                 .addRequestFilters(
                         AccessLoggingFilter.class,
                         AggregationLoggerRequestFilter.class,
