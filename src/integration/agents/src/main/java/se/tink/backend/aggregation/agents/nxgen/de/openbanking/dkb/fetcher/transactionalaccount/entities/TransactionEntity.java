@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -31,6 +32,7 @@ public class TransactionEntity {
     private String ultimateDebtor;
     private String valueDate;
 
+    @JsonIgnore
     public Transaction toBookedTinkTransaction() {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())
@@ -40,6 +42,7 @@ public class TransactionEntity {
                 .build();
     }
 
+    @JsonIgnore
     public Transaction toPendingTinkTransaction() {
         return Transaction.builder()
                 .setAmount(transactionAmount.toAmount())

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -21,6 +22,7 @@ public class GetTokenResponse {
     @JsonProperty("token_type")
     private String tokenType;
 
+    @JsonIgnore
     public OAuth2Token toTinkToken() {
         return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
