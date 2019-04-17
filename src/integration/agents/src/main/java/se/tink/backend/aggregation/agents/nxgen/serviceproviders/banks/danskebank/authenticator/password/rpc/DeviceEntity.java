@@ -46,4 +46,8 @@ public class DeviceEntity {
     public boolean isOtpCard() {
         return DanskeBankConstants.Device.DEVICE_TYPE_OTP_CARD.equalsIgnoreCase(deviceType);
     }
+
+    public boolean isSecCard() {
+        return DanskeBankConstants.Device.DEVICE_TYPE_SEC_CARD.equalsIgnoreCase(deviceType);
+    }
 }

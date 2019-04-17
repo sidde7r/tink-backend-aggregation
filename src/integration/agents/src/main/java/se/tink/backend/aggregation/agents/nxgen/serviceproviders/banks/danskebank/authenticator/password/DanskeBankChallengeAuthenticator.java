@@ -70,6 +70,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private String finalizePackage;
     private WebDriver driver;
     private String keyCardOtpChallenge;
+    private String userId;
 
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
@@ -129,7 +130,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         DeviceEntity preferredDevice = getPreferredDevice();
         if (preferredDevice.isCodeApp()) {
             codeAppAuthentication(username, preferredDevice);
-        } else if (preferredDevice.isOtpCard()) {
+        } else if (preferredDevice.isOtpCard() || preferredDevice.isSecCard()) {
             this.keyCardOtpChallenge = getKeyCardOtpChallenge(bindDeviceResponse);
             KeyCardAuthenticationController keyCardAuthenticationController =
                     new KeyCardAuthenticationController(
@@ -149,8 +150,10 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     public KeyCardInitValues init(String username, String password)
             throws AuthenticationException, AuthorizationException {
 
+        // For Codecard authentication in DK, they have switched to use the userId instead of
+        // username
         KeyCardEntity keyCardEntity =
-                decryptOtpChallenge(username, this.keyCardOtpChallenge, KeyCardEntity.class);
+                decryptOtpChallenge(this.userId, this.keyCardOtpChallenge, KeyCardEntity.class);
         return new KeyCardInitValues(keyCardEntity.getSerialNumber(), keyCardEntity.getChallenge());
     }
 
@@ -402,8 +405,12 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             throw new IllegalStateException("Finalize Package was null, aborting login");
         }
 
-        return this.apiClient.finalizeAuthentication(
-                FinalizeAuthenticationRequest.createForServiceCode(this.finalizePackage));
+        FinalizeAuthenticationResponse response =
+                this.apiClient.finalizeAuthentication(
+                        FinalizeAuthenticationRequest.createForServiceCode(this.finalizePackage));
+
+        this.userId = response.getUserId();
+        return response;
     }
 
     private void logonStepOne(String username, String password)

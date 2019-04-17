@@ -62,6 +62,7 @@ public final class DanskeBankConstants {
     public static class Device {
         public static final String DEVICE_TYPE_CODE_APP = "CODEAPP";
         public static final String DEVICE_TYPE_OTP_CARD = "OTPCARD";
+        public static final String DEVICE_TYPE_SEC_CARD = "SECCARD";
         public static final String USER_ID_TYPE = "PRIV";
         public static final String SUPPRESS_PUSH = "N";
         public static final String LANGUAGE_CODE = "EN";
