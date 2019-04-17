@@ -11,6 +11,16 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public abstract class UkOpenBankingV20Constants extends UkOpenBankingConstants {
 
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, "CurrentAccount")
+                    .put(AccountTypes.CREDIT_CARD, "CreditCard")
+                    .put(AccountTypes.SAVINGS, "Savings")
+                    .put(AccountTypes.LOAN, "Loan")
+                    .put(AccountTypes.MORTGAGE, "Mortgage")
+                    .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
+                    .build();
+
     public enum AccountIdentifier {
         IBAN,
         SORT_CODE_ACCOUNT_NUMBER,
@@ -42,16 +52,6 @@ public abstract class UkOpenBankingV20Constants extends UkOpenBankingConstants {
                     : null;
         }
     }
-
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
-            AccountTypeMapper.builder()
-                    .put(AccountTypes.CHECKING, "CurrentAccount")
-                    .put(AccountTypes.CREDIT_CARD, "CreditCard")
-                    .put(AccountTypes.SAVINGS, "Savings")
-                    .put(AccountTypes.LOAN, "Loan")
-                    .put(AccountTypes.MORTGAGE, "Mortgage")
-                    .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
-                    .build();
 
     public static class Links {
         public static final String NEXT = "Next";

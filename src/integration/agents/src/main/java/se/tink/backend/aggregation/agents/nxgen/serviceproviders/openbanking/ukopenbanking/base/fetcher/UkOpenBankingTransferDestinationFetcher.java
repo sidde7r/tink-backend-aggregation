@@ -28,6 +28,16 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
                     .add(AccountTypes.SAVINGS)
                     .build();
 
+    private static List<? extends GeneralAccountEntity> getSourceAccounts(
+            Collection<Account> accounts) {
+        return accounts.stream()
+                .filter(a -> WHITELISTED_ACCOUNT_TYPES.contains(a.getType()))
+                .map(GeneralAccountEntityImpl::createFromCoreAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
         TransferDestinationsResponse transferDestinations = new TransferDestinationsResponse();
@@ -45,15 +55,5 @@ public class UkOpenBankingTransferDestinationFetcher implements TransferDestinat
 
         transferDestinations.addDestinations(destinations);
         return transferDestinations;
-    }
-
-    private static List<? extends GeneralAccountEntity> getSourceAccounts(
-            Collection<Account> accounts) {
-        return accounts.stream()
-                .filter(a -> WHITELISTED_ACCOUNT_TYPES.contains(a.getType()))
-                .map(GeneralAccountEntityImpl::createFromCoreAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
     }
 }

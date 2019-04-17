@@ -45,6 +45,23 @@ final class TinkJwtCreator {
         }
     }
 
+    public static Builder create() {
+        return new Builder();
+    }
+
+    private String sign() throws SignatureGenerationException {
+        String header =
+                Base64.encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
+        String payload =
+                Base64.encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
+        String content = String.format("%s.%s", header, payload);
+
+        byte[] signatureBytes = algorithm.sign(content.getBytes(StandardCharsets.UTF_8));
+        String signature = Base64.encodeBase64URLSafeString((signatureBytes));
+
+        return String.format("%s.%s", content, signature);
+    }
+
     public static class Builder {
         private final Map<String, Object> payloadClaims;
         private Map<String, Object> headerClaims;
@@ -332,22 +349,5 @@ final class TinkJwtCreator {
             }
             payloadClaims.put(name, value);
         }
-    }
-
-    public static Builder create() {
-        return new Builder();
-    }
-
-    private String sign() throws SignatureGenerationException {
-        String header =
-                Base64.encodeBase64URLSafeString(headerJson.getBytes(StandardCharsets.UTF_8));
-        String payload =
-                Base64.encodeBase64URLSafeString(payloadJson.getBytes(StandardCharsets.UTF_8));
-        String content = String.format("%s.%s", header, payload);
-
-        byte[] signatureBytes = algorithm.sign(content.getBytes(StandardCharsets.UTF_8));
-        String signature = Base64.encodeBase64URLSafeString((signatureBytes));
-
-        return String.format("%s.%s", content, signature);
     }
 }

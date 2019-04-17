@@ -6,10 +6,6 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
 
-    public static class Links {
-        public static final String NEXT = "Next";
-    }
-
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(AccountTypes.CHECKING, "CurrentAccount")
@@ -19,4 +15,8 @@ public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
                     .put(AccountTypes.MORTGAGE, "Mortgage")
                     .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
                     .build();
+
+    public static class Links {
+        public static final String NEXT = "Next";
+    }
 }

@@ -16,6 +16,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 // This is an Authorize request JWT that is used by UK OpenBanking.
 public class AuthorizeRequest {
 
+    public static Builder create() {
+        return new Builder();
+    }
+
     public static class Builder {
         private WellKnownResponse wellknownConfiguration;
         private SoftwareStatement softwareStatement;
@@ -94,7 +98,8 @@ public class AuthorizeRequest {
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
 
             String responseTypes =
-                    OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
+                    OpenIdConstants.MANDATORY_RESPONSE_TYPES
+                            .stream()
                             .collect(Collectors.joining(" "));
 
             AuthorizeRequestClaims authorizeRequestClaims =
@@ -120,9 +125,5 @@ public class AuthorizeRequest {
                             authorizeRequestClaims)
                     .sign(algorithm);
         }
-    }
-
-    public static Builder create() {
-        return new Builder();
     }
 }

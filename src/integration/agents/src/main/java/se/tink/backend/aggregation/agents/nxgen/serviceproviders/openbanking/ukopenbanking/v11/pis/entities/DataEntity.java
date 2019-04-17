@@ -50,14 +50,6 @@ public class DataEntity {
         this.paymentId = paymentId;
     }
 
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code getStatus() {
-        return status;
-    }
-
     @JsonIgnore
     public static DataEntity createPersonToPerson(
             String internalTransferId,
@@ -96,5 +88,13 @@ public class DataEntity {
                         destinationAccount,
                         amount,
                         bankTransferMessage));
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code getStatus() {
+        return status;
     }
 }

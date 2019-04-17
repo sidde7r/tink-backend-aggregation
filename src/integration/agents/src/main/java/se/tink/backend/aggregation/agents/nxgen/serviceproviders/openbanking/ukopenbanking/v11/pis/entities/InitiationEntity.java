@@ -27,11 +27,6 @@ public class InitiationEntity {
     @JsonProperty("RemittanceInformation")
     private RemittanceInformationEntity remittanceInformation;
 
-    @JsonIgnore
-    public String getExternalId() {
-        return instructionIdentification;
-    }
-
     private InitiationEntity(
             @JsonProperty("InstructionIdentification") String instructionIdentification,
             @JsonProperty("EndToEndIdentification") String endToEndIdentification,
@@ -64,5 +59,10 @@ public class InitiationEntity {
                 sourceAccount,
                 destinationAccount,
                 RemittanceInformationEntity.create(bankTransferMessage));
+    }
+
+    @JsonIgnore
+    public String getExternalId() {
+        return instructionIdentification;
     }
 }

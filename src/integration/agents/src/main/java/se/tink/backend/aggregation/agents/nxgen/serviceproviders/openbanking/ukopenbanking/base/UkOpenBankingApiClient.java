@@ -32,7 +32,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         super(httpClient, softwareStatement, providerConfiguration, clientMode);
         apiBaseUrl = providerConfiguration.getApiBaseURL();
         this.config = config;
-
     }
 
     public <T> T createPaymentIntentId(Object request, Class<T> responseType) {
@@ -65,15 +64,11 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T> T fetchAccounts(Class<T> responseType) {
-        return createRequest(
-                        config.getBulkAccountRequestURL(apiBaseUrl))
-                .get(responseType);
+        return createRequest(config.getBulkAccountRequestURL(apiBaseUrl)).get(responseType);
     }
 
     public <T> T fetchAccountBalance(String accountId, Class<T> responseType) {
-        return createRequest(
-                        config.getAccountBalanceRequestURL(
-                                apiBaseUrl, accountId))
+        return createRequest(config.getAccountBalanceRequestURL(apiBaseUrl, accountId))
                 .get(responseType);
     }
 
@@ -89,9 +84,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     public <T> T fetchUpcomingTransactions(String accountId, Class<T> responseType) {
         try {
 
-            return createRequest(
-                            config.getUpcomingTransactionRequestURL(
-                                    apiBaseUrl, accountId))
+            return createRequest(config.getUpcomingTransactionRequestURL(apiBaseUrl, accountId))
                     .get(responseType);
         } catch (Exception e) {
             // TODO: Ukob testdata has an error in it which makes some transactions impossible to

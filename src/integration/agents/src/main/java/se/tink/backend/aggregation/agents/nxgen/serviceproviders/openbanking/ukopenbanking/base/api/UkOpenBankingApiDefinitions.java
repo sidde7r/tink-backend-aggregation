@@ -146,7 +146,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -165,7 +165,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -189,7 +189,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -206,7 +206,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -227,7 +227,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -249,7 +249,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-//        @JsonValue
+        //        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }

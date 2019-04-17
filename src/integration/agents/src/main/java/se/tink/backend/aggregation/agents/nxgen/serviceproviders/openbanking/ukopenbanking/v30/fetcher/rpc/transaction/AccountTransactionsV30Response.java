@@ -15,22 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class AccountTransactionsV30Response extends BaseResponse<List<TransactionEntity>> {
 
-    private String nextKey() {
-        return searchLink(UkOpenBankingV30Constants.Links.NEXT).orElse(null);
-    }
-
-    private List<? extends Transaction> toTinkTransactions() {
-        return getData().stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
-    }
-
-    private List<? extends Transaction> toCreditCardTransactions(CreditCardAccount account) {
-        return getData().stream()
-                .map(e -> e.toCreditCardTransaction(account))
-                .collect(Collectors.toList());
-    }
-
     public static TransactionKeyPaginatorResponse<String> toAccountTransactionPaginationResponse(
             AccountTransactionsV30Response response, TransactionalAccount account) {
         return new TransactionKeyPaginatorResponseImpl<>(
@@ -41,5 +25,23 @@ public class AccountTransactionsV30Response extends BaseResponse<List<Transactio
             AccountTransactionsV30Response response, CreditCardAccount account) {
         return new TransactionKeyPaginatorResponseImpl<>(
                 response.toCreditCardTransactions(account), response.nextKey());
+    }
+
+    private String nextKey() {
+        return searchLink(UkOpenBankingV30Constants.Links.NEXT).orElse(null);
+    }
+
+    private List<? extends Transaction> toTinkTransactions() {
+        return getData()
+                .stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
+    }
+
+    private List<? extends Transaction> toCreditCardTransactions(CreditCardAccount account) {
+        return getData()
+                .stream()
+                .map(e -> e.toCreditCardTransaction(account))
+                .collect(Collectors.toList());
     }
 }

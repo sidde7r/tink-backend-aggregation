@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
@@ -78,14 +78,16 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
 
     private boolean matchingAccount(
             TransactionalAccount account, AccountIdentifier accountIdentifier) {
-        return account.getIdentifiers().stream()
+        return account.getIdentifiers()
+                .stream()
                 .anyMatch(identifier -> identifier.equals(accountIdentifier));
     }
 
     private boolean hasAccountIdentifier(AccountIdentifier accountIdentifier) {
         List<TransactionalAccount> tinkAccounts = getTransactionalAccounts();
 
-        return tinkAccounts.stream()
+        return tinkAccounts
+                .stream()
                 .anyMatch(account -> matchingAccount(account, accountIdentifier));
     }
 

@@ -15,10 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
         implements AccountStream {
 
-    public Stream<AccountEntity> stream() {
-        return getData().stream();
-    }
-
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV30Response accounts, AccountBalanceV30Response balance) {
 
@@ -43,5 +39,9 @@ public class AccountsV30Response extends BaseResponse<List<AccountEntity>>
                                         e.getRawAccountSubType()))
                 .findFirst()
                 .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));
+    }
+
+    public Stream<AccountEntity> stream() {
+        return getData().stream();
     }
 }

@@ -23,6 +23,37 @@ public class AccountEntity implements IdentifiableAccount {
     @JsonProperty("Account")
     private AccountIdentifierEntity identifierEntity;
 
+    public static TransactionalAccount toTransactionalAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
+
+        return TransactionalAccount.builder(
+                        account.getAccountType(), accountNumber, balance.getBalance())
+                .setAccountNumber(accountNumber)
+                .setName(accountName)
+                .addIdentifier(account.toAccountIdentifier(accountName))
+                .setBankIdentifier(account.getAccountId())
+                .build();
+    }
+
+    public static CreditCardAccount toCreditCardAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+
+        return CreditCardAccount.builder(
+                        account.getUniqueIdentifier(),
+                        balance.getBalance(),
+                        balance.getAvailableCredit()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "CreditCardAccount has no credit.")))
+                .setAccountNumber(account.getUniqueIdentifier())
+                .setBankIdentifier(account.getAccountId())
+                .setName(account.getDisplayName())
+                .build();
+    }
+
     public String getAccountId() {
         return accountId;
     }
@@ -57,36 +88,5 @@ public class AccountEntity implements IdentifiableAccount {
     @Override
     public String getBankIdentifier() {
         return accountId;
-    }
-
-    public static TransactionalAccount toTransactionalAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-        String accountNumber = account.getUniqueIdentifier();
-        String accountName = account.getDisplayName();
-
-        return TransactionalAccount.builder(
-                        account.getAccountType(), accountNumber, balance.getBalance())
-                .setAccountNumber(accountNumber)
-                .setName(accountName)
-                .addIdentifier(account.toAccountIdentifier(accountName))
-                .setBankIdentifier(account.getAccountId())
-                .build();
-    }
-
-    public static CreditCardAccount toCreditCardAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-
-        return CreditCardAccount.builder(
-                        account.getUniqueIdentifier(),
-                        balance.getBalance(),
-                        balance.getAvailableCredit()
-                                .orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        "CreditCardAccount has no credit.")))
-                .setAccountNumber(account.getUniqueIdentifier())
-                .setBankIdentifier(account.getAccountId())
-                .setName(account.getDisplayName())
-                .build();
     }
 }
