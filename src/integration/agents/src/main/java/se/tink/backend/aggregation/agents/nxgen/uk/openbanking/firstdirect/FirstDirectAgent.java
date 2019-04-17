@@ -14,7 +14,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class FirstDirectAgent extends UkOpenBankingBaseAgent {
     public FirstDirectAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new UkOpenBankingV11Configuration());
     }
 
     @Override

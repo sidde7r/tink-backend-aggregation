@@ -18,7 +18,7 @@ public class BarclaysAgent extends UkOpenBankingBaseAgent {
 
     public BarclaysAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new UkOpenBankingV20Configuration());
     }
 
     @Override

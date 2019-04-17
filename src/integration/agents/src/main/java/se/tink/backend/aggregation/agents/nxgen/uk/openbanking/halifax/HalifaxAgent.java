@@ -15,7 +15,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class HalifaxAgent extends UkOpenBankingBaseAgent {
     public HalifaxAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new UkOpenBankingV20Configuration());
     }
 
     @Override

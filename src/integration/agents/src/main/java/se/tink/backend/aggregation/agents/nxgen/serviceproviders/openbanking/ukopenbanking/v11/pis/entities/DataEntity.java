@@ -54,7 +54,7 @@ public class DataEntity {
         return paymentId;
     }
 
-    public UkOpenBankingConstants.TransactionIndividualStatus1Code getStatus() {
+    public UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code getStatus() {
         return status;
     }
 

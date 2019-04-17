@@ -15,7 +15,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class LloydsAgent extends UkOpenBankingBaseAgent {
     public LloydsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new UkOpenBankingV20Configuration());
     }
 
     @Override

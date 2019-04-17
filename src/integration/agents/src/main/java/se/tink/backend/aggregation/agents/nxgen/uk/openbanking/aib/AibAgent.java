@@ -15,7 +15,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class AibAgent extends UkOpenBankingBaseAgent {
     public AibAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(request, context, signatureKeyPair, new UkOpenBankingV11Configuration());
     }
 
     @Override
