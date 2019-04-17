@@ -107,7 +107,7 @@ public final class AhoiSandboxApiClient {
                         providerId,
                         new AccessFieldsEntity(
                                 credentials.getField(Key.USERNAME),
-                                Integer.valueOf(credentials.getField(Key.PASSWORD))));
+                                credentials.getField(Key.PASSWORD)));
 
         return createRequestInSession(Urls.CREATE_ACCESS)
                 .post(CreateAccessResponse.class, accessRequestEntity);

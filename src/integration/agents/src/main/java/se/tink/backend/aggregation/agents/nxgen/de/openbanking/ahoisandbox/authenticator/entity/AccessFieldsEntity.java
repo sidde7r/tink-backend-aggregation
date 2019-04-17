@@ -10,9 +10,9 @@ public class AccessFieldsEntity {
     private String username;
 
     @JsonProperty("PIN")
-    private int pin;
+    private String pin;
 
-    public AccessFieldsEntity(String username, int pin) {
+    public AccessFieldsEntity(String username, String pin) {
         this.username = username;
         this.pin = pin;
     }
