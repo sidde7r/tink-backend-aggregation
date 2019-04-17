@@ -17,5 +17,5 @@ spec:
       targetAverageValue: {{ default "800m" .Values.targetAverageCpuValue }} 
   - type: Pods
     pods:
-      metricName: tink_api_http_requests_total
+      metricName: http_requests_per_second
       targetAverageValue: "20"
