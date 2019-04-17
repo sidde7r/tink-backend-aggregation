@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsAggregate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.Santand
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
@@ -27,17 +27,17 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SantanderEsLoanFetcher.class);
 
     private final SantanderEsApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final SantanderEsSessionStorage santanderEsSessionStorage;
 
-    public SantanderEsLoanFetcher(SantanderEsApiClient apiClient, SessionStorage sessionStorage) {
+    public SantanderEsLoanFetcher(final SantanderEsApiClient apiClient, final SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.santanderEsSessionStorage = santanderEsSessionStorage;
     }
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         try {
-            LoginResponse loginResponse = getLoginResponse();
+            LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
 
             String userDataXml =
                     SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
@@ -54,19 +54,6 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
         }
 
         return Collections.emptyList();
-    }
-
-    private LoginResponse getLoginResponse() {
-        String loginResponseString =
-                sessionStorage
-                        .get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SantanderEsConstants.LogMessages
-                                                        .LOGIN_RESPONSE_NOT_FOUND));
-
-        return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
     }
 
     private Optional<LoanAccount> toTinkLoanOptional(LoanEntity loanEntity, String userDataXml) {

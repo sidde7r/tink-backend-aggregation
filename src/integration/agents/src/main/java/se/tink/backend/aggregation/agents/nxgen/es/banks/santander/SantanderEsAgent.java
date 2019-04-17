@@ -29,10 +29,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderEsAgent extends NextGenerationAgent {
     private final SantanderEsApiClient apiClient;
+    private final SantanderEsSessionStorage santanderEsSessionStorage;
 
     public SantanderEsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
         this.apiClient = new SantanderEsApiClient(client);
     }
 
@@ -42,7 +44,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new SantanderEsAuthenticator(apiClient, sessionStorage));
+                new SantanderEsAuthenticator(apiClient, santanderEsSessionStorage));
     }
 
     @Override
@@ -52,7 +54,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
-                        new SantanderEsAccountFetcher(sessionStorage),
+                        new SantanderEsAccountFetcher(santanderEsSessionStorage),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
@@ -61,7 +63,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(apiClient, sessionStorage);
+        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(apiClient, santanderEsSessionStorage);
 
         return Optional.of(
                 new CreditCardRefreshController(
@@ -76,7 +78,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         SantanderEsInvestmentFetcher investmentFetcher =
-                new SantanderEsInvestmentFetcher(apiClient, sessionStorage);
+                new SantanderEsInvestmentFetcher(apiClient, santanderEsSessionStorage);
 
         return Optional.of(
                 new InvestmentRefreshController(
@@ -89,7 +91,7 @@ public class SantanderEsAgent extends NextGenerationAgent {
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new SantanderEsLoanFetcher(apiClient, sessionStorage)));
+                        new SantanderEsLoanFetcher(apiClient, santanderEsSessionStorage)));
     }
 
     @Override

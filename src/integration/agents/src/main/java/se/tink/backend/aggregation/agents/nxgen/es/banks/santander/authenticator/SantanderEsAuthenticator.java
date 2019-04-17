@@ -8,19 +8,19 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
     private final SantanderEsApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final SantanderEsSessionStorage santanderEsSessionStorage;
 
-    public SantanderEsAuthenticator(SantanderEsApiClient apiClient, SessionStorage sessionStorage) {
+    public SantanderEsAuthenticator(SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.santanderEsSessionStorage = santanderEsSessionStorage;
     }
 
     @Override
@@ -59,14 +59,6 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         apiClient.setTokenCredential(tokenCredential);
 
         responseString = apiClient.login();
-
-        // Login response contain users accounts, save to session storage to use for later fetching
-        Node loginResponseNode =
-                SantanderEsXmlUtils.getTagNodeFromSoapString(
-                        responseString, SantanderEsConstants.NodeTags.METHOD_RESULT);
-
-        String loginResponseString = SantanderEsXmlUtils.convertToString(loginResponseNode);
-
-        sessionStorage.put(SantanderEsConstants.Storage.LOGIN_RESPONSE, loginResponseString);
+        santanderEsSessionStorage.setLoginResponse(responseString);
     }
 }
