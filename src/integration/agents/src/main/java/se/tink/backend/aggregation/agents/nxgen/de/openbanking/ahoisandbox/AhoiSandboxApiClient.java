@@ -72,24 +72,7 @@ public final class AhoiSandboxApiClient {
         return persistentStorage.get(AhoiSandboxConstants.StorageKeys.ACCOUNT_ID);
     }
 
-    public void authenticate(Credentials credentials) {
-        final RegistrationTokenResponse registrationToken = getRegistrationTokenResponse();
-
-        final UserRegistrationResponse userRegistrationResponse =
-                getUserRegistrationResponse(registrationToken.getAccessToken());
-
-        final BankingTokenResponse bankingTokenResponse =
-                getBankingTokenResponse(
-                        userRegistrationResponse.getInstallation()); // Banking token = access token
-
-        persistentStorage.put(
-                AhoiSandboxConstants.StorageKeys.ACCESS_TOKEN,
-                bankingTokenResponse.getAccessToken());
-
-        final ProvidersListRsponse providersListRsponse = getProviderEntities();
-
-        final ProviderDetailsResponse providerDetailsResponse =
-                getProviderDetailsResponse(providersListRsponse.get(0).getId());
+    public void createAccess(Credentials credentials, ProviderDetailsResponse providerDetailsResponse) {
 
         final CreateAccessResponse createAccessResponse =
                 getCreateAcccessResponse(providerDetailsResponse.getId(), credentials);
@@ -113,17 +96,17 @@ public final class AhoiSandboxApiClient {
                 .post(CreateAccessResponse.class, accessRequestEntity);
     }
 
-    private ProviderDetailsResponse getProviderDetailsResponse(String providerId) {
+    public ProviderDetailsResponse getProviderDetailsResponse(String providerId) {
 
         return createRequestInSession(new URL(Urls.PROVIDERS + providerId))
                 .get(ProviderDetailsResponse.class);
     }
 
-    private ProvidersListRsponse getProviderEntities() {
+    public ProvidersListRsponse getProviderEntities() {
         return createRequestInSession(Urls.PROVIDERS).get(ProvidersListRsponse.class);
     }
 
-    private BankingTokenResponse getBankingTokenResponse(String installationId) {
+    public BankingTokenResponse getBankingTokenResponse(String installationId) {
 
         final BankingTokenRequest bankingTokenRequest =
                 new BankingTokenRequest(
@@ -138,7 +121,7 @@ public final class AhoiSandboxApiClient {
                 .post(BankingTokenResponse.class);
     }
 
-    private UserRegistrationResponse getUserRegistrationResponse(String registrationAccessToken) {
+    public UserRegistrationResponse getUserRegistrationResponse(String registrationAccessToken) {
 
         return createRequest(Urls.REGISTRATION)
                 .header(
@@ -147,7 +130,7 @@ public final class AhoiSandboxApiClient {
                 .post(UserRegistrationResponse.class);
     }
 
-    private RegistrationTokenResponse getRegistrationTokenResponse() {
+    public RegistrationTokenResponse getRegistrationTokenResponse() {
 
         return createRequest(Urls.OAUTH)
                 .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE)
