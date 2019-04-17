@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.creditcards.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import joptsimple.internal.Strings;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;

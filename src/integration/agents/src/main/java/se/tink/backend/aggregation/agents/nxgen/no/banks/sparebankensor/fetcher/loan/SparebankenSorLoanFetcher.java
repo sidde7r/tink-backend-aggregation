@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.loan;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities.LinkEntity;

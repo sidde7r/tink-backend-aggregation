@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.security.PrivateKey;
-import org.elasticsearch.common.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
