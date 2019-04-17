@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.AhoiS
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.AhoiSandboxConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.entity.AccessFieldsEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.entity.AccessRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.entity.BankingTokenRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.rpc.BankingTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.rpc.BankingTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.rpc.CreateAccessResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.authenticator.rpc.ProviderDetailsResponse;
@@ -128,15 +128,15 @@ public final class AhoiSandboxApiClient {
 
     private BankingTokenResponse getBankingTokenResponse(String installationId) {
 
-        final BankingTokenRequestEntity bankingTokenRequestEntity =
-                new BankingTokenRequestEntity(
+        final BankingTokenRequest bankingTokenRequest =
+                new BankingTokenRequest(
                         installationId, UUID.randomUUID().toString(), Instant.now().toString());
 
         final String bankingRequestHeader =
                 Base64.getUrlEncoder()
                         .withoutPadding()
                         .encodeToString(
-                                SerializationUtils.serializeToString(bankingTokenRequestEntity)
+                                SerializationUtils.serializeToString(bankingTokenRequest)
                                         .getBytes(StandardCharsets.UTF_8));
 
         return createRequest(Urls.OAUTH)
