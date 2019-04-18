@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -41,6 +42,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final UkOpenBankingPis ukOpenBankingPis;
     private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
     private final String callbackUriId;
+    private final UkOpenBankingConfig pisConfig;
+    private final UkOpenBankingConfig aisConfig;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
@@ -52,7 +55,9 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher,
             UkOpenBankingPis ukOpenBankingPis,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
-            String callbackUriId) {
+            String callbackUriId,
+            UkOpenBankingConfig aisConfig,
+            UkOpenBankingConfig pisConfig) {
         this.catalog = catalog;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -62,14 +67,16 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         this.ukOpenBankingPis = ukOpenBankingPis;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
         this.callbackUriId = callbackUriId;
+        this.pisConfig = pisConfig;
+        this.aisConfig = aisConfig;
 
         this.apiClient =
                 new UkOpenBankingApiClient(
                         httpClient,
                         softwareStatement,
                         providerConfiguration,
-                        null,
-                        null,
+                        this.aisConfig,
+                        this.pisConfig,
                         OpenIdConstants.ClientMode.PAYMENTS);
     }
 
