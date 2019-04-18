@@ -1,8 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "agents",
     srcs = glob(["src/main/**/*.java"]),
+    artifactId = "agents",
+    groupId = "se.tink.backend.aggregation",
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
