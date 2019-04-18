@@ -1,32 +1,33 @@
-package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.bankofscotland;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Pis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Agent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Ais;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Configuration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BankOfScotlandAgent extends UkOpenBankingV20Agent {
-    public BankOfScotlandAgent(
+public class UkOpenBankingV31Agent extends UkOpenBankingBaseAgent {
+    public UkOpenBankingV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                new UkOpenBankingV31Configuration(),
+                new UkOpenBankingV31Configuration());
     }
 
     @Override
     protected UkOpenBankingAis makeAis() {
-        return new UkOpenBankingV20Ais();
+        return new UkOpenBankingV31Ais();
     }
 
     @Override
     protected Optional<UkOpenBankingPis> makePis() {
-        return Optional.of(new UkOpenBankingV11Pis());
+        return Optional.of(new UkOpenBankingV31Pis());
     }
 
     @Override

@@ -13,4 +13,10 @@ public interface UkOpenBankingConfig {
     public URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId);
 
     String getIntentId(AccountPermissionResponse accountPermissionResponse);
+
+    URL createConsentRequestURL(URL authBaseURL);
+
+    URL createPaymentsURL(URL authBaseURL);
+
+    URL createPaymentSubmissionURL(URL authBaseURL);
 }

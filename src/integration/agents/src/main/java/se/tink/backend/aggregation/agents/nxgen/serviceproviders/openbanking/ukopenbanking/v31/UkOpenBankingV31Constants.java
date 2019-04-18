@@ -16,6 +16,12 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                     .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
                     .build();
 
+    public static final class ApiServices extends UkOpenBankingConstants.ApiServices {
+        public static final String CONSENT_REQUEST = "/account-access-consents";
+        public static final String AISP_PREFIX = "/aisp";
+        public static final String PISP_PREFIX = "/pisp";
+    }
+
     public static class Links {
         public static final String NEXT = "Next";
     }

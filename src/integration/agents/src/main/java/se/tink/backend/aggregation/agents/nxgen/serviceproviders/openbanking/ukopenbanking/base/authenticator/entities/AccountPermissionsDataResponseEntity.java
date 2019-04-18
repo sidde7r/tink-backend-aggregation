@@ -9,9 +9,6 @@ public class AccountPermissionsDataResponseEntity extends AccountPermissionDataE
     @JsonProperty("AccountRequestId")
     private String accountRequestId;
 
-    @JsonProperty("ConsentId")
-    private String accountConsentId;
-
     @JsonProperty("CreationDateTime")
     private String creationDateTime;
 
@@ -22,7 +19,7 @@ public class AccountPermissionsDataResponseEntity extends AccountPermissionDataE
     private String statusUpdateDateTime;
 
     public String getAccountRequestId() {
-        return accountConsentId;
+        return accountRequestId;
     }
 
     public String getCreationDateTime() {

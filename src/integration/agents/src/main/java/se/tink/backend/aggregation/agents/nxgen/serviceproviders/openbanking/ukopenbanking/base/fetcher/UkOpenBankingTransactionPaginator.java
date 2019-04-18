@@ -58,7 +58,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
         if (key == null) {
             key =
                     apiClient
-                            .getConfig()
+                            .getAisConfig()
                             .getInitialTransactionsPaginationKey(account.getBankIdentifier());
         }
 

@@ -41,7 +41,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     private final Provider tinkProvider;
-    private final UkOpenBankingConfig config;
+    private final UkOpenBankingConfig aisConfig;
+    private final UkOpenBankingConfig pisConfig;
     // Separate httpClient used for payments since PIS and AIS are two different
     // authenticated flows.
     private final TinkHttpClient paymentsHttpClient;
@@ -58,7 +59,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             CredentialsRequest request,
             AgentContext context,
             SignatureKeyPair signatureKeyPair,
-            UkOpenBankingConfig ukObConfig) {
+            UkOpenBankingConfig aisConfig,
+            UkOpenBankingConfig pisConfig) {
         super(request, context, signatureKeyPair);
 
         this.paymentsHttpClient =
@@ -69,7 +71,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                         signatureKeyPair,
                         request.getProvider());
         tinkProvider = request.getProvider();
-        config = ukObConfig;
+        this.aisConfig = aisConfig;
+        this.pisConfig = pisConfig;
     }
 
     @Override
@@ -139,7 +142,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                         client,
                         softwareStatement,
                         providerConfiguration,
-                        config,
+                        aisConfig,
+                        pisConfig,
                         OpenIdConstants.ClientMode.ACCOUNTS);
 
         callbackJWTSignatureKeyPair = configuration.getCallbackJwtSignatureKeyPair();
@@ -161,10 +165,11 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            UkOpenBankingConfig config,
+            UkOpenBankingConfig aisConfig,
+            UkOpenBankingConfig pisConfig,
             OpenIdConstants.ClientMode clientMode) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, config, clientMode);
+                httpClient, softwareStatement, providerConfiguration, aisConfig, pisConfig, clientMode);
     }
 
     @Override
