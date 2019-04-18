@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -24,6 +18,13 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
+
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class OAuth2AuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {

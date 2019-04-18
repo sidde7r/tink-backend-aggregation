@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator;
 
 import com.google.common.collect.ImmutableList;
-import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
@@ -23,6 +20,10 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import java.time.OffsetDateTime;
+import java.util.Optional;
+import java.util.UUID;
 
 public class OpBankAuthenticator implements OAuth2Authenticator {
 
@@ -67,11 +68,11 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         TokenBodyEntity tokenBody = new TokenBodyEntity();
         tokenBody.setAud("https://mtls.apis.op.fi");
         tokenBody.setIss(configuration.getClientId());
-        tokenBody.setResponse_type("code id_token");
+        tokenBody.setResponse_type("code");
         tokenBody.setClient_id(configuration.getClientId());
         tokenBody.setRedirect_uri("https://localhost:7357/api/v1/thirdparty/callback");
         tokenBody.setScope("openid accounts");
-        tokenBody.setState(UUID.randomUUID().toString());
+        tokenBody.setState(state);
         tokenBody.setNonce(UUID.randomUUID().toString());
         tokenBody.setMax_age(86400);
         tokenBody.setIat(OffsetDateTime.now().toEpochSecond());
@@ -92,7 +93,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
         String authorizationURL = String.format("https://authorize.psd2-sandbox.op.fi/oauth/authorize"
             + "?request=%s"
-            + "&response_type=code id_token"
+            + "&response_type=code"
             + "&client_id=%s"
             + "&scope=openid accounts",
             fullToken,
@@ -103,7 +104,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        return null;
+        return apiClient.exchangeToken(code).toOauth2Token();
     }
 
     @Override
