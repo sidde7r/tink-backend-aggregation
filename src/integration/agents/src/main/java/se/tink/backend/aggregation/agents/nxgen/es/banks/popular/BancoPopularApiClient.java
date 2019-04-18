@@ -1,20 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants.ApiService;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchIdentityRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchIdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.SetContractRequest;
@@ -101,7 +107,7 @@ public class BancoPopularApiClient {
     }
 
     // Method for fetching misc accounts for logging purposes
-    public String fetchMiscAccountsForLogging(FetchAccountsRequest request) {
+    private String fetchMiscAccountsForLogging(FetchAccountsRequest request) {
         HttpResponse rawResponse =
                 createRequest(
                                 BancoPopularConstants.Urls.FETCH_ACCOUNTS_URL,
@@ -146,6 +152,25 @@ public class BancoPopularApiClient {
         handleResponse(rawResponse);
 
         return rawResponse.getBody(FetchTransactionsResponse.class);
+    }
+
+    public FetchIdentityDataResponse fetchIdentityData(BancoPopularPersistentStorage storage) {
+        BancoPopularContract contract = storage.getLoginContracts().getFirstContract();
+
+        FetchIdentityRequest request =
+                new FetchIdentityRequest(contract.getBank(), contract.getOffice());
+
+        HttpResponse rawResponse =
+                createRequest(
+                                BancoPopularConstants.Urls.IDENTITY_URL,
+                                ApiService.IDENTITY_PATH,
+                                request)
+                        .post(HttpResponse.class, request);
+
+        handleResponse(rawResponse);
+
+        return new FetchIdentityDataResponse(
+                rawResponse.getBody(FetchIdentityResponse.class).toTinkIdentity());
     }
 
     public KeepAliveResponse keepAlive() throws SessionException {
@@ -216,7 +241,7 @@ public class BancoPopularApiClient {
             String message = messageToString(messageObject);
 
             String cryptoKey = calculateCryptoKey(servicePath, getAuthorization());
-            byte[] byteKey = cryptoKey.getBytes("UTF-8");
+            byte[] byteKey = cryptoKey.getBytes(StandardCharsets.UTF_8);
 
             Mac sha512_HMAC = Mac.getInstance(BancoPopularConstants.Authentication.CRYPTO_ALG);
             SecretKeySpec keySpec =
