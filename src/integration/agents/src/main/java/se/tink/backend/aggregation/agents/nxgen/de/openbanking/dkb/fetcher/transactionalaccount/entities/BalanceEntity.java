@@ -15,11 +15,13 @@ public class BalanceEntity {
     private String lastCommittedTransaction;
     private String referenceDate;
 
+    @JsonIgnore
     public boolean isAvailable() {
         return balanceType.equalsIgnoreCase(BalanceTypes.INTERIM_AVAILABLE)
                 || balanceType.equalsIgnoreCase(BalanceTypes.FORWARD_AVAILABLE);
     }
 
+    @JsonIgnore
     public Amount getAmount() {
         return balanceAmount.toAmount();
     }

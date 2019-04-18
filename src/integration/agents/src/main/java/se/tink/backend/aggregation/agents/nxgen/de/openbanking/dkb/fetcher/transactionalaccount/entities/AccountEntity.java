@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +29,7 @@ public class AccountEntity {
     private String status;
     private String usage;
 
+    @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         // replace function is used because mocked date is not valid
         return CheckingAccount.builder()
@@ -43,6 +45,7 @@ public class AccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     private Amount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(BalanceEntity::isAvailable)

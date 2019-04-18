@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +20,7 @@ public class GetTransactionsResponse {
     private List<BalanceEntity> balances;
     private TransactionsEntity transactions;
 
+    @JsonIgnore
     public Collection<? extends Transaction> toTinkTransactions() {
         return Optional.ofNullable(transactions)
                 .orElse(new TransactionsEntity())
