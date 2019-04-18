@@ -1,11 +1,10 @@
 package se.tink.libraries.payment.rpc;
 
+import java.time.LocalDate;
+import java.util.UUID;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 public class Payment {
     private Creditor creditor;

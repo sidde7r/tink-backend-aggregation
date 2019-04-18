@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment;
 
+import java.util.ArrayList;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.entities.DebtorEntity;
@@ -21,9 +23,6 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     private NordeaBaseApiClient apiClient;

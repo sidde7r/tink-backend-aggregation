@@ -1,6 +1,6 @@
 package se.tink.libraries.payment.rpc;
 
-import javafx.util.Pair;
+import se.tink.libraries.pair.Pair;
 
 public class Reference {
     private Pair<String, String> internalRef;
@@ -10,10 +10,10 @@ public class Reference {
     }
 
     public String getType() {
-        return internalRef.getKey();
+        return internalRef.first;
     }
 
     public String getValue() {
-        return internalRef.getValue();
+        return internalRef.second;
     }
 }

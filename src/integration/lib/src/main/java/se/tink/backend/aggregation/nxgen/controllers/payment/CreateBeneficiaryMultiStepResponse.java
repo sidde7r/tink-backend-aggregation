@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.payment.rpc.Payment;
-
-import java.util.List;
 
 public class CreateBeneficiaryMultiStepResponse {
     private String step;

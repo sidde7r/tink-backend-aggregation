@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.Ignore;
@@ -10,14 +17,6 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 @Ignore
 public class NordeaSEAgentPaymentTest {

@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.enums;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.libraries.i18n.LocalizableKey;
-
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.function.Function;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.libraries.i18n.LocalizableKey;
 
 public enum NordeaFailures {
     ERROR_TOKEN_EXPIRED("error.token.expired"),

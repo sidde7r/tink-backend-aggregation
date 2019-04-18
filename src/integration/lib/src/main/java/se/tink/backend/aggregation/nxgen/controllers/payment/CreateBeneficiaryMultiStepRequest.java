@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.libraries.payment.rpc.Payment;
-
-import java.util.Collections;
-import java.util.List;
 
 public class CreateBeneficiaryMultiStepRequest {
     private String step;

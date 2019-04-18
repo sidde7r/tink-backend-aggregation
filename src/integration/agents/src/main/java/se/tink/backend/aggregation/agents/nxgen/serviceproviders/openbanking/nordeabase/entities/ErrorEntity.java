@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.enums.NordeaFailures;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public class ErrorEntity {
