@@ -16,7 +16,7 @@ public interface MonitoringService {
     @Path("connectivity/")
     @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.APPLICATION_JSON)
-        @AllowAnonymous
+    @AllowAnonymous
     Response checkConnectivity();
 
     @GET
