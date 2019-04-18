@@ -152,7 +152,7 @@ public final class BbvaConstants {
         public static final int START_DATE_YEAR_AGO = -30;
     }
 
-    public static final class Message {
+    public static final class Messages {
         public static final String OK = "ok";
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session;
 
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Message;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Messages;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -27,7 +27,7 @@ public class BbvaSessionHandler implements SessionHandler {
                 .initiateSession()
                 .map(BbvaResponse::getResult)
                 .map(ResultEntity::getCode)
-                .filter(Message.OK::equalsIgnoreCase)
+                .filter(Messages.OK::equalsIgnoreCase)
                 .getOrElseThrow(t -> SessionError.SESSION_EXPIRED.exception());
     }
 }
