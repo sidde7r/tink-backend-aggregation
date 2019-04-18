@@ -82,5 +82,5 @@ clients:
     aggregatorIdentifier: "SAXO Bank"
   caixa-production:
     aggregatorIdentifier: "Caixa"
-  caixa-testing:
+  caixa-staging:
     aggregatorIdentifier: "Caixa"
