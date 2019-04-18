@@ -17,7 +17,7 @@ java_binary(
     ]),
     visibility = ["//visibility:public"],
     runtime_deps = [
-        "//third_party:log-runtime",
+        "//third_party:log",
         "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
     deps = [

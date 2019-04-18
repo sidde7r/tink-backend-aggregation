@@ -9,8 +9,8 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/giro_validation",
-        "//src/libraries/uuid",
         "//src/libraries/strings",
+        "//src/libraries/uuid",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:com_google_guava_guava",

@@ -7,7 +7,7 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_apache_commons_commons_lang3",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_apache_commons_commons_lang3",
     ],
 )
