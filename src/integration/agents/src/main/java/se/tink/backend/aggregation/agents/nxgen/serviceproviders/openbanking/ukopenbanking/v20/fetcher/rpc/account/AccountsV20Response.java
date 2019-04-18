@@ -19,8 +19,7 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV20Response accounts, AccountBalanceV20Response balance) {
 
-        return accounts.getData()
-                .stream()
+        return accounts.getData().stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
                 .filter(
                         e ->
@@ -33,8 +32,7 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
     public static Optional<CreditCardAccount> toCreditCardAccount(
             AccountsV20Response accounts, AccountBalanceV20Response balance) {
 
-        return accounts.getData()
-                .stream()
+        return accounts.getData().stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
                 .filter(
                         e ->

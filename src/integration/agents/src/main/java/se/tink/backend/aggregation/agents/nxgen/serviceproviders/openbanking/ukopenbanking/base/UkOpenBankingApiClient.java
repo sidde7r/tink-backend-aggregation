@@ -48,7 +48,8 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T> T submitPayment(Object request, Class<T> responseType) {
-        return createRequest(pisConfig.createPaymentSubmissionURL(providerConfiguration.getPisBaseURL()))
+        return createRequest(
+                        pisConfig.createPaymentSubmissionURL(providerConfiguration.getPisBaseURL()))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
@@ -59,7 +60,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     public AccountPermissionResponse createAccountIntentId() {
         HttpResponse post =
-                createRequest(aisConfig.createConsentRequestURL(providerConfiguration.getAuthBaseURL()))
+                createRequest(
+                                aisConfig.createConsentRequestURL(
+                                        providerConfiguration.getAuthBaseURL()))
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .body(AccountPermissionRequest.create())
                         .post(HttpResponse.class);

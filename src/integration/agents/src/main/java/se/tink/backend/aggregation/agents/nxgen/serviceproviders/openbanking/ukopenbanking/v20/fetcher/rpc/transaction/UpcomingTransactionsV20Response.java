@@ -22,8 +22,7 @@ public class UpcomingTransactionsV20Response extends BaseResponse<List<Scheduled
             return Collections.emptyList();
         }
 
-        return response.getData()
-                .stream()
+        return response.getData().stream()
                 .map(ScheduledPaymentEntity::toTinkUpcomingTransaction)
                 .collect(Collectors.toList());
     }

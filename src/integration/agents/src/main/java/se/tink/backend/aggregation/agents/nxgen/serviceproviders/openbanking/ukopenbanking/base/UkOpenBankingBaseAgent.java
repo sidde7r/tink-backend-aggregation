@@ -169,7 +169,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             UkOpenBankingConfig pisConfig,
             OpenIdConstants.ClientMode clientMode) {
         return new UkOpenBankingApiClient(
-                httpClient, softwareStatement, providerConfiguration, aisConfig, pisConfig, clientMode);
+                httpClient,
+                softwareStatement,
+                providerConfiguration,
+                aisConfig,
+                pisConfig,
+                clientMode);
     }
 
     @Override
@@ -271,7 +276,9 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                                 getTransactionalAccountFetcher(),
                                 pis,
                                 callbackJWTSignatureKeyPair,
-                                request.getCallbackRedirectUriId(), aisConfig, pisConfig),
+                                request.getCallbackRedirectUriId(),
+                                aisConfig,
+                                pisConfig),
                         null,
                         null));
     }

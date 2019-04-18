@@ -64,8 +64,7 @@ public class AccountBalanceEntity {
             return Optional.empty();
         }
 
-        return creditLine
-                .stream()
+        return creditLine.stream()
                 .filter(
                         credit ->
                                 credit.getType()

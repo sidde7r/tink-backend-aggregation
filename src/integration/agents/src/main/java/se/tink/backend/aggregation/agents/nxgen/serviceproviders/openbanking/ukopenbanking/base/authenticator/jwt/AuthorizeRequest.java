@@ -98,8 +98,7 @@ public class AuthorizeRequest {
             String scope = scopes.build().stream().collect(Collectors.joining(" "));
 
             String responseTypes =
-                    OpenIdConstants.MANDATORY_RESPONSE_TYPES
-                            .stream()
+                    OpenIdConstants.MANDATORY_RESPONSE_TYPES.stream()
                             .collect(Collectors.joining(" "));
 
             AuthorizeRequestClaims authorizeRequestClaims =

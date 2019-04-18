@@ -19,8 +19,7 @@ public class AccountsV11Response extends BaseResponse<List<AccountEntity>>
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV11Response accounts, AccountBalanceV11Response balance) {
 
-        return accounts.getData()
-                .stream()
+        return accounts.getData().stream()
                 .filter(e -> e.getAccountType().equals(AccountTypes.CHECKING))
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
                 .findFirst()

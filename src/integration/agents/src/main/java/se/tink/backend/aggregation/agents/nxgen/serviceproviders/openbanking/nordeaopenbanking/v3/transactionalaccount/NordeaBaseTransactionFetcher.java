@@ -14,14 +14,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class NordeaBaseTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, LinkEntity> {
     private static final Logger LOG = LoggerFactory.getLogger(NordeaBaseTransactionFetcher.class);
-
-    private final NordeaBaseApiClient apiClient;
-    private final NordeaTransactionParser transactionParser;
-
     // THIS IS ONLY FOR SANDBOX ENVIRONMENT REMOVE WHEN IN "REAL" ENV
     // when set to a value > 0 will stop after fetching that many times
     // TODO: remove when production, sandbox requires this
     private static final int MAX_TRANSACTION_FETCHES = 0;
+    private final NordeaBaseApiClient apiClient;
+    private final NordeaTransactionParser transactionParser;
     private int numFetches = 0;
 
     public NordeaBaseTransactionFetcher(

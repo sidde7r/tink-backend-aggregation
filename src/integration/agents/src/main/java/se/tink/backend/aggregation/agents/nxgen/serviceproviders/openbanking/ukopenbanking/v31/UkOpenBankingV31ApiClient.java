@@ -27,7 +27,13 @@ public class UkOpenBankingV31ApiClient extends UkOpenBankingApiClient {
             UkOpenBankingConfig aisConfig,
             UkOpenBankingConfig pisConfig,
             OpenIdConstants.ClientMode clientMode) {
-        super(httpClient, softwareStatement, providerConfiguration, aisConfig, pisConfig, clientMode);
+        super(
+                httpClient,
+                softwareStatement,
+                providerConfiguration,
+                aisConfig,
+                pisConfig,
+                clientMode);
     }
 
     public <T> T createPaymentIntentId(Object request, Class<T> responseType) {
@@ -41,7 +47,8 @@ public class UkOpenBankingV31ApiClient extends UkOpenBankingApiClient {
     }
 
     public <T> T submitPayment(Object request, Class<T> responseType) {
-        return createRequest(aisConfig.createPaymentSubmissionURL(providerConfiguration.getPisBaseURL()))
+        return createRequest(
+                        aisConfig.createPaymentSubmissionURL(providerConfiguration.getPisBaseURL()))
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .header(
                         UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
@@ -53,7 +60,9 @@ public class UkOpenBankingV31ApiClient extends UkOpenBankingApiClient {
     @Override
     public AccountPermissionResponseV31 createAccountIntentId() {
         HttpResponse post =
-                createRequest(aisConfig.createConsentRequestURL(providerConfiguration.getAuthBaseURL()))
+                createRequest(
+                                aisConfig.createConsentRequestURL(
+                                        providerConfiguration.getAuthBaseURL()))
                         .type(MediaType.APPLICATION_JSON_TYPE)
                         .body(AccountPermissionRequest.create())
                         .post(HttpResponse.class);

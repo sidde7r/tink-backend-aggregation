@@ -86,16 +86,14 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
 
     private boolean matchingAccount(
             TransactionalAccount account, AccountIdentifier accountIdentifier) {
-        return account.getIdentifiers()
-                .stream()
+        return account.getIdentifiers().stream()
                 .anyMatch(identifier -> identifier.equals(accountIdentifier));
     }
 
     private boolean hasAccountIdentifier(AccountIdentifier accountIdentifier) {
         List<TransactionalAccount> tinkAccounts = getTransactionalAccounts();
 
-        return tinkAccounts
-                .stream()
+        return tinkAccounts.stream()
                 .anyMatch(account -> matchingAccount(account, accountIdentifier));
     }
 

@@ -66,12 +66,12 @@ public class OpenIdConstants {
                             .add(TOKEN_ENDPOINT_AUTH_METHOD.private_key_jwt)
                             .add(TOKEN_ENDPOINT_AUTH_METHOD.tls_client_auth)
                             .build();
-//
-//    public static class ApiServices {
-//        public static final String ACCOUNT_REQUESTS = "/account-requests";
-//        public static final String PAYMENTS = "/payments";
-//        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
-//    }
+    //
+    //    public static class ApiServices {
+    //        public static final String ACCOUNT_REQUESTS = "/account-requests";
+    //        public static final String PAYMENTS = "/payments";
+    //        public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
+    //    }
 
     public static class Params {
         public static final String SOFTWARE_REDIRECT_URIS = "software_redirect_uris";

@@ -14,16 +14,23 @@ public class UkOpenBankingV31Pis implements UkOpenBankingPis {
     }
 
     @Override
-    public String getBankTransferIntentId(UkOpenBankingApiClient apiClient,
-            @Nullable AccountIdentifier sourceIdentifier, AccountIdentifier destinationIdentifier, Amount amount,
-            String referenceText) throws TransferExecutionException {
+    public String getBankTransferIntentId(
+            UkOpenBankingApiClient apiClient,
+            @Nullable AccountIdentifier sourceIdentifier,
+            AccountIdentifier destinationIdentifier,
+            Amount amount,
+            String referenceText)
+            throws TransferExecutionException {
         return null;
     }
 
     @Override
-    public void executeBankTransfer(UkOpenBankingApiClient apiClient, String intentId,
-            @Nullable AccountIdentifier sourceIdentifier, AccountIdentifier destinationIdentifier, Amount amount,
-            String referenceText) throws TransferExecutionException {
-
-    }
+    public void executeBankTransfer(
+            UkOpenBankingApiClient apiClient,
+            String intentId,
+            @Nullable AccountIdentifier sourceIdentifier,
+            AccountIdentifier destinationIdentifier,
+            Amount amount,
+            String referenceText)
+            throws TransferExecutionException {}
 }
