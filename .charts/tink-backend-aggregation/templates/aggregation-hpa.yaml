@@ -1,0 +1,21 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aggregation-service-hpa
+  namespace: aggregation
+spec:
+  minReplicas:  {{ default "2" .Values.replicas }}
+  maxReplicas:  {{ default "6" .Values.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aggregation
+  metrics:
+  - type: Pods
+    pods:
+      metricName: cpu_usage
+      targetAverageValue: {{ default "800m" .Values.targetAverageCpuValue }} 
+  - type: Pods
+    pods:
+      metricName: http_requests_per_second
+      targetAverageValue: "20"
