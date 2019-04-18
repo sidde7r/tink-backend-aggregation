@@ -153,7 +153,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         UkOpenBankingAuthenticator authenticator = new UkOpenBankingAuthenticator(apiClient);
-        return createOpenIdFlowWithAuthenticator(authenticator, callbackJWTSignatureKeyPair.isEnabled());
+        return createOpenIdFlowWithAuthenticator(
+                authenticator, callbackJWTSignatureKeyPair.isEnabled());
     }
 
     protected final Authenticator createOpenIdFlowWithAuthenticator(
