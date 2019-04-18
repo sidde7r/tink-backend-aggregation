@@ -18,7 +18,10 @@ public class BancoPopularAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(true)
-                .addRefreshableItems(RefreshableItem.REFRESHABLE_ITEMS_ALL.asList().toArray(new RefreshableItem[0]))
+                .addRefreshableItems(
+                        RefreshableItem.REFRESHABLE_ITEMS_ALL
+                                .asList()
+                                .toArray(new RefreshableItem[0]))
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
