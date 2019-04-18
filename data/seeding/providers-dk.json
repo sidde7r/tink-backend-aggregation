@@ -2201,36 +2201,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
-        },
-        {
-            "name": "dk-nordea-oauth2",
-            "displayName": "Nordea",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.dk.openbanking.nordea.NordeaDkAgent",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "transactional": true,
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
-        },
-        {
-            "name": "dk-bec-oauth2",
-            "displayName": "Bec",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.dk.openbanking.bec.BecAgent",
-            "passwordHelpText": "Please authenticate yourself.",
-            "transactional": true,
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
         }
     ]
 }

@@ -361,51 +361,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
-        },
-        {
-            "name": "fi-nordea-oauth2",
-            "displayName": "Nordea",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.fi.openbanking.nordea.NordeaFiAgent",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "transactional": true,
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
-        },
-        {
-            "name": "fi-spankki-oauth2",
-            "displayName": "S-Pankki",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.fi.openbanking.spankki.SPankkiAgent",
-            "passwordHelpText": null,
-            "transactional": "true",
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
-        },
-        {
-            "name": "fi-alandsbanken-oauth2",
-            "displayName": "Alandsbanken",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.fi.openbanking.alandsbanken.AlandsbankenFIAgent",
-            "passwordHelpText": null,
-            "transactional": "true",
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
         }
     ]
 }

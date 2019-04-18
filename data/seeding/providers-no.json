@@ -3579,36 +3579,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
-        },
-        {
-            "name": "no-nordea-oauth2",
-            "displayName": "Nordea",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.no.openbanking.nordea.NordeaNoAgent",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "transactional": true,
-            "tutorialUrl": null,
-            "fields": [],
-            "payload": "tink"
-        },
-        {
-            "name": "no-sparebank1-oauth2",
-            "displayName": "SpareBank1 (Sandbox)",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.no.openbanking.sparebank1.SpareBank1Agent",
-            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-            "transactional": true,
-            "payload": "tink",
-            "tutorialUrl": null,
-            "fields": []
         }
     ]
 }
