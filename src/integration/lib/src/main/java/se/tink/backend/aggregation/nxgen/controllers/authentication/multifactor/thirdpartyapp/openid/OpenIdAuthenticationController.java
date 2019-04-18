@@ -69,12 +69,12 @@ public class OpenIdAuthenticationController
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
-        this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(8);
+        this.pseudoId = RandomUtils.generateRandomHexEncoded(8);
 
         this.callbackRedirectId = callbackUriId;
         this.state = getJwtState(pseudoId);
 
-        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(8);
+        this.nonce = RandomUtils.generateRandomHexEncoded(8);
     }
 
     @Override
