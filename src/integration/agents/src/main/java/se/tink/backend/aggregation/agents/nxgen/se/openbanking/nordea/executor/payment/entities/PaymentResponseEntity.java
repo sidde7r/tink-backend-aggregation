@@ -53,7 +53,7 @@ public class PaymentResponseEntity {
     }
 
     public PaymentResponse toTinkPaymentResponse(PaymentType paymentType) {
-        Payment tinkPayment =
+        Payment.Builder buildingPaymentResponse =
                 new Payment.Builder()
                         .withCreditor(creditor.toTinkCreditor())
                         .withDebtor(debtor.toTinkDebtor())
@@ -66,9 +66,13 @@ public class PaymentResponseEntity {
                         .withStatus(
                                 NordeaPaymentStatus.mapToTinkPaymentStatus(
                                         NordeaPaymentStatus.fromString(paymentStatus)))
-                        .withType(paymentType)
-                        .withReference(creditor.getReference().toTinkReference())
-                        .build();
+                        .withType(paymentType);
+
+        if (creditor.getReference() != null) {
+            buildingPaymentResponse.withReference(creditor.getReference().toTinkReference());
+        }
+
+        Payment tinkPayment = buildingPaymentResponse.build();
 
         return new PaymentResponse(tinkPayment);
     }

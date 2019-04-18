@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
@@ -18,9 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.payment.enums.PaymentType;
-
-import java.util.Optional;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected NordeaBaseApiClient apiClient;
@@ -93,7 +91,7 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<PaymentController> constructPaymentController(PaymentType type) {
+    public Optional<PaymentController> constructPaymentController() {
         return Optional.empty();
     }
 }

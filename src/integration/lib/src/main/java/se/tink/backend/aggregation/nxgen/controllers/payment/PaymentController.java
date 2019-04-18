@@ -19,8 +19,9 @@ public class PaymentController {
         return paymentExecutor.sign(paymentMultiStepRequest);
     }
 
-    public PaymentMultiStepResponse createBeneficiary() {
-        return paymentExecutor.createBeneficiary();
+    public CreateBeneficiaryMultiStepResponse createBeneficiary(
+            CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
+        return paymentExecutor.createBeneficiary(createBeneficiaryMultiStepRequest);
     }
 
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
@@ -29,9 +30,5 @@ public class PaymentController {
 
     public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) {
         return paymentExecutor.fetchMultiple(paymentRequest);
-    }
-
-    public PaymentExecutor getPaymentExecutor() {
-        return paymentExecutor;
     }
 }

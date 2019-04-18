@@ -1,9 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Creditor;
 import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
@@ -34,15 +32,6 @@ public class PaymentRequest {
 
         Debtor debtorInRequest = new Debtor(transfer.getSource());
 
-        PaymentType paymentType = PaymentType.INTERNATIONAL;
-        if (transfer.getSource().getType() == transfer.getDestination().getType()) {
-            if (transfer.getSource().getType() == AccountIdentifier.Type.IBAN) {
-                paymentType = PaymentType.SEPA;
-            } else {
-                paymentType = PaymentType.DOMESTIC;
-            }
-        }
-
         Reference referenceInRequest = null;
         if (TransferType.PAYMENT.equals(transfer.getType())) {
             referenceInRequest =
@@ -56,7 +45,6 @@ public class PaymentRequest {
                         .withAmount(transfer.getAmount())
                         .withExecutionDate(DateUtils.toJavaTimeLocalDate(transfer.getDueDate()))
                         .withCurrency(transfer.getAmount().getCurrency())
-                        .withType(paymentType)
                         .withReference(referenceInRequest)
                         .build();
 

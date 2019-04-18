@@ -1,6 +1,15 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
 import com.google.common.base.Strings;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -66,18 +75,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public abstract class NextGenerationAgent extends SuperAbstractAgent
         implements RefreshCheckingAccountsExecutor,
@@ -113,6 +111,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     private TransferController transferController;
     private Authenticator authenticator;
     private SessionController sessionController;
+    private PaymentController paymentController;
 
     // Until we can refresh CHECKING and SAVING accounts & transactions separately.
     private boolean hasRefreshedCheckingAccounts = false;
@@ -281,6 +280,14 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         return Optional.ofNullable(transferController);
     }
 
+    private Optional<PaymentController> getPaymentController() {
+        if (paymentController == null) {
+            paymentController = constructPaymentController().orElse(null);
+        }
+
+        return Optional.ofNullable(paymentController);
+    }
+
     private SessionController getSessionController() {
         if (sessionController == null) {
             sessionController =
@@ -442,40 +449,40 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
-    public Optional<PaymentController> constructPaymentController(PaymentType type) {
+    public Optional<PaymentController> constructPaymentController() {
         return Optional.empty();
     }
 
     public PaymentResponse createPayment(PaymentRequest paymentRequest) {
-        return constructPaymentController(paymentRequest.getPayment().getType())
+        return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .create(paymentRequest);
     }
 
     public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
-        return constructPaymentController(paymentRequest.getPayment().getType())
+        return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .fetch(paymentRequest);
     }
 
     public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
-        return constructPaymentController(paymentRequest.getPayment().getType())
+        return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .sign(paymentRequest);
     }
 
     public PaymentResponse cancelPayment(PaymentRequest paymentRequest) {
-        return constructPaymentController(paymentRequest.getPayment().getType())
+        return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .cancel(paymentRequest);
     }
 
     public PaymentListResponse fetchPayments(PaymentRequest paymentRequest) {
-        return constructPaymentController(paymentRequest.getPayment().getType())
+        return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .fetchMultiple(paymentRequest);

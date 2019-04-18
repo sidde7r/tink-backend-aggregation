@@ -22,11 +22,9 @@ public enum NordeaFailures {
                 description ->
                         SessionError.SESSION_EXPIRED.exception(new LocalizableKey(description)));
         nordeaFailuresToExceptionCreatorsMapper.put(
-                ERROR_API_KEY_MISSING,
-                description -> new IllegalArgumentException(description));
+                ERROR_API_KEY_MISSING, description -> new IllegalArgumentException(description));
         nordeaFailuresToExceptionCreatorsMapper.put(
-                ERROR_TOKEN,
-                description -> new IllegalArgumentException(description));
+                ERROR_TOKEN, description -> new IllegalArgumentException(description));
     }
 
     NordeaFailures(String code) {

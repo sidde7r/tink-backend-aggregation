@@ -157,5 +157,6 @@ junit_test(
         "//third_party:org_seleniumhq_selenium_selenium_firefox_driver",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "//third_party:org_iban4j_iban4j",
     ],
 )

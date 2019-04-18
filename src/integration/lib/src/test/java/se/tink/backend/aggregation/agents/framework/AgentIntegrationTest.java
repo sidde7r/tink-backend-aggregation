@@ -30,7 +30,8 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -289,74 +290,92 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    private void doRevampBankTransfer(Agent agent, Payment payment) throws Exception {
-        log.info("Executing bank transfer.");
+    private void doRevampBankTransfer(Agent agent, List<Payment> paymentList) throws Exception {
 
         if (agent instanceof NextGenerationAgent) {
-
-            PaymentExecutor paymentExecutor =
+            PaymentController paymentController =
                     ((NextGenerationAgent) agent)
-                            .constructPaymentController(payment.getType())
-                            .orElseThrow(Exception::new)
-                            .getPaymentExecutor();
+                            .constructPaymentController()
+                            .orElseThrow(Exception::new);
 
-            PaymentResponse createPaymentResponse =
-                    paymentExecutor.create(new PaymentRequest(payment));
+            for (Payment payment : paymentList) {
+                log.info("Executing bank transfer.");
 
-            PaymentResponse fetchPaymentResponse =
-                    paymentExecutor.fetch(new PaymentRequest(createPaymentResponse.getPayment()));
+                PaymentResponse createPaymentResponse =
+                        paymentController.create(new PaymentRequest(payment));
 
-            assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
+                PaymentResponse fetchPaymentResponse =
+                        paymentController.fetch(
+                                new PaymentRequest(createPaymentResponse.getPayment()));
 
-            PaymentMultiStepRequest paymentMultiStepRequest =
-                    new PaymentMultiStepRequest(
-                            fetchPaymentResponse.getPayment(),
-                            AuthenticationStepConstants.STEP_INIT,
-                            Collections.emptyList(),
-                            Collections.emptyList());
-
-            PaymentMultiStepResponse paymentMultiStepResponse =
-                    paymentExecutor.sign(paymentMultiStepRequest);
-
-            Map<String, String> map;
-            List<Field> fields;
-            String nextStep = paymentMultiStepResponse.getStep();
-            payment = paymentMultiStepResponse.getPayment();
-            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
-                // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
-                // etc.
-                if (isSupplementalStep(paymentMultiStepResponse.getStep())) {
-                    fields = paymentMultiStepResponse.getFields();
-                    map =
-                            supplementalInformationController.askSupplementalInformation(
-                                    fields.toArray(new Field[fields.size()]));
-                } else {
-                    fields = paymentMultiStepResponse.getFields();
-                    map = Collections.emptyMap();
-                }
-
-                paymentMultiStepResponse =
-                        paymentExecutor.sign(
-                                new PaymentMultiStepRequest(
-                                        payment, nextStep, fields, new ArrayList<>(map.values())));
-                nextStep = paymentMultiStepResponse.getStep();
-                fields = paymentMultiStepResponse.getFields();
-                payment = paymentMultiStepResponse.getPayment();
+                assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
             }
 
-            Assert.assertThat(
-                    paymentMultiStepResponse.getPayment().getStatus(),
-                    Matchers.anyOf(
-                            Matchers.is(PaymentStatus.SIGNED), Matchers.is(PaymentStatus.PAID)));
+            PaymentListResponse paymentListResponse = paymentController.fetchMultiple(null);
 
+            for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
+                Payment retrievedPayment = paymentResponse.getPayment();
+
+                PaymentMultiStepRequest paymentMultiStepRequest =
+                        new PaymentMultiStepRequest(
+                                retrievedPayment,
+                                AuthenticationStepConstants.STEP_INIT,
+                                Collections.emptyList(),
+                                Collections.emptyList());
+
+                PaymentMultiStepResponse paymentMultiStepResponse =
+                        paymentController.sign(paymentMultiStepRequest);
+
+                Map<String, String> map;
+                List<Field> fields;
+                String nextStep = paymentMultiStepResponse.getStep();
+                retrievedPayment = paymentMultiStepResponse.getPayment();
+                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+                    // TODO auth: think about cases other than supplemental info, e.g. bankid,
+                    // redirect
+                    // etc.
+                    if (isSupplementalStep(paymentMultiStepResponse.getStep())) {
+                        fields = paymentMultiStepResponse.getFields();
+                        map =
+                                supplementalInformationController.askSupplementalInformation(
+                                        fields.toArray(new Field[fields.size()]));
+                    } else {
+                        fields = paymentMultiStepResponse.getFields();
+                        map = Collections.emptyMap();
+                    }
+
+                    paymentMultiStepResponse =
+                            paymentController.sign(
+                                    new PaymentMultiStepRequest(
+                                            retrievedPayment,
+                                            nextStep,
+                                            fields,
+                                            new ArrayList<>(map.values())));
+                    nextStep = paymentMultiStepResponse.getStep();
+                    fields = paymentMultiStepResponse.getFields();
+                    retrievedPayment = paymentMultiStepResponse.getPayment();
+                }
+
+                Assert.assertThat(
+                        paymentMultiStepResponse.getPayment().getStatus(),
+                        Matchers.anyOf(
+                                Matchers.is(PaymentStatus.SIGNED),
+                                Matchers.is(PaymentStatus.PAID)));
+
+                log.info("Done with bank transfer.");
+            }
+
+            // The assert is done here instead of at the beginning of the loop to sign all the
+            // pending payments so they will not be present and mess with the test the next time we
+            // run it.
+            Assert.assertEquals(
+                    paymentList.size(), paymentListResponse.getPaymentResponseList().size());
         } else {
             throw new AssertionError(
                     String.format(
                             "%s does not implement a transfer executor interface.",
                             agent.getClass().getSimpleName()));
         }
-
-        log.info("Done with bank transfer.");
     }
 
     private boolean isSupplementalStep(String step) {
@@ -444,13 +463,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testPaymentRevamp(Payment payment) throws Exception {
+    public void testPaymentRevamp(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
             if (agent instanceof NextGenerationAgent) {
-                doRevampBankTransfer(agent, payment);
+                doRevampBankTransfer(agent, paymentList);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));

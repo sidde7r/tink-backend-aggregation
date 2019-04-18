@@ -208,7 +208,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         }
     }
 
-    private void handlePayment(NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest) {
+    private void handlePayment(
+            NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest) {
         PaymentResponse createPaymentResponse =
                 nextGenerationAgent.createPayment(PaymentRequest.of(transferRequest));
         PaymentMultiStepResponse signPaymentMultiStepResponse =

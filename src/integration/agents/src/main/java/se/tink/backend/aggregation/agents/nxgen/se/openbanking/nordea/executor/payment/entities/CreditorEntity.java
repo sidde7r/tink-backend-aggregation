@@ -19,6 +19,7 @@ public class CreditorEntity {
     public ReferenceEntity getReference() {
         return reference;
     }
+
     @JsonIgnore
     private CreditorEntity(Builder builder) {
         this.account = builder.account;

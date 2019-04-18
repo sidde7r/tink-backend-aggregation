@@ -43,11 +43,10 @@ public enum NordeaPaymentStatus {
     }
 
     public static NordeaPaymentStatus fromString(String text) {
-        return
-                Arrays.stream(NordeaPaymentStatus.values())
-                        .filter(s -> s.statusText.equalsIgnoreCase(text))
-                        .findFirst()
-                        .orElse(UNKNOWN);
+        return Arrays.stream(NordeaPaymentStatus.values())
+                .filter(s -> s.statusText.equalsIgnoreCase(text))
+                .findFirst()
+                .orElse(UNKNOWN);
     }
 
     public static PaymentStatus mapToTinkPaymentStatus(NordeaPaymentStatus nordeaPaymentStatus) {

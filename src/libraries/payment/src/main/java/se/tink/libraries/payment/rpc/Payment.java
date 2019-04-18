@@ -68,6 +68,10 @@ public class Payment {
         return type;
     }
 
+    public Reference getReference() {
+        return reference;
+    }
+
     public void setStatus(PaymentStatus status) {
         this.status = status;
     }
@@ -79,7 +83,7 @@ public class Payment {
         private LocalDate executionDate;
         private String uniqueId;
         private PaymentStatus status = PaymentStatus.UNDEFINED;
-        private PaymentType type;
+        private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
         private Reference reference;
 

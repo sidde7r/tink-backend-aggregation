@@ -15,7 +15,6 @@ public class PaymentListResponse {
         this.getPaymentResponseList().add(paymentResponse);
     }
 
-
     public List<PaymentResponse> getPaymentResponseList() {
         return paymentResponseList;
     }
