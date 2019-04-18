@@ -1,8 +1,10 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "lib",
     srcs = glob(["src/main/**/*.java"]),
+    artifactId = "aggregation-lib",
     data = [
         "//data:cryptography_test",
         "//data:provision_clients",
@@ -12,6 +14,7 @@ java_library(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
+    groupId = "se.tink.backend.aggregation",
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     runtime_deps = [
