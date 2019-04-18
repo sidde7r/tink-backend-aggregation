@@ -1,24 +1,63 @@
-# Use the new Skylark version of git_repository. This uses the system's native
-# git client which supports fancy key formats and key passphrases.
+"""
+Import the new Skylark version of http_archive & git_repository
+
+This uses the system's native git client which supports fancy key formats and key passphrases.
+"""
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
+"""
+Assert Bazel version
+
+Usually this should be set to the version of Bazel used for CI
+"""
 git_repository(
     name = "bazel_skylib",
     remote = "https://github.com/bazelbuild/bazel-skylib",
     commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
     shallow_since = "1557756873 +0200"
 )
-
-# This checks that the version of Bazel in use is at least the set version
-# Usually this should be set to the version of Bazel used for CI
 load("@bazel_skylib//lib:versions.bzl", "versions")
 versions.check("0.25.0")
 
-## Tink virtual monorepsotiroy
-# These are repositories under Tink control. They are trusted, and imported
-# as a part of tink-backend's repository (not checksumed).
+"""
+Import bazel-common, which has a Maven pom_file generation rule
+"""
+http_archive(
+    name = "bazel_common",
+    strip_prefix = "bazel-common-f1115e0f777f08c3cdb115526c4e663005bec69b",
+    url = "https://github.com/google/bazel-common/archive/f1115e0f777f08c3cdb115526c4e663005bec69b.zip",
+)
 
+"""
+Import Docker rule
+"""
+http_archive(
+    name = "io_bazel_rules_docker",
+    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
+    strip_prefix = "rules_docker-0.7.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+)
+load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
+container_repositories()
+load("@io_bazel_rules_docker//container:container.bzl","container_pull")
+
+"""
+Pull Docker images
+"""
+container_pull(
+    name = "openjdk_jdk8",
+    registry = "gcr.io",
+    repository = "tink-containers/openjdk-8-jre",
+    tag = "8",
+)
+
+"""
+Tink-vendored dependencies
+
+These are repositories under Tink control. They are trusted, and imported
+as a part of tink-backend's repository (not checksumed).
+"""
 git_repository(
     name = "dropwizard_jersey",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
@@ -53,61 +92,13 @@ git_repository(
     commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
 )
 
-# Docker dependencies
-http_archive(
-    name = "io_bazel_rules_docker",
-    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
-    strip_prefix = "rules_docker-0.7.0",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
-)
+"""
+External repositories that are not under Tink control.
 
-http_archive(
-    name = "bazel_common",
-    strip_prefix = "bazel-common-f1115e0f777f08c3cdb115526c4e663005bec69b",
-    url = "https://github.com/google/bazel-common/archive/f1115e0f777f08c3cdb115526c4e663005bec69b.zip",
-)
-
-# This is NOT needed when going through the language lang_image
-# "repositories" function(s).
-load(
-    "@io_bazel_rules_docker//repositories:repositories.bzl",
-    container_repositories = "repositories",
-)
-container_repositories()
-
-load(
-    "@io_bazel_rules_docker//container:container.bzl",
-    "container_pull",
-)
-
-container_pull(
-    name = "openjdk_jdk8",
-    registry = "gcr.io",
-    repository = "tink-containers/openjdk-8-jre",
-    tag = "8",
-)
-
-## External dependencies
-# External repositories that are not under Tink control. These should *always*
-# be locked to something stable (a commit, not a branch for example) and have
-# a checksum to prevent tampering by the remote end.
-
-# libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
-http_file(
-    name =  "libm4ri_dev",
-    downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
-    sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
-)
-
-http_file(
-    name =  "libm4ri_0.0.20140914",
-    downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
-    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
-    sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
-)
-
-# TODO: Build these
+These should *always* be locked to something stable
+(a commit or a release tag, but not a branch for example) and have
+a checksum to prevent tampering by the remote end.
+"""
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
     urls = ["http://repo1.maven.org/maven2/io/grpc/protoc-gen-grpc-java/1.2.0/protoc-gen-grpc-java-1.2.0-linux-x86_64.exe"],
@@ -134,6 +125,24 @@ bind(
     actual = "@com_google_protobuf//:protoc",
 )
 
+"""
+Import Maven packages which rules_jvm_external can't currently resolve
+"""
+# libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
+http_file(
+    name =  "libm4ri_dev",
+    downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
+    sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
+)
+
+http_file(
+    name =  "libm4ri_0.0.20140914",
+    downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
+    sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
+)
+
 maven_jar(
     name = "io_opencensus_opencensus_api",
     artifact = "io.opencensus:opencensus-api:0.12.3",
@@ -151,14 +160,6 @@ maven_jar(
     artifact = "com.google.errorprone:error_prone_annotations:2.0.11",
     sha1 = "3624d81fca4e93c67f43bafc222b06e1b1e3b260",
 )
-
-## Maven jar imports
-# Same as above, always make sure to specify a checksum. To check what is using
-# a specifc library you can use:
-# $ bazel query 'rdeps(//:all, @aopalliance_aopalliance//jar, 1)'
-# //third_party:org_springframework_data_spring_cql
-# //third_party:com_google_inject_guice
-# @aopalliance_aopalliance//jar:jar
 
 maven_jar(
     name = "aopalliance_aopalliance",
@@ -359,8 +360,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_platform",
-    artifact = "net.java.dev.jna:jna-platform:5.3.1",
-    sha1 = "925049dd00b3def5ab561709a56b96055fa67011",
+    artifact = "net.java.dev.jna:jna-platform:4.5.1",
+    sha1 = "117d52c9f672d8b7ea80a81464c33ef843de9254",
 )
 
 maven_jar(
@@ -713,8 +714,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_jna",
-    artifact = "net.java.dev.jna:jna:5.3.1",
-    sha1 = "6eb9d07456c56b9c2560722e90382252f0f98405",
+    artifact = "net.java.dev.jna:jna:4.5.1",
+    sha1 = "65bd0cacc9c79a21c6ed8e9f588577cd3c2f85b9",
 )
 
 maven_jar(
@@ -2124,18 +2125,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_zxing_qrcode_core",
-    artifact = "com.google.zxing:core:3.3.3",
-    sha1 = "b640badcc97f18867c4dfd249ef8d20ec0204c07",
-)
-
-maven_jar(
-    name = "com_google_zxing_qrcode_javase",
-    artifact = "com.google.zxing:javase:3.3.3",
-    sha1 = "44d02048349c96eacb394af7978b3e6f1777bb02",
-)
-
-maven_jar(
     name = "io_prometheus_simpleclient_skeleton_version",
     artifact = "io.prometheus:simpleclient:0.5.0",
     sha1 = "fbbfe2300098798e3d23f93b7b14befeceacf512",
@@ -2288,16 +2277,15 @@ maven_jar(
 
 ### === END === Java Spark dependencies
 
-
-# GRPC/Protobuf rules
+"""
+Import GRPC/Protobuf rules
+"""
 http_archive(
     name = "build_stack_rules_proto",
     sha256 = "0d88313ba32c0042c2633c3cbdd187afb0c3c9468b978f6eb4919ac6e535f029",
     strip_prefix = "rules_proto-8afa882b3dff5fec93b22519d34d0099083a7ce2",
     urls = ["https://github.com/stackb/rules_proto/archive/8afa882b3dff5fec93b22519d34d0099083a7ce2.tar.gz"],
 )
-
-# Used by java_grpc_library
 http_archive(
     name = "io_grpc_grpc_java",
     sha256 = "9d23d9fec84e24bd3962f5ef9d1fd61ce939d3f649a22bcab0f19e8167fae8ef",
@@ -2306,6 +2294,5 @@ http_archive(
         "https://github.com/grpc/grpc-java/archive/v1.20.0.zip",
     ],
 )
-
 load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 grpc_java_repositories(omit_com_google_protobuf = True)
