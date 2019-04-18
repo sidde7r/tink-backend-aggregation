@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.vavr.CheckedPredicate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.PaginationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -16,6 +19,11 @@ public class AccountTransactionsResponse implements PaginatorResponse {
     private PaginationEntity pagination;
     private Integer totalResults;
     private Boolean hostResult;
+
+    @JsonIgnore
+    public static CheckedPredicate<AccountTransactionsResponse> shouldRetryFetching(int attempt) {
+        return response -> attempt <= Fetchers.MAX_TRY_ATTEMPTS;
+    }
 
     @Override
     public Collection<Transaction> getTinkTransactions() {
