@@ -6,7 +6,8 @@ java_library_maven(
     groupId = "se.tink.libraries.documentcontainer",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:org_apache_hadoop_hadoop_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_sun_jersey_jersey_core",
+        "@maven//:commons_io_commons_io",
     ],
 )

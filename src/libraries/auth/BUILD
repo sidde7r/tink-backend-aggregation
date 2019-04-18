@@ -8,12 +8,15 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/http:http_annotations",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_lambdaworks_scrypt",
-        "//third_party:com_yubico_yubico_validation_client2",
         "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:org_slf4j_slf4j_api",
-        "//third_party:org_springframework_security",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_lambdaworks_scrypt",
+        "@maven//:com_sun_jersey_jersey_core",
+        "@maven//:com_sun_jersey_jersey_server",
+        "@maven//:com_yubico_yubico_validation_client2",
+        "@maven//:javax_servlet_javax_servlet_api",
+        "@maven//:org_slf4j_slf4j_api",
+        "@maven//:org_springframework_security_spring_security_core",
     ],
 )
 
@@ -22,8 +25,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/auth",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

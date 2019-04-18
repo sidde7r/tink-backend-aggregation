@@ -18,20 +18,20 @@ java_binary(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:log-runtime",
-        "//third_party:netty-runtime",
+        "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
     deps = [
         "//src/integration/grpc-server",
         "//src/integration/grpc-services",
-        "//src/libraries:health-check-handler",
-        "//src/libraries:simple-http-server",
         "//src/libraries/metrics",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_grpc_grpc_core",
         "//third_party:log",
-        "//third_party:org_yaml_snakeyaml",
-        "//third_party:prometheus",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:io_grpc_grpc_core",
+        "@maven//:io_prometheus_simpleclient_hotspot",
+        "@maven//:org_yaml_snakeyaml",
+        "@tink_backend_shared_libraries//libraries/health-check-handler",
+        "@tink_backend_shared_libraries//libraries/simple-http-server",
     ],
 )
 

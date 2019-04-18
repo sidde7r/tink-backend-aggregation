@@ -8,26 +8,17 @@ java_library_maven(
     groupId = "se.tink.libraries.account",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_slf4j_slf4j_api",
-        "//src/libraries/uuid",
         "//src/libraries/giro_validation",
+        "//src/libraries/uuid",
         "//src/libraries/strings",
-
-        # Guava
-        "//third_party:com_google_guava_guava",
-
-        # Jackson
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-
-        # IBAN
-        "//third_party:org_iban4j_iban4j",
-
-        # HTTP
-        "//third_party:org_apache_httpcomponents_httpclient",
-        "//third_party:org_apache_httpcomponents_httpcore",
-
-        # Stringutils
-        "//third_party:org_apache_commons_commons_lang3",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_apache_httpcomponents_httpclient",
+        "@maven//:org_apache_httpcomponents_httpcore",
+        "@maven//:org_iban4j_iban4j",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -37,8 +28,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

@@ -7,9 +7,10 @@ java_library_maven(
     groupId = "se.tink.libraries.i18n",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_googlecode_gettext_commons_gettext_commons",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:com_googlecode_gettext_commons_gettext_commons",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -17,15 +18,15 @@ junit_test(
     name = "i18n_test",
     srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
-        "//third_party:asm_asm",
-        "//third_party:net_bytebuddy_byte_buddy",
-        "//third_party:org_objenesis_objenesis",
+        "@maven//:asm_asm",
+        "@maven//:net_bytebuddy_byte_buddy",
+        "@maven//:org_objenesis_objenesis",
     ],
     deps = [
         "//src/libraries/i18n",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_mockito_mockito_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:org_mockito_mockito_core",
     ],
 )

@@ -4,6 +4,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
     ],
 )

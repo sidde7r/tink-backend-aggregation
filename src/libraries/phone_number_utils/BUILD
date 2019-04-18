@@ -7,7 +7,7 @@ java_library_maven(
     groupId = "se.tink.libraries.phonenumbers",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_googlecode_libphonenumber_libphonenumber",
+        "@maven//:com_googlecode_libphonenumber_libphonenumber",
     ],
 )
 
@@ -16,7 +16,7 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/phone_number_utils",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

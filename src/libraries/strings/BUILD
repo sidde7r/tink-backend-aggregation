@@ -8,10 +8,10 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:com_google_guava_guava",
-        "//third_party:commons_codec_commons_codec",
-        "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:commons_codec_commons_codec",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -20,8 +20,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/strings",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

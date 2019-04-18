@@ -6,7 +6,7 @@ java_library_maven(
     groupId = "se.tink.libraries.cli.printutils",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_http_client_google_http_client",
     ],
 )

@@ -21,7 +21,7 @@ java_library_maven(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_google_guava_guava",
     ],
 )

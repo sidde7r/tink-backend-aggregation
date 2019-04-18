@@ -7,11 +7,12 @@ java_library_maven(
     groupId = "se.tink.libraries.uuid",
     visibility = ["//visibility:public"],
     deps = [
-        # UUID
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
 
-        # Serialization
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        # com.datastax.driver.core.utils.UUID
+        "@maven//:com_datastax_cassandra_cassandra_driver_core",
     ],
 )
 
@@ -19,7 +20,7 @@ junit_test(
     name = "uuid_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        "//src/libraries/uuid",
-        "//third_party:org_assertj_assertj_core",
+        ":uuid",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

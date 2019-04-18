@@ -8,7 +8,7 @@ java_library_maven(
     deps = [
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_google_guava_guava",
     ],
 )

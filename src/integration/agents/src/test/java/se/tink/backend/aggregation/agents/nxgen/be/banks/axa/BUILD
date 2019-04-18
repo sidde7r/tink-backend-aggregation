@@ -18,6 +18,6 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/libraries/serialization",
-        "//third_party:com_github_tomakehurst_wiremock",
+        "@maven//:com_github_tomakehurst_wiremock",
     ],
 )

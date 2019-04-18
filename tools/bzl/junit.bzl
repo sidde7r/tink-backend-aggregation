@@ -41,8 +41,8 @@ def junit_test(name, srcs, deps, **kwargs):
     native.java_test(name = name,
                      test_class = SUITE_PACKAGE + "." + s_name,
                      srcs = srcs + [":" + s_name],
-                     deps = list(depset(deps + ["//external:cpsuite",
-                                                "//third_party:ch_qos_logback_logback_classic",
+                     deps = list(depset(deps + ["@maven//:io_takari_junit_takari_cpsuite",
+                                                "@maven//:ch_qos_logback_logback_classic",
                                                 "//third_party:io_dropwizard_dropwizard_logging"
                                                 ])),
                      **kwargs)

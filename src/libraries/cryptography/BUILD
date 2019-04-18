@@ -7,11 +7,13 @@ java_library_maven(
     groupId = "se.tink.libraries.cryptography",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_auth0_java_jwt",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:commons_codec_commons_codec",
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_auth0_java_jwt",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:commons_codec_commons_codec",
+        "@maven//:org_bouncycastle_bcpkix_jdk15on",
+        "@maven//:org_bouncycastle_bcprov_jdk15on",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -23,8 +25,9 @@ junit_test(
     ],
     deps = [
         "//src/libraries/cryptography",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:org_bouncycastle_bcpkix_jdk15on",
+        "@maven//:org_bouncycastle_bcprov_jdk15on",
     ],
 )

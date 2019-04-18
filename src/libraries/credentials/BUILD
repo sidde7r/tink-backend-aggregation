@@ -7,7 +7,7 @@ java_library_maven(
     groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -17,8 +17,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:demo",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )
 
@@ -28,9 +28,9 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:service",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )
 
@@ -51,9 +51,9 @@ java_library_maven(
         "//src/libraries/field:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -66,8 +66,10 @@ java_library_maven(
         "//src/integration/api",
         "//src/libraries/strings",
         "//src/libraries/user:rpc",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
-        "//third_party:commons_codec_commons_codec",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:commons_codec_commons_codec",
     ],
 )

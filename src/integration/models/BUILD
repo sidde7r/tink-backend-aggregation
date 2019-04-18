@@ -12,8 +12,12 @@ java_library_maven(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
-        "//third_party:com_datastax_cassandra_cassandra_driver_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+
+        # com.datastax.driver.core.utils.UUID
+        "@maven//:com_datastax_cassandra_cassandra_driver_core",
     ],
 )

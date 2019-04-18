@@ -9,8 +9,8 @@ java_library_maven(
         "//src/libraries/concurrency",
         "//src/libraries/executor_utils",
         "//src/libraries/metrics",
-        "//third_party:com_google_guava_guava",
-        "//third_party:net_spy_spymemcached",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:net_spy_spymemcached",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

@@ -8,8 +8,8 @@ java_library_maven(
     deps = [
         "//src/libraries/metrics",
         "//src/libraries/serialization",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_http_client_google_http_client",
-        "//third_party:com_google_inject_guice",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_http_client_google_http_client",
+        "@maven//:com_google_inject_guice",
     ],
 )

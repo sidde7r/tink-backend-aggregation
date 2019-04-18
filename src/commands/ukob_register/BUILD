@@ -7,6 +7,7 @@ java_binary(
         "//src/integration/agents",
         "//src/integration/lib",
         "//src/libraries/serialization",
-        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "@maven//:org_bouncycastle_bcpkix_jdk15on",
+        "@maven//:org_bouncycastle_bcprov_jdk15on",
     ],
 )

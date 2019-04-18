@@ -6,11 +6,12 @@ java_library_maven(
     groupId = "se.tink.libraries.creditsafe.consumermonitoring",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
-        "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:com_google_guava_guava",
-        "//third_party:commons_io_commons_io",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:commons_io_commons_io",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

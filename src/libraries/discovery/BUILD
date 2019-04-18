@@ -8,12 +8,17 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_lifecycle",
-        "//third_party:org_apache_curator_curator_framework",
-        "//third_party:org_apache_curator_curator_x_discovery",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_google_inject_guice",
+        "@maven//:org_apache_curator_curator_client",
+        "@maven//:org_apache_curator_curator_framework",
+        "@maven//:org_apache_curator_curator_recipes",
+        "@maven//:org_apache_curator_curator_x_discovery",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -22,10 +27,10 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/discovery",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_apache_curator_curator_x_discovery",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:pl_pragmatists_junitparams",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_apache_curator_curator_x_discovery",
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:pl_pragmatists_JUnitParams",
     ],
 )

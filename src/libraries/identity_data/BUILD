@@ -7,13 +7,11 @@ java_library_maven(
     groupId = "se.tink.libraries.identitydata",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Guava
-        "//third_party:com_google_guava_guava",
-
-        # Jackson
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -23,8 +21,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/identity_data",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

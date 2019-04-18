@@ -8,8 +8,10 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
     ],
 )
 
@@ -19,8 +21,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/generic_application",
-        "//third_party:com_google_guava_guava",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

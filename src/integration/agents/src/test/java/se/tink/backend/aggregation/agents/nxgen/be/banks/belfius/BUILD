@@ -26,9 +26,9 @@ junit_test(
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_mockito_mockito_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_mockito_mockito_core",
     ],
 )

@@ -7,20 +7,15 @@ java_library_maven(
     groupId = "se.tink.libraries.date",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_slf4j_slf4j_api",
-
-        # Date libraries
-        "//third_party:de_jollyday_jollyday",
-        "//third_party:org_pojava_pojava",
-        "//third_party:org_apache_commons_commons_lang3",
-
-        # Annotations
-        "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_swagger_swagger_annotations",
-
-        # Guava
-        "//third_party:com_google_guava_guava",
+        "@maven//:com_google_code_findbugs_jsr305",
+        "@maven//:com_google_guava_guava",
+        "@maven//:de_jollyday_jollyday",
+        "@maven//:io_protostuff_protostuff_api",
+        "@maven//:io_swagger_swagger_annotations",
+        "@maven//:joda_time_joda_time",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_pojava_pojava",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
 
@@ -28,13 +23,13 @@ junit_test(
     name = "date_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        "//src/libraries/date",
-        "//third_party:com_google_guava_guava",
-        "//third_party:joda_time_joda_time",
-        "//third_party:junit_junit",
-        "//third_party:org_apache_commons_commons_lang3",
-        "//third_party:org_assertj_assertj_core",
-        "//third_party:org_pojava_pojava",
-        "//third_party:pl_pragmatists_junitparams",
+        ":date",
+        "@maven//:com_google_guava_guava",
+        "@maven//:joda_time_joda_time",
+        "@maven//:junit_junit",
+        "@maven//:org_apache_commons_commons_lang3",
+        "@maven//:org_assertj_assertj_core",
+        "@maven//:org_pojava_pojava",
+        "@maven//:pl_pragmatists_JUnitParams",
     ],
 )

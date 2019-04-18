@@ -7,7 +7,7 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/concurrency",
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

@@ -17,7 +17,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
-        "//third_party:org_hamcrest_hamcrest_core",
-        "//third_party:org_hamcrest_hamcrest_library",
+        "@maven//:org_hamcrest_hamcrest_core",
+        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
