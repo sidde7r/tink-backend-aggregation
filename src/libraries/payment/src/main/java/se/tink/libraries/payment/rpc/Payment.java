@@ -2,7 +2,9 @@ package se.tink.libraries.payment.rpc;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
@@ -75,13 +77,17 @@ public class Payment {
         this.status = status;
     }
 
+    public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
+        return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
+    }
+
     public static class Builder {
         private Creditor creditor;
         private Debtor debtor;
         private Amount amount;
         private LocalDate executionDate;
         private String uniqueId;
-        private PaymentStatus status = PaymentStatus.UNDEFINED;
+        private PaymentStatus status = PaymentStatus.CREATED;
         private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
         private Reference reference;

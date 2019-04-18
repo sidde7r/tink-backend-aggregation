@@ -14,6 +14,7 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/date",
+        "//src/libraries/pair",
         "//src/libraries/payment:enums",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -24,17 +25,3 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
     ],
 )
-
-#java_library(
-#    name = "mocks",
-#    srcs = glob(["src/main/**/mocks/*.java"]),
-#    visibility = ["//visibility:public"],
-#    deps = [
-#        "//src/libraries/account_identifier",
-#        "//src/libraries/amount",
-#        "//src/libraries/payment:enums",
-#        "//src/libraries/payment:rpc",
-#        "//third_party:com_fasterxml_jackson_core_jackson_core",
-#        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-#    ],
-#)

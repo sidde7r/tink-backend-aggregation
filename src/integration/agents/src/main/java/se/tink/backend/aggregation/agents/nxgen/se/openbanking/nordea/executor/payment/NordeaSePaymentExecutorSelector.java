@@ -25,32 +25,36 @@ public class NordeaSePaymentExecutorSelector implements PaymentExecutor {
     // The key is a pair where the key is debtor account type and value is creditor account type.
     // The mapping follows the instructions in:
     // https://developer.nordeaopenbanking.com/app/documentation?api=Payments%20API%20Domestic%20transfer&version=3.3#payment_types_field_combinations
-    private static ImmutableMap<Pair<AccountIdentifier.Type, AccountIdentifier.Type>, PaymentType>
-            accountIdentifiersToPaymentTypeMap;
-
-    static {
-        accountIdentifiersToPaymentTypeMap =
-                ImmutableMap
-                        .<Pair<AccountIdentifier.Type, AccountIdentifier.Type>, PaymentType>
-                                builder()
-                        .put(
-                                new Pair<>(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
-                                PaymentType.DOMESTIC)
-                        .put(
-                                new Pair<>(AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
-                                PaymentType.DOMESTIC)
-                        .put(
-                                new Pair<>(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE_BG),
-                                PaymentType.DOMESTIC)
-                        .put(
-                                new Pair<>(AccountIdentifier.Type.SE, AccountIdentifier.Type.SE_PG),
-                                PaymentType.DOMESTIC)
-                        .put(
-                                new Pair<>(
-                                        AccountIdentifier.Type.IBAN, AccountIdentifier.Type.IBAN),
-                                PaymentType.SEPA)
-                        .build();
-    }
+    private static final ImmutableMap<
+                    Pair<AccountIdentifier.Type, AccountIdentifier.Type>, PaymentType>
+            accountIdentifiersToPaymentTypeMap =
+                    ImmutableMap
+                            .<Pair<AccountIdentifier.Type, AccountIdentifier.Type>, PaymentType>
+                                    builder()
+                            .put(
+                                    new Pair<>(
+                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
+                                    PaymentType.DOMESTIC)
+                            .put(
+                                    new Pair<>(
+                                            AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
+                                    PaymentType.DOMESTIC)
+                            .put(
+                                    new Pair<>(
+                                            AccountIdentifier.Type.SE,
+                                            AccountIdentifier.Type.SE_BG),
+                                    PaymentType.DOMESTIC)
+                            .put(
+                                    new Pair<>(
+                                            AccountIdentifier.Type.SE,
+                                            AccountIdentifier.Type.SE_PG),
+                                    PaymentType.DOMESTIC)
+                            .put(
+                                    new Pair<>(
+                                            AccountIdentifier.Type.IBAN,
+                                            AccountIdentifier.Type.IBAN),
+                                    PaymentType.SEPA)
+                            .build();;
 
     public NordeaSePaymentExecutorSelector(NordeaBaseApiClient apiClient) {
         NordeaSeDomesticPaymentExecutor nordeaSeDomesticPaymentExecutor =
@@ -116,7 +120,7 @@ public class NordeaSePaymentExecutorSelector implements PaymentExecutor {
 
     private PaymentExecutor getRelevantExecutor(PaymentRequest paymentRequest) {
         Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
-                getAccountIdentifiersKey(paymentRequest);
+                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
         PaymentType paymentType = accountIdentifiersToPaymentTypeMap.get(accountIdentifiersKey);
         PaymentExecutor relevantPaymentExecutor = paymentTypeToExecutorMap.get(paymentType);
         if (relevantPaymentExecutor == null) {
@@ -125,12 +129,5 @@ public class NordeaSePaymentExecutorSelector implements PaymentExecutor {
                             + accountIdentifiersKey);
         }
         return relevantPaymentExecutor;
-    }
-
-    private Pair<AccountIdentifier.Type, AccountIdentifier.Type> getAccountIdentifiersKey(
-            PaymentRequest paymentRequest) {
-        return new Pair<>(
-                paymentRequest.getPayment().getDebtor().getAccountIdentifierType(),
-                paymentRequest.getPayment().getCreditor().getAccountIdentifierType());
     }
 }

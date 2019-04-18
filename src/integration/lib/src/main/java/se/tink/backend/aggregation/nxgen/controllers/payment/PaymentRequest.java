@@ -33,7 +33,8 @@ public class PaymentRequest {
         Debtor debtorInRequest = new Debtor(transfer.getSource());
 
         Reference referenceInRequest = null;
-        if (TransferType.PAYMENT.equals(transfer.getType())) {
+        if (TransferType.PAYMENT.equals(transfer.getType())
+                || TransferType.EINVOICE.equals(transfer.getType())) {
             referenceInRequest =
                     new Reference(transfer.getType().toString(), transfer.getDestinationMessage());
         }
