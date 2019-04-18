@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.RequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
@@ -31,7 +31,7 @@ public class IngHelper {
                 requestEntity ->
                         this.urlsByRequestName.put(
                                 requestEntity.getName().toLowerCase(),
-                                StringEscapeUtils.unescapeHtml(requestEntity.getUrl())));
+                                StringEscapeUtils.unescapeHtml4(requestEntity.getUrl())));
 
         String urlsByRequestNameString =
                 SerializationUtils.serializeToString(this.urlsByRequestName);

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import java.util.Objects;
 import java.util.Optional;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;

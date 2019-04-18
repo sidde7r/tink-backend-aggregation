@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.rpc;
 
 import java.util.Date;
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;

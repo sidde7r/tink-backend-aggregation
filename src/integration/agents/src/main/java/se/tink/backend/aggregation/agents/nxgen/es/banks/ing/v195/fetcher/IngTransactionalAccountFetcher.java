@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;

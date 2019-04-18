@@ -133,7 +133,6 @@ junit_test(
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:commons_io_commons_io",
-        "//third_party:commons_lang_commons_lang",
         "//third_party:io_dropwizard_dropwizard_client",
         "//third_party:io_dropwizard_dropwizard_configuration",
         "//third_party:io_grpc_grpc_protobuf_lite",

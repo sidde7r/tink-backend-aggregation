@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json;
 
 import java.util.List;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -70,6 +70,6 @@ public class RequestEntity {
 
     public URL asSSORequest() {
         return new URL(
-                IngConstants.Urls.BASE_SSO_REQUEST + StringEscapeUtils.unescapeHtml(this.url));
+                IngConstants.Urls.BASE_SSO_REQUEST + StringEscapeUtils.unescapeHtml4(this.url));
     }
 }

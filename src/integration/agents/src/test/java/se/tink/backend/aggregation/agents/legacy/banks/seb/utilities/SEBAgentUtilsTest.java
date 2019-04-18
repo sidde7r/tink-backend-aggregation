@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;

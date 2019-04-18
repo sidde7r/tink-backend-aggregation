@@ -15,7 +15,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.libraries.credentials.enums.CredentialsTypes;

@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.xerces.dom.ElementNSImpl;
 import org.w3c.dom.Node;
 import se.tink.backend.agents.rpc.Credentials;

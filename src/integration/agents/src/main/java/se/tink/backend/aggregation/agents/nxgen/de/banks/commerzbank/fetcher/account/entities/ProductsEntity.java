@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.ac
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
