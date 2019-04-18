@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
 @Path("/monitoring")
 public interface MonitoringService {
@@ -15,11 +16,13 @@ public interface MonitoringService {
     @Path("connectivity/")
     @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.APPLICATION_JSON)
+        @AllowAnonymous
     Response checkConnectivity();
 
     @GET
     @Path("connectivity/{clusterId}")
     @TeamOwnership(Team.AGGREGATION)
     @Produces(MediaType.APPLICATION_JSON)
+    @AllowAnonymous
     Response checkConnectivity(@PathParam("clusterId") String clusterId);
 }
