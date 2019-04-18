@@ -5,6 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Ignore
 public class OpenbankAgentTest {
@@ -22,7 +23,12 @@ public class OpenbankAgentTest {
                         .addCredentialField(OpenbankConstants.USERNAME_TYPE, TEST_USERNAME_TYPE)
                         .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .addRefreshableItems(
+                                RefreshableItem.REFRESHABLE_ITEMS_ALL
+                                        .asList()
+                                        .toArray(new RefreshableItem[0]))
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
 
     @Test

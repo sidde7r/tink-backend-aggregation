@@ -4,6 +4,7 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LogoutResponse;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.IdentityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionDetailsRequestQueryParams;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc.AccountTransactionsRequestQueryParams;
@@ -134,5 +136,9 @@ public final class OpenbankApiClient {
         return createRequestInSession(OpenbankConstants.Urls.CARD_TRANSACTIONS)
                 .body(request)
                 .post(CardTransactionsResponse.class);
+    }
+
+    public IdentityResponse fetchIdentityData() {
+        return createRequestInSession(Urls.IDENTITY_URL).get(IdentityResponse.class);
     }
 }
