@@ -22,7 +22,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MortgageEntity {
-    private static final Splitter SPLITTER = Splitter.on(CharMatcher.BREAKING_WHITESPACE);
+    private static final Splitter SPLITTER = Splitter.on(CharMatcher.breakingWhitespace());
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @JsonProperty("Deeds")
