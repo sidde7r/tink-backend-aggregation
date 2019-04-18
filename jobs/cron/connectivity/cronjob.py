@@ -5,25 +5,11 @@ import requests
 
 response = None
 
-if (len(sys.argv) < 3):
-    print("Not enough argument: {}".format(sys.argv))
-    sys.exit(1)
-
-cluster_id = sys.argv[1]
-environment = sys.argv[2]
-
-request_url = None;
-verify = None;
-
-if (cluster_id == "local" and environment == "development"):
-    request_url = 'https://192.168.99.100:31011/monitoring/connectivity'
-    verify = False
-else:
-    request_url = "https://aggregation2.{}.{}.tink.se".format(environment, cluster_id)
-    verify = False # TODO: put cert here!
-
 try:
-    response = requests.get(request_url, verify)
+    print("Connecting to aggregation...")
+    sys.stdout.flush()
+
+    response = requests.get("https://aggregation/monitoring/connectivity", verify = False)
 except requests.exceptions.ConnectionError as error:
     print("Failed to connect to Aggregation Service: {}".format(error))
     sys.exit(1)

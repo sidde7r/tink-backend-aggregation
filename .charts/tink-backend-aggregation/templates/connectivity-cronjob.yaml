@@ -41,8 +41,6 @@ spec:
               privileged: false
             command:
             - "/opt/connectivity/cronjob.py"
-            - "{{ .Values.Cluster }}"
-            - "{{ .Values.Environment }}"
 
 {{- if eq "local" .Values.Cluster }}
 ---
