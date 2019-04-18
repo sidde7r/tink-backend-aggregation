@@ -1,0 +1,2 @@
+RT_USERNAME = ""
+RT_PASSWORD = ""
