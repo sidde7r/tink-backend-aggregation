@@ -17,10 +17,10 @@ verify = None;
 
 if (cluster_id == "local" and environment == "development"):
     request_url = 'https://192.168.99.100:31011/monitoring/connectivity'
-    verify = "False"
+    verify = False
 else:
     request_url = "https://aggregation2.{}.{}.tink.se".format(environment, cluster_id)
-    verify = "True"
+    verify = False # TODO: put cert here!
 
 try:
     response = requests.get(request_url, verify)
