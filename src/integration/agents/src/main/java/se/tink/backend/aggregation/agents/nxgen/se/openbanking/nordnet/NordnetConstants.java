@@ -28,7 +28,7 @@ public abstract class NordnetConstants {
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
+        public static final String AUTHORIZATION = "AUTHORIZATION";
     }
 
     public static class HeaderValues {

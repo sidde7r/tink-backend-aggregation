@@ -23,7 +23,7 @@ public abstract class BbvaConstants {
     }
 
     public static class StorageKeys {
-        public static final String TOKEN = "TOKEN";
+        public static final String TOKEN = "OAUTH_TOKEN";
     }
 
     public static class QueryKeys {

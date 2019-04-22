@@ -33,7 +33,7 @@ public abstract class LansforsakringarConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String PSU_USER_AGENT = "PSU-User-Agent";
         public static final String X_REQUEST_ID = "X-Request-ID";
-        public static final String AUTHORIZATION = "Authorization";
+        public static final String AUTHORIZATION = "AUTHORIZATION";
     }
 
     public static class HeaderValues {
