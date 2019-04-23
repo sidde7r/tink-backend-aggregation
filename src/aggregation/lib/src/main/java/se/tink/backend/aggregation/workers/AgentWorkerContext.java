@@ -590,9 +590,17 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     @Override
     public void sendIdentityToIdentityService(IdentityData identityData) {
         // TODO: implement sending identity data
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+                simplifiedIdentityData =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData();
+        simplifiedIdentityData.setName(identityData.getFullName());
+        simplifiedIdentityData.setSsn(identityData.getSsn()); //create mapper
+
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
-        updateIdentityDataRequest.setName(identityData.getFullName());
-        updateIdentityDataRequest.setSsn(identityData.getSsn());
+        updateIdentityDataRequest.setIdentityData(simplifiedIdentityData);
+        updateIdentityDataRequest.setProviderName(request.getProvider().getName()); // null?
+        updateIdentityDataRequest.setUserId(request.getUser().getId()); // is this the correct id? null?
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);

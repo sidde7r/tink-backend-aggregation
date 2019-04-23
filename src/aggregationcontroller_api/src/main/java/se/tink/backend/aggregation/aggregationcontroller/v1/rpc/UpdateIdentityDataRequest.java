@@ -1,22 +1,31 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 public class UpdateIdentityDataRequest {
-    private String name;
-    private String ssn;
+    private IdentityData identityData;
+    private String userId;
+    private String providerName;
 
-    public String getName() {
-        return name;
+    public IdentityData getIdentityData() {
+        return identityData;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIdentityData(IdentityData identityData) {
+        this.identityData = identityData;
     }
 
-    public String getSsn() {
-        return ssn;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setSsn(String ssn) {
-        this.ssn = ssn;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 }
