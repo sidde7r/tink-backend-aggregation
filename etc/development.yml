@@ -180,8 +180,8 @@ agentsServiceConfiguration:
     seb:
       tink:
         baseUrl: "https://sandbox.sebgroup.com"
-        clientId: "7a140014-c446-44e9-986d-7af449c3e0b1"
-        clientSecret: "oL6bI4pF6yW8yE4mY1hE0hC4wT1qB1pO1vK6xU6pF2tE3kB7tE"
+        clientId: ""
+        clientSecret: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     lansforsakringar:
       tink:

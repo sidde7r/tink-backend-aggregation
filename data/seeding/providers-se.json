@@ -2051,7 +2051,7 @@
             "popular": true,
             "type": "BANK",
             "status": "DISABLED",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "multiFactor": false,
             "className": "nxgen.se.openbanking.nordea.NordeaSeAgent",
             "passwordHelpText": "Please authenticate to use this bank.",

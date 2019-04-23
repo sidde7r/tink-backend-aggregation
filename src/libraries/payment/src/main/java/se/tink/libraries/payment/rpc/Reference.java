@@ -1,19 +1,19 @@
 package se.tink.libraries.payment.rpc;
 
-import se.tink.libraries.pair.Pair;
-
 public class Reference {
-    private Pair<String, String> internalRef;
+    private String type;
+    private String value;
 
     public Reference(String type, String value) {
-        this.internalRef = new Pair<>(type, value);
+        this.type = type;
+        this.value = value;
     }
 
     public String getType() {
-        return internalRef.first;
+        return type;
     }
 
     public String getValue() {
-        return internalRef.second;
+        return value;
     }
 }

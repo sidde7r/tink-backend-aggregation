@@ -2201,6 +2201,21 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "name": "dk-nordea-oauth2",
+            "displayName": "Nordea",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.dk.openbanking.nordea.NordeaDkAgent",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }

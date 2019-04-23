@@ -1,9 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums;
 
 import com.google.common.collect.EnumHashBiMap;
+import se.tink.libraries.account.AccountIdentifier;
+
 import java.util.Arrays;
 import java.util.Optional;
-import se.tink.libraries.account.AccountIdentifier;
 
 public enum NordeaAccountType {
     IBAN,

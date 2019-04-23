@@ -752,6 +752,18 @@
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
+    "nxgen.fi.openbanking.nordea.NordeaFiAgent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
+    "nxgen.dk.openbanking.nordea.NordeaDkAgent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
+    "nxgen.no.openbanking.nordea.NordeaNoAgent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
     "other.CSNAgent": [
         "LOANS"
     ]

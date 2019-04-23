@@ -361,6 +361,21 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "name": "fi-nordea-oauth2",
+            "displayName": "Nordea",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fi.openbanking.nordea.NordeaFiAgent",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }

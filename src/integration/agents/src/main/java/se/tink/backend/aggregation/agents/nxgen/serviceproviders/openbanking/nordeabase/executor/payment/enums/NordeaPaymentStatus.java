@@ -1,9 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment.enums;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.enums;
+
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Optional;
-import se.tink.libraries.payment.enums.PaymentStatus;
 
 public enum NordeaPaymentStatus {
     PENDING_CONFIRMATION("PendingConfirmation"),
