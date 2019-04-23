@@ -208,6 +208,7 @@ maven_install(
     ],
     repositories = [
         "https://%s:%s@tinkab.jfrog.io/tinkab/libs-snapshot/" % (RT_USERNAME, RT_PASSWORD),
+        "https://repo.maven.apache.org/maven2/",
     ],
 )
 
