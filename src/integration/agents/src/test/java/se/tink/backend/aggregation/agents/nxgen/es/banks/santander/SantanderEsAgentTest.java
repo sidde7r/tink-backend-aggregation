@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-//@Ignore
+@Ignore
 public class SantanderEsAgentTest {
     private enum Arg {
         USERNAME,
@@ -20,8 +20,8 @@ public class SantanderEsAgentTest {
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("es", "es-bancosantander-password")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
 
     @Before
     public void before() {
