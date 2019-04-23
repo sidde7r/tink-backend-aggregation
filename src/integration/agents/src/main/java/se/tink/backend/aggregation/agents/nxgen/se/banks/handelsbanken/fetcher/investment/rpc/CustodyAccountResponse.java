@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.amount.Amount;
 
 public class CustodyAccountResponse extends BaseResponse {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustodyAccountResponse.class);
 
     private HandelsbankenPerformance performance;
     private HandelsbankenAmount marketValue;
@@ -72,6 +75,13 @@ public class CustodyAccountResponse extends BaseResponse {
     }
 
     private Portfolio.Type toType() {
-        return HandelsbankenSEConstants.Fetcher.Investments.PortfolioType.asType(type);
+        Portfolio.Type portfolioType =
+                HandelsbankenSEConstants.Fetcher.Investments.PortfolioType.asType(this.type);
+
+        if (portfolioType == Portfolio.Type.OTHER) {
+            LOGGER.warn("Unknown portfolio type: {}", this.type);
+        }
+
+        return portfolioType;
     }
 }
