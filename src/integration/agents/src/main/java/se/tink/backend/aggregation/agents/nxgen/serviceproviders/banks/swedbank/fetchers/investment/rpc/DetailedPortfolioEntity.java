@@ -206,6 +206,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
                         "Normalized savings account to portfolio. This should not happen, but not failing refresh.");
                 // Intentional fall trough
             default:
+                log.warn("Unknown portfolio type: {}", type);
                 return Portfolio.Type.OTHER;
         }
     }
