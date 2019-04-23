@@ -1,0 +1,20 @@
+java_library(
+    name = "bawagpsk",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/lib",
+        "//src/libraries/account_identifier",
+        "//src/libraries/amount",
+        "//src/libraries/credentials:service",
+        "//src/libraries/pair",
+        "//src/libraries/serialization",
+        "@com_google_guava_guava//jar",
+        "@com_sun_jersey_jersey_core//jar",
+        "@commons_io_commons_io//jar",
+        "@org_apache_commons_commons_lang3//jar",
+        "@org_json_json//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)
