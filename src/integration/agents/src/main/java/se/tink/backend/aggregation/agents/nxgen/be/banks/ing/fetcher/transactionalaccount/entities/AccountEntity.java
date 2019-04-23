@@ -14,7 +14,7 @@ import se.tink.libraries.amount.Amount;
 
 @XmlRootElement
 public class AccountEntity {
-    public static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
+    private static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
 
     private String type;
     private String category;
