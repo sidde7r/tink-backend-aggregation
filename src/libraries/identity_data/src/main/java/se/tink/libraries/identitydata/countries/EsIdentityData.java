@@ -8,12 +8,14 @@ public class EsIdentityData extends IdentityData {
     private final String nieNumber;
     private final String nifNumber;
     private final String passportNumber;
+    private final String otherDocumentNumber;
 
     private EsIdentityData(Builder builder) {
         super(builder);
         nieNumber = builder.nieNumber;
         nifNumber = builder.nifNumber;
         passportNumber = builder.passportNumber;
+        otherDocumentNumber = builder.otherDocumentNumber;
     }
 
     public static EsIdentityDataBuilder builder() {
@@ -26,6 +28,8 @@ public class EsIdentityData extends IdentityData {
         EsIdentityDataBuilder setNifNumber(String val);
 
         EsIdentityDataBuilder setPassportNumber(String val);
+
+        EsIdentityDataBuilder setDocumentNumber(String val);
     }
 
     public static final class Builder extends IdentityData.Builder
@@ -33,6 +37,7 @@ public class EsIdentityData extends IdentityData {
         private String nieNumber;
         private String nifNumber;
         private String passportNumber;
+        private String otherDocumentNumber;
 
         protected Builder() {}
 
@@ -48,6 +53,22 @@ public class EsIdentityData extends IdentityData {
 
         public EsIdentityDataBuilder setPassportNumber(String val) {
             passportNumber = val;
+            return this;
+        }
+
+        @Override
+        public EsIdentityDataBuilder setDocumentNumber(String val) {
+            switch (EsIdentityDocumentType.typeOf(val)) {
+                case NIF:
+                    nifNumber = val;
+                    break;
+                case NIE:
+                    nieNumber = val;
+                    break;
+                case OTHER:
+                    otherDocumentNumber = val;
+                    break;
+            }
             return this;
         }
 
@@ -68,6 +89,10 @@ public class EsIdentityData extends IdentityData {
         if (passportNumber != null) {
             map.put("passportNumber", passportNumber);
         }
+        if (otherDocumentNumber != null) {
+            map.put("otherDocumentNumber", otherDocumentNumber);
+        }
+
         return map;
     }
 
@@ -77,8 +102,10 @@ public class EsIdentityData extends IdentityData {
             return nieNumber;
         } else if (nifNumber != null) {
             return nifNumber;
-        } else {
+        } else if (passportNumber != null) {
             return passportNumber;
+        } else {
+            return otherDocumentNumber;
         }
     }
 
@@ -92,5 +119,9 @@ public class EsIdentityData extends IdentityData {
 
     public String getPassportNumber() {
         return passportNumber;
+    }
+
+    public String getOtherDocumentNumber() {
+        return otherDocumentNumber;
     }
 }
