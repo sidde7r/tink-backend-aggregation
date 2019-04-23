@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class BancoPopularConstants {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BancoPopularConstants.class);
@@ -22,9 +23,11 @@ public class BancoPopularConstants {
         public static final String SET_CONTRACT_PATH = "acl/setContract";
         public static final String ACCOUNTS_PATH = "cuentas/BTAT";
         public static final String TRANSACTIONS_PATH = "cuentas/BTD6";
+        public static final String IDENTITY_PATH = "personal/BTN7";
     }
 
     public static class Urls {
+
         private static final String BASE = "https://bm.bancopopular.es/ACBL/";
 
         public static final URL LOGIN_URL = new URL(BASE + ApiService.LOGIN_PATH);
@@ -34,6 +37,8 @@ public class BancoPopularConstants {
         public static final URL FETCH_ACCOUNTS_URL = new URL(BASE + ApiService.ACCOUNTS_PATH);
         public static final URL FETCH_TRANSACTIONS_URL =
                 new URL(BASE + ApiService.TRANSACTIONS_PATH);
+
+        public static final URL IDENTITY_URL = new URL(BASE + ApiService.IDENTITY_PATH);
     }
 
     public static class Fetcher {

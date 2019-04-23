@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.authenticator.BancoPopularAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.BancoPopularAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.BancoPopularInvestmentFetcher;
@@ -25,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BancoPopularAgent extends NextGenerationAgent {
+public class BancoPopularAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final BancoPopularApiClient bankClient;
     private final BancoPopularPersistentStorage popularPersistentStorage;
@@ -103,5 +105,10 @@ public class BancoPopularAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return bankClient.fetchIdentityData(popularPersistentStorage);
     }
 }
