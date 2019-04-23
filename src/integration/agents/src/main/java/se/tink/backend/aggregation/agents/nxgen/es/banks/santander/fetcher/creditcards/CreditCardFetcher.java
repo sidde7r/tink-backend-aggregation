@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardDetailsResponse;
@@ -27,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -36,16 +36,17 @@ public class CreditCardFetcher
     private static final AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
 
     private final SantanderEsApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final SantanderEsSessionStorage santanderEsSessionStorage;
 
-    public CreditCardFetcher(SantanderEsApiClient apiClient, SessionStorage sessionStorage) {
+    public CreditCardFetcher(
+            SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.santanderEsSessionStorage = santanderEsSessionStorage;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        LoginResponse loginResponse = getLoginResponse();
+        LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
         return Optional.ofNullable(loginResponse.getCards()).orElse(Collections.emptyList())
@@ -80,19 +81,6 @@ public class CreditCardFetcher
 
         return PaginatorResponseImpl.create(
                 fetchAllTransactionsBetweenDates(userDataXml, card, startDate, endDate));
-    }
-
-    private LoginResponse getLoginResponse() {
-        String loginResponseString =
-                sessionStorage
-                        .get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SantanderEsConstants.LogMessages
-                                                        .LOGIN_RESPONSE_NOT_FOUND));
-
-        return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
     }
 
     private List<CreditCardTransaction> fetchAllTransactionsBetweenDates(

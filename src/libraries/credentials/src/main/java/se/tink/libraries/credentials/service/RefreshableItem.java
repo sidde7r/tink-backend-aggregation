@@ -100,6 +100,10 @@ public enum RefreshableItem {
         return REFRESHABLE_ITEM_ORDERING.sortedCopy(items);
     }
 
+    public static RefreshableItem[] allRefreshableItemsAsArray() {
+        return REFRESHABLE_ITEMS_ALL.stream().toArray(RefreshableItem[]::new);
+    }
+
     public static boolean isAccount(RefreshableItem item) {
         return REFRESHABLE_ITEMS_ACCOUNTS.contains(item);
     }

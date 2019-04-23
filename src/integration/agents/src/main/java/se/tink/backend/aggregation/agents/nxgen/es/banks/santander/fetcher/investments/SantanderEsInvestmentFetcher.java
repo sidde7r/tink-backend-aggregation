@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioContentEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
@@ -19,26 +20,26 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger LOG =
             new AggregationLogger(SantanderEsInvestmentFetcher.class);
 
     private final SantanderEsApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final SantanderEsSessionStorage santanderEsSessionStorage;
 
     public SantanderEsInvestmentFetcher(
-            SantanderEsApiClient apiClient, SessionStorage sessionStorage) {
+            final SantanderEsApiClient apiClient,
+            final SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.santanderEsSessionStorage = santanderEsSessionStorage;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         List<InvestmentAccount> accounts = new ArrayList<>();
 
-        LoginResponse loginResponse = getLoginResponse();
+        LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
 
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
@@ -58,19 +59,6 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
                 .forEach(accounts::add);
 
         return accounts;
-    }
-
-    private LoginResponse getLoginResponse() {
-        String loginResponseString =
-                sessionStorage
-                        .get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                SantanderEsConstants.LogMessages
-                                                        .LOGIN_RESPONSE_NOT_FOUND));
-
-        return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
     }
 
     private InvestmentAccount parseFundAccount(FundEntity fundEntity, String userDataXml) {
