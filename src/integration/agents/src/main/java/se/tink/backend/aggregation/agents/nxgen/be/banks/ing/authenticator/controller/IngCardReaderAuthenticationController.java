@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
-public class IngCardReaderAuthenticationController
+public final class IngCardReaderAuthenticationController
         implements MultiFactorAuthenticator, ProgressiveAuthenticator {
     private static Logger logger =
             LoggerFactory.getLogger(IngCardReaderAuthenticationController.class);
