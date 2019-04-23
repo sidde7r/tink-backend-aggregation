@@ -36,7 +36,6 @@ public class ICSOAuthAuthenticator implements OAuth2Authenticator {
                         .getAccountRequestId();
 
         sessionStorage.put(StorageKeys.STATE, state);
-
         return client.createAuthorizeRequest(state, accountRequestId).getUrl();
     }
 
