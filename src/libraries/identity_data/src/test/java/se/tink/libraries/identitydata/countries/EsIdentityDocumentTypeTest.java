@@ -38,7 +38,7 @@ public class EsIdentityDocumentTypeTest {
         assertTrue(EsIdentityDocumentType.isValidNif("12345678Z"));
         assertTrue(EsIdentityDocumentType.isValidNif("12345677J"));
         assertFalse(EsIdentityDocumentType.isValidNif("12345678Y"));
-        assertFalse(EsIdentityDocumentType.isValidNif("12345678Z"));
+        assertFalse(EsIdentityDocumentType.isValidNif("02345678Z"));
         assertFalse(EsIdentityDocumentType.isValidNif("X2345678Z"));
         assertFalse(EsIdentityDocumentType.isValidNif("X2345678E"));
     }
