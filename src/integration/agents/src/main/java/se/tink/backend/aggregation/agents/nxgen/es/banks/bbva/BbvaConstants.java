@@ -5,7 +5,12 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
 public final class BbvaConstants {
-    public static final int PAGE_SIZE = 20;
+
+    public static final class Fetchers {
+        public static final long BACKOFF = 3000;
+        public static final int MAX_TRY_ATTEMPTS = 5;
+        public static final int PAGE_SIZE = 20;
+    }
 
     public enum Error {
         BANK_SERVICE_UNAVAILABLE("ENPP0000"),
@@ -58,6 +63,8 @@ public final class BbvaConstants {
 
     public static final class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
+        public static final LogTag TRANSACTIONS_RETRYING =
+                LogTag.from("bbva_transactions_retrying");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO =
                 LogTag.from("bbva_investment_international_portfolio");
         public static final LogTag PRODUCTS_FULL_RESPONSE =
@@ -145,10 +152,15 @@ public final class BbvaConstants {
         public static final int START_DATE_YEAR_AGO = -30;
     }
 
-    public static final class Message {
+    public static final class Messages {
         public static final String OK = "ok";
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
+    }
+
+    public static final class ErrorMessages {
+        public static final String MAX_TRY_ATTEMPTS =
+                String.format("Reached max retry attempts of %d", Fetchers.MAX_TRY_ATTEMPTS);
     }
 
     public static final class IdTypeCodes {

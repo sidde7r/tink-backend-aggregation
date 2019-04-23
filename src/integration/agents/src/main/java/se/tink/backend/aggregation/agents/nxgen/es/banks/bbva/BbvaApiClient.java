@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
@@ -95,7 +96,7 @@ public class BbvaApiClient {
 
         return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(QueryKeys.PAGINATION_OFFSET, String.valueOf(keyIndex))
-                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
+                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE))
                 .post(AccountTransactionsResponse.class, request);
     }
 
