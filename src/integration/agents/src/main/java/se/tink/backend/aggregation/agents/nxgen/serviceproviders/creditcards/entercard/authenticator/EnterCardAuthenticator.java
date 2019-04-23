@@ -37,8 +37,9 @@ public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitRes
 
         BankIdInitResponse bankIdResponse = apiClient.orderBankId(signicatServiceUrl, ssn);
 
-        if (bankIdResponse.isError())
+        if (bankIdResponse.isError()) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
 
         return bankIdResponse;
     }
