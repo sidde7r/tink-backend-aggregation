@@ -5,6 +5,31 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SabadellConstants {
 
+    public enum QueryParamPairs {
+        NO_ERROR("noError", "true"),
+        CTA_VISTA("type", "CTA_VISTA"),
+        CTA_CARD_ALL("filter", "CTA_CARD_ALL"),
+        PAGE("page", "1"),
+        ORDER_DESC("order", "desc"),
+        ORDER_0("order", "0");
+
+        private final String key;
+        private final String value;
+
+        QueryParamPairs(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public static final class Authentication {
         public static final String PUBLIC_KEY_B64 =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4Ug848S9Hf0wg4YUbr"
@@ -46,31 +71,6 @@ public final class SabadellConstants {
 
     public static final class Headers {
         public static final String SABADELL_ACCEPT = "application/vnd.idk.bsmobil-v1921+json";
-    }
-
-    public enum QueryParamPairs {
-        NO_ERROR("noError", "true"),
-        CTA_VISTA("type", "CTA_VISTA"),
-        CTA_CARD_ALL("filter", "CTA_CARD_ALL"),
-        PAGE("page", "1"),
-        ORDER_DESC("order", "desc"),
-        ORDER_0("order", "0");
-
-        private final String key;
-        private final String value;
-
-        QueryParamPairs(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
-        }
     }
 
     public static final class InitiateSessionRequest {
@@ -149,8 +149,17 @@ public final class SabadellConstants {
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
     }
 
+    public static final class IdentityTypes {
+
+        public static final String NIF = "01";
+    }
+
     public static final class Constants {
         public static final String NOT_AVAILABLE_ABBREVIATION = "N.D.";
+    }
+
+    public static final class Storage {
+        public static final String SESSION_KEY = "sabadell-session-data";
     }
 
     public static final class QueryParamsKeys {

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
@@ -22,7 +23,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountsResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -40,12 +40,12 @@ public class SabadellApiClient {
                 .accept(SabadellConstants.Headers.SABADELL_ACCEPT);
     }
 
-    public void initiateSession(String username, String password) {
+    public SessionResponse initiateSession(String username, String password) {
         InitiateSessionRequestEntity requestEntity =
                 InitiateSessionRequestEntity.build(username, password);
 
-        createRequest(SabadellConstants.Urls.INITIATE_SESSION)
-                .post(HttpResponse.class, requestEntity);
+        return createRequest(SabadellConstants.Urls.INITIATE_SESSION)
+                .post(SessionResponse.class, requestEntity);
     }
 
     public AccountsResponse fetchAccounts() {

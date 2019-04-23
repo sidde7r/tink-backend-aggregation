@@ -5,22 +5,28 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SabadellAuthenticator implements PasswordAuthenticator {
     private final SabadellApiClient apiClient;
+    private final SessionStorage sessionStorage;
 
-    public SabadellAuthenticator(SabadellApiClient apiClient) {
+    public SabadellAuthenticator(SabadellApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
         try {
-            apiClient.initiateSession(username, password);
+            SessionResponse response = apiClient.initiateSession(username, password);
+            sessionStorage.put(Storage.SESSION_KEY, response);
         } catch (HttpResponseException e) {
             ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
             String errorCode = response.getErrorCode();
