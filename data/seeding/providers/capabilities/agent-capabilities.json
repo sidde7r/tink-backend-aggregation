@@ -666,6 +666,12 @@
     "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.se.creditcards.entercard.moregolf.MoreGolfMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.entercard.coop.CoopMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
     "nxgen.serviceproviders.banks.bec.BecAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
