@@ -10,7 +10,9 @@ public class AccountResponse {
     private Account account;
 
     public CreditCardAccount toCreditCardAccount(User user, String accountId) {
-        if (account == null) return null;
+        if (account == null) {
+            throw new IllegalStateException("Account response without a card, should not happen.");
+        }
 
         return account.toCreditCardAccount(user, accountId);
     }

@@ -15,7 +15,9 @@ public class UserResponse {
     }
 
     public List<String> getAccountIds() {
-        if (user == null) return null;
+        if (user == null) {
+            throw new IllegalStateException("User response without products, should not happen.");
+        }
 
         return user.getProducts().stream().map(Product::getAccountId).collect(Collectors.toList());
     }

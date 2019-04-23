@@ -5,11 +5,12 @@ import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 
 @SuppressWarnings("unused")
 @JsonObject
-public class Transaction {
+public class TransactionEntity {
 
     private double transactionAmount;
     private String transactionCurrency;
@@ -28,7 +29,7 @@ public class Transaction {
     private String cardNumber;
     private boolean disputable;
 
-    public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkTransaction() {
+    public Transaction toTinkTransaction() {
         Amount amount = new Amount(billingCurrency, billingAmount);
         ZonedDateTime dateTime =
                 ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
@@ -38,7 +39,6 @@ public class Transaction {
                 .setDescription(description)
                 .setAmount(amount)
                 .setDateTime(dateTime)
-                .setExternalId("" + id)
                 .build();
     }
 }

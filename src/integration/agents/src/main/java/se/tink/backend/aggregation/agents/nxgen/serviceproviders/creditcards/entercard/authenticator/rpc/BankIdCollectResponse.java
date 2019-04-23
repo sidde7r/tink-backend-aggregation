@@ -4,12 +4,14 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.BankIdProgressStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 @SuppressWarnings("unused")
 @JsonObject
 public class BankIdCollectResponse {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BankIdCollectResponse.class);
 
     private String progressStatus;
@@ -23,12 +25,12 @@ public class BankIdCollectResponse {
         final String status = Optional.ofNullable(progressStatus).orElse("null");
 
         switch (status.toUpperCase()) {
-            case "COMPLETE":
+            case BankIdProgressStatus.COMPLETE:
                 return BankIdStatus.DONE;
-            case "OUTSTANDING_TRANSACTION":
-            case "USER_SIGN":
+            case BankIdProgressStatus.OUTSTANDING_TRANSACTION:
+            case BankIdProgressStatus.USER_SIGN:
                 return BankIdStatus.WAITING;
-            case "NO_CLIENT":
+            case BankIdProgressStatus.NO_CLIENT:
                 return BankIdStatus.NO_CLIENT;
             default:
                 LOGGER.warn("Unknown BankID status: {}", status);

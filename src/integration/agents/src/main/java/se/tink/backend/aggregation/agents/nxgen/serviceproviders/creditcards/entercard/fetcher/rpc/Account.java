@@ -29,7 +29,7 @@ public class Account {
                 .setBankIdentifier(accountId)
                 .setAvailableCredit(Amount.inSEK(openToBuy))
                 .setAccountNumber(accountId)
-                .setBalance(Amount.inSEK(-usedCredit))
+                .setBalance(Amount.inSEK(usedCredit).negate())
                 .setName(productName)
                 .build();
     }

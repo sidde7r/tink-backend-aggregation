@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public final class URL {
     public static final Pattern URL_PARAMETER_PATTERN = Pattern.compile("\\{[^{}]{2,}}");
-    private static final String URL_SEPARATOR = "/";
+    public static final String URL_SEPARATOR = "/";
 
     private final String url;
     private final String query;

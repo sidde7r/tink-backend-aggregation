@@ -25,8 +25,10 @@ public abstract class EnterCardConfiguration {
     }
 
     URL getAccountUrl(String accountIdentifier) {
-        return new URL(
-                getServiceHost() + ACCOUNT_ENDPOINT + accountIdentifier + EnterCardConstants.SLASH);
+        return new URL(getServiceHost())
+                .concat(ACCOUNT_ENDPOINT)
+                .concat(accountIdentifier)
+                .concat(URL.URL_SEPARATOR);
     }
 
     URL getTransactionsUrl(String accountIdentifier) {

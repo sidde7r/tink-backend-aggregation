@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator;
 
-import java.util.Objects;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.jsoup.Jsoup;
@@ -38,7 +37,7 @@ public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitRes
 
         BankIdInitResponse bankIdResponse = apiClient.orderBankId(signicatServiceUrl, ssn);
 
-        if (Objects.nonNull(bankIdResponse.getError()))
+        if (bankIdResponse.isError())
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
 
         return bankIdResponse;

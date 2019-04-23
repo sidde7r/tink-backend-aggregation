@@ -31,22 +31,6 @@ public class BankIdInitResponse {
                 || Strings.isNullOrEmpty(orderRef);
     }
 
-    @Override
-    public String toString() {
-        return "BankIdInitResponse{"
-                + "orderRef='"
-                + orderRef
-                + '\''
-                + ", autoStartToken='"
-                + autoStartToken
-                + '\''
-                + ", collectUrl="
-                + collectUrl
-                + ", error="
-                + error
-                + '}';
-    }
-
     public class Error {
         private String code;
         private String message;
