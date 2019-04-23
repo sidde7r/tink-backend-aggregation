@@ -4,9 +4,9 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingPis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.entities.DebtorCreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSetupV11Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSetupV11Response;
@@ -114,7 +114,7 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
         PaymentSetupV11Response paymentSetupResponse =
                 apiClient.createPaymentIntentId(request, PaymentSetupV11Response.class);
 
-        UkOpenBankingConstants.TransactionIndividualStatus1Code receivedStatus =
+        UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code receivedStatus =
                 paymentSetupResponse
                         .getStatus()
                         .orElseThrow(
@@ -185,7 +185,7 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
                 apiClient.submitPayment(
                         paymentSubmissionRequest, PaymentSubmissionV11Response.class);
 
-        UkOpenBankingConstants.TransactionIndividualStatus1Code receivedStatus =
+        UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code receivedStatus =
                 paymentSubmissionResponse
                         .getStatus()
                         .orElseThrow(

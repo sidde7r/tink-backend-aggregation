@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -37,6 +37,41 @@ public class AccountEntity implements IdentifiableAccount {
     @JsonDeserialize(using = AccountIdentifierDeserializer.class)
     private Map<UkOpenBankingV20Constants.AccountIdentifier, AccountIdentifierEntity>
             accountIdentifierMap;
+
+    public static TransactionalAccount toTransactionalAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
+
+        TransactionalAccount.Builder accountBuilder =
+                TransactionalAccount.builder(
+                                account.getAccountType(), accountNumber, balance.getBalance())
+                        .setAccountNumber(accountNumber)
+                        .setName(accountName)
+                        .setBankIdentifier(account.getAccountId());
+
+        account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
+
+        return accountBuilder.build();
+    }
+
+    public static CreditCardAccount toCreditCardAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+
+        log.info("Found UKOB credit card!");
+        return CreditCardAccount.builder(
+                        account.getUniqueIdentifier(),
+                        balance.getBalance(),
+                        balance.getAvailableCredit()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "CreditCardAccount has no credit.")))
+                .setAccountNumber(account.getUniqueIdentifier())
+                .setBankIdentifier(account.getAccountId())
+                .setName(account.getDisplayName())
+                .build();
+    }
 
     public String getAccountId() {
         return accountId;
@@ -89,41 +124,6 @@ public class AccountEntity implements IdentifiableAccount {
 
     public String getRawAccountSubType() {
         return rawAccountSubType;
-    }
-
-    public static TransactionalAccount toTransactionalAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-        String accountNumber = account.getUniqueIdentifier();
-        String accountName = account.getDisplayName();
-
-        TransactionalAccount.Builder accountBuilder =
-                TransactionalAccount.builder(
-                                account.getAccountType(), accountNumber, balance.getBalance())
-                        .setAccountNumber(accountNumber)
-                        .setName(accountName)
-                        .setBankIdentifier(account.getAccountId());
-
-        account.toAccountIdentifier(accountName).ifPresent(accountBuilder::addIdentifier);
-
-        return accountBuilder.build();
-    }
-
-    public static CreditCardAccount toCreditCardAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-
-        log.info("Found UKOB credit card!");
-        return CreditCardAccount.builder(
-                        account.getUniqueIdentifier(),
-                        balance.getBalance(),
-                        balance.getAvailableCredit()
-                                .orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        "CreditCardAccount has no credit.")))
-                .setAccountNumber(account.getUniqueIdentifier())
-                .setBankIdentifier(account.getAccountId())
-                .setName(account.getDisplayName())
-                .build();
     }
 
     @Override

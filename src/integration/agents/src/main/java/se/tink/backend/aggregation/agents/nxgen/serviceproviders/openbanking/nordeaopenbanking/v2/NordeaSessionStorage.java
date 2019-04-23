@@ -13,11 +13,11 @@ public class NordeaSessionStorage {
         this.sessionStorage = sessionStorage;
     }
 
-    public void setAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(NordeaBaseConstants.Storage.ACCESS_TOKEN, accessToken);
-    }
-
     public Optional<OAuth2Token> getAccessToken() {
         return sessionStorage.get(NordeaBaseConstants.Storage.ACCESS_TOKEN, OAuth2Token.class);
+    }
+
+    public void setAccessToken(OAuth2Token accessToken) {
+        sessionStorage.put(NordeaBaseConstants.Storage.ACCESS_TOKEN, accessToken);
     }
 }

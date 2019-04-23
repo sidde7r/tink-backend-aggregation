@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DebtorCreditorAccountEntity {
     @JsonProperty("SchemeName")
-    private UkOpenBankingConstants.ExternalAccountIdentification2Code schemeName;
+    private UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code schemeName;
 
     @JsonProperty("Identification")
     private String identification; // Max34Text
@@ -20,7 +20,7 @@ public class DebtorCreditorAccountEntity {
 
     private DebtorCreditorAccountEntity(
             @JsonProperty("SchemeName")
-                    UkOpenBankingConstants.ExternalAccountIdentification2Code schemeName,
+                    UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code schemeName,
             @JsonProperty("Identification") String identification,
             @JsonProperty("Name") String name) {
         this.schemeName = schemeName;
@@ -37,7 +37,8 @@ public class DebtorCreditorAccountEntity {
     public static DebtorCreditorAccountEntity createSortCodeAccount(
             String identification, String name) {
         return new DebtorCreditorAccountEntity(
-                UkOpenBankingConstants.ExternalAccountIdentification2Code.SORT_CODE_ACCOUNT_NUMBER,
+                UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code
+                        .SORT_CODE_ACCOUNT_NUMBER,
                 cleanAccountNumber(identification),
                 name);
     }
@@ -46,7 +47,7 @@ public class DebtorCreditorAccountEntity {
     public static DebtorCreditorAccountEntity createIbanAccount(
             String identification, String name) {
         return new DebtorCreditorAccountEntity(
-                UkOpenBankingConstants.ExternalAccountIdentification2Code.IBAN,
+                UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code.IBAN,
                 cleanAccountNumber(identification),
                 name);
     }

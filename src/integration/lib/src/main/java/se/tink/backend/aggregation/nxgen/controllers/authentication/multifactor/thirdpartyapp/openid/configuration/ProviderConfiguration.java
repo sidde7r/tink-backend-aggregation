@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
@@ -34,18 +33,6 @@ public class ProviderConfiguration {
 
     public URL getAuthBaseURL() {
         return authBaseURL != null ? authBaseURL : apiBaseURL;
-    }
-
-    public URL getAccountRequestsURL() {
-        return getAuthBaseURL().concat(OpenIdConstants.ApiServices.ACCOUNT_REQUESTS);
-    }
-
-    public URL getPaymentsURL() {
-        return getPisConsentURL().concat(OpenIdConstants.ApiServices.PAYMENTS);
-    }
-
-    public URL getPaymentSubmissionsURL() {
-        return getPisBaseURL().concat(OpenIdConstants.ApiServices.PAYMENT_SUBMISSIONS);
     }
 
     public void validate() {

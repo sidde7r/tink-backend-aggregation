@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NordeaBaseConstants {
     public static final String INTEGRATION_NAME = "nordea";
+    public static final AccountTypeMapper ACCOUNT_TYPE =
+            AccountTypeMapper.builder().put(AccountTypes.CHECKING, "Current").build();
 
     public static class Url {
         private static final String API_BASE_URL = "https://api.nordeaopenbanking.com";
@@ -67,15 +69,11 @@ public class NordeaBaseConstants {
     }
 
     public static class Authorization {
-        private static final String DEFAULT_TOKEN_TYPE = "Bearer";
-
         public static final String STATE_COMPLETED = "COMPLETED";
-
         public static final String GRANT_TYPE_AUTH_CODE = "authorization_code";
         public static final String RESPONSE_TYPE = "nordea_code";
         public static final long TOKEN_DURATION = 129600;
         public static final String LANGUAGE = "en";
-
         public static final List<String> SCOPES =
                 ImmutableList.of(
                         "ACCOUNTS_BASIC",
@@ -83,6 +81,7 @@ public class NordeaBaseConstants {
                         "ACCOUNTS_DETAILS",
                         "ACCOUNTS_TRANSACTIONS",
                         "PAYMENTS_MULTIPLE");
+        private static final String DEFAULT_TOKEN_TYPE = "Bearer";
 
         public static String tokenToAuthorizationValue(String token) {
             return String.format("%s %s", DEFAULT_TOKEN_TYPE, token);
@@ -95,9 +94,6 @@ public class NordeaBaseConstants {
         public static final String ACCOUNT_NUMBER_SE = "BBAN_SE";
         public static final String ACCOUNT_NUMBER_IBAN = "IBAN";
     }
-
-    public static final AccountTypeMapper ACCOUNT_TYPE =
-            AccountTypeMapper.builder().put(AccountTypes.CHECKING, "Current").build();
 
     public static class Transaction {
         public static final String RESERVED = "reserved";

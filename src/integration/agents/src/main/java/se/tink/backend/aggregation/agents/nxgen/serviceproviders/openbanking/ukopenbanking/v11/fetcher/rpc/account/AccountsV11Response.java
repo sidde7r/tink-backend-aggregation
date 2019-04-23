@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.AccountStream;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.AccountStream;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -15,11 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class AccountsV11Response extends BaseResponse<List<AccountEntity>>
         implements AccountStream {
-
-    @Override
-    public Stream<? extends IdentifiableAccount> stream() {
-        return getData().stream();
-    }
 
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV11Response accounts, AccountBalanceV11Response balance) {
@@ -39,5 +34,10 @@ public class AccountsV11Response extends BaseResponse<List<AccountEntity>>
         // TODO  Test data does not include credit cards, this will be revisited when we have data
         // that includes this.
         return Optional.empty();
+    }
+
+    @Override
+    public Stream<? extends IdentifiableAccount> stream() {
+        return getData().stream();
     }
 }

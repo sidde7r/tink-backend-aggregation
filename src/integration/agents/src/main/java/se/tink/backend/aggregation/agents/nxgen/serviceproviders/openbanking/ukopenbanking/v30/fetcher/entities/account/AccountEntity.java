@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -29,40 +29,6 @@ public class AccountEntity implements IdentifiableAccount {
 
     @JsonProperty("Account")
     private AccountIdentifierEntity identifierEntity;
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public String getUniqueIdentifier() {
-
-        if (identifierEntity == null) {
-            throw new IllegalStateException("Account details did not specify an identifier.");
-        }
-
-        return identifierEntity.getIdentification();
-    }
-
-    public AccountTypes getAccountType() {
-        return UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER
-                .translate(rawAccountSubType)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Unknown account types should have been filtered out before reaching this point!"));
-    }
-
-    public String getDisplayName() {
-        return nickname != null ? nickname : identifierEntity.getName();
-    }
-
-    public String getRawAccountSubType() {
-        return rawAccountSubType;
-    }
-
-    private Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
-        return identifierEntity.toAccountIdentifier(accountName);
-    }
 
     public static TransactionalAccount toTransactionalAccount(
             AccountEntity account, AccountBalanceEntity balance) {
@@ -96,6 +62,40 @@ public class AccountEntity implements IdentifiableAccount {
                 .setBankIdentifier(account.getAccountId())
                 .setName(account.getDisplayName())
                 .build();
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public String getUniqueIdentifier() {
+
+        if (identifierEntity == null) {
+            throw new IllegalStateException("Account details did not specify an identifier.");
+        }
+
+        return identifierEntity.getIdentification();
+    }
+
+    public AccountTypes getAccountType() {
+        return UkOpenBankingV30Constants.ACCOUNT_TYPE_MAPPER
+                .translate(rawAccountSubType)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Unknown account types should have been filtered out before reaching this point!"));
+    }
+
+    public String getDisplayName() {
+        return nickname != null ? nickname : identifierEntity.getName();
+    }
+
+    public String getRawAccountSubType() {
+        return rawAccountSubType;
+    }
+
+    private Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
+        return identifierEntity.toAccountIdentifier(accountName);
     }
 
     @Override

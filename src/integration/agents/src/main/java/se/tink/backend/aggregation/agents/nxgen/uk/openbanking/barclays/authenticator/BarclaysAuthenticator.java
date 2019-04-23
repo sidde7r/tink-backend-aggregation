@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.authent
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.AuthenticationQueryParameters.AUTHONDEVICE;
 import static se.tink.backend.aggregation.agents.nxgen.uk.openbanking.barclays.BarclaysConstants.AuthenticationQueryParameters.YES;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class BarclaysAuthenticator extends UkOpenBankingAuthenticator {

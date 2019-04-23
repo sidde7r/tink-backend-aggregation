@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -11,7 +11,7 @@ import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 public class AccountIdentifierEntity {
 
     @JsonProperty("SchemeName")
-    private UkOpenBankingConstants.ExternalAccountIdentification2Code identifierType;
+    private UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code identifierType;
 
     @JsonProperty("Identification")
     private String identification;
@@ -24,7 +24,7 @@ public class AccountIdentifierEntity {
 
     public boolean isSortCode() {
         return identifierType
-                == UkOpenBankingConstants.ExternalAccountIdentification2Code
+                == UkOpenBankingApiDefinitions.ExternalAccountIdentification2Code
                         .SORT_CODE_ACCOUNT_NUMBER;
     }
 

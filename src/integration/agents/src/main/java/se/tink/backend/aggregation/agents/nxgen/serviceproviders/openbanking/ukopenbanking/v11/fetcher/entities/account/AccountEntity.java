@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -22,6 +22,37 @@ public class AccountEntity implements IdentifiableAccount {
 
     @JsonProperty("Account")
     private AccountIdentifierEntity identifierEntity;
+
+    public static TransactionalAccount toTransactionalAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+        String accountNumber = account.getUniqueIdentifier();
+        String accountName = account.getDisplayName();
+
+        return TransactionalAccount.builder(
+                        account.getAccountType(), accountNumber, balance.getBalance())
+                .setAccountNumber(accountNumber)
+                .setName(accountName)
+                .addIdentifier(account.toAccountIdentifier(accountName))
+                .setBankIdentifier(account.getAccountId())
+                .build();
+    }
+
+    public static CreditCardAccount toCreditCardAccount(
+            AccountEntity account, AccountBalanceEntity balance) {
+
+        return CreditCardAccount.builder(
+                        account.getUniqueIdentifier(),
+                        balance.getBalance(),
+                        balance.getAvailableCredit()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "CreditCardAccount has no credit.")))
+                .setAccountNumber(account.getUniqueIdentifier())
+                .setBankIdentifier(account.getAccountId())
+                .setName(account.getDisplayName())
+                .build();
+    }
 
     public String getAccountId() {
         return accountId;
@@ -57,36 +88,5 @@ public class AccountEntity implements IdentifiableAccount {
     @Override
     public String getBankIdentifier() {
         return accountId;
-    }
-
-    public static TransactionalAccount toTransactionalAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-        String accountNumber = account.getUniqueIdentifier();
-        String accountName = account.getDisplayName();
-
-        return TransactionalAccount.builder(
-                        account.getAccountType(), accountNumber, balance.getBalance())
-                .setAccountNumber(accountNumber)
-                .setName(accountName)
-                .addIdentifier(account.toAccountIdentifier(accountName))
-                .setBankIdentifier(account.getAccountId())
-                .build();
-    }
-
-    public static CreditCardAccount toCreditCardAccount(
-            AccountEntity account, AccountBalanceEntity balance) {
-
-        return CreditCardAccount.builder(
-                        account.getUniqueIdentifier(),
-                        balance.getBalance(),
-                        balance.getAvailableCredit()
-                                .orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        "CreditCardAccount has no credit.")))
-                .setAccountNumber(account.getUniqueIdentifier())
-                .setBankIdentifier(account.getAccountId())
-                .setName(account.getDisplayName())
-                .build();
     }
 }

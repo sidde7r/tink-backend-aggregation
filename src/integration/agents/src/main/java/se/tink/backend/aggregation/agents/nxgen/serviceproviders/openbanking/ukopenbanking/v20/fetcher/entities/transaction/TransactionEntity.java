@@ -3,9 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants.EntryStatusCode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -28,10 +27,10 @@ public class TransactionEntity {
     private AmountEntity amount;
 
     @JsonProperty("CreditDebitIndicator")
-    private UkOpenBankingConstants.CreditDebitIndicator creditDebitIndicator;
+    private UkOpenBankingApiDefinitions.CreditDebitIndicator creditDebitIndicator;
 
     @JsonProperty("Status")
-    private EntryStatusCode status;
+    private UkOpenBankingApiDefinitions.EntryStatusCode status;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("BookingDateTime")
@@ -59,7 +58,7 @@ public class TransactionEntity {
                 .setExternalId(transactionId)
                 .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
-                .setPending(status == EntryStatusCode.PENDING)
+                .setPending(status == UkOpenBankingApiDefinitions.EntryStatusCode.PENDING)
                 .setDate(bookingDateTime)
                 .build();
     }
@@ -70,13 +69,13 @@ public class TransactionEntity {
                 .setCreditAccount(account)
                 .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
-                .setPending(status == EntryStatusCode.PENDING)
+                .setPending(status == UkOpenBankingApiDefinitions.EntryStatusCode.PENDING)
                 .setDate(bookingDateTime)
                 .build();
     }
 
     private Amount getSignedAmount() {
-        if (UkOpenBankingConstants.CreditDebitIndicator.DEBIT == creditDebitIndicator) {
+        if (UkOpenBankingApiDefinitions.CreditDebitIndicator.DEBIT == creditDebitIndicator) {
             return amount.negate();
         }
         return amount;
