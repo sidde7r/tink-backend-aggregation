@@ -177,6 +177,8 @@ public class IngConstants {
         public static final LogTag CREDITCARD_TRANSACTIONS =
                 LogTag.from("#ING_creditcard_transactions");
         public static final LogTag UNKNOWN_ERROR_CODE = LogTag.from("#ING_UNKNOWN_ERROR_CODE");
+        public static final LogTag AUTH_STEP2 = LogTag.from("#AUTH_STEP2");
+        public static final LogTag AUTH_STEP3 = LogTag.from("#AUTH_STEP3");
     }
 
     public static final class Transfers {

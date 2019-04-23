@@ -266,7 +266,7 @@ public class IngCardReaderAuthenticator {
                                 IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR,
                                 responseEntity.getErrorCode(),
                                 responseEntity.getErrorText()));
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             } else {
                 throw new IllegalStateException(IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR);
             }

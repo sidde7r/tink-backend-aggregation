@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -22,6 +24,9 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class IngCardReaderAuthenticationController
         implements MultiFactorAuthenticator, ProgressiveAuthenticator {
+    private static Logger logger =
+            LoggerFactory.getLogger(IngCardReaderAuthenticationController.class);
+
     private static final String CARD_ID_FIELD = "cardId";
 
     private static final String STEP_OTP = "otp";
@@ -70,6 +75,8 @@ public class IngCardReaderAuthenticationController
 
     private AuthenticationResponse step2(AuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException {
+        logger.info("ING step2: {}", authenticationRequest.getUserInputs());
+
         String username = authenticationRequest.getCredentials().getField(Field.Key.USERNAME);
         String cardNumber = authenticationRequest.getCredentials().getField(CARD_ID_FIELD);
         String otp = authenticationRequest.getUserInputs().get(0);
@@ -91,6 +98,8 @@ public class IngCardReaderAuthenticationController
 
     private AuthenticationResponse step3(AuthenticationRequest authenticationRequest)
             throws AuthenticationException {
+        logger.info("ING step3: {}", authenticationRequest.getUserInputs());
+
         authenticator.confirmEnroll(
                 authenticationRequest.getCredentials().getField(Field.Key.USERNAME),
                 authenticationRequest.getUserInputs().get(1),

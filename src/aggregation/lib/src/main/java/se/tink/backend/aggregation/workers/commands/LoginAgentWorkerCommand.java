@@ -208,6 +208,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             Map<String, String> map =
                     supplementalInformationController.askSupplementalInformation(
                             fields.toArray(new Field[fields.size()]));
+            log.info(String.format("progressiveLogin - %s", map));
             response =
                     ((ProgressiveAuthAgent) agent)
                             .login(
