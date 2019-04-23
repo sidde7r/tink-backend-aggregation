@@ -18,9 +18,7 @@ public class SabadellAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
-                .addRefreshableItems(
-                        RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)
-                                .toArray(new RefreshableItem[0]))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();

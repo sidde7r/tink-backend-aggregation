@@ -24,10 +24,7 @@ public class OpenbankAgentTest {
                         .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
-                        .addRefreshableItems(
-                                RefreshableItem.REFRESHABLE_ITEMS_ALL
-                                        .asList()
-                                        .toArray(new RefreshableItem[0]))
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                         .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
 
