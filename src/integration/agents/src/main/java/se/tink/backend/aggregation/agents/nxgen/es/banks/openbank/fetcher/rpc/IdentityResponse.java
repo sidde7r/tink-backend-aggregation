@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ public class IdentityResponse {
         this.clientName = clientName != null ? clientName.trim() : null;
     }
 
+    @JsonIgnore
     public IdentityData toTinkIdentity() {
         EsIdentityDataBuilder builder = EsIdentityData.builder();
 
@@ -61,41 +63,5 @@ public class IdentityResponse {
                 .addSurnameElement(surnameOne.getSurname())
                 .setDateOfBirth(LocalDate.parse(birthDate))
                 .build();
-    }
-}
-
-@SuppressWarnings("FieldCanBeLocal")
-@JsonObject
-class SurnameOneEntity {
-    @JsonProperty("apellido")
-    private String surname;
-
-    @JsonProperty("particula")
-    private String title;
-
-    public void setSurname(String surname) {
-        this.surname = surname != null ? surname.trim() : null;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-}
-
-@JsonObject
-class IdentificationDocumentEntity {
-
-    @JsonProperty("codigodocumpersonacorp")
-    private String documentNumber;
-
-    @JsonProperty("tipodocumpersonacorp")
-    private String documentType;
-
-    String getDocumentNumber() {
-        return documentNumber;
-    }
-
-    String getDocumentType() {
-        return documentType;
     }
 }
