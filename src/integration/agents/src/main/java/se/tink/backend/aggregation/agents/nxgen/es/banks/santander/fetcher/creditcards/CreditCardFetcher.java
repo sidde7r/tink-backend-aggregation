@@ -38,7 +38,8 @@ public class CreditCardFetcher
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
 
-    public CreditCardFetcher(SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
+    public CreditCardFetcher(
+            SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
         this.santanderEsSessionStorage = santanderEsSessionStorage;
     }

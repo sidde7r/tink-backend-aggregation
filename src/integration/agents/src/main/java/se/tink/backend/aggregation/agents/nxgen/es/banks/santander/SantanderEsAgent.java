@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.SantanderEsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.identitydata.SantanderEsIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.SantanderEsInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.SantanderEsLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
@@ -27,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SantanderEsAgent extends NextGenerationAgent {
+public class SantanderEsAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
 
@@ -63,7 +66,8 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        CreditCardFetcher creditcardFetcher = new CreditCardFetcher(apiClient, santanderEsSessionStorage);
+        CreditCardFetcher creditcardFetcher =
+                new CreditCardFetcher(apiClient, santanderEsSessionStorage);
 
         return Optional.of(
                 new CreditCardRefreshController(
@@ -113,5 +117,12 @@ public class SantanderEsAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final SantanderEsIdentityDataFetcher fetcher =
+                new SantanderEsIdentityDataFetcher(santanderEsSessionStorage);
+        return fetcher.response();
     }
 }

@@ -22,7 +22,9 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         // Temporary logging of whole response in String format to detect any unknown accounts
-        LOGGER.info("es_santander_full_logging_response", santanderEsSessionStorage.getLoginResponseString());
+        LOGGER.info(
+                "es_santander_full_logging_response",
+                santanderEsSessionStorage.getLoginResponseString());
 
         LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
         return loginResponse.getAccountList().stream()

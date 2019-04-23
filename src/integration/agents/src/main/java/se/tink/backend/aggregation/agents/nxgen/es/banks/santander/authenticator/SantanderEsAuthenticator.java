@@ -18,7 +18,8 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
 
-    public SantanderEsAuthenticator(SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
+    public SantanderEsAuthenticator(
+            SantanderEsApiClient apiClient, SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
         this.santanderEsSessionStorage = santanderEsSessionStorage;
     }
@@ -60,5 +61,6 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
 
         responseString = apiClient.login();
         santanderEsSessionStorage.setLoginResponse(responseString);
+        santanderEsSessionStorage.setIdNumber(username);
     }
 }

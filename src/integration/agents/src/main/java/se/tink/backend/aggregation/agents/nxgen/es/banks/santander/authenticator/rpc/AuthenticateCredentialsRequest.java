@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsIdNumberUtils.getIdNumberType;
+
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsIdNumberUtils.IdNumberTypes;
+
 public class AuthenticateCredentialsRequest {
 
     public static String create(String username, String password) {
@@ -19,18 +23,6 @@ public class AuthenticateCredentialsRequest {
                         + "</n0:authenticateCredential>"
                         + "</v:Body>"
                         + "</v:Envelope>",
-                username, getIdNumberType(username), password);
-    }
-
-    /**
-     * Return "N" for NIF ID numbers and "C" for NIE ID numbers. NIF numbers start with a digit
-     * while NIE numbers start with a letter.
-     */
-    private static String getIdNumberType(String username) {
-        return startsWithDigit(username) ? "N" : "C";
-    }
-
-    private static boolean startsWithDigit(String username) {
-        return username.substring(0, 1).matches("[\\d]");
+                username, getIdNumberType(username) == IdNumberTypes.NIE ? "C" : "N", password);
     }
 }

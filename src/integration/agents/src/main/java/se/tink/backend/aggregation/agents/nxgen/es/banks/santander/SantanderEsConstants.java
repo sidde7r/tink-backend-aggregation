@@ -42,6 +42,7 @@ public class SantanderEsConstants {
         public static final String CONTRACT_ID_XML = "contractIdXml";
         public static final String BALANCE_XML = "balanceXml";
         public static final String CARD_ENTITY = "cardEntity";
+        public static final String ID_NUMBER = "idNumber";
     }
 
     public static final class DataHeader {

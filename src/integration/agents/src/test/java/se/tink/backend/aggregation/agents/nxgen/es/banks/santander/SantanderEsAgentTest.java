@@ -7,8 +7,9 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
+//@Ignore
 public class SantanderEsAgentTest {
     private enum Arg {
         USERNAME,
@@ -16,8 +17,6 @@ public class SantanderEsAgentTest {
     }
 
     private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
-    private final String USERNAME = "";
-    private final String PASSWORD = "";
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("es", "es-bancosantander-password")
@@ -38,6 +37,8 @@ public class SantanderEsAgentTest {
     public void testLogin() throws Exception {
         builder.addCredentialField(Key.USERNAME, helper.get(Arg.USERNAME))
                 .addCredentialField(Key.PASSWORD, helper.get(Arg.PASSWORD))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }

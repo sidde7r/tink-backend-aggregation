@@ -29,7 +29,8 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
     private final SantanderEsSessionStorage santanderEsSessionStorage;
 
     public SantanderEsInvestmentFetcher(
-            final SantanderEsApiClient apiClient, final SantanderEsSessionStorage santanderEsSessionStorage) {
+            final SantanderEsApiClient apiClient,
+            final SantanderEsSessionStorage santanderEsSessionStorage) {
         this.apiClient = apiClient;
         this.santanderEsSessionStorage = santanderEsSessionStorage;
     }

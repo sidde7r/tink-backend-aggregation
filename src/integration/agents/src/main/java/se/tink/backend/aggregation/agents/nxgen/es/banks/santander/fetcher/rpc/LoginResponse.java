@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.identitydata.entities.SurnameEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
@@ -19,6 +22,11 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 @JsonObject
 @XmlRootElement(name = "methodResult")
 public class LoginResponse {
+
+    @JsonIgnore
+    private static final DateTimeFormatter BIRTH_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private InfoEntity info;
 
     @JsonProperty("datosUsuario")
@@ -42,9 +50,39 @@ public class LoginResponse {
     @JsonProperty("nombreCliente")
     private String userName;
 
+    @JsonProperty("fechaNacimientoCliente")
+    private String dateOfBirth;
+
+    @JsonProperty("nombrePersonaSinApellidos")
+    private String nameWithoutSurname;
+
+    @JsonProperty("apellidoUno")
+    private SurnameEntity firstSurname;
+
+    @JsonProperty("apellidoDos")
+    private SurnameEntity secondSurname;
+
     @JsonIgnore
     public HolderName getHolderName() {
         return Optional.ofNullable(userName).map(HolderName::new).orElse(null);
+    }
+
+    @JsonIgnore
+    public String getFirstSurname() {
+        return firstSurname.getSurname();
+    }
+
+    @JsonIgnore
+    public String getSecondSurname() {
+        return secondSurname.getSurname();
+    }
+
+    public String getNameWithoutSurname() {
+        return nameWithoutSurname;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return LocalDate.parse(dateOfBirth, BIRTH_DATE_FORMATTER);
     }
 
     public InfoEntity getInfo() {
