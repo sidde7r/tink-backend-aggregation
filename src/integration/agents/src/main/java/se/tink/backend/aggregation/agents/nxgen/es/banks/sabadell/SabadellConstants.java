@@ -149,8 +149,16 @@ public final class SabadellConstants {
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
     }
 
+    public static final class IdentityTypes {
+
+        public static final String NIF = "01";
+    }
+
     public static final class Constants {
         public static final String NOT_AVAILABLE_ABBREVIATION = "N.D.";
+    }
+
+    public static final class Storage {
         public static final String SESSION_KEY = "sabadell-session-data";
     }
 

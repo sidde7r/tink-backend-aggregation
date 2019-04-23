@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.IdentityTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
@@ -10,6 +11,7 @@ import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBui
 @SuppressWarnings("unused")
 @JsonObject
 public class UserEntity {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEntity.class);
 
     private String dni;
@@ -44,11 +46,9 @@ public class UserEntity {
         EsIdentityDataBuilder builder = EsIdentityData.builder();
 
         switch (idType) {
-            case "01":
+            case IdentityTypes.NIF:
                 builder.setNifNumber(dni);
                 break;
-            case "02": // NIE?
-            case "03": // Passport?
             default:
                 LOGGER.warn(
                         "ES Sabadell: Unhandled document type: {} (maybe NIE or passport?)",

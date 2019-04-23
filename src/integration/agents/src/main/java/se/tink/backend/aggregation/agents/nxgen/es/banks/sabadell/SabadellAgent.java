@@ -4,7 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Constants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.SabadellAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.InitiateSessionRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator.entities.SessionResponse;
@@ -124,7 +124,7 @@ public class SabadellAgent extends NextGenerationAgent implements RefreshIdentit
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
         return sessionStorage
-                .get(Constants.SESSION_KEY, SessionResponse.class)
+                .get(Storage.SESSION_KEY, SessionResponse.class)
                 .orElseThrow(IllegalStateException::new)
                 .getUser()
                 .toTinkIdentity();

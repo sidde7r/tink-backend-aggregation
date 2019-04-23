@@ -32,7 +32,6 @@ public class SabadellApiClient {
 
     public SabadellApiClient(TinkHttpClient client) {
         this.client = client;
-        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     private RequestBuilder createRequest(URL url) {
