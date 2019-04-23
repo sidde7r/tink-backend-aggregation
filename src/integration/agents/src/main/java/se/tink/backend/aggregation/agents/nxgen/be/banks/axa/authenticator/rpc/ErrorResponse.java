@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
 import java.util.Optional;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

@@ -565,7 +565,7 @@ public class DateUtilsTest {
     @Test
     public void testDateList() {
         Date last = new Date();
-        Date first = org.apache.commons.lang.time.DateUtils.addDays(last, -5);
+        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
 
         List<Date> dates = DateUtils.createDailyDateList(first, last);
 
@@ -578,7 +578,7 @@ public class DateUtilsTest {
     @Test
     public void testDateListReversed() {
         Date last = new Date();
-        Date first = org.apache.commons.lang.time.DateUtils.addDays(last, -5);
+        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
 
         List<Date> dates = DateUtils.createDailyDateList(first, last, true);
 
@@ -591,7 +591,7 @@ public class DateUtilsTest {
     @Test
     public void testModifiedBuilder() {
         Date last = new Date();
-        Date first = org.apache.commons.lang.time.DateUtils.addDays(last, -5);
+        Date first = org.apache.commons.lang3.time.DateUtils.addDays(last, -5);
 
         List<Date> dates = DateUtils.createDailyDateList(first, last, true);
 

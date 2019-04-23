@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import java.util.Date;
 import javax.annotation.Nullable;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

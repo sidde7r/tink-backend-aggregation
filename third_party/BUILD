@@ -386,14 +386,6 @@ java_library(
 )
 
 java_library(
-    name = "commons_lang_commons_lang",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_lang_commons_lang//jar",
-    ],
-)
-
-java_library(
     name = "de_jollyday_jollyday",
     visibility = ["//visibility:public"],
     exports = [

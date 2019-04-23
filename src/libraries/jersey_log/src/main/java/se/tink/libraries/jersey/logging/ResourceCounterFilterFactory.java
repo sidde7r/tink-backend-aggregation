@@ -9,7 +9,7 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Path;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricRegistry;
 

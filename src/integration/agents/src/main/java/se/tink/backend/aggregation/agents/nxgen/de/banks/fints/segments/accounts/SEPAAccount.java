@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import io.netty.util.internal.StringUtil;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
@@ -66,7 +65,7 @@ public class SEPAAccount {
     }
 
     public String getCurrency() {
-        return StringUtil.isNullOrEmpty(currency) ? FinTsConstants.CURRENCY : currency;
+        return Strings.isNullOrEmpty(currency) ? FinTsConstants.CURRENCY : currency;
     }
 
     public void setCurrency(String currency) {

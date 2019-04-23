@@ -10,7 +10,6 @@ java_library(
         # Date libraries
         "//third_party:de_jollyday_jollyday",
         "//third_party:org_pojava_pojava",
-        "//third_party:commons_lang_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",
 
         # Annotations
@@ -29,7 +28,6 @@ junit_test(
     deps = [
         "//src/libraries/date",
         "//third_party:com_google_guava_guava",
-        "//third_party:commons_lang_commons_lang",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",
         "//third_party:org_apache_commons_commons_lang3",

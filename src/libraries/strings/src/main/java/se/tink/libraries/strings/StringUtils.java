@@ -492,7 +492,7 @@ public class StringUtils {
      * @return the trimmed String, <code>null</code> if only chars are whitespace, empty or null
      *     String input
      * @note This description was mostly ripped from {@link
-     *     org.apache.commons.lang.StringUtils#trimToNull(String)}
+     *     org.apache.commons.lang3.StringUtils#trimToNull(String)}
      */
     public static String trimToNull(String string) {
         if (string == null) return null;

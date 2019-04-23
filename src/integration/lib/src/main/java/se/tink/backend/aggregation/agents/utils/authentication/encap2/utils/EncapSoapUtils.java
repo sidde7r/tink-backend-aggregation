@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap2.utils;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConfiguration;

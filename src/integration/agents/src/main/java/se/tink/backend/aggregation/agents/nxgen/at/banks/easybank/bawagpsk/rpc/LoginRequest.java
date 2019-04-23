@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Authentication;

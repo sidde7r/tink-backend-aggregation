@@ -1,6 +1,6 @@
 package se.tink.libraries.enums;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
 
 public enum SwedishGiroType {
@@ -16,7 +16,7 @@ public enum SwedishGiroType {
                 return AccountIdentifier.Type.SE_PG;
             default:
             case AG:
-                throw new NotImplementedException();
+                throw new NotImplementedException("Type AG is not implemented");
         }
     }
 }

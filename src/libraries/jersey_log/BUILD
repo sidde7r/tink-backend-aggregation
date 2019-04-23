@@ -38,6 +38,7 @@ java_library(
         # Api utils
         "//src/libraries/api_headers",
         "//src/libraries/api_annotations",
+        "//third_party:org_apache_commons_commons_lang3",
     ],
 )
 
