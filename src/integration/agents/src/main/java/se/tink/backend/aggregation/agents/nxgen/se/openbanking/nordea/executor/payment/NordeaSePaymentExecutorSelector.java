@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.NordeaBasePaymentExecutorSelector;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -10,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
-
-import java.util.Collection;
 
 public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutorSelector {
     private final ImmutableMap<PaymentType, PaymentExecutor> paymentTypeToExecutorMap;
