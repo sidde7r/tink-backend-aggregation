@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
+import se.tink.backend.aggregation.aggregationcontroller.v1.api.IdentityAggregatorService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
@@ -70,6 +71,12 @@ public class AggregationControllerAggregationClient {
             HostConfiguration hostConfiguration) {
         return buildInterClusterServiceFromInterface(
                 hostConfiguration, AggregationControllerService.class);
+    }
+
+    private IdentityAggregatorService getIdentityAggregatorService(
+            HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(
+                hostConfiguration, IdentityAggregatorService.class);
     }
 
     public Response generateStatisticsAndActivityAsynchronously(
@@ -157,8 +164,8 @@ public class AggregationControllerAggregationClient {
         return getAggregationControllerService(hostConfiguration).connectivityCheck();
     }
 
-    public void updateIdentity(
+    public Response updateIdentity(
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
-        // TODO: Implement this when Identity service up and running!
+        return getIdentityAggregatorService(hostConfiguration).updateIdentityData(request);
     }
 }
