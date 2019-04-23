@@ -44,6 +44,7 @@ public abstract class OpenbankConstants {
         static final String ACCOUNT_TRANSACTIONS_PATH = "/my-money/cuentas/movimientos";
         static final String TRANSACTION_DETAILS_PATH = "/cuentas/movimientos/detalles";
         static final String CARD_TRANSACTIONS_PATH = "/my-cards/tarjetas/movimientos-categoria";
+        static final String IDENTITY_PATH = "/user/profile";
     }
 
     public static class Urls {
@@ -60,6 +61,7 @@ public abstract class OpenbankConstants {
                 new URL(HOST + ApiService.TRANSACTION_DETAILS_PATH);
         public static final URL CARD_TRANSACTIONS =
                 new URL(HOST + ApiService.CARD_TRANSACTIONS_PATH);
+        static final URL IDENTITY_URL = new URL(HOST + ApiService.IDENTITY_PATH);
     }
 
     public static class UsernameTypes {
