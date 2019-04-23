@@ -23,10 +23,13 @@ versions.check("0.25.0")
 """
 Import bazel-common, which has a Maven pom_file generation rule
 """
+BAZEL_COMMON_TAG = "f3dc1a775d21f74fc6f4bbcf076b8af2f6261a69"
+BAZEL_COMMON_SHA = "ccdd09559b49c7efd9e4b0b617b18e2a4bbdb2142fc30dfd3501eb5fa1294dcc"
 http_archive(
     name = "bazel_common",
-    strip_prefix = "bazel-common-f1115e0f777f08c3cdb115526c4e663005bec69b",
-    url = "https://github.com/google/bazel-common/archive/f1115e0f777f08c3cdb115526c4e663005bec69b.zip",
+    strip_prefix = "bazel-common-%s" % BAZEL_COMMON_TAG,
+    sha256 = BAZEL_COMMON_SHA,
+    url = "https://github.com/google/bazel-common/archive/%s.zip" % BAZEL_COMMON_TAG,
 )
 
 """
@@ -214,11 +217,13 @@ maven_install(
 """
 Import Docker rule
 """
+IO_BAZEL_RULES_DOCKER_TAG = "3332026921c918c9bfaa94052578d0ca578aab66"
+IO_BAZEL_RULES_DOCKER_SHA = "8729112ed4288143955d50fee6c5a306305b9fca48838f73efc1f21f3c32573f"
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
-    strip_prefix = "rules_docker-0.7.0",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+    strip_prefix = "rules_docker-%s" % IO_BAZEL_RULES_DOCKER_TAG,
+    sha256 = IO_BAZEL_RULES_DOCKER_SHA,
+    url = "https://github.com/bazelbuild/rules_docker/archive/%s.zip" % IO_BAZEL_RULES_DOCKER_TAG,
 )
 load("@io_bazel_rules_docker//repositories:repositories.bzl", container_repositories = "repositories")
 container_repositories()
