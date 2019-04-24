@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -147,7 +148,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -166,7 +167,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -190,7 +191,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -207,7 +208,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -228,7 +229,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -250,7 +251,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
