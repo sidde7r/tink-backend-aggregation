@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.kbc.fetchers;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers;
 
 import java.util.Collection;
 import java.util.Collections;

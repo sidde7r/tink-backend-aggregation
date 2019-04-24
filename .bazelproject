@@ -16,6 +16,7 @@ targets:
   //src/integration/agents:agents_test
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank
