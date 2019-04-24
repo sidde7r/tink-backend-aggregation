@@ -21,5 +21,11 @@ trap handle_result EXIT
 
 ./bazel-wrapper build //tools/format:google-java-format 1>/dev/null
 
-find $(git rev-parse --show-toplevel) -type f -name "*.java" \
-    | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
+# Commit hash right before this branch diverged from master
+branch_point=$(git merge-base master HEAD)
+
+diffing_java_files=$(find $(git diff $branch_point HEAD --name-only) -type f -name "*.java")
+
+if [ ! -z "$diffing_java_files" ]; then
+    echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
+fi
