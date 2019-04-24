@@ -135,11 +135,7 @@ public class IberCajaApiClient {
 
     private RequestBuilder createAuthenticatedRequest(URL url) {
         return createRequest(url)
-                .header(
-                        IberCajaConstants.Headers.USER,
-                        iberCajaSessionStorage.getUsername())
-                .header(
-                        IberCajaConstants.Headers.TICKET,
-                        iberCajaSessionStorage.getTicket());
+                .header(IberCajaConstants.Headers.USER, iberCajaSessionStorage.getUsername())
+                .header(IberCajaConstants.Headers.TICKET, iberCajaSessionStorage.getTicket());
     }
 }
