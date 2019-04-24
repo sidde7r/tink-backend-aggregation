@@ -67,7 +67,7 @@ public class PortfolioDetailsResponse {
             SantanderEsApiClient apiClient,
             String userDataXml,
             List<PortfolioContentEntity> portfolioContent) {
-        return Optional.ofNullable(portfolioContent).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(portfolioContent).orElseGet(Collections::emptyList).stream()
                 .map(item -> item.toInstrument(apiClient, userDataXml))
                 .collect(Collectors.toList());
     }

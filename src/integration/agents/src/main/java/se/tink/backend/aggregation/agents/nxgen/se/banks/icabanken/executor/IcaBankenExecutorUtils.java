@@ -32,7 +32,7 @@ public class IcaBankenExecutorUtils {
     public static Optional<AccountEntity> tryFindOwnAccount(
             final AccountIdentifier accountIdentifier, Collection<AccountEntity> accounts) {
 
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(
                         accountEntity ->
                                 (accountIdentifier
@@ -45,7 +45,7 @@ public class IcaBankenExecutorUtils {
     static Optional<RecipientEntity> tryFindRegisteredTransferAccount(
             final AccountIdentifier accountIdentifier, List<RecipientEntity> recipientAccounts) {
 
-        return Optional.ofNullable(recipientAccounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(recipientAccounts).orElseGet(Collections::emptyList).stream()
                 .filter(
                         recipientEntity ->
                                 (accountIdentifier
@@ -58,7 +58,7 @@ public class IcaBankenExecutorUtils {
     static Optional<RecipientEntity> tryFindRegisteredPaymentAccount(
             final AccountIdentifier accountIdentifier, List<RecipientEntity> recipientAccounts) {
 
-        return Optional.ofNullable(recipientAccounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(recipientAccounts).orElseGet(Collections::emptyList).stream()
                 .filter(
                         recipientEntity ->
                                 (accountIdentifier

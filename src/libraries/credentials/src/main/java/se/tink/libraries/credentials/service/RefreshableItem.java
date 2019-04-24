@@ -101,7 +101,7 @@ public enum RefreshableItem {
     }
 
     public static RefreshableItem[] allRefreshableItemsAsArray() {
-        return REFRESHABLE_ITEMS_ALL.stream().toArray(RefreshableItem[]::new);
+        return REFRESHABLE_ITEMS_ALL.toArray(new RefreshableItem[0]);
     }
 
     public static boolean isAccount(RefreshableItem item) {

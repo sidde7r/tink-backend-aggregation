@@ -33,7 +33,7 @@ public class SdcAgreementServiceConfigurationResponse {
     }
 
     public Optional<SdcPhoneNumbersEntity> findFirstPhoneNumber() {
-        return Optional.ofNullable(this.phoneNumbers).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(this.phoneNumbers).orElseGet(Collections::emptyList).stream()
                 .filter(SdcPhoneNumbersEntity::hasPhoneNumber)
                 .findFirst();
     }

@@ -51,7 +51,7 @@ public class UserSummaryResponse {
     private RefundSummaryEntity refundSummary;
 
     public Collection<CreditCardAccount> toTinkCards(String credentialsId) {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isCard)
                 .map(a -> a.toTinkCard(credentialsId))
                 .filter(Optional::isPresent)
@@ -60,7 +60,7 @@ public class UserSummaryResponse {
     }
 
     public Collection<TransactionalAccount> toTinkAccounts(String credentialsId) {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(a -> !a.isCard())
                 .map(a -> a.toTinkAccount(credentialsId))
                 .filter(Optional::isPresent)

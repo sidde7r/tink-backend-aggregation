@@ -67,7 +67,7 @@ public class AccountDetailsResponse {
     private int numberOfTransfers;
 
     public List<CurrencyAccountEntity> getCurrencyAccounts() {
-        return Optional.ofNullable(currencyAccounts).orElse(Collections.emptyList());
+        return Optional.ofNullable(currencyAccounts).orElseGet(Collections::emptyList);
     }
 
     public String getAccountId() {

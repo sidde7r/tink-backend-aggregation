@@ -7,6 +7,7 @@ java_library(
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints",
     ],
     deps = [
         "//src/integration/api",
@@ -30,6 +31,8 @@ java_library(
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/pair",
+        "//src/libraries/payment:enums",
+        "//src/libraries/payment:rpc",
         "//src/libraries/phone_number_utils",
         "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
@@ -120,6 +123,8 @@ junit_test(
         "//src/libraries/date",
         "//src/libraries/enums",
         "//src/libraries/i18n",
+        "//src/libraries/payment:enums",
+        "//src/libraries/payment:rpc",
         "//src/libraries/serialization",
         "//src/libraries/social_security_number:social_security_number_test",
         "//src/libraries/strings",
@@ -148,6 +153,7 @@ junit_test(
         "//third_party:org_apache_velocity_velocity",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_hamcrest_hamcrest_library",
+        "//third_party:org_iban4j_iban4j",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_seleniumhq_selenium_selenium_firefox_driver",

@@ -21,7 +21,7 @@ public class TransfersResponse implements PaginatorResponse {
 
     @JsonIgnore
     public List<TransferEntity> getTransfers() {
-        return Optional.ofNullable(transfers).orElse(Collections.emptyList());
+        return Optional.ofNullable(transfers).orElseGet(Collections::emptyList);
     }
 
     @Override

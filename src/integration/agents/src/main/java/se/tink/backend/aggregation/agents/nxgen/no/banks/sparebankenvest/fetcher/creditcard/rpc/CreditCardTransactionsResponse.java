@@ -18,7 +18,7 @@ public class CreditCardTransactionsResponse {
 
     @JsonIgnore
     public List<CreditCardTransaction> getTinkTransactions() {
-        return Optional.ofNullable(list).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(list).orElseGet(Collections::emptyList).stream()
                 .map(CrecitCardTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

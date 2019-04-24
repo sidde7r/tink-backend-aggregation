@@ -32,7 +32,7 @@ public final class AccountResponse {
     }
 
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(AccountResponse::validateAndLogAccountType)
                 .map(AccountResponse::toTransactionalAccount)
                 .collect(Collectors.toSet());

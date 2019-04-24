@@ -26,7 +26,7 @@ public class ContractGroupEntity {
         Map<String, String> codeByNumber = new HashMap<>();
 
         Optional.ofNullable(contracts)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .forEach(
                         contract ->
                                 codeByNumber.put(

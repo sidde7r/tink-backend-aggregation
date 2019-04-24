@@ -44,7 +44,7 @@ public class AccountsOverviewResponse {
     }
 
     public List<AccountEntity> getAccounts() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList());
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList);
     }
 
     public int getNumberOfOrders() {

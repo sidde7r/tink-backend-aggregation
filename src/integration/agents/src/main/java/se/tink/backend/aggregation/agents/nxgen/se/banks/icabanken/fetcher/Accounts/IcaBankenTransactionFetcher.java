@@ -56,7 +56,7 @@ public class IcaBankenTransactionFetcher {
 
     private List<Transaction> parseTransactions(TransactionsBodyEntity transactionsBody) {
         return Optional.ofNullable(transactionsBody.getTransactions())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
@@ -65,7 +65,7 @@ public class IcaBankenTransactionFetcher {
         List<UpcomingTransactionEntity> upcomingTransactions =
                 apiClient.fetchUpcomingTransactions();
 
-        return Optional.ofNullable(upcomingTransactions).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(upcomingTransactions).orElseGet(Collections::emptyList).stream()
                 .filter(
                         upcomingTransactionEntity ->
                                 account.getBankIdentifier()

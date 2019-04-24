@@ -48,10 +48,10 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
         final Optional<List<TransactionItem>> bookedTransactions = transactions.getBooked();
         final Optional<List<TransactionItem>> pendingTransactions = transactions.getPending();
         final List<Transaction> transactions = Lists.newArrayList();
-        bookedTransactions.orElse(Collections.emptyList()).stream()
+        bookedTransactions.orElseGet(Collections::emptyList).stream()
                 .map(t -> toTinkTransaction(t, false))
                 .forEach(transactions::add);
-        pendingTransactions.orElse(Collections.emptyList()).stream()
+        pendingTransactions.orElseGet(Collections::emptyList).stream()
                 .map(t -> toTinkTransaction(t, true))
                 .forEach(transactions::add);
         return transactions;
