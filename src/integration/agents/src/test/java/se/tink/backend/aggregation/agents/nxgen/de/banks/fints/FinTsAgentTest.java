@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 
 public class FinTsAgentTest {
 
-    ArgumentHelper helper =
+    private final ArgumentHelper helper =
             new ArgumentHelper("tink.username", "tink.password", "tink.market", "tink.provider");
 
     @Before
