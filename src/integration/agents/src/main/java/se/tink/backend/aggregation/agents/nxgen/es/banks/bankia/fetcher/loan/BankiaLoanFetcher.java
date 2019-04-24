@@ -29,7 +29,7 @@ public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             List<LoanAccountEntity> loans = apiClient.getLoans();
 
-            return Optional.ofNullable(loans).orElse(Collections.emptyList()).stream()
+            return Optional.ofNullable(loans).orElseGet(Collections::emptyList).stream()
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());
         } catch (Exception e) {

@@ -113,7 +113,7 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
         if (accounts == null) {
             accounts =
                     Optional.ofNullable(accountFetcher.fetchAccounts())
-                            .orElse(Collections.emptyList());
+                            .orElseGet(Collections::emptyList);
         }
 
         return accounts;
@@ -121,6 +121,6 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
 
     private List<AggregationTransaction> fetchTransactionsFor(final CreditCardAccount account) {
         return Optional.ofNullable(transactionFetcher.fetchTransactionsFor(account))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

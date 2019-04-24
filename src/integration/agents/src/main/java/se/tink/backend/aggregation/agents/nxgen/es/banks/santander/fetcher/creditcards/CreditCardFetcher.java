@@ -49,7 +49,7 @@ public class CreditCardFetcher
         LoginResponse loginResponse = santanderEsSessionStorage.getLoginResponse();
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
-        return Optional.ofNullable(loginResponse.getCards()).orElse(Collections.emptyList())
+        return Optional.ofNullable(loginResponse.getCards()).orElseGet(Collections::emptyList)
                 .stream()
                 .filter(
                         cardEntity ->

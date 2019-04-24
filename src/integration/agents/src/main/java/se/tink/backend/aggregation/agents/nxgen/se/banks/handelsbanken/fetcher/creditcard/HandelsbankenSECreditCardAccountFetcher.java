@@ -40,7 +40,7 @@ public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<C
                                             .toTinkCreditCard(client)
                                             .collect(Collectors.toList());
                                 })
-                        .orElse(Collections.emptyList()));
+                        .orElseGet(Collections::emptyList));
 
         creditCardAccounts.addAll(
                 sessionStorage
@@ -52,7 +52,7 @@ public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<C
                                     sessionStorage.persist(cards);
                                     return cards.toTinkAccounts(client);
                                 })
-                        .orElse(Collections.emptyList()));
+                        .orElseGet(Collections::emptyList));
 
         return creditCardAccounts;
     }

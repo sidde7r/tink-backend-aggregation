@@ -13,6 +13,6 @@ public class SecuritiesEntity {
     private String type;
 
     public List<AccountEntity> getAccounts() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList());
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList);
     }
 }

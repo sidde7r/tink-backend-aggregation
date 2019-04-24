@@ -31,7 +31,7 @@ public class InstrumentEntity {
     }
 
     public List<PositionEntity> getPositions() {
-        return Optional.ofNullable(positions).orElse(Collections.emptyList());
+        return Optional.ofNullable(positions).orElseGet(Collections::emptyList);
     }
 
     public void setPositions(List<PositionEntity> positions) {

@@ -68,7 +68,7 @@ public final class GetAccountInformationListResponse {
 
         return ok.map(OK::getAccountInformationListItemList)
                 .map(Stream::of)
-                .orElse(Stream.empty()) // Optional -> Stream
+                .orElseGet(Stream::empty)
                 .flatMap(Collection::stream) // Stream<Collection<T>> -> Stream<T>
                 .filter(Objects::nonNull)
                 .map(AccountInformationListItem::getAccountInfo)
