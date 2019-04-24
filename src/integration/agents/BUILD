@@ -7,11 +7,13 @@ java_library(
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/belfius",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/fortis",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander",
+
     ],
     deps = [
         "//src/integration/api",
