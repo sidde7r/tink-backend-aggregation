@@ -23,8 +23,8 @@ public enum EsIdentityDocumentType {
     }
 
     public static boolean isValidNie(String identifier) {
-        identifier = trimDni(identifier);
-        return identifier.matches(NIE_PATTERN) && validNieChecksumLetter(identifier);
+        final String dni = trimDni(identifier);
+        return dni.matches(NIE_PATTERN) && validNieChecksumLetter(dni);
     }
 
     private static boolean validNieChecksumLetter(String input) {
@@ -35,8 +35,8 @@ public enum EsIdentityDocumentType {
     }
 
     public static boolean isValidNif(String identifier) {
-        identifier = trimDni(identifier);
-        return identifier.matches(NIF_PATTERN) && validNifChecksumLetter(identifier);
+        final String dni = trimDni(identifier);
+        return dni.matches(NIF_PATTERN) && validNifChecksumLetter(dni);
     }
 
     public static String trimDni(String identifier) {

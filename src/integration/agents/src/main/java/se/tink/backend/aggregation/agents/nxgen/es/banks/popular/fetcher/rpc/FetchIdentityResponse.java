@@ -22,11 +22,13 @@ public class FetchIdentityResponse extends BancoPopularResponse {
             return null;
         }
 
+        final String documentNumber =
+                Strings.isNullOrEmpty(identity.getNif())
+                        ? identity.getDocumentNumber()
+                        : identity.getNif();
+
         return EsIdentityData.builder()
-                .setDocumentNumber(
-                        !Strings.isNullOrEmpty(identity.getNif())
-                                ? identity.getNif()
-                                : identity.getDocumentNumber())
+                .setDocumentNumber(documentNumber)
                 .addFirstNameElement(identity.getFirstName())
                 .addSurnameElement(identity.getLastname1())
                 .setDateOfBirth(null)
