@@ -1,0 +1,21 @@
+java_library(
+    name = "fortis",
+    srcs = glob(["**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/integration/lib",
+        "//src/libraries/account_identifier",
+        "//src/libraries/amount",
+        "//src/libraries/credentials:service",
+        "//src/libraries/i18n",
+        "//src/libraries/serialization",
+        "//src/libraries/strings",
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
+        "@com_google_guava_guava//jar",
+        "@com_sun_jersey_jersey_core//jar",
+        "@org_apache_commons_commons_lang3//jar",
+        "@org_bouncycastle_bcprov_jdk15on//jar",
+    ],
+)
