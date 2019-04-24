@@ -2105,6 +2105,7 @@
             "multiFactor": false,
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
+            "payload": "tink",
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
