@@ -21,15 +21,8 @@ trap handle_result EXIT
 
 ./bazel-wrapper build //tools/format:google-java-format 1>/dev/null
 
-current_branch=$(git rev-parse --abbrev-ref HEAD)
-
-if [ "$current_branch" = "master" ]; then
-    # Skip checking format -- it is only useful for non-master branches anyway
-    exit
-fi
-
 # Commit hash right before this branch diverged from master
-branch_point=$(git merge-base master HEAD)
+branch_point=$(git merge-base upstream/master HEAD)
 
 diffing_java_files=$(find $(git diff $branch_point HEAD --name-only) -type f -name "*.java")
 
