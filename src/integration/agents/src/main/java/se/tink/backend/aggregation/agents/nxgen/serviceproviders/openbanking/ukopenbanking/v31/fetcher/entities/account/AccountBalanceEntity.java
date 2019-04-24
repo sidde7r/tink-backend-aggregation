@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
@@ -37,25 +38,25 @@ public class AccountBalanceEntity {
         Amount total = getSignedAmount();
 
         // If no credit line is present the balance is already calculated.
-        if (creditLine == null || creditLine.isEmpty()) {
-            return total;
-        }
-
-        // Only one credit line can be approved at a time, but this can be repeated under a
-        // different ExternalLimitType.
-        // We find the first credit line that is included in the balance and return (balance -
-        // credit).
-        // ExternalLimitType.AVAILABLE is not useful when calculating credit exclusive balance so
-        // this is ignored.
-        for (CreditLineEntity credit : creditLine) {
-            if (credit.getType() != UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE) {
-                if (credit.isIncluded()) {
-                    return total.subtract(credit.getAmount());
-                }
-            }
-        }
-
-        return total;
+        return Optional.ofNullable(creditLine)
+                .orElse(Collections.emptyList())
+                .stream()
+                // Only one credit line can be approved at a time, but this can be repeated under a
+                // different ExternalLimitType.
+                // We find the first credit line that is included in the balance and return (balance
+                // -
+                // credit).
+                // ExternalLimitType.AVAILABLE is not useful when calculating credit exclusive
+                // balance so
+                // this is ignored.
+                .filter(
+                        credit ->
+                                credit.getType()
+                                        != UkOpenBankingApiDefinitions.ExternalLimitType.AVAILABLE)
+                .filter(CreditLineEntity::isIncluded)
+                .map(credit -> total.subtract(credit.getAmount()))
+                .findFirst()
+                .orElse(total);
     }
 
     public Optional<Amount> getAvailableCredit() {
@@ -64,7 +65,8 @@ public class AccountBalanceEntity {
             return Optional.empty();
         }
 
-        return creditLine.stream()
+        return creditLine
+                .stream()
                 .filter(
                         credit ->
                                 credit.getType()
