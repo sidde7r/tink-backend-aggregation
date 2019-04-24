@@ -332,7 +332,9 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
-        return new FetchAccountsResponse(updateCreditCardAccounts());
+        // As we fetch and store accounts when we fetch transactions.
+        // We add an empty list to avoid getting duplicate accounts.
+        return new FetchAccountsResponse(Collections.emptyList());
     }
 
     @Override
