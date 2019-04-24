@@ -89,7 +89,7 @@ public class UkOpenBankingApiDefinitions {
                 Map<AccountBalanceType, T> typeMap) {
 
             return Optional.ofNullable(PREFERRED_TYPE_LIST)
-                    .orElse(ImmutableList.of())
+                    .orElseGet(ImmutableList::of)
                     .stream()
                     .filter(typeMap::containsKey)
                     .map(typeMap::get)

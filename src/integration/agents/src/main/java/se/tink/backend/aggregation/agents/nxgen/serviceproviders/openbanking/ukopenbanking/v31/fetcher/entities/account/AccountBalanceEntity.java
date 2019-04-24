@@ -39,7 +39,7 @@ public class AccountBalanceEntity {
 
         // If no credit line is present the balance is already calculated.
         return Optional.ofNullable(creditLine)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .stream()
                 // Only one credit line can be approved at a time, but this can be repeated under a
                 // different ExternalLimitType.
@@ -62,7 +62,7 @@ public class AccountBalanceEntity {
     public Optional<Amount> getAvailableCredit() {
 
         return Optional.ofNullable(creditLine)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(
                         credit ->
