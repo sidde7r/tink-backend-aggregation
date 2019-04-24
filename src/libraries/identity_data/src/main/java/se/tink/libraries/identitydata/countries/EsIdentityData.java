@@ -58,6 +58,8 @@ public class EsIdentityData extends IdentityData {
 
         @Override
         public EsIdentityDataBuilder setDocumentNumber(String val) {
+            val = EsIdentityDocumentType.trimDni(val);
+
             switch (EsIdentityDocumentType.typeOf(val)) {
                 case NIF:
                     nifNumber = val;

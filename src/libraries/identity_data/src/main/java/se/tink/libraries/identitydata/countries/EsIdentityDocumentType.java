@@ -11,7 +11,9 @@ public enum EsIdentityDocumentType {
     private static final String NIE_PATTERN = "[X-Z]\\d{7}[A-Z]";
 
     public static EsIdentityDocumentType typeOf(String identifier) {
-        if (isValidNif(identifier)) {
+        if (Strings.isNullOrEmpty(identifier)) {
+            return OTHER;
+        } else if (isValidNif(identifier)) {
             return NIF;
         } else if (isValidNie(identifier)) {
             return NIE;
@@ -21,9 +23,8 @@ public enum EsIdentityDocumentType {
     }
 
     public static boolean isValidNie(String identifier) {
-        return !Strings.isNullOrEmpty(identifier)
-                && identifier.trim().matches(NIE_PATTERN)
-                && validNieChecksumLetter(identifier.trim());
+        identifier = trimDni(identifier);
+        return identifier.matches(NIE_PATTERN) && validNieChecksumLetter(identifier);
     }
 
     private static boolean validNieChecksumLetter(String input) {
@@ -34,9 +35,18 @@ public enum EsIdentityDocumentType {
     }
 
     public static boolean isValidNif(String identifier) {
-        return !Strings.isNullOrEmpty(identifier)
-                && identifier.trim().matches(NIF_PATTERN)
-                && validNifChecksumLetter(identifier.trim());
+        identifier = trimDni(identifier);
+        return identifier.matches(NIF_PATTERN) && validNifChecksumLetter(identifier);
+    }
+
+    public static String trimDni(String identifier) {
+        identifier = identifier.trim().replace("-", "");
+
+        if (identifier.charAt(0) == '0' && identifier.length() == 10) {
+            identifier = identifier.substring(1);
+        }
+
+        return identifier;
     }
 
     private static boolean validNifChecksumLetter(String input) {
