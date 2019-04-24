@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.utils.CreditCardMasker;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
@@ -373,7 +373,7 @@ public class ProductsEntity {
                         getTinkBalance(),
                         getTinkCredit())
                 .setName(getProductType().getProductName())
-                .setAccountNumber(CreditCardUtils.maskCardNumber(creditCardNumber))
+                .setAccountNumber(CreditCardMasker.maskCardNumber(creditCardNumber))
                 .putInTemporaryStorage(
                         CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER,
                         getProductId().getIdentifier())
