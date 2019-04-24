@@ -21,18 +21,27 @@ PROJECTS = {
         },
     },
     'tink-backend-aggregation-agents': {
-            'chart': True,
-            'salt': False,
-            'branches': {
-                'aggregation-production': {'block': False},
-                'aggregation-staging': {'block': False},
-            },
+        'chart': True,
+        'salt': False,
+        'branches': {
+            'aggregation-production': {'block': False},
+            'aggregation-staging': {'block': False},
         },
+    },
     'tink-backend-aggregation-statuspage-providers-cronjob': {
         'chart': True,
         'salt': False,
         'branches': {
             'aggregation-production': {'block': True},
+        },
+    },
+
+    'tink-backend-aggregation-connectivity-cronjob': {
+        'chart': True,
+        'salt': False,
+        'branches': {
+            'aggregation-production': {'block': True},
+            'aggregation-staging': {'block': False},
         },
     }
 }
