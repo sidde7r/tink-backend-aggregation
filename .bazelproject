@@ -24,6 +24,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank
   -//deb:all
   -//third_party:all
 
