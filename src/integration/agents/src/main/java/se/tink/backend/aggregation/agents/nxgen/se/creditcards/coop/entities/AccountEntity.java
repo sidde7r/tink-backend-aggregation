@@ -135,7 +135,7 @@ public class AccountEntity {
 
     @JsonIgnore
     private Map<String, String> getAccountDetailsMap() {
-        return Optional.ofNullable(details).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(details).orElseGet(Collections::emptyList).stream()
                 .collect(Collectors.toMap(DetailsEntity::getIdLowerCase, DetailsEntity::getValue));
     }
 

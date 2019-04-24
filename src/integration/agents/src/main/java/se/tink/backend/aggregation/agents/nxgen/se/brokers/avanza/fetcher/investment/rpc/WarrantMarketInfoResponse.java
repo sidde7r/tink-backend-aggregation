@@ -158,7 +158,7 @@ public class WarrantMarketInfoResponse {
     }
 
     public List<PositionEntity> getPositions() {
-        return Optional.ofNullable(positions).orElse(Collections.emptyList());
+        return Optional.ofNullable(positions).orElseGet(Collections::emptyList);
     }
 
     public double getPositionsTotalValue() {

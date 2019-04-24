@@ -45,7 +45,7 @@ public class CreditBalanceResponse {
         return Optional.ofNullable(data)
                 .map(BalanceDataEntity::getBalance)
                 .map(Collection::stream)
-                .orElse(Stream.empty())
+                .orElseGet(Stream::empty)
                 .filter(balanceEntity -> balanceEntity.getAccountId().equalsIgnoreCase(accountId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));

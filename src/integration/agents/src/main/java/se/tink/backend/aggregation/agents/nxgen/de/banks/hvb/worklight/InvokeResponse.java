@@ -43,13 +43,14 @@ public final class InvokeResponse {
     public Optional<String> getMessages() {
         return Optional.of(
                         Stream.of(
-                                        Optional.ofNullable(errors).orElse(Collections.emptyList()),
+                                        Optional.ofNullable(errors)
+                                                .orElseGet(Collections::emptyList),
                                         Optional.ofNullable(warnings)
-                                                .orElse(Collections.emptyList()),
-                                        Optional.ofNullable(info).orElse(Collections.emptyList()),
+                                                .orElseGet(Collections::emptyList),
+                                        Optional.ofNullable(info).orElseGet(Collections::emptyList),
                                         Optional.ofNullable(securityServiceLoginError)
                                                 .map(Collections::singletonList)
-                                                .orElse(Collections.emptyList()))
+                                                .orElseGet(Collections::emptyList))
                                 .flatMap(Collection::stream)
                                 .collect(Collectors.joining("; ")))
                 .filter(s -> !s.isEmpty());

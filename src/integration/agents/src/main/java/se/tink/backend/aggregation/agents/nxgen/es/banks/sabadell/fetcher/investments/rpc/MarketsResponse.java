@@ -11,6 +11,6 @@ public class MarketsResponse {
     private List<MarketsEntity> markets;
 
     public List<MarketsEntity> getMarkets() {
-        return Optional.ofNullable(markets).orElse(Collections.emptyList());
+        return Optional.ofNullable(markets).orElseGet(Collections::emptyList);
     }
 }

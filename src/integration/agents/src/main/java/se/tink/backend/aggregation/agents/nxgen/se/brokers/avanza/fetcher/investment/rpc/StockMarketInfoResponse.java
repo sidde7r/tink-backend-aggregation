@@ -206,11 +206,11 @@ public class StockMarketInfoResponse {
     }
 
     public List<DividendEntity> getDividends() {
-        return Optional.ofNullable(dividends).orElse(Collections.emptyList());
+        return Optional.ofNullable(dividends).orElseGet(Collections::emptyList);
     }
 
     public List<RelatedStockEntity> getRelatedStocks() {
-        return Optional.ofNullable(relatedStocks).orElse(Collections.emptyList());
+        return Optional.ofNullable(relatedStocks).orElseGet(Collections::emptyList);
     }
 
     public CompanyEntity getCompany() {
@@ -230,7 +230,7 @@ public class StockMarketInfoResponse {
     }
 
     public List<LatestTradeEntity> getLatestTrades() {
-        return Optional.ofNullable(latestTrades).orElse(Collections.emptyList());
+        return Optional.ofNullable(latestTrades).orElseGet(Collections::emptyList);
     }
 
     public boolean getMarketTrades() {
@@ -238,7 +238,7 @@ public class StockMarketInfoResponse {
     }
 
     public List<PositionEntity> getPositions() {
-        return Optional.ofNullable(positions).orElse(Collections.emptyList());
+        return Optional.ofNullable(positions).orElseGet(Collections::emptyList);
     }
 
     public double getPositionsTotalValue() {

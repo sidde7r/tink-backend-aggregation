@@ -67,7 +67,7 @@ public final class InvestmentRefreshController implements AccountRefresher {
         if (investments == null) {
             investments =
                     Optional.ofNullable(investmentFetcher.fetchAccounts())
-                            .orElse(Collections.emptyList());
+                            .orElseGet(Collections::emptyList);
         }
 
         return investments;

@@ -25,7 +25,7 @@ public class ICSAccountFetcher implements AccountFetcher<CreditCardAccount> {
                 .map(CreditAccountsResponse::getData)
                 .map(AccountDataEntity::getAccount)
                 .map(Collection::stream)
-                .orElse(Stream.empty())
+                .orElseGet(Stream::empty)
                 .filter(account -> account.getCreditCardEntity().isActive())
                 .map(this::enrichAccountWithBalance)
                 .collect(Collectors.toList());

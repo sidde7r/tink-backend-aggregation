@@ -33,7 +33,7 @@ public class CardContractEntity {
     }
 
     public List<CardEntity> getCards() {
-        return Optional.ofNullable(cards).orElse(Collections.emptyList());
+        return Optional.ofNullable(cards).orElseGet(Collections::emptyList);
     }
 
     public boolean isOwned() {

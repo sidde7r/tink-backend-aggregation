@@ -30,6 +30,6 @@ public class InvestmentTransactionsResponse {
                                                         OrderbooksEntity::getName,
                                                         OrderbooksEntity::getIsin,
                                                         (isin1, isin2) -> isin1)))
-                .orElse(Collections.emptyMap());
+                .orElseGet(Collections::emptyMap);
     }
 }

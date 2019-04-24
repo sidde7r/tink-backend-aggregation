@@ -38,12 +38,12 @@ public class HandelsbankenSETransferContext extends TransferableResponse {
     public List<GeneralAccountEntity> retrieveOwnedSourceAccounts() {
         return Optional.ofNullable(fromAccounts)
                 .flatMap(HandelsbankenSEAccountContext::asOwnedAccountEntities)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     public List<GeneralAccountEntity> retrieveDestinationAccounts() {
         return Optional.ofNullable(toAccounts)
                 .flatMap(HandelsbankenSEAccountContext::asGeneralAccountEntities)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

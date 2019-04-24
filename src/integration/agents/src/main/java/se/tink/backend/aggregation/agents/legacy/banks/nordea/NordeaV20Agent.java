@@ -2026,7 +2026,7 @@ public class NordeaV20Agent extends AbstractAgent
         // requesting payments for
         // multiple accounts at the same time.
         for (ProductEntity account :
-                Optional.ofNullable(accounts).orElse(Collections.emptyList())) {
+                Optional.ofNullable(accounts).orElseGet(Collections::emptyList)) {
             for (PaymentEntity paymentEntity : getPayments(account, status)) {
                 PaymentDetailsResponseOut paymentDetails = getPaymentDetails(paymentEntity);
 

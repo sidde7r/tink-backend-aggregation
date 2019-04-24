@@ -121,7 +121,7 @@ public final class LoanRefreshController implements AccountRefresher, Transactio
         if (loans == null) {
             loans =
                     Optional.ofNullable(loanFetcher.fetchAccounts())
-                            .orElse(Collections.emptyList());
+                            .orElseGet(Collections::emptyList);
         }
 
         return loans;
@@ -129,6 +129,6 @@ public final class LoanRefreshController implements AccountRefresher, Transactio
 
     private List<AggregationTransaction> fetchTransactionsFor(final LoanAccount account) {
         return Optional.ofNullable(transactionFetcher.fetchTransactionsFor(account))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }
