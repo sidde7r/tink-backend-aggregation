@@ -86,12 +86,13 @@ public class UkOpenBankingApiDefinitions {
 
         public static <T> Optional<T> getPreferredBalanceEntity(
                 Map<AccountBalanceType, T> typeMap) {
-            for (AccountBalanceType id : PREFERRED_TYPE_LIST) {
-                if (typeMap.containsKey(id)) {
-                    return Optional.of(typeMap.get(id));
-                }
-            }
-            return Optional.empty();
+
+            return Optional.ofNullable(PREFERRED_TYPE_LIST)
+                    .orElse(ImmutableList.of())
+                    .stream()
+                    .filter(typeMap::containsKey)
+                    .map(typeMap::get)
+                    .findFirst();
         }
 
         @JsonCreator
