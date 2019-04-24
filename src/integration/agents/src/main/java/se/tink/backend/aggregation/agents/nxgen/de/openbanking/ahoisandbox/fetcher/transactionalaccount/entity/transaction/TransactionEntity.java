@@ -29,10 +29,10 @@ public class TransactionEntity {
     private String mandateId;
     private String endToEndId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
     @JsonIgnore
