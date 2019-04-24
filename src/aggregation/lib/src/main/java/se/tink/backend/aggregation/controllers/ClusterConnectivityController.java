@@ -26,7 +26,6 @@ public class ClusterConnectivityController {
             try {
                 checkConnectivity(clusterId);
             } catch (AggregationControllerNotReachable e) {
-                log.error("Connection to %s cluster failed", clusterId);
                 anyClusterFailed = true;
             }
         }
@@ -43,7 +42,7 @@ public class ClusterConnectivityController {
         try {
             controllerWrapper.checkConnectivity();
         } catch (ClientHandlerException e) {
-            log.error("Connection to %s cluster failed", clusterId);
+            log.error("Connection to {} cluster failed : {}", clusterId, e.getMessage());
             throw new AggregationControllerNotReachable();
         }
     }
