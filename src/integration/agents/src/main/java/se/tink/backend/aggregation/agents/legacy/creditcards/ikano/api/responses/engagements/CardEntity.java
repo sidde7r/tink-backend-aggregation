@@ -7,9 +7,9 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.utils.CreditCardMasker;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntity {
@@ -30,7 +30,7 @@ public class CardEntity {
         tinkAccount.setAvailableCredit(availableCredit);
         tinkAccount.setBalance(this.calculateBalance());
         if (!Strings.isNullOrEmpty(cardNumber)) {
-            tinkAccount.setAccountNumber(CreditCardUtils.maskCardNumber(cardNumber));
+            tinkAccount.setAccountNumber(CreditCardMasker.maskCardNumber(cardNumber));
         }
 
         return tinkAccount;
