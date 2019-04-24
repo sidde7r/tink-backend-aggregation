@@ -24,18 +24,10 @@ public class BankiaIdentityDataFetcher implements IdentityDataFetcher {
     public IdentityData fetchIdentityData() {
         IdentityDataResponse identityDataResponse = apiClient.fetchIdentityData();
         IdentityDataEntity identityDataEntity = identityDataResponse.getIdentityData();
-        String documentNumber = identityDataEntity.getClientDocument();
 
-        EsIdentityData.EsIdentityDataBuilder builder = EsIdentityData.builder();
-
-        // DNI that starts with a letter is a NIE, identity document for foreigners
-        if (documentNumber.matches("^[a-zA-Z].*$")) {
-            builder.setNieNumber(documentNumber);
-        } else {
-            builder.setNifNumber(documentNumber);
-        }
-
-        return builder.addFirstNameElement(identityDataEntity.getFirstName())
+        return EsIdentityData.builder()
+                .setDocumentNumber(identityDataEntity.getClientDocument())
+                .addFirstNameElement(identityDataEntity.getFirstName())
                 .addSurnameElement(identityDataEntity.getFirstSurName())
                 .addSurnameElement(identityDataEntity.getSecondSurName())
                 .setDateOfBirth(
