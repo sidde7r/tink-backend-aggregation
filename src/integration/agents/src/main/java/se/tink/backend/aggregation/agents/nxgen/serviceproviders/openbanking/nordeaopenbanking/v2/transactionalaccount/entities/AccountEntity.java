@@ -45,7 +45,9 @@ public class AccountEntity {
 
     @JsonIgnore
     public AccountTypes tinkAccountType() {
-        return NordeaBaseConstants.ACCOUNT_TYPE.translate(accountType).get();
+        return NordeaBaseConstants.ACCOUNT_TYPE
+                .translate(accountType)
+                .orElseGet(() -> AccountTypes.OTHER);
     }
 
     public String getId() {
