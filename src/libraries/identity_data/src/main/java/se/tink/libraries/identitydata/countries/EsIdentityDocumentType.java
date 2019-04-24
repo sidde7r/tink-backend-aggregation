@@ -40,13 +40,13 @@ public enum EsIdentityDocumentType {
     }
 
     public static String trimDni(String identifier) {
-        identifier = identifier.trim().replace("-", "");
+        String trimmed = identifier.trim().replace("-", "");
 
-        if (identifier.charAt(0) == '0' && identifier.length() == 10) {
-            identifier = identifier.substring(1);
+        if (trimmed.charAt(0) == '0' && trimmed.length() == 10) {
+            return trimmed.substring(1);
+        } else {
+            return trimmed;
         }
-
-        return identifier;
     }
 
     private static boolean validNifChecksumLetter(String input) {
