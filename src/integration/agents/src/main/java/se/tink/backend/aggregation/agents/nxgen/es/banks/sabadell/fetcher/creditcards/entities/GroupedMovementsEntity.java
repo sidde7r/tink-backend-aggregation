@@ -29,7 +29,7 @@ public class GroupedMovementsEntity {
         List<CreditCardTransaction> transactions = new ArrayList<>();
 
         Optional.ofNullable(periodMovementModelList)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .forEach(
                         periodMovementEntity ->
                                 transactions.addAll(
@@ -49,7 +49,7 @@ public class GroupedMovementsEntity {
         }
 
         return Optional.ofNullable(movementWrapperList.getMovements())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .filter(movementEntity -> Objects.nonNull(movementEntity.getCardMovement()))
                 .map(
                         movementEntity ->

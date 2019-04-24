@@ -2,8 +2,13 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -12,6 +17,12 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -23,6 +34,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -47,7 +59,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     @Override
-    public AgentWorkerCommandResult execute() throws Exception {
+    public AgentWorkerCommandResult execute() {
         Agent agent = context.getAgent();
         Catalog catalog = context.getCatalog();
 
@@ -97,6 +109,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 } else {
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
                 }
+            } else if (agent instanceof NextGenerationAgent) {
+                handlePayment((NextGenerationAgent) agent, transferRequest);
             }
 
             metricAction.completed();
@@ -190,6 +204,30 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             // Disable the logging filter when we're done with the transfer execute command.
             loggingFilterFactory.removeClientFilters();
             resetCredentialsStatus();
+        }
+    }
+
+    private void handlePayment(
+            NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest) {
+        PaymentResponse createPaymentResponse =
+                nextGenerationAgent.createPayment(PaymentRequest.of(transferRequest));
+        PaymentMultiStepResponse signPaymentMultiStepResponse =
+                nextGenerationAgent.signPayment(PaymentMultiStepRequest.of(createPaymentResponse));
+
+        Map<String, String> map;
+        List<Field> fields;
+        String nextStep = signPaymentMultiStepResponse.getStep();
+        Payment payment = signPaymentMultiStepResponse.getPayment();
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
+            fields = signPaymentMultiStepResponse.getFields();
+            map = Collections.emptyMap();
+
+            signPaymentMultiStepResponse =
+                    nextGenerationAgent.signPayment(
+                            new PaymentMultiStepRequest(
+                                    payment, nextStep, fields, new ArrayList<>(map.values())));
+            nextStep = signPaymentMultiStepResponse.getStep();
+            payment = signPaymentMultiStepResponse.getPayment();
         }
     }
 

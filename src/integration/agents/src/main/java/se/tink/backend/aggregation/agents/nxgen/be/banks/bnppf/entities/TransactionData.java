@@ -12,7 +12,7 @@ public class TransactionData {
 
     public List<se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction>
             getTinkTransactions(String externalAccountId) {
-        return Optional.ofNullable(transaction).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transaction).orElseGet(Collections::emptyList).stream()
                 .map(transaction -> transaction.toTinkTransaction(externalAccountId))
                 .collect(Collectors.toList());
     }

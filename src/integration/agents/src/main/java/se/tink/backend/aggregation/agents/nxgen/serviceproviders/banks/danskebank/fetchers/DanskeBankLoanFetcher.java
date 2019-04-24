@@ -46,7 +46,7 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
             ListLoansResponse loansResponse =
                     apiClient.listLoans(ListLoansRequest.createFromLanguageCode(languageCode));
 
-            return Optional.ofNullable(loansResponse.getLoans()).orElse(Collections.emptyList())
+            return Optional.ofNullable(loansResponse.getLoans()).orElseGet(Collections::emptyList)
                     .stream()
                     .map(this::toLoanAccount)
                     .collect(Collectors.toList());

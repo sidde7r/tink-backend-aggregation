@@ -30,7 +30,7 @@ public class PortfolioEntity {
     private String accountId;
 
     public List<InstrumentEntity> getInstruments() {
-        return Optional.ofNullable(instruments).orElse(Collections.emptyList());
+        return Optional.ofNullable(instruments).orElseGet(Collections::emptyList);
     }
 
     public double getTotalProfit() {

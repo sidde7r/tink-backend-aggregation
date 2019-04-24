@@ -14,7 +14,7 @@ public class CardsResponse extends CrossKeyResponse {
     private List<Object> data;
 
     public List<CrossKeyCard> getCards() {
-        return Optional.ofNullable(cards).orElse(Collections.emptyList());
+        return Optional.ofNullable(cards).orElseGet(Collections::emptyList);
     }
 
     public boolean hasData() {

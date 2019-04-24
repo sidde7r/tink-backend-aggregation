@@ -195,7 +195,7 @@ public class IcaBankenApiClient {
                         .getBody()
                         .getDepots();
 
-        return Optional.ofNullable(depots).orElse(Collections.emptyList());
+        return Optional.ofNullable(depots).orElseGet(Collections::emptyList);
     }
 
     public FundDetailsBodyEntity getFundDetails(String fundId) {
@@ -251,7 +251,7 @@ public class IcaBankenApiClient {
                         .get(AssignmentsResponse.class)
                         .getBody();
 
-        return Optional.ofNullable(bodyEntity.getAssignments()).orElse(Collections.emptyList());
+        return Optional.ofNullable(bodyEntity.getAssignments()).orElseGet(Collections::emptyList);
     }
 
     public ValidateEInvoiceResponse validateEInvoice(ValidateEInvoiceRequest validateRequest) {
@@ -281,7 +281,7 @@ public class IcaBankenApiClient {
                         .get(TransferBanksResponse.class)
                         .getBody();
 
-        return Optional.ofNullable(bodyEntity.getTransferBanks()).orElse(Collections.emptyList());
+        return Optional.ofNullable(bodyEntity.getTransferBanks()).orElseGet(Collections::emptyList);
     }
 
     public Optional<String> fetchPaymentDestinationName(String giroNumber) {

@@ -19,7 +19,7 @@ public class TransactionalAccountFetcher implements AccountFetcher<Transactional
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return Optional.ofNullable(apiClient.fetchAccounts())
-                .map(TransactionalAccountsResponse::getAccounts).orElse(Collections.emptyList())
+                .map(TransactionalAccountsResponse::getAccounts).orElseGet(Collections::emptyList)
                 .stream()
                 .map(acc -> acc.toCheckingAccount(apiClient.getBalance(acc.getResourceId())))
                 .collect(Collectors.toList());

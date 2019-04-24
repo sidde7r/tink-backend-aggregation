@@ -56,7 +56,7 @@ public class OperationSummaryResponse implements TransactionKeyPaginatorResponse
         List<Transaction> transactions = Lists.newArrayList();
 
         Optional.ofNullable(operations).map(o -> o.getTransactions())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .map(OperationEntity::toTransaction)
                 .forEach(transactions::add);
 

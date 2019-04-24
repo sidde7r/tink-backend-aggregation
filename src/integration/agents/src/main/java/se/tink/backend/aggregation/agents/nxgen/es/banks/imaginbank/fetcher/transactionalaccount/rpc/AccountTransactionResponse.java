@@ -42,7 +42,7 @@ public class AccountTransactionResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transactions).orElseGet(Collections::emptyList).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

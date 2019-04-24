@@ -520,7 +520,7 @@ public class SEBApiAgent extends AbstractAgent
         List<Instrument> instruments = new ArrayList<>();
 
         Optional.ofNullable(holdingsEntities)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .forEach(
                         holdingsEntity -> {
                             Optional<Instrument> instrument = holdingsEntity.toInstrument();

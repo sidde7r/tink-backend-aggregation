@@ -22,7 +22,7 @@ public class BankIdCollectResponse {
     private String transactionId;
 
     public List<Object> getRecommendedTargetCustomers() {
-        return Optional.ofNullable(recommendedTargetCustomers).orElse(Collections.emptyList());
+        return Optional.ofNullable(recommendedTargetCustomers).orElseGet(Collections::emptyList);
     }
 
     public String getName() {
@@ -34,7 +34,7 @@ public class BankIdCollectResponse {
     }
 
     public List<LoginEntity> getLogins() {
-        return Optional.ofNullable(logins).orElse(Collections.emptyList());
+        return Optional.ofNullable(logins).orElseGet(Collections::emptyList);
     }
 
     public String getTransactionId() {

@@ -29,6 +29,6 @@ public class HandelsbankenLoanFetcher implements AccountFetcher<LoanAccount> {
                 .map(
                         applicationEntryPoint ->
                                 client.loans(applicationEntryPoint).toTinkLoans(credentials))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }
