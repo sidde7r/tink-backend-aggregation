@@ -29,11 +29,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class IberCajaAgent extends NextGenerationAgent {
 
     private final IberCajaApiClient apiClient;
+    private final IberCajaSessionStorage iberCajaSessionStorage;
 
     public IberCajaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new IberCajaApiClient(client, sessionStorage);
+        this.iberCajaSessionStorage = new IberCajaSessionStorage(sessionStorage);
+        this.apiClient = new IberCajaApiClient(client, iberCajaSessionStorage);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class IberCajaAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new IberCajaPasswordAuthenticator(apiClient, sessionStorage));
+                new IberCajaPasswordAuthenticator(apiClient, iberCajaSessionStorage));
     }
 
     @Override
