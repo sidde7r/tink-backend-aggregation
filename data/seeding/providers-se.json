@@ -1467,6 +1467,10 @@
         },
         {
             "name": "seb-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
             "className": "banks.seb.SEBApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -2109,6 +2113,21 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "name": "se-seb-oauth2",
+            "displayName": "SEB (Sandbox)",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.openbanking.sebopenbanking.SebAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "payload": null,
+            "tutorialUrl": null,
+            "fields": []
         },
         {
             "name": "se-nordea-oauth2",
