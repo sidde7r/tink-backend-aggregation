@@ -690,6 +690,9 @@
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS"
     ],
+    "nxgen.serviceproviders.openbanking.sebopenbanking.SebAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent": [
         "CREDIT_CARDS"
     ],

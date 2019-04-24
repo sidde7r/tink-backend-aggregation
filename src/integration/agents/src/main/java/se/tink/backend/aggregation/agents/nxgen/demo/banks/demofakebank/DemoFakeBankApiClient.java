@@ -11,16 +11,13 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DemoFakeBankApiClient {
     private final TinkHttpClient client;
-    private PersistentStorage persistentStorage;
     private DemoFakeBankConfiguration configuration;
 
-    public DemoFakeBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public DemoFakeBankApiClient(TinkHttpClient client) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
     }
 
     public DemoFakeBankConfiguration getConfiguration() {
@@ -39,7 +36,7 @@ public class DemoFakeBankApiClient {
     }
 
     private URL createBaseUrl() {
-        return new URL(persistentStorage.get(DemoFakeBankConstants.Storage.BASE_URL));
+        return new URL(configuration.getBaseUrl());
     }
 
     private RequestBuilder createRequest(URL url) {
