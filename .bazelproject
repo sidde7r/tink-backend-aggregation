@@ -16,6 +16,7 @@ targets:
   //src/integration/agents:agents_test
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank
   -//deb:all
   -//third_party:all
 
