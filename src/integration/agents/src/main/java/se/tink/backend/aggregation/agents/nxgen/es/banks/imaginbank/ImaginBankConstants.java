@@ -21,6 +21,8 @@ public class ImaginBankConstants {
         public static final String INITIATE_CARD_FETCHING_PATH = "finanbox/inicializarBoxes";
         static final String CARDS_PATH = "tarbox/listadoTarjetas";
         static final String CARD_TRANSACTIONS_PATH = "tarbox/listaMovimientos";
+
+        static final String USER_DATA_PATH = "login/loginDatosUsuario";
     }
 
     public static class Urls {
@@ -41,6 +43,8 @@ public class ImaginBankConstants {
 
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
+
+        public static final URL USER_DATA = new URL(BASE + ApiService.USER_DATA_PATH);
     }
 
     public static class DefaultRequestParams {
@@ -98,6 +102,10 @@ public class ImaginBankConstants {
     }
 
     public static class Storage {
-        public static final String USER_NAME = "userName";
+        public static final String LOGIN_RESPONSE = "loginResponse";
+    }
+
+    public static class IdentityData {
+        public static final String DNI = "linkDNI";
     }
 }

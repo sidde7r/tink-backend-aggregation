@@ -46,6 +46,6 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
                                 ImaginBankConstants.DefaultRequestParams.DEMO,
                                 ImaginBankConstants.DefaultRequestParams.ALTA_IMAGINE));
 
-        sessionStorage.setUserName(loginResponse.getUserName());
+        sessionStorage.setLoginResponse(loginResponse);
     }
 }

@@ -7,9 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LoginResponse {
 
     @JsonProperty("nombre")
-    private String userName;
+    private String name;
 
-    public String getUserName() {
-        return userName;
+    @JsonProperty("fechaNacimiento")
+    private String dateOfBirth;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 }

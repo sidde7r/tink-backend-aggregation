@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.ImaginBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.ImaginBankCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.ImaginBankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.ImaginBankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.session.ImaginBankSessionHandler;
@@ -29,7 +32,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * The main differences are authentication.
  * ImaginBank also has separate account fetching
  */
-public class ImaginBankAgent extends NextGenerationAgent {
+public class ImaginBankAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage imaginBankSessionStorage;
@@ -111,5 +114,12 @@ public class ImaginBankAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final ImaginBankIdentityDataFetcher fetcher =
+                new ImaginBankIdentityDataFetcher(imaginBankSessionStorage, apiClient);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

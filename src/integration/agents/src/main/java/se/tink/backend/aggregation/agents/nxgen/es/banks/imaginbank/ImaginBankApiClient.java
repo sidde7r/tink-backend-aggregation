@@ -11,6 +11,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata.rpc.UserDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -145,6 +147,13 @@ public class ImaginBankApiClient {
         }
 
         return true;
+    }
+
+    public UserDataResponse fetchDni() {
+        UserDataRequest request = new UserDataRequest(ImaginBankConstants.IdentityData.DNI);
+
+        return createRequest(ImaginBankConstants.Urls.USER_DATA)
+                .post(UserDataResponse.class, request);
     }
 
     private RequestBuilder createRequest(URL url) {
