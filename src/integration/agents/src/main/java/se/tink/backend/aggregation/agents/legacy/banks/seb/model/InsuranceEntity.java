@@ -73,6 +73,9 @@ public class InsuranceEntity {
 
         switch (type.toLowerCase()) {
             case SEBApiConstants.PortfolioType.ENDOWMENT_INSURANCE:
+            case SEBApiConstants.PortfolioType.PENSION_SAVINGS_FUND:
+            case SEBApiConstants.PortfolioType.SAFE_PENSION_INSURANCE:
+            case SEBApiConstants.PortfolioType.PENSION_INSURANCE:
                 return Portfolio.Type.KF;
             case SEBApiConstants.PortfolioType.OCCUPATIONAL_PENSION:
                 return Portfolio.Type.PENSION;
