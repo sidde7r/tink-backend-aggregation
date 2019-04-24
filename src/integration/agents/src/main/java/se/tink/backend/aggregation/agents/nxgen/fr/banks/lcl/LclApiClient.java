@@ -103,7 +103,7 @@ public class LclApiClient {
                         body.getBodyValue(),
                         AccessSummaryResponse.class);
 
-        return Optional.ofNullable(response.getAccountGroupList()).orElse(Collections.emptyList())
+        return Optional.ofNullable(response.getAccountGroupList()).orElseGet(Collections::emptyList)
                 .stream()
                 .filter(AccountGroupEntity::isCheckingAccountGroup)
                 .findFirst();

@@ -47,7 +47,7 @@ public class NordeaAccountParser {
 
     protected Collection<AccountIdentifier> getAccountIdentifiers(AccountEntity accountEntity) {
         return Optional.ofNullable(accountEntity.getAccountNumbers())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .map(AccountNumbersEntity::toTinkIdentifier)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -72,7 +72,7 @@ public class NordeaAccountParser {
             AccountEntity accountEntity, final String accountNumberType) {
 
         return Optional.ofNullable(accountEntity.getAccountNumbers())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .filter(
                         accountNumberEntity ->
                                 accountNumberType.equalsIgnoreCase(accountNumberEntity.getType())

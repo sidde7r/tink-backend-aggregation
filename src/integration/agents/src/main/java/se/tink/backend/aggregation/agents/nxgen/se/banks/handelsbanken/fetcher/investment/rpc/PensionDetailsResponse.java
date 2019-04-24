@@ -55,7 +55,7 @@ public class PensionDetailsResponse extends BaseResponse {
                                                 .filter(Optional::isPresent)
                                                 .map(Optional::get)
                                                 .collect(Collectors.toList()))
-                        .orElse(Collections.emptyList()));
+                        .orElseGet(Collections::emptyList));
         return portfolio;
     }
 

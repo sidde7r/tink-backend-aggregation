@@ -19,7 +19,7 @@ public class CardTransactionsListEntity {
 
     @JsonIgnore
     public List<CreditCardTransaction> getTinkTransactions() {
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transactions).orElseGet(Collections::emptyList).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

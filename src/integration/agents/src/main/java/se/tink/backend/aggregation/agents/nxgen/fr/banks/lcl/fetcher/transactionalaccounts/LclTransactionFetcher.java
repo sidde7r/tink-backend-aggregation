@@ -40,7 +40,7 @@ public class LclTransactionFetcher implements TransactionFetcher<TransactionalAc
         TransactionsResponse transactionsResponse = apiClient.getTransactions(accountDetailsEntity);
 
         return Optional.ofNullable(transactionsResponse.getTransactionsList())
-                .orElse(Collections.emptyList()).stream()
+                .orElseGet(Collections::emptyList).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

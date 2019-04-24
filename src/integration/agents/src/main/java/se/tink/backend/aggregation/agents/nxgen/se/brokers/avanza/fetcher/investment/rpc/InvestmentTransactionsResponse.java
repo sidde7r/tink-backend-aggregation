@@ -18,7 +18,7 @@ public class InvestmentTransactionsResponse {
     }
 
     public List<OrderbookEntity> getOrderbooks() {
-        return Optional.ofNullable(orderbooks).orElse(Collections.emptyList());
+        return Optional.ofNullable(orderbooks).orElseGet(Collections::emptyList);
     }
 
     public IsinMap toIsinMap() {

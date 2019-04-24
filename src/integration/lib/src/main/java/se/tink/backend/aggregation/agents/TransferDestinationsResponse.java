@@ -64,7 +64,7 @@ public class TransferDestinationsResponse {
     }
 
     public Map<Account, List<TransferDestinationPattern>> getDestinations() {
-        return Optional.ofNullable(destinations).orElse(Collections.emptyMap());
+        return Optional.ofNullable(destinations).orElseGet(Collections::emptyMap);
     }
 
     private static Map<Account, List<TransferDestinationPattern>> asMap(

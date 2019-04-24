@@ -13,6 +13,6 @@ public class AccountsResponse {
     private List<AccountEntity> accounts;
 
     public List<AccountEntity> getAccounts() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList());
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList);
     }
 }

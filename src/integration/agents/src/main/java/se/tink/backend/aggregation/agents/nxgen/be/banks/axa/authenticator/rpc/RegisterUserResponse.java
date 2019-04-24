@@ -26,7 +26,7 @@ public final class RegisterUserResponse {
         return Optional.ofNullable(output)
                 .map(OutputEntity::getErrors)
                 .map(Stream::of)
-                .orElse(Stream.empty())
+                .orElseGet(Stream::empty)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());

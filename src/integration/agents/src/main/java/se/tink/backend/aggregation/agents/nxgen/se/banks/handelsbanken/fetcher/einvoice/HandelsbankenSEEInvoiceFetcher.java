@@ -25,6 +25,6 @@ public class HandelsbankenSEEInvoiceFetcher implements EInvoiceFetcher {
                 .applicationEntryPoint()
                 .map(client::pendingEInvoices)
                 .map(PendingEInvoicesResponse::toTinkTransfers)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

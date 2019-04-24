@@ -131,6 +131,6 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
 
     private List<PortfolioEntity> getStockPortfolios() {
         return Optional.ofNullable(apiClient.fetchDepositList().getPortfolioList())
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

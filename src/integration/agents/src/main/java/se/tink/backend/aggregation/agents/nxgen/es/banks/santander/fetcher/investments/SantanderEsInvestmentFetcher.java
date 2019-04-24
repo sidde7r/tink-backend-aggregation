@@ -44,7 +44,8 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
         // stocks
-        Optional.ofNullable(loginResponse.getPortfolios()).orElse(Collections.emptyList()).stream()
+        Optional.ofNullable(loginResponse.getPortfolios()).orElseGet(Collections::emptyList)
+                .stream()
                 .map(
                         portfolio ->
                                 parsePortfolioAccount(
@@ -54,7 +55,7 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
                 .forEach(accounts::add);
 
         // funds
-        Optional.ofNullable(loginResponse.getFunds()).orElse(Collections.emptyList()).stream()
+        Optional.ofNullable(loginResponse.getFunds()).orElseGet(Collections::emptyList).stream()
                 .map(fund -> parseFundAccount(fund, userDataXml))
                 .forEach(accounts::add);
 

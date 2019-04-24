@@ -94,15 +94,15 @@ public class LoginResponse {
     }
 
     public List<AccountEntity> getAccountList() {
-        return Optional.ofNullable(accountList).orElse(Collections.emptyList());
+        return Optional.ofNullable(accountList).orElseGet(Collections::emptyList);
     }
 
     public List<CardEntity> getCards() {
-        return Optional.ofNullable(cards).orElse(Collections.emptyList());
+        return Optional.ofNullable(cards).orElseGet(Collections::emptyList);
     }
 
     public List<FundEntity> getFunds() {
-        return Optional.ofNullable(funds).orElse(Collections.emptyList());
+        return Optional.ofNullable(funds).orElseGet(Collections::emptyList);
     }
 
     public List<LoanEntity> getLoans() {

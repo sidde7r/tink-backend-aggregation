@@ -59,7 +59,7 @@ public class HandelsbankenSEUpcomingTransactionFetcher
                                                             getTransferDetails(transaction)))
                                     .collect(Collectors.toList());
                         })
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     private Transfer getTransferDetails(PendingTransaction transaction) {
@@ -98,7 +98,7 @@ public class HandelsbankenSEUpcomingTransactionFetcher
                 findAccount(account)
                         .map(client::transactions)
                         .map(TransactionsSEResponse::getTodaysTransactions)
-                        .orElse(Stream.empty())
+                        .orElseGet(Stream::empty)
                         .map(HandelsbankenSETransaction::positiveAmount)
                         .collect(Collectors.toList());
 

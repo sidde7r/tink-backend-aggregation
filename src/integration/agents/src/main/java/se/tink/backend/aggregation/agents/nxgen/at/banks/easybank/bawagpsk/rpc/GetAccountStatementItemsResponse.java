@@ -48,7 +48,7 @@ public final class GetAccountStatementItemsResponse {
         final String description =
                 String.join(
                         " ",
-                        Optional.ofNullable(item.getTextLines()).orElse(Collections.emptyList()));
+                        Optional.ofNullable(item.getTextLines()).orElseGet(Collections::emptyList));
         if (currency.isPresent() && balance.isPresent() && date.isPresent()) {
             return Optional.of(
                     Transaction.builder()
@@ -67,7 +67,7 @@ public final class GetAccountStatementItemsResponse {
                 .map(GetAccountStatementItemsResponseEntity::getOk)
                 .map(OK::getAccountStatementItemList)
                 .map(Stream::of)
-                .orElse(Stream.empty())
+                .orElseGet(Stream::empty)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .map(this::buildTransaction)

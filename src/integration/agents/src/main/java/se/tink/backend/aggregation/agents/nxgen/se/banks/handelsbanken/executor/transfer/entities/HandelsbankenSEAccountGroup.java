@@ -62,6 +62,6 @@ public class HandelsbankenSEAccountGroup {
                 .map(
                         accounts ->
                                 accounts.map(HandelsbankenSEPaymentAccount::toGeneralAccountEntity))
-                .orElse(Stream.empty());
+                .orElseGet(Stream::empty);
     }
 }

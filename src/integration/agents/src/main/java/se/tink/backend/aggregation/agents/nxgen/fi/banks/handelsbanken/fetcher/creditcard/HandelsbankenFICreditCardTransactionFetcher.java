@@ -78,7 +78,7 @@ public class HandelsbankenFICreditCardTransactionFetcher
                                                     .tinkTransactions(account));
                                     return subTransactions;
                                 })
-                        .orElse(Collections.emptyList());
+                        .orElseGet(Collections::emptyList);
         List<Transaction> transactions = new ArrayList<>(accountTransactions);
         List<CreditCardTransaction> creditCardTransactions =
                 sessionStorage
@@ -88,7 +88,7 @@ public class HandelsbankenFICreditCardTransactionFetcher
                                 creditCard ->
                                         client.creditCardTransactions(creditCard)
                                                 .tinkTransactions(creditCard, account))
-                        .orElse(Collections.emptyList());
+                        .orElseGet(Collections::emptyList);
         transactions.addAll(creditCardTransactions);
 
         return transactions;

@@ -18,7 +18,7 @@ public class AccountsResponse extends CrossKeyResponse {
 
     public Collection<TransactionalAccount> getTransactionalAccounts(
             CrossKeyConfiguration agentConfiguration) {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(CrossKeyAccount::isTransactionalAccount)
                 .map(account -> account.toTransactionalAccount(agentConfiguration))
                 .collect(Collectors.toList());

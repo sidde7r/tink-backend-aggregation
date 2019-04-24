@@ -16,6 +16,6 @@ public class ReservationsResponse {
     }
 
     public List<TransactionEntity> getReservations() {
-        return Optional.ofNullable(reservations).orElse(Collections.emptyList());
+        return Optional.ofNullable(reservations).orElseGet(Collections::emptyList);
     }
 }
