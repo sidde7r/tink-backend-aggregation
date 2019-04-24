@@ -7,10 +7,9 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 
-// @Ignore
-public class FinTsAgentTest {
+public final class FinTsAgentTest {
 
-    ArgumentHelper helper =
+    private final ArgumentHelper helper =
             new ArgumentHelper("tink.username", "tink.password", "tink.market", "tink.provider");
 
     @Before

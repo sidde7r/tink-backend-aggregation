@@ -54,7 +54,7 @@ public class TransactionsSEResponse extends TransactionsResponse implements Pagi
     public Stream<HandelsbankenSETransaction> getTodaysTransactions() {
         LocalDate today = LocalDate.now();
 
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transactions).orElseGet(Collections::emptyList).stream()
                 .filter(transaction -> Objects.equal(today, transaction.dueDateAsLocalDate()));
     }
 }

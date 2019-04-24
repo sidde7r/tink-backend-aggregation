@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoP
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.entities.IdentityEntity;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
-import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
 @SuppressWarnings("unused")
 public class FetchIdentityResponse extends BancoPopularResponse {
@@ -23,18 +22,14 @@ public class FetchIdentityResponse extends BancoPopularResponse {
             return null;
         }
 
-        EsIdentityDataBuilder builder = EsIdentityData.builder();
+        final String documentNumber =
+                Strings.isNullOrEmpty(identity.getNif())
+                        ? identity.getDocumentNumber()
+                        : identity.getNif();
 
-        if (!Strings.isNullOrEmpty(identity.getNif())) {
-            builder.setNifNumber(identity.getNif());
-        } else {
-            LOGGER.warn(
-                    "Non-NIF document number, assuming passport number: {}",
-                    identity.getDocumentNumber());
-            builder.setPassportNumber(identity.getDocumentNumber());
-        }
-
-        return builder.addFirstNameElement(identity.getFirstName())
+        return EsIdentityData.builder()
+                .setDocumentNumber(documentNumber)
+                .addFirstNameElement(identity.getFirstName())
                 .addSurnameElement(identity.getLastname1())
                 .setDateOfBirth(null)
                 .build();

@@ -33,9 +33,9 @@ public class AccountsEntity {
     public List<AccountEntity> getAllAccounts() {
         List<AccountEntity> accounts = Lists.newArrayList();
 
-        accounts.addAll(Optional.ofNullable(ownAccounts).orElse(Collections.emptyList()));
-        accounts.addAll(Optional.ofNullable(jointAccounts).orElse(Collections.emptyList()));
-        accounts.addAll(Optional.ofNullable(minorsAccounts).orElse(Collections.emptyList()));
+        accounts.addAll(Optional.ofNullable(ownAccounts).orElseGet(Collections::emptyList));
+        accounts.addAll(Optional.ofNullable(jointAccounts).orElseGet(Collections::emptyList));
+        accounts.addAll(Optional.ofNullable(minorsAccounts).orElseGet(Collections::emptyList));
 
         return accounts;
     }

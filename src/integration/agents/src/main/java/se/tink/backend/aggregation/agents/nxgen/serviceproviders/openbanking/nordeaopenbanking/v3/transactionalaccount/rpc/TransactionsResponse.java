@@ -54,7 +54,7 @@ public class TransactionsResponse {
                 return Collections.emptyList();
             }
 
-            return Optional.ofNullable(response.getTransactions()).orElse(Collections.emptyList())
+            return Optional.ofNullable(response.getTransactions()).orElseGet(Collections::emptyList)
                     .stream()
                     .map(this.transactionParser::toTinkTransaction)
                     .filter(Optional::isPresent)

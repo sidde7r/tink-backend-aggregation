@@ -23,7 +23,7 @@ public final class GetTransactionsResponse {
 
     public List<AggregationTransaction> getTransactions() {
         return Optional.ofNullable(output).map(OutputEntity::getAccountTransactions)
-                .map(AccountTransactionsEntity::getTransactions).orElse(Collections.emptyList())
+                .map(AccountTransactionsEntity::getTransactions).orElseGet(Collections::emptyList)
                 .stream()
                 .map(GetTransactionsResponse::toTinkTransaction)
                 .collect(Collectors.toList());

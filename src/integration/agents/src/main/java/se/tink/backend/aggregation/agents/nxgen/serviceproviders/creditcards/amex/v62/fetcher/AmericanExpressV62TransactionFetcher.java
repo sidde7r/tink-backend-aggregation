@@ -77,7 +77,7 @@ public class AmericanExpressV62TransactionFetcher
                                 .get(
                                         AmericanExpressV62Constants.Tags.CARD_LIST,
                                         new TypeReference<List<CardEntity>>() {})
-                                .orElse(Collections.emptyList()),
+                                .orElseGet(Collections::emptyList),
                         account);
 
         List<SubcardEntity> partnerCards =

@@ -158,7 +158,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
                         .orElse(null));
 
         portfolio.setCashValue(
-                Optional.ofNullable(this.settlements).orElse(Collections.emptyList()).stream()
+                Optional.ofNullable(this.settlements).orElseGet(Collections::emptyList).stream()
                         .map(SettlementEntity::getBuyingPower)
                         .map(AmountEntity::toTinkAmount)
                         .mapToDouble(Amount::getValue)
@@ -173,7 +173,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
     private List<Instrument> toTinkFundInstruments(SwedbankDefaultApiClient apiClient) {
         Preconditions.checkNotNull(apiClient, API_CLIENT_ERROR_MESSAGE);
 
-        return Optional.ofNullable(placements).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(placements).orElseGet(Collections::emptyList).stream()
                 .map(placementEntity -> placementEntity.toTinkFundInstruments(apiClient))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -182,7 +182,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
     private List<Instrument> toTinkInstruments(SwedbankDefaultApiClient apiClient) {
         Preconditions.checkNotNull(apiClient, API_CLIENT_ERROR_MESSAGE);
 
-        return Optional.ofNullable(placements).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(placements).orElseGet(Collections::emptyList).stream()
                 .map(placementEntity -> placementEntity.toTinkInstruments(apiClient))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

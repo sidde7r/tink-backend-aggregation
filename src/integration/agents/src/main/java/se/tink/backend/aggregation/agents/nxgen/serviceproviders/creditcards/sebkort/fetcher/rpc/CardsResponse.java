@@ -18,11 +18,11 @@ public class CardsResponse {
     private UserEntity user;
 
     public List<CardContractEntity> getCardContracts() {
-        return Optional.ofNullable(cardContracts).orElse(Collections.emptyList());
+        return Optional.ofNullable(cardContracts).orElseGet(Collections::emptyList);
     }
 
     public List<CardAccountEntity> getCardAccounts() {
-        return Optional.ofNullable(cardAccounts).orElse(Collections.emptyList());
+        return Optional.ofNullable(cardAccounts).orElseGet(Collections::emptyList);
     }
 
     public Map<String, CardAccountEntity> getCardAccountsHashMap() {

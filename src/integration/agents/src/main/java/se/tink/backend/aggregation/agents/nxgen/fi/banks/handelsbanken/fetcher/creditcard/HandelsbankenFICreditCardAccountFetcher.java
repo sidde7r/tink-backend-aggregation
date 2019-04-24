@@ -40,7 +40,7 @@ public class HandelsbankenFICreditCardAccountFetcher implements AccountFetcher<C
                                             .toTinkCreditCard(client)
                                             .collect(Collectors.toList());
                                 })
-                        .orElse(Collections.emptyList()));
+                        .orElseGet(Collections::emptyList));
 
         creditCardAccounts.addAll(
                 sessionStorage
@@ -52,7 +52,7 @@ public class HandelsbankenFICreditCardAccountFetcher implements AccountFetcher<C
                                     sessionStorage.persist(cards);
                                     return cards.toTinkAccounts();
                                 })
-                        .orElse(Collections.emptyList()));
+                        .orElseGet(Collections::emptyList));
 
         return creditCardAccounts;
     }

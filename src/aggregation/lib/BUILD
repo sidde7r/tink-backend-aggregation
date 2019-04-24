@@ -45,6 +45,7 @@ java_library(
         "//src/libraries/jersey_log",
         "//src/libraries/metrics",
         "//src/libraries/pair",
+        "//src/libraries/payment:rpc",
         "//src/libraries/queue_lib",
         "//src/libraries/queue_sqs",
         "//src/libraries/repository",

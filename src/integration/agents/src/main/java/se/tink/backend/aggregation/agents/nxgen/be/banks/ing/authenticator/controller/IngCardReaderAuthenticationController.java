@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
-public class IngCardReaderAuthenticationController
+public final class IngCardReaderAuthenticationController
         implements MultiFactorAuthenticator, ProgressiveAuthenticator {
     private static Logger logger =
             LoggerFactory.getLogger(IngCardReaderAuthenticationController.class);
@@ -66,6 +66,19 @@ public class IngCardReaderAuthenticationController
         }
     }
 
+    private static String extractSignCodeInput(final AuthenticationRequest request) {
+        // MIYAG-490: In production it has been observed that, in general, the list of user inputs
+        // only consists of the 'signcodeinput', which is what we are interested in:
+        // {signcodeinput=12345678}
+        // In rare cases however, the 'signcodedescription' is also included for some reason:
+        // {signcodedescription=4321 8765 09, signcodeinput=12345678}
+
+        return request.getUserInputs().stream()
+                .filter(input -> !input.contains(" "))
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
+    }
+
     private AuthenticationResponse step1() {
         List<Field> otpInput =
                 Collections.singletonList(
@@ -102,7 +115,7 @@ public class IngCardReaderAuthenticationController
 
         authenticator.confirmEnroll(
                 authenticationRequest.getCredentials().getField(Field.Key.USERNAME),
-                authenticationRequest.getUserInputs().get(1),
+                extractSignCodeInput(authenticationRequest),
                 authenticationRequest.getCredentials().getSensitivePayload(SIGN_ID));
         authenticator.authenticate(
                 authenticationRequest.getCredentials().getField(Field.Key.USERNAME));
