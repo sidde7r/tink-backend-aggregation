@@ -107,7 +107,7 @@ public final class TransactionalAccountRefreshController
         if (accounts == null) {
             accounts =
                     Optional.ofNullable(accountFetcher.fetchAccounts())
-                            .orElse(Collections.emptyList());
+                            .orElseGet(Collections::emptyList);
         }
 
         return accounts;

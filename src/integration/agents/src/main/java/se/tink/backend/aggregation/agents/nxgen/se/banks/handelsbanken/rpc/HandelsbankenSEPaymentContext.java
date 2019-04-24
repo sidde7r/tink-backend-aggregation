@@ -25,13 +25,13 @@ public class HandelsbankenSEPaymentContext extends BaseResponse {
     }
 
     public List<PaymentRecipient> paymentRecipients() {
-        return Optional.ofNullable(recipients).orElse(Collections.emptyList());
+        return Optional.ofNullable(recipients).orElseGet(Collections::emptyList);
     }
 
     public List<GeneralAccountEntity> retrieveOwnedSourceAccounts() {
         return Optional.ofNullable(fromAccounts)
                 .flatMap(HandelsbankenSEAccountContext::asOwnedAccountEntities)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     public List<GeneralAccountEntity> retrieveDestinationAccounts() {
@@ -42,6 +42,6 @@ public class HandelsbankenSEPaymentContext extends BaseResponse {
                                 recipients
                                         .map(PaymentRecipient::retrieveGeneralAccountEntities)
                                         .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

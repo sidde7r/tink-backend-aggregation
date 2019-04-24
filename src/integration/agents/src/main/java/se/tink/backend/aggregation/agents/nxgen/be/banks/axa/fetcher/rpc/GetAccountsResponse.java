@@ -24,7 +24,7 @@ public final class GetAccountsResponse {
         return Optional.ofNullable(output)
                 .map(OutputEntity::getAccounts)
                 .map(Stream::of)
-                .orElse(Stream.empty())
+                .orElseGet(Stream::empty)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .map(GetAccountsResponse::toTransactionalAccount)

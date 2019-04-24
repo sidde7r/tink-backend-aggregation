@@ -24,14 +24,14 @@ public class AccountsResponse {
 
     @JsonIgnore
     public List<TransactionalAccount> getTinkAccounts(HolderName holderName) {
-        return Optional.ofNullable(account).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(account).orElseGet(Collections::emptyList).stream()
                 .map(account -> account.toTinkAccount(holderName))
                 .collect(Collectors.toList());
     }
 
     @JsonIgnore
     public int getNumberOfAccounts() {
-        return Optional.ofNullable(account).orElse(Collections.emptyList()).size();
+        return Optional.ofNullable(account).orElseGet(Collections::emptyList).size();
     }
 
     public boolean isMoreData() {

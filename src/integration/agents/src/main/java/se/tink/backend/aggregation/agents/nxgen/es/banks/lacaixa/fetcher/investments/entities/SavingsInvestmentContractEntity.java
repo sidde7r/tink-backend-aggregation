@@ -20,7 +20,7 @@ public class SavingsInvestmentContractEntity {
     public Map<String, String> getProductCodeByContractNumber() {
         Map<String, String> response = new HashMap<>();
 
-        Optional.ofNullable(contractGroups).orElse(Collections.emptyList()).stream()
+        Optional.ofNullable(contractGroups).orElseGet(Collections::emptyList).stream()
                 .forEach(
                         contractGroup ->
                                 response.putAll(contractGroup.getProductCodeByContractNumber()));
@@ -30,7 +30,7 @@ public class SavingsInvestmentContractEntity {
 
     @JsonIgnore
     public Optional<String> getContractName(String contractNumber) {
-        return Optional.ofNullable(contractGroups).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(contractGroups).orElseGet(Collections::emptyList).stream()
                 .map(ContractGroupEntity::getContracts)
                 .flatMap(List::stream)
                 .filter(

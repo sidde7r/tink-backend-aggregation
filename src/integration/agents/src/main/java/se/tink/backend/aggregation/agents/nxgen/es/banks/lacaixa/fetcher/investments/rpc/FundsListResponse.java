@@ -36,7 +36,7 @@ public class FundsListResponse {
     @JsonIgnore
     public List<InvestmentAccount> getTinkInvestments(
             LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
-        return Optional.ofNullable(fundAccounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(fundAccounts).orElseGet(Collections::emptyList).stream()
                 .map(
                         fundAccount ->
                                 fundAccount.toTinkInvestment(apiClient, holderName, engagements))

@@ -60,7 +60,7 @@ public class SavingsAccountEntity {
 
     @JsonIgnore
     private HolderName getHolderName() {
-        return Optional.ofNullable(accountHolders).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accountHolders).orElseGet(Collections::emptyList).stream()
                 .filter(
                         holder ->
                                 VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT

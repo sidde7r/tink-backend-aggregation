@@ -198,7 +198,7 @@ public class FundMarketInfoResponse {
     }
 
     public List<RelatedFundsEntity> getRelatedFunds() {
-        return Optional.ofNullable(relatedFunds).orElse(Collections.emptyList());
+        return Optional.ofNullable(relatedFunds).orElseGet(Collections::emptyList);
     }
 
     public FundCompanyEntity getFundCompany() {
@@ -210,7 +210,7 @@ public class FundMarketInfoResponse {
     }
 
     public List<PositionEntity> getPositions() {
-        return Optional.ofNullable(positions).orElse(Collections.emptyList());
+        return Optional.ofNullable(positions).orElseGet(Collections::emptyList);
     }
 
     public Double getPositionsTotalValue() {

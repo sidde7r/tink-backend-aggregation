@@ -44,7 +44,7 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
             String userDataXml =
                     SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
             List<LoanEntity> loanEntities =
-                    Optional.ofNullable(loginResponse.getLoans()).orElse(Collections.emptyList());
+                    Optional.ofNullable(loginResponse.getLoans()).orElseGet(Collections::emptyList);
             return loanEntities.stream()
                     .map(loan -> toTinkLoanOptional(loan, userDataXml))
                     .filter(Optional::isPresent)

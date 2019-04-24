@@ -22,7 +22,7 @@ public class SparebankenSorTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         List<AccountEntity> accountList = apiClient.fetchAccounts();
 
-        return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accountList).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());

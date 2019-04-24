@@ -15,7 +15,7 @@ public class CardsResponse {
 
     @JsonIgnore
     public List<CreditCardAccount> getTinkCreditCards() {
-        return Optional.ofNullable(cardAccountList).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(cardAccountList).orElseGet(Collections::emptyList).stream()
                 .filter(CardAccountEntity::isActiveCreditCard)
                 .map(CardAccountEntity::toTinkCreditCard)
                 .collect(Collectors.toList());

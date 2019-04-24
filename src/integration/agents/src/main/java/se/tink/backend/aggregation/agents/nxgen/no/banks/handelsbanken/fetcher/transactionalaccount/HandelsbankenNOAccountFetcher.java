@@ -22,7 +22,7 @@ public class HandelsbankenNOAccountFetcher implements AccountFetcher<Transaction
     public Collection<TransactionalAccount> fetchAccounts() {
         List<AccountEntity> accounts = apiClient.fetchAccounts();
 
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accounts).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());

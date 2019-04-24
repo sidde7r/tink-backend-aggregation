@@ -20,7 +20,7 @@ public class EInvoiceBodyEntity {
     @JsonIgnore
     public List<Transfer> toTinkTransfers(Catalog catalog) {
 
-        return Optional.ofNullable(eInvoices).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(eInvoices).orElseGet(Collections::emptyList).stream()
                 .map(eInvoice -> eInvoice.toTinkTransfer(catalog))
                 .collect(Collectors.toList());
     }

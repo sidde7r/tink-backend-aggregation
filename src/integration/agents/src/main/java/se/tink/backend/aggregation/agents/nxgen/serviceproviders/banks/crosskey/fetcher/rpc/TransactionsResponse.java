@@ -17,7 +17,7 @@ public class TransactionsResponse extends CrossKeyResponse {
     private List<CrossKeyTransaction> transactions;
 
     public Collection<Transaction> getTinkTransactions(CrossKeyConfiguration agentConfiguration) {
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transactions).orElseGet(Collections::emptyList).stream()
                 .map(transaction -> transaction.toTinkTransaction(agentConfiguration))
                 .collect(Collectors.toList());
     }

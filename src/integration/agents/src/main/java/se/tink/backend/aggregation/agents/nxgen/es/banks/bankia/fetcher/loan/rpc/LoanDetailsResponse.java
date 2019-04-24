@@ -112,7 +112,7 @@ public class LoanDetailsResponse {
 
     @JsonIgnore
     private List<String> getApplicants() {
-        return Optional.ofNullable(debtors).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(debtors).orElseGet(Collections::emptyList).stream()
                 .filter(Predicates.not(debtor -> Strings.isNullOrEmpty(debtor.getDebtorName())))
                 .filter(
                         debtor ->

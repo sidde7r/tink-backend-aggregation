@@ -4,6 +4,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Ignore
 public class BankiaAgentTest {
@@ -14,7 +15,9 @@ public class BankiaAgentTest {
                 .addCredentialField(Field.Key.USERNAME, "")
                 .addCredentialField(Field.Key.PASSWORD, "")
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
 
     @Test

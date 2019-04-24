@@ -18,7 +18,7 @@ public class AccountInfoResponse extends BaseResponse {
 
     @JsonIgnore
     public Map<String, String> getValuesByLabel() {
-        return Optional.ofNullable(items).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(items).orElseGet(Collections::emptyList).stream()
                 .filter(lv -> !Strings.isNullOrEmpty(lv.getLabel()))
                 .collect(
                         Collectors.toMap(
