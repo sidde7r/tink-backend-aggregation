@@ -5,6 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 @Ignore
 public class LaCaixaAgentTest {
@@ -21,7 +22,9 @@ public class LaCaixaAgentTest {
                         .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
                         .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
 
     @Test
