@@ -82,7 +82,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
                 .orElse(false)) {
             return new TransactionFetcherController<>(
                     transactionPaginationHelper,
-                    new TransactionKeyPaginationController(
+                    new TransactionKeyPaginationController<>(
                             EuroInformationOperationsFetcher.create(this.apiClient)));
         }
         return EuroInformationTransactionsFetcher.create(this.apiClient);

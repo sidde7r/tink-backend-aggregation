@@ -32,6 +32,9 @@ public class LoginResponse {
     @XmlElement(name = "domain")
     private List<String> domainList;
 
+    @XmlElement(name = "libelle_client")
+    private String clientName;
+
     public String getReturnCode() {
         return returnCode;
     }
@@ -62,5 +65,9 @@ public class LoginResponse {
 
     public List<String> getDomainList() {
         return domainList;
+    }
+
+    public String getClientName() {
+        return clientName;
     }
 }
