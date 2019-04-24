@@ -76,7 +76,8 @@ agentsServiceConfiguration:
     sbab:
       signBaseUrl: https://secure.sbab.se
     demoFakeBank:
-      baseUrl: http://localhost:9271
+      tink:
+        baseUrl: http://localhost:9271
   creditsafe:
     username: TINKTESTIN
     password: cU7356rwx

@@ -132,6 +132,12 @@ agentsServiceConfiguration:
         redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
         clientSSLP12: "dummyP12"
         clientSSLKeyPassword: "dummyPassword"
+    sebopenbanking:
+      tink:
+        baseUrl: "https://api-sandbox.sebgroup.com"
+        clientId: "dummyId"
+        clientSecret: "dummySecret"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     starling:
       tink:
         aisConfiguration:

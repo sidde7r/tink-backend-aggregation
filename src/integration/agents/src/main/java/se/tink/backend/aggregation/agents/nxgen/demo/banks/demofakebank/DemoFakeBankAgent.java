@@ -44,7 +44,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         clientName = request.getProvider().getPayload();
-        apiClient = new DemoFakeBankApiClient(client, persistentStorage);
+        apiClient = new DemoFakeBankApiClient(client);
         sessionStorage = new SessionStorage();
     }
 

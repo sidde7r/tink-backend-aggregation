@@ -12,3 +12,7 @@ gcloud docker -- push "gcr.io/tink-containers/tink-backend-aggregation-statuspag
 echo "--- Build and push Demo Bank Cronjob image to gcr.io"
 gcloud docker -- build -t "gcr.io/tink-containers/tink-backend-aggregation-demo-bank-cronjob:$VERSION" jobs/cron/demo-bank;
 gcloud docker -- push "gcr.io/tink-containers/tink-backend-aggregation-demo-bank-cronjob:$VERSION";
+
+echo "--- Build and push Connectivity Cronjob image to gcr.io"
+gcloud docker -- build -t "gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:$VERSION" jobs/cron/connectivity;
+gcloud docker -- push "gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:$VERSION";
