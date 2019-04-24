@@ -1114,7 +1114,7 @@
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "TEMPORARY_DISABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "CREDIT_CARD"
         },
