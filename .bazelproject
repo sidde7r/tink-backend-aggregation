@@ -14,6 +14,7 @@ test_sources:
 targets:
   //...:all
   //src/integration/agents:agents_test
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
