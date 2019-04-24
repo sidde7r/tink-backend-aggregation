@@ -27,6 +27,8 @@ public class EsIdentityDocumentTypeTest {
     public void isValidNie() {
         assertTrue(EsIdentityDocumentType.isValidNie("Z2345678M"));
         assertTrue(EsIdentityDocumentType.isValidNie("X2345677E"));
+        assertTrue(EsIdentityDocumentType.isValidNie("X-2345677-E"));
+        assertTrue(EsIdentityDocumentType.isValidNie("  X-2345677-E"));
         assertFalse(EsIdentityDocumentType.isValidNie("X2345677J"));
         assertFalse(EsIdentityDocumentType.isValidNie("Z2345678Z"));
         assertFalse(EsIdentityDocumentType.isValidNie("P2345678Y"));
@@ -35,8 +37,11 @@ public class EsIdentityDocumentTypeTest {
 
     @Test
     public void isValidNif() {
+        assertTrue(EsIdentityDocumentType.isValidNif("012345678Z"));
         assertTrue(EsIdentityDocumentType.isValidNif("12345678Z"));
         assertTrue(EsIdentityDocumentType.isValidNif("12345677J"));
+        assertTrue(EsIdentityDocumentType.isValidNif("012345677J"));
+        assertTrue(EsIdentityDocumentType.isValidNif("0-123-45678-Z "));
         assertFalse(EsIdentityDocumentType.isValidNif("12345678Y"));
         assertFalse(EsIdentityDocumentType.isValidNif("02345678Z"));
         assertFalse(EsIdentityDocumentType.isValidNif("X2345678Z"));

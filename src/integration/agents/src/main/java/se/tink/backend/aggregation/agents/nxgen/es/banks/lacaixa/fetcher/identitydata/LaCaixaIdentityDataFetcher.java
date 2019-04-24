@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc.Use
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
-import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
 public class LaCaixaIdentityDataFetcher implements IdentityDataFetcher {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy");
@@ -15,7 +14,6 @@ public class LaCaixaIdentityDataFetcher implements IdentityDataFetcher {
     private final LaCaixaApiClient apiClient;
 
     public LaCaixaIdentityDataFetcher(LaCaixaApiClient apiClient) {
-
         this.apiClient = apiClient;
     }
 
@@ -23,18 +21,9 @@ public class LaCaixaIdentityDataFetcher implements IdentityDataFetcher {
     public IdentityData fetchIdentityData() {
         UserDataResponse userDataResponse = apiClient.fetchIdentityData();
 
-        EsIdentityDataBuilder builder = EsIdentityData.builder();
-
-        String dni = userDataResponse.getDNI();
-
-        // DNI that starts with a letter is a NIE, identity document for foreigners
-        if (dni.matches("^[a-zA-Z].*$")) {
-            builder.setNieNumber(dni);
-        } else {
-            builder.setNifNumber(dni);
-        }
-
-        return builder.addFirstNameElement(userDataResponse.getFirstName())
+        return EsIdentityData.builder()
+                .setDocumentNumber(userDataResponse.getDNI())
+                .addFirstNameElement(userDataResponse.getFirstName())
                 .addSurnameElement(userDataResponse.getFirstSurName())
                 .addSurnameElement(userDataResponse.getSecondSurName())
                 .setDateOfBirth(LocalDate.parse(userDataResponse.getDateOfBirth(), DATE_FORMATTER))
