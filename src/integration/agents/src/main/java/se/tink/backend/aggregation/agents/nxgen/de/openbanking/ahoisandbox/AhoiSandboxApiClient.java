@@ -72,7 +72,8 @@ public final class AhoiSandboxApiClient {
         return persistentStorage.get(AhoiSandboxConstants.StorageKeys.ACCOUNT_ID);
     }
 
-    public void createAccess(Credentials credentials, ProviderDetailsResponse providerDetailsResponse) {
+    public void createAccess(
+            Credentials credentials, ProviderDetailsResponse providerDetailsResponse) {
 
         final CreateAccessResponse createAccessResponse =
                 getCreateAcccessResponse(providerDetailsResponse.getId(), credentials);

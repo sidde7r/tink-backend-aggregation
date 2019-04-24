@@ -23,8 +23,9 @@ public class AhoiSandboxAuthenticator implements PasswordAuthenticator {
     private final PersistentStorage persistentStorage;
 
     public AhoiSandboxAuthenticator(
-        AhoiSandboxApiClient apiClient, AhoiSandboxConfiguration configuration,
-        PersistentStorage persistentStorage) {
+            AhoiSandboxApiClient apiClient,
+            AhoiSandboxConfiguration configuration,
+            PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         this.persistentStorage = persistentStorage;
@@ -42,23 +43,24 @@ public class AhoiSandboxAuthenticator implements PasswordAuthenticator {
         credentials.setUsername(username);
         credentials.setPassword(password);
 
-        final RegistrationTokenResponse registrationToken = apiClient.getRegistrationTokenResponse();
+        final RegistrationTokenResponse registrationToken =
+                apiClient.getRegistrationTokenResponse();
 
         final UserRegistrationResponse userRegistrationResponse =
-            apiClient.getUserRegistrationResponse(registrationToken.getAccessToken());
+                apiClient.getUserRegistrationResponse(registrationToken.getAccessToken());
 
         final BankingTokenResponse bankingTokenResponse =
-            apiClient.getBankingTokenResponse(
-                userRegistrationResponse.getInstallation()); // Banking token = access token
+                apiClient.getBankingTokenResponse(
+                        userRegistrationResponse.getInstallation()); // Banking token = access token
 
         persistentStorage.put(
-            AhoiSandboxConstants.StorageKeys.ACCESS_TOKEN,
-            bankingTokenResponse.getAccessToken());
+                AhoiSandboxConstants.StorageKeys.ACCESS_TOKEN,
+                bankingTokenResponse.getAccessToken());
 
         final ProvidersListRsponse providersListRsponse = apiClient.getProviderEntities();
 
         final ProviderDetailsResponse providerDetailsResponse =
-            apiClient.getProviderDetailsResponse(providersListRsponse.get(0).getId());
+                apiClient.getProviderDetailsResponse(providersListRsponse.get(0).getId());
 
         apiClient.createAccess(credentials, providerDetailsResponse);
     }

@@ -62,7 +62,8 @@ public final class AhoiSandboxAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
 
         return new PasswordAuthenticationController(
-                new AhoiSandboxAuthenticator(apiClient, getClientConfiguration(), persistentStorage));
+                new AhoiSandboxAuthenticator(
+                        apiClient, getClientConfiguration(), persistentStorage));
     }
 
     @Override
