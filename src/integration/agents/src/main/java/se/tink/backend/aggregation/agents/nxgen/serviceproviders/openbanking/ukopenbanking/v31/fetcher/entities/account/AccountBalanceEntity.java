@@ -61,11 +61,8 @@ public class AccountBalanceEntity {
 
     public Optional<Amount> getAvailableCredit() {
 
-        if (creditLine == null || creditLine.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return creditLine
+        return Optional.ofNullable(creditLine)
+                .orElse(Collections.emptyList())
                 .stream()
                 .filter(
                         credit ->
