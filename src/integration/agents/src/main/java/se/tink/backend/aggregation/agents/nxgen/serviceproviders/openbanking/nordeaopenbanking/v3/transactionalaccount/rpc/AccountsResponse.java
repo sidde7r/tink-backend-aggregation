@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -21,9 +22,12 @@ public class AccountsResponse {
     @JsonIgnore
     private static BiPredicate<AccountEntity, List<AccountTypes>> isOneOfType =
             (account, types) -> types.contains(account.tinkAccountType());
+
     @JsonProperty("group_header")
     private GroupHeaderEntity groupHeader;
+
     private AccountsResponseEntity response;
+
     @JsonProperty("_links")
     private LinkListEntity links;
 
@@ -32,10 +36,9 @@ public class AccountsResponse {
     }
 
     public List<TransactionalAccount> getTinkAccounts(NordeaAccountParser accountParser) {
-        if (response == null || response.getAccounts() == null) {
-            return Collections.emptyList();
-        }
-        return response.getAccounts()
+        return Optional.ofNullable(response)
+                .map(r -> r.getAccounts())
+                .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(AccountEntity::isOpen)
                 .filter(
