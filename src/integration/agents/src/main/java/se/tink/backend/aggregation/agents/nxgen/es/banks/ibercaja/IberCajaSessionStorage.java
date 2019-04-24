@@ -24,11 +24,28 @@ public class IberCajaSessionStorage {
         sessionStorage.put(IberCajaConstants.Storage.TICKET, ticket);
     }
 
+    public void saveFullName(String name) {
+        sessionStorage.put(IberCajaConstants.Storage.FULL_NAME, name);
+    }
+
+    public void saveDocumentNumber(String documentNumber) {
+        sessionStorage.put(IberCajaConstants.Storage.DOCUMENT_NUMBER, documentNumber);
+    }
+
     public String getUsername() {
         return sessionStorage.get(IberCajaConstants.Storage.USERNAME);
     }
 
     public String getTicket() {
         return sessionStorage.get(IberCajaConstants.Storage.TICKET);
+    }
+
+    public String getFullName() {
+        return sessionStorage.get(IberCajaConstants.Storage.FULL_NAME);
+    }
+
+    public String getDocumentNumber() {
+        return sessionStorage.get(IberCajaConstants.Storage.DOCUMENT_NUMBER);
+
     }
 }

@@ -6,6 +6,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SessionResponse {
 
+    @JsonProperty("Nombre")
+    private String name;
+
+    @JsonProperty("NIF")
+    private String nif;
+
+    @JsonProperty("TipoUsuario")
+    private int userType;
+
     @JsonProperty("NICI")
     private int nici;
 
@@ -14,6 +23,18 @@ public class SessionResponse {
 
     @JsonProperty("CodigoUsuario")
     private String user;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getNif() {
+        return nif;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
 
     public int getNici() {
 

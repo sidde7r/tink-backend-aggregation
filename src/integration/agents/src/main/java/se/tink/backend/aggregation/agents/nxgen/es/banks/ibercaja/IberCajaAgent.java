@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.IberCajaPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.identitydata.IberCajaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.IberCajaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.IberCajaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.IberCajaCreditCardTransactionalFetcher;
@@ -26,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IberCajaAgent extends NextGenerationAgent {
+public class IberCajaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final IberCajaApiClient apiClient;
     private final IberCajaSessionStorage iberCajaSessionStorage;
@@ -114,5 +117,12 @@ public class IberCajaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IberCajaIdentityDataFetcher fetcher =
+                new IberCajaIdentityDataFetcher(iberCajaSessionStorage);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }
