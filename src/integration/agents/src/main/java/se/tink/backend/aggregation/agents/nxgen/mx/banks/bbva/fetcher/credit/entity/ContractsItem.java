@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.utils.CreditCardMasker;
 
 @JsonObject
 public class ContractsItem {
@@ -30,7 +30,7 @@ public class ContractsItem {
         try {
             return Optional.of(
                     CreditCardAccount.builder(id, detail.getBalance(), detail.getAvailableCredit())
-                            .setAccountNumber(CreditCardUtils.maskCardNumber(number))
+                            .setAccountNumber(CreditCardMasker.maskCardNumber(number))
                             .setName(alias)
                             .setHolderName(new HolderName(holderName))
                             .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
