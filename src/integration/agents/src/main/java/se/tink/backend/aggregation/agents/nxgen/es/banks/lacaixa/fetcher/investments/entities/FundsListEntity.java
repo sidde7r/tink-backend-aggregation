@@ -64,7 +64,7 @@ public class FundsListEntity {
     private List<Instrument> getInstruments(LaCaixaApiClient apiClient) {
         List<Instrument> instruments = new ArrayList<>();
         Optional.ofNullable(fundsList)
-                .orElse(Collections.emptyList())
+                .orElseGet(Collections::emptyList)
                 .forEach(
                         fund -> {
                             FundDetailsResponse fundDetails =

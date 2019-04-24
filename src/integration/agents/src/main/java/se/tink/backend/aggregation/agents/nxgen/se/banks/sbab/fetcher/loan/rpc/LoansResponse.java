@@ -13,6 +13,6 @@ public class LoansResponse {
     private List<LoanEntity> loans;
 
     public List<LoanEntity> getLoans() {
-        return Optional.ofNullable(loans).orElse(Collections.emptyList());
+        return Optional.ofNullable(loans).orElseGet(Collections::emptyList);
     }
 }

@@ -127,7 +127,7 @@ public class IngTransferDestinationFetcher implements TransferDestinationFetcher
                                         .getBeneficiaries()
                                         .getBeneficiaryList())
                 .map(this::filterValidDestinationAccounts)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     private List<GeneralAccountEntity> filterValidDestinationAccounts(

@@ -3,10 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.authenticator
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants.IdentityTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
-import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
 
 @SuppressWarnings("unused")
 @JsonObject
@@ -43,20 +41,10 @@ public class UserEntity {
     private boolean isBrandActiveAgentUpdated;
 
     public FetchIdentityDataResponse toTinkIdentity() {
-        EsIdentityDataBuilder builder = EsIdentityData.builder();
-
-        switch (idType) {
-            case IdentityTypes.NIF:
-                builder.setNifNumber(dni);
-                break;
-            default:
-                LOGGER.warn(
-                        "ES Sabadell: Unhandled document type: {} (maybe NIE or passport?)",
-                        idType);
-        }
-
         return new FetchIdentityDataResponse(
-                builder.addFirstNameElement(firstName)
+                EsIdentityData.builder()
+                        .setDocumentNumber(dni)
+                        .addFirstNameElement(firstName)
                         .addSurnameElement(lastName)
                         .setDateOfBirth(null)
                         .build());

@@ -60,7 +60,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
 
         List<AccountEntity> accountList = apiClient.fetchAccounts();
 
-        return Optional.ofNullable(accountList).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(accountList).orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isLoanAccount)
                 .map(
                         accountEntity -> {

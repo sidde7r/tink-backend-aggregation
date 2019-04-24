@@ -16,6 +16,6 @@ public class TransactionsResponse {
     }
 
     public List<TransactionEntity> getTransactions() {
-        return Optional.ofNullable(transactions).orElse(Collections.emptyList());
+        return Optional.ofNullable(transactions).orElseGet(Collections::emptyList);
     }
 }

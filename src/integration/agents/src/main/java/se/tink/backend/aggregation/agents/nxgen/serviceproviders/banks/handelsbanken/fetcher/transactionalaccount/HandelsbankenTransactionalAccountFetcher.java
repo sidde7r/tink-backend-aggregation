@@ -32,6 +32,6 @@ public class HandelsbankenTransactionalAccountFetcher
                             sessionStorage.persist(accountList);
                             return accountList.toTinkAccounts(client).collect(Collectors.toList());
                         })
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

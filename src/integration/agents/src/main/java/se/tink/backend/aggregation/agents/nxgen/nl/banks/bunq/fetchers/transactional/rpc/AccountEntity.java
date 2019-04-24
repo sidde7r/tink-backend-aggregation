@@ -103,7 +103,7 @@ public class AccountEntity {
     }
 
     public Optional<CheckingAccount> toTinkCheckingAccount() {
-        List<AliasEntity> aliasList = Optional.ofNullable(alias).orElse(Collections.emptyList());
+        List<AliasEntity> aliasList = Optional.ofNullable(alias).orElseGet(Collections::emptyList);
 
         Optional<String> accountIban =
                 aliasList.stream()

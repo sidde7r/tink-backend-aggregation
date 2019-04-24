@@ -43,7 +43,7 @@ public class LclTransactionalAccountFetcher implements AccountFetcher<Transactio
                 groupListEntity ->
                         accounts.addAll(
                                 Optional.ofNullable(groupListEntity.getAccountList())
-                                        .orElse(Collections.emptyList())));
+                                        .orElseGet(Collections::emptyList)));
 
         return accounts;
     }

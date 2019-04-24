@@ -37,7 +37,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        return Optional.ofNullable(apiClient.getInvestments()).orElse(Collections.emptyList())
+        return Optional.ofNullable(apiClient.getInvestments()).orElseGet(Collections::emptyList)
                 .stream()
                 .filter(
                         account -> {

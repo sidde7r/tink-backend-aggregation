@@ -35,7 +35,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
                         .get(
                                 AmericanExpressV62Constants.Tags.CARD_LIST,
                                 new TypeReference<List<CardEntity>>() {})
-                        .orElse(Collections.emptyList());
+                        .orElseGet(Collections::emptyList);
 
         return cardEntities.stream()
                 .map(card -> card.toCreditCardAccount(configuration))
