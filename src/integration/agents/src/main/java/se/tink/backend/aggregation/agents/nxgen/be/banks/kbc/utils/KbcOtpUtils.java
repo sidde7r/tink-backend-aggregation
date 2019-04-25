@@ -4,14 +4,18 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class KbcOtpUtils {
+    private static final Logger logger = LoggerFactory.getLogger(KbcOtpUtils.class);
 
     private static final String LIBRARY_FILE_PATH;
 
@@ -180,10 +184,16 @@ public class KbcOtpUtils {
     }
 
     public static byte[] wbAesEncrypt(byte[] data) {
+        logger.info("KbcOtpUtils: Reading library {}", LIBRARY_FILE_PATH);
+        logger.info(
+                "KbcOtpUtils: tools/ directory contents: {}",
+                new File(new File(LIBRARY_FILE_PATH).getParent()));
         KbcWhiteBoxAes kbcWhiteBoxAes =
                 (KbcWhiteBoxAes) Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
+        logger.info("KbcOtpUtils: Reading library done, {}", kbcWhiteBoxAes.toString());
         byte[] out = new byte[16];
         kbcWhiteBoxAes.kbc_wb_aes128_encrypt(data, out);
+        logger.info("KbcOtpUtils: wbAesEncrypt done");
         return out;
     }
 
