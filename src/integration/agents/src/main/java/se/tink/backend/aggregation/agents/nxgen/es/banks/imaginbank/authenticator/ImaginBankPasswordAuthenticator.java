@@ -13,12 +13,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 
 public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
 
-    private final ImaginBankApiClient bankClient;
+    private final ImaginBankApiClient apiClient;
     private final ImaginBankSessionStorage sessionStorage;
 
     public ImaginBankPasswordAuthenticator(
-            ImaginBankApiClient bankClient, ImaginBankSessionStorage sessionStorage) {
-        this.bankClient = bankClient;
+            ImaginBankApiClient apiClient, ImaginBankSessionStorage sessionStorage) {
+        this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
@@ -28,7 +28,7 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
 
         // Requests a session ID from the server in the form of a cookie.
         // Also gets seed for password hashing.
-        SessionResponse sessionResponse = bankClient.initializeSession();
+        SessionResponse sessionResponse = apiClient.initializeSession();
 
         // Initialize password hasher with seed from initialization request.
         LaCaixaPasswordHash otpHelper =
@@ -39,13 +39,13 @@ public class ImaginBankPasswordAuthenticator implements PasswordAuthenticator {
 
         // Construct login request from username and hashed password
         LoginResponse loginResponse =
-                bankClient.login(
+                apiClient.login(
                         new LoginRequest(
                                 username,
                                 otpHelper.createOtp(),
                                 ImaginBankConstants.DefaultRequestParams.DEMO,
                                 ImaginBankConstants.DefaultRequestParams.ALTA_IMAGINE));
 
-        sessionStorage.setUserName(loginResponse.getUserName());
+        sessionStorage.setLoginResponse(loginResponse);
     }
 }

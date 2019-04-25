@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class ImaginBankTransactionFetcher
         implements TransactionPagePaginator<TransactionalAccount> {
 
-    private final ImaginBankApiClient bankClient;
+    private final ImaginBankApiClient apiClient;
 
-    public ImaginBankTransactionFetcher(ImaginBankApiClient bankClient) {
-        this.bankClient = bankClient;
+    public ImaginBankTransactionFetcher(ImaginBankApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ImaginBankTransactionFetcher
                         ImaginBankConstants.TemporaryStorage.ACCOUNT_REFERENCE);
 
         AccountTransactionResponse response =
-                bankClient.fetchNextAccountTransactions(accountReference, page == 0);
+                apiClient.fetchNextAccountTransactions(accountReference, page == 0);
 
         return response;
     }
