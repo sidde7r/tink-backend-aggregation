@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
@@ -157,8 +158,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 device.encryptClientPublicKeyAndNonce(aesKey0, iv);
 
         LOGGER.info(
-                String.format(
-                        "%s createAndActivateKbcDevice decryptServerPublicKey", LogTags.DEBUG));
+                String.format("%s createAndActivateKbcDevice activationLicense", LogTags.DEBUG));
         ActivationLicenseResponse activationLicenseResponse =
                 apiClient.activationLicence(
                         device,
@@ -167,19 +167,38 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
         LOGGER.info(
                 String.format(
-                        "%s createAndActivateKbcDevice decryptServerPublicKey", LogTags.DEBUG));
+                        "%s createAndActivateKbcDevice decryptServerPublicKey(byte[%d], %s)",
+                        LogTags.DEBUG,
+                        aesKey0.length,
+                        SerializationUtils.serializeToString(activationLicenseResponse)));
         byte[] serverPublicKey =
                 KbcEnryptionUtils.decryptServerPublicKey(aesKey0, activationLicenseResponse);
+        LOGGER.info(
+                String.format(
+                        "%s calculateSharedSecret(byte[%d])",
+                        LogTags.DEBUG, serverPublicKey.length));
         byte[] sharedSecret = device.calculateSharedSecret(serverPublicKey);
+        LOGGER.info(
+                String.format(
+                        "%s decryptStaticVector(byte[%d], activationLicenseResponse)",
+                        LogTags.DEBUG, sharedSecret.length));
         byte[] staticVector =
                 KbcEnryptionUtils.decryptStaticVector(sharedSecret, activationLicenseResponse);
+        LOGGER.info(
+                String.format(
+                        "%s decryptDynamicVector(byte[%d], activationLicenseResponse)",
+                        LogTags.DEBUG, sharedSecret.length));
         byte[] dynamicVector =
                 KbcEnryptionUtils.decryptDynamicVector(sharedSecret, activationLicenseResponse);
 
+        LOGGER.info(String.format("%s setStaticVector", LogTags.DEBUG));
         device.setStaticVector(new String(staticVector));
+        LOGGER.info(String.format("%s setDynamicVector", LogTags.DEBUG));
         device.setDynamicVector(new String(dynamicVector));
+        LOGGER.info(String.format("%s setDynamicVector done", LogTags.DEBUG));
 
         String challenge = activationLicenseResponse.getChallenge().getValue();
+        LOGGER.info(String.format("%s calculateDeviceCode(%s)", LogTags.DEBUG, challenge));
         String deviceCode = device.calculateDeviceCode(challenge);
 
         LOGGER.info(String.format("%s createAndActivateKbcDevice generateIv", LogTags.DEBUG));

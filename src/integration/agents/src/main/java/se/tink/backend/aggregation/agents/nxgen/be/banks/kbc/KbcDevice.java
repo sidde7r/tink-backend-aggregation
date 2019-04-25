@@ -17,6 +17,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.serializer.KeyPairDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.serializer.KeyPairSerializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.utils.KbcOtpUtils;
@@ -29,6 +31,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class KbcDevice {
+    private static final Logger logger = LoggerFactory.getLogger(KbcDevice.class);
+
     private static class StaticVectorKeys {
         static final int SEED = 2;
         static final int SIGNATURE = 1;
@@ -274,15 +278,22 @@ public class KbcDevice {
     }
 
     public String calculateDeviceCode(String challenge) {
+        logger.info("KbcDevice checkCalculateKeys");
         checkCalculateKeys();
+        logger.info(
+                String.format(
+                        "KbcDevice internalCalculateOtp(byte[%d], 0, [decodeHex(%s)])",
+                        key2.length, challenge));
         String otp =
                 internalCalculateOtp(
                         key2,
                         0,
                         Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
 
+        logger.info("KbcDevice calculateDiversifier");
         byte[] bDiversifier = calculateDiversifier();
         String diversifier = Integer.toString(KbcOtpUtils.bytesToInt(bDiversifier));
+        logger.info("KbcDevice extractTlvFieldAsInt");
         int diversifierLength =
                 KbcOtpUtils.extractTlvFieldAsInt(
                         staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
@@ -291,7 +302,9 @@ public class KbcDevice {
         // last 5 digits of the otp
         otp = otp.substring(otp.length() - 5);
 
+        logger.info("KbcDevice modifyDiversifier");
         String modifiedDiversifier = KbcOtpUtils.modifyDiversifier(diversifier, otp);
+        logger.info("KbcDevice calculateDeviceCode return");
         return modifiedDiversifier + otp;
     }
 
