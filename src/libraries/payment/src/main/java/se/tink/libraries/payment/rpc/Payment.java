@@ -1,7 +1,10 @@
 package se.tink.libraries.payment.rpc;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.pair.Pair;
@@ -19,6 +22,7 @@ public class Payment {
     private PaymentType type;
     private String currency;
     private Reference reference;
+    private TemporaryStorage temporaryStorage;
 
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
@@ -31,6 +35,7 @@ public class Payment {
         this.uniqueId = builder.uniqueId;
         this.reference = builder.reference;
         this.id = UUID.randomUUID();
+        this.temporaryStorage = builder.getTransientStorage();
     }
 
     public String getCurrency() {
@@ -81,6 +86,18 @@ public class Payment {
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
     }
 
+    public String getFromTemporaryStorage(String key) {
+        return temporaryStorage.get(key);
+    }
+
+    public <T> Optional<T> getFromTemporaryStorage(String key, Class<T> valueType) {
+        return temporaryStorage.get(key, valueType);
+    }
+
+    public <T> Optional<T> getFromTemporaryStorage(String key, TypeReference<T> valueType) {
+        return temporaryStorage.get(key, valueType);
+    }
+
     public static class Builder {
         private Creditor creditor;
         private Debtor debtor;
@@ -91,6 +108,7 @@ public class Payment {
         private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
         private Reference reference;
+        protected final TemporaryStorage temporaryStorage = new TemporaryStorage();
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;
@@ -135,6 +153,15 @@ public class Payment {
         public Builder withReference(Reference reference) {
             this.reference = reference;
             return this;
+        }
+
+        public <K> Builder putInTemporaryStorage(String key, K value) {
+            temporaryStorage.put(key, value);
+            return this;
+        }
+
+        private TemporaryStorage getTransientStorage() {
+            return temporaryStorage;
         }
 
         public Payment build() {

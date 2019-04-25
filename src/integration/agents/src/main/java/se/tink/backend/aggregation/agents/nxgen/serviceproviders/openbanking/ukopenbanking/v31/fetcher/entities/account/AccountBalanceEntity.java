@@ -38,7 +38,9 @@ public class AccountBalanceEntity {
         Amount total = getSignedAmount();
 
         // If no credit line is present the balance is already calculated.
-        return Optional.ofNullable(creditLine).orElseGet(Collections::emptyList).stream()
+        return Optional.ofNullable(creditLine)
+                .orElseGet(Collections::emptyList)
+                .stream()
                 // Only one credit line can be approved at a time, but this can be repeated under a
                 // different ExternalLimitType.
                 // We find the first credit line that is included in the balance and return (balance
@@ -59,7 +61,9 @@ public class AccountBalanceEntity {
 
     public Optional<Amount> getAvailableCredit() {
 
-        return Optional.ofNullable(creditLine).orElseGet(Collections::emptyList).stream()
+        return Optional.ofNullable(creditLine)
+                .orElseGet(Collections::emptyList)
+                .stream()
                 .filter(
                         credit ->
                                 credit.getType()

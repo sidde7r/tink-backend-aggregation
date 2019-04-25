@@ -12,7 +12,8 @@ public class UpcomingTransactionsV30Response extends BaseResponse<List<Scheduled
     public static List<UpcomingTransaction> toUpcomingTransactions(
             UpcomingTransactionsV30Response response) {
 
-        return response.getData().stream()
+        return response.getData()
+                .stream()
                 .map(ScheduledPaymentEntity::toTinkUpcomingTransaction)
                 .collect(Collectors.toList());
     }

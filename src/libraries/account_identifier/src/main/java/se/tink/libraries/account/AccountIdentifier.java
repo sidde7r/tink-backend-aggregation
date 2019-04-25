@@ -17,6 +17,8 @@ import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
+import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
@@ -41,7 +43,9 @@ public abstract class AccountIdentifier {
         SE_BG("se-bg"),
         SE_PG("se-pg"),
         SEPA_EUR("sepa-eur"),
-        SORT_CODE("sort-code");
+        SORT_CODE("sort-code"),
+        PAYMENT_CARD_NUMBER("payment-card-number"),
+        PAYM_PHONE_NUMBER("paym-phone-number");
 
         private String scheme;
 
@@ -254,6 +258,10 @@ public abstract class AccountIdentifier {
                 return new SepaEurIdentifier(id);
             case SORT_CODE:
                 return new SortCodeIdentifier(id);
+            case PAYM_PHONE_NUMBER:
+                return new PaymPhoneNumberIdentifier(id);
+            case PAYMENT_CARD_NUMBER:
+                return new PaymentCardNumberIdentifier(id);
         }
         return null;
     }

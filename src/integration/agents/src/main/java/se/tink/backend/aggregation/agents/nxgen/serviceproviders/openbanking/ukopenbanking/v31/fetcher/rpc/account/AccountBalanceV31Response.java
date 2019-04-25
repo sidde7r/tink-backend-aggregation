@@ -27,7 +27,8 @@ public class AccountBalanceV31Response extends BaseResponse<List<AccountBalanceE
     }
 
     private Map<UkOpenBankingApiDefinitions.AccountBalanceType, AccountBalanceEntity> toMap() {
-        return getData().stream()
+        return getData()
+                .stream()
                 .collect(Collectors.toMap(AccountBalanceEntity::getType, Function.identity()));
     }
 }

@@ -32,13 +32,15 @@ public class AccountTransactionsV31Response extends BaseResponse<List<Transactio
     }
 
     private List<? extends Transaction> toTinkTransactions() {
-        return getData().stream()
+        return getData()
+                .stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
     private List<? extends Transaction> toCreditCardTransactions(CreditCardAccount account) {
-        return getData().stream()
+        return getData()
+                .stream()
                 .map(e -> e.toCreditCardTransaction(account))
                 .collect(Collectors.toList());
     }
