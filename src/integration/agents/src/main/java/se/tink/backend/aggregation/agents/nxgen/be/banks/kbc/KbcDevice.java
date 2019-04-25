@@ -222,12 +222,19 @@ public class KbcDevice {
         Preconditions.checkNotNull(staticVector, "Static vector has not been set.");
         Preconditions.checkNotNull(dynamicVector, "Dynamic vector has not been set.");
 
+        logger.info(
+                String.format(
+                        "KbcDevice extractTlvField(byte[%d], 4, SEED, 0)", staticVector.length));
         byte[] seed =
                 KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SEED, 0)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
                                                 "Could not find seed in static vector."));
+        logger.info(
+                String.format(
+                        "KbcDevice extractTlvField(byte[%d], 4, SIGNATURE, 0)",
+                        staticVector.length));
         byte[] signature =
                 KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SIGNATURE, 0)
                         .orElseThrow(
@@ -235,17 +242,30 @@ public class KbcDevice {
                                         new IllegalStateException(
                                                 "Could not find signature in static vector."));
 
+        logger.info(String.format("KbcDevice calculateLogId(byte[%d])", dynamicVector.length));
         String logonId = KbcOtpUtils.calculateLogonId(dynamicVector);
 
         // Encrypt the seed with an obfuscated (whitebox) key
+        logger.info(String.format("KbcDevice wbAesEncrypt(byte[%d])", seed.length));
         key0 = KbcOtpUtils.wbAesEncrypt(seed);
+        logger.info(
+                String.format(
+                        "KbcDevice encryptLogonId(byte[%d], byte[%d], %s)",
+                        key0.length, signature.length, logonId));
         key1 = KbcOtpUtils.encryptLogonId(key0, signature, logonId);
+        logger.info(
+                String.format(
+                        "KbcDevice decryptDynamicVector(byte[%d], byte[%d])",
+                        key1.length, dynamicVector.length));
         key2 = KbcOtpUtils.decryptDynamicVector(key1, dynamicVector);
+        logger.info(String.format("KbcDevice encryptConstantA0(byte[%d])", key2.length));
         key3 = KbcOtpUtils.encryptConstantA0(key2);
+        logger.info("KbcDevice internalCalculateKeys return");
     }
 
     private void checkCalculateKeys() {
         if (key0 == null || key1 == null || key2 == null || key3 == null) {
+            logger.info("KbcDevice internalCalculateKeys");
             internalCalculateKeys();
         }
     }
