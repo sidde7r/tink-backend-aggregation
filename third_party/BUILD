@@ -1146,28 +1146,6 @@ java_library(
 )
 
 java_library(
-    name = "org_elasticsearch_elasticsearch",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_spatial4j_spatial4j//jar",
-        "@org_apache_lucene_lucene_analyzers_common//jar",
-        "@org_apache_lucene_lucene_codecs//jar",
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_grouping//jar",
-        "@org_apache_lucene_lucene_highlighter//jar",
-        "@org_apache_lucene_lucene_join//jar",
-        "@org_apache_lucene_lucene_memory//jar",
-        "@org_apache_lucene_lucene_misc//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-        "@org_apache_lucene_lucene_queryparser//jar",
-        "@org_apache_lucene_lucene_sandbox//jar",
-        "@org_apache_lucene_lucene_spatial//jar",
-        "@org_apache_lucene_lucene_suggest//jar",
-        "@org_elasticsearch_elasticsearch//jar",
-    ],
-)
-
-java_library(
     name = "org_hibernate_hibernate_annotations",
     visibility = ["//visibility:public"],
     exports = [
