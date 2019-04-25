@@ -192,6 +192,7 @@ public class KbcConstants {
         public static final LogTag ACCOUNTS = LogTag.from("#be_kbc_accounts");
         public static final LogTag CREDIT_CARDS = LogTag.from("#be_kbc_credit_cards");
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
+        public static final LogTag DEBUG = LogTag.from("#be_kbc_debug");
     }
 
     public static final String[] IGNORED_ACCOUNT_TYPES = {
