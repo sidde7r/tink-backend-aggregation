@@ -441,7 +441,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testGeneritPayment(List<Payment> paymentList) throws Exception {
+    public void testGenericPayment(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {

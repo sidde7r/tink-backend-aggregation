@@ -29,7 +29,7 @@ public class NordeaSEAgentPaymentTest {
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false);
 
-        builder.build().testGeneritPayment(createListMockedDomesticPayment(4));
+        builder.build().testGenericPayment(createListMockedDomesticPayment(4));
     }
 
     private List<Payment> createListMockedDomesticPayment(int numberOfMockedPayments) {
