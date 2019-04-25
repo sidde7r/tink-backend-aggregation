@@ -81,7 +81,6 @@ java_library(
         "//third_party:org_apache_velocity_velocity",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_eclipse_jetty_jetty_servlets",
-        "//third_party:org_elasticsearch_elasticsearch",
         "//third_party:org_hibernate_hibernate_entitymanager",
         "//third_party:org_jsoup_jsoup",
         "//third_party:org_seleniumhq_selenium_selenium_api",
