@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.targo;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -7,15 +7,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfor
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.identitydata.IdentityData;
-import se.tink.libraries.identitydata.countries.EsIdentityData;
 
-public class TargoBankESIdentityFetcher implements IdentityDataFetcher {
+public class EuroInformationIdentityFetcher implements IdentityDataFetcher {
 
     private final SessionStorage sessionStorage;
     private static final String TITLE_PATTERN = "[A-Z][a-z]{1,4} ([A-Z -]+)";
     private final Pattern pattern = Pattern.compile(TITLE_PATTERN);
 
-    TargoBankESIdentityFetcher(SessionStorage sessionStorage) {
+    EuroInformationIdentityFetcher(SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
     }
 
@@ -25,7 +24,7 @@ public class TargoBankESIdentityFetcher implements IdentityDataFetcher {
                 .get(Tags.LOGIN_RESPONSE, LoginResponse.class)
                 .map(
                         response ->
-                                EsIdentityData.builder()
+                                IdentityData.builder()
                                         .setFullName(preProcessName(response.getClientName()))
                                         .setDateOfBirth(null)
                                         .build())
