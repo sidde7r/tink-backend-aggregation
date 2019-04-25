@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class KbcOtpUtils {
+
     private static final Logger logger = LoggerFactory.getLogger(KbcOtpUtils.class);
 
     private static final String LIBRARY_FILE_PATH;
