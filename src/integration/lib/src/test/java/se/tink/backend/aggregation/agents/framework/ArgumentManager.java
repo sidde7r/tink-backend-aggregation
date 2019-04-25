@@ -31,7 +31,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
     private static int skippedTestsCount = 0;
     private static final Collection<String> missingArguments = new HashSet<>();
 
-    private class State {
+    private static class State {
         private boolean isBeforeExecuted = false;
 
         private void setIsBeforeExecuted() {
