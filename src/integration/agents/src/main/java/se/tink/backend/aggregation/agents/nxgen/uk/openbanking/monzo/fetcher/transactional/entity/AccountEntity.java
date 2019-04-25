@@ -48,9 +48,10 @@ public class AccountEntity {
                         .setBankIdentifier(this.getId())
                         .setName(description);
 
-        if (!Strings.isNullOrEmpty(sortCode)) {
+        if (!Strings.isNullOrEmpty(sortCode) && !Strings.isNullOrEmpty(accountNumber)) {
             result.addIdentifier(
-                    AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, sortCode));
+                    AccountIdentifier.create(
+                            AccountIdentifier.Type.SORT_CODE, sortCode + accountNumber));
         }
         return result.build();
     }
