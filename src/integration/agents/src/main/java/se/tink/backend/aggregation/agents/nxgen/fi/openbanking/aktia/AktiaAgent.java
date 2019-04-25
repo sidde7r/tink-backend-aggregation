@@ -36,7 +36,7 @@ public final class AktiaAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final AktiaConfiguration akitaConfiguration =
+        final AktiaConfiguration aktiaConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
@@ -48,7 +48,7 @@ public final class AktiaAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 AktiaConstants.ErrorMessages
                                                         .MISSING_CONFIGURATION));
-        apiClient.setConfiguration(akitaConfiguration);
+        apiClient.setConfiguration(aktiaConfiguration);
     }
 
     @Override
