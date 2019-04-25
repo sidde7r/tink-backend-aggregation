@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.Tags;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -21,7 +21,7 @@ public class EuroInformationIdentityFetcher implements IdentityDataFetcher {
     @Override
     public IdentityData fetchIdentityData() {
         return sessionStorage
-                .get(Tags.LOGIN_RESPONSE, LoginResponse.class)
+                .get(Storage.LOGIN_RESPONSE, LoginResponse.class)
                 .map(
                         response ->
                                 IdentityData.builder()

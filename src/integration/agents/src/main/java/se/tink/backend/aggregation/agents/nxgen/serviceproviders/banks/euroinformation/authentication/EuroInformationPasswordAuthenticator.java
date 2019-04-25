@@ -53,7 +53,7 @@ public class EuroInformationPasswordAuthenticator implements PasswordAuthenticat
             handleError(logon);
         }
 
-        sessionStorage.put(EuroInformationConstants.Tags.LOGIN_RESPONSE, logon);
+        sessionStorage.put(EuroInformationConstants.Storage.LOGIN_RESPONSE, logon);
         config.getInitEndpoint()
                 .ifPresent(
                         endpoint -> {

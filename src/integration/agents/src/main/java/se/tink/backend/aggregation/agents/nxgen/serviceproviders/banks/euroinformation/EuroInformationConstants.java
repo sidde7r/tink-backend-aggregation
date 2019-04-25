@@ -36,6 +36,9 @@ public class EuroInformationConstants {
         public static final String INVESTMENT_ACCOUNTS = "investmentAccounts";
         public static final String INVESTMENT_ACCOUNT = "investmentAccountDetails";
         public static final String PFM_ENABLED = "pfm";
+    }
+
+    public static class Storage {
         public static final String LOGIN_RESPONSE = "login_response";
     }
 
