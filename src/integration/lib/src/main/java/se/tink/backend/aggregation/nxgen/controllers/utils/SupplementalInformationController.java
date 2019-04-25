@@ -49,7 +49,7 @@ public class SupplementalInformationController {
             throws SupplementalInfoException {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
-        logger.info("Requesting supplemental information, fields"); // MIYAG-445
+        logger.info("Requesting supplemental information"); // MIYAG-445
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(

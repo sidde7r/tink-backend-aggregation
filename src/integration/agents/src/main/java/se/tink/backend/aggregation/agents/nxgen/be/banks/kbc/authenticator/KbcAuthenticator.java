@@ -62,11 +62,16 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 verifyCredentialsNotNullOrEmpty(
                         supplementalInformationHelper.waitForSignCodeChallengeResponse(
                                 signChallengeCode));
-        LOGGER.info(String.format("%s KBC waitForSignCodeChallengeResponse done", LogTags.DEBUG));
+        LOGGER.info(
+                String.format(
+                        "%s signValidation(%s, %s, %s)",
+                        LogTags.DEBUG, signResponseCode, panNr, signingId));
         String finalSigningId = apiClient.signValidation(signResponseCode, panNr, signingId);
+        LOGGER.info(String.format("%s enrollDeviceRoundTwo(%s)", LogTags.DEBUG, finalSigningId));
         EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse =
                 enrollDeviceRoundTwo(finalSigningId);
 
+        LOGGER.info(String.format("%s createAndActivateKbcDevice", LogTags.DEBUG));
         KbcDevice device = createAndActivateKbcDevice(enrollDeviceRoundTwoResponse);
 
         LOGGER.info(String.format("%s apiClient.logout", LogTags.DEBUG));
@@ -119,14 +124,19 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
             return apiClient.enrollDeviceWithSigningId(finalSigningId);
         } catch (IllegalStateException e) {
             if (isNotACustomer(e)) {
+                LOGGER.info(String.format("%s enrollDeviceRoundTwo isNotACustomer", LogTags.DEBUG));
                 throw LoginError.NOT_CUSTOMER.exception(
                         KbcConstants.UserMessage.NOT_A_CUSTOMER.getKey());
             }
 
             if (isIncorrectSignCode(e)) {
+                LOGGER.info(
+                        String.format(
+                                "%s enrollDeviceRoundTwo isIncorrectSignCode", LogTags.DEBUG));
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
 
+            LOGGER.info(String.format("%s enrollDeviceRoundTwo throw", LogTags.DEBUG));
             throw e;
         }
     }
@@ -138,6 +148,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         device.setDeviceId(enrollDeviceRoundTwoResponse.getDeviceId().getValue());
         device.setAccessNumber(enrollDeviceRoundTwoResponse.getAccessNumber().getValue());
 
+        LOGGER.info(String.format("%s createAndActivateKbcDevice deriveKey", LogTags.DEBUG));
         byte[] aesKey0 =
                 KbcEnryptionUtils.deriveKey(
                         enrollDeviceRoundTwoResponse.getActivationPassword().getValue());
@@ -145,12 +156,18 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         String encryptedClientPublicKeyAndNonce =
                 device.encryptClientPublicKeyAndNonce(aesKey0, iv);
 
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice decryptServerPublicKey", LogTags.DEBUG));
         ActivationLicenseResponse activationLicenseResponse =
                 apiClient.activationLicence(
                         device,
                         EncodingUtils.encodeHexAsString(iv).toUpperCase(),
                         encryptedClientPublicKeyAndNonce);
 
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice decryptServerPublicKey", LogTags.DEBUG));
         byte[] serverPublicKey =
                 KbcEnryptionUtils.decryptServerPublicKey(aesKey0, activationLicenseResponse);
         byte[] sharedSecret = device.calculateSharedSecret(serverPublicKey);
@@ -165,11 +182,19 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         String challenge = activationLicenseResponse.getChallenge().getValue();
         String deviceCode = device.calculateDeviceCode(challenge);
 
+        LOGGER.info(String.format("%s createAndActivateKbcDevice generateIv", LogTags.DEBUG));
         iv = KbcDevice.generateIv();
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice decryptAndEncryptNonce", LogTags.DEBUG));
         String encryptedNonce =
                 KbcEnryptionUtils.decryptAndEncryptNonce(
                         sharedSecret, iv, activationLicenseResponse);
 
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice apiClient.activationInstance",
+                        LogTags.DEBUG));
         String activationMessage =
                 apiClient.activationInstance(
                         device,
@@ -179,10 +204,18 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                         deviceCode);
 
         device.setActivationMessage(activationMessage);
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice calculateVerificationMessage",
+                        LogTags.DEBUG));
         String verificationMessage = device.calculateVerificationMessage();
 
+        LOGGER.info(
+                String.format(
+                        "%s createAndActivateKbcDevice activationVerification", LogTags.DEBUG));
         apiClient.activationVerification(device, verificationMessage);
 
+        LOGGER.info(String.format("%s createAndActivateKbcDevice return", LogTags.DEBUG));
         return device;
     }
 
