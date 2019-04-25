@@ -23,7 +23,7 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsum
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface CreditSafeService {
-    @DELETE
+    @POST
     @Path("consumermonitoring")
     @TeamOwnership(Team.AGGREGATION)
     void removeConsumerMonitoring(
