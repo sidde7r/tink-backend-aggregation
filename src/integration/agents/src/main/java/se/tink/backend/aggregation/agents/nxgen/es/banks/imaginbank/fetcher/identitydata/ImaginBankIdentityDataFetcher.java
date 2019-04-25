@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.identitydata;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.ImaginBankSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.LoginResponse;
@@ -11,8 +9,6 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 
 public class ImaginBankIdentityDataFetcher implements IdentityDataFetcher {
-    private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ImaginBankSessionStorage imaginBankSessionStorage;
     private final ImaginBankApiClient apiClient;
@@ -33,7 +29,7 @@ public class ImaginBankIdentityDataFetcher implements IdentityDataFetcher {
 
         return builder.setDocumentNumber(dni)
                 .setFullName(loginResponse.getName())
-                .setDateOfBirth(LocalDate.parse(loginResponse.getDateOfBirth(), DATE_FORMATTER))
+                .setDateOfBirth(loginResponse.getFormattedDateOfBirth())
                 .build();
     }
 }
