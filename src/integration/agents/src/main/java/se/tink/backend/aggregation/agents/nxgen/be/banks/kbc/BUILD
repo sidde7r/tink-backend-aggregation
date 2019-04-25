@@ -28,5 +28,6 @@ java_library(
         "@org_apache_httpcomponents_httpcore//jar",
         "@org_assertj_assertj_core//jar",
         "@org_bouncycastle_bcprov_jdk15on//jar",
+        "@org_slf4j_slf4j_api//jar",
     ],
 )
