@@ -150,12 +150,14 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         getAuthenticator().authenticate(credentials);
+        log.info("NextGenerationAgent finished login"); // MIYAG-445
         return true;
     }
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
+        log.info("NextGenerationAgent entered progressive login"); // MIYAG-445
         request.setCredentials(credentials);
         return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(request);
     }
