@@ -1,26 +1,39 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
 public class EvoBancoAgentTest {
-    private final String TEST_USERNAME = "CCCCC";
-    private final String TEST_PASSWORD = "NNNNNN";
 
+    private enum Arg {
+        USERNAME,
+        PASSWORD
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
     @Before
     public void setup() {
+        manager.before();
         builder =
                 new AgentIntegrationTest.Builder("es", "es-evobanco-password")
-                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .loadCredentialsBefore(true)
-                        .saveCredentialsAfter(true);
+                        .saveCredentialsAfter(true)
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     @Test

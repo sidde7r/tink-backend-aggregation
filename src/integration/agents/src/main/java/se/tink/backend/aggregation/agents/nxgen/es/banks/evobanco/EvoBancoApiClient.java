@@ -84,6 +84,7 @@ public class EvoBancoApiClient {
                         + loginResponse.getUserinfo().getSurname1Client()
                         + " "
                         + loginResponse.getUserinfo().getSurname2Client());
+        sessionStorage.put(EvoBancoConstants.Storage.USER_INFO, loginResponse.getUserinfo());
 
         return loginResponse;
     }
