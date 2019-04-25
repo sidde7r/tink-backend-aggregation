@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
     private static final Logger logger = LoggerFactory.getLogger(ArgumentManager.class);
 
-    private static final String argPrefix = "tink.";
+    private static final String ARG_PREFIX = "tink.";
 
     private static int skippedTestsCount = 0;
     private static final Collection<String> missingArguments = new HashSet<>();
@@ -63,7 +63,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
         state.setIsBeforeExecuted();
         // Run tests only if the listed parameters have been passed as arguments, otherwise skip
         for (final String arg : arguments) {
-            final String propertyName = argPrefix + arg;
+            final String propertyName = ARG_PREFIX + arg;
             if (System.getProperty(propertyName) == null) {
                 missingArguments.add(arg);
             }
@@ -82,7 +82,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
         if (skippedTestsCount > 0) {
             final List<String> missingArgs =
                     missingArguments.stream()
-                            .map(arg -> argPrefix + arg)
+                            .map(arg -> ARG_PREFIX + arg)
                             .collect(Collectors.toList());
             final String header =
                     String.format(
@@ -92,7 +92,8 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
             final Function<String, String> argToFlag =
                     arg ->
                             String.format(
-                                    "--jvmopt=-D%s%s=%s", argPrefix, arg, "my" + arg.toLowerCase());
+                                    "--jvmopt=-D%s%s=%s",
+                                    ARG_PREFIX, arg, "my" + arg.toLowerCase());
             final List<String> lines =
                     missingArguments.stream().map(argToFlag).collect(Collectors.toList());
             logger.warn(String.format("%s\n%s\n%s", header, explanation, String.join("\n", lines)));
