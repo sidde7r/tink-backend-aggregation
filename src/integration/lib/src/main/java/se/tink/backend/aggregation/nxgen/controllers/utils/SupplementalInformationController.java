@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -17,6 +19,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {
+    private static final Logger logger =
+            LoggerFactory.getLogger(SupplementalInformationController.class);
 
     private final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
@@ -45,12 +49,15 @@ public class SupplementalInformationController {
             throws SupplementalInfoException {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
+        logger.info(
+                "Requesting supplemental information, fields {}", (Object[]) fields); // MIYAG-445
         String supplementalInformation =
                 Optional.ofNullable(
                                 Strings.emptyToNull(
                                         supplementalRequester.requestSupplementalInformation(
                                                 credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
+        logger.info("Finished requesting supplemental information"); // MIYAG-445
 
         return Optional.ofNullable(
                         SerializationUtils.deserializeFromString(

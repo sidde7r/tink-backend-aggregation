@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcDevice;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
@@ -53,10 +54,15 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         String signingId = apiClient.enrollDevice();
         String signTypeId = apiClient.signTypeManual(signingId);
         String signChallengeCode = apiClient.signChallenge(signTypeId, signingId);
+        LOGGER.info(
+                String.format(
+                        "%s KBC waitForSignCodeChallengeResponse, %s",
+                        LogTags.DEBUG, signChallengeCode));
         String signResponseCode =
                 verifyCredentialsNotNullOrEmpty(
                         supplementalInformationHelper.waitForSignCodeChallengeResponse(
                                 signChallengeCode));
+        LOGGER.info(String.format("%s KBC waitForSignCodeChallengeResponse done", LogTags.DEBUG));
         String finalSigningId = apiClient.signValidation(signResponseCode, panNr, signingId);
         EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse =
                 enrollDeviceRoundTwo(finalSigningId);
@@ -78,9 +84,13 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private void registerLogon(String panNr)
             throws AuthenticationException, AuthorizationException {
         String challengeCode = apiClient.challenge();
+        LOGGER.info(
+                String.format(
+                        "%s KBC waitForLoginChallengeResponse, %s", LogTags.DEBUG, challengeCode));
         String responseCode =
                 verifyCredentialsNotNullOrEmpty(
                         supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
+        LOGGER.info(String.format("%s KBC waitForLoginChallengeResponse done", LogTags.DEBUG));
         try {
             apiClient.registerLogon(panNr, responseCode);
         } catch (IllegalStateException e) {
