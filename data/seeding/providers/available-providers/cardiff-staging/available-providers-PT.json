@@ -1,0 +1,7 @@
+{
+    "clusterid": "cardiff-staging",
+    "providers": [
+      "pt-test-password",
+      "pt-test-multi-supplemental"
+    ]
+}
