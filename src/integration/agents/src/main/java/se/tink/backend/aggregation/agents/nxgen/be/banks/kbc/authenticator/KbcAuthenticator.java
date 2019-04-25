@@ -69,8 +69,10 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
         KbcDevice device = createAndActivateKbcDevice(enrollDeviceRoundTwoResponse);
 
+        LOGGER.info(String.format("%s apiClient.logout", LogTags.DEBUG));
         apiClient.logout();
 
+        LOGGER.info(String.format("%s login(device)", LogTags.DEBUG));
         login(device);
     }
 
@@ -247,12 +249,17 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     }
 
     public void login(KbcDevice device) throws AuthenticationException, AuthorizationException {
+        LOGGER.info(String.format("%s apiclient.prepareSession", LogTags.DEBUG));
         apiClient.prepareSession();
 
+        LOGGER.info(String.format("%s apiclient.challengeSotp", LogTags.DEBUG));
         String otpChallenge = apiClient.challengeSotp(device);
 
+        LOGGER.info(
+                String.format("%s calculateAuthenticationOtp, %s", LogTags.DEBUG, otpChallenge));
         String otp = device.calculateAuthenticationOtp(otpChallenge);
 
+        LOGGER.info(String.format("%s loginSotp, %s", LogTags.DEBUG, otp));
         apiClient.loginSotp(device, otp);
 
         persistentStorage.put(KbcConstants.Storage.DEVICE_KEY, device);
