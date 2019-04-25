@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
 import com.google.common.base.Strings;
+import java.security.Security;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -44,10 +47,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import java.security.Security;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class NextGenerationAgent extends SuperAbstractAgent
         implements RefreshCheckingAccountsExecutor,

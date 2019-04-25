@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.framework;
 
+import static org.junit.Assert.assertEquals;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -33,12 +38,6 @@ import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
