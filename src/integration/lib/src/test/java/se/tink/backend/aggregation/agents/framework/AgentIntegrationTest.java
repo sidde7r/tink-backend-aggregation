@@ -7,14 +7,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -23,17 +16,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentClassFactory;
-import se.tink.backend.aggregation.agents.AgentFactory;
-import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
-import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
@@ -42,12 +25,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.*;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
@@ -289,7 +267,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Done with refresh.");
     }
 
-    private void doRevampBankTransfer(Agent agent, List<Payment> paymentList) throws Exception {
+    private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
+            throws Exception {
 
         if (agent instanceof NextGenerationAgent) {
             PaymentController paymentController =
@@ -462,13 +441,13 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testPaymentRevamp(List<Payment> paymentList) throws Exception {
+    public void testGenericPayment(List<Payment> paymentList) throws Exception {
         initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
             if (agent instanceof NextGenerationAgent) {
-                doRevampBankTransfer(agent, paymentList);
+                doGenericPaymentBankTransfer(agent, paymentList);
             } else {
                 throw new NotImplementedException(
                         String.format("%s", agent.getAgentClass().getSimpleName()));

@@ -2,36 +2,12 @@ package se.tink.backend.aggregation.nxgen.agents;
 
 import com.google.common.base.Strings;
 import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
-import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.SuperAbstractAgent;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -45,12 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.*;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
@@ -481,7 +452,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                 .cancel(paymentRequest);
     }
 
-    public PaymentListResponse fetchPayments(PaymentRequest paymentRequest) {
+    public PaymentListResponse fetchMultiplePayments(PaymentRequest paymentRequest) {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
