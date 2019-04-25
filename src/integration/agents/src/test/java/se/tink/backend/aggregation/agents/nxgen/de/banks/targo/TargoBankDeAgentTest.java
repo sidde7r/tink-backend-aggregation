@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public final class TargoBankDeAgentTest {
     private enum Arg {
@@ -30,7 +31,9 @@ public final class TargoBankDeAgentTest {
     private AgentIntegrationTest.Builder builder() {
         return new AgentIntegrationTest.Builder("de", "de-targobank-password")
                 .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
     }
 
     @Test

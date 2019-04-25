@@ -32,7 +32,7 @@ public class EsIdentityData extends IdentityData {
         EsIdentityDataBuilder setDocumentNumber(String val);
     }
 
-    public static final class Builder extends IdentityData.Builder
+    protected static final class Builder extends IdentityData.Builder
             implements EsIdentityDataBuilder {
         private String nieNumber;
         private String nifNumber;

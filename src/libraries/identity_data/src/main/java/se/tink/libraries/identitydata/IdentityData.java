@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class IdentityData {
+public class IdentityData {
 
     private final List<NameElement> nameElements;
     private final LocalDate dateOfBirth;
@@ -17,6 +17,10 @@ public abstract class IdentityData {
     protected IdentityData(Builder builder) {
         nameElements = ImmutableList.copyOf(builder.nameElements);
         dateOfBirth = builder.dateOfBirth;
+    }
+
+    public static InitialBuilderStep builder() {
+        return new Builder();
     }
 
     public interface InitialBuilderStep {
@@ -45,8 +49,9 @@ public abstract class IdentityData {
         IdentityData build();
     }
 
-    public abstract static class Builder
-            implements FirstNameElementBuilderStep,
+    public static class Builder
+            implements InitialBuilderStep,
+                    FirstNameElementBuilderStep,
                     SurnameElementBuilderStep,
                     DateOfBirthBuilderStep,
                     FinalBuilderStep {
@@ -78,11 +83,15 @@ public abstract class IdentityData {
             return this;
         }
 
-        public abstract IdentityData build();
+        public IdentityData build() {
+            return new IdentityData(this);
+        }
     }
 
     @JsonIgnore
-    public abstract Map<String, String> toMap();
+    public Map<String, String> toMap() {
+        return baseMap();
+    }
 
     @JsonIgnore
     protected Map<String, String> baseMap() {
@@ -114,7 +123,9 @@ public abstract class IdentityData {
     }
 
     @JsonIgnore
-    public abstract String getSsn();
+    public String getSsn() {
+        return null;
+    }
 
     public List<NameElement> getNameElements() {
         return nameElements;

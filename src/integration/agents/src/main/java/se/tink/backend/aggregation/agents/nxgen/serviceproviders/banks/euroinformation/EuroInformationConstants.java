@@ -38,6 +38,10 @@ public class EuroInformationConstants {
         public static final String PFM_ENABLED = "pfm";
     }
 
+    public static class Storage {
+        public static final String LOGIN_RESPONSE = "login_response";
+    }
+
     public static class LoggingTags {
         public static final LogTag creditcardTransactionsTag =
                 LogTag.from("euroinformation_creditcard_transactions");

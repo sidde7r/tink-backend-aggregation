@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardTransactionsFetcher;
@@ -30,7 +32,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class EuroInformationAgent extends NextGenerationAgent {
+public abstract class EuroInformationAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
     protected final EuroInformationApiClient apiClient;
     private final EuroInformationConfiguration config;
 
@@ -82,7 +85,7 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
                 .orElse(false)) {
             return new TransactionFetcherController<>(
                     transactionPaginationHelper,
-                    new TransactionKeyPaginationController(
+                    new TransactionKeyPaginationController<>(
                             EuroInformationOperationsFetcher.create(this.apiClient)));
         }
         return EuroInformationTransactionsFetcher.create(this.apiClient);
@@ -133,5 +136,11 @@ public abstract class EuroInformationAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        EuroInformationIdentityFetcher fetcher = new EuroInformationIdentityFetcher(sessionStorage);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }
