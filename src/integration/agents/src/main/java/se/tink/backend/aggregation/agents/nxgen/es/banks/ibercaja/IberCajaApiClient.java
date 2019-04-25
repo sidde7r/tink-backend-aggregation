@@ -16,17 +16,17 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class IberCajaApiClient {
 
     private final TinkHttpClient httpClient;
-    private final SessionStorage sessionStorage;
+    private final IberCajaSessionStorage iberCajaSessionStorage;
 
-    public IberCajaApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
+    public IberCajaApiClient(
+            TinkHttpClient httpClient, IberCajaSessionStorage iberCajaSessionStorage) {
         this.httpClient = httpClient;
-        this.sessionStorage = sessionStorage;
+        this.iberCajaSessionStorage = iberCajaSessionStorage;
     }
 
     public SessionResponse initializeSession(SessionRequest sessionRequest) throws LoginException {
@@ -135,11 +135,7 @@ public class IberCajaApiClient {
 
     private RequestBuilder createAuthenticatedRequest(URL url) {
         return createRequest(url)
-                .header(
-                        IberCajaConstants.Headers.USER,
-                        sessionStorage.get(IberCajaConstants.Storage.USERNAME))
-                .header(
-                        IberCajaConstants.Headers.TICKET,
-                        sessionStorage.get(IberCajaConstants.Storage.TICKET));
+                .header(IberCajaConstants.Headers.USER, iberCajaSessionStorage.getUsername())
+                .header(IberCajaConstants.Headers.TICKET, iberCajaSessionStorage.getTicket());
     }
 }
