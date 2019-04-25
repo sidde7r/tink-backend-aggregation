@@ -1886,7 +1886,7 @@
             "type": "CREDIT_CARD"
         },
         {
-            "name": "coopmastercard-bankid",
+            "name": "coop-bankid",
             "className": "nxgen.se.creditcards.entercard.coop.CoopMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
