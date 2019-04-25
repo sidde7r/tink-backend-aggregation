@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account;
 
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.Self;
@@ -23,5 +22,4 @@ public class Links {
     public Transactions getTransactions() {
         return transactions;
     }
-
 }

@@ -6,8 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LinksEntity {
 
     private LinksDetailsEntity account;
-
     private LinksDetailsEntity balances;
-
     private LinksDetailsEntity transactions;
 }

@@ -10,7 +10,6 @@ public class IdTokenClaim {
     private IdToken idToken;
 
     public IdTokenClaim(String value, Boolean essential) {
-
         idToken = new IdToken(value, essential);
     }
 }

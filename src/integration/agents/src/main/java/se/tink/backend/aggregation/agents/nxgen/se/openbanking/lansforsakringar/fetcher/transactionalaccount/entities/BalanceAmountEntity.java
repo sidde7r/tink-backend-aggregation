@@ -7,7 +7,6 @@ import se.tink.libraries.amount.Amount;
 public class BalanceAmountEntity {
 
     private Double amount;
-
     private String currency;
 
     public Amount toAmount() {

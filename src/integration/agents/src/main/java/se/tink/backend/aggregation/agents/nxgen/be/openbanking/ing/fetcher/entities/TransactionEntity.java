@@ -10,12 +10,16 @@ public class TransactionEntity {
 
     private String transactionId;
     private String endToEndId;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date executionDateTime;
+
     private TransactionAmountEntity transactionAmount;
     private String creditorName;
     private TransactionAccountEntity creditorAccount;
@@ -35,11 +39,11 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean isPending) {
         return Transaction.builder()
-            .setPending(isPending)
-            .setExternalId(transactionId)
-            .setDescription(remittanceInformationUnstructured)
-            .setAmount(transactionAmount.toAmount())
-            .setDate(bookingDate)
-            .build();
+                .setPending(isPending)
+                .setExternalId(transactionId)
+                .setDescription(remittanceInformationUnstructured)
+                .setAmount(transactionAmount.toAmount())
+                .setDate(bookingDate)
+                .build();
     }
 }

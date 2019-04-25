@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 
 public enum AccountSubtypeEntity {
-
     CURRENT_ACCOUNT(CrosskeyBaseConstants.AccountType.CURRENT_ACCOUNT),
     CREDIT_CARD(CrosskeyBaseConstants.AccountType.CREDIT_CARD);
 

@@ -6,11 +6,11 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class TransactionAmountEntity {
-  private String amount;
+    private String amount;
 
-  private String currency;
+    private String currency;
 
-  public Amount getAmount() {
-    return new Amount(currency, StringUtils.parseAmount(amount));
-  }
+    public Amount getAmount() {
+        return new Amount(currency, StringUtils.parseAmount(amount));
+    }
 }

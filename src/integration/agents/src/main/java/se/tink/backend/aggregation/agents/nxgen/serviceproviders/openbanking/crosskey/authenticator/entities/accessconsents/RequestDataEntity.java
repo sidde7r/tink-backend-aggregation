@@ -14,8 +14,11 @@ public class RequestDataEntity {
     private String transactionFromDateTime;
     private String transactionToDateTime;
 
-    public RequestDataEntity(String expirationDateTime, List<String> permissions,
-        String transactionFromDateTime, String transactionToDateTime) {
+    public RequestDataEntity(
+            String expirationDateTime,
+            List<String> permissions,
+            String transactionFromDateTime,
+            String transactionToDateTime) {
         this.expirationDateTime = expirationDateTime;
         this.permissions = permissions;
         this.transactionFromDateTime = transactionFromDateTime;

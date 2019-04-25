@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public final class LansforsakringarSessionHandler implements SessionHandler {
+
     private final LansforsakringarApiClient apiClient;
 
     public LansforsakringarSessionHandler(LansforsakringarApiClient apiClient) {

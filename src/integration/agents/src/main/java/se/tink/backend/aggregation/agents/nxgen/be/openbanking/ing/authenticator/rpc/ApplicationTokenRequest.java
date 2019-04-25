@@ -7,8 +7,8 @@ public class ApplicationTokenRequest {
 
     public String toData() {
         return Form.builder()
-            .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.CLIENT_CREDENTIALS)
-            .build()
-            .serialize();
+                .put(IngConstants.FormKeys.GRANT_TYPE, IngConstants.FormValues.CLIENT_CREDENTIALS)
+                .build()
+                .serialize();
     }
 }

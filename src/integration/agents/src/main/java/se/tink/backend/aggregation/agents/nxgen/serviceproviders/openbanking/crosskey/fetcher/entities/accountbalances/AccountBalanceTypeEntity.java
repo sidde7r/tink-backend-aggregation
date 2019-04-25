@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
 
 public enum AccountBalanceTypeEntity {
-
     BOOKED(CrosskeyBaseConstants.AccountBalanceType.BOOKED),
     AVAILABLE(CrosskeyBaseConstants.AccountBalanceType.AVAILABLE);
 

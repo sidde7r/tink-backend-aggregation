@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetConstants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class NordnetSessionHandler implements SessionHandler {

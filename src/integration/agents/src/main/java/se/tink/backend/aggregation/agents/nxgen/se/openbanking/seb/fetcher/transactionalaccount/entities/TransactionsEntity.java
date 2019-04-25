@@ -9,16 +9,18 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionsEntity {
-  private List<BookedEntity> booked;
+    private List<BookedEntity> booked;
 
-  private List<PendingEntity> pending;
+    private List<PendingEntity> pending;
 
-  public Collection<? extends Transaction> getTransactions() {
-    return Stream.concat(
-            booked != null ? booked.stream().map(BookedEntity::toTinkTransaction) : Stream.empty(),
-            pending != null
-                ? pending.stream().map(PendingEntity::toTinkTransaction)
-                : Stream.empty())
-        .collect(Collectors.toList());
-  }
+    public Collection<? extends Transaction> getTransactions() {
+        return Stream.concat(
+                        booked != null
+                                ? booked.stream().map(BookedEntity::toTinkTransaction)
+                                : Stream.empty(),
+                        pending != null
+                                ? pending.stream().map(PendingEntity::toTinkTransaction)
+                                : Stream.empty())
+                .collect(Collectors.toList());
+    }
 }
