@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseRequest;
@@ -483,14 +484,18 @@ public class KbcApiClient {
         SignValidationRequest signValidationRequest =
                 SignValidationRequest.create(signingResponse, panNr, signingId);
 
+        LOGGER.info(String.format("%s postGetResponseAndHeader", LogTags.DEBUG));
         Pair<SignValidationResponse, String> response =
                 postGetResponseAndHeader(
                         KbcConstants.Url.SIGNING_VALIDATION,
                         signValidationRequest,
                         SignValidationResponse.class);
+        LOGGER.info(String.format("%s checkBlockedAccount", LogTags.DEBUG));
         checkBlockedAccount(response.first.getHeader(), response.second);
+        LOGGER.info(String.format("%s verifyDoubleZeroResponseCode", LogTags.DEBUG));
         verifyDoubleZeroResponseCode(response.first.getHeader());
 
+        LOGGER.info(String.format("%s signValidation return", LogTags.DEBUG));
         return response.first.getHeader().getSigningId().getEncoded();
     }
 
