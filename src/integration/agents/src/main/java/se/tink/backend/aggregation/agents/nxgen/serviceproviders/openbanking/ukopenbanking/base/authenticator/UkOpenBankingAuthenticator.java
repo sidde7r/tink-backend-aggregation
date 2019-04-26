@@ -23,8 +23,7 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
 
     @Override
     public URL decorateAuthorizeUrl(URL authorizeUrl, String state, String nonce) {
-        AccountPermissionResponse accountPermissionResponse = apiClient.createAccountIntentId();
-        String intentId = apiClient.getAisConfig().getIntentId(accountPermissionResponse);
+        String intentId = apiClient.fetchIntentIdString();
 
         WellKnownResponse wellKnownConfiguration = apiClient.getWellKnownConfiguration();
 

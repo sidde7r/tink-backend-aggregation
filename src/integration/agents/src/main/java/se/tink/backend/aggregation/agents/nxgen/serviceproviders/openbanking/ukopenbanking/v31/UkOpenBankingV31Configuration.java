@@ -19,4 +19,9 @@ public class UkOpenBankingV31Configuration extends UkOpenBankingBaseConfiguratio
                 .concat(UkOpenBankingV31Constants.ApiServices.AISP_PREFIX)
                 .concat(UkOpenBankingV31Constants.ApiServices.CONSENT_REQUEST);
     }
+
+    @Override
+    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
+        return (Class<T>) AccountPermissionResponseV31.class;
+    }
 }

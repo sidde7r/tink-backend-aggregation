@@ -101,4 +101,9 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     private RequestBuilder createRequest(URL url) {
         return httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
     }
+
+    public String fetchIntentIdString() {
+        return this.getAisConfig()
+                .getIntentId(this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
+    }
 }
