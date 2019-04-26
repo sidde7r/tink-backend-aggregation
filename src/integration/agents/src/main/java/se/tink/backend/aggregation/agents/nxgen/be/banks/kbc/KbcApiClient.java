@@ -383,8 +383,7 @@ public class KbcApiClient {
         return response.first.getChallenge().getValue();
     }
 
-    public RegisterLogonResponse registerLogon(
-            String username, String challengeResponse, final byte[] cipherKey)
+    public void registerLogon(String username, String challengeResponse, final byte[] cipherKey)
             throws AuthorizationException {
         RegisterLogonRequest registerLogonRequest =
                 RegisterLogonRequest.builder()
@@ -407,8 +406,6 @@ public class KbcApiClient {
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyResponseCode(
                 response.first.getHeader(), KbcConstants.ResultCode.DOUBLE_ZERO, response.second);
-
-        return response.first;
     }
 
     public String enrollDevice(final byte[] cipherKey) {
