@@ -11,5 +11,4 @@ public class AmericanExpressESAgent extends AmericanExpressV62Agent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AmericanExpressESConfiguration());
     }
-
 }
