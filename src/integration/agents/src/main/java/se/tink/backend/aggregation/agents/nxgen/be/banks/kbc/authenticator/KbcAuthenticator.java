@@ -321,9 +321,11 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
     public void login(KbcDevice device) throws AuthenticationException, AuthorizationException {
         LOGGER.info(String.format("%s apiclient.prepareSession", LogTags.DEBUG));
-        final byte[] cipherKey =
-                EncodingUtils.decodeBase64String(
-                        sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
+
+        final byte[] cipherKey = generateCipherKey();
+        sessionStorage.put(
+                KbcConstants.Encryption.AES_SESSION_KEY_KEY,
+                EncodingUtils.encodeAsBase64String(cipherKey));
         apiClient.prepareSession(cipherKey);
 
         LOGGER.info(String.format("%s apiclient.challengeSotp", LogTags.DEBUG));
