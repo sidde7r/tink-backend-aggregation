@@ -195,7 +195,7 @@ public class ICABankenAgent extends AbstractAgent
     private static final String DEPOTS_URL = BASE_URL + "/api/depots";
     private static final String FUNDS_URL = BASE_URL + "/api/funds/%s";
 
-    private static final String API_KEY = "BBA7D74A-042F-4E87-8C88-55412320F186";
+    private static final String API_KEY = "AA6DF245-0A93-498F-ACDD-63C1CBF70322";
     private static final String API_VERSION = "8";
     private static final String CLIENT_APP_VERSION = "1.45.1";
     private static final String CLIENT_HARDWARE = "Nexus 5X";
