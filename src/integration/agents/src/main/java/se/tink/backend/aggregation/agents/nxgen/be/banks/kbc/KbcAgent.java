@@ -37,7 +37,7 @@ public final class KbcAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
-        this.apiClient = KbcApiClient.create(client);
+        this.apiClient = new KbcApiClient(client);
     }
 
     @Override
@@ -113,7 +113,7 @@ public final class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return KbcSessionHandler.create(httpFilter, apiClient, sessionStorage);
+        return new KbcSessionHandler(httpFilter, apiClient, sessionStorage);
     }
 
     @Override
