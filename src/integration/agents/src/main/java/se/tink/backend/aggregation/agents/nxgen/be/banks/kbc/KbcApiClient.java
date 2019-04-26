@@ -338,7 +338,7 @@ public class KbcApiClient {
     // == END PRIVATE METHODS ==
 
     public void prepareSession(final byte[] cipherKey) throws AuthorizationException {
-        keyExchange(KbcConstants.RequestInput.APP_FAMILY, cipherKey);
+        keyExchange(cipherKey);
     }
 
     public void logout(final byte[] cipherKey) {
@@ -347,12 +347,11 @@ public class KbcApiClient {
         verifyDoubleZeroResponseCode(response.getHeader());
     }
 
-    private void keyExchange(String appFamily, final byte[] cipherKey)
-            throws AuthorizationException {
+    private void keyExchange(final byte[] cipherKey) throws AuthorizationException {
         KeyExchangeRequest request =
                 KeyExchangeRequest.createWithStandardTypes(
                         KbcConstants.RequestInput.COMPANY_ID,
-                        appFamily,
+                        KbcConstants.RequestInput.APP_FAMILY,
                         encryptAndEncodePublicKey(cipherKey));
 
         Pair<KeyExchangeResponse, String> response =
