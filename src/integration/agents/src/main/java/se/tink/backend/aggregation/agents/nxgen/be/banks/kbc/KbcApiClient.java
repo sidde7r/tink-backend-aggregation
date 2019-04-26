@@ -299,16 +299,14 @@ public class KbcApiClient {
 
     private <T> Pair<T, String> postGetResponseAndHeader(
             KbcConstants.Url url, Object request, Class<T> responseType, final byte[] cipherKey) {
-        return postGetResponseAndHeader(
-                url, request, responseType, true, KbcConstants.ErrorHeaders.LOGON_ERROR, cipherKey);
+        return postGetResponseAndHeader(url, request, responseType, true, cipherKey);
     }
 
     private <T> Pair<T, String> postGetResponseAndHeader(
-            KbcConstants.Url url,
+            Url url,
             Object request,
             Class<T> responseType,
             boolean encryptAndEncodeRequest,
-            String headerKey,
             final byte[] cipherKey) {
 
         HttpResponse httpResponse =
@@ -319,7 +317,7 @@ public class KbcApiClient {
                         DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS,
                         cipherKey);
 
-        String headerValue = getHeaderValue(headerKey, httpResponse);
+        String headerValue = getHeaderValue(KbcConstants.ErrorHeaders.LOGON_ERROR, httpResponse);
 
         T response =
                 encryptAndEncodeRequest
@@ -364,7 +362,6 @@ public class KbcApiClient {
                         request,
                         KeyExchangeResponse.class,
                         false,
-                        KbcConstants.ErrorHeaders.LOGON_ERROR,
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyDoubleZeroResponseCode(response.first.getHeader());
