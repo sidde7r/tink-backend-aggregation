@@ -317,7 +317,7 @@ public class KbcApiClient {
                         DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS,
                         cipherKey);
 
-        String headerValue = getHeaderValue(KbcConstants.ErrorHeaders.LOGON_ERROR, httpResponse);
+        String headerValue = getHeaderValue(httpResponse);
 
         T response =
                 encryptAndEncodeRequest
@@ -327,9 +327,10 @@ public class KbcApiClient {
         return new Pair<>(response, headerValue);
     }
 
-    private String getHeaderValue(String headerKey, HttpResponse httpResponse) {
-        if (httpResponse.getHeaders() != null && httpResponse.getHeaders().containsKey(headerKey)) {
-            return httpResponse.getHeaders().getFirst(headerKey);
+    private String getHeaderValue(HttpResponse httpResponse) {
+        if (httpResponse.getHeaders() != null
+                && httpResponse.getHeaders().containsKey(KbcConstants.ErrorHeaders.LOGON_ERROR)) {
+            return httpResponse.getHeaders().getFirst(KbcConstants.ErrorHeaders.LOGON_ERROR);
         }
         return "";
     }
