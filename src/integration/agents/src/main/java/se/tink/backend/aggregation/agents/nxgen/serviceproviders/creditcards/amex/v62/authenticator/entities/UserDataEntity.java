@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import se.tink.libraries.identitydata.IdentityData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDataEntity {
@@ -30,5 +32,14 @@ public class UserDataEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @JsonIgnore
+    public IdentityData toTinkIdentity() {
+        return IdentityData.builder()
+                .addFirstNameElement(firstName)
+                .addSurnameElement(lastName)
+                .setDateOfBirth(null)
+                .build();
     }
 }

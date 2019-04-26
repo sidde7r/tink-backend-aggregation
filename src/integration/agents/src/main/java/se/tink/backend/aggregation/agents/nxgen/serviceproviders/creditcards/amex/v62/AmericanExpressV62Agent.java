@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.AmericanExpressV62PasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.entities.UserDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.AmericanExpressV62TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.session.AmericanExpressV62SessionHandler;
@@ -26,7 +30,8 @@ import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AmericanExpressV62Agent extends NextGenerationAgent {
+public class AmericanExpressV62Agent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
 
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
@@ -124,5 +129,14 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return sessionStorage
+                .get(Tags.USER_DATA, UserDataEntity.class)
+                .map(UserDataEntity::toTinkIdentity)
+                .map(FetchIdentityDataResponse::new)
+                .orElse(new FetchIdentityDataResponse(null));
     }
 }
