@@ -5,6 +5,7 @@ import java.util.Random;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.authenticator.rpc.AccountPermissionResponseV31;
@@ -55,18 +56,6 @@ public class UkOpenBankingV31ApiClient extends UkOpenBankingApiClient {
                         RandomUtils.generateRandomHexEncoded(8))
                 .body(request)
                 .post(responseType);
-    }
-
-    @Override
-    public AccountPermissionResponseV31 createAccountIntentId() {
-        HttpResponse post =
-                createRequest(
-                                aisConfig.createConsentRequestURL(
-                                        providerConfiguration.getAuthBaseURL()))
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .body(AccountPermissionRequest.create())
-                        .post(HttpResponse.class);
-        return post.getBody(AccountPermissionResponseV31.class);
     }
 
     public <T> T fetchAccounts(Class<T> responseType) {

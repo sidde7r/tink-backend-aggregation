@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -58,15 +57,12 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .post(responseType);
     }
 
-    public AccountPermissionResponse createAccountIntentId() {
-        HttpResponse post =
-                createRequest(
-                                aisConfig.createConsentRequestURL(
-                                        providerConfiguration.getAuthBaseURL()))
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .body(AccountPermissionRequest.create())
-                        .post(HttpResponse.class);
-        return post.getBody(AccountPermissionResponse.class);
+    public <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
+        return createRequest(
+                        aisConfig.createConsentRequestURL(providerConfiguration.getAuthBaseURL()))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .body(AccountPermissionRequest.create())
+                .post(responseType);
     }
 
     public <T> T fetchAccounts(Class<T> responseType) {
