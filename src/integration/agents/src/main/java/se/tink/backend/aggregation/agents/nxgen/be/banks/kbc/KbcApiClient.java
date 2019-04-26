@@ -77,8 +77,12 @@ public class KbcApiClient {
     private AccountsResponse accountResponse;
     private static final AggregationLogger LOGGER = new AggregationLogger(KbcApiClient.class);
 
-    KbcApiClient(TinkHttpClient client) {
+    private KbcApiClient(TinkHttpClient client) {
         this.client = client;
+    }
+
+    public static KbcApiClient create(TinkHttpClient client) {
+        return new KbcApiClient(client);
     }
 
     // == START PRIVATE METHODS ==

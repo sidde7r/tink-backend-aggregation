@@ -12,11 +12,16 @@ public class KbcSessionHandler implements SessionHandler {
     private final KbcApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    KbcSessionHandler(
+    private KbcSessionHandler(
             KbcHttpFilter httpFilter, KbcApiClient apiClient, final SessionStorage sessionStorage) {
         this.httpFilter = httpFilter;
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
+    }
+
+    public static KbcSessionHandler create(
+            KbcHttpFilter httpFilter, KbcApiClient apiClient, final SessionStorage sessionStorage) {
+        return new KbcSessionHandler(httpFilter, apiClient, sessionStorage);
     }
 
     @Override
