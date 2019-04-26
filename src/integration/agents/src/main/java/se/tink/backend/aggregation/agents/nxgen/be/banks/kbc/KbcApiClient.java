@@ -35,7 +35,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.K
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.LoginSotpRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.LoginSotpResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.LogoutResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.PersonalisationResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.RegisterLogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.RegisterLogonResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.HeaderDto;
@@ -428,18 +427,6 @@ public class KbcApiClient {
                 response.first.getHeader(), KbcConstants.ResultCode.DOUBLE_ZERO, response.second);
 
         return response.first;
-    }
-
-    public PersonalisationResponse personalisation(final byte[] cipherKey) {
-        PersonalisationResponse response =
-                post(
-                        KbcConstants.Url.PERSONALISATION,
-                        null,
-                        PersonalisationResponse.class,
-                        cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-
-        return response;
     }
 
     public String enrollDevice(final byte[] cipherKey) {
