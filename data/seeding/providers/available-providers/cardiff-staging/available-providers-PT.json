@@ -1,6 +1,7 @@
 {
     "clusterid": "cardiff-staging",
     "providers": [
+      "seb-bankid",
       "pt-test-password",
       "pt-test-multi-supplemental"
     ]
