@@ -108,8 +108,7 @@ public final class TypeMapperTest {
                 TypeMapper.<AccountTypes>builder()
                         .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
                         .build();
-        Assert.assertTrue(
-                mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        Assert.assertTrue(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
     }
 
     @Test
@@ -120,8 +119,7 @@ public final class TypeMapperTest {
                         .put(AccountTypes.CHECKING, "checking_account")
                         .put(AccountTypes.MORTGAGE, checking_account)
                         .build();
-        Assert.assertFalse(
-                mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+        Assert.assertFalse(mapper.isOneOf(checking_account, Arrays.asList(AccountTypes.CHECKING)));
     }
 
     @Test
