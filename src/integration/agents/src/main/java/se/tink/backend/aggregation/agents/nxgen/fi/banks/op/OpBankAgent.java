@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OpBankAgent extends NextGenerationAgent {
@@ -41,9 +40,6 @@ public class OpBankAgent extends NextGenerationAgent {
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
         ;
     }
-
-    @Override
-    public void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public Authenticator constructAuthenticator() {

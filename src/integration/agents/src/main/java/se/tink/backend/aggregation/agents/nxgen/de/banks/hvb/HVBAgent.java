@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HVBAgent extends NextGenerationAgent {
@@ -46,9 +45,6 @@ public final class HVBAgent extends NextGenerationAgent {
         apiClient = new WLApiClient(client);
         storage = new HVBStorage(sessionStorage, persistentStorage);
     }
-
-    @Override
-    protected void configureHttpClient(final TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

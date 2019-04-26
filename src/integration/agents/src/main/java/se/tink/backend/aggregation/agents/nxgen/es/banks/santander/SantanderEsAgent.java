@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderEsAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
@@ -40,9 +39,6 @@ public class SantanderEsAgent extends NextGenerationAgent implements RefreshIden
         santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
         this.apiClient = new SantanderEsApiClient(client);
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

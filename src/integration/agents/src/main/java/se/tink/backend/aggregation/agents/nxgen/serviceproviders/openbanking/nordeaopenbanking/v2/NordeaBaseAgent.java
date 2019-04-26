@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
@@ -46,9 +45,6 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     protected NordeaPersistentStorage getNordeaPersistentStorage() {
         return nordeaPersistentStorage;
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {

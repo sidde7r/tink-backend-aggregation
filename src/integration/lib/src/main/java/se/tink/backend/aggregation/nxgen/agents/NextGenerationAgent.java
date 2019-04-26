@@ -257,7 +257,7 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         return sessionController;
     }
 
-    protected abstract void configureHttpClient(TinkHttpClient client);
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     protected abstract Authenticator constructAuthenticator();
 

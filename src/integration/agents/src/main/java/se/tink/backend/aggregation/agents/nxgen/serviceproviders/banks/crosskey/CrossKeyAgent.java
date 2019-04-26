@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrossKeyAgent extends NextGenerationAgent {
@@ -39,9 +38,6 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
         this.apiClient = new CrossKeyApiClient(this.client, agentConfiguration);
         agentPersistentStorage = new CrossKeyPersistentStorage(this.persistentStorage);
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Optional<TransactionalAccountRefreshController>

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankS
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankAbstractAgentPaymentsRevamp;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SwedbankSEAgentPaymentsRevamp extends SwedbankAbstractAgentPaymentsRevamp {
@@ -19,11 +18,6 @@ public class SwedbankSEAgentPaymentsRevamp extends SwedbankAbstractAgentPayments
                 signatureKeyPair,
                 new SwedbankSEConfiguration(request.getProvider().getPayload()),
                 new SwedbankSEApiClientProvider());
-    }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        super.configureHttpClient(client);
     }
 
     @Override
