@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.rpc.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.AccountStream;
@@ -20,20 +18,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
         implements AccountStream {
 
-    @JsonIgnore
-    private static BiPredicate<AccountEntity, List<AccountTypes>> isOneOfType =
-            (account, types) -> {
-                AccountTypes accountType =
-                        UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER
-                                .translate(account.getRawAccountSubType())
-                                .orElse(AccountTypes.OTHER);
-                return types.contains(accountType);
-            };
-
-    @JsonIgnore
-    private static BiPredicate<AccountEntity, AccountTypes> isOfType =
-            (account, type) -> isOneOfType.test(account, Arrays.asList(type));
-
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV20Response accounts, AccountBalanceV20Response balance) {
 
@@ -41,8 +25,8 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
                 .filter(
                         e ->
-                                isOneOfType.test(
-                                        e,
+                                UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.isOneOf(
+                                        e.getRawAccountSubType(),
                                         Arrays.asList(AccountTypes.CHECKING, AccountTypes.SAVINGS)))
                 .findFirst()
                 .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance()));
@@ -53,7 +37,10 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
 
         return accounts.getData().stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
-                .filter(e -> isOfType.test(e, AccountTypes.CREDIT_CARD))
+                .filter(
+                        e ->
+                                UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER.isOf(
+                                        e.getRawAccountSubType(), AccountTypes.CREDIT_CARD))
                 .findFirst()
                 .map(e -> AccountEntity.toCreditCardAccount(e, balance.getBalance()));
     }
