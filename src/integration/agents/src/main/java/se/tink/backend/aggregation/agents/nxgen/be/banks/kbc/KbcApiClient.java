@@ -128,8 +128,8 @@ public class KbcApiClient {
         verifyResponseCode(header, KbcConstants.ResultCode.DOUBLE_ZERO, "");
     }
 
-    private void verifyResponseCode(HeaderDto header, final String expectedValue) {
-        verifyResponseCode(header, expectedValue, "");
+    private void verifyResponseCode(HeaderDto header) {
+        verifyResponseCode(header, KbcConstants.ResultCode.ZERO_NINE, "");
     }
 
     private void verifyResponseCode(
@@ -445,7 +445,7 @@ public class KbcApiClient {
                         enrollDeviceRequest,
                         EnrollDeviceRoundOneResponse.class,
                         cipherKey);
-        verifyResponseCode(response.getHeader(), KbcConstants.ResultCode.ZERO_NINE);
+        verifyResponseCode(response.getHeader());
 
         return response.getHeader().getSigningId().getEncoded();
     }
@@ -850,7 +850,7 @@ public class KbcApiClient {
 
         SignValidationResponse response =
                 post(url, request, SignValidationResponse.class, cipherKey);
-        verifyResponseCode(response.getHeader(), KbcConstants.ResultCode.ZERO_NINE);
+        verifyResponseCode(response.getHeader());
 
         return response.getHeader().getSigningId().getEncoded();
     }
