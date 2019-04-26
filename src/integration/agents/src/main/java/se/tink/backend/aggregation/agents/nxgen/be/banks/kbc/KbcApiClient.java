@@ -251,7 +251,7 @@ public class KbcApiClient {
 
     private <T> T post(
             KbcConstants.Url url, Object request, Class<T> responseType, final byte[] cipherKey) {
-        return post(
+        return postStuff(
                 url,
                 request,
                 responseType,
@@ -266,10 +266,10 @@ public class KbcApiClient {
             Class<T> responseType,
             String requestLocale,
             final byte[] cipherKey) {
-        return post(url, request, responseType, true, requestLocale, cipherKey);
+        return postStuff(url, request, responseType, true, requestLocale, cipherKey);
     }
 
-    private <T> T post(
+    private <T> T postStuff(
             KbcConstants.Url url,
             Object request,
             Class<T> responseType,
