@@ -4,5 +4,10 @@ public enum PaymentType {
     UNDEFINED,
     DOMESTIC,
     SEPA,
-    INTERNATIONAL,
+    INTERNATIONAL;
+
+    @Override
+    public String toString() {
+        return this.name().toLowerCase();
+    }
 }
