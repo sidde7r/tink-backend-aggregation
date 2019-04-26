@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class KbcAgent extends NextGenerationAgent {
+public final class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
