@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import java.util.Arrays;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
@@ -98,5 +99,71 @@ public final class TypeMapperTest {
                         .build();
 
         Assert.assertEquals(mapper.translate(""), Optional.empty());
+    }
+
+    @Test
+    public void isOneOf_isOfGivenType() {
+        String checking_account = "checking_account";
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
+                        .build();
+        Assert.assertTrue(
+                mapper.isOneOf.test(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+    }
+
+    @Test
+    public void isOneOf_isOfDifferentType() {
+        String checking_account = "not_checking_account";
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING,"checking_account")
+                        .put(AccountTypes.MORTGAGE, checking_account)
+                        .build();
+        Assert.assertFalse(
+                mapper.isOneOf.test(checking_account, Arrays.asList(AccountTypes.CHECKING)));
+    }
+
+    @Test
+    public void isOneOf_isNotOfAnyType() {
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, "checking_account")
+                        .build();
+        Assert.assertFalse(
+                mapper.isOneOf.test("other_type", Arrays.asList(AccountTypes.CHECKING)));
+    }
+
+    @Test
+    public void isOf_isOfGivenType() {
+        String checking_account = "checking_account";
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, checking_account, "other_checking_account")
+                        .build();
+        Assert.assertTrue(
+                mapper.isOf.test(checking_account, AccountTypes.CHECKING));
+    }
+
+    @Test
+    public void isOf_isOfDifferentType() {
+        String checking_account = "not_checking_account";
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING,"checking_account")
+                        .put(AccountTypes.MORTGAGE, checking_account)
+                        .build();
+        Assert.assertFalse(
+                mapper.isOf.test(checking_account, AccountTypes.CHECKING));
+    }
+
+    @Test
+    public void isOf_isNotOfType() {
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, "checking_account")
+                        .build();
+        Assert.assertFalse(
+                mapper.isOf.test("other_type", AccountTypes.CHECKING));
     }
 }

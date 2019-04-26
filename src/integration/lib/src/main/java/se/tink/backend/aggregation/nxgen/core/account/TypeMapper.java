@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,15 @@ public class TypeMapper<V> {
 
         return type;
     }
+
+    public BiPredicate<String, List<V>> isOneOf =
+            (input, types) -> {
+                Optional<V> type = translate(input);
+                return type.map(t -> types.contains(t)).orElseGet(() -> false);
+            };
+
+    public BiPredicate<String, V> isOf =
+            (account, type) -> isOneOf.test(account, Arrays.asList(type));
 
     public static class Builder<V> {
 
