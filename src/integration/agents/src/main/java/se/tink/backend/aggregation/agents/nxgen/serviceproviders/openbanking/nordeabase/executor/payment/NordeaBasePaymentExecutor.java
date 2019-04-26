@@ -1,7 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment;
 
+import io.vavr.CheckedFunction1;
+import io.vavr.Value;
+import io.vavr.control.Try;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
@@ -18,10 +24,10 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
+public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
     private NordeaBaseApiClient apiClient;
 
-    public NordeaSeDomesticPaymentExecutor(NordeaBaseApiClient apiClient) {
+    public NordeaBasePaymentExecutor(NordeaBaseApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -38,15 +44,17 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
                         .build();
+
         return apiClient
-                .createPayment(createPaymentRequest)
-                .toTinkPaymentResponse(PaymentType.DOMESTIC);
+                .createPayment(createPaymentRequest, getPaymentType(paymentRequest))
+                .toTinkPaymentResponse(getPaymentType(paymentRequest));
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return apiClient
-                .getPayment(paymentRequest.getPayment().getUniqueId())
+                .getPayment(
+                        paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
                 .toTinkPaymentResponse(PaymentType.DOMESTIC);
     }
 
@@ -60,7 +68,8 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
                         apiClient.confirmPayment(
-                                paymentMultiStepRequest.getPayment().getUniqueId(), true);
+                                paymentMultiStepRequest.getPayment().getUniqueId(),
+                                getPaymentType(paymentMultiStepRequest));
                 paymentStatus =
                         NordeaPaymentStatus.mapToTinkPaymentStatus(
                                 NordeaPaymentStatus.fromString(
@@ -72,7 +81,8 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
             case NordeaSeConstants.NordeaSignSteps.SAMPLE_STEP:
                 paymentStatus =
                         sampleStepNordeaAutoSignsAfterAFewSeconds(
-                                paymentMultiStepRequest.getPayment().getUniqueId());
+                                paymentMultiStepRequest.getPayment().getUniqueId(),
+                                getPaymentType(paymentMultiStepRequest));
                 nextStep = AuthenticationStepConstants.STEP_FINALIZE;
                 break;
 
@@ -93,19 +103,6 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
                 "createBeneficiary not yet implemented for " + this.getClass().getName());
     }
 
-    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(String providerId)
-            throws PaymentException {
-        // Should be enough to get the payment auto signed.
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        GetPaymentResponse paymentResponse = apiClient.getPayment(providerId);
-        return NordeaPaymentStatus.mapToTinkPaymentStatus(
-                NordeaPaymentStatus.fromString(paymentResponse.getResponse().getPaymentStatus()));
-    }
-
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         throw new NotImplementedException(
@@ -115,6 +112,63 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
             throws PaymentException {
-        return apiClient.fetchPayments().toTinkPaymentListResponse(PaymentType.DOMESTIC);
+        Collector<PaymentListResponse, ArrayList<PaymentResponse>, PaymentListResponse>
+                paymentListResponseCollector =
+                        Collector.of(
+                                ArrayList::new,
+                                (paymentResponses, paymentListResponse) ->
+                                        paymentResponses.addAll(
+                                                paymentListResponse.getPaymentResponseList()),
+                                (paymentResponses1, paymentResponses2) -> {
+                                    paymentResponses1.addAll(paymentResponses2);
+                                    return paymentResponses1;
+                                },
+                                paymentResponses -> new PaymentListResponse(paymentResponses));
+
+        List<Try<PaymentListResponse>> allTries =
+                getSupportedPaymentTypes().stream()
+                        .map(
+                                CheckedFunction1.liftTry(
+                                        paymentType ->
+                                                apiClient
+                                                        .fetchPayments(paymentType)
+                                                        .toTinkPaymentListResponse(paymentType)))
+                        .collect(Collectors.toList());
+
+        List<Try<PaymentListResponse>> failedTries =
+                allTries.stream().filter(Try::isFailure).collect(Collectors.toList());
+
+        if (!failedTries.isEmpty()) {
+            Throwable failedTryCause = failedTries.stream().findFirst().get().getCause();
+            if (failedTryCause instanceof PaymentException) {
+                throw (PaymentException) failedTryCause;
+            } else {
+                throw new PaymentException(
+                        "Unrecognized exception when fetching multiple payments.", failedTryCause);
+            }
+        }
+
+        PaymentListResponse collect =
+                allTries.stream()
+                        .flatMap(Value::toJavaStream)
+                        .collect(paymentListResponseCollector);
+        return collect;
+    }
+
+    protected abstract PaymentType getPaymentType(PaymentRequest paymentRequest);
+
+    protected abstract Collection<PaymentType> getSupportedPaymentTypes();
+
+    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(
+            String providerId, PaymentType paymentType) throws PaymentException {
+        // Should be enough to get the payment auto signed.
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        GetPaymentResponse paymentResponse = apiClient.getPayment(providerId, paymentType);
+        return NordeaPaymentStatus.mapToTinkPaymentStatus(
+                NordeaPaymentStatus.fromString(paymentResponse.getResponse().getPaymentStatus()));
     }
 }

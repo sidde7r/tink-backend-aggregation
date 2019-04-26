@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public class NordeaBaseApiClient {
     protected final TinkHttpClient client;
@@ -125,10 +126,14 @@ public class NordeaBaseApiClient {
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
     }
 
-    public CreatePaymentResponse createPayment(CreatePaymentRequest createPaymentRequest)
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, PaymentType paymentType)
             throws PaymentException {
         try {
-            return createRequestInSession(NordeaBaseConstants.Urls.INITIATE_DOMESTIC_PAYMENT)
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.INITIATE_PAYMENT.parameter(
+                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                    paymentType.toString()))
                     .post(CreatePaymentResponse.class, createPaymentRequest);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
@@ -136,27 +141,31 @@ public class NordeaBaseApiClient {
         }
     }
 
-    public ConfirmPaymentResponse confirmPayment(String paymentId, boolean domestic)
+    public ConfirmPaymentResponse confirmPayment(String paymentId, PaymentType paymentType)
             throws PaymentException {
         try {
-            URL url =
-                    domestic
-                            ? NordeaBaseConstants.Urls.CONFIRM_DOMESTIC_PAYMENT.parameter(
-                                    NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId)
-                            : NordeaBaseConstants.Urls.CONFIRM_SEPA_PAYMENT.parameter(
-                                    NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId);
-            return createRequestInSession(url).put(ConfirmPaymentResponse.class);
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.CONFIRM_PAYMENT
+                                    .parameter(
+                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                            paymentType.toString())
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
+                    .put(ConfirmPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
             throw e;
         }
     }
 
-    public GetPaymentResponse getPayment(String paymentId) throws PaymentException {
+    public GetPaymentResponse getPayment(String paymentId, PaymentType paymentType)
+            throws PaymentException {
         try {
             return createRequestInSession(
-                            NordeaBaseConstants.Urls.GET_DOMESTIC_PAYMENT.parameter(
-                                    NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
+                            NordeaBaseConstants.Urls.GET_PAYMENT
+                                    .parameter(
+                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                            paymentType.toString())
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
                     .get(GetPaymentResponse.class);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);
@@ -164,9 +173,12 @@ public class NordeaBaseApiClient {
         }
     }
 
-    public GetPaymentsResponse fetchPayments() throws PaymentException {
+    public GetPaymentsResponse fetchPayments(PaymentType paymentType) throws PaymentException {
         try {
-            return createRequestInSession(NordeaBaseConstants.Urls.GET_DOMESTIC_PAYMENTS)
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.GET_PAYMENTS.parameter(
+                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                    paymentType.toString()))
                     .get(GetPaymentsResponse.class);
         } catch (HttpResponseException e) {
             handleHttpResponseException(e);

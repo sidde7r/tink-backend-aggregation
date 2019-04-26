@@ -25,16 +25,10 @@ public final class NordeaBaseConstants {
         public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
-        public static final URL INITIATE_DOMESTIC_PAYMENT =
-                new URL(BASE_URL + ApiService.INITIATE_DOMESTIC_PAYMENT);
-        public static final URL CONFIRM_DOMESTIC_PAYMENT =
-                new URL(BASE_URL + ApiService.CONFIRM_DOMESTIC_PAYMENT);
-        public static final URL CONFIRM_SEPA_PAYMENT =
-                new URL(BASE_URL + ApiService.CONFIRM_SEPA_PAYMENT);
-        public static final URL GET_DOMESTIC_PAYMENT =
-                new URL(BASE_URL + ApiService.GET_DOMESTIC_PAYMENT);
-        public static final URL GET_DOMESTIC_PAYMENTS =
-                new URL(BASE_URL + ApiService.INITIATE_DOMESTIC_PAYMENT);
+        public static final URL INITIATE_PAYMENT = new URL(BASE_URL + ApiService.INITIATE_PAYMENT);
+        public static final URL CONFIRM_PAYMENT = new URL(BASE_URL + ApiService.CONFIRM_PAYMENT);
+        public static final URL GET_PAYMENT = new URL(BASE_URL + ApiService.GET_PAYMENT);
+        public static final URL GET_PAYMENTS = new URL(BASE_URL + ApiService.GET_PAYMENTS);
     }
 
     public static class ApiService {
@@ -42,11 +36,11 @@ public final class NordeaBaseConstants {
         public static final String GET_TOKEN = "/v3/authorize/token";
         public static final String GET_ACCOUNTS = "/v3/accounts";
         public static final String GET_TRANSACTIONS = "/v3/accounts/{accountId}/transactions";
-        public static final String INITIATE_DOMESTIC_PAYMENT = "/v3/payments/domestic";
-        public static final String CONFIRM_DOMESTIC_PAYMENT =
-                "/v3/payments/domestic/{paymentId}/confirm";
-        public static final String CONFIRM_SEPA_PAYMENT = "/v3/payments/sepa/{paymentId}/confirm";
-        public static final String GET_DOMESTIC_PAYMENT = "/v3/payments/domestic/{paymentId}";
+        public static final String INITIATE_PAYMENT = "/v3/payments/{paymentType}";
+        public static final String CONFIRM_PAYMENT =
+                "/v3/payments/{paymentType}/{paymentId}/confirm";
+        public static final String GET_PAYMENT = "/v3/payments/{paymentType}/{paymentId}";
+        public static final String GET_PAYMENTS = "/v3/payments/{paymentType}";
     }
 
     public static class StorageKeys {
@@ -90,6 +84,7 @@ public final class NordeaBaseConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_TYPE = "paymentType";
     }
 
     public static final class ErrorMessages {
