@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.FutureTransactionsResponse;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class KbcTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -34,22 +32,15 @@ public class KbcTransactionalAccountFetcher
 
     private final KbcApiClient apiClient;
     private String userLanguage;
-    private final SessionStorage sessionStorage;
 
-    public KbcTransactionalAccountFetcher(
-            KbcApiClient apiClient, String userLanguage, final SessionStorage sessionStorage) {
+    public KbcTransactionalAccountFetcher(KbcApiClient apiClient, String userLanguage) {
         this.apiClient = apiClient;
         this.userLanguage = userLanguage;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final byte[] cipherKey =
-                EncodingUtils.decodeBase64String(
-                        sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
-
-        return apiClient.fetchAccounts(userLanguage, cipherKey).getAgreements().stream()
+        return apiClient.fetchAccounts(userLanguage).getAgreements().stream()
                 .filter(
                         agreement ->
                                 agreement.getAccountType().isPresent()
@@ -62,13 +53,8 @@ public class KbcTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-        final byte[] cipherKey =
-                EncodingUtils.decodeBase64String(
-                        sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
-
         try {
-            return apiClient.fetchTransactions(
-                    account.getBankIdentifier(), key, userLanguage, cipherKey);
+            return apiClient.fetchTransactions(account.getBankIdentifier(), key, userLanguage);
         } catch (IllegalStateException e) {
             if (noTransactionsFoundForLast12Months(e)) {
                 return new TransactionKeyPaginatorResponseImpl<>();
@@ -98,14 +84,10 @@ public class KbcTransactionalAccountFetcher
             TransactionalAccount account) {
         Collection<UpcomingTransaction> upcomingTransactions = Lists.newArrayList();
 
-        final byte[] cipherKey =
-                EncodingUtils.decodeBase64String(
-                        sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
-
         String key = null;
         do {
             FutureTransactionsResponse response =
-                    apiClient.fetchFutureTransactions(account.getBankIdentifier(), key, cipherKey);
+                    apiClient.fetchFutureTransactions(account.getBankIdentifier(), key);
             upcomingTransactions.addAll(response.getUpcomingTransactions());
             key = response.hasNext() ? response.nextKey() : null;
         } while (key != null);

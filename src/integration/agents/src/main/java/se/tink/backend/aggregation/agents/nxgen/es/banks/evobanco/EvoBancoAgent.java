@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoMultifactorAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.UserinfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.EvoBancoCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.EvoBancoInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.EvoBancoAccountFetcher;
@@ -29,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EvoBancoAgent extends NextGenerationAgent {
+public class EvoBancoAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final EvoBancoApiClient bankClient;
 
@@ -125,5 +129,14 @@ public class EvoBancoAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return sessionStorage
+                .get(Storage.USER_INFO, UserinfoEntity.class)
+                .map(UserinfoEntity::toTinkIdentity)
+                .map(FetchIdentityDataResponse::new)
+                .orElse(null);
     }
 }

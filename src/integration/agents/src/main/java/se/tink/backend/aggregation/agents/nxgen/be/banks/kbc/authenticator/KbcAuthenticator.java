@@ -17,29 +17,24 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcDevice;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
-    private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private static final AggregationLogger LOGGER = new AggregationLogger(KbcAuthenticator.class);
 
     public KbcAuthenticator(
-            final SessionStorage sessionStorage,
             final PersistentStorage persistentStorage,
             final KbcApiClient apiClient,
             final SupplementalInformationHelper supplementalInformationHelper) {
-        this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -50,26 +45,16 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         return CredentialsTypes.PASSWORD;
     }
 
-    private static byte[] generateCipherKey() {
-        return RandomUtils.secureRandom(KbcConstants.Encryption.AES_KEY_LENGTH);
-    }
-
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
         String panNr = verifyCredentialsNotNullOrEmpty(credentials.getField(Field.Key.USERNAME));
+        apiClient.prepareSession();
+        registerLogon(panNr);
 
-        final byte[] cipherKey = generateCipherKey();
-        sessionStorage.put(
-                KbcConstants.Encryption.AES_SESSION_KEY_KEY,
-                EncodingUtils.encodeAsBase64String(cipherKey));
-        apiClient.prepareSession(cipherKey);
-
-        registerLogon(panNr, cipherKey);
-
-        String signingId = apiClient.enrollDevice(cipherKey);
-        String signTypeId = apiClient.signTypeManual(signingId, cipherKey);
-        String signChallengeCode = apiClient.signChallenge(signTypeId, signingId, cipherKey);
+        String signingId = apiClient.enrollDevice();
+        String signTypeId = apiClient.signTypeManual(signingId);
+        String signChallengeCode = apiClient.signChallenge(signTypeId, signingId);
         LOGGER.info(
                 String.format(
                         "%s KBC waitForSignCodeChallengeResponse, %s",
@@ -82,17 +67,16 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 String.format(
                         "%s signValidation(%s, %s, %s)",
                         LogTags.DEBUG, signResponseCode, panNr, signingId));
-        String finalSigningId =
-                apiClient.signValidation(signResponseCode, panNr, signingId, cipherKey);
+        String finalSigningId = apiClient.signValidation(signResponseCode, panNr, signingId);
         LOGGER.info(String.format("%s enrollDeviceRoundTwo(%s)", LogTags.DEBUG, finalSigningId));
         EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse =
-                enrollDeviceRoundTwo(finalSigningId, cipherKey);
+                enrollDeviceRoundTwo(finalSigningId);
 
         LOGGER.info(String.format("%s createAndActivateKbcDevice", LogTags.DEBUG));
-        KbcDevice device = createAndActivateKbcDevice(enrollDeviceRoundTwoResponse, cipherKey);
+        KbcDevice device = createAndActivateKbcDevice(enrollDeviceRoundTwoResponse);
 
         LOGGER.info(String.format("%s apiClient.logout", LogTags.DEBUG));
-        apiClient.logout(cipherKey);
+        apiClient.logout();
 
         LOGGER.info(String.format("%s login(device)", LogTags.DEBUG));
         login(device);
@@ -105,9 +89,9 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         return value;
     }
 
-    private void registerLogon(String panNr, final byte[] cipherKey)
+    private void registerLogon(String panNr)
             throws AuthenticationException, AuthorizationException {
-        String challengeCode = apiClient.challenge(cipherKey);
+        String challengeCode = apiClient.challenge();
         LOGGER.info(
                 String.format(
                         "%s KBC waitForLoginChallengeResponse, %s", LogTags.DEBUG, challengeCode));
@@ -116,7 +100,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                         supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
         LOGGER.info(String.format("%s KBC waitForLoginChallengeResponse done", LogTags.DEBUG));
         try {
-            apiClient.registerLogon(panNr, responseCode, cipherKey);
+            apiClient.registerLogon(panNr, responseCode);
         } catch (IllegalStateException e) {
             if (isIncorrectCardNumber(e) || isIncorrectCard(e)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(
@@ -135,11 +119,10 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         }
     }
 
-    private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(
-            String finalSigningId, final byte[] cipherKey)
+    private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(String finalSigningId)
             throws AuthenticationException, AuthorizationException {
         try {
-            return apiClient.enrollDeviceWithSigningId(finalSigningId, cipherKey);
+            return apiClient.enrollDeviceWithSigningId(finalSigningId);
         } catch (IllegalStateException e) {
             if (isNotACustomer(e)) {
                 LOGGER.info(String.format("%s enrollDeviceRoundTwo isNotACustomer", LogTags.DEBUG));
@@ -160,7 +143,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     }
 
     private KbcDevice createAndActivateKbcDevice(
-            EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse, final byte[] cipherKey)
+            EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse)
             throws AuthorizationException {
         KbcDevice device = new KbcDevice();
         device.setDeviceId(enrollDeviceRoundTwoResponse.getDeviceId().getValue());
@@ -180,8 +163,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 apiClient.activationLicence(
                         device,
                         EncodingUtils.encodeHexAsString(iv).toUpperCase(),
-                        encryptedClientPublicKeyAndNonce,
-                        cipherKey);
+                        encryptedClientPublicKeyAndNonce);
 
         LOGGER.info(
                 String.format(
@@ -238,8 +220,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                         EncodingUtils.encodeHexAsString(iv).toUpperCase(),
                         encryptedNonce,
                         challenge,
-                        deviceCode,
-                        cipherKey);
+                        deviceCode);
 
         device.setActivationMessage(activationMessage);
         LOGGER.info(
@@ -251,7 +232,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         LOGGER.info(
                 String.format(
                         "%s createAndActivateKbcDevice activationVerification", LogTags.DEBUG));
-        apiClient.activationVerification(device, verificationMessage, cipherKey);
+        apiClient.activationVerification(device, verificationMessage);
 
         LOGGER.info(String.format("%s createAndActivateKbcDevice return", LogTags.DEBUG));
         return device;
@@ -321,20 +302,17 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
     public void login(KbcDevice device) throws AuthenticationException, AuthorizationException {
         LOGGER.info(String.format("%s apiclient.prepareSession", LogTags.DEBUG));
-        final byte[] cipherKey =
-                EncodingUtils.decodeBase64String(
-                        sessionStorage.get(KbcConstants.Encryption.AES_SESSION_KEY_KEY));
-        apiClient.prepareSession(cipherKey);
+        apiClient.prepareSession();
 
         LOGGER.info(String.format("%s apiclient.challengeSotp", LogTags.DEBUG));
-        String otpChallenge = apiClient.challengeSotp(device, cipherKey);
+        String otpChallenge = apiClient.challengeSotp(device);
 
         LOGGER.info(
                 String.format("%s calculateAuthenticationOtp, %s", LogTags.DEBUG, otpChallenge));
         String otp = device.calculateAuthenticationOtp(otpChallenge);
 
         LOGGER.info(String.format("%s loginSotp, %s", LogTags.DEBUG, otp));
-        apiClient.loginSotp(device, otp, cipherKey);
+        apiClient.loginSotp(device, otp);
 
         persistentStorage.put(KbcConstants.Storage.DEVICE_KEY, device);
     }

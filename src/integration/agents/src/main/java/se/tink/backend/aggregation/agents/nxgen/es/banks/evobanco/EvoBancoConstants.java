@@ -111,6 +111,7 @@ public class EvoBancoConstants {
         public static final String DEVICE_ID = "device-id";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
+        public static final String USER_INFO = "user-info";
     }
 
     public static class FormKey {
