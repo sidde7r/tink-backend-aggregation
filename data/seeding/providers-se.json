@@ -271,7 +271,7 @@
                 "from": "09:00",
                 "to": "01:00"
             },
-            "status": "TEMPORARY_DISABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "CREDIT_CARD"
         },
