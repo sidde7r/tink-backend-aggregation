@@ -35,5 +35,5 @@ public interface SystemUpdater {
 
     void setWaitingOnConnectorTransactions(boolean waitingOnConnectorTransactions);
 
-    void sendIdentityToIdentityService(IdentityData identityData);
+    void sendIdentityToIdentityAggregatorService(IdentityData identityData);
 }

@@ -150,7 +150,7 @@ public class FakeIntegrationArgumentsCreator {
                     }
 
                     @Override
-                    public void sendIdentityToIdentityService(IdentityData identityData) {}
+                    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {}
                 };
         return context;
     }
