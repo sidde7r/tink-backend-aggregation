@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 public class EnterCardConstants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
-    public static final String RESPONSE_FORM_ID = "responseForm";
-    static final String REFERER = "Referer";
     static final String SIGNICAT_ID = "sbid-mobil-2014:%s:sv";
 
     public static class Urls {
@@ -28,6 +26,22 @@ public class EnterCardConstants {
         public static final String NO_CLIENT = "NO_CLIENT";
     }
 
+    static class AuthenticationErrors {
+
+        static final String ACCOUNT_NOT_FOUND = "ACCOUNT_NOT_FOUND";
+        static final String INVALID_STATUS = "INVALID_STATUS";
+        static final String LOGIN_CANCELLED_BY_USER = "LOGIN_CANCELLED_BY_USER";
+        static final String TECHNICAL_ERROR = "TECHNICAL_ERROR";
+        static final String ERROR_IN_SIGNICAT_RESPONSE = "ERROR_IN_SIGNICAT_RESPONSE";
+        static final String REAUTH_FAILURE = "REAUTH_FAILURE";
+    }
+
+    public static class AuthenticationForm {
+
+        public static final String RESPONSE_FORM_ID = "responseForm";
+        static final String ATTRIBUTE_KEY = "action";
+    }
+
     static class QueryKey {
 
         static final String PREFILLED_MODE = "prefilled.mode";
@@ -42,8 +56,15 @@ public class EnterCardConstants {
         static final String PREFILLED_MODE = "limited";
     }
 
+    static class HeaderKey {
+
+        static final String REFERER = "Referer";
+        static final String ORIGIN = "Origin";
+    }
+
     static class HeaderValue {
 
         static final String ACCEPT_LANGUAGE = "sv-se";
+        static final String ORIGIN = "https://id.signicat.com";
     }
 }
