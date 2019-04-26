@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class KbcSessionHandler implements SessionHandler {
+public final class KbcSessionHandler implements SessionHandler {
     private final KbcHttpFilter httpFilter;
     private final KbcApiClient apiClient;
     private final SessionStorage sessionStorage;
