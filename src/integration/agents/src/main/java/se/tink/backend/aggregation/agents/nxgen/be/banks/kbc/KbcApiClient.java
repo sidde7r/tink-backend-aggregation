@@ -274,9 +274,7 @@ public class KbcApiClient {
 
         HttpResponse httpResponse = postRequest(url, request, true, requestLocale, cipherKey);
 
-        T response = decodeAndDecryptResponse(httpResponse, responseType, cipherKey);
-
-        return response;
+        return decodeAndDecryptResponse(httpResponse, responseType, cipherKey);
     }
 
     private HttpResponse postRequest(
