@@ -14,7 +14,7 @@ import se.tink.libraries.amount.Amount;
 
 @XmlRootElement
 public class AccountEntity {
-    public static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
+    private static final AggregationLogger logger = new AggregationLogger(AccountEntity.class);
 
     private String type;
     private String category;
@@ -252,7 +252,7 @@ public class AccountEntity {
             case IngConstants.AccountTypes.SAVINGS_ACCOUNT:
                 return AccountTypes.SAVINGS;
             default:
-                LOGGER.warn(
+                logger.warn(
                         String.format(
                                 "Could not map account type [%s] to a Tink account type", type));
                 return AccountTypes.OTHER;

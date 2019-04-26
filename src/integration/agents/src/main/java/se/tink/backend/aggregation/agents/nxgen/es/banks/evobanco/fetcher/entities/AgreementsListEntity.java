@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
 import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity.LOGGER;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -20,6 +21,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class AgreementsListEntity {
+    @JsonIgnore
+    private static final AggregationLogger logger =
+            new AggregationLogger(AgreementsListEntity.class);
+
     @JsonProperty("saldoLimite")
     private String balanceLimit;
 
@@ -122,7 +127,7 @@ public class AgreementsListEntity {
             case OTHER:
             default:
                 // log all accounts to try to find out what types we are receiving
-                LOGGER.infoExtraLong(
+                logger.infoExtraLong(
                         SerializationUtils.serializeToString(this),
                         EvoBancoConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
 
