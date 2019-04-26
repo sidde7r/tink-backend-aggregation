@@ -567,7 +567,7 @@ public class KbcApiClient {
         return response.first.getActivationMessage().getValue();
     }
 
-    public ActivationVerificationResponse activationVerification(
+    public void activationVerification(
             KbcDevice device, String verificationMessage, final byte[] cipherKey)
             throws AuthorizationException {
         ActivationVerificationRequest activationVerificationRequest =
@@ -594,8 +594,6 @@ public class KbcApiClient {
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyDoubleZeroResponseCode(response.first.getHeader());
-
-        return response.first;
     }
 
     public String challengeSotp(KbcDevice device, final byte[] cipherKey)
