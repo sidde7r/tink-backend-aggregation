@@ -1,32 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment;
 
+import io.vavr.CheckedFunction1;
+import io.vavr.Value;
+import io.vavr.control.Try;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collector;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import se.tink.backend.aggregation.nxgen.controllers.payment.*;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public abstract class NordeaBasePaymentExecutorSelector implements PaymentExecutor {
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         return getRelevantExecutor(paymentRequest).create(paymentRequest);
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return getRelevantExecutor(paymentRequest).fetch(paymentRequest);
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         return getRelevantExecutor(paymentMultiStepRequest).sign(paymentMultiStepRequest);
     }
 
@@ -43,7 +43,8 @@ public abstract class NordeaBasePaymentExecutorSelector implements PaymentExecut
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) {
+    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+            throws PaymentException {
         Collector<PaymentListResponse, ArrayList<PaymentResponse>, PaymentListResponse>
                 paymentListResponseCollector =
                         Collector.of(
@@ -57,9 +58,25 @@ public abstract class NordeaBasePaymentExecutorSelector implements PaymentExecut
                                 },
                                 paymentResponses -> new PaymentListResponse(paymentResponses));
 
-        return getAllExecutors().stream()
-                .map(executor -> executor.fetchMultiple(null))
-                .collect(paymentListResponseCollector);
+        List<Try<PaymentListResponse>> allTries =
+                getAllExecutors().stream()
+                        .map(CheckedFunction1.liftTry(executor -> executor.fetchMultiple(null)))
+                        .collect(Collectors.toList());
+
+        List<Try<PaymentListResponse>> failedTries =
+                allTries.stream().filter(Try::isFailure).collect(Collectors.toList());
+
+        if (!failedTries.isEmpty()) {
+            Throwable failedTryCause = failedTries.stream().findFirst().get().getCause();
+            if (failedTryCause instanceof PaymentException) {
+                throw (PaymentException) failedTryCause;
+            } else {
+                throw new PaymentException(
+                        "Unrecognized exception when fetching multiple payments.", failedTryCause);
+            }
+        }
+
+        return allTries.stream().flatMap(Value::toJavaStream).collect(paymentListResponseCollector);
     }
 
     protected abstract PaymentExecutor getRelevantExecutor(PaymentRequest paymentRequest);

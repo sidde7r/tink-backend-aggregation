@@ -2,20 +2,13 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -208,7 +201,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     private void handlePayment(
-            NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest) {
+            NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest)
+            throws PaymentException {
         PaymentResponse createPaymentResponse =
                 nextGenerationAgent.createPayment(PaymentRequest.of(transferRequest));
         PaymentMultiStepResponse signPaymentMultiStepResponse =

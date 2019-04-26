@@ -10,6 +10,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
@@ -426,21 +427,22 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         return Optional.empty();
     }
 
-    public PaymentResponse createPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse createPayment(PaymentRequest paymentRequest) throws PaymentException {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .create(paymentRequest);
     }
 
-    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) throws PaymentException {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
                 .fetch(paymentRequest);
     }
 
-    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest) {
+    public PaymentMultiStepResponse signPayment(PaymentMultiStepRequest paymentRequest)
+            throws PaymentException {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
@@ -454,7 +456,8 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                 .cancel(paymentRequest);
     }
 
-    public PaymentListResponse fetchMultiplePayments(PaymentRequest paymentRequest) {
+    public PaymentListResponse fetchMultiplePayments(PaymentRequest paymentRequest)
+            throws PaymentException {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
