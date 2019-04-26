@@ -350,7 +350,7 @@ public class KbcApiClient {
         verifyDoubleZeroResponseCode(response.getHeader());
     }
 
-    public void keyExchange(String companyId, String appFamily, final byte[] cipherKey)
+    private void keyExchange(String companyId, String appFamily, final byte[] cipherKey)
             throws AuthorizationException {
         KeyExchangeRequest request =
                 KeyExchangeRequest.createWithStandardTypes(
