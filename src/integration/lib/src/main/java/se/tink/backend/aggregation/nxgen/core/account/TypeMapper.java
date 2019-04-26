@@ -79,13 +79,13 @@ public class TypeMapper<V> {
         return type;
     }
 
-    private BiPredicate<String, List<V>> isOneOfType =
+    private BiPredicate<String, Collection<V>> isOneOfType =
             (input, types) -> {
                 Optional<V> type = translate(input);
                 return type.map(t -> types.contains(t)).orElseGet(() -> false);
             };
 
-    public Boolean isOneOf(String input, List<V> types) {
+    public Boolean isOneOf(String input, Collection<V> types) {
         return isOneOfType.test(input, types);
     }
 
