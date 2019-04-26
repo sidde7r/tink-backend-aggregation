@@ -33,6 +33,7 @@ public class BankAustriaAgent extends NextGenerationAgent {
     public BankAustriaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.bankAustriaSessionStorage =
                 new BankAustriaSessionStorage(
                         this.sessionStorage,
@@ -41,7 +42,6 @@ public class BankAustriaAgent extends NextGenerationAgent {
         this.otmlResponseConverter = new OtmlResponseConverter();
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new OtmlBodyReader<>());
     }

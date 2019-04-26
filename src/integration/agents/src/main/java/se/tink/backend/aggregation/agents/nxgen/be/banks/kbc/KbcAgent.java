@@ -36,11 +36,11 @@ public final class KbcAgent extends NextGenerationAgent {
     public KbcAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
         this.apiClient = new KbcApiClient(client);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         httpFilter = new KbcHttpFilter();
         client.addFilter(httpFilter);

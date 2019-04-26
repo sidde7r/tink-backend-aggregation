@@ -40,10 +40,10 @@ public class SabadellAgent extends NextGenerationAgent implements RefreshIdentit
     public SabadellAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new SabadellApiClient(client);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageWriter(
                 new NoEscapeOfBackslashMessageBodyWriter(InitiateSessionRequestEntity.class));

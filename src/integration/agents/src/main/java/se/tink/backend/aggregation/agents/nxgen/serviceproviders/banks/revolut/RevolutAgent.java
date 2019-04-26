@@ -36,10 +36,10 @@ public class RevolutAgent extends NextGenerationAgent implements RefreshIdentity
     public RevolutAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new RevolutApiClient(client, persistentStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new RevolutFilter());
     }

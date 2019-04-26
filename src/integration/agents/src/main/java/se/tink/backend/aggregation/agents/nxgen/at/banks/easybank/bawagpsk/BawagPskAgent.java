@@ -34,12 +34,12 @@ public class BawagPskAgent extends NextGenerationAgent {
     public BawagPskAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient =
                 new BawagPskApiClient(
                         this.client, sessionStorage, persistentStorage, request.getProvider());
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         BawagPskUtils.trustIntermediateCertificate(client);
     }

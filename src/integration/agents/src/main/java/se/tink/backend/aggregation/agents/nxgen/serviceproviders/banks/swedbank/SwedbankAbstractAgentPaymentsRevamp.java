@@ -59,12 +59,12 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
             SwedbankConfiguration configuration,
             SwedbankApiClientProvider apiClientProvider) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new SwedbankBaseHttpFilter());
     }

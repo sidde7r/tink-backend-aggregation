@@ -32,11 +32,11 @@ public class ArgentaAgent extends NextGenerationAgent {
     public ArgentaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient =
                 new ArgentaApiClient(this.client, new ArgentaSessionStorage(this.sessionStorage));
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         // Argenta tries to set "out of domain cookies", to avoid a warning for each request just
         // ignore cookies.

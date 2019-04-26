@@ -32,12 +32,12 @@ public class IngAtAgent extends NextGenerationAgent {
     public IngAtAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.ingAtSessionStorage = new IngAtSessionStorage(sessionStorage);
         this.apiClient =
                 new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(IngAtConstants.Header.USER_AGENT);
     }

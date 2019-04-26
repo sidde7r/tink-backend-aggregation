@@ -30,13 +30,13 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
     public BanquePopulaireAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         apiClient =
                 new BanquePopulaireApiClient(
                         client, sessionStorage, request.getProvider().getPayload());
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addRedirectHandler(new BanquePopulaireRedirectHandler(sessionStorage));
     }

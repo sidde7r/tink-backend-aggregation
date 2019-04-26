@@ -62,6 +62,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             UkOpenBankingConfig aisConfig,
             UkOpenBankingConfig pisConfig) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         this.paymentsHttpClient =
                 new TinkHttpClient(
@@ -75,7 +76,6 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         this.pisConfig = pisConfig;
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
     }

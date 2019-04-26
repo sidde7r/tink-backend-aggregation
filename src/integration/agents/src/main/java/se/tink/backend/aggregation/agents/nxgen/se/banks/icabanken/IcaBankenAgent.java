@@ -41,13 +41,13 @@ public class IcaBankenAgent extends NextGenerationAgent {
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
         this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new IcaBankenFilter());
     }

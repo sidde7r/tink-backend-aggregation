@@ -127,7 +127,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                         request.getProvider(), supplementalInformationController);
         this.supplementalInformationFormer =
                 new SupplementalInformationFormer(request.getProvider());
-        configureHttpClient(client);
     }
 
     // TODO auth: remove the legacy login.
@@ -256,8 +255,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         }
         return sessionController;
     }
-
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     protected abstract Authenticator constructAuthenticator();
 

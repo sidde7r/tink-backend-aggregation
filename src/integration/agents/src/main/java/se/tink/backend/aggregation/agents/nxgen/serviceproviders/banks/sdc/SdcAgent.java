@@ -39,6 +39,7 @@ public abstract class SdcAgent extends NextGenerationAgent {
             SdcConfiguration agentConfiguration,
             SdcTransactionParser parser) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.parser = parser;
         this.agentConfiguration = agentConfiguration;
         this.sdcSessionStorage = new SdcSessionStorage(this.sessionStorage);
@@ -46,7 +47,6 @@ public abstract class SdcAgent extends NextGenerationAgent {
         this.bankClient = this.createApiClient(agentConfiguration);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setTimeout(SdcConstants.HTTP_TIMEOUT);
     }
