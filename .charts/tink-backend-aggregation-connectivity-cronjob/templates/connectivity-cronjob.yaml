@@ -33,7 +33,7 @@ spec:
             image: local_connectivity_test
             imagePullPolicy: Never
             {{else}}
-            image: gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-connectivity-cronjob.txt" | default "latest" }}
+            image: gcr.io/tink-containers/tink-backend-aggregation-connectivity-cronjob:{{ .Values.Version | default "latest" }}
             imagePullPolicy: IfNotPresent
             {{end}}
             securityContext:
