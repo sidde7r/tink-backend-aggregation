@@ -223,6 +223,7 @@ public class KbcApiClient {
     private <T> String encryptAndEncodeRequest(T request, final byte[] cipherKey) {
         String serializedRequest = SerializationUtils.serializeToString(request);
         byte[] iv = RandomUtils.secureRandom(16);
+        assert serializedRequest != null;
         byte[] encryptedRequest = AES.encryptCbc(cipherKey, iv, serializedRequest.getBytes());
         byte[] concatenatedArrays = Bytes.concat(iv, encryptedRequest);
         return EncodingUtils.encodeAsBase64String(concatenatedArrays);
