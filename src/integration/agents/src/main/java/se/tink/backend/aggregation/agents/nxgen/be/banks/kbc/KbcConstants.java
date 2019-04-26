@@ -123,7 +123,6 @@ public class KbcConstants {
         public static final String CURRENCY = "EUR";
         public static final String SEARCH_MESSAGE = "";
         public static final String SEARCH_AMOUNT = "";
-        public static final String ROLE_CODE = "T";
         public static final int TRANSACTIONS_QUANTITY = 15;
     }
 
@@ -137,7 +136,6 @@ public class KbcConstants {
         public static final String APPVERSION_KEY = "appVersion";
         public static final String APPVERSION_VALUE = RequestInput.VERSION_NUMBER;
         public static final String ACCEPT_LANG_KEY = "Accept-Language";
-        public static final String ACCEPT_LANG_VALUE = "en";
     }
 
     public static class Predicates {
@@ -150,7 +148,6 @@ public class KbcConstants {
         public static final String DOUBLE_ZERO = "00";
         public static final String ZERO_TWO = "02";
         public static final String ZERO_NINE = "09"; // isSigningRequired
-        public static final String ZERO_TEN = "10"; // isReSigningRequired
     }
 
     public static class PairTypeTypes {
@@ -270,8 +267,6 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
         public static final String CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = "D9FE51";
-        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_2 = "D9C104";
-        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_3 = "D9E027";
     }
 
     public enum UserMessage implements LocalizableEnum {
