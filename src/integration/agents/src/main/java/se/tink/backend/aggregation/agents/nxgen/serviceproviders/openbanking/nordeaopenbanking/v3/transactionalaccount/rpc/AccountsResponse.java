@@ -36,10 +36,8 @@ public class AccountsResponse {
     }
 
     public List<TransactionalAccount> getTinkAccounts(NordeaAccountParser accountParser) {
-        return Optional.ofNullable(response)
-                .map(r -> r.getAccounts())
-                .orElseGet(Collections::emptyList)
-                .stream()
+        return Optional.ofNullable(response).map(r -> r.getAccounts())
+                .orElseGet(Collections::emptyList).stream()
                 .filter(AccountEntity::isOpen)
                 .filter(
                         account ->

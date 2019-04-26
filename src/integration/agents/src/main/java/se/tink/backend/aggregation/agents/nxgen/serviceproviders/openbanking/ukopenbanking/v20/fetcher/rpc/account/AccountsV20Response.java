@@ -21,23 +21,29 @@ public class AccountsV20Response extends BaseResponse<List<AccountEntity>>
         implements AccountStream {
 
     @JsonIgnore
-    private static BiPredicate<AccountEntity, List<AccountTypes>> isOneOfType = (account, types) ->
-    {
-         AccountTypes accountType = UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER
-                .translate(account.getRawAccountSubType())
-                .orElse(AccountTypes.OTHER);
-         return types.contains(accountType);
-    };
+    private static BiPredicate<AccountEntity, List<AccountTypes>> isOneOfType =
+            (account, types) -> {
+                AccountTypes accountType =
+                        UkOpenBankingV20Constants.ACCOUNT_TYPE_MAPPER
+                                .translate(account.getRawAccountSubType())
+                                .orElse(AccountTypes.OTHER);
+                return types.contains(accountType);
+            };
+
     @JsonIgnore
-    private static BiPredicate<AccountEntity, AccountTypes> isOfType = (account, type) ->
-            isOneOfType.test(account, Arrays.asList(type));
+    private static BiPredicate<AccountEntity, AccountTypes> isOfType =
+            (account, type) -> isOneOfType.test(account, Arrays.asList(type));
 
     public static Optional<TransactionalAccount> toTransactionalAccount(
             AccountsV20Response accounts, AccountBalanceV20Response balance) {
 
         return accounts.getData().stream()
                 .filter(e -> e.getAccountId().equals(balance.getBalance().getAccountId()))
-                .filter(e -> isOneOfType.test(e, Arrays.asList(AccountTypes.CHECKING, AccountTypes.SAVINGS)))
+                .filter(
+                        e ->
+                                isOneOfType.test(
+                                        e,
+                                        Arrays.asList(AccountTypes.CHECKING, AccountTypes.SAVINGS)))
                 .findFirst()
                 .map(e -> AccountEntity.toTransactionalAccount(e, balance.getBalance()));
     }

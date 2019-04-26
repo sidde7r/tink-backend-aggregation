@@ -88,9 +88,7 @@ public class UkOpenBankingApiDefinitions {
         public static <T> Optional<T> getPreferredBalanceEntity(
                 Map<AccountBalanceType, T> typeMap) {
 
-            return Optional.ofNullable(PREFERRED_TYPE_LIST)
-                    .orElseGet(ImmutableList::of)
-                    .stream()
+            return Optional.ofNullable(PREFERRED_TYPE_LIST).orElseGet(ImmutableList::of).stream()
                     .filter(typeMap::containsKey)
                     .map(typeMap::get)
                     .findFirst();

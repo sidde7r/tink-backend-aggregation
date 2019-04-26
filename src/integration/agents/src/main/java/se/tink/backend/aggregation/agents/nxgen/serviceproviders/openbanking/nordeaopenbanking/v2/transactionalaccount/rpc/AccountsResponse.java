@@ -26,8 +26,7 @@ public class AccountsResponse extends NordeaResponseBase {
         if (response == null || response.getAccounts() == null) {
             return Collections.emptyList();
         }
-        return response.getAccounts()
-                .stream()
+        return response.getAccounts().stream()
                 .filter(AccountEntity::isOpen)
                 .filter(
                         account ->
