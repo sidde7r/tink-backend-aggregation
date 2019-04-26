@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.LogTags;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseRequest;
@@ -252,12 +253,7 @@ public class KbcApiClient {
     private <T> T post(
             KbcConstants.Url url, Object request, Class<T> responseType, final byte[] cipherKey) {
         return postStuff(
-                url,
-                request,
-                responseType,
-                true,
-                DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS,
-                cipherKey);
+                url, request, responseType, DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS, cipherKey);
     }
 
     private <T> T post(
@@ -266,22 +262,20 @@ public class KbcApiClient {
             Class<T> responseType,
             String requestLocale,
             final byte[] cipherKey) {
-        return postStuff(url, request, responseType, true, requestLocale, cipherKey);
+        return postStuff(url, request, responseType, requestLocale, cipherKey);
     }
 
     private <T> T postStuff(
-            KbcConstants.Url url,
+            Url url,
             Object request,
             Class<T> responseType,
-            boolean encryptAndEncodeRequest,
             String requestLocale,
             final byte[] cipherKey) {
 
-        HttpResponse httpResponse =
-                postRequest(url, request, encryptAndEncodeRequest, requestLocale, cipherKey);
+        HttpResponse httpResponse = postRequest(url, request, true, requestLocale, cipherKey);
 
         T response =
-                encryptAndEncodeRequest
+                true
                         ? decodeAndDecryptResponse(httpResponse, responseType, cipherKey)
                         : cleanResponse(httpResponse, responseType);
 
