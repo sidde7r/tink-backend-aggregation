@@ -350,8 +350,7 @@ public class KbcApiClient {
         verifyDoubleZeroResponseCode(response.getHeader());
     }
 
-    public KeyExchangeResponse keyExchange(
-            String companyId, String appFamily, final byte[] cipherKey)
+    public void keyExchange(String companyId, String appFamily, final byte[] cipherKey)
             throws AuthorizationException {
         KeyExchangeRequest request =
                 KeyExchangeRequest.createWithStandardTypes(
@@ -366,8 +365,6 @@ public class KbcApiClient {
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyDoubleZeroResponseCode(response.first.getHeader());
-
-        return response.first;
     }
 
     public String challenge(final byte[] cipherKey) throws AuthorizationException {
