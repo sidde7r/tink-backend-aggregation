@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.
 
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.entities.CreditorEntity;
@@ -11,14 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.*;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
@@ -32,7 +26,7 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
 
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
@@ -44,21 +38,21 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
                         .withCurrency(paymentRequest.getPayment().getCurrency())
                         .withDebtor(debtorEntity)
                         .build();
-
         return apiClient
                 .createPayment(createPaymentRequest)
                 .toTinkPaymentResponse(PaymentType.DOMESTIC);
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getUniqueId())
                 .toTinkPaymentResponse(PaymentType.DOMESTIC);
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         PaymentStatus paymentStatus;
         String nextStep;
         List fields = new ArrayList<>();
@@ -99,7 +93,8 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
                 "createBeneficiary not yet implemented for " + this.getClass().getName());
     }
 
-    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(String providerId) {
+    private PaymentStatus sampleStepNordeaAutoSignsAfterAFewSeconds(String providerId)
+            throws PaymentException {
         // Should be enough to get the payment auto signed.
         try {
             Thread.sleep(10000);
@@ -118,7 +113,8 @@ public class NordeaSeDomesticPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) {
+    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+            throws PaymentException {
         return apiClient.fetchPayments().toTinkPaymentListResponse(PaymentType.DOMESTIC);
     }
 }

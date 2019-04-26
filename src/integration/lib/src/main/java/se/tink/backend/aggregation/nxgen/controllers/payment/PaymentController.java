@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+
 public class PaymentController {
     private final PaymentExecutor paymentExecutor;
 
@@ -7,15 +9,16 @@ public class PaymentController {
         this.paymentExecutor = paymentExecutor;
     }
 
-    public PaymentResponse create(PaymentRequest paymentRequest) {
+    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
         return paymentExecutor.create(paymentRequest);
     }
 
-    public PaymentResponse fetch(PaymentRequest paymentRequest) {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
         return paymentExecutor.fetch(paymentRequest);
     }
 
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
         return paymentExecutor.sign(paymentMultiStepRequest);
     }
 
@@ -28,7 +31,8 @@ public class PaymentController {
         return paymentExecutor.cancel(paymentRequest);
     }
 
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) {
+    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+            throws PaymentException {
         return paymentExecutor.fetchMultiple(paymentRequest);
     }
 }
