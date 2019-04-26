@@ -14,6 +14,7 @@ public abstract class CollectBankIdResponse {
             case "COMPLETE":
                 return BankIdStatus.DONE;
             case "CANCELLED":
+            case "USER_CANCEL":
                 return BankIdStatus.CANCELLED;
             case "USER_SIGN":
             case "OUTSTANDING_TRANSACTION":

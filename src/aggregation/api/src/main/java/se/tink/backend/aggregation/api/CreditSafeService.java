@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.api;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,8 +22,8 @@ import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsum
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public interface CreditSafeService {
-    @DELETE
-    @Path("consumermonitoring")
+    @POST
+    @Path("consumermonitoring/delete")
     @TeamOwnership(Team.AGGREGATION)
     void removeConsumerMonitoring(
             RemoveMonitoredConsumerCreditSafeRequest request, @ClientContext ClientInfo clientInfo);
