@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.AuthenticationForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdCollectRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdInitResponse;
@@ -61,7 +61,7 @@ public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitRes
                     apiClient.completeBankId(collectResponse.getCompleteUrl(), collectRequest);
 
             Document document = Jsoup.parse(completeResponse);
-            Element formElement = document.getElementById(EnterCardConstants.RESPONSE_FORM_ID);
+            Element formElement = document.getElementById(AuthenticationForm.RESPONSE_FORM_ID);
             apiClient.auth(formElement);
             apiClient.roundTripTest(config.getServiceHost());
 

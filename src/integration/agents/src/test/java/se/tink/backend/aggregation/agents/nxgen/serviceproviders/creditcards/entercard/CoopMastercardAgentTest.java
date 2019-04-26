@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class CoopMastercardAgentTest {
 
     private enum Arg {
@@ -23,7 +21,7 @@ public class CoopMastercardAgentTest {
     public void setup() {
         manager.before();
         builder =
-                new AgentIntegrationTest.Builder("se", "coopmastercard-bankid")
+                new AgentIntegrationTest.Builder("se", "coop-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
