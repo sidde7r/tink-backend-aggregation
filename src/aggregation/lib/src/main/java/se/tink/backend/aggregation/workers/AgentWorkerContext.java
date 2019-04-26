@@ -588,11 +588,18 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public void sendIdentityToIdentityService(IdentityData identityData) {
-        // TODO: implement sending identity data
+    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
+                simplifiedIdentityData =
+                        new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData();
+        simplifiedIdentityData.setName(identityData.getFullName());
+        simplifiedIdentityData.setSsn(identityData.getSsn());
+
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
-        updateIdentityDataRequest.setName(identityData.getFullName());
-        updateIdentityDataRequest.setSsn(identityData.getSsn());
+        updateIdentityDataRequest.setIdentityData(simplifiedIdentityData);
+        updateIdentityDataRequest.setProviderName(request.getProvider().getName());
+        updateIdentityDataRequest.setUserId(request.getUser().getId());
 
         try {
             controllerWrapper.updateIdentityData(updateIdentityDataRequest);

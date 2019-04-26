@@ -314,7 +314,7 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void sendIdentityToIdentityService(IdentityData identityData) {
+    public void sendIdentityToIdentityAggregatorService(IdentityData identityData) {
         // TODO: implement sending identity data
         throw new NotImplementedException("Method not implemented");
     }
