@@ -37,7 +37,7 @@ public final class KbcAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
-        this.apiClient = KbcApiClient.create(sessionStorage, client);
+        this.apiClient = KbcApiClient.create(client);
     }
 
     @Override
@@ -50,7 +50,11 @@ public final class KbcAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         KbcAuthenticator authenticator =
-                new KbcAuthenticator(persistentStorage, apiClient, supplementalInformationHelper);
+                new KbcAuthenticator(
+                        sessionStorage,
+                        persistentStorage,
+                        apiClient,
+                        supplementalInformationHelper);
         return new AutoAuthenticationController(
                 request, systemUpdater, authenticator, authenticator);
     }
@@ -59,7 +63,7 @@ public final class KbcAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         KbcTransactionalAccountFetcher accountFetcher =
-                new KbcTransactionalAccountFetcher(apiClient, kbcLanguage);
+                new KbcTransactionalAccountFetcher(apiClient, kbcLanguage, sessionStorage);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -73,7 +77,8 @@ public final class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        KbcCreditCardFetcher creditCardFetcher = new KbcCreditCardFetcher(apiClient);
+        KbcCreditCardFetcher creditCardFetcher =
+                new KbcCreditCardFetcher(apiClient, sessionStorage);
         return Optional.of(
                 new CreditCardRefreshController(
                         metricRefreshController,
@@ -103,12 +108,12 @@ public final class KbcAgent extends NextGenerationAgent {
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
-                        new KbcTransferDestinationFetcher(apiClient, kbcLanguage)));
+                        new KbcTransferDestinationFetcher(apiClient, kbcLanguage, sessionStorage)));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return KbcSessionHandler.create(httpFilter, apiClient);
+        return KbcSessionHandler.create(httpFilter, apiClient, sessionStorage);
     }
 
     @Override
@@ -119,6 +124,7 @@ public final class KbcAgent extends NextGenerationAgent {
                         new KbcBankTransferExecutor(
                                 credentials,
                                 persistentStorage,
+                                sessionStorage,
                                 apiClient,
                                 catalog,
                                 supplementalInformationHelper),
