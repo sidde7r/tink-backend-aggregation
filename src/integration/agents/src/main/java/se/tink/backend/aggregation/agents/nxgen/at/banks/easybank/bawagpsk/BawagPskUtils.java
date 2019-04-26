@@ -11,7 +11,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class BawagPskUtils {
+public final class BawagPskUtils {
     private BawagPskUtils() {
         throw new AssertionError();
     }
