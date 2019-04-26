@@ -39,7 +39,8 @@ import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-public class AgentIntegrationTest extends AbstractConfigurationBase {
+public final class AgentIntegrationTest extends AbstractConfigurationBase {
+
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -104,7 +105,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return;
         }
 
-        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
 
         // Tell the agent to store data onto the credential (cookies etcetera)
         persistentAgent.persistLoginSession();
@@ -141,7 +142,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return false;
         }
 
-        PersistentLogin persistentAgent = PersistentLogin.class.cast(agent);
+        PersistentLogin persistentAgent = (PersistentLogin) agent;
 
         persistentAgent.loadLoginSession();
         if (!persistentAgent.isLoggedIn()) {
@@ -217,13 +218,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         if (agent instanceof DeprecatedRefreshExecutor) {
             log.warn("DeprecatedRefreshExecutor");
             ((DeprecatedRefreshExecutor) agent).refresh();
-
-            // process everything
-            context.processAccounts();
-            context.processTransactions();
-            context.processEinvoices();
-            context.processTransferDestinationPatterns();
-
         } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
@@ -239,27 +233,19 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 }
             }
 
-            if (RefreshableItem.hasAccounts(sortedItems)) {
-                context.processAccounts();
-            } else {
+            if (!RefreshableItem.hasAccounts(sortedItems)) {
                 Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
             }
 
-            if (RefreshableItem.hasTransactions(sortedItems)) {
-                context.processTransactions();
-            } else {
+            if (!RefreshableItem.hasTransactions(sortedItems)) {
                 Assert.assertTrue(context.getTransactions().isEmpty());
             }
 
-            if (refreshableItems.contains(RefreshableItem.EINVOICES)) {
-                context.processEinvoices();
-            } else {
+            if (!refreshableItems.contains(RefreshableItem.EINVOICES)) {
                 Assert.assertTrue(context.getTransfers().isEmpty());
             }
 
-            if (refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-                context.processTransferDestinationPatterns();
-            } else {
+            if (!refreshableItems.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
             }
         }

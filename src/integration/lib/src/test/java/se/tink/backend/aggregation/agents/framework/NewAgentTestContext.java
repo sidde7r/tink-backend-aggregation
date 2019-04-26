@@ -49,7 +49,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 
-public class NewAgentTestContext extends AgentContext implements IdentityDataCacher {
+public final class NewAgentTestContext extends AgentContext implements IdentityDataCacher {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -111,7 +111,8 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
 
     @Override
     public void processTransactions() {
-        // noop
+        // Should never be called, and we shouldn't have to implement this method to begin with
+        throw new AssertionError();
     }
 
     private void displaySupplementalInformation(Credentials credentials) {
@@ -194,10 +195,6 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
                             credential.getId(), autoStartToken));
             AgentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
         }
-    }
-
-    public void processAccounts() {
-        // noop
     }
 
     @Override
@@ -355,14 +352,6 @@ public class NewAgentTestContext extends AgentContext implements IdentityDataCac
 
     @Override
     public void updateDocument(DocumentContainer contianer) {
-        // noop
-    }
-
-    public void processEinvoices() {
-        // noop
-    }
-
-    public void processTransferDestinationPatterns() {
         // noop
     }
 
