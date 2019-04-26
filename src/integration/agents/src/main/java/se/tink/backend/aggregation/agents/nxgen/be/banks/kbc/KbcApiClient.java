@@ -338,16 +338,6 @@ public class KbcApiClient {
     // == END PRIVATE METHODS ==
 
     public void prepareSession(final byte[] cipherKey) throws AuthorizationException {
-        keyExchange(cipherKey);
-    }
-
-    public void logout(final byte[] cipherKey) {
-        LogoutResponse response =
-                post(KbcConstants.Url.LOGOUT, null, LogoutResponse.class, cipherKey);
-        verifyDoubleZeroResponseCode(response.getHeader());
-    }
-
-    private void keyExchange(final byte[] cipherKey) throws AuthorizationException {
         KeyExchangeRequest request =
                 KeyExchangeRequest.createWithStandardTypes(
                         KbcConstants.RequestInput.COMPANY_ID,
@@ -363,6 +353,12 @@ public class KbcApiClient {
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyDoubleZeroResponseCode(response.first.getHeader());
+    }
+
+    public void logout(final byte[] cipherKey) {
+        LogoutResponse response =
+                post(KbcConstants.Url.LOGOUT, null, LogoutResponse.class, cipherKey);
+        verifyDoubleZeroResponseCode(response.getHeader());
     }
 
     public String challenge(final byte[] cipherKey) throws AuthorizationException {
