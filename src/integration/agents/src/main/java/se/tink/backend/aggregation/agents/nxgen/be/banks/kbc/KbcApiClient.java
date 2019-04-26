@@ -625,7 +625,7 @@ public class KbcApiClient {
         return response.first.getChallenge().getValue();
     }
 
-    public LoginSotpResponse loginSotp(KbcDevice device, String otp, final byte[] cipherKey)
+    public void loginSotp(KbcDevice device, String otp, final byte[] cipherKey)
             throws AuthorizationException {
         LoginSotpRequest loginSotpRequest =
                 LoginSotpRequest.builder()
@@ -652,8 +652,6 @@ public class KbcApiClient {
                         cipherKey);
         checkBlockedAccount(response.first.getHeader(), response.second);
         verifyDoubleZeroResponseCode(response.first.getHeader());
-
-        return response.first;
     }
 
     public AccountsResponse fetchAccounts(String language, final byte[] cipherKey) {
