@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.primitives.Bytes;
-import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Objects;
@@ -214,10 +213,10 @@ public class KbcApiClient {
     }
 
     private String encryptAndEncodePublicKey(final byte[] cipherKey) {
-        PublicKey publicKey =
+        RSAPublicKey publicKey =
                 RSA.getPubKeyFromBytes(
                         EncodingUtils.decodeBase64String(KbcConstants.Encryption.PUBLIC_KEY));
-        byte[] cipherText = RSA.encryptNonePkcs1((RSAPublicKey) publicKey, cipherKey);
+        byte[] cipherText = RSA.encryptNonePkcs1(publicKey, cipherKey);
         return EncodingUtils.encodeAsBase64String(cipherText);
     }
 
