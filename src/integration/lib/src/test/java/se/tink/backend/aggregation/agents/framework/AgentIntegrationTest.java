@@ -42,7 +42,6 @@ import se.tink.libraries.user.rpc.UserProfile;
 public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
-    private static final ObjectMapper mapper = new ObjectMapper();
 
     private final Provider provider;
     private final User user;
@@ -491,6 +490,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             String providersFilePath =
                     "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
+            final ObjectMapper mapper = new ObjectMapper();
             try {
                 return mapper.readValue(providersFile, ProviderConfig.class);
             } catch (IOException e) {
