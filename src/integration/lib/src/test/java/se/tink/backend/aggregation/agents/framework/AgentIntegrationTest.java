@@ -482,11 +482,11 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             this.provider.setCurrency(marketProviders.getCurrency());
         }
 
-        private String escapeMarket(String market) {
+        private static String escapeMarket(String market) {
             return market.replaceAll("[^a-zA-Z]", "");
         }
 
-        private ProviderConfig readProvidersConfiguration(String market) {
+        private static ProviderConfig readProvidersConfiguration(String market) {
             String providersFilePath =
                     "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
