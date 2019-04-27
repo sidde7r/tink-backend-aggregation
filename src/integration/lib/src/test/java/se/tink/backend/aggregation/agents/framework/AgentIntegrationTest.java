@@ -37,7 +37,6 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.user.rpc.UserProfile;
 
 public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
@@ -499,12 +498,9 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         private static User createDefaultUser() {
-            UserProfile profile = new UserProfile();
-            profile.setLocale(DEFAULT_LOCALE);
-
             User user = new User();
             user.setId(DEFAULT_USER_ID);
-            user.setProfile(profile);
+            user.setLocale(DEFAULT_LOCALE);
             user.setFlags(Lists.newArrayList());
 
             return user;
@@ -569,8 +565,8 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder setUserLocale(String locale) {
             Preconditions.checkNotNull(this.user, "User not set.");
-            Preconditions.checkNotNull(this.user.getProfile(), "User has no profile.");
-            this.user.getProfile().setLocale(locale);
+            Preconditions.checkNotNull(this.user.getLocale(), "User has no locale.");
+            this.user.setLocale(locale);
             return this;
         }
 

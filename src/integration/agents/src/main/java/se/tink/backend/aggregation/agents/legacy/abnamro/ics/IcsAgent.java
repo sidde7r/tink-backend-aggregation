@@ -142,7 +142,7 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
             String bcNumber, Set<Long> contractNumbers) {
 
         ErrorMessageBuilder errorMessageBuilder =
-                new ErrorMessageBuilder(Catalog.getCatalog(user.getProfile().getLocale()));
+                new ErrorMessageBuilder(Catalog.getCatalog(user.getLocale()));
 
         for (Long contractNumber : contractNumbers) {
             try {
