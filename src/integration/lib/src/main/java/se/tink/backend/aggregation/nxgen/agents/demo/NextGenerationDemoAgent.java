@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -139,4 +140,6 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     public abstract DemoTransactionAccount getTransactionalAccountAccounts();
 
     public abstract List<DemoCreditCardAccount> getCreditCardAccounts();
+
+    public abstract DemoIdentityData getIdentityDataResponse();
 }

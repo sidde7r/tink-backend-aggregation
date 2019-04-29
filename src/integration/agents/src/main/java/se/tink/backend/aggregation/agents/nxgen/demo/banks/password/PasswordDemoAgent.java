@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.password;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +16,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoIdentityData;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -24,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.NameElement;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
     private static String username;
@@ -190,5 +195,23 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                         return 8543D;
                     }
                 });
+    }
+
+    @Override
+    public DemoIdentityData getIdentityDataResponse() {
+        return new DemoIdentityData() {
+            @Override
+            public List<NameElement> getNameElements() {
+                return new ArrayList<>(
+                        Arrays.asList(
+                                new NameElement(NameElement.Type.FIRST_NAME, "Jane"),
+                                new NameElement(NameElement.Type.SURNAME, "Doe")));
+            }
+
+            @Override
+            public LocalDate getDateOfBirth() {
+                return LocalDate.of(1970, 1, 1);
+            }
+        };
     }
 }
