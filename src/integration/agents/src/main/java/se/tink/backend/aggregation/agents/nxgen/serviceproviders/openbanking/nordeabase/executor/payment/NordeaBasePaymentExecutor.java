@@ -62,7 +62,7 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
         return apiClient
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(), getPaymentType(paymentRequest))
-                .toTinkPaymentResponse(PaymentType.DOMESTIC);
+                .toTinkPaymentResponse(getPaymentType(paymentRequest));
     }
 
     @Override

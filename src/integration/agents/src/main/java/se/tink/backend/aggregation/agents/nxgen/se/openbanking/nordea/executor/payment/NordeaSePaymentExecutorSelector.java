@@ -39,11 +39,6 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
                                             AccountIdentifier.Type.SE,
                                             AccountIdentifier.Type.SE_PG),
                                     PaymentType.DOMESTIC)
-                            .put(
-                                    new Pair<>(
-                                            AccountIdentifier.Type.IBAN,
-                                            AccountIdentifier.Type.IBAN),
-                                    PaymentType.SEPA)
                             .build();
 
     public NordeaSePaymentExecutorSelector(NordeaBaseApiClient apiClient) {
