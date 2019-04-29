@@ -8,8 +8,8 @@
         "nl-bunq-apikey",
         "nl-bunq-sandbox-apikey",
         "nl-demo",
-        "nl-test-password",
+        "nl-ics-oauth2",
         "nl-test-multi-supplemental",
-        "nl-ics-oauth2"
+        "nl-test-password"
     ]
 }
