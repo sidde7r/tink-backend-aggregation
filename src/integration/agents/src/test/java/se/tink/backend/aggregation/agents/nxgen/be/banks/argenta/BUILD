@@ -18,6 +18,6 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/libraries/amount",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

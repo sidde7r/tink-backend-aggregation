@@ -10,9 +10,9 @@ java_library(
         "//src/libraries/credentials:service",
         "//src/libraries/date",
         "//src/libraries/strings",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@commons_codec_commons_codec//jar",
-        "@org_jsoup_jsoup//jar",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:commons_codec_commons_codec",
+        "//third_party:org_jsoup_jsoup",
     ],
 )

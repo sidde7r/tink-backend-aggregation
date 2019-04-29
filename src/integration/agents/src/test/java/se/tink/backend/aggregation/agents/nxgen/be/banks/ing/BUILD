@@ -24,9 +24,9 @@ junit_test(
         "//src/libraries/serialization",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_google_guava_guava//jar",
-        "@org_assertj_assertj_core//jar",
     ],
 )

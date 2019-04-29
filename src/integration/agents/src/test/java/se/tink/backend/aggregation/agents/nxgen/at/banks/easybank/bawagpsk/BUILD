@@ -19,6 +19,6 @@ junit_test(
         "//src/integration/lib:lib_test",
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
-        "@com_google_guava_guava//jar",
+        "//third_party:com_google_guava_guava",
     ],
 )
