@@ -38,9 +38,6 @@ public class RabobankApiClient {
     }
 
     public RabobankConfiguration getConfiguration() {
-        // return Optional.ofNullable(configuration)
-        //        .orElseThrow(() -> new
-        // IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
         return new RabobankConfiguration();
     }
 
