@@ -85,11 +85,11 @@ public class TypeMapper<V> {
                 return type.map(t -> types.contains(t)).orElseGet(() -> false);
             };
 
-    public Boolean isOneOf(String input, Collection<V> types) {
+    public boolean isOneOf(String input, Collection<V> types) {
         return isOneOfType.test(input, types);
     }
 
-    public Boolean isOf(String input, V type) {
+    public boolean isOf(String input, V type) {
         return isOneOfType.test(input, Arrays.asList(type));
     }
 
