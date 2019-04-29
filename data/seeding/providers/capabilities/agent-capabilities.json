@@ -745,7 +745,15 @@
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
-    "nxgen.uk.openbanking.rbs.RbsAgent": [
+    "nxgen.uk.openbanking.natwest.NatWestV31Agent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
+  "nxgen.uk.openbanking.rbs.RbsAgent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
+  "nxgen.uk.openbanking.rbs.RbsV31Agent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
@@ -754,6 +762,10 @@
         "TRANSFERS"
     ],
     "nxgen.uk.openbanking.ulster.UlsterAgent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
+  "nxgen.uk.openbanking.ulster.UlsterV31Agent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],

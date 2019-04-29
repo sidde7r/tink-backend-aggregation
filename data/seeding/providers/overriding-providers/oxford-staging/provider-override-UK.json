@@ -1,0 +1,86 @@
+{
+  "clusterid": "oxford-staging",
+  "provider-configuration": [
+    {
+      "name": "uk-rbs-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.rbs.RbsV31Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Royal Bank of Scotland",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink2:rbs",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": true,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-ulster-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.ulster.UlsterV31Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "Ulster Bank",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink2:ulster",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    },
+    {
+      "name": "uk-natwest-oauth2",
+      "capabilities": [
+        "TRANSFERS"
+      ],
+      "className": "nxgen.uk.openbanking.natwest.NatWestV31Agent",
+      "credentialsType": "PASSWORD",
+      "displayName": "NatWest",
+      "fields": [
+        {
+          "name": "info",
+          "value": "Connecting your bank",
+          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+          "immutable": true
+        }
+      ],
+      "payload": "tink2:natwest",
+      "groupDisplayName": "",
+      "multiFactor": false,
+      "passwordhelptext": "Authentication is done on external page",
+      "popular": false,
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+      "status": "ENABLED",
+      "transactional": true,
+      "type": "BANK"
+    }
+  ]
+}
