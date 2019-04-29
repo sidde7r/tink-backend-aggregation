@@ -257,32 +257,26 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        // TODO: Do not use get & isPresent on Optional in production code
-        Optional<UkOpenBankingPis> optionalPis = makePis();
-        if (!optionalPis.isPresent()) {
-            return Optional.empty();
-        }
-
-        UkOpenBankingPis pis = optionalPis.get();
-
-        return Optional.of(
-                new TransferController(
-                        null,
-                        new UkOpenBankingBankTransferExecutor(
-                                catalog,
-                                credentials,
-                                supplementalInformationHelper,
-                                softwareStatement,
-                                providerConfiguration,
-                                paymentsHttpClient,
-                                getTransactionalAccountFetcher(),
-                                pis,
-                                callbackJWTSignatureKeyPair,
-                                request.getCallbackRedirectUriId(),
-                                aisConfig,
-                                pisConfig),
-                        null,
-                        null));
+        return makePis()
+                .map(
+                        pis ->
+                                new TransferController(
+                                        null,
+                                        new UkOpenBankingBankTransferExecutor(
+                                                catalog,
+                                                credentials,
+                                                supplementalInformationHelper,
+                                                softwareStatement,
+                                                providerConfiguration,
+                                                paymentsHttpClient,
+                                                getTransactionalAccountFetcher(),
+                                                pis,
+                                                callbackJWTSignatureKeyPair,
+                                                request.getCallbackRedirectUriId(),
+                                                aisConfig,
+                                                pisConfig),
+                                        null,
+                                        null));
     }
 
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>

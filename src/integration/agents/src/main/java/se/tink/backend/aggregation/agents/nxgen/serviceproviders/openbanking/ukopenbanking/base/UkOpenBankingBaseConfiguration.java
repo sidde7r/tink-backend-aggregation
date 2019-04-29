@@ -19,6 +19,7 @@ public class UkOpenBankingBaseConfiguration implements UkOpenBankingConfig {
         return apiBaseUrl.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
     }
 
+    @Override
     public String getIntentId(AccountPermissionResponse accountPermissionResponse) {
         return accountPermissionResponse.getData().getAccountRequestId();
     }
@@ -36,6 +37,12 @@ public class UkOpenBankingBaseConfiguration implements UkOpenBankingConfig {
     @Override
     public URL createPaymentSubmissionURL(URL pisBaseUrl) {
         return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.PAYMENT_SUBMISSIONS);
+    }
+
+    @Override
+    public <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType() {
+        // TODO: Check if this is possible to do without casting
+        return (Class<T>) AccountPermissionResponse.class;
     }
 
     public String getInitialTransactionsPaginationKey(String accountId) {

@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NordeaBaseConstants {
     public static final String INTEGRATION_NAME = "nordea";
-    public static final AccountTypeMapper ACCOUNT_TYPE =
-            AccountTypeMapper.builder().put(AccountTypes.CHECKING, "Current").build();
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "Current").build();
 
     public static class Url {
         private static final String API_BASE_URL = "https://api.nordeaopenbanking.com";

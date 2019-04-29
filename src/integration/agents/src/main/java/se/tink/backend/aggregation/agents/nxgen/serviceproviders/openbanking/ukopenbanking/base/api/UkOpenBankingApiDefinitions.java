@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -86,12 +87,11 @@ public class UkOpenBankingApiDefinitions {
 
         public static <T> Optional<T> getPreferredBalanceEntity(
                 Map<AccountBalanceType, T> typeMap) {
-            for (AccountBalanceType id : PREFERRED_TYPE_LIST) {
-                if (typeMap.containsKey(id)) {
-                    return Optional.of(typeMap.get(id));
-                }
-            }
-            return Optional.empty();
+
+            return Optional.ofNullable(PREFERRED_TYPE_LIST).orElseGet(ImmutableList::of).stream()
+                    .filter(typeMap::containsKey)
+                    .map(typeMap::get)
+                    .findFirst();
         }
 
         @JsonCreator
@@ -146,7 +146,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -165,7 +165,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -189,7 +189,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -206,7 +206,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -227,7 +227,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
@@ -249,7 +249,7 @@ public class UkOpenBankingApiDefinitions {
                     : null;
         }
 
-        //        @JsonValue
+        @JsonValue
         public String toValue() {
             return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, this.toString());
         }
