@@ -101,7 +101,6 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                     new LoginRequest(completeResponse.getResponseSAML(), config);
             final LoginResponse loginResponse = apiClient.login(loginRequest);
 
-            LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
             return loginResponse;
         } catch (HttpResponseException e) {
 
@@ -121,9 +120,6 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
         final AuthResponse authResponse = apiClient.auth(authRequest);
 
         if (authResponse.isSuccess()) {
-            LOGGER.info(
-                    "BankID Login successful "
-                            + SerializationUtils.serializeToString(authResponse));
             sessionStorage.put(
                     SebKortConstants.StorageKey.AUTHORIZATION,
                     "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
