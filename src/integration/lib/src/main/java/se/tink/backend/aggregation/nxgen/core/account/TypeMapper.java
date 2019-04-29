@@ -83,7 +83,7 @@ public class TypeMapper<V> {
     private BiPredicate<String, Collection<V>> isOneOfType =
             (input, types) -> {
                 Optional<V> type = translate(input);
-                return type.map(t -> types.contains(t)).orElseGet(() -> false);
+                return type.map(types::contains).orElseGet(() -> false);
             };
 
     public boolean isOneOf(String input, Collection<V> types) {
