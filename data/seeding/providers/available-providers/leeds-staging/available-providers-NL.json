@@ -9,6 +9,7 @@
         "nl-bunq-sandbox-apikey",
         "nl-demo",
         "nl-ics-oauth2",
+        "nl-rabobank-oauth2",
         "nl-test-multi-supplemental",
         "nl-test-password"
     ]
