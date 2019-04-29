@@ -15,6 +15,7 @@ public class N26Constants {
     public static class URLS {
         public static final String HOST = "https://api.tech26.de";
         public static final String AUTHENTICATION = "/oauth/token";
+        public static final String ME = "/api/me?full=true";
         public static final String ACCOUNT = "/api/accounts";
         public static final String TRANSACTION = "/api/smrt/transactions";
         public static final String SAVINGS = "/api/hub/savings/accounts";

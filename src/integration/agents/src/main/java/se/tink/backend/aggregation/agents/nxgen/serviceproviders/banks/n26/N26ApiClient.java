@@ -9,22 +9,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants.URLS;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.authenticator.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.AccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.MeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SavingsAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SavingsSpaceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SpaceTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.TransactionResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class N26ApiClient {
+public class N26ApiClient implements IdentityDataFetcher {
 
     private final TinkHttpClient client;
     private final SessionStorage storage;
@@ -144,6 +148,16 @@ public class N26ApiClient {
 
         return getRequest(N26Constants.URLS.SAVINGS, MediaType.APPLICATION_JSON_TYPE, bearer)
                 .get(SavingsAccountResponse.class);
+    }
+
+    @Override
+    public IdentityData fetchIdentityData() {
+        TokenEntity token = getToken();
+        String bearer = N26Constants.BEARER_TOKEN + token.getAccessToken();
+
+        return getRequest(URLS.ME, MediaType.APPLICATION_JSON_TYPE, bearer)
+                .get(MeResponse.class)
+                .toTinkIdentity();
     }
 
     public HttpResponse logout() {
