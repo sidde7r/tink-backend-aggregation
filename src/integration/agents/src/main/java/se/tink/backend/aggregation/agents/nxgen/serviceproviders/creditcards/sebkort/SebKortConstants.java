@@ -77,4 +77,10 @@ public class SebKortConstants {
         public static final String TYPE = "EID";
         public static final String SEB_AUTH_MECHANISM = "5";
     }
+
+    public static class Error {
+        public static final String BANKID_ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
+        public static final String GENERIC_TECHNICAL_ERROR = "GENERIC_TECHNICAL_ERROR";
+        public static final String BANK_SIDE_FAILURE = "tillfälligt tekniskt fel";
+    }
 }
