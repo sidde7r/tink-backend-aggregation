@@ -1,0 +1,27 @@
+{
+  "clusterid": "cardiff-staging",
+  "provider-configuration": [
+    {
+      "capabilitiesSerialized": "[]",
+      "className": null,
+      "credentialsType": "PASSWORD",
+      "currency": "EUR",
+      "displayName": "CARDIFF Abstract",
+      "groupDisplayName": null,
+      "market": "PT",
+      "multiFactor": false,
+      "name": "se-cardiff-abstract",
+      "passwordHelpText": null,
+      "payload": null,
+      "popular": false,
+      "refreshFrequency": 0,
+      "refreshFrequencyFactor": 0,
+      "status": "DISABLED",
+      "transactional": true,
+      "type": "BANK",
+      "displayDescription": null,
+      "fields": [],
+      "capabilities": []
+    }
+  ]
+}
