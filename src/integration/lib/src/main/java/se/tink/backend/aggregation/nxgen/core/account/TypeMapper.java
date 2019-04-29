@@ -5,12 +5,14 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +78,20 @@ public class TypeMapper<V> {
         }
 
         return type;
+    }
+
+    private BiPredicate<String, Collection<V>> isOneOfType =
+            (input, types) -> {
+                Optional<V> type = translate(input);
+                return type.map(types::contains).orElseGet(() -> false);
+            };
+
+    public boolean isOneOf(String input, Collection<V> types) {
+        return isOneOfType.test(input, types);
+    }
+
+    public boolean isOf(String input, V type) {
+        return isOneOfType.test(input, Collections.singleton(type));
     }
 
     public static class Builder<V> {
