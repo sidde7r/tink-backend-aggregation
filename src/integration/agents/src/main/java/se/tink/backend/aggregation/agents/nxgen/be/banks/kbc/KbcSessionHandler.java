@@ -7,21 +7,16 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class KbcSessionHandler implements SessionHandler {
+public final class KbcSessionHandler implements SessionHandler {
     private final KbcHttpFilter httpFilter;
     private final KbcApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    private KbcSessionHandler(
+    KbcSessionHandler(
             KbcHttpFilter httpFilter, KbcApiClient apiClient, final SessionStorage sessionStorage) {
         this.httpFilter = httpFilter;
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
-    }
-
-    public static KbcSessionHandler create(
-            KbcHttpFilter httpFilter, KbcApiClient apiClient, final SessionStorage sessionStorage) {
-        return new KbcSessionHandler(httpFilter, apiClient, sessionStorage);
     }
 
     @Override
