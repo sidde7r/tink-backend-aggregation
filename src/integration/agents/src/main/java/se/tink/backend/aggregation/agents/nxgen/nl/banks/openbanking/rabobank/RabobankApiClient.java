@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
@@ -40,8 +38,7 @@ public class RabobankApiClient {
     }
 
     public RabobankConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+        return new RabobankConfiguration();
     }
 
     public void setConfiguration(RabobankConfiguration configuration) {
