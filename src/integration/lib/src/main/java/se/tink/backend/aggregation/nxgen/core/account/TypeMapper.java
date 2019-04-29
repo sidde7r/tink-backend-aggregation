@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -90,7 +91,7 @@ public class TypeMapper<V> {
     }
 
     public boolean isOf(String input, V type) {
-        return isOneOfType.test(input, Arrays.asList(type));
+        return isOneOfType.test(input, Collections.singleton(type));
     }
 
     public static class Builder<V> {
