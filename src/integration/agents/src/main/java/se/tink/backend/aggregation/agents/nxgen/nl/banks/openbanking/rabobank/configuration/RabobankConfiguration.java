@@ -61,13 +61,13 @@ public class RabobankConfiguration implements ClientConfiguration {
 
     @JsonIgnore
     public String getClientCert() {
-        return RabobankUtils.getCertificateSerialNumber(
+        return RabobankUtils.getB64EncodedX509Certificate(
                 getClientSSLP12bytes(), getClientSSLKeyPassword());
     }
 
     @JsonIgnore
     public String getClientCertSerial() {
-        return RabobankUtils.getB64EncodedX509Certificate(
+        return RabobankUtils.getCertificateSerialNumber(
                 getClientSSLP12bytes(), getClientSSLKeyPassword());
     }
 }
