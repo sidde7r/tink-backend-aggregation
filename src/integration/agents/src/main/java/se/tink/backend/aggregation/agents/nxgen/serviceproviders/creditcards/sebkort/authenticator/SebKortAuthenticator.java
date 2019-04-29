@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
@@ -127,6 +128,11 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                     SebKortConstants.StorageKey.AUTHORIZATION,
                     "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
         } else {
+
+            if (authResponse.isBankSideFailure()) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
             LOGGER.info(
                     "BankID Login Failed "
                             + SerializationUtils.serializeToString(authResponse));
