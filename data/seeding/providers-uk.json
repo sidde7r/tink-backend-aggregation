@@ -278,7 +278,7 @@
             "transactional": true,
             "type": "BANK"
         },{
-            "name": "uk-ulster-oauth2",
+            "name": "uk-ulsterv31-oauth2",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -306,6 +306,32 @@
         },
         {
             "name": "uk-natwest-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "NatWest",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:natwest",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },{
+            "name": "uk-natwestv31-oauth2",
             "capabilities": [
                 "TRANSFERS"
             ],
@@ -411,7 +437,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.rbs.RbsV31Agent",
+            "className": "nxgen.uk.openbanking.rbs.RbsAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Royal Bank of Scotland",
             "fields": [
@@ -434,11 +460,11 @@
             "type": "BANK"
         },
         {
-            "name": "uk-rbs-oauth2",
+            "name": "uk-rbsv31-oauth2",
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.rbs.RbsAgent",
+            "className": "nxgen.uk.openbanking.rbs.RbsV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Royal Bank of Scotland",
             "fields": [
