@@ -23,7 +23,7 @@ junit_test(
         "//src/libraries/serialization",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@org_assertj_assertj_core//jar",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:org_assertj_assertj_core",
     ],
 )

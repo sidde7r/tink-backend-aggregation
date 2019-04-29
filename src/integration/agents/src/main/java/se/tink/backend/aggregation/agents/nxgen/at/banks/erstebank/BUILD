@@ -8,9 +8,9 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_google_guava_guava//jar",
-        "@com_sun_jersey_jersey_core//jar",
-        "@org_slf4j_slf4j_api//jar",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

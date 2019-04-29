@@ -99,6 +99,19 @@ java_library(
 )
 
 java_library(
+    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_fasterxml_jackson_core_jackson_annotations//jar",
+        "@com_fasterxml_jackson_core_jackson_core//jar",
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
+        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
+        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
+    ],
+)
+
+java_library(
     name = "com_fasterxml_jackson_dataformat_jackson_dataformat_smile",
     visibility = ["//visibility:public"],
     exports = [
@@ -578,6 +591,14 @@ java_library(
 )
 
 java_library(
+    name = "io_grpc_grpc_core",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_grpc_grpc_core//jar",
+    ],
+)
+
+java_library(
     # is it necessary ?
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
@@ -788,6 +809,14 @@ java_library(
     exports = [
         "@net_sourceforge_cssparser_cssparser//jar",
         "@org_w3c_css_sac//jar",
+    ],
+)
+
+java_library(
+    name = "net_java_dev_jna_jna",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@net_java_dev_jna_jna//jar",
     ],
 )
 

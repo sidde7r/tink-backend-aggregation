@@ -28,10 +28,10 @@ java_binary(
         "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
+        "//third_party:io_grpc_grpc_core",
         "//third_party:log",
         "//third_party:org_yaml_snakeyaml",
         "//third_party:prometheus",
-        "@io_grpc_grpc_core//jar",
     ],
 )
 
