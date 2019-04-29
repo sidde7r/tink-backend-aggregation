@@ -1,15 +1,15 @@
 {
-  "clusterid" : "leeds-staging",
-  "providers" : [
-    "nl-abnamro",
-    "nl-abnamro-abstract",
-    "nl-abnamro-ics-abstract",
-    "nl-bunq",
-    "nl-bunq-apikey",
-    "nl-bunq-sandbox-apikey",
-    "nl-demo",
-    "nl-test-password",
-    "nl-test-multi-supplemental",
-    "nl-ics-oauth2"
-  ]
+    "clusterid": "leeds-staging",
+    "providers": [
+        "nl-abnamro",
+        "nl-abnamro-abstract",
+        "nl-abnamro-ics-abstract",
+        "nl-bunq",
+        "nl-bunq-apikey",
+        "nl-bunq-sandbox-apikey",
+        "nl-demo",
+        "nl-test-password",
+        "nl-test-multi-supplemental",
+        "nl-ics-oauth2"
+    ]
 }
