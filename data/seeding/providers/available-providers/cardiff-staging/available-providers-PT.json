@@ -3,6 +3,7 @@
     "providers": [
       "seb-bankid",
       "pt-test-password",
-      "pt-test-multi-supplemental"
+      "pt-test-multi-supplemental",
+      "se-cardiff-abstract"
     ]
 }
