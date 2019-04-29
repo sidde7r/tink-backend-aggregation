@@ -12,6 +12,7 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
+
     private List<String> flags;
     private String flagsSerialized;
     private String id;
