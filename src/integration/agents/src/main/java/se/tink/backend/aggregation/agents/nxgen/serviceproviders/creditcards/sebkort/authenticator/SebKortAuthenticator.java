@@ -64,28 +64,9 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 final BankIdCompleteResponse completeResponse =
                         apiClient.completeBankId(collectResponse.getCompleteUrl());
 
-                final LoginRequest loginRequest =
-                        new LoginRequest(completeResponse.getResponseSAML(), config);
-                final LoginResponse loginResponse = apiClient.login(loginRequest);
+                final LoginResponse loginResponse = loginUser(completeResponse);
 
-                LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
-
-                final AuthRequest authRequest =
-                        new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
-                final AuthResponse authResponse = apiClient.auth(authRequest);
-
-                if (authResponse.isSuccess()) {
-                    LOGGER.info(
-                            "BankID Login successful "
-                                    + SerializationUtils.serializeToString(authResponse));
-                    sessionStorage.put(
-                            SebKortConstants.StorageKey.AUTHORIZATION,
-                            "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
-                } else {
-                    LOGGER.info(
-                            "BankID Login Failed "
-                                    + SerializationUtils.serializeToString(authResponse));
-                }
+                authorizeUser(loginResponse);
             }
             return bankIdStatus;
         } catch (HttpResponseException e) {
@@ -93,6 +74,34 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                 throw BankIdError.INTERRUPTED.exception();
             }
             throw e;
+        }
+    }
+
+    private LoginResponse loginUser(BankIdCompleteResponse completeResponse) {
+        final LoginRequest loginRequest =
+                new LoginRequest(completeResponse.getResponseSAML(), config);
+        final LoginResponse loginResponse = apiClient.login(loginRequest);
+
+        LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
+        return loginResponse;
+    }
+
+    private void authorizeUser(LoginResponse loginResponse) {
+        final AuthRequest authRequest =
+                new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
+        final AuthResponse authResponse = apiClient.auth(authRequest);
+
+        if (authResponse.isSuccess()) {
+            LOGGER.info(
+                    "BankID Login successful "
+                            + SerializationUtils.serializeToString(authResponse));
+            sessionStorage.put(
+                    SebKortConstants.StorageKey.AUTHORIZATION,
+                    "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
+        } else {
+            LOGGER.info(
+                    "BankID Login Failed "
+                            + SerializationUtils.serializeToString(authResponse));
         }
     }
 
