@@ -6,5 +6,6 @@ import se.tink.libraries.identitydata.NameElement;
 
 public interface DemoIdentityData {
     List<NameElement> getNameElements();
+
     LocalDate getDateOfBirth();
 }
