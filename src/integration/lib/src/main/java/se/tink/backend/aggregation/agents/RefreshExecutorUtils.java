@@ -158,6 +158,7 @@ public final class RefreshExecutorUtils {
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());
+                    break;
                 default:
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));
