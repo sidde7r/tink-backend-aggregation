@@ -8,7 +8,9 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
@@ -23,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -90,13 +93,25 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
         }
     }
 
-    private LoginResponse loginUser(BankIdCompleteResponse completeResponse) {
-        final LoginRequest loginRequest =
-                new LoginRequest(completeResponse.getResponseSAML(), config);
-        final LoginResponse loginResponse = apiClient.login(loginRequest);
+    private LoginResponse loginUser(BankIdCompleteResponse completeResponse) throws LoginException {
 
-        LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
-        return loginResponse;
+        try {
+            final LoginRequest loginRequest =
+                    new LoginRequest(completeResponse.getResponseSAML(), config);
+            final LoginResponse loginResponse = apiClient.login(loginRequest);
+
+            LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
+            return loginResponse;
+        } catch (HttpResponseException e) {
+
+            HttpResponse response = e.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            throw e;
+        }
     }
 
     private void authorizeUser(LoginResponse loginResponse) {
