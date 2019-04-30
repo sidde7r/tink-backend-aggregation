@@ -55,6 +55,7 @@ public class AmericanExpressV62Constants {
         public static final String IS_PENDING = "pendingTransaction";
         public static final String CUPCAKE = "cupcake";
         public static final String INSTALLATION_ID = "installationId";
+        public static final String USER_DATA = "userData";
     }
 
     public static final class Headers {

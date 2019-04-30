@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.creditcards.amex.fetcher.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TimelineRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.creditcards.amex;
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.creditcards.amex.fetcher.rpc.TimelineESRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.CardEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.fetcher.rpc.TimelineRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class AmericanExpressESConfiguration implements AmericanExpressConfiguration {
+public class AmericanExpressESConfiguration implements AmericanExpressV62Configuration {
 
     @Override
     public String getAppId() {
@@ -22,18 +22,8 @@ public class AmericanExpressESConfiguration implements AmericanExpressConfigurat
     }
 
     @Override
-    public String getFace() {
-        return AmericanExpressESConstants.HeaderValues.FACE;
-    }
-
-    @Override
     public String getLocale() {
         return AmericanExpressESConstants.BodyValue.LOCALE;
-    }
-
-    @Override
-    public String getClientVersion() {
-        return AmericanExpressESConstants.BodyValue.CLIENT_VERSION;
     }
 
     @Override
@@ -49,8 +39,8 @@ public class AmericanExpressESConfiguration implements AmericanExpressConfigurat
     @Override
     public TimelineRequest createTimelineRequest(Integer cardIndex) {
         TimelineESRequest request = new TimelineESRequest();
-        request.setTimeZone(AmericanExpressConstants.RequestValue.TIME_ZONE);
-        request.setTimeZoneOffset(AmericanExpressConstants.RequestValue.TIME_ZONE_OFFSET);
+        request.setTimeZone(AmericanExpressV62Constants.RequestValue.TIME_ZONE);
+        request.setTimeZoneOffset(AmericanExpressV62Constants.RequestValue.TIME_ZONE_OFFSET);
         request.setSortedIndex(cardIndex);
         request.setLocalTime(new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss").format(new Date()));
         request.setPendingChargeEnabled(true);

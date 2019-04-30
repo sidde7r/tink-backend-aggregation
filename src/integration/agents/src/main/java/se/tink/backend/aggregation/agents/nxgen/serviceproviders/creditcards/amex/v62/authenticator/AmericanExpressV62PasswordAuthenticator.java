@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.rpc.LogonResponse;
@@ -94,6 +95,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
         sessionStorage.put(
                 AmericanExpressV62Constants.Tags.SESSION_ID,
                 logonResponse.getLogonData().getAmexSession());
+        sessionStorage.put(Tags.USER_DATA, logonResponse.getSummaryData().getUserData());
 
         List<CardEntity> cardList =
                 logonResponse.getSummaryData().getCardList().stream()

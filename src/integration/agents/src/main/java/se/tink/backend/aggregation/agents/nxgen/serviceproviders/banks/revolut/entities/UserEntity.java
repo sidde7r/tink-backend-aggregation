@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDate;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.identitydata.IdentityData;
 
 @JsonObject
 public class UserEntity {
@@ -90,5 +92,23 @@ public class UserEntity {
     @JsonIgnore
     public String getFullName() {
         return String.format("%s %s", firstName, lastName);
+    }
+
+    @JsonIgnore
+    public IdentityData toTinkIdentity() {
+        return IdentityData.builder()
+                .addFirstNameElement(firstName)
+                .addSurnameElement(lastName)
+                .setDateOfBirth(getBirthDateAsLocalDate())
+                .build();
+    }
+
+    @JsonIgnore
+    public LocalDate getBirthDateAsLocalDate() {
+        if (birthDate.size() != 3) {
+            return null;
+        } else {
+            return LocalDate.of(birthDate.get(0), birthDate.get(1), birthDate.get(2));
+        }
     }
 }
