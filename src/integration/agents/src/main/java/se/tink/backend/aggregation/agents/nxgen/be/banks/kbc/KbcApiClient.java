@@ -72,6 +72,7 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class KbcApiClient {
+
     private final TinkHttpClient client;
     private AccountsResponse accountResponse;
     private static final AggregationLogger LOGGER = new AggregationLogger(KbcApiClient.class);

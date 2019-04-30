@@ -6,8 +6,10 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,13 +188,25 @@ public class KbcOtpUtils {
 
     public static byte[] wbAesEncrypt(byte[] data) {
         logger.info("KbcOtpUtils: Reading library {}", LIBRARY_FILE_PATH);
+        final List<Byte> dataList = new ArrayList<>();
+        for (byte b : data) {
+            dataList.add(b);
+        }
+        logger.info(String.format("data == %s", dataList));
         logger.info(
                 "KbcOtpUtils: tools/ directory contents: {}",
-                new File(new File(LIBRARY_FILE_PATH).getParent()));
+                Arrays.asList(
+                        Objects.requireNonNull(
+                                new File(new File(LIBRARY_FILE_PATH).getParent()).listFiles())));
         KbcWhiteBoxAes kbcWhiteBoxAes =
                 (KbcWhiteBoxAes) Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
-        logger.info("KbcOtpUtils: Reading library done, {}", kbcWhiteBoxAes.toString());
+        logger.info("KbcOtpUtils: Reading library done");
         byte[] out = new byte[16];
+        try {
+            Thread.sleep(100); // Give logging some time to finish
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
         kbcWhiteBoxAes.kbc_wb_aes128_encrypt(data, out);
         logger.info("KbcOtpUtils: wbAesEncrypt done");
         return out;
