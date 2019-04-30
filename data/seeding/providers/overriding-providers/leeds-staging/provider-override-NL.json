@@ -369,6 +369,23 @@
             "capabilities": []
         },
         {
+            "name": "nl-rabobank-oauth2",
+            "displayName": "Rabobank",
+            "currency": "EUR",
+            "popular": true,
+            "market": "NL",
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
+        },
+        {
             "name": "nl-ics-oauth2",
             "displayName": "ICS",
             "currency": "EUR",
