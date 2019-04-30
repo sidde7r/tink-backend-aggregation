@@ -12,12 +12,13 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
+
     private List<String> flags;
     private String flagsSerialized;
     private String id;
 
     @JsonInclude(Include.NON_NULL)
-    private UserProfile profile;
+    private String locale;
 
     private String username;
     private Date debugUntil;
@@ -37,10 +38,6 @@ public class User {
 
     public String getId() {
         return id;
-    }
-
-    public UserProfile getProfile() {
-        return profile;
     }
 
     public String getUsername() {
@@ -65,8 +62,8 @@ public class User {
         this.id = id;
     }
 
-    public void setProfile(UserProfile profile) {
-        this.profile = profile;
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public void setUsername(String username) {
@@ -79,7 +76,7 @@ public class User {
 
     @JsonIgnore
     public String getLocale() {
-        return getProfile().getLocale();
+        return locale;
     }
 
     @JsonIgnore

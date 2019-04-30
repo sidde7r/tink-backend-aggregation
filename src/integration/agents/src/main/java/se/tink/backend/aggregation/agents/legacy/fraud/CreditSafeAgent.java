@@ -144,7 +144,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
 
             // If error status is protected or blocked, create identity content saying that.
 
-            Catalog catalog = Catalog.getCatalog(user.getProfile().getLocale());
+            Catalog catalog = Catalog.getCatalog(user.getLocale());
             String knownErrorMessage = parseErrorMessageKnown(catalog, error);
 
             if (!Strings.isNullOrEmpty(knownErrorMessage)) {

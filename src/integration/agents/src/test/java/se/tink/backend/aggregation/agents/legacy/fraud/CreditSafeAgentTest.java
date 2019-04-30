@@ -22,7 +22,6 @@ import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.user.rpc.UserProfile;
 
 public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
 
@@ -161,9 +160,7 @@ public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
     protected AgentTestContext testAgentNonTestEnv(Credentials credentials) throws Exception {
         User user = new User();
         user.setId("----DEMO----");
-        UserProfile profile = new UserProfile();
-        profile.setLocale("sv_SE");
-        user.setProfile(profile);
+        user.setLocale("sv_SE");
 
         CredentialsRequest informationRefreshRequest =
                 new RefreshInformationRequest(
