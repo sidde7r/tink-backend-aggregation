@@ -31,6 +31,7 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.user.rpc.UserProfile;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
     protected Class<T> cls;
@@ -97,22 +98,24 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected User createUser(Credentials credentials) {
-        final String locale = "sv_SE";
+        UserProfile profile = new UserProfile();
+        profile.setLocale("sv_SE");
 
         User user = new User();
         user.setId(credentials.getUserId());
-        user.setLocale(locale);
+        user.setProfile(profile);
         user.setFlags(constructFeatureFlags());
 
         return user;
     }
 
     protected KeepAliveRequest createKeepAliveRequest(Credentials credentials) {
-        final String locale = "sv_SE";
+        UserProfile profile = new UserProfile();
+        profile.setLocale("sv_SE");
 
         User user = new User();
         user.setId(credentials.getUserId());
-        user.setLocale(locale);
+        user.setProfile(profile);
         user.setFlags(constructFeatureFlags());
 
         return new KeepAliveRequest(user, constructProvider(), credentials);

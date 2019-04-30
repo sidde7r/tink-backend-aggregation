@@ -98,7 +98,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         setAggregatorInfo(aggregatorInfo);
 
         if (request.getUser() != null) {
-            this.catalog = Catalog.getCatalog(request.getUser().getLocale());
+            this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
         }
 
         this.setMetricRegistry(metricRegistry);
