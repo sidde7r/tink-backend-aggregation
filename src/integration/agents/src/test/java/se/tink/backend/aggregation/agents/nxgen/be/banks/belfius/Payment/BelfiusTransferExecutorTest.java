@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.CountryDateUtils;
+import se.tink.libraries.date.BelgianDateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -62,7 +62,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("EUR");
         amount.setValue(0.02);
-        Date d = CountryDateUtils.getBelgianDateUtils().getToday();
+        Date d = BelgianDateUtils.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);
@@ -98,7 +98,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("");
         amount.setValue(1000.0);
-        Date d = CountryDateUtils.getBelgianDateUtils().getToday();
+        Date d = BelgianDateUtils.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);
@@ -134,7 +134,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         Amount amount = new Amount();
         amount.setCurrency("EUR");
         amount.setValue(0.02);
-        Date d = CountryDateUtils.getBelgianDateUtils().getToday();
+        Date d = BelgianDateUtils.getToday();
         d.setDate(d.getDate() + 9);
         t.setDestination(destinationAcc);
         t.setSource(sourceAcc);

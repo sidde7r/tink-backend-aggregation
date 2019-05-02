@@ -85,20 +85,6 @@ public class DateUtilsTest {
     }
 
     @Test
-    public void belgianDateUtilTest() {
-        String date = "2018-12-24";
-        String kingsDay = "2018-04-02";
-        CountryDateUtils be = CountryDateUtils.getBelgianDateUtils();
-        CountryDateUtils sv = CountryDateUtils.getSwedishDateUtils();
-        Date date1 = new DateTime(DateTime.parse(date)).toDate();
-        Date date2 = new DateTime(DateTime.parse(kingsDay)).toDate();
-        assertEquals(be.isBusinessDay(date1), true);
-        assertFalse(sv.isBusinessDay(date1));
-        assertFalse(be.isBusinessDay(date2));
-        assertFalse(sv.isBusinessDay(date2));
-    }
-
-    @Test
     public void testGetFirstDateFromPeriods() throws ParseException {
         Date isDate =
                 DateUtils.getFirstDateFromPeriods(
