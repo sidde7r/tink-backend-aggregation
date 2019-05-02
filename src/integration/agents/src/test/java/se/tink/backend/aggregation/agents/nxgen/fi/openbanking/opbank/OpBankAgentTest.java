@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
+@Ignore
 public class OpBankAgentTest {
 
     private final String TEST_USERNAME = "SOMEUSER";
