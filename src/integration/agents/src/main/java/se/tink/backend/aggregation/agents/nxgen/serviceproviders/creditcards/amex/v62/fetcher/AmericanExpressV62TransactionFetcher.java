@@ -34,8 +34,14 @@ public class AmericanExpressV62TransactionFetcher
     }
 
     @Override
+    /**
+     * Fetches the transactions from two parts of the Amex api, the actual transactions and the
+     * 'timeline'. The 'timeline' is  some sort of overview, where pending transactions end up. We
+     * parse the timeline to fetch them.
+     */
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
         Set<Transaction> transactions = new HashSet<>();
+        // Fetch transactions
         Set<TransactionResponse> transactionResponses =
                 sessionStorage
                         .get(TRANSACTIONS, new TypeReference<Set<TransactionResponse>>() {})
@@ -48,6 +54,7 @@ public class AmericanExpressV62TransactionFetcher
             transactions.addAll(response.toTinkTransactions(config, false, suppIndex));
         }
 
+        // Fetch timeline and parse pending transactions from it.
         Set<TimelineResponse> timelineResponses =
                 sessionStorage
                         .get(TIME_LINES, new TypeReference<Set<TimelineResponse>>() {})
