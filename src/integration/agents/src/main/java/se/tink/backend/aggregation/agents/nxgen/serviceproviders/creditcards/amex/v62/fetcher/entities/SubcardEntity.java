@@ -35,7 +35,6 @@ public class SubcardEntity {
                 .setHolderName(getHolderName())
                 .setAccountNumber(accountNumber)
                 .setName(cardProductName)
-                // .setBankIdentifier() TODO: What should this be?
                 .build();
     }
 
