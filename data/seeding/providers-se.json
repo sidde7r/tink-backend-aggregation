@@ -1950,6 +1950,38 @@
             "type": "CREDIT_CARD"
         },
         {
+            "name": "remembermastercard-bankid",
+            "className": "nxgen.se.creditcards.entercard.remember.RememberAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "re:member",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
             "credentialsType": "PASSWORD",
             "displayName": "TEST_PARTNER Abstract",
             "groupDisplayName": null,
