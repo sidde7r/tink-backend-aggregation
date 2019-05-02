@@ -3,6 +3,7 @@
     "providers": [
         "uk-aib-oauth2",
         "uk-barclays-oauth2",
+        "uk-barclaysv31-oauth2",
         "uk-danskebank-oauth2",
         "uk-monzo-oauth2",
         "uk-halifax-oauth2",
