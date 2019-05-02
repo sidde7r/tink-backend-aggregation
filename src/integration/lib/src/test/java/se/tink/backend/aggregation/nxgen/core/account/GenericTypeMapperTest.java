@@ -9,29 +9,31 @@ import se.tink.backend.agents.rpc.AccountTypes;
 public class GenericTypeMapperTest {
     @Test
     public void ensureTranslate_withNothingKnown_returnsEmpty() {
-        final GenericTypeMapper<AccountTypes, String> mapper =
-                GenericTypeMapper.<AccountTypes, String>genericBuilder().build();
+        final GenericTypeMapper<String, Integer> mapper =
+                GenericTypeMapper.<String, Integer>genericBuilder().build();
 
-        Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
+        Assert.assertFalse(mapper.translate(Integer.valueOf(1)).isPresent());
     }
 
     @Test
     public void ensureTranslate_withIgnored_returnsEmpty() {
-        final GenericTypeMapper<AccountTypes, Integer> mapper =
-                GenericTypeMapper.<AccountTypes, Integer>genericBuilder().ignoreKeys(Integer.valueOf(7), null).build();
+        final GenericTypeMapper<String, Integer> mapper =
+                GenericTypeMapper.<String, Integer>genericBuilder()
+                        .ignoreKeys(Integer.valueOf(7), null)
+                        .build();
 
         Assert.assertFalse(mapper.translate(Integer.valueOf(7)).isPresent());
     }
 
     @Test
-    public void ensureTranslate_withCheckingStringMappedToChecking_returnsChecking() {
-        final GenericTypeMapper<AccountTypes, String> mapper =
-                GenericTypeMapper.<AccountTypes, String>genericBuilder()
-                        .put(AccountTypes.CHECKING, "CHECKING_ACCOUNT")
+    public void ensureTranslate_withOnlyOneValue_returnsProper() {
+        final GenericTypeMapper<String, AccountTypes> mapper =
+                GenericTypeMapper.<String, AccountTypes>genericBuilder()
+                        .put("CHECKING_ACCOUNT", AccountTypes.CHECKING)
                         .build();
 
         Assert.assertEquals(
-                mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
+                mapper.translate(AccountTypes.CHECKING), Optional.of("CHECKING_ACCOUNT"));
     }
 
     @Test
