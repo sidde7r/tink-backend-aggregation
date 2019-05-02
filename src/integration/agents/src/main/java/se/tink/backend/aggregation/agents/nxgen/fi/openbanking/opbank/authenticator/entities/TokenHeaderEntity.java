@@ -4,8 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TokenHeaderEntity {
-    private String alg ="ES256";
-    private String typ="JWT";
-    private String kid="NGKPTg";
-
+    private String alg = "ES256";
+    private String typ = "JWT";
+    private String kid = "NGKPTg";
 }

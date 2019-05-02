@@ -11,9 +11,7 @@ public class ClaimsEntity {
     @JsonProperty("id_token")
     private ClaimEntity idToken;
 
-    public ClaimsEntity(
-        ClaimEntity userInfo,
-        ClaimEntity idToken) {
+    public ClaimsEntity(ClaimEntity userInfo, ClaimEntity idToken) {
         this.userInfo = userInfo;
         this.idToken = idToken;
     }

@@ -23,10 +23,8 @@ public class ExchangeTokenForm extends AbstractForm {
         return this;
     }
 
-
     public ExchangeTokenForm setClientId(String clientId) {
         this.put("client_id", clientId);
         return this;
     }
-
 }

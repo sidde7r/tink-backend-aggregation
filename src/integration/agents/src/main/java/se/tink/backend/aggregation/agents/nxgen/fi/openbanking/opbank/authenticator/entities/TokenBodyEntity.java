@@ -17,7 +17,6 @@ public class TokenBodyEntity {
     private long iat;
     private ClaimsEntity claims;
 
-
     public void setAud(String aud) {
         this.aud = aud;
     }
@@ -62,8 +61,7 @@ public class TokenBodyEntity {
         this.iat = iat;
     }
 
-    public void setClaims(
-        ClaimsEntity claims) {
+    public void setClaims(ClaimsEntity claims) {
         this.claims = claims;
     }
 }

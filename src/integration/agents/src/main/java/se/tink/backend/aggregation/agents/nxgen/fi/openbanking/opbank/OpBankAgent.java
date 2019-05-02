@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.OpBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
@@ -24,8 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public final class OpBankAgent extends NextGenerationAgent {
 
     private final String clientName;
@@ -41,9 +40,8 @@ public final class OpBankAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        //client.setDebugProxy("https://localhost:9022");
+        // client.setDebugProxy("https://localhost:9022");
         client.setDebugProxy("https://192.168.99.100:30922");
-
     }
 
     @Override

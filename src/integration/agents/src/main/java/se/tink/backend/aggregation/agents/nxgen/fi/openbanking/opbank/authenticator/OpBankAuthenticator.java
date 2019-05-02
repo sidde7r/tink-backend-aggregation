@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator;
 
 import com.google.common.collect.ImmutableList;
+import java.time.OffsetDateTime;
+import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
@@ -20,10 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.time.OffsetDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 public class OpBankAuthenticator implements OAuth2Authenticator {
 
@@ -82,22 +81,24 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         String tokenBodyJson = SerializationUtils.serializeToString(tokenBody);
         String tokenHeadJson = SerializationUtils.serializeToString(new TokenHeaderEntity());
 
-
-        String baseTokenString = Base64.encodeBase64URLSafeString(tokenHeadJson.getBytes())
-            + "."
-            + Base64.encodeBase64URLSafeString(tokenBodyJson.getBytes());
+        String baseTokenString =
+                Base64.encodeBase64URLSafeString(tokenHeadJson.getBytes())
+                        + "."
+                        + Base64.encodeBase64URLSafeString(tokenBodyJson.getBytes());
 
         String signature = apiClient.fetchSignature(baseTokenString);
 
         String fullToken = baseTokenString + "." + signature;
 
-        String authorizationURL = String.format("https://authorize.psd2-sandbox.op.fi/oauth/authorize"
-            + "?request=%s"
-            + "&response_type=code"
-            + "&client_id=%s"
-            + "&scope=openid accounts",
-            fullToken,
-            configuration.getClientId()).replace(" ", "%20");
+        String authorizationURL =
+                String.format(
+                                "https://authorize.psd2-sandbox.op.fi/oauth/authorize"
+                                        + "?request=%s"
+                                        + "&response_type=code"
+                                        + "&client_id=%s"
+                                        + "&scope=openid accounts",
+                                fullToken, configuration.getClientId())
+                        .replace(" ", "%20");
 
         return new URL(authorizationURL);
     }

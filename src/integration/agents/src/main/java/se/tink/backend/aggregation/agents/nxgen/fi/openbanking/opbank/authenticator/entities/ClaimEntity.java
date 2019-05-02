@@ -11,9 +11,7 @@ public class ClaimEntity {
     @JsonInclude(Include.NON_NULL)
     private AcrEntity acr;
 
-    public ClaimEntity(
-        AuthorizationIdEntity authorizationId,
-        AcrEntity acr) {
+    public ClaimEntity(AuthorizationIdEntity authorizationId, AcrEntity acr) {
         this.authorizationId = authorizationId;
         this.acr = acr;
     }

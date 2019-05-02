@@ -73,7 +73,7 @@ public class AccountEntity {
                 .setAccountNumber(getIdentifier())
                 .setBalance(new Amount(getCurrency(), getNetBalance()))
                 .setAlias(getProductName())
-                //TODO check the identifier scheme
+                // TODO check the identifier scheme
                 .addAccountIdentifier(new IbanIdentifier(getIdentifier()))
                 .putInTemporaryStorage(OpBankConstants.StorageKeys.ACCOUNT_ID, getAccountId())
                 .build();
