@@ -11,15 +11,16 @@ public class RedsysAgentTest {
     private AgentIntegrationTest.Builder builder;
 
     @Before
-    public void setup(){
-        builder = new AgentIntegrationTest.Builder("es", "es-redsys-oauth2")
-                .expectLoggedIn(false)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+    public void setup() {
+        builder =
+                new AgentIntegrationTest.Builder("es", "es-redsys-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test
-    public void testRefresh() throws Exception{
+    public void testRefresh() throws Exception {
         builder.build().testRefresh();
     }
 }

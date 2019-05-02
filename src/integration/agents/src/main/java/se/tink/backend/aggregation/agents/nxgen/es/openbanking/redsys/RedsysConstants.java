@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class RedsysConstants {
 
@@ -22,7 +22,7 @@ public final class RedsysConstants {
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
-            "Invalid Configuration: %s cannot be empty or null";
+                "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
     }
@@ -48,9 +48,9 @@ public final class RedsysConstants {
     }
 
     public static class QueryValues {
-        public static String RESPONSE_TYPE = "code";
-        public static String SCOPE = "AIS";
-        public static String CODE_CHALLENGE_METHOD = "plain";
+        public static final String RESPONSE_TYPE = "code";
+        public static final String SCOPE = "AIS";
+        public static final String CODE_CHALLENGE_METHOD = "plain";
     }
 
     public static class HeaderKeys {}
@@ -66,8 +66,8 @@ public final class RedsysConstants {
     }
 
     public static class FormValues {
-        public static String AUTHORIZATION_CODE = "authorization_code";
-        public static String REFRESH_TOKEN = "refresh_token";
+        public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class LogTags {}

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
@@ -11,8 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-import java.util.Optional;
-
 public class RedsysAuthenticator implements OAuth2Authenticator {
 
     private final RedsysApiClient apiClient;
@@ -20,7 +19,10 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
     private final RedsysConfiguration configuration;
     private final String codeVerifier;
 
-    public RedsysAuthenticator(RedsysApiClient apiClient, PersistentStorage persistentStorage, RedsysConfiguration configuration) {
+    public RedsysAuthenticator(
+            RedsysApiClient apiClient,
+            PersistentStorage persistentStorage,
+            RedsysConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
@@ -29,7 +31,7 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
 
     private RedsysConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
-            .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

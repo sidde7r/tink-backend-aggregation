@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
+import java.util.Optional;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.FormKeys;
@@ -16,9 +18,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Optional;
 
 public final class RedsysApiClient {
 
@@ -49,8 +48,7 @@ public final class RedsysApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         final OAuth2Token authToken = getTokenFromStorage();
 
-        return createRequest(url)
-                .addBearerToken(authToken);
+        return createRequest(url).addBearerToken(authToken);
     }
 
     private OAuth2Token getTokenFromStorage() {
@@ -61,7 +59,8 @@ public final class RedsysApiClient {
     }
 
     public URL getAuthorizeUrl(String state, String codeChallenge) {
-        final String baseAuthUrl = getConfiguration().getBaseUrl() + "/" + getConfiguration().getAspsp();
+        final String baseAuthUrl =
+                getConfiguration().getBaseUrl() + "/" + getConfiguration().getAspsp();
         final String clientId = getConfiguration().getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
@@ -77,18 +76,20 @@ public final class RedsysApiClient {
     }
 
     public OAuth2Token getToken(String code, String codeVerifier) {
-        final String url = getConfiguration().getBaseUrl() + "/" + getConfiguration().getAspsp() + Urls.TOKEN;
+        final String url =
+                getConfiguration().getBaseUrl() + "/" + getConfiguration().getAspsp() + Urls.TOKEN;
         final String clientId = getConfiguration().getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
-        final String payload = Form.builder()
-                .put(FormKeys.GRANT_TYPE, FormValues.AUTHORIZATION_CODE)
-                .put(FormKeys.CLIENT_ID, clientId)
-                .put(FormKeys.CODE, code)
-                .put(FormKeys.REDIRECT_URI, redirectUri)
-                .put(FormKeys.CODE_VERIFIER, codeVerifier)
-                .build()
-                .serialize();
+        final String payload =
+                Form.builder()
+                        .put(FormKeys.GRANT_TYPE, FormValues.AUTHORIZATION_CODE)
+                        .put(FormKeys.CLIENT_ID, clientId)
+                        .put(FormKeys.CODE, code)
+                        .put(FormKeys.REDIRECT_URI, redirectUri)
+                        .put(FormKeys.CODE_VERIFIER, codeVerifier)
+                        .build()
+                        .serialize();
 
         return client.request(url)
                 .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
@@ -101,13 +102,14 @@ public final class RedsysApiClient {
         final String aspsp = getConfiguration().getAspsp();
         final String clientId = getConfiguration().getAuthClientId();
 
-        final String payload = Form.builder()
-                .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN)
-                .put(FormKeys.ASPSP, aspsp)
-                .put(FormKeys.CLIENT_ID, clientId)
-                .put(FormKeys.REFRESH_TOKEN, refreshToken)
-                .build()
-                .serialize();
+        final String payload =
+                Form.builder()
+                        .put(FormKeys.GRANT_TYPE, FormValues.REFRESH_TOKEN)
+                        .put(FormKeys.ASPSP, aspsp)
+                        .put(FormKeys.CLIENT_ID, clientId)
+                        .put(FormKeys.REFRESH_TOKEN, refreshToken)
+                        .build()
+                        .serialize();
 
         return client.request(url)
                 .body(payload, MediaType.APPLICATION_FORM_URLENCODED)

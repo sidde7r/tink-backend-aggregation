@@ -8,12 +8,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class RedsysTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, URL> {
+                TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final RedsysApiClient apiClient;
 
@@ -27,7 +27,8 @@ public class RedsysTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account, URL nextUrl) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL nextUrl) {
         throw new NotImplementedException("getTransactionsFor not implemented");
     }
 }

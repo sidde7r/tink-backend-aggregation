@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.RedsysAuthenticator;
@@ -22,8 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Optional;
 
 public final class RedsysAgent extends NextGenerationAgent {
 
@@ -49,46 +48,48 @@ public final class RedsysAgent extends NextGenerationAgent {
 
         apiClient.setConfiguration(getClientConfiguration());
     }
+
     protected RedsysConfiguration getClientConfiguration() {
         return configuration
-            .getIntegrations()
-            .getClientConfiguration(
-                RedsysConstants.INTEGRATION_NAME, clientName, RedsysConfiguration.class)
-            .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                .getIntegrations()
+                .getClientConfiguration(
+                        RedsysConstants.INTEGRATION_NAME, clientName, RedsysConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
-            new OAuth2AuthenticationController(
-                    persistentStorage,
-                    supplementalInformationHelper,
-                    new RedsysAuthenticator(apiClient, persistentStorage, getClientConfiguration()));
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new RedsysAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()));
 
         return new AutoAuthenticationController(
-            request,
-            systemUpdater,
-            new ThirdPartyAppAuthenticationController<>(
-                controller, supplementalInformationHelper),
-            controller);
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         final RedsysTransactionalAccountFetcher accountFetcher =
                 new RedsysTransactionalAccountFetcher(apiClient);
 
-/*
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(accountFetcher))));
-*/
+        /*
+                return Optional.of(
+                        new TransactionalAccountRefreshController(
+                                metricRefreshController,
+                                updateController,
+                                accountFetcher,
+                                new TransactionFetcherController<>(
+                                        transactionPaginationHelper,
+                                        new TransactionKeyPaginationController<>(accountFetcher))));
+        */
         return Optional.empty();
     }
 
@@ -114,7 +115,7 @@ public final class RedsysAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
