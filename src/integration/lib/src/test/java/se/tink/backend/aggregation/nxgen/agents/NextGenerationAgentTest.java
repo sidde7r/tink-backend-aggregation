@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
+@Deprecated
 public abstract class NextGenerationAgentTest<T extends NextGenerationAgent>
         extends AbstractAgentTest<T> {
     protected NextGenerationAgentTest(Class<T> cls) {
