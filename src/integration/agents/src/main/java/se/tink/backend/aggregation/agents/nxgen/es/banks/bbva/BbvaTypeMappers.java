@@ -15,7 +15,9 @@ public final class BbvaTypeMappers {
                             "0CA0000245", // CUENTA ON LINE
                             "0000009340", // CUENTA TRADER - marked as personal account by BBVA
                             "0CA0000299", // CUENTO UNO
-                            "0000004272" // CUENTA BLUE ONLINE
+                            "0000004272", // CUENTA BLUE ONLINE
+                            "0CA0000089", // LIBRETON
+                            "0CA0000028" // CUENTA ORDINARIA BBVA
                             )
                     .put(
                             AccountTypes.SAVINGS, "0000011102" // CUENTA METAS - goal account
