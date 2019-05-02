@@ -26,6 +26,15 @@ public class TimelineResponse {
         return timeline.getCreditCardAccounts(configuration);
     }
 
+    /**
+     * Fetches the suppIndex for an account.
+     * In the response, each account is assigned an index (suppIndex) to connect the account with a
+     * transaction. We have to check the transaction details for the suppIndex of the account by
+     * mapping the account number.
+     *
+     * @param account
+     * @return
+     */
     @JsonIgnore
     public String getSuppIndexForAccount(final CreditCardAccount account) {
         return timeline.getCardList().stream()

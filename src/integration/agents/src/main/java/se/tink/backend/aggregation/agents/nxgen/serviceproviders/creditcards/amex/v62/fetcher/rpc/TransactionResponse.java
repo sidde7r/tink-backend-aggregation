@@ -65,6 +65,15 @@ public class TransactionResponse {
         return transactions;
     }
 
+    /**
+     * Fetches the suppIndex for an account.
+     * In the response, each account is assigned an index (suppIndex) to connect the account with a
+     * transaction. We have to check the transaction details for the suppIndex of the account by
+     * mapping the holderName.
+     *
+     * @param account
+     * @return
+     */
     public String getSuppIndexForAccount(final CreditCardAccount account) {
         return transactionDetails.getFilterOptions().getCardmembers().getValues().stream()
                 .filter(v -> v.getLabel().equalsIgnoreCase(account.getHolderName().toString()))
