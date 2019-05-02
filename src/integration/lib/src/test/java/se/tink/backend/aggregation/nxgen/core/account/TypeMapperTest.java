@@ -11,7 +11,6 @@ public final class TypeMapperTest {
     public void ensureTranslate_withNothingKnown_returnsEmpty() {
         final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder().build();
 
-
         Assert.assertFalse(mapper.translate("CHECKING_ACCOUNT").isPresent());
     }
 

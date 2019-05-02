@@ -32,8 +32,7 @@ public class GenericTypeMapper<V, T> {
         ImmutableMap.Builder<T, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<T>> entry : builder.getReversed().entrySet()) {
 
-            entry.getValue()
-                    .stream()
+            entry.getValue().stream()
                     .peek(
                             key ->
                                     Preconditions.checkState(

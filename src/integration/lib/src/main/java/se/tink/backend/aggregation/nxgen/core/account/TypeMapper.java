@@ -19,16 +19,14 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
     private TypeMapper(GenericTypeMapper.Builder<V, String, ?> builder) {
         ignoredKeys.clear();
         ignoredKeys.addAll(
-                builder.getIgnoredKeys()
-                        .stream()
+                builder.getIgnoredKeys().stream()
                         .map(k -> k.toLowerCase())
                         .collect(Collectors.toSet()));
 
         ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<String>> entry : builder.getReversed().entrySet()) {
 
-            entry.getValue()
-                    .stream()
+            entry.getValue().stream()
                     .peek(
                             key ->
                                     Preconditions.checkState(
@@ -76,8 +74,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
         /** Known keys, and the account type they should be mapped to. */
         public TypeMapperBuilder<V, B> put(V value, String... keys) {
             Set<String> collect =
-                    Arrays.asList(keys)
-                            .stream()
+                    Arrays.asList(keys).stream()
                             .map(k -> k.toLowerCase())
                             .collect(Collectors.toSet());
             self().reversed.put(value, collect);
