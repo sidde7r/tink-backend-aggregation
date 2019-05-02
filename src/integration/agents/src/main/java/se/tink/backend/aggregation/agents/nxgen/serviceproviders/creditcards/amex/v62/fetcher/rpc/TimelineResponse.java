@@ -27,10 +27,9 @@ public class TimelineResponse {
     }
 
     /**
-     * Fetches the suppIndex for an account.
-     * In the response, each account is assigned an index (suppIndex) to connect the account with a
-     * transaction. We have to check the transaction details for the suppIndex of the account by
-     * mapping the account number.
+     * Fetches the suppIndex for an account. In the response, each account is assigned an index
+     * (suppIndex) to connect the account with a transaction. We have to check the transaction
+     * details for the suppIndex of the account by mapping the account number.
      *
      * @param account
      * @return

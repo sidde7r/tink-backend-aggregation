@@ -36,7 +36,7 @@ public class AmericanExpressV62TransactionFetcher
     @Override
     /**
      * Fetches the transactions from two parts of the Amex api, the actual transactions and the
-     * 'timeline'. The 'timeline' is  some sort of overview, where pending transactions end up. We
+     * 'timeline'. The 'timeline' is some sort of overview, where pending transactions end up. We
      * parse the timeline to fetch them.
      */
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
