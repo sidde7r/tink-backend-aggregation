@@ -59,30 +59,31 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         createNewPayment(transfer);
     }
 
+    private BeneficiariesEntity createDestination(Transfer transfer) {
+        return executorHelper
+                // create plusgiro or bankgiro destination if it
+                // does not exist in beneficiaries
+                .createRecipient(transfer)
+                // throw exception if destination does not exist
+                .orElseThrow(() -> executorHelper.throwInvalidDestError());
+    }
+
     private void createNewPayment(Transfer transfer) {
-        FetchAccountResponse accountResponse = fetchAccounts();
+        final FetchAccountResponse accountResponse = fetchAccounts();
 
         // find source account
-        AccountEntity sourceAccount =
+        final AccountEntity sourceAccount =
                 executorHelper.validateSourceAccount(transfer, accountResponse, true);
 
         // find destination in beneficiaries
-        Optional<BeneficiariesEntity> destinationAccount =
-                executorHelper.validateDestinationAccount(transfer);
-
-        // create plusgiro or bankgiro destination if it does not exist in beneficiaries
-        if (!destinationAccount.isPresent()) {
-            destinationAccount = executorHelper.createRecipient(transfer);
-        }
-
-        // throw exception if destionation does not exist
-        if (!destinationAccount.isPresent()) {
-            executorHelper.throwInvalidDestError();
-        }
+        final BeneficiariesEntity destinationAccount =
+                executorHelper
+                        .validateDestinationAccount(transfer)
+                        .orElseGet(() -> createDestination(transfer));
 
         // create request
-        PaymentRequest paymentRequest =
-                createPaymentRequest(transfer, sourceAccount, destinationAccount.get());
+        final PaymentRequest paymentRequest =
+                createPaymentRequest(transfer, sourceAccount, destinationAccount);
 
         // execute payment
         executeBankPayment(paymentRequest);
