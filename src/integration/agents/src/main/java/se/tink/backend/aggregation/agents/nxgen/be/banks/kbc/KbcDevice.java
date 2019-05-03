@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class KbcDevice {
+
     private static final Logger logger = LoggerFactory.getLogger(KbcDevice.class);
 
     private static class StaticVectorKeys {
