@@ -57,6 +57,7 @@ public final class RedsysConstants {
 
     public static class HeaderKeys {
         public static final String REQUEST_ID = "X-Request-ID";
+        public static final String IBM_CLIENT_ID = "X-IBM-Client-Id";
         public static final String DIGEST = "Digest";
         public static final String SIGNATURE = "Signature";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";

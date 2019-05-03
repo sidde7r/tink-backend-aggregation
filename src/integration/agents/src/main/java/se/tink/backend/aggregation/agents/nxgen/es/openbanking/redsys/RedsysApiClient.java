@@ -258,6 +258,7 @@ public final class RedsysApiClient {
         RequestBuilder request =
                 client.request(url)
                         .addBearerToken(token)
+                        .header(HeaderKeys.IBM_CLIENT_ID, getConfiguration().getClientId())
                         .header(HeaderKeys.DIGEST, digest)
                         .header(HeaderKeys.REQUEST_ID, requestID)
                         .header(HeaderKeys.SIGNATURE, signature)
