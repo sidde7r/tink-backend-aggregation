@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class KbcSessionHandler implements SessionHandler {
+
     private final KbcHttpFilter httpFilter;
     private final KbcApiClient apiClient;
     private final SessionStorage sessionStorage;

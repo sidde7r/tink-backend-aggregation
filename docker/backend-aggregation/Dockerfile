@@ -3,7 +3,7 @@ FROM tink/base-java:8
 RUN wget -O /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64
 RUN chmod +x /usr/bin/dumb-init
 
-RUN apt-get update && apt-get install -y xvfb libtesseract4 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y xvfb libtesseract4 libm4ri-dev && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /heapdumps
 RUN mkdir /gc-logs
