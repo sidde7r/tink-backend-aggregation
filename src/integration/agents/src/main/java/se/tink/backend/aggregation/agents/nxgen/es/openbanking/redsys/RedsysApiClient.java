@@ -1,5 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.PrivateKey;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
@@ -27,22 +42,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.ws.rs.core.MediaType;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.PrivateKey;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
 
 public final class RedsysApiClient {
 
