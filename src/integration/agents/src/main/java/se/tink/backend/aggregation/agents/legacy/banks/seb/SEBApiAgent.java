@@ -917,29 +917,41 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private List<AccountEntity> listAccounts(String id) {
-        SebRequest payload = new SebRequest();
-        payload.request.ServiceInput.add(new ServiceInput("KUND_ID", id));
-
-        // listAccounts() is used by keepAlive() which is not allowed to throw exceptions, hence
-        // this try/catch block
-        ClientResponse response = postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
+        ClientResponse response = queryAccounts(id);
         try {
-            if (response.getStatus() == HttpStatus.SC_OK
-                    && response.hasEntity()
-                    && response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
-                SebResponse sebResponse = response.getEntity(SebResponse.class);
-
-                if (sebResponse.d != null && sebResponse.d.VODB != null) {
-                    return sebResponse.d.VODB.getAccountEntities();
-                } else {
-                    return null;
-                }
+            if (isValidResponse(response)) {
+                return response.getEntity(SebResponse.class).d.VODB.getAccountEntities();
             }
         } finally {
             response.close();
         }
 
         return null;
+    }
+
+    private ClientResponse queryAccounts(final String id) {
+        SebRequest payload = new SebRequest();
+        payload.request.ServiceInput.add(new ServiceInput("KUND_ID", id));
+        return postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
+    }
+
+    private boolean isValidResponse(final ClientResponse response) {
+        if (response.getStatus() != HttpStatus.SC_OK
+                || !response.hasEntity()
+                || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            return false;
+        }
+
+        SebResponse sebResponse = response.getEntity(SebResponse.class);
+        if (sebResponse.hasErrors()) {
+            return false;
+        }
+
+        if (sebResponse.d == null || sebResponse.d.VODB == null) {
+            return false;
+        }
+
+        return true;
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
@@ -1718,24 +1730,17 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public boolean isLoggedIn() throws Exception {
-        // return keepAlive();
-        // 2017-11-23 jrenold: Temporary solution until SEB fixes their timeout problems
-        // (lalmgren is in contact with them).
-        return false;
+        return keepAlive();
     }
 
     @Override
     public boolean keepAlive() throws Exception {
-        /*
         if (customerId == null) {
             return false;
         }
 
-        return listAccounts(customerId) != null;
-        */
-        // 2017-11-23 jrenold: Temporary solution until SEB fixes their timeout problems
-        // (lalmgren is in contact with them).
-        return false;
+        ClientResponse response = queryAccounts(customerId);
+        return isValidResponse(response);
     }
 
     @Override
