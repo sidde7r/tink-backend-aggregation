@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.fetcher.t
 import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysApiClient;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;

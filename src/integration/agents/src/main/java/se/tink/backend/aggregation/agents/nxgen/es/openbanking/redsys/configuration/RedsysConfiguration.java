@@ -9,18 +9,29 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class RedsysConfiguration implements ClientConfiguration {
 
-    private String baseUrl;
+    private String baseAuthUrl;
+    private String baseAPIUrl;
     private String clientId;
     private String authClientId;
     private String redirectUrl;
     private String aspsp;
+    private String clientSigningKeyPath;
+    private String clientSigningCertificatePath;
 
-    public String getBaseUrl() {
+    public String getBaseAuthUrl() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
+                Strings.emptyToNull(baseAuthUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
 
-        return baseUrl;
+        return baseAuthUrl;
+    }
+
+    public String getBaseAPIUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAPIUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
+
+        return baseAPIUrl;
     }
 
     public String getAuthClientId() {
@@ -53,5 +64,22 @@ public class RedsysConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "ASPSP"));
 
         return aspsp;
+    }
+
+    public String getClientSigningKeyPath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningKeyPath),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Key Path"));
+
+        return clientSigningKeyPath;
+    }
+
+    public String getClientSigningCertificatePath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningCertificatePath),
+                String.format(
+                        ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
+
+        return clientSigningCertificatePath;
     }
 }
