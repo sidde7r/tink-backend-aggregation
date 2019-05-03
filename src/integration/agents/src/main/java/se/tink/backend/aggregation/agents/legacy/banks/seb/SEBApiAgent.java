@@ -920,7 +920,11 @@ public class SEBApiAgent extends AbstractAgent
         ClientResponse response = queryAccounts(id);
         try {
             if (isValidResponse(response)) {
-                return response.getEntity(SebResponse.class).d.VODB.getAccountEntities();
+                SebResponse sebResponse = response.getEntity(SebResponse.class);
+                if (java.util.Objects.isNull(sebResponse) || sebResponse.hasErrors()) {
+                    return null;
+                }
+                return sebResponse.d.VODB.getAccountEntities();
             }
         } finally {
             response.close();
@@ -936,6 +940,10 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private boolean isValidResponse(final ClientResponse response) {
+        if (java.util.Objects.isNull(response)) {
+            return false;
+        }
+
         if (response.getStatus() != HttpStatus.SC_OK
                 || !response.hasEntity()
                 || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
@@ -943,11 +951,12 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (sebResponse.hasErrors()) {
+        if (java.util.Objects.isNull(sebResponse) || sebResponse.hasErrors()) {
             return false;
         }
 
-        if (sebResponse.d == null || sebResponse.d.VODB == null) {
+        if (java.util.Objects.isNull(sebResponse.d)
+                || java.util.Objects.isNull(sebResponse.d.VODB)) {
             return false;
         }
 
