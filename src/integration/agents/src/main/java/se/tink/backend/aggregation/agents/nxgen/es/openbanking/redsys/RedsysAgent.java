@@ -38,9 +38,7 @@ public final class RedsysAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://127.0.0.1:8888");
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -80,16 +78,6 @@ public final class RedsysAgent extends NextGenerationAgent {
         final RedsysTransactionalAccountFetcher accountFetcher =
                 new RedsysTransactionalAccountFetcher(apiClient);
 
-        /*
-                return Optional.of(
-                        new TransactionalAccountRefreshController(
-                                metricRefreshController,
-                                updateController,
-                                accountFetcher,
-                                new TransactionFetcherController<>(
-                                        transactionPaginationHelper,
-                                        new TransactionKeyPaginationController<>(accountFetcher))));
-        */
         return Optional.empty();
     }
 
