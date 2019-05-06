@@ -27,7 +27,7 @@ branch_point=$(git merge-base upstream/master HEAD)
 git_diff=$(git diff $branch_point HEAD --diff-filter='ACMR' --name-only)
 
 if [ ! -z "$git_diff" ]; then
-  diffing_java_files=$(find $(git diff $branch_point HEAD --diff-filter='ACMR' --name-only) -type f -name "*.java")
+  diffing_java_files=$(find $git_diff -type f -name "*.java")
 
   if [ ! -z "$diffing_java_files" ]; then
       echo $diffing_java_files | xargs -n500 bazel-bin/tools/format/google-java-format --aosp --dry-run --set-exit-if-changed
