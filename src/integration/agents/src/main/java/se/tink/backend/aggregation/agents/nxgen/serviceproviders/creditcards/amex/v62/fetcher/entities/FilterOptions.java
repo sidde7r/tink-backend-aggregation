@@ -13,7 +13,7 @@ public class FilterOptions {
     private Sort sort;
 
     @JsonProperty("cardmembers")
-    private Cardmembers cardmembers;
+    private CardMembers cardmembers;
 
     @JsonProperty("title")
     private String title;
@@ -26,7 +26,7 @@ public class FilterOptions {
         return sort;
     }
 
-    public Cardmembers getCardmembers() {
+    public CardMembers getCardmembers() {
         return cardmembers;
     }
 
