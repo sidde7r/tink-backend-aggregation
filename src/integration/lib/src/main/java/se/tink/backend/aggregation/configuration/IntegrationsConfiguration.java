@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,7 +17,10 @@ public class IntegrationsConfiguration {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private Map<String, Object> integrations = new HashMap<>();
+
     @JsonProperty private String proxyUri;
+
+    @JsonProperty private List<String> proxyUris;
 
     private Optional<Object> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
@@ -42,5 +47,9 @@ public class IntegrationsConfiguration {
 
     public String getProxyUri() {
         return proxyUri;
+    }
+
+    public List<String> getProxyUris() {
+        return new ArrayList<>(proxyUris);
     }
 }
