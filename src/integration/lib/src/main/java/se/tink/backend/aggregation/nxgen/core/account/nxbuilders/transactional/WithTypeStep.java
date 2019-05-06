@@ -6,5 +6,4 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdS
 public interface WithTypeStep<T> {
 
     WithIdStep<T> withType(AccountTypes accountType);
-
 }
