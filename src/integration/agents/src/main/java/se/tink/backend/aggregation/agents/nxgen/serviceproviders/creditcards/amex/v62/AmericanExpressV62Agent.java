@@ -77,16 +77,16 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         AmericanExpressV62CreditCardFetcher americanExpressV62CreditCardFetcher =
-                AmericanExpressV62CreditCardFetcher.create(sessionStorage, config);
+                AmericanExpressV62CreditCardFetcher.create(sessionStorage, config, apiClient);
 
         AmericanExpressV62TransactionFetcher americanExpressV62TransactionFetcher =
-                AmericanExpressV62TransactionFetcher.create(apiClient, config, sessionStorage);
+                AmericanExpressV62TransactionFetcher.create(config, sessionStorage);
 
         TransactionPagePaginationController<CreditCardAccount>
                 amexV66TransactionPagePaginationController =
                         new TransactionPagePaginationController<>(
                                 americanExpressV62TransactionFetcher,
-                                AmericanExpressV62Constants.Fetcher.START_PAGE);
+                                AmericanExpressV62Constants.Fetcher.START_BILLING_INDEX);
 
         TransactionFetcherController<CreditCardAccount> amexV62TransactionFetcherController =
                 new TransactionFetcherController<>(

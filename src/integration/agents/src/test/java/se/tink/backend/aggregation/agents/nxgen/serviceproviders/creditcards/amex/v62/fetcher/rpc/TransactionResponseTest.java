@@ -6,10 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62.AmericanExpressV62SEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponseTestDataHelper.ResponseType;
 
 public class TransactionResponseTest {
     AmericanExpressV62Configuration config = new AmericanExpressV62SEConfiguration();
@@ -19,10 +19,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.PROPER_TRANSACTION_LIST);
-        Collection transactions =
-                transactionResponse
-                        .getPaginatorResponse(config, Collections.emptyList())
-                        .getTinkTransactions();
+        Collection transactions = transactionResponse.toTinkTransactions(config, false, "01");
         assertFalse(transactions.isEmpty());
         assertEquals(1, transactions.size());
     }
@@ -33,10 +30,7 @@ public class TransactionResponseTest {
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
 
-        Collection transactions =
-                transactionResponse
-                        .getPaginatorResponse(config, Collections.emptyList())
-                        .getTinkTransactions();
+        Collection transactions = transactionResponse.toTinkTransactions(config, false, "01");
         assertTrue(transactions.isEmpty());
     }
 
@@ -45,11 +39,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.ERROR_LIST);
-        boolean canFetchMore =
-                transactionResponse
-                        .getPaginatorResponse(config, Collections.emptyList())
-                        .canFetchMore()
-                        .get();
+        boolean canFetchMore = transactionResponse.canFetchMore();
 
         assertFalse(canFetchMore);
     }
@@ -58,13 +48,9 @@ public class TransactionResponseTest {
     public void canFetchMore_emptyTransactionListForPeriod() throws IOException {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
-                        TransactionResponseTestDataHelper.ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
-        boolean canFetchMore =
-                transactionResponse
-                        .getPaginatorResponse(config, Collections.emptyList())
-                        .canFetchMore()
-                        .get();
-        assertTrue(canFetchMore);
+                        ResponseType.NO_TRANSACTIONS_FOR_PERIOD);
+        boolean canFetchMore = transactionResponse.canFetchMore();
+        assertFalse(canFetchMore);
     }
 
     @Test
@@ -72,11 +58,7 @@ public class TransactionResponseTest {
         TransactionResponse transactionResponse =
                 TransactionResponseTestDataHelper.buildResponse(
                         TransactionResponseTestDataHelper.ResponseType.PROPER_TRANSACTION_LIST);
-        boolean canFetchMore =
-                transactionResponse
-                        .getPaginatorResponse(config, Collections.emptyList())
-                        .canFetchMore()
-                        .get();
+        boolean canFetchMore = transactionResponse.canFetchMore();
         assertTrue(canFetchMore);
     }
 }
