@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
+
     private final AmericanExpressV62ApiClient client;
     private final AmericanExpressV62Configuration config;
     private final SessionStorage sessionStorage;
