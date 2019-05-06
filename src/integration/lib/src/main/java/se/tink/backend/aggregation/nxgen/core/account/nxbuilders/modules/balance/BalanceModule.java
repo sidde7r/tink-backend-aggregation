@@ -12,12 +12,41 @@ public class BalanceModule {
     private final double interestRate;
     private final Amount availableCredit;
 
+    private BalanceModule(Builder builder) {
+        this.balance = builder.balance;
+        this.interestRate = builder.interestRate;
+        this.availableCredit = builder.availableCredit;
+    }
+
+    private BalanceModule(Amount balance) {
+        this.balance = balance;
+        this.interestRate = 0;
+        this.availableCredit = null;
+    }
+
     public static BalanceStep<BalanceBuilderStep> builder() {
         return new Builder();
     }
 
     public static BalanceModule of(Amount amount) {
         return new BalanceModule(amount);
+    }
+
+    public Amount getBalance() {
+        return balance;
+    }
+
+    // Backwards compatibility
+    public Amount getValue() {
+        return getBalance();
+    }
+
+    public double getInterestRate() {
+        return interestRate;
+    }
+
+    public Amount getAvailableCredit() {
+        return availableCredit;
     }
 
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
@@ -49,34 +78,5 @@ public class BalanceModule {
         public BalanceModule build() {
             return new BalanceModule(this);
         }
-    }
-
-    private BalanceModule(Builder builder) {
-        this.balance = builder.balance;
-        this.interestRate = builder.interestRate;
-        this.availableCredit = builder.availableCredit;
-    }
-
-    private BalanceModule(Amount balance) {
-        this.balance = balance;
-        this.interestRate = 0;
-        this.availableCredit = null;
-    }
-
-    public Amount getBalance() {
-        return balance;
-    }
-
-    // Backwards compatibility
-    public Amount getValue() {
-        return getBalance();
-    }
-
-    public double getInterestRate() {
-        return interestRate;
-    }
-
-    public Amount getAvailableCredit() {
-        return availableCredit;
     }
 }

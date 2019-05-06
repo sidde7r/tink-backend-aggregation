@@ -5,5 +5,4 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance
 public interface WithBalanceStep<T> {
 
     T withBalance(BalanceModule balance);
-
 }

@@ -18,5 +18,4 @@ public interface IdentifierStep<T> {
      * @return The final step of the builder.
      */
     T addIdentifier(@Nonnull AccountIdentifier identifier);
-
 }

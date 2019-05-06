@@ -12,5 +12,4 @@ public interface BalanceStep<T> {
      * @return The next step of the builder
      */
     T setBalance(@Nonnull Amount balance);
-
 }

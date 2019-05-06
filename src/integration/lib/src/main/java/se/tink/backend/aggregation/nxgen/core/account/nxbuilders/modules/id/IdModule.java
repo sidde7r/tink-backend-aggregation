@@ -22,8 +22,36 @@ public class IdModule {
     private final String productName;
     private final Set<AccountIdentifier> identifiers;
 
+    private IdModule(Builder builder) {
+        this.uniqueId = builder.uniqueIdentifier;
+        this.accountNumber = builder.accountNumber;
+        this.accountName = builder.accountName;
+        this.identifiers = builder.identifiers;
+        this.productName = builder.productName;
+    }
+
     public static UniqueIdStep<IdBuildStep> builder() {
         return new Builder();
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public Set<AccountIdentifier> getIdentifiers() {
+        return identifiers;
+    }
+
+    public String getProductName() {
+        return productName;
     }
 
     private static class Builder
@@ -33,10 +61,10 @@ public class IdModule {
                     ProductNameStep<IdBuildStep>,
                     IdentifierStep<IdBuildStep>,
                     IdBuildStep {
+        private final Set<AccountIdentifier> identifiers = new HashSet<>();
         private String uniqueIdentifier;
         private String accountNumber;
         private String accountName;
-        private final Set<AccountIdentifier> identifiers = new HashSet<>();
         private String productName;
 
         @Override
@@ -90,33 +118,5 @@ public class IdModule {
             this.productName = productName;
             return this;
         }
-    }
-
-    private IdModule(Builder builder) {
-        this.uniqueId = builder.uniqueIdentifier;
-        this.accountNumber = builder.accountNumber;
-        this.accountName = builder.accountName;
-        this.identifiers = builder.identifiers;
-        this.productName = builder.productName;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public Set<AccountIdentifier> getIdentifiers() {
-        return identifiers;
-    }
-
-    public String getProductName() {
-        return productName;
     }
 }
