@@ -2,6 +2,7 @@ package se.tink.libraries.identitydata.countries;
 
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
 import org.junit.Test;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -28,10 +29,12 @@ public class SeIdentityDataTest {
 
         assertEquals("Britt-Marie Larsen", data.getFullName());
         assertEquals("195612310021", data.getSsn());
+        assertEquals(LocalDate.of(1956, 12, 31), data.getDateOfBirth());
 
         IdentityData fnData = SeIdentityData.of("Kalle Kula", "200207314356");
 
         assertEquals("Kalle Kula", fnData.getFullName());
         assertEquals("200207314356", fnData.getSsn());
+        assertEquals(LocalDate.of(2002, 7, 31), fnData.getDateOfBirth());
     }
 }

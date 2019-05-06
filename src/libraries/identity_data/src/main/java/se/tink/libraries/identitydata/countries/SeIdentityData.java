@@ -20,7 +20,7 @@ public class SeIdentityData extends IdentityData {
         return builder()
                 .setSsn(ssn)
                 .setFullName(fullName)
-                .setDateOfBirth(getBirthDate(ssn))
+                .setDateOfBirth(getBirthDateFromSsn(ssn))
                 .build();
     }
 
@@ -29,7 +29,7 @@ public class SeIdentityData extends IdentityData {
                 .setSsn(ssn)
                 .addFirstNameElement(firstName)
                 .addSurnameElement(lastName)
-                .setDateOfBirth(getBirthDate(ssn))
+                .setDateOfBirth(getBirthDateFromSsn(ssn))
                 .build();
     }
 
@@ -46,12 +46,12 @@ public class SeIdentityData extends IdentityData {
         return trimmedSsn;
     }
 
-    public static LocalDate getBirthDate(String ssn) {
+    public static LocalDate getBirthDateFromSsn(String ssn) {
         final String processedSsn = processSsn(ssn);
 
         int year = Integer.parseInt(processedSsn.substring(0, 4));
-        int month = Integer.parseInt(processedSsn.substring(5, 6));
-        int day = Integer.parseInt(processedSsn.substring(7, 8));
+        int month = Integer.parseInt(processedSsn.substring(4, 6));
+        int day = Integer.parseInt(processedSsn.substring(6, 8));
 
         return LocalDate.of(year, month, day);
     }
