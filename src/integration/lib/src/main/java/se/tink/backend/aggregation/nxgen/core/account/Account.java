@@ -37,19 +37,23 @@ import se.tink.libraries.user.rpc.User;
 public abstract class Account {
     private static final Logger logger = LoggerFactory.getLogger(Account.class);
 
-    private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
-    private String name;
-    private String productName;
-    private String accountNumber;
-    private Amount balance;
-    private Amount availableCredit;
-    private Set<AccountIdentifier> identifiers;
-    private String uniqueIdentifier;
-    private String apiIdentifier;
-    private HolderName holderName;
-    private TemporaryStorage temporaryStorage;
-    private Set<AccountFlag> accountFlags;
+    static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
+    protected String name;
+    protected String productName;
+    protected String accountNumber;
+    protected Amount balance;
+    protected Amount availableCredit;
+    protected Set<AccountIdentifier> identifiers;
+    protected String uniqueIdentifier;
+    protected String apiIdentifier;
+    protected HolderName holderName;
+    protected TemporaryStorage temporaryStorage;
+    protected Set<AccountFlag> accountFlags;
 
+    // Exists for interoperability only, do not ever use
+    protected Account() {}
+
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     @Deprecated
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
@@ -94,6 +98,8 @@ public abstract class Account {
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+    @Deprecated
     public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
             implements BuildStep<A, B> {
 
@@ -227,6 +233,7 @@ public abstract class Account {
         }
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
@@ -363,6 +370,7 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     /** @deprecated Use StepBuilder instead */
     @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {

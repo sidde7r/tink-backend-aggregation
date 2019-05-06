@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Chec
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
 
+@Deprecated
 public class CheckingAccount extends TransactionalAccount {
 
     @Deprecated
@@ -30,10 +31,14 @@ public class CheckingAccount extends TransactionalAccount {
         return builder(uniqueIdentifier).setBalance(balance);
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+    @Deprecated
     public static UniqueIdentifierStep<CheckingBuildStep> builder() {
         return new CheckingAccountBuilder();
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+    @Deprecated
     private static class CheckingAccountBuilder
             extends Account.StepBuilder<CheckingAccount, CheckingBuildStep>
             implements UniqueIdentifierStep<CheckingBuildStep>,

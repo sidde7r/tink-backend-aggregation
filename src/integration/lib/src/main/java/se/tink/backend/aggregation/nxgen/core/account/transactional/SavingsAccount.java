@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Savi
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
 
+@Deprecated
 public class SavingsAccount extends TransactionalAccount {
     private final Double interestRate;
 
