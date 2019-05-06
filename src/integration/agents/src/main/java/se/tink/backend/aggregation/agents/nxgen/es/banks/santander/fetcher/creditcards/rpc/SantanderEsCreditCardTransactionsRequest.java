@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml.convertXmlToString;
+
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.DateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 
@@ -72,14 +75,16 @@ public class SantanderEsCreditCardTransactionsRequest {
                             "<repos>%s</repos>",
                             SantanderEsXmlUtils.parseJsonToXmlString(repositionEntity));
         }
+        DateEntity startDate = LocalDateToXml.serializeLocalDateToXml(fromDate);
+        DateEntity endDate = LocalDateToXml.serializeLocalDateToXml(toDate);
 
         return String.format(
                 "<fechaDesde>%s</fechaDesde>"
                         + "<fechaHasta>%s</fechaHasta>"
                         + "<esUnaPaginacion>%s</esUnaPaginacion>"
                         + "%s",
-                LocalDateToXml.serializeLocalDateToXml(fromDate),
-                LocalDateToXml.serializeLocalDateToXml(toDate),
+                convertXmlToString(startDate),
+                convertXmlToString(endDate),
                 (isPaginationRequest ? "S" : "N"),
                 repositionData);
     }
