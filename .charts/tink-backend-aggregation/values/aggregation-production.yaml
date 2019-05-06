@@ -31,6 +31,12 @@ agents:
 
   proxyUri: http://10.88.12.185:8080
 
+  proxyUris: [
+    "http://http-proxy-0.internal.production.aggregation.tink.network:8080",
+    "http://http-proxy-1.internal.production.aggregation.tink.network:8080",
+    "http://http-proxy-2.internal.production.aggregation.tink.network:8080",
+  ]
+
   fints: true
   abnAmro:
     production: {}

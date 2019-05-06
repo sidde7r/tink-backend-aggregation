@@ -44,6 +44,13 @@ data:
         proxyUri: "{{ $agentsConfig.proxyUri }}"
         {{- end }}
 
+        {{- if $agentsConfig.proxyUris }}
+        proxyUris:
+        {{- range $uri := $agentsConfig.proxyUris }}
+          - "{{ $uri }}"
+        {{- end }}
+        {{- end }}
+
         {{- if $agentsConfig.monzo }}
         monzo:
           tink:
