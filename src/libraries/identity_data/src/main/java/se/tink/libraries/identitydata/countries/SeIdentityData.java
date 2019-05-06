@@ -16,6 +16,14 @@ public class SeIdentityData extends IdentityData {
         this.ssn = builder.ssn;
     }
 
+    public static IdentityData of(String fullName, String ssn) {
+        return builder()
+                .setSsn(ssn)
+                .setFullName(fullName)
+                .setDateOfBirth(getBirthDate(ssn))
+                .build();
+    }
+
     public static IdentityData of(String firstName, String lastName, String ssn) {
         return builder()
                 .setSsn(ssn)

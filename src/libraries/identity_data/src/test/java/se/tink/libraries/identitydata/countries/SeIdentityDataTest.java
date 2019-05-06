@@ -24,10 +24,14 @@ public class SeIdentityDataTest {
 
     @Test
     public void testConstruction() {
-
         IdentityData data = SeIdentityData.of("Britt-Marie", "Larsen", "19561231-0021");
 
         assertEquals("Britt-Marie Larsen", data.getFullName());
         assertEquals("195612310021", data.getSsn());
+
+        IdentityData fnData = SeIdentityData.of("Kalle Kula", "200207314356");
+
+        assertEquals("Kalle Kula", fnData.getFullName());
+        assertEquals("200207314356", fnData.getSsn());
     }
 }
