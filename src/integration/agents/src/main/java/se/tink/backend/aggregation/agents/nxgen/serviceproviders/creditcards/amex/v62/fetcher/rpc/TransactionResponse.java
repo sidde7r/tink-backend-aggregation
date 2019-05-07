@@ -26,7 +26,7 @@ public class TransactionResponse {
     }
 
     @JsonIgnore
-    private boolean hasTransactions() {
+    public boolean hasTransactions() {
         int numTransctions = 0;
         if (hasMoreTransactions()) {
             for (ActivityListEntity activityListEntity : transactionDetails.getActivityList()) {
