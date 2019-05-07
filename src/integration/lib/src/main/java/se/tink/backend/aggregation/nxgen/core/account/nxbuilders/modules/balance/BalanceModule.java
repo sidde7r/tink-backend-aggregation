@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance;
 
 import com.google.common.base.Preconditions;
+import java.util.Optional;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceStep;
 import se.tink.libraries.amount.Amount;
 
-public class BalanceModule {
+public final class BalanceModule {
 
     private final Amount balance;
-    private final double interestRate;
+    private final Double interestRate;
     private final Amount availableCredit;
 
     private BalanceModule(Builder builder) {
@@ -18,40 +19,29 @@ public class BalanceModule {
         this.availableCredit = builder.availableCredit;
     }
 
-    private BalanceModule(Amount balance) {
-        this.balance = balance;
-        this.interestRate = 0;
-        this.availableCredit = null;
-    }
-
     public static BalanceStep<BalanceBuilderStep> builder() {
         return new Builder();
     }
 
     public static BalanceModule of(Amount amount) {
-        return new BalanceModule(amount);
+        return builder().withBalance(amount).build();
     }
 
     public Amount getBalance() {
-        return balance;
+        return new Amount(balance.getCurrency(), balance.getValue());
     }
 
-    // Backwards compatibility
-    public Amount getValue() {
-        return getBalance();
+    public Optional<Double> getInterestRate() {
+        return Optional.ofNullable(interestRate);
     }
 
-    public double getInterestRate() {
-        return interestRate;
-    }
-
-    public Amount getAvailableCredit() {
-        return availableCredit;
+    public Optional<Amount> getAvailableCredit() {
+        return Optional.ofNullable(availableCredit);
     }
 
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
 
-        private double interestRate;
+        private Double interestRate;
         private Amount availableCredit;
         private Amount balance;
 
@@ -62,13 +52,14 @@ public class BalanceModule {
         }
 
         @Override
-        public BalanceBuilderStep setAvailableCredit(Amount availableCredit) {
+        public BalanceBuilderStep setAvailableCredit(@Nonnull Amount availableCredit) {
+            Preconditions.checkNotNull(balance, "Available Credit must not be null.");
             this.availableCredit = availableCredit;
             return this;
         }
 
         @Override
-        public BalanceBuilderStep setBalance(@Nonnull Amount balance) {
+        public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
             this.balance = balance;
             return this;

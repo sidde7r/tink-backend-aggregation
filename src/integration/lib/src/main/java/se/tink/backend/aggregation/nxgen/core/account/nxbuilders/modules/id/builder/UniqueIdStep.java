@@ -32,5 +32,5 @@ public interface UniqueIdStep<T> {
      * @param identifier The unique identifier
      * @return The next step of the builder
      */
-    AccountNumberStep<T> setUniqueIdentifier(@Nonnull String identifier);
+    AccountNumberStep<T> withUniqueIdentifier(@Nonnull String identifier);
 }

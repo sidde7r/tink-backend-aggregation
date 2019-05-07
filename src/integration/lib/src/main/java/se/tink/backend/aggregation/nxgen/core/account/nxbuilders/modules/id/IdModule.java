@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -9,12 +10,11 @@ import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.buil
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.AccountNumberStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdentifierStep;
-import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.ProductNameStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.UniqueIdStep;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
-public class IdModule {
+public final class IdModule {
 
     private final String uniqueId;
     private final String accountNumber;
@@ -47,7 +47,7 @@ public class IdModule {
     }
 
     public Set<AccountIdentifier> getIdentifiers() {
-        return identifiers;
+        return ImmutableSet.copyOf(identifiers);
     }
 
     public String getProductName() {
@@ -58,7 +58,6 @@ public class IdModule {
             implements UniqueIdStep<IdBuildStep>,
                     AccountNumberStep<IdBuildStep>,
                     AccountNameStep<IdBuildStep>,
-                    ProductNameStep<IdBuildStep>,
                     IdentifierStep<IdBuildStep>,
                     IdBuildStep {
         private final Set<AccountIdentifier> identifiers = new HashSet<>();
@@ -68,7 +67,9 @@ public class IdModule {
         private String productName;
 
         @Override
-        public AccountNameStep<IdBuildStep> setAccountNumber(@Nonnull String accountNumber) {
+        public AccountNameStep<IdBuildStep> withAccountNumber(@Nonnull String accountNumber) {
+            Preconditions.checkNotNull(accountNumber, "AccountNumber must not be null.");
+
             this.accountNumber = accountNumber;
             return this;
         }
@@ -87,16 +88,18 @@ public class IdModule {
         }
 
         @Override
-        public ProductNameStep<IdBuildStep> setAccountName(String name) {
+        public IdentifierStep<IdBuildStep> withAccountName(@Nonnull String name) {
+            Preconditions.checkNotNull(name, "AccountName must not be null.");
+
             this.accountName = name;
             return this;
         }
 
         @Override
-        public AccountNumberStep<IdBuildStep> setUniqueIdentifier(@Nonnull String identifier) {
+        public AccountNumberStep<IdBuildStep> withUniqueIdentifier(@Nonnull String identifier) {
             Preconditions.checkArgument(
                     !Strings.isNullOrEmpty(identifier),
-                    "UniqueIdentifier must no be null or empty.");
+                    "UniqueIdentifier must not be null or empty.");
 
             final String trimmedIdentifier = StringUtils.removeNonAlphaNumeric(identifier);
 
@@ -114,7 +117,9 @@ public class IdModule {
         }
 
         @Override
-        public IdentifierStep<IdBuildStep> setProductName(String productName) {
+        public IdBuildStep setProductName(@Nonnull String productName) {
+            Preconditions.checkNotNull(productName, "ProductName must not be null if set.");
+
             this.productName = productName;
             return this;
         }

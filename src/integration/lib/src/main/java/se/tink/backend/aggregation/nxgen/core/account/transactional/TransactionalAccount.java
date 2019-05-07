@@ -23,8 +23,8 @@ public class TransactionalAccount extends Account {
         this.name = builder.getIdModule().getAccountName();
         this.accountNumber = builder.getIdModule().getAccountNumber();
         this.balance = builder.getBalanceModule().getBalance();
-        this.availableCredit = builder.getBalanceModule().getAvailableCredit();
-        this.identifiers = ImmutableSet.copyOf(builder.getIdModule().getIdentifiers());
+        this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
+        this.identifiers = builder.getIdModule().getIdentifiers();
         this.uniqueIdentifier = builder.getIdModule().getUniqueId();
         this.apiIdentifier = builder.getApiIdentifier();
         this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);

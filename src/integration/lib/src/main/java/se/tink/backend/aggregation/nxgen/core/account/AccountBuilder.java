@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import static se.tink.backend.aggregation.nxgen.core.account.Account.BANK_IDENTIFIER_KEY;
-
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,14 +28,14 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     protected abstract B buildStep();
 
     @Override
-    public WithBalanceStep<B> withId(IdModule id) {
+    public WithBalanceStep<B> withId(@Nonnull IdModule id) {
         Preconditions.checkNotNull(id, "Id Module must not be null.");
         this.idModule = id;
         return this;
     }
 
     @Override
-    public B withBalance(BalanceModule balance) {
+    public B withBalance(@Nonnull BalanceModule balance) {
         Preconditions.checkNotNull(balance, "Balance Module must not be null.");
         this.balanceModule = balance;
         return buildStep();
@@ -44,13 +43,14 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
 
     @Override
     public B setApiIdentifier(@Nonnull String identifier) {
+        Preconditions.checkNotNull(identifier, "API Identifier name must not be null.");
         this.apiIdentifier = identifier;
         return buildStep();
     }
 
     @Override
     public B addHolderName(@Nonnull String holderName) {
-        // Preconditions.checkNotNull(holderName, "Holder name must not be null.");
+        Preconditions.checkNotNull(holderName, "Holder name must not be null.");
         holderNames.add(new HolderName(holderName));
         return buildStep();
     }
@@ -69,12 +69,12 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     public B setBankIdentifier(String bankIdentifier) {
-        temporaryStorage.put(BANK_IDENTIFIER_KEY, bankIdentifier);
+        temporaryStorage.put(Account.BANK_IDENTIFIER_KEY, bankIdentifier);
         return buildStep();
     }
 
     private String getBankIdentifier() {
-        return temporaryStorage.get(BANK_IDENTIFIER_KEY);
+        return temporaryStorage.get(Account.BANK_IDENTIFIER_KEY);
     }
 
     public IdModule getIdModule() {
@@ -90,11 +90,11 @@ public abstract class AccountBuilder<A extends Account, B extends BuildStep<A, B
     }
 
     public List<HolderName> getHolderNames() {
-        return holderNames;
+        return ImmutableList.copyOf(holderNames);
     }
 
     public List<AccountFlag> getAccountFlags() {
-        return accountFlags;
+        return ImmutableList.copyOf(accountFlags);
     }
 
     public TemporaryStorage getTransientStorage() {

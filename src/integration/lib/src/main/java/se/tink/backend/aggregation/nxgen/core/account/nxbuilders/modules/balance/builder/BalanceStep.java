@@ -11,5 +11,5 @@ public interface BalanceStep<T> {
      * @param balance The balance to be set
      * @return The next step of the builder
      */
-    T setBalance(@Nonnull Amount balance);
+    T withBalance(@Nonnull Amount balance);
 }

@@ -10,5 +10,5 @@ public interface AccountNumberStep<T> {
      * @param accountNumber The account number
      * @return The next step of the builder
      */
-    AccountNameStep<T> setAccountNumber(@Nonnull String accountNumber);
+    AccountNameStep<T> withAccountNumber(@Nonnull String accountNumber);
 }
