@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.einvoice.SwedbankDefaultApproveEInvoiceExecutor;
@@ -10,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.updatepayment.SwedbankDefaultUpdatePaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.creditcard.SwedbankDefaultCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.SwedbankDefaultEinvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.identitydata.SwedbankIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.investment.SwedbankDefaultInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.loan.SwedbankDefaultLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transactional.SwedbankDefaultTransactionalAccountFetcher;
@@ -35,7 +38,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
+public abstract class SwedbankAbstractAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
 
@@ -174,5 +178,13 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
                         transferExecutor,
                         approveEInvoiceExecutor,
                         updatePaymentExecutor));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final SwedbankIdentityDataFetcher identityDataFetcher =
+                new SwedbankIdentityDataFetcher(apiClient);
+
+        return identityDataFetcher.getIdentityDataResponse();
     }
 }

@@ -30,4 +30,12 @@ public class TouchResponse {
     public String getChosenProfile() {
         return chosenProfile;
     }
+
+    public String getIdentifiedUser() {
+        return identifiedUser;
+    }
+
+    public String getIdentifiedUserName() {
+        return identifiedUserName;
+    }
 }
