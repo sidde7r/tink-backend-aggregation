@@ -48,7 +48,7 @@ public class AmericanExpressV62TransactionFetcher
                         .get(TRANSACTIONS, new TypeReference<Set<TransactionResponse>>() {})
                         .orElse(Collections.emptySet());
         for (TransactionResponse response : transactionResponses) {
-            if (!response.isOkResponse()) {
+            if (!response.isValidResponse()) {
                 continue;
             }
             final String suppIndex = response.getSuppIndexForAccount(account);
