@@ -308,7 +308,8 @@ public class ProviderConfigurationDTO {
         CREDIT_CARDS,
         LOANS,
         INVESTMENTS,
-        PAYMENTS
+        PAYMENTS,
+        IDENTITY_DATA
     }
 
     @JsonProperty("refreshschedule")
