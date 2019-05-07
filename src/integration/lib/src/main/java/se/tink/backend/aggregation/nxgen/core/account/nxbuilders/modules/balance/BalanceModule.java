@@ -47,21 +47,23 @@ public final class BalanceModule {
 
         @Override
         public BalanceBuilderStep setInterestRate(double interestRate) {
+            Preconditions.checkArgument(interestRate >= 0, "Interest rate must not be negative.");
             this.interestRate = interestRate;
             return this;
         }
 
         @Override
         public BalanceBuilderStep setAvailableCredit(@Nonnull Amount availableCredit) {
-            Preconditions.checkNotNull(balance, "Available Credit must not be null.");
-            this.availableCredit = availableCredit;
+            Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
+            this.availableCredit =
+                    new Amount(availableCredit.getCurrency(), availableCredit.getValue());
             return this;
         }
 
         @Override
         public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.balance = balance;
+            this.balance = new Amount(balance.getCurrency(), balance.getValue());
             return this;
         }
 
