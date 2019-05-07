@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Fetcher.DEFAULT_MAX_BILLING_INDEX;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Fetcher.START_BILLING_INDEX;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Storage.TRANSACTIONS;
 
@@ -68,15 +69,16 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
 
     private void fetchAndStoreAllTransactions(Collection<CreditCardAccount> accounts) {
         int billingIndex = START_BILLING_INDEX;
+        int highestBillingIndex = DEFAULT_MAX_BILLING_INDEX;
         Set<TransactionResponse> transactions = new HashSet<>();
         for (CreditCardAccount account : accounts) {
-
             // Sub accounts do not have an api identifier.
             if (Strings.isNullOrEmpty(account.getApiIdentifier())) {
                 continue;
             }
+
             boolean canFetchMore = true;
-            while (canFetchMore) {
+            while (billingIndex <= highestBillingIndex || canFetchMore) {
                 TransactionsRequest request = new TransactionsRequest();
                 request.setSortedIndex(Integer.parseInt(account.getApiIdentifier()))
                         .setBillingIndexList(ImmutableList.of(billingIndex));
@@ -85,6 +87,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
                     transactions.add(resp);
                 }
                 canFetchMore = resp.canFetchMore();
+                highestBillingIndex = resp.getHighestBillingIndex();
                 ++billingIndex;
             }
         }

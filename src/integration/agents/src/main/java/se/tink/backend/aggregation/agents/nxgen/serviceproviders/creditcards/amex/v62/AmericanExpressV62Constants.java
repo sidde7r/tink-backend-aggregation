@@ -86,6 +86,8 @@ public class AmericanExpressV62Constants {
 
     public static class Fetcher {
         public static final int START_BILLING_INDEX = 0;
+        // At least try 5 responses to fetch transactions
+        public static final int DEFAULT_MAX_BILLING_INDEX = 5;
     }
 
     public class Storage {

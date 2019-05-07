@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Fetcher.DEFAULT_MAX_BILLING_INDEX;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.BillingInfoDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TransactionDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ValuesItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,6 +21,18 @@ public class TransactionResponse {
 
     public TransactionDetailsEntity getTransactionDetails() {
         return this.transactionDetails;
+    }
+
+    @JsonIgnore
+    public int getHighestBillingIndex() {
+        if (!isValidResponse()) {
+            return DEFAULT_MAX_BILLING_INDEX;
+        }
+        return transactionDetails.getBillingInfo().getBillingInfoDetails().stream()
+                .map(BillingInfoDetailsEntity::getPageNo)
+                .mapToInt(v -> v)
+                .max()
+                .orElse(DEFAULT_MAX_BILLING_INDEX);
     }
 
     @JsonIgnore
