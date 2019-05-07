@@ -664,7 +664,8 @@
         "INVESTMENTS"
     ],
     "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent": [
-        "CREDIT_CARDS"
+        "CREDIT_CARDS",
+        "IDENTITY_DATA"
     ],
     "nxgen.se.creditcards.entercard.moregolf.MoreGolfMastercardAgent": [
         "CREDIT_CARDS"
@@ -752,11 +753,11 @@
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
-  "nxgen.uk.openbanking.rbs.RbsAgent": [
+    "nxgen.uk.openbanking.rbs.RbsAgent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
-  "nxgen.uk.openbanking.rbs.RbsV31Agent": [
+    "nxgen.uk.openbanking.rbs.RbsV31Agent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
@@ -768,7 +769,7 @@
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
-  "nxgen.uk.openbanking.ulster.UlsterV31Agent": [
+    "nxgen.uk.openbanking.ulster.UlsterV31Agent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
