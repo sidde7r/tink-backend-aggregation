@@ -63,14 +63,14 @@ public class TimelineEntity {
     public Set<Transaction> getTransactions(
             final AmericanExpressV62Configuration configuration, final String suppIndex) {
         Map<String, Boolean> transactionPendingMap = new HashMap<>();
+        // Fetch all pending transaction ids from timeline sub items.
         timelineItems.stream()
                 .flatMap(timeLineItem -> timeLineItem.getSubItems().stream())
                 .forEach(
-                        subItem ->
-                                transactionPendingMap.put(
-                                        subItem.getId(),
-                                        subItem.getType().equalsIgnoreCase("pendingtransaction")));
+                        subItem -> transactionPendingMap.put(subItem.getId(), subItem.isPending()));
+        // Map pending transaction ids to the transaction map to get transaction details.
         return getTransactionMap().entrySet().stream()
+                .filter(entry -> entry.getValue().getSuppIndex() == suppIndex)
                 .map(
                         entry ->
                                 entry.getValue()
