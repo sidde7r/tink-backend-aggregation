@@ -353,6 +353,7 @@ public class ProviderConfigurationStorage {
         SAVINGS_ACCOUNTS,
         CREDIT_CARDS,
         LOANS,
+        IDENTITY_DATA,
         INVESTMENTS,
         PAYMENTS
     }
