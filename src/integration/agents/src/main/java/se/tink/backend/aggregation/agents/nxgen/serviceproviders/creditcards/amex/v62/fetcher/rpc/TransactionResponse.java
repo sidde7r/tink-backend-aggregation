@@ -21,8 +21,8 @@ public class TransactionResponse {
     }
 
     @JsonIgnore
-    public boolean isOkResponse() {
-        return transactionDetails.getStatus() == 0;
+    public boolean isValidResponse() {
+        return transactionDetails.getStatus() == 0 && hasTransactions();
     }
 
     @JsonIgnore

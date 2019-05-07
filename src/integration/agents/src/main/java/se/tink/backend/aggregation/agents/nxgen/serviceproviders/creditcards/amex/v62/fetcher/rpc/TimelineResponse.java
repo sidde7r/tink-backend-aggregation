@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
@@ -18,6 +19,11 @@ public class TimelineResponse {
 
     public TimelineEntity getTimeline() {
         return timeline;
+    }
+
+    @JsonIgnore
+    public boolean isValidResponse() {
+        return !Objects.isNull(timeline) && !Objects.isNull(timeline.getTimelineItems());
     }
 
     @JsonIgnore

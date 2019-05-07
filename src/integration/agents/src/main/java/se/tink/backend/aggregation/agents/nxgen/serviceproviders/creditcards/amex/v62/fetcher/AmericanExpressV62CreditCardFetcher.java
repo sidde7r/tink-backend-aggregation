@@ -81,7 +81,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
                 request.setSortedIndex(Integer.parseInt(account.getApiIdentifier()))
                         .setBillingIndexList(ImmutableList.of(billingIndex));
                 TransactionResponse resp = apiClient.requestTransaction(request);
-                if (resp.isOkResponse() && resp.hasTransactions()) {
+                if (resp.isValidResponse()) {
                     transactions.add(resp);
                 }
                 canFetchMore = resp.canFetchMore();
@@ -112,7 +112,9 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
                     configuration.createTimelineRequest(
                             Integer.valueOf(account.getApiIdentifier()));
             TimelineResponse resp = apiClient.requestTimeline(timelineRequest);
-            timeLines.add(resp);
+            if (resp.isValidResponse()) {
+                timeLines.add(resp);
+            }
 
             subAccounts.addAll(
                     resp.getAccounts(configuration).stream()
