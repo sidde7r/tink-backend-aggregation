@@ -329,8 +329,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_platform",
-    artifact = "net.java.dev.jna:jna-platform:4.5.1",
-    sha1 = "117d52c9f672d8b7ea80a81464c33ef843de9254",
+    artifact = "net.java.dev.jna:jna-platform:5.3.1",
+    sha1 = "925049dd00b3def5ab561709a56b96055fa67011",
 )
 
 maven_jar(
@@ -683,8 +683,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_jna",
-    artifact = "net.java.dev.jna:jna:4.5.1",
-    sha1 = "65bd0cacc9c79a21c6ed8e9f588577cd3c2f85b9",
+    artifact = "net.java.dev.jna:jna:5.3.1",
+    sha1 = "6eb9d07456c56b9c2560722e90382252f0f98405",
 )
 
 maven_jar(

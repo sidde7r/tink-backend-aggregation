@@ -2,7 +2,15 @@ load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_bundle",
     "container_image",
+    "container_layer",
     "container_push",
+)
+
+container_layer(
+    name = "libm4ri_installer",
+    debs = [
+        "//tools:libm4ri_linux",
+    ],
 )
 
 container_image(
@@ -15,6 +23,9 @@ container_image(
         "/usr/share/tink-backend-aggregation/aggregation_service.jar",
         "server",
         "/etc/tink/aggregation-server.yml",
+    ],
+    layers = [
+        ":libm4ri_installer",
     ],
     tars = [
         "//deb:aggregation_bin_tar",
