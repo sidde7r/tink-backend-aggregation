@@ -141,9 +141,11 @@ public class IcaBankenApiClient {
 
     public AccountsEntity fetchAccounts() {
         if (cachedAccounts == null) {
-            cachedAccounts = createRequest(IcaBankenConstants.Urls.ACCOUNTS)
-                    .get(AccountsResponse.class).getBody()
-                    .getAccounts();
+            cachedAccounts =
+                    createRequest(IcaBankenConstants.Urls.ACCOUNTS)
+                            .get(AccountsResponse.class)
+                            .getBody()
+                            .getAccounts();
         }
 
         return cachedAccounts;
