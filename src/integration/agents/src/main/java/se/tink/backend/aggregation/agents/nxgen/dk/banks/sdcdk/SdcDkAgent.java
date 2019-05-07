@@ -44,12 +44,7 @@ public class SdcDkAgent extends SdcAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        if (SdcDkConstants.Authentication.BANKS_WITH_SMS_AUTHENTICATION.contains(
-                agentConfiguration.getBankCode())) {
-            return constructSmsAuthenticator();
-        } else {
-            return constructPinAuthenticator();
-        }
+        return constructSmsAuthenticator();
     }
 
     @Override
