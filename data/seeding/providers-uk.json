@@ -77,6 +77,33 @@
             "type": "BANK"
         },
         {
+            "name": "uk-barclaysv31-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Barclays",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:barclays",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "name": "uk-barclays-oauth2",
             "capabilities": [
                 "TRANSFERS"

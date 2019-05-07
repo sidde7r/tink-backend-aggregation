@@ -713,6 +713,10 @@
         "CHECKING_ACCOUNTS",
         "TRANSFERS"
     ],
+    "nxgen.uk.openbanking.barclays.BarclaysV31Agent": [
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
+    ],
     "nxgen.uk.openbanking.danskebank.DanskeBankAgent": [
         "CHECKING_ACCOUNTS",
         "TRANSFERS"

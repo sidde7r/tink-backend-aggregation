@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.provider.configuration.http.converter;
 
 import com.google.common.collect.Sets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -74,7 +75,14 @@ public class HttpProviderConfigurationConverter {
             return SerializationUtils.serializeToString(capabilities);
         }
 
-        return providerConfigurationCore.getCapabilitiesSerialized();
+        return SerializationUtils.serializeToString(
+                providerConfigurationCore.getCapabilities().stream()
+                        .filter(
+                                capability ->
+                                        !Objects.equals(
+                                                capability,
+                                                ProviderConfigurationCore.Capability.IDENTITY_DATA))
+                        .collect(Collectors.toList()));
     }
 
     private static ProviderConfigurationDTO.AccessType convertAccessType(
