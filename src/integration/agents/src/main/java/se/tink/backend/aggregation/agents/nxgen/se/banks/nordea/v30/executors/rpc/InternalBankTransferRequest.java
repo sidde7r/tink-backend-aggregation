@@ -53,12 +53,12 @@ public class InternalBankTransferRequest {
 
     @JsonIgnore
     public void setFrom(AccountEntity sourceAccount) {
-        this.from = sourceAccount.getUnformattedAccountNumber();
+        this.from = sourceAccount.formatAccountNumber();
     }
 
     @JsonIgnore
     public void setTo(AccountEntity destinationAccount) {
-        this.to = destinationAccount.getUnformattedAccountNumber();
+        this.to = destinationAccount.formatAccountNumber();
     }
 
     @JsonIgnore

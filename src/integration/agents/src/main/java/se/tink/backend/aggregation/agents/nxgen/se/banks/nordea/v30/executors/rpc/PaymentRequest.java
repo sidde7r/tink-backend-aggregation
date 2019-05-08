@@ -53,7 +53,7 @@ public class PaymentRequest {
 
     @JsonIgnore
     public void setFrom(AccountEntity sourceAccount) {
-        this.from = sourceAccount.getUnformattedAccountNumber();
+        this.from = sourceAccount.formatAccountNumber();
     }
 
     @JsonIgnore
