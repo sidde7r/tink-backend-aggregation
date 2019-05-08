@@ -95,7 +95,7 @@ pkg_deb(
         "tesseract-ocr",
         "tesseract-ocr-swe",
         "xvfb",
-        "libm4ri-0.0.20140914",
+        "libm4ri-dev",
     ],
     description = "Tink Backend Aggregation",
     homepage = "https://tink.se",

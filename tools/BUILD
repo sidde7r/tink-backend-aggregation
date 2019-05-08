@@ -17,15 +17,6 @@ filegroup(
 )
 
 filegroup(
-    name = "libm4ri_linux",
-    srcs = [
-        "libm4ri-0.0.20140914_20140914-2-b1_amd64.deb",
-        "libm4ri-dev_20140914-2-b1_amd64.deb",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
     name = "libkbc_wbaes_mac",
     srcs = ["libkbc_wbaes_mac.dylib"],
     visibility = ["//visibility:public"],

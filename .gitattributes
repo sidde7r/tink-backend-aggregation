@@ -1,2 +1,1 @@
 data/secret/**/* filter=git-crypt diff=git-crypt
-*.deb filter=lfs diff=lfs merge=lfs -text

@@ -45,6 +45,13 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
 )
 
+http_archive(
+    name = "base_images_docker",
+    sha256 = "327bad1315c45f3afcf339ada2aca835e84c6a496a70b2c0501100d430d049a7",
+    strip_prefix = "base-images-docker-2019-01-14",
+    urls = ["https://github.com/GoogleCloudPlatform/base-images-docker/archive/2019-01-14.tar.gz"],
+)
+
 # This is NOT needed when going through the language lang_image
 # "repositories" function(s).
 load(
