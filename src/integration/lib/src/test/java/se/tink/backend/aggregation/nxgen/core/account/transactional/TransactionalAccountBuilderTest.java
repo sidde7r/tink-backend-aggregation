@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -11,7 +10,6 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.AccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
@@ -202,12 +200,14 @@ public class TransactionalAccountBuilderTest {
         assertEquals(AccountTypes.SAVINGS, account.getType());
         assertEquals("321573128", account.getIdModule().getUniqueId());
         assertEquals("B-321-573-128", account.getAccountNumber());
-        assertArrayEquals(
-                new AccountIdentifier[] {
-                    new SepaEurIdentifier("DE75512108001245126199"),
-                    new IbanIdentifier("DE75512108001245126199")
-                },
-                account.getIdModule().getIdentifiers().toArray());
+        assertTrue(
+                account.getIdModule()
+                        .getIdentifiers()
+                        .contains(new SepaEurIdentifier("DE75512108001245126199")));
+        assertTrue(
+                account.getIdModule()
+                        .getIdentifiers()
+                        .contains(new IbanIdentifier("DE75512108001245126199")));
         assertEquals("Meine Pezparinger", account.getIdModule().getAccountName());
         assertEquals("UltraSavings ZeroFX", account.getIdModule().getProductName());
 
