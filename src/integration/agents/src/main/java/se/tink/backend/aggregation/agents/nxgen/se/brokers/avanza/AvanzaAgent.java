@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.AvanzaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.AvanzaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.AvanzaTransactionalAccountFetcher;
@@ -23,8 +26,10 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
-public final class AvanzaAgent extends NextGenerationAgent {
+public final class AvanzaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final AvanzaApiClient apiClient;
     private final TemporaryStorage temporaryStorage;
@@ -104,5 +109,11 @@ public final class AvanzaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                SeIdentityData.of("", credentials.getField(Field.Key.USERNAME)));
     }
 }
