@@ -7,7 +7,11 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.Message;
 
-public class AmericanExpressV62Predicates {
+public final class AmericanExpressV62Predicates {
+
+    private AmericanExpressV62Predicates() {
+        throw new AssertionError();
+    }
 
     public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate =
             c -> {
