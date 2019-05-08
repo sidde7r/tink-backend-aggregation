@@ -246,7 +246,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                 if (item == RefreshableItem.IDENTITY_DATA
                         && agent instanceof RefreshIdentityDataExecutor) {
 
-                    context.updateIdentityData(
+                    context.sendIdentityToIdentityAggregatorService(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());
