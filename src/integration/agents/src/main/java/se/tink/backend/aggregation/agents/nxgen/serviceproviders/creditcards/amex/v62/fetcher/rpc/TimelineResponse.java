@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ public class TimelineResponse {
                                                 subCard.transformCardNameToAccountNumber()))
                 .map(SubcardEntity::getSuppIndex)
                 .findAny()
-                .orElseThrow(NoSuchElementException::new);
+                .orElse("");
     }
 
     @JsonIgnore
