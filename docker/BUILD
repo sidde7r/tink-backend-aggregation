@@ -2,30 +2,21 @@ load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_bundle",
     "container_image",
+    "container_layer",
     "container_push",
 )
-load("@base_images_docker//package_managers:download_pkgs.bzl", "download_pkgs")
-load("@base_images_docker//package_managers:install_pkgs.bzl", "install_pkgs")
 
-download_pkgs(
-    name = "wbaes_dependencies_pkgs",
-    image_tar = "@openjdk_jdk8//image",
-    packages = [
-        "libm4ri-dev",
+container_layer(
+    name = "libm4ri_installer",
+    debs = [
+        "@libm4ri_dev//file",
+        "@libm4ri_0.0.20140914//file",
     ],
-)
-
-install_pkgs(
-    name = "wbaes_dependencies_image",
-    image_tar = "@openjdk_jdk8//image",
-    installables_tar = ":wbaes_dependencies_pkgs.tar",
-    installation_cleanup_commands = "rm -rf /var/lib/apt/lists/*",
-    output_image_name = "wbaes_dependencies_pkgs_image",
 )
 
 container_image(
     name = "aggregation_image",
-    base = ":wbaes_dependencies_image",
+    base = "@openjdk_jdk8//image",
     cmd = [
         "java",
         "-jar",
@@ -33,6 +24,9 @@ container_image(
         "/usr/share/tink-backend-aggregation/aggregation_service.jar",
         "server",
         "/etc/tink/aggregation-server.yml",
+    ],
+    layers = [
+        ":libm4ri_installer",
     ],
     tars = [
         "//deb:aggregation_bin_tar",
