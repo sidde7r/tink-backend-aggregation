@@ -1,11 +1,13 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
 
 import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62.AmericanExpressV62SEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -24,7 +26,7 @@ public class AmericanExpressV62PredicatesTest {
 
     @Test
     public void getCardEndingNumber_fromCardEntity() {
-        assertEquals(
+        Assert.assertEquals(
                 AmericanExpressV62Predicates.getCardEndingNumbers.apply(
                         mainCardEntity.getCardNumberDisplay()),
                 AmericanExpressV62PredicatesTestData.CARD_NUMBER);

@@ -14,7 +14,7 @@ public class AmericanExpressV62Predicates {
                 return !"true".equals(c.getCanceled());
             };
 
-    protected static final Function<String, String> getCardEndingNumbers =
+    public static final Function<String, String> getCardEndingNumbers =
             fullCardNumber -> fullCardNumber.split("-")[1].trim();
     private static final String ERROR = "ERROR";
     private static final Logger LOGGER =

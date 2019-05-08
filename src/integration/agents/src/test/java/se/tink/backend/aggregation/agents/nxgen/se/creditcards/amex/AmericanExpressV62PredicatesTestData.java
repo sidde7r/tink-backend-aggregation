@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex;
 
 public class AmericanExpressV62PredicatesTestData {
     public static final String CARD_NUMBER = "12345";
