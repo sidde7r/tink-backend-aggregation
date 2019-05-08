@@ -10,7 +10,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 public class IdModuleTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void missingUniqueId() {
+    public void nullArguments() {
         IdModule.builder()
                 .withUniqueIdentifier(null)
                 .withAccountNumber(null)
@@ -20,12 +20,22 @@ public class IdModuleTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void missingUniqueId() {
+        IdModule.builder()
+                .withUniqueIdentifier(null)
+                .withAccountNumber("1234")
+                .withAccountName("Kelly Hansen")
+                .addIdentifier(new SwedishIdentifier("255-663-996"))
+                .build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void missingSanitizedUniqueId() {
         IdModule.builder()
                 .withUniqueIdentifier("-?--  ")
-                .withAccountNumber(null)
-                .withAccountName(null)
-                .addIdentifier(null)
+                .withAccountNumber("1234")
+                .withAccountName("Kelly Hansen")
+                .addIdentifier(new SwedishIdentifier("255-663-996"))
                 .build();
     }
 
@@ -34,8 +44,8 @@ public class IdModuleTest {
         IdModule.builder()
                 .withUniqueIdentifier("LegitUniqueID")
                 .withAccountNumber(null)
-                .withAccountName(null)
-                .addIdentifier(null)
+                .withAccountName("Kelly Hansen")
+                .addIdentifier(new SwedishIdentifier("255-663-996"))
                 .build();
     }
 
@@ -45,7 +55,7 @@ public class IdModuleTest {
                 .withUniqueIdentifier("LegitUniqueID")
                 .withAccountNumber("1234")
                 .withAccountName(null)
-                .addIdentifier(null)
+                .addIdentifier(new SwedishIdentifier("255-663-996"))
                 .build();
     }
 
