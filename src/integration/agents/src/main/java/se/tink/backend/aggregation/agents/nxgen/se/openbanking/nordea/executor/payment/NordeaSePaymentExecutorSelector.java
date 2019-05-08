@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.executor.payment;
 
-import com.google.common.collect.ImmutableMap;
 import java.util.Collection;
 import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
@@ -56,7 +55,7 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected Collection<PaymentType> getSupportedPaymentTypes() {
-        //TODO: Consider if this should be defined in runtime or static
+        // TODO: Consider if this should be defined in runtime or static
         return Collections.singleton(PaymentType.DOMESTIC);
     }
 }
