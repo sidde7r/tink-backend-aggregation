@@ -67,13 +67,13 @@ public class NordeaExecutorHelper {
                     .filter(this::isCanPayPgbgFromAccount)
                     .filter(account -> isSourceEqualsTransfer(transfer, account))
                     .findFirst()
-                    .orElseThrow(this::throwInvalidSourceAccountError);
+                    .orElseThrow(this::invalidSourceAccountError);
         } else {
             return accounts.stream()
                     .filter(this::isCanTransferFromAccount)
                     .filter(account -> isSourceEqualsTransfer(transfer, account))
                     .findFirst()
-                    .orElseThrow(this::throwInvalidSourceAccountError);
+                    .orElseThrow(this::invalidSourceAccountError);
         }
     }
 
@@ -134,7 +134,7 @@ public class NordeaExecutorHelper {
     protected String getPaymentType(final AccountIdentifier destination) {
         if (!destination.is(AccountIdentifier.Type.SE_PG)
                 && !destination.is(AccountIdentifier.Type.SE_BG)) {
-            throwInvalidPaymentType();
+            throw invalidPaymentType();
         }
         return destination.is(AccountIdentifier.Type.SE_PG)
                 ? NordeaSEConstants.PaymentTypes.PLUSGIRO
@@ -204,7 +204,7 @@ public class NordeaExecutorHelper {
             sign(signatureRequest, id);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                throwTransferError();
+                throw transferError();
             }
         }
     }
@@ -227,7 +227,7 @@ public class NordeaExecutorHelper {
                     HttpResponse response =
                             ((HttpResponseException) initialException.getCause()).getResponse();
                     if (response.getStatus() == HttpStatus.SC_CONFLICT) {
-                        throwBankIdAlreadyInProgressError();
+                        throw bankIdAlreadyInProgressError();
                     }
                 }
 
@@ -250,14 +250,14 @@ public class NordeaExecutorHelper {
                     case WAITING:
                         break;
                     case CANCELLED:
-                        throwBankIdCancelledError();
+                        throw bankIdCancelledError();
                     default:
-                        throwSignTransferFailedError();
+                        throw signTransferFailedError();
                 }
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                    throwBankIdAlreadyInProgressError();
+                    throw bankIdAlreadyInProgressError();
                 }
             }
         }
@@ -274,7 +274,7 @@ public class NordeaExecutorHelper {
                         .findFirst();
 
         if (rejectedTransfer.isPresent()) {
-            throwTransferRejectedError();
+            throw transferRejectedError();
         }
     }
 
@@ -297,46 +297,44 @@ public class NordeaExecutorHelper {
         return !failedTransfer.isPresent();
     }
 
-    protected void throwInvalidDestError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+    protected TransferExecutionException InvalidDestError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
                         this.catalog.getString(
                                 TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
                 .build();
     }
 
-    protected TransferExecutionException throwFailedFetchAccountsError()
-            throws TransferExecutionException {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    protected TransferExecutionException FailedFetchAccountsError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.UNABLE_TO_FETCH_ACCOUNTS)
                 .build();
     }
 
-    protected void throwPaymentFailedError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    protected TransferExecutionException PaymentFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
                 .build();
     }
 
-    private TransferExecutionException throwInvalidSourceAccountError()
-            throws TransferExecutionException {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    private TransferExecutionException invalidSourceAccountError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(
                         this.catalog.getString(
                                 TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                 .build();
     }
 
-    private void throwInvalidPaymentType() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+    private TransferExecutionException invalidPaymentType() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
                         catalog.getString("You can only make payments to Swedish destinations"))
                 .build();
     }
 
-    private void throwBankIdAlreadyInProgressError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+    private TransferExecutionException bankIdAlreadyInProgressError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
                                 .getKey()
@@ -348,8 +346,8 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private void throwBankIdCancelledError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+    private TransferExecutionException bankIdCancelledError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
                 .setEndUserMessage(
@@ -358,8 +356,8 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private void throwSignTransferFailedError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    private TransferExecutionException signTransferFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(
                         TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED
                                 .getKey()
@@ -370,22 +368,22 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    private void throwTransferRejectedError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    private TransferExecutionException transferRejectedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.TRANSFER_REJECTED)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.TRANSFER_REJECTED)
                 .build();
     }
 
-    protected void throwTransferFailedError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    protected TransferExecutionException transferFailedError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setEndUserMessage(
                         this.catalog.getString(
                                 TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED))
                 .build();
     }
 
-    public TransferExecutionException throwEInvoiceFailedError() throws TransferExecutionException {
+    public TransferExecutionException eInvoiceFailedError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.LogMessages.EINVOICE_NOT_FOUND)
                 .setEndUserMessage(
@@ -394,8 +392,8 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    public void throwTransferError() {
-        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+    private TransferExecutionException transferError() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.TRANSFER_ERROR)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.TRANSFER_ERROR)
                 .build();

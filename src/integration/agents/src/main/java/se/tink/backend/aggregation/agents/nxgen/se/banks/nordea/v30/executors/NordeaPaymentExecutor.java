@@ -65,7 +65,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
                 // does not exist in beneficiaries
                 .createRecipient(transfer)
                 // throw exception if destination does not exist
-                .orElseThrow(() -> executorHelper.throwInvalidDestError());
+                .orElseThrow(() -> executorHelper.InvalidDestError());
     }
 
     private void createNewPayment(Transfer transfer) {
@@ -93,7 +93,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
         FetchAccountResponse accountResponse = apiClient.fetchAccount();
 
         if (accountResponse == null) {
-            executorHelper.throwFailedFetchAccountsError();
+            throw executorHelper.FailedFetchAccountsError();
         }
 
         return accountResponse;
@@ -125,7 +125,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             executorHelper.confirm(confirmTransferRequest, paymentId);
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                executorHelper.throwPaymentFailedError();
+                throw executorHelper.PaymentFailedError();
             }
         }
     }

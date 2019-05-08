@@ -50,7 +50,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
                 .filter(EInvoiceEntity::isUnconfirmed)
                 .filter(eInvoiceEntity -> isEInvoiceEqualsTransfer(transfer, eInvoiceEntity))
                 .findFirst()
-                .orElseThrow(() -> executorHelper.throwEInvoiceFailedError());
+                .orElseThrow(() -> executorHelper.eInvoiceFailedError());
     }
 
     private boolean isEInvoiceEqualsTransfer(Transfer transfer, EInvoiceEntity eInvoiceEntity) {
