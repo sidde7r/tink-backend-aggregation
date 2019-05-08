@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,10 @@ public class GenericTypeMapper<V, T> {
         }
 
         return type;
+    }
+
+    public Collection<V> getMappedTypes() {
+        return translator.values().stream().distinct().collect(Collectors.toList());
     }
 
     public boolean isOneOf(T input, Collection<V> types) {

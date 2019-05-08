@@ -143,4 +143,24 @@ public class GenericTypeMapperTest {
                         .build();
         Assert.assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
     }
+
+    @Test
+    public void getMappedTypes_noTypes() {
+        final GenericTypeMapper<AccountTypes, String> mapper =
+                GenericTypeMapper.<AccountTypes, String>genericBuilder()
+                        .build();
+        Assert.assertTrue(mapper.getMappedTypes().isEmpty());
+    }
+    @Test
+    public void getMappedTypes_multipleTypes() {
+        final GenericTypeMapper<AccountTypes, String> mapper =
+                GenericTypeMapper.<AccountTypes, String>genericBuilder()
+                        .put(AccountTypes.CHECKING, "a")
+                        .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .build();
+
+        Assert.assertEquals(2, mapper.getMappedTypes().size());
+        Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CHECKING));
+        Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CREDIT_CARD));
+    }
 }
