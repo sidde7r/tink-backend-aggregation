@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.payment.CreditorValidationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.DebtorValidationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentValidationException;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -22,12 +23,18 @@ public class FailuresEntity {
                             .put(
                                     (description, cause) ->
                                             new PaymentValidationException(description, cause),
-                                    "error.validation",
+                                    "error.validation")
+                            .put(
+                                    (description, cause) ->
+                                            new PaymentAuthenticationException(description, cause),
                                     "error.apikey.missing",
                                     "error.token",
                                     "error.token.invalid",
                                     "error.token.expired",
-                                    "error.token.expired",
+                                    "error.token.expired")
+                            .put(
+                                    (description, cause) ->
+                                            new PaymentAuthorizationException(description, cause),
                                     "error.resource.denied")
                             .build();
 
@@ -49,9 +56,9 @@ public class FailuresEntity {
             }
         }
 
-        Optional<BiFunction<String, Throwable, PaymentException>> error =
-                errorCodeToPaymentExceptionMapper.translate(code);
-        return error.map(e -> e.apply(description, cause))
+        return errorCodeToPaymentExceptionMapper
+                .translate(code)
+                .map(e -> e.apply(description, cause))
                 .orElseGet(() -> new PaymentException(this.toString(), cause));
     }
 
