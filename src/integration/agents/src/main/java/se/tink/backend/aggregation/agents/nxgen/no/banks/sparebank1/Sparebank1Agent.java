@@ -40,6 +40,7 @@ public class Sparebank1Agent extends NextGenerationAgent {
     public Sparebank1Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         String bankId = request.getProvider().getPayload();
         apiClient = new Sparebank1ApiClient(client, bankId);
@@ -56,7 +57,6 @@ public class Sparebank1Agent extends NextGenerationAgent {
         return apiClient.get(restRootLink.getHref(), RestRootResponse.class);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(Sparebank1Constants.Headers.USER_AGENT);
         AddRefererFilter filter = new AddRefererFilter();

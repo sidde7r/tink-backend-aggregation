@@ -32,13 +32,13 @@ public class BunqAgent extends NextGenerationAgent {
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
         BunqConfiguration agentConfiguration = new BunqConfiguration(backendHost);
         this.apiClient = new BunqApiClient(client, agentConfiguration);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BunqRequiredHeadersFilter(sessionStorage));
         client.addFilter(new BunqSignatureHeaderFilter(persistentStorage, client.getUserAgent()));

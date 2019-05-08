@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SebKortAgent extends NextGenerationAgent {
@@ -37,9 +36,6 @@ public class SebKortAgent extends NextGenerationAgent {
         this.apiClient = new SebKortApiClient(client, sessionStorage, config);
         this.config = config;
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

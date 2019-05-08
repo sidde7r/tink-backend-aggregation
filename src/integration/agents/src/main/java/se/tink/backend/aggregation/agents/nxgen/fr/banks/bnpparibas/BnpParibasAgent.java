@@ -31,11 +31,11 @@ public class BnpParibasAgent extends NextGenerationAgent {
     public BnpParibasAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new BnpParibasApiClient(client);
         this.bnpParibasPersistentStorage = new BnpParibasPersistentStorage(persistentStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(BnpParibasConstants.Auth.USER_AGENT);
     }

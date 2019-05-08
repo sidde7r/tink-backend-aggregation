@@ -29,6 +29,7 @@ public class NordeaNoAgent extends NordeaV17Agent {
                 context,
                 signatureKeyPair,
                 new NordeaNoParser(new NordeaNoTransactionParser()));
+        configureHttpClient(client);
     }
 
     @Override
@@ -38,7 +39,6 @@ public class NordeaNoAgent extends NordeaV17Agent {
                         client, request.getCredentials(), NordeaNoConstants.MARKET_CODE);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaNoFilter());
         client.disableSignatureRequestHeader();

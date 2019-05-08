@@ -24,9 +24,6 @@ public class DanskeBankNOAgent extends DanskeBankAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
-
-    @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
                 new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration));

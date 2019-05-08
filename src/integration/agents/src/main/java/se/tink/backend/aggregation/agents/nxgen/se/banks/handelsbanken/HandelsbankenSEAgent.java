@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.HandelsbankenSECreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.HandelsbankenSECreditCardTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.HandelsbankenSEEInvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.identity.HandelsbankenSEIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.HandelsbankenSEInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEAccountTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenSEUpcomingTransactionFetcher;
@@ -41,7 +44,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent
-        extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
+        extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
+        implements RefreshIdentityDataExecutor {
 
     public HandelsbankenSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -163,5 +167,10 @@ public class HandelsbankenSEAgent
             HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return new TransactionKeyPaginationController<>(
                 new HandelsbankenSECreditCardTransactionPaginator(client, sessionStorage));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return HandelsbankenSEIdentityFetcher.fetchIdentityData(persistentStorage, credentials);
     }
 }

@@ -32,6 +32,7 @@ public class AktiaAgent extends NextGenerationAgent {
     public AktiaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         this.apiClient = new AktiaApiClient(client);
 
@@ -45,7 +46,6 @@ public class AktiaAgent extends NextGenerationAgent {
                         AktiaConstants.DEVICE_PROFILE);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(AktiaConstants.HttpHeaders.USER_AGENT);
         client.disableSignatureRequestHeader();

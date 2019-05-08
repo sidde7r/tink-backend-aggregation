@@ -28,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
@@ -41,11 +40,6 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
-    }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        // NOOP
     }
 
     @Override

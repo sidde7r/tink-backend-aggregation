@@ -34,11 +34,11 @@ public class BankdataAgent extends NextGenerationAgent {
     public BankdataAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         bankClient = new BankdataApiClient(client, request.getProvider());
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setDebugOutput(false);
     }

@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ErsteBankPasswordAgent extends NextGenerationAgent {
@@ -34,9 +33,6 @@ public class ErsteBankPasswordAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.ersteBankApiClient = new ErsteBankApiClient(this.client, persistentStorage);
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

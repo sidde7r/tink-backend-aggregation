@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45;
 
-public class AmericanExpressConstants {
+public final class AmericanExpressConstants {
+
+    private AmericanExpressConstants() {
+        throw new AssertionError();
+    }
 
     public static final String BASE_API = "https://global.americanexpress.com";
 

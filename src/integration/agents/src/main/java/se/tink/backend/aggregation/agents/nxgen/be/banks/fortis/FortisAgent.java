@@ -27,6 +27,7 @@ public class FortisAgent extends NextGenerationAgent {
     public FortisAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         String[] payload = request.getProvider().getPayload().split(" ");
         String baseUrl = payload[0];
@@ -35,7 +36,6 @@ public class FortisAgent extends NextGenerationAgent {
         this.apiClient = new FortisApiClient(client, baseUrl, distributorId);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new HtmlReader());
     }

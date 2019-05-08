@@ -32,11 +32,11 @@ public class OmaspAgent extends NextGenerationAgent {
     public OmaspAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
 
         apiClient = new OmaspApiClient(client, sessionStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new OmaspAccessTokenFilter(sessionStorage));
     }

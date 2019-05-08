@@ -37,12 +37,12 @@ public class ICSAgent extends NextGenerationAgent {
     public ICSAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         clientName = request.getProvider().getPayload().split(" ")[0];
         redirectUri = request.getProvider().getPayload().split(" ")[1];
         apiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
     }

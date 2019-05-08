@@ -29,6 +29,7 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
     public DanskeBankDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankDKConfiguration());
+        configureHttpClient(client);
     }
 
     @Override
@@ -37,7 +38,6 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
         return new DanskeBankDKApiClient(client, (DanskeBankDKConfiguration) configuration);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
     }

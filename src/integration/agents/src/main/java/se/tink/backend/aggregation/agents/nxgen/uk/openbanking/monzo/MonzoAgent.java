@@ -22,7 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MonzoAgent extends NextGenerationAgent {
@@ -36,9 +35,6 @@ public class MonzoAgent extends NextGenerationAgent {
         apiClient = new MonzoApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {

@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BbvaMxAgent extends NextGenerationAgent {
@@ -31,9 +30,6 @@ public class BbvaMxAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.bbvaApiClient = new BbvaMxApiClient(client, persistentStorage);
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

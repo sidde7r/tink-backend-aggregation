@@ -27,7 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
@@ -57,9 +56,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
         // Use this multiIp gateway to originate from different IP addresses.
         gateway.setMultiIpGateway(configuration.getIntegrations());
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {

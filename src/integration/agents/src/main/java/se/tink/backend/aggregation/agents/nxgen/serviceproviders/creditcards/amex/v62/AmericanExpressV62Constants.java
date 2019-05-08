@@ -2,7 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.am
 
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
-public class AmericanExpressV62Constants {
+public final class AmericanExpressV62Constants {
+
+    private AmericanExpressV62Constants() {
+        throw new AssertionError();
+    }
 
     public static final String BASE_API = "https://global.americanexpress.com";
     public static final String NOT_APPLICABLE = "n/a";

@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v45;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
+public final class AmericanExpressSEConstants {
 
-public class AmericanExpressSEConstants extends AmericanExpressConstants {
+    private AmericanExpressSEConstants() {
+        throw new AssertionError();
+    }
 
     public static class HeaderValues {
         public static final String APP_ID = "se.co.americanexpress.amexservice";
