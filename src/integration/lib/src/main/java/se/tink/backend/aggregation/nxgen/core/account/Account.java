@@ -295,7 +295,7 @@ public abstract class Account {
     }
 
     public Amount getBalance() {
-        return balanceModule.getBalance();
+        return balance != null ? balance : balanceModule.getBalance();
     }
 
     public BalanceModule getBalanceModule() {
