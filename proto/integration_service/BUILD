@@ -1,12 +1,18 @@
-load("@org_pubref_rules_protobuf//java:rules.bzl", "java_proto_library")
+load("@build_stack_rules_proto//java:java_grpc_library.bzl", "java_grpc_library")
 
-java_proto_library(
+java_grpc_library(
     name = "tink-grpc-integration",
-    protos = [
+    visibility = ["//visibility:public"],
+    deps = [
+        ":integration-proto",
+    ],
+)
+
+proto_library(
+    name = "integration-proto",
+    srcs = [
         "models.proto",
         "rpc.proto",
         "services.proto",
     ],
-    visibility = ["//visibility:public"],
-    with_grpc = True,
 )
