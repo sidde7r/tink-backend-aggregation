@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.creditcards.amex;
 
-public class AmericanExpressBEConstants {
+public final class AmericanExpressBEConstants {
+
+    private AmericanExpressBEConstants() {
+        throw new AssertionError();
+    }
 
     public static final String MARKET = "BE";
     public static final String PROVIDER_NAME = "be-americanexpress-password";
