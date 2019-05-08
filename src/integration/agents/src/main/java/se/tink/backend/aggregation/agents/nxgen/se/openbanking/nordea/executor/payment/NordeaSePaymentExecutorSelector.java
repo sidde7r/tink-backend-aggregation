@@ -55,7 +55,6 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected Collection<PaymentType> getSupportedPaymentTypes() {
-        // TODO: Consider if this should be defined in runtime or static
-        return Collections.singleton(PaymentType.DOMESTIC);
+        return accountIdentifiersToPaymentTypeMapper.getMappedTypes();
     }
 }
