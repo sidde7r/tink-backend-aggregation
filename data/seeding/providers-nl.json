@@ -137,6 +137,21 @@
             "tutorialUrl": null,
             "fields": [],
             "payload": "tink"
+        },
+        {
+            "name": "nl-volksbank-oauth2",
+            "displayName": "Volksbank",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }

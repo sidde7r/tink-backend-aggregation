@@ -120,6 +120,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
                     .build();
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private SSLContext sslContext;
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
@@ -138,6 +139,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public String getUserAgent() {
         Preconditions.checkNotNull(userAgent);
         return this.userAgent;
+    }
+
+    public SSLContext getSslContext() {
+        return sslContext;
     }
 
     public String getHeaderAggregatorIdentifier() {
@@ -228,7 +233,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     private void constructInternalClient() {
-        SSLContext sslContext;
         try {
             sslContext = this.internalSslContextBuilder.build();
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
@@ -239,7 +243,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             this.internalRequestConfigBuilder.setCookieSpec(this.cookieSpec);
         }
 
-        RequestConfig reguestConfig = this.internalRequestConfigBuilder.build();
+        RequestConfig requestConfig = this.internalRequestConfigBuilder.build();
 
         if (!this.followRedirects) {
             // Add a redirect handler to deny all redirects.
@@ -291,7 +295,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         CloseableHttpClient httpClient =
                 this.internalHttpClientBuilder
                         .addInterceptorFirst(contentEncodingFixerInterceptor)
-                        .setDefaultRequestConfig(reguestConfig)
+                        .setDefaultRequestConfig(requestConfig)
                         .setSslcontext(sslContext)
                         .setRedirectStrategy(this.redirectStrategy)
                         .build();
