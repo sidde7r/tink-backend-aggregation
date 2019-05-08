@@ -38,7 +38,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         final FetchAccountResponse accountResponse =
                 Optional.ofNullable(apiClient.fetchAccount())
-                        .orElseThrow(executorHelper::FailedFetchAccountsError);
+                        .orElseThrow(executorHelper::failedFetchAccountsError);
 
         final TransferMessageFormatter transferMessageFormatter =
                 new TransferMessageFormatter(
@@ -68,7 +68,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     createDestinationAccount(transfer.getDestination());
 
             if (!destinationExternalAccount.isPresent()) {
-                throw executorHelper.InvalidDestError();
+                throw executorHelper.invalidDestError();
             }
             executeExternalBankTransfer(
                     transfer,

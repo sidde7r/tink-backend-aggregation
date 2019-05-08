@@ -297,7 +297,7 @@ public class NordeaExecutorHelper {
         return !failedTransfer.isPresent();
     }
 
-    protected TransferExecutionException InvalidDestError() {
+    protected TransferExecutionException invalidDestError() {
         return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
                         this.catalog.getString(
@@ -305,13 +305,13 @@ public class NordeaExecutorHelper {
                 .build();
     }
 
-    protected TransferExecutionException FailedFetchAccountsError() {
+    protected TransferExecutionException failedFetchAccountsError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.UNABLE_TO_FETCH_ACCOUNTS)
                 .build();
     }
 
-    protected TransferExecutionException PaymentFailedError() {
+    protected TransferExecutionException paymentFailedError() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                 .setMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
                 .setEndUserMessage(NordeaSEConstants.ErrorCodes.PAYMENT_ERROR)
