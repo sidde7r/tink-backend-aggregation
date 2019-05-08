@@ -160,6 +160,7 @@ public final class TypeMapperTest {
                         .build();
         Assert.assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
     }
+
     @Test
     public void setDefaultReturnValue_defaultValueSet() {
         final TypeMapper<AccountTypes> mapper =
@@ -171,6 +172,7 @@ public final class TypeMapperTest {
 
         Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
     }
+
     @Test
     public void setDefaultReturnValue_noDefaulyValueSet() {
         final TypeMapper<AccountTypes> mapper =

@@ -147,10 +147,10 @@ public class GenericTypeMapperTest {
     @Test
     public void getMappedTypes_noTypes() {
         final GenericTypeMapper<AccountTypes, String> mapper =
-                GenericTypeMapper.<AccountTypes, String>genericBuilder()
-                        .build();
+                GenericTypeMapper.<AccountTypes, String>genericBuilder().build();
         Assert.assertTrue(mapper.getMappedTypes().isEmpty());
     }
+
     @Test
     public void getMappedTypes_multipleTypes() {
         final GenericTypeMapper<AccountTypes, String> mapper =
@@ -175,6 +175,7 @@ public class GenericTypeMapperTest {
 
         Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
     }
+
     @Test
     public void setDefaultReturnValue_noDefaulyValueSet() {
         final GenericTypeMapper<AccountTypes, String> mapper =
