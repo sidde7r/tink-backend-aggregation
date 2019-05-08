@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.fetcher.rpc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -7,9 +7,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Collection;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.fetcher.rpc.TransactionResponseTestDataHelper.ResponseType;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62.AmericanExpressV62SEConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponseTestDataHelper.ResponseType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionResponse;
 
 public class TransactionResponseTest {
     AmericanExpressV62Configuration config = new AmericanExpressV62SEConfiguration();
