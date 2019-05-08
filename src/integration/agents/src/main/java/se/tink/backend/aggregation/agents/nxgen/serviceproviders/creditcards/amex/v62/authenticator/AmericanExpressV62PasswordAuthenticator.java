@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.Tags;
@@ -107,7 +106,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                         // Double filtering for backward compatibility
                         .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
                         .collect(Collectors.toList());
-        instanceStorage.put(AmericanExpressConstants.Tags.CARD_LIST, cardList);
+        instanceStorage.put(AmericanExpressV62Constants.Tags.CARD_LIST, cardList);
     }
 
     private String generateAndStoreUuidFromValue(String tag, String value) {

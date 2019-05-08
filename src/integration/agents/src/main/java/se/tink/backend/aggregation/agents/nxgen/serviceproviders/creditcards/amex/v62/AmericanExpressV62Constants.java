@@ -98,4 +98,10 @@ public final class AmericanExpressV62Constants {
         public static final String TIME_LINES = "timeLines";
         public static final String TRANSACTIONS = "transactions";
     }
+
+    public static final class StatusCode {
+        public static final String INCORRECT = "incorrect";
+        public static final String SECOND_ATTEMPT = "secondAttempt";
+        public static final String REVOKED = "revoked";
+    }
 }
