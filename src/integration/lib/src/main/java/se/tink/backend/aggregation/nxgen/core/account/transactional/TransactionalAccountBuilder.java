@@ -23,7 +23,7 @@ public class TransactionalAccountBuilder
 
     @Override
     public WithIdStep<TransactionalBuildStep> withType(AccountTypes accountType) {
-        Preconditions.checkState(
+        Preconditions.checkArgument(
                 ALLOWED_ACCOUNT_TYPES.contains(accountType),
                 "Account Type must be CHECKING, SAVINGS or OTHER.");
         this.accountType = accountType;

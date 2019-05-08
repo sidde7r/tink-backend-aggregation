@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional.TransactionalBuildStep;
@@ -19,17 +18,8 @@ public class TransactionalAccount extends Account {
     private AccountTypes accountType;
 
     TransactionalAccount(TransactionalAccountBuilder builder) {
+        super(builder);
         this.accountType = builder.getAccountType();
-        this.name = builder.getIdModule().getAccountName();
-        this.accountNumber = builder.getIdModule().getAccountNumber();
-        this.balance = builder.getBalanceModule().getBalance();
-        this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
-        this.identifiers = builder.getIdModule().getIdentifiers();
-        this.uniqueIdentifier = builder.getIdModule().getUniqueId();
-        this.apiIdentifier = builder.getApiIdentifier();
-        this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
-        this.temporaryStorage = builder.getTransientStorage();
-        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
     }
 
     public static WithTypeStep<TransactionalBuildStep> nxBuilder() {

@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -38,8 +40,12 @@ public abstract class Account {
     private static final Logger logger = LoggerFactory.getLogger(Account.class);
 
     static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
+
+    protected BalanceModule balanceModule;
+    protected IdModule idModule;
     protected String name;
     protected String productName;
+
     protected String accountNumber;
     protected Amount balance;
     protected Amount availableCredit;
@@ -51,7 +57,22 @@ public abstract class Account {
     protected Set<AccountFlag> accountFlags;
 
     // Exists for interoperability only, do not ever use
-    protected Account() {}
+    protected Account(AccountBuilder<? extends Account, ?> builder) {
+        // These exist for interoperability and will eventually be removed
+        this.name = builder.getIdModule().getAccountName();
+        this.accountNumber = builder.getIdModule().getAccountNumber();
+        this.balance = builder.getBalanceModule().getBalance();
+        this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
+        this.identifiers = builder.getIdModule().getIdentifiers();
+        this.uniqueIdentifier = builder.getIdModule().getUniqueId();
+
+        this.balanceModule = builder.getBalanceModule();
+        this.idModule = builder.getIdModule();
+        this.apiIdentifier = builder.getApiIdentifier();
+        this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
+        this.temporaryStorage = builder.getTransientStorage();
+        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
+    }
 
     // This will be removed as part of the improved step builder + agent builder refactoring project
     @Deprecated
@@ -274,6 +295,18 @@ public abstract class Account {
     }
 
     public Amount getBalance() {
+        return balanceModule.getBalance();
+    }
+
+    public BalanceModule getBalanceModule() {
+        return balanceModule;
+    }
+
+    public IdModule getIdModule() {
+        return idModule;
+    }
+
+    public Amount getAccountBalance() {
         return new Amount(this.balance.getCurrency(), this.balance.getValue());
     }
 
