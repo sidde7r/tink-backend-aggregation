@@ -22,6 +22,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
                 builder.getIgnoredKeys().stream()
                         .map(k -> k.toLowerCase())
                         .collect(Collectors.toSet()));
+        defaultValue = builder.getDefaultValue();
 
         ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<String>> entry : builder.getReversed().entrySet()) {
@@ -55,12 +56,10 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
     public Optional<V> translate(String typeKey) {
         if (Strings.isNullOrEmpty(typeKey)) {
             // `typeKey` comes from the bank and can be null.
-            return Optional.empty();
+            return defaultValue;
         }
 
-        typeKey = typeKey.toLowerCase();
-
-        return super.translate(typeKey);
+        return super.translate(typeKey.toLowerCase());
     }
 
     public abstract static class TypeMapperBuilder<V, B extends TypeMapperBuilder<V, B>>
@@ -95,6 +94,12 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
         @Override
         public TypeMapperBuilder<V, B> ignoreKeys(String... keys) {
             self().ignoredKeys.addAll(Arrays.asList(keys));
+            return self();
+        }
+
+        @Override
+        public TypeMapperBuilder<V, B> setDefaultTranslationValue(V defaultTranslationValue) {
+            self().defaultValue = Optional.ofNullable(defaultTranslationValue);
             return self();
         }
 

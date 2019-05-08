@@ -163,4 +163,26 @@ public class GenericTypeMapperTest {
         Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CHECKING));
         Assert.assertTrue(mapper.getMappedTypes().contains(AccountTypes.CREDIT_CARD));
     }
+
+    @Test
+    public void setDefaultReturnValue_defaultValueSet() {
+        final GenericTypeMapper<AccountTypes, String> mapper =
+                GenericTypeMapper.<AccountTypes, String>genericBuilder()
+                        .put(AccountTypes.CHECKING, "a")
+                        .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .setDefaultTranslationValue(AccountTypes.DUMMY)
+                        .build();
+
+        Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
+    }
+    @Test
+    public void setDefaultReturnValue_noDefaulyValueSet() {
+        final GenericTypeMapper<AccountTypes, String> mapper =
+                GenericTypeMapper.<AccountTypes, String>genericBuilder()
+                        .put(AccountTypes.CHECKING, "a")
+                        .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .build();
+
+        Assert.assertEquals(Optional.empty(), mapper.translate("z"));
+    }
 }
