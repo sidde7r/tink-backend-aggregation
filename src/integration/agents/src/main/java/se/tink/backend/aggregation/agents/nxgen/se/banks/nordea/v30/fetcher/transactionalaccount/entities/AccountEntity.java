@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tra
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
@@ -67,7 +69,7 @@ public class AccountEntity implements GeneralAccountEntity {
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(maskAccountNumber())
-                .setAccountNumber(getUnformattedAccountNumber())
+                .setAccountNumber(formatAccountNumber())
                 .setBalance(new Amount(currency, availableBalance))
                 .setAlias(nickname)
                 .addAccountIdentifier(
@@ -111,14 +113,13 @@ public class AccountEntity implements GeneralAccountEntity {
     // clearing number is added
     @JsonIgnore
     public String getTransferAccountNumber() {
-        SocialSecurityNumber.Sweden pnr =
-                new SocialSecurityNumber.Sweden(getUnformattedAccountNumber());
+        SocialSecurityNumber.Sweden pnr = new SocialSecurityNumber.Sweden(formatAccountNumber());
         if (NordeaSEConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(productName)
                 && pnr.isValid()) {
             return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER
-                    + getUnformattedAccountNumber();
+                    + formatAccountNumber();
         } else {
-            return getUnformattedAccountNumber();
+            return formatAccountNumber();
         }
     }
 
@@ -128,9 +129,15 @@ public class AccountEntity implements GeneralAccountEntity {
     }
 
     @JsonIgnore
-    public String getUnformattedAccountNumber() {
-        // account number format NAID-SE-SEK-ACCOUNTNUMBER
-        return accountNumber.split("-")[3];
+    public String formatAccountNumber() {
+        final Pattern p = Pattern.compile(".*?([0-9]{10,})");
+        // account number comes in format "NAID-SE-SEK-<ACCOUNTNUMBER>"
+        Matcher matcher = p.matcher(accountNumber);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException(
+                    "Could not parse account number from " + accountNumber);
+        }
+        return matcher.group(1);
     }
 
     @JsonIgnore
