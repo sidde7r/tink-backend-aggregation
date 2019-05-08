@@ -77,6 +77,21 @@ git_repository(
     commit = "563b674a2ce6650d459732932ea2bc98c9c9a9bf",
 )
 
+# libm4ri library, needed by https://github.com/tink-ab/tink-backend-aggregation/tree/master/tools/libkbc_wbaes_src
+http_file(
+    name =  "libm4ri_dev",
+    downloaded_file_path = "libm4ri-dev_20140914-2+b1_amd64.deb",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-dev_20140914-2+b1_amd64.deb"],
+    sha256 = "040b81df10945380424d8874d38c062f45a5fee6886ae8e6963c87393ba84cd9",
+)
+
+http_file(
+    name =  "libm4ri_0.0.20140914",
+    downloaded_file_path = "libm4ri-0.0.20140914_20140914-2+b1_amd64.deb",
+    urls = ["http://ftp.br.debian.org/debian/pool/main/libm/libm4ri/libm4ri-0.0.20140914_20140914-2+b1_amd64.deb"],
+    sha256 = "c2f38d51730b6e9a73e2f4d2e0edfadf647a9889da9d06a15abca07d3eccc6f1",
+)
+
 # TODO: Build these
 http_file(
     name = "protoc_gen_grpc_java_linux_x86_64",
@@ -329,8 +344,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_platform",
-    artifact = "net.java.dev.jna:jna-platform:4.5.1",
-    sha1 = "117d52c9f672d8b7ea80a81464c33ef843de9254",
+    artifact = "net.java.dev.jna:jna-platform:5.3.1",
+    sha1 = "925049dd00b3def5ab561709a56b96055fa67011",
 )
 
 maven_jar(
@@ -683,8 +698,8 @@ maven_jar(
 
 maven_jar(
     name = "net_java_dev_jna_jna",
-    artifact = "net.java.dev.jna:jna:4.5.1",
-    sha1 = "65bd0cacc9c79a21c6ed8e9f588577cd3c2f85b9",
+    artifact = "net.java.dev.jna:jna:5.3.1",
+    sha1 = "6eb9d07456c56b9c2560722e90382252f0f98405",
 )
 
 maven_jar(
