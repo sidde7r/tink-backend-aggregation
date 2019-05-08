@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62Agent extends NextGenerationAgent
@@ -35,6 +36,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     private final AmericanExpressV62ApiClient apiClient;
     private final AmericanExpressV62Configuration config;
     private final MultiIpGateway gateway;
+    private final Storage instanceStorage;
 
     protected AmericanExpressV62Agent(
             CredentialsRequest request,
@@ -46,6 +48,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                 new AmericanExpressV62ApiClient(client, sessionStorage, persistentStorage, config);
         this.config = config;
         this.gateway = new MultiIpGateway(client, credentials);
+        this.instanceStorage = new Storage();
     }
 
     @Override
@@ -61,7 +64,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
                 new AmericanExpressV62PasswordAuthenticator(
-                        apiClient, persistentStorage, sessionStorage));
+                        apiClient, persistentStorage, sessionStorage, instanceStorage));
     }
 
     @Override
@@ -73,10 +76,10 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         AmericanExpressV62CreditCardFetcher americanExpressV62CreditCardFetcher =
-                AmericanExpressV62CreditCardFetcher.create(sessionStorage, config, apiClient);
+                AmericanExpressV62CreditCardFetcher.create(config, apiClient, instanceStorage);
 
         AmericanExpressV62TransactionFetcher americanExpressV62TransactionFetcher =
-                AmericanExpressV62TransactionFetcher.create(config, sessionStorage);
+                AmericanExpressV62TransactionFetcher.create(config, instanceStorage);
 
         TransactionPagePaginationController<CreditCardAccount>
                 amexV66TransactionPagePaginationController =

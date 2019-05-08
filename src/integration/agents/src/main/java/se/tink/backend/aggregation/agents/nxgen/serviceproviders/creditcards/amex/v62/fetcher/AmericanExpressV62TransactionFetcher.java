@@ -15,23 +15,23 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
 
     private final AmericanExpressV62Configuration config;
-    private final SessionStorage sessionStorage;
+    private final Storage instanceStorage;
 
     private AmericanExpressV62TransactionFetcher(
-            AmericanExpressV62Configuration config, SessionStorage sessionStorage) {
+            AmericanExpressV62Configuration config, final Storage instanceStorage) {
         this.config = config;
-        this.sessionStorage = sessionStorage;
+        this.instanceStorage = instanceStorage;
     }
 
     public static AmericanExpressV62TransactionFetcher create(
-            AmericanExpressV62Configuration config, SessionStorage sessionStorage) {
-        return new AmericanExpressV62TransactionFetcher(config, sessionStorage);
+            AmericanExpressV62Configuration config, Storage instanceStorage) {
+        return new AmericanExpressV62TransactionFetcher(config, instanceStorage);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class AmericanExpressV62TransactionFetcher
         Set<Transaction> transactions = new HashSet<>();
         // Fetch transactions
         Set<TransactionResponse> transactionResponses =
-                sessionStorage
+                instanceStorage
                         .get(TRANSACTIONS, new TypeReference<Set<TransactionResponse>>() {})
                         .orElse(Collections.emptySet());
         for (TransactionResponse response : transactionResponses) {
@@ -57,7 +57,7 @@ public class AmericanExpressV62TransactionFetcher
 
         // Fetch timeline and parse pending transactions from it.
         Set<TimelineResponse> timelineResponses =
-                sessionStorage
+                instanceStorage
                         .get(TIME_LINES, new TypeReference<Set<TimelineResponse>>() {})
                         .orElse(Collections.emptySet());
         for (TimelineResponse timelineResponse : timelineResponses) {

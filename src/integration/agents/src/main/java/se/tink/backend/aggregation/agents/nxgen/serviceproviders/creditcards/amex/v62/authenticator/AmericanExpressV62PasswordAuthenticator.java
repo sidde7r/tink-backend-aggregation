@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
 
@@ -31,14 +32,17 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
     private final AmericanExpressV62ApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final SessionStorage sessionStorage;
+    private final Storage instanceStorage;
 
     public AmericanExpressV62PasswordAuthenticator(
             AmericanExpressV62ApiClient apiClient,
             PersistentStorage persistentStorage,
-            SessionStorage sessionStorage) {
+            SessionStorage sessionStorage,
+            final Storage instanceStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
+        this.instanceStorage = instanceStorage;
     }
 
     @Override
@@ -103,7 +107,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
                         // Double filtering for backward compatibility
                         .filter(AmericanExpressV62Predicates.cancelledCardSummaryValuePredicate)
                         .collect(Collectors.toList());
-        sessionStorage.put(AmericanExpressConstants.Tags.CARD_LIST, cardList);
+        instanceStorage.put(AmericanExpressConstants.Tags.CARD_LIST, cardList);
     }
 
     private String generateAndStoreUuidFromValue(String tag, String value) {

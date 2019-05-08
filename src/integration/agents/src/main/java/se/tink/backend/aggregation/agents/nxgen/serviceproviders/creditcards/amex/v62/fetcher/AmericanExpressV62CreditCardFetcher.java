@@ -24,34 +24,34 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<CreditCardAccount> {
 
-    private final SessionStorage sessionStorage;
     private final AmericanExpressV62Configuration configuration;
     private final AmericanExpressV62ApiClient apiClient;
+    private final Storage instanceStorage;
 
     private AmericanExpressV62CreditCardFetcher(
-            SessionStorage sessionStorage,
             AmericanExpressV62Configuration configuration,
-            final AmericanExpressV62ApiClient apiClient) {
+            final AmericanExpressV62ApiClient apiClient,
+            final Storage instanceStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
         this.configuration = configuration;
+        this.instanceStorage = instanceStorage;
     }
 
     public static AmericanExpressV62CreditCardFetcher create(
-            SessionStorage sessionStorage,
             AmericanExpressV62Configuration config,
-            AmericanExpressV62ApiClient apiClient) {
-        return new AmericanExpressV62CreditCardFetcher(sessionStorage, config, apiClient);
+            AmericanExpressV62ApiClient apiClient,
+            Storage transactionStorage) {
+        return new AmericanExpressV62CreditCardFetcher(config, apiClient, transactionStorage);
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         List<CardEntity> cardEntities =
-                sessionStorage
+                instanceStorage
                         .get(
                                 AmericanExpressV62Constants.Tags.CARD_LIST,
                                 new TypeReference<List<CardEntity>>() {})
@@ -92,7 +92,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
             }
         }
 
-        sessionStorage.put(TRANSACTIONS, transactions);
+        instanceStorage.put(TRANSACTIONS, transactions);
     }
 
     private Collection<? extends CreditCardAccount> fetchSubAccountsFromTimeline(
@@ -125,7 +125,7 @@ public class AmericanExpressV62CreditCardFetcher implements AccountFetcher<Credi
                             .filter(a -> !existingSubAccountNumbers.contains(a.getAccountNumber()))
                             .collect(Collectors.toList()));
         }
-        sessionStorage.put(AmericanExpressV62Constants.Storage.TIME_LINES, timeLines);
+        instanceStorage.put(AmericanExpressV62Constants.Storage.TIME_LINES, timeLines);
         return subAccounts;
     }
 }
