@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BalancesResponse {
 
-    public List<BalanceEntity> balances;
+    private List<BalanceEntity> balances;
 
     public List<BalanceEntity> getBalances() {
         return balances;

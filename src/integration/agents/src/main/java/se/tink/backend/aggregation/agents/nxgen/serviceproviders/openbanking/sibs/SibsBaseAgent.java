@@ -29,6 +29,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SibsBaseAgent extends NextGenerationAgent {
 
+    private final String clientName;
     private final SibsBaseApiClient apiClient;
 
     public SibsBaseAgent(
@@ -36,9 +37,8 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
 
         apiClient = new SibsBaseApiClient(client, persistentStorage);
+        clientName = request.getProvider().getPayload();
     }
-
-    protected abstract String getClientName();
 
     protected abstract String getIntegrationName();
 
@@ -55,8 +55,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
     protected SibsConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
-                .getClientConfiguration(
-                        getIntegrationName(), getClientName(), SibsConfiguration.class)
+                .getClientConfiguration(getIntegrationName(), clientName, SibsConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
@@ -65,9 +64,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
 
         final SibsAuthenticationController controller =
                 new SibsAuthenticationController(
-                        supplementalInformationHelper,
-                        new SibsAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                        supplementalInformationHelper, new SibsAuthenticator(apiClient));
 
         return new AutoAuthenticationController(
                 request,

@@ -13,11 +13,6 @@ public class SantanderAgent extends SibsBaseAgent {
     }
 
     @Override
-    protected String getClientName() {
-        return SantanderConstants.Market.CLIENT_NAME;
-    }
-
-    @Override
     public String getIntegrationName() {
         return SantanderConstants.Market.INTEGRATION_NAME;
     }

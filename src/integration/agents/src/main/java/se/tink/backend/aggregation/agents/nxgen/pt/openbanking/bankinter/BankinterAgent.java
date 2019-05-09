@@ -14,11 +14,6 @@ public class BankinterAgent extends SibsBaseAgent {
     }
 
     @Override
-    protected String getClientName() {
-        return Market.CLIENT_NAME;
-    }
-
-    @Override
     protected String getIntegrationName() {
         return Market.INTEGRATION_NAME;
     }

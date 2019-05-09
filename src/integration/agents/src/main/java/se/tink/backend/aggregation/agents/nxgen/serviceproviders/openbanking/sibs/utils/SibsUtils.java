@@ -62,7 +62,7 @@ public final class SibsUtils {
         byte[] bytes =
                 SerializationUtils.serializeToString(consentRequest)
                         .getBytes(StandardCharsets.US_ASCII);
-        MessageDigest md = null;
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance(Formats.SHA_256);
         } catch (NoSuchAlgorithmException e) {

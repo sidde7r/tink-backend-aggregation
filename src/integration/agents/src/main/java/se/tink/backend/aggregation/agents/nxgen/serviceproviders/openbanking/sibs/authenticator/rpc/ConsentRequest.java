@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConsentRequest {
 
-    public ConsentAccessEntity access;
-    public Boolean recurringIndicator;
-    public String validUntil;
-    public Integer frequencyPerDay;
-    public Boolean combinedServiceIndicator;
+    private ConsentAccessEntity access;
+    private Boolean recurringIndicator;
+    private String validUntil;
+    private Integer frequencyPerDay;
+    private Boolean combinedServiceIndicator;
 
     public ConsentRequest(
             ConsentAccessEntity access,

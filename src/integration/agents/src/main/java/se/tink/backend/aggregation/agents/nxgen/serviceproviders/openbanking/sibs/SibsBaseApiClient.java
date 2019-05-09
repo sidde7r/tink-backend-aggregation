@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -8,11 +9,9 @@ import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
@@ -47,13 +46,8 @@ public class SibsBaseApiClient {
         this.persistentStorage = persistentStorage;
     }
 
-    protected SibsConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-    }
-
     protected void setConfiguration(SibsConfiguration configuration) {
-        this.configuration = configuration;
+        this.configuration = Preconditions.checkNotNull(configuration);
     }
 
     protected RequestBuilder createRequest(URL url) {

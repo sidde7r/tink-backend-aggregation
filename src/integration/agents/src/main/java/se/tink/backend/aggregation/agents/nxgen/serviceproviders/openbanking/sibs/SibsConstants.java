@@ -1,36 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SibsConstants {
-
-    public static final String INTEGRATION_NAME = "sibs";
 
     private SibsConstants() {
         throw new AssertionError();
     }
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
-                    .build();
-
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String NO_BALANCE = "No balance found!";
     }
 
     public static class Urls {
-        public static String BASE_URL = "https://site1.sibsapimarket.com:8444/sibs/apimarket";
+        public static final String BASE_URL = "https://site1.sibsapimarket.com:8444/sibs/apimarket";
 
         public static final URL ACCOUNTS = new URL(BASE_URL + "/{aspsp-cde}/v1/accounts");
         public static final URL ACCOUNT_DETAILS =
@@ -45,12 +31,6 @@ public final class SibsConstants {
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
-
-        public static final String BASE_URL = "BASE_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String CONSENT_ID = "CONSENT_ID";
     }
 
@@ -83,15 +63,11 @@ public final class SibsConstants {
         public static final String CONSENT_ID = "Consent-ID";
     }
 
-    public static class FormKeys {}
-
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "all-accounts";
         public static final Integer FREQUENCY_PER_DAY = 100;
     }
-
-    public static class LogTags {}
 
     public static class Formats {
 

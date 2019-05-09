@@ -13,11 +13,6 @@ public class BancoBpiAgent extends SibsBaseAgent {
     }
 
     @Override
-    protected String getClientName() {
-        return BancoBpiConstants.Market.CLIENT_NAME;
-    }
-
-    @Override
     public String getIntegrationName() {
         return BancoBpiConstants.Market.INTEGRATION_NAME;
     }

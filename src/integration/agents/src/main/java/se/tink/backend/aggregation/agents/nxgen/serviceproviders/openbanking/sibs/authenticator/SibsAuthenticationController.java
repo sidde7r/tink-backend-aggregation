@@ -6,8 +6,6 @@ import java.util.Base64.Encoder;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -45,14 +43,12 @@ public class SibsAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate()
-            throws SessionException, BankServiceException, AuthorizationException {
+    public void autoAuthenticate() throws SessionException, BankServiceException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference)
-            throws AuthenticationException, AuthorizationException {
+    public ThirdPartyAppResponse<String> collect(String reference) {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
