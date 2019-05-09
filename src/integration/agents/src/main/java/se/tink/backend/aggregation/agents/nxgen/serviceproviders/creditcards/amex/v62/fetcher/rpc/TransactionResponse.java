@@ -5,7 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditca
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.ActivityListEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.BillingInfoDetailsEntity;
@@ -93,6 +92,6 @@ public class TransactionResponse {
                 .filter(v -> v.getLabel().equalsIgnoreCase(account.getHolderName().toString()))
                 .map(ValuesItem::getType)
                 .findAny()
-                .orElseThrow(NoSuchElementException::new);
+                .orElse("");
     }
 }
