@@ -1,19 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsRequest.SibsRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
@@ -24,7 +22,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -44,52 +41,13 @@ public class SibsBaseApiClient {
         this.configuration = Preconditions.checkNotNull(configuration);
     }
 
-    protected RequestBuilder createRequest(URL url) {
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+    protected SibsRequestBuilder createRequest(URL url) {
+        return SibsRequest.builder(client, configuration, url);
     }
 
-    private RequestBuilder createSignedRequest(URL url, String digest) {
+    private SibsRequestBuilder createSignedRequestInSession(URL url) {
 
-        String transactionId = SibsUtils.getRequestId();
-        String requestId = SibsUtils.getRequestId();
-
-        String requestTimestamp =
-                new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT).format(new Date());
-
-        String signature =
-                SibsUtils.getSignature(
-                        digest,
-                        transactionId,
-                        requestId,
-                        requestTimestamp,
-                        configuration.getClientSigningKeyPath(),
-                        configuration.getClientSigningCertificateSerialNumber());
-
-        RequestBuilder signedRequest =
-                createRequest(url)
-                        .header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
-                        .header(
-                                HeaderKeys.TPP_CERTIFICATE,
-                                SibsUtils.readSigningCertificate(
-                                        configuration.getClientSigningCertificatePath()))
-                        .header(HeaderKeys.SIGNATURE, signature)
-                        .header(HeaderKeys.TPP_TRANSACTION_ID, transactionId)
-                        .header(HeaderKeys.TPP_REQUEST_ID, requestId)
-                        .header(HeaderKeys.DATE, requestTimestamp);
-
-        if (!Strings.isNullOrEmpty(digest)) {
-            signedRequest =
-                    signedRequest.header(HeaderKeys.DIGEST, HeaderValues.DIGEST_PREFIX + digest);
-        }
-
-        return signedRequest;
-    }
-
-    private RequestBuilder createSignedRequestInSession(URL url, String digest) {
-        return createSignedRequest(url, digest)
-                .header(HeaderKeys.CONSENT_ID, getConsentFromStorage());
+        return createRequest(url).signed().inSession(getConsentFromStorage());
     }
 
     private String getConsentFromStorage() {
@@ -103,8 +61,9 @@ public class SibsBaseApiClient {
 
         return createSignedRequestInSession(
                         Urls.ACCOUNTS.parameter(
-                                PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()),
-                        "")
+                                PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
+                .build()
+                .getRequest()
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
@@ -115,8 +74,9 @@ public class SibsBaseApiClient {
                         Urls.ACCOUNT_BALANCES
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
-                                .parameter(PathParameterKeys.ACCOUNT_ID, accountId),
-                        "")
+                                .parameter(PathParameterKeys.ACCOUNT_ID, accountId))
+                .build()
+                .getRequest()
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .get(BalancesResponse.class);
     }
@@ -131,8 +91,9 @@ public class SibsBaseApiClient {
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(
-                                        PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier()),
-                        "")
+                                        PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
+                .build()
+                .getRequest()
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
@@ -147,10 +108,13 @@ public class SibsBaseApiClient {
         String digest = SibsUtils.getDigest(consentRequest);
 
         ConsentResponse consentResponse =
-                createSignedRequest(
+                createRequest(
                                 Urls.CREATE_CONSENT.parameter(
-                                        PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()),
-                                digest)
+                                        PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
+                        .signed()
+                        .withDigest(digest)
+                        .build()
+                        .getRequest()
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(configuration.getRedirectUrl())
@@ -169,8 +133,9 @@ public class SibsBaseApiClient {
                         Urls.CONSENT_STATUS
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
-                                .parameter(PathParameterKeys.CONSENT_ID, getConsentFromStorage()),
-                        "")
+                                .parameter(PathParameterKeys.CONSENT_ID, getConsentFromStorage()))
+                .build()
+                .getRequest()
                 .get(ConsentStatusResponse.class);
     }
 
