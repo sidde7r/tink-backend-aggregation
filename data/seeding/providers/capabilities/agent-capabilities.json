@@ -472,6 +472,9 @@
     "nxgen.fi.creditcards.amex.AmericanExpressFIAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.fi.openbanking.opbank.OpBankAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
