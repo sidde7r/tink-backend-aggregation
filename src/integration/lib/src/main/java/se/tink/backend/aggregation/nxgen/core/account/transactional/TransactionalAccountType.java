@@ -11,7 +11,7 @@ public enum TransactionalAccountType {
     SAVINGS,
     OTHER;
 
-    public static TransactionalAccountType fromAccountType(AccountTypes type) {
+    public static TransactionalAccountType from(AccountTypes type) {
         switch (type) {
             case CHECKING:
                 return CHECKING;

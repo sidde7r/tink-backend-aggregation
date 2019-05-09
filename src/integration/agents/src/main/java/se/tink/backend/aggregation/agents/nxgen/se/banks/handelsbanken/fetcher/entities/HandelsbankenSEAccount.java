@@ -58,7 +58,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         return Optional.of(
                 TransactionalAccount.nxBuilder()
-                        .withType(TransactionalAccountType.fromAccountType(accountType))
+                        .withType(TransactionalAccountType.from(accountType))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(number)

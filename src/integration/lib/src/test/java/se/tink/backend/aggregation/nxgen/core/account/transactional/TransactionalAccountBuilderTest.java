@@ -36,7 +36,7 @@ public class TransactionalAccountBuilderTest {
     public void illegalAccountType() {
         // Build an otherwise correct account
         TransactionalAccount.nxBuilder()
-                .withType(TransactionalAccountType.fromAccountType(AccountTypes.LOAN))
+                .withType(TransactionalAccountType.from(AccountTypes.LOAN))
                 .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
                 .build();

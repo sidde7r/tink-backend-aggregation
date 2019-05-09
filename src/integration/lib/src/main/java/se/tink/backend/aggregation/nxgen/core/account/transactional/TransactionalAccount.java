@@ -19,7 +19,7 @@ public class TransactionalAccount extends Account {
 
     TransactionalAccount(TransactionalAccountBuilder builder) {
         super(builder);
-        this.accountType = builder.getAccountType();
+        this.accountType = builder.getTransactionalType();
     }
 
     public static WithTypeStep<TransactionalBuildStep> nxBuilder() {
@@ -64,7 +64,7 @@ public class TransactionalAccount extends Account {
 
     @Override
     public AccountTypes getType() {
-        return accountType == null ? null : accountType.toAccountType();
+        return accountType.toAccountType();
     }
 
     /** @deprecated Use StepBuilder instead */

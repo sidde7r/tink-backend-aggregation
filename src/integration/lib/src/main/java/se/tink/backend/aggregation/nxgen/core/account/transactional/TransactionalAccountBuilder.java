@@ -29,7 +29,7 @@ public class TransactionalAccountBuilder
         return new TransactionalAccount(this);
     }
 
-    public TransactionalAccountType getAccountType() {
+    TransactionalAccountType getTransactionalType() {
         return accountType;
     }
 }
