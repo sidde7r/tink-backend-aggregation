@@ -186,30 +186,30 @@ public final class RedsysApiClient {
     }
 
     private String getKeyID(X509Certificate cert) {
-        return "SN="
-                + cert.getSerialNumber().toString(10)
-                + ",CA="
-                + cert.getIssuerX500Principal().getName();
+        return String.format(
+                Locale.ENGLISH,
+                Signature.KEY_ID_FORMAT,
+                cert.getSerialNumber(),
+                cert.getIssuerX500Principal().getName());
     }
 
     private String generateRequestSignature(
             String digest, String requestID, String tppRedirectUri) {
         String payloadToSign =
-                HeaderKeys.DIGEST.toLowerCase(Locale.ENGLISH)
-                        + ": "
-                        + digest
-                        + "\n"
-                        + HeaderKeys.REQUEST_ID.toLowerCase(Locale.ENGLISH)
-                        + ": "
-                        + requestID;
+                String.format(
+                        "%s: %s\n%s: %s",
+                        HeaderKeys.DIGEST.toLowerCase(Locale.ENGLISH),
+                        digest,
+                        HeaderKeys.REQUEST_ID.toLowerCase(Locale.ENGLISH),
+                        requestID);
         String headers = HeaderKeys.DIGEST + " " + HeaderKeys.REQUEST_ID;
         if (!Strings.isNullOrEmpty(tppRedirectUri)) {
             headers += " " + HeaderKeys.TPP_REDIRECT_URI;
             payloadToSign +=
-                    "\n"
-                            + HeaderKeys.TPP_REDIRECT_URI.toLowerCase(Locale.ENGLISH)
-                            + ": "
-                            + tppRedirectUri;
+                    String.format(
+                            "\n%s: %s",
+                            HeaderKeys.TPP_REDIRECT_URI.toLowerCase(Locale.ENGLISH),
+                            tppRedirectUri);
         }
 
         final String keyPath = getConfiguration().getClientSigningKeyPath();
@@ -219,22 +219,8 @@ public final class RedsysApiClient {
                         .encodeToString(RSA.signSha256(privateKey, payloadToSign.getBytes()));
         final String keyID = getKeyID(getCertificate());
 
-        return Signature.KEY_ID_PREFIX
-                + "\""
-                + keyID
-                + "\","
-                + Signature.ALGORITHM_PREFIX
-                + "\""
-                + Signature.ALGORITHM
-                + "\","
-                + Signature.HEADERS_PREFIX
-                + "\""
-                + headers.toLowerCase(Locale.ENGLISH)
-                + "\","
-                + Signature.SIGNATURE_PREFIX
-                + "\""
-                + signature
-                + "\"";
+        return String.format(
+                Signature.FORMAT, keyID, headers.toLowerCase(Locale.ENGLISH), signature);
     }
 
     private RequestBuilder createSignedRequest(String url, Object payload, OAuth2Token token) {

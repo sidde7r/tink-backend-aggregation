@@ -88,11 +88,9 @@ public final class RedsysConstants {
 
     public static class Signature {
         public static final String DIGEST_PREFIX = "SHA-256=";
-        public static final String ALGORITHM = "SHA-256";
         public static final String KEY_ALGORITHM = "RSA";
-        public static final String SIGNATURE_PREFIX = "signature=";
-        public static final String KEY_ID_PREFIX = "keyId=";
-        public static final String ALGORITHM_PREFIX = "algorithm=";
-        public static final String HEADERS_PREFIX = "headers=";
+        public static final String KEY_ID_FORMAT = "SN=%d,CA=%s";
+        public static final String FORMAT =
+                "keyId=\"%s\",algorithm=\"SHA-256\",headers=\"%s\",signature=\"%s\"";
     }
 }
