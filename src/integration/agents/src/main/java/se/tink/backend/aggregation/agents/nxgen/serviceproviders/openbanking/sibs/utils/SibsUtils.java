@@ -15,7 +15,6 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
@@ -72,26 +71,19 @@ public final class SibsUtils {
         String signatureBase64Sha =
                 org.apache.commons.codec.binary.Base64.encodeBase64String(signatureSha);
 
-        return new StringBuilder()
-                .append(SibsConstants.SignatureKeys.KEY_ID)
-                .append("\"")
-                .append(clientSigningCertificateSerialNumber)
-                .append("\"")
-                .append(",")
-                .append(SibsConstants.SignatureKeys.ALGORITHM)
-                .append(SignatureValues.RSA_SHA256)
-                .append(",")
-                .append(SibsConstants.SignatureKeys.HEADERS)
-                .append(
-                        Strings.isNullOrEmpty(digest)
-                                ? SignatureValues.HEADERS_NO_DIGEST
-                                : SignatureValues.HEADERS)
-                .append(",")
-                .append(SibsConstants.SignatureKeys.SIGNATURE)
-                .append("\"")
-                .append(signatureBase64Sha)
-                .append("\"")
-                .toString();
+        return formSignature(digest, clientSigningCertificateSerialNumber, signatureBase64Sha);
+    }
+
+    private static String formSignature(
+            String digest, String clientSigningCertificateSerialNumber, String signatureBase64Sha) {
+        return String.format(
+                Formats.SIGNATURE_STRING_FORMAT,
+                clientSigningCertificateSerialNumber,
+                SignatureValues.RSA_SHA256,
+                Strings.isNullOrEmpty(digest)
+                        ? SignatureValues.HEADERS_NO_DIGEST
+                        : SignatureValues.HEADERS,
+                signatureBase64Sha);
     }
 
     public static PrivateKey readSigningKey(String path, String algorithm) {

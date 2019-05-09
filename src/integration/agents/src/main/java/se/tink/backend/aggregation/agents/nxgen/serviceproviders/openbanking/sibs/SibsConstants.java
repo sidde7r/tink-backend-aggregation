@@ -77,6 +77,7 @@ public final class SibsConstants {
         public static final String RSA = "RSA";
         public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd";
+        public static final String SIGNATURE_STRING_FORMAT = "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
     }
 
     public static class HeaderValues {
