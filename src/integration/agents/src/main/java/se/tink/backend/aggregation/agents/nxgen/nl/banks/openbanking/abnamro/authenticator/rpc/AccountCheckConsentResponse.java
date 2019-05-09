@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountPermissionResponse {
+public class AccountCheckConsentResponse {
 
     @JsonProperty("iban")
     private String accountId;

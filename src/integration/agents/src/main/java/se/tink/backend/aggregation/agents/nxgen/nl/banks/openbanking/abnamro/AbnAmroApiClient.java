@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.*;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionalAccountsResponse;
@@ -38,6 +36,10 @@ public class AbnAmroApiClient {
 
     public TokenResponse exchangeAuthorizationCode(final ExchangeAuthorizationCodeRequest request) {
         return post(request);
+    }
+
+    public AccountCheckConsentResponse checkAccountAccessUsingConsent(final URL url) {
+        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_CONSENT_INFO).get(AccountCheckConsentResponse.class);
     }
 
     public TokenResponse refreshAccessToken(final RefreshTokenRequest request) {

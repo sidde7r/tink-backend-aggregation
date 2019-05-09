@@ -2,9 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.AbnAmroAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.AccountCheckConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.transactional.TransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.session.AbnAmroSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -17,8 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -82,18 +79,24 @@ public class AbnAmroAgent extends NextGenerationAgent {
         //client.setDebugProxy("http://192.168.237.123:8888");
     }
 
+    protected Optional<AccountCheckConsentResponse> constructAccountCheckUsingConsent() {
+        System.out.println("Test Account Check Using Consent");
+        return Optional.empty();
+    }
+
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new TransactionalAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new TransactionFetcher(apiClient),
-                                        AbnAmroConstants.START_PAGE))));
+        return Optional.empty();
+//        return Optional.of(
+//                new TransactionalAccountRefreshController(
+//                        metricRefreshController,
+//                        updateController,
+//                        new TransactionalAccountFetcher(apiClient),
+//                        new TransactionFetcherController<>(
+//                                transactionPaginationHelper,
+//                                new TransactionPagePaginationController<>(
+//                                        new TransactionFetcher(apiClient),
+//                                        AbnAmroConstants.START_PAGE))));
     }
 
     @Override
