@@ -67,8 +67,7 @@ public class CreditCardParsingUtils {
     public static Optional<String> parseAccountName(String htmlContent) {
         Elements elements = Jsoup.parse(htmlContent).select("div.creditcard");
 
-        String name =
-                elements.get(0).select("div.creditcard__name").first().text().replaceAll("\\s", "");
+        String name = elements.get(0).select("div.creditcard__name").first().text().trim();
 
         return Strings.isNullOrEmpty(name) ? Optional.empty() : Optional.of(name);
     }
