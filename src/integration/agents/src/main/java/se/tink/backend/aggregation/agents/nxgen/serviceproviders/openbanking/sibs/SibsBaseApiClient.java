@@ -2,22 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
@@ -56,7 +50,7 @@ public class SibsBaseApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    protected RequestBuilder createSignedRequest(URL url, String digest) {
+    private RequestBuilder createSignedRequest(URL url, String digest) {
 
         String transactionId = SibsUtils.getRequestId();
         String requestId = SibsUtils.getRequestId();
@@ -64,7 +58,14 @@ public class SibsBaseApiClient {
         String requestTimestamp =
                 new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT).format(new Date());
 
-        String signature = getSignature(digest, transactionId, requestId, requestTimestamp);
+        String signature =
+                SibsUtils.getSignature(
+                        digest,
+                        transactionId,
+                        requestId,
+                        requestTimestamp,
+                        configuration.getClientSigningKeyPath(),
+                        configuration.getClientSigningCertificateSerialNumber());
 
         RequestBuilder signedRequest =
                 createRequest(url)
@@ -86,12 +87,12 @@ public class SibsBaseApiClient {
         return signedRequest;
     }
 
-    protected RequestBuilder createSignedRequestInSession(URL url, String digest) {
+    private RequestBuilder createSignedRequestInSession(URL url, String digest) {
         return createSignedRequest(url, digest)
                 .header(HeaderKeys.CONSENT_ID, getConsentFromStorage());
     }
 
-    protected String getConsentFromStorage() {
+    private String getConsentFromStorage() {
         return persistentStorage
                 .get(StorageKeys.CONSENT_ID, String.class)
                 .orElseThrow(
@@ -173,67 +174,7 @@ public class SibsBaseApiClient {
                 .get(ConsentStatusResponse.class);
     }
 
-    protected String getSignature(
-            String digest, String transactionId, String requestId, String signatureStringDate) {
-
-        StringBuilder signingString = new StringBuilder();
-
-        if (!Strings.isNullOrEmpty(digest)) {
-            signingString
-                    .append(HeaderKeys.DIGEST.toLowerCase())
-                    .append(": ")
-                    .append(HeaderValues.DIGEST_PREFIX)
-                    .append(digest)
-                    .append("\n");
-        }
-
-        signingString
-                .append(HeaderKeys.TPP_TRANSACTION_ID.toLowerCase())
-                .append(": ")
-                .append(transactionId)
-                .append("\n")
-                .append(HeaderKeys.TPP_REQUEST_ID.toLowerCase())
-                .append(": ")
-                .append(requestId)
-                .append("\n")
-                .append(HeaderKeys.DATE.toLowerCase())
-                .append(": ")
-                .append(signatureStringDate);
-
-        byte[] signatureSha;
-        try {
-            PrivateKey privateKey =
-                    SibsUtils.readSigningKey(configuration.getClientSigningKeyPath(), Formats.RSA);
-            signatureSha = SibsUtils.toSHA256withRSA(privateKey, signingString.toString());
-        } catch (SignatureException | InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException();
-        }
-
-        String signatureBase64Sha = Base64.encodeBase64String(signatureSha);
-
-        return new StringBuilder()
-                .append(SibsConstants.SignatureKeys.KEY_ID)
-                .append("\"")
-                .append(configuration.getClientSigningCertificateSerialNumber())
-                .append("\"")
-                .append(",")
-                .append(SibsConstants.SignatureKeys.ALGORITHM)
-                .append(SignatureValues.RSA_SHA256)
-                .append(",")
-                .append(SibsConstants.SignatureKeys.HEADERS)
-                .append(
-                        Strings.isNullOrEmpty(digest)
-                                ? SignatureValues.HEADERS_NO_DIGEST
-                                : SignatureValues.HEADERS)
-                .append(",")
-                .append(SibsConstants.SignatureKeys.SIGNATURE)
-                .append("\"")
-                .append(signatureBase64Sha)
-                .append("\"")
-                .toString();
-    }
-
-    protected ConsentRequest getConsentRequest() {
+    private ConsentRequest getConsentRequest() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.DATE, 1); // Consent valid for 1 day
