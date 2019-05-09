@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
@@ -100,11 +99,6 @@ public class OpBankAgent extends NextGenerationAgent {
                         metricRefreshController,
                         updateController,
                         new OpBankLoanFetcher(bankClient, credentials)));
-    }
-
-    @Override
-    public Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
     }
 
     @Override

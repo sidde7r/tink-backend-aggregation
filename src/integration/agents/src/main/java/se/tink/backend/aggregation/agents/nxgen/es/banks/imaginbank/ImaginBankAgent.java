@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -88,11 +87,6 @@ public class ImaginBankAgent extends NextGenerationAgent implements RefreshIdent
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
         return Optional.empty();
     }
 
