@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata;
 
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.collections4.CollectionUtils;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
@@ -25,18 +26,20 @@ public class IcaBankenIdentityDataFetcher implements IdentityDataFetcher {
     public IdentityData fetchIdentityData() {
         List<AccountEntity> ownAccounts = apiClient.fetchAccounts().getOwnAccounts();
 
-        // Use SSN from credential if user has no own accounts
-        if (CollectionUtils.isEmpty(ownAccounts)) {
-            return SeIdentityData.of("", ssnFromCredential);
-        }
-
         // Icabanken splits accounts types on "own", "joint", and "minor". This should make it safe
         // to use the account owner data from one of the own account entities for identity data.
-        AccountEntity ownAccountEntity = ownAccounts.get(0);
-        AccountOwnerEntity accountOwner = ownAccountEntity.getAccountOwner();
+        if (!CollectionUtils.isEmpty(ownAccounts)) {
+            AccountEntity ownAccountEntity = ownAccounts.get(0);
+            AccountOwnerEntity accountOwner = ownAccountEntity.getAccountOwner();
 
-        return SeIdentityData.of(
-                accountOwner.getFullName(), accountOwner.getNationalIdWithCentury());
+            if (Objects.nonNull(accountOwner)) {
+                return SeIdentityData.of(
+                        accountOwner.getFullName(), accountOwner.getNationalIdWithCentury());
+            }
+        }
+
+        // Use SSN from credential if user has no own accounts with usable data
+        return SeIdentityData.of("", ssnFromCredential);
     }
 
     public FetchIdentityDataResponse getIdentityDataResponse() {
