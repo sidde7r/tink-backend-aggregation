@@ -34,12 +34,12 @@ public final class OpBankAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        configureHttpClient(client);
         apiClient = new OpBankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {
+    private void configureHttpClient(TinkHttpClient client) {
         // client.setDebugProxy("https://localhost:9022");
         client.setDebugProxy("https://192.168.99.100:30922");
     }
