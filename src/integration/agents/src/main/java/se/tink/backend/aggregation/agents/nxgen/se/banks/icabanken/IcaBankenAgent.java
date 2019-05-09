@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
@@ -37,7 +39,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IcaBankenAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class IcaBankenAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
@@ -117,13 +120,6 @@ public class IcaBankenAgent extends NextGenerationAgent implements RefreshIdenti
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
-
-        return Optional.of(new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher));
-    }
-
-    @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.of(
@@ -149,6 +145,14 @@ public class IcaBankenAgent extends NextGenerationAgent implements RefreshIdenti
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
                         new IcaBankenEInvoiceExecutor(apiClient, executorHelper, catalog),
                         null));
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
+        EInvoiceRefreshController eInvoiceRefreshController =
+                new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher);
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override
