@@ -7,7 +7,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -16,7 +23,17 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.*;
+import se.tink.backend.aggregation.agents.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentClassFactory;
+import se.tink.backend.aggregation.agents.AgentFactory;
+import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
@@ -25,7 +42,12 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
-import se.tink.backend.aggregation.nxgen.controllers.payment.*;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
@@ -42,7 +64,6 @@ import se.tink.libraries.user.rpc.UserProfile;
 public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
-    private static final ObjectMapper mapper = new ObjectMapper();
 
     private final Provider provider;
     private final User user;
@@ -224,7 +245,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                 if (item == RefreshableItem.IDENTITY_DATA
                         && agent instanceof RefreshIdentityDataExecutor) {
 
-                    context.updateIdentityData(
+                    context.sendIdentityToIdentityAggregatorService(
                             ((RefreshIdentityDataExecutor) agent)
                                     .fetchIdentityData()
                                     .getIdentityData());
@@ -483,14 +504,15 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             this.provider.setCurrency(marketProviders.getCurrency());
         }
 
-        private String escapeMarket(String market) {
+        private static String escapeMarket(String market) {
             return market.replaceAll("[^a-zA-Z]", "");
         }
 
-        private ProviderConfig readProvidersConfiguration(String market) {
+        private static ProviderConfig readProvidersConfiguration(String market) {
             String providersFilePath =
                     "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
+            final ObjectMapper mapper = new ObjectMapper();
             try {
                 return mapper.readValue(providersFile, ProviderConfig.class);
             } catch (IOException e) {

@@ -30,6 +30,7 @@ public class NordeaDkAgent extends NordeaV20Agent {
                 context,
                 signatureKeyPair,
                 new NordeaDkParser(new NordeaDkTransactionParser(), request.getCredentials()));
+        configureHttpClient(client);
     }
 
     @Override
@@ -44,7 +45,6 @@ public class NordeaDkAgent extends NordeaV20Agent {
                         NordeaDkConstants.MARKET_CODE);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaDkFilter());
         client.setDebugOutput(false);

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Link;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.entities.Mandate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.ErrorResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -26,6 +28,9 @@ public abstract class BaseResponse {
 
     @JsonProperty("links")
     private List<Link> linksList;
+
+    @JsonProperty("mandates")
+    private List<Mandate> mandates;
 
     private String code;
     private String message;
@@ -112,6 +117,13 @@ public abstract class BaseResponse {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    @JsonIgnore
+    public Optional<String> getCustomerName() {
+        return mandates == null
+                ? Optional.empty()
+                : mandates.stream().map(Mandate::getCustomerName).findFirst();
     }
 
     @Override

@@ -44,12 +44,12 @@ public class IngAgent extends NextGenerationAgent {
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
         this.ingTransferHelper = new IngTransferHelper(catalog);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(USER_AGENT);
         client.setFollowRedirects(false);

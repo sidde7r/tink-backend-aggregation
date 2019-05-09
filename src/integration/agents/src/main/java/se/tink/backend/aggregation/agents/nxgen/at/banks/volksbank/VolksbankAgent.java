@@ -31,10 +31,10 @@ public class VolksbankAgent extends NextGenerationAgent {
     public VolksbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = VolksbankApiClient.create(persistentStorage, sessionStorage, client);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(VolksbankConstants.USER_AGENT);
     }

@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.de.creditcards.amex;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
+public final class AmericanExpressDEConstants {
 
-public class AmericanExpressDEConstants extends AmericanExpressConstants {
+    private AmericanExpressDEConstants() {
+        throw new AssertionError();
+    }
 
     public static final String MARKET = "DE";
     public static final String PROVIDER_NAME = "de-americanexpress-password";

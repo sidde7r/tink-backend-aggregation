@@ -36,6 +36,7 @@ public class DnbAgent extends NextGenerationAgent {
     public DnbAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new DnbApiClient(client);
         this.authenticator = new DnbAuthenticator(apiClient);
         this.accountFetcher = new DnbAccountFetcher(apiClient);
@@ -44,7 +45,6 @@ public class DnbAgent extends NextGenerationAgent {
         this.creditTransactionFetcher = new DnbCreditTransactionFetcher(apiClient);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setFollowRedirects(false);
     }

@@ -46,10 +46,10 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     public SparebankenSorAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
 
         AddRefererFilter filter = new AddRefererFilter();

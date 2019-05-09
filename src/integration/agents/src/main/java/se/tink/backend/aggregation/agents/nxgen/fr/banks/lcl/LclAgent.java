@@ -30,11 +30,11 @@ public class LclAgent extends NextGenerationAgent {
     public LclAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.lclPersistentStorage = new LclPersistentStorage(persistentStorage);
         this.apiClient = new LclApiClient(client, lclPersistentStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         // We have to disable the Tink signature header, otherwise LCL will reject our requests.
         client.disableSignatureRequestHeader();

@@ -33,9 +33,11 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Headers;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
@@ -79,10 +81,11 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
-        implements RefreshInvestmentAccountsExecutor, PersistentLogin {
+        implements RefreshInvestmentAccountsExecutor, RefreshIdentityDataExecutor, PersistentLogin {
     private String authenticationToken;
     private Client client;
     private Credentials credentials;
@@ -722,6 +725,12 @@ public class AvanzaV2Agent extends AbstractAgent
                             request.getCredentials().getType().name()));
             return new FetchTransactionsResponse(Collections.emptyMap());
         }
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                SeIdentityData.of("", credentials.getField(Field.Key.USERNAME)));
     }
     ///////////////////////////////////////
 }

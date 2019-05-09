@@ -15,6 +15,7 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
     public DanskeBankFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankFIConfiguration());
+        configureHttpClient(client);
     }
 
     @Override
@@ -23,7 +24,6 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
         return new DanskeBankFIApiClient(client, (DanskeBankFIConfiguration) configuration);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.disableSignatureRequestHeader();
     }

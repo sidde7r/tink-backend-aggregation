@@ -1494,7 +1494,10 @@ public class DateUtils {
     }
 
     public static java.time.LocalDate toJavaTimeLocalDate(java.util.Date date) {
-        return Instant.ofEpochMilli(date.getTime()).atZone(DEFAULT_ZONE_ID).toLocalDate();
+        if (date != null) {
+            return Instant.ofEpochMilli(date.getTime()).atZone(DEFAULT_ZONE_ID).toLocalDate();
+        }
+        return null;
     }
 
     public static java.util.Date toJavaUtilDate(java.time.LocalDate date) {

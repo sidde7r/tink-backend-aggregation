@@ -10,3 +10,10 @@ The library depends on m4ri which can be installed with:
 or with brew for macOS:
 # brew tap brewsci/homebrew-science
 # brew install brewsci/science/m4ri
+
+If you want to rebuild the library for whatever reason run from this directory:
+# docker build . -t lib_wbaes_builder
+# docker run --rm -ti -v "$PWD:/usr/src/libkbc_wbaes" lib_wbaes_builder
+
+you'll find the output file libkbc_wbaes.so in the same directory from when you
+run the docker run command.

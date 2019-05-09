@@ -27,11 +27,11 @@ public class CreditAgricoleAgent extends NextGenerationAgent {
     public CreditAgricoleAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         persistentStorage.put(StorageKey.REGION_ID, request.getProvider().getPayload());
         apiClient = new CreditAgricoleApiClient(client, persistentStorage, sessionStorage);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new CreditAgricoleHttpFilter());
     }

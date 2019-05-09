@@ -30,7 +30,9 @@ import se.tink.backend.aggregation.agents.banks.se.collector.models.ErrorRespons
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -110,7 +112,7 @@ public class CollectorAgent extends AbstractAgent
         return true;
     }
 
-    private boolean autoAuthenticate(Credentials credentials) {
+    private boolean autoAuthenticate(Credentials credentials) throws SessionException {
         Optional<String> accessToken = credentials.getSensitivePayload(Field.Key.ACCESS_TOKEN);
         if (accessToken.isPresent() && apiClient.isAlive(accessToken.get())) {
             return true;
@@ -144,7 +146,7 @@ public class CollectorAgent extends AbstractAgent
         credentials.setStatus(CredentialsStatus.UNCHANGED);
         systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
-        return false;
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 
     private void authenticateWithMobileBankID(String username) throws BankIdException {

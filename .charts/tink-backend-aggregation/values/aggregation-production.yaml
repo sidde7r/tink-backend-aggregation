@@ -3,7 +3,7 @@ podCpuLimit: "1000m"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
 heapSize: "4G"
-replicas: 10
+replicas: 8
 maxReplicas: 20
 
 nodeZones:
@@ -30,6 +30,12 @@ agents:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
 
   proxyUri: http://10.88.12.185:8080
+
+  proxyUris: [
+    "http://http-proxy-0.internal.production.aggregation.tink.network:8080",
+    "http://http-proxy-1.internal.production.aggregation.tink.network:8080",
+    "http://http-proxy-2.internal.production.aggregation.tink.network:8080",
+  ]
 
   fints: true
   abnAmro:

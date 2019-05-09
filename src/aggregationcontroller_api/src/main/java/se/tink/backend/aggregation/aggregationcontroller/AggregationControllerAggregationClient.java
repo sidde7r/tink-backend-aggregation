@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
@@ -34,6 +36,8 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AggregationControllerAggregationClient {
     private static final String EMPTY_PASSWORD = "";
+    private static final Logger log =
+            LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
 
     @Inject
     public AggregationControllerAggregationClient() {}
@@ -166,6 +170,13 @@ public class AggregationControllerAggregationClient {
 
     public Response updateIdentity(
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
-        return getIdentityAggregatorService(hostConfiguration).updateIdentityData(request);
+
+        // TODO: Remove this after identity service is fully implemented.
+        if (hostConfiguration.getClusterId().equals("oxford-staging")) {
+            log.info("Updating identity temporarily disabled!");
+            return getIdentityAggregatorService(hostConfiguration).updateIdentityData(request);
+        }
+
+        return Response.ok().build();
     }
 }

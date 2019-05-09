@@ -41,6 +41,7 @@ public class SparebankenVestAgent extends NextGenerationAgent {
     public SparebankenVestAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new SparebankenVestApiClient(client);
         this.encapClient =
                 new EncapClient(
@@ -52,7 +53,6 @@ public class SparebankenVestAgent extends NextGenerationAgent {
                         DeviceProfileConfiguration.IOS_STABLE);
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(SparebankenVestConstants.Headers.USER_AGENT);
     }

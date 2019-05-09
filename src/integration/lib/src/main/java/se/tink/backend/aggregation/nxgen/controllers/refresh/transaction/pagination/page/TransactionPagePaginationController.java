@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 
 public class TransactionPagePaginationController<A extends Account>
         implements TransactionPaginator<A> {
+
     private final TransactionPagePaginator<A> paginator;
     private final int startPage;
     private int currentPage;

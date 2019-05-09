@@ -37,12 +37,12 @@ public final class AxaAgent extends NextGenerationAgent {
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        configureHttpClient(client);
         this.apiClient = new AxaApiClient(client);
         this.storage = makeStorage();
         this.request = request;
     }
 
-    @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(AxaConstants.Request.USER_AGENT);
         client.setCipherSuites(AxaConstants.CIPHER_SUITES);

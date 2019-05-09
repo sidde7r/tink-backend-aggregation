@@ -5,15 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DateEntity {
-
-    @JsonProperty("dia")
-    private String day;
+    @JsonProperty("anyo")
+    private String year;
 
     @JsonProperty("mes")
     private String month;
 
-    @JsonProperty("anyo")
-    private String year;
+    @JsonProperty("dia")
+    private String day;
 
     public void setDay(String day) {
         this.day = day;
