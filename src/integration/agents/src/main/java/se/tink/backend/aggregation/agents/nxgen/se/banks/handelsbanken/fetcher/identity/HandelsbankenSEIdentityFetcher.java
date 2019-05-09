@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.identity;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
@@ -20,6 +21,6 @@ public class HandelsbankenSEIdentityFetcher {
                 .map(Optional::get)
                 .map(name -> SeIdentityData.of(name, credentials.getField(Field.Key.USERNAME)))
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }
