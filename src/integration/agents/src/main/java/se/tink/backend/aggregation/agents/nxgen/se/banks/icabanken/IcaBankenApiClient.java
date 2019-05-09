@@ -61,6 +61,8 @@ public class IcaBankenApiClient {
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icabankenPersistentStorage;
 
+    private AccountsEntity cachedAccounts;
+
     public IcaBankenApiClient(
             TinkHttpClient client,
             IcaBankenSessionStorage icaBankenSessionStorage,
@@ -138,10 +140,15 @@ public class IcaBankenApiClient {
     }
 
     public AccountsEntity fetchAccounts() {
-        return createRequest(IcaBankenConstants.Urls.ACCOUNTS)
-                .get(AccountsResponse.class)
-                .getBody()
-                .getAccounts();
+        if (cachedAccounts == null) {
+            cachedAccounts =
+                    createRequest(IcaBankenConstants.Urls.ACCOUNTS)
+                            .get(AccountsResponse.class)
+                            .getBody()
+                            .getAccounts();
+        }
+
+        return cachedAccounts;
     }
 
     public TransactionsBodyEntity fetchTransactionsWithDate(Account account, Date toDate) {

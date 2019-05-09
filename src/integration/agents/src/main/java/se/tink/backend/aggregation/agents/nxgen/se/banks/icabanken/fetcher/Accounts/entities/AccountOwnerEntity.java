@@ -10,4 +10,12 @@ public class AccountOwnerEntity {
 
     @JsonProperty("NationalIdWithCentury")
     private String nationalIdWithCentury;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getNationalIdWithCentury() {
+        return nationalIdWithCentury;
+    }
 }

@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorHelper;
@@ -10,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.IcaBankenIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
@@ -33,7 +37,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IcaBankenAgent extends NextGenerationAgent {
+public class IcaBankenAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
@@ -144,5 +149,13 @@ public class IcaBankenAgent extends NextGenerationAgent {
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
                         new IcaBankenEInvoiceExecutor(apiClient, executorHelper, catalog),
                         null));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        IcaBankenIdentityDataFetcher identityDataFetcher =
+                new IcaBankenIdentityDataFetcher(
+                        apiClient, credentials.getField(Field.Key.USERNAME));
+        return identityDataFetcher.getIdentityDataResponse();
     }
 }
