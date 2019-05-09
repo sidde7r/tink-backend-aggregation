@@ -152,6 +152,21 @@
             "tutorialUrl": null,
             "fields": [],
             "payload": "tink"
+        },
+        {
+            "name": "nl-abnamro-oauth2",
+            "displayName": "AbnAmro",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.abnamro.AbnAmroAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }

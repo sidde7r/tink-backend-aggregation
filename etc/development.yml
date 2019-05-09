@@ -132,6 +132,15 @@ agentsServiceConfiguration:
         redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
         clientSSLP12: "dummyP12"
         clientSSLKeyPassword: "dummyPassword"
+    abnamro:
+      tink:
+        clientId: "TPP_test"
+        clientSecret: "7xenkgINmhQwAe2f"
+        apiKey: "VA6GvoqsktLZCl7G3ALbvSLxoWZ0LXHG"
+        #redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        redirectUrl: "https://localhost/auth"
+        clientSSLP12: "/Users/nazri/Developments/Projects/ABN-Amro/Keys/abnamro.p12"
+        clientSSLKeyPassword: "changeit"
     sebopenbanking:
       tink:
         baseUrl: "https://api-sandbox.sebgroup.com"
