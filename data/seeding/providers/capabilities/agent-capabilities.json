@@ -529,6 +529,9 @@
     "nxgen.nl.banks.openbanking.rabobank.RabobankAgent": [
         "CHECKING_ACCOUNTS"
     ],
+    "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.no.banks.danskebank.DanskeBankNOAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
