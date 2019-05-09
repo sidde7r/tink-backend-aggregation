@@ -3,6 +3,30 @@
     "currency": "EUR",
     "providers": [
         {
+            "name": "fi-opbank-openbanking",
+            "className": "nxgen.fi.openbanking.opbank.OpBankAgent",
+            "credentialsType": "PASSWORD",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "type": "BANK",
+            "transactional": true
+        },
+        {
             "className": "nxgen.fi.creditcards.amex.AmericanExpressFIAgent",
             "credentialsType": "PASSWORD",
             "displayName": "American Express",
