@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.transactional;
 
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.builder.WithIdStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 
 public interface WithTypeStep<T> {
 
-    WithIdStep<T> withType(AccountTypes accountType);
+    WithIdStep<T> withType(TransactionalAccountType accountType);
 }

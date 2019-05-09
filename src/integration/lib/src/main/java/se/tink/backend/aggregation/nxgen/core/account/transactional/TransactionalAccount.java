@@ -15,7 +15,7 @@ public class TransactionalAccount extends Account {
                     .add(AccountTypes.OTHER)
                     .build();
 
-    private AccountTypes accountType;
+    private TransactionalAccountType accountType;
 
     TransactionalAccount(TransactionalAccountBuilder builder) {
         super(builder);
@@ -64,7 +64,7 @@ public class TransactionalAccount extends Account {
 
     @Override
     public AccountTypes getType() {
-        return accountType;
+        return accountType == null ? null : accountType.toAccountType();
     }
 
     /** @deprecated Use StepBuilder instead */

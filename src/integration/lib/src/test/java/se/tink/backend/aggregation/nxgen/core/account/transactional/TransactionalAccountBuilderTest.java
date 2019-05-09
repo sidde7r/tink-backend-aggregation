@@ -36,7 +36,7 @@ public class TransactionalAccountBuilderTest {
     public void illegalAccountType() {
         // Build an otherwise correct account
         TransactionalAccount.nxBuilder()
-                .withType(AccountTypes.LOAN)
+                .withType(TransactionalAccountType.fromAccountType(AccountTypes.LOAN))
                 .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
                 .build();
@@ -45,7 +45,7 @@ public class TransactionalAccountBuilderTest {
     @Test(expected = NullPointerException.class)
     public void nullArguments() {
         TransactionalAccount.nxBuilder()
-                .withType(AccountTypes.CHECKING)
+                .withType(TransactionalAccountType.CHECKING)
                 .withId(null)
                 .withBalance(null)
                 .build();
@@ -54,7 +54,7 @@ public class TransactionalAccountBuilderTest {
     @Test(expected = NullPointerException.class)
     public void nullBalance() {
         TransactionalAccount.nxBuilder()
-                .withType(AccountTypes.CHECKING)
+                .withType(TransactionalAccountType.CHECKING)
                 .withId(ID_MODULE)
                 .withBalance(null)
                 .build();
@@ -63,7 +63,7 @@ public class TransactionalAccountBuilderTest {
     @Test(expected = NullPointerException.class)
     public void nullId() {
         TransactionalAccount.nxBuilder()
-                .withType(AccountTypes.CHECKING)
+                .withType(TransactionalAccountType.CHECKING)
                 .withId(null)
                 .withBalance(BalanceModule.of(Amount.inEUR(2)))
                 .build();
@@ -72,7 +72,7 @@ public class TransactionalAccountBuilderTest {
     @Test(expected = NullPointerException.class)
     public void nullFlagList() {
         TransactionalAccount.nxBuilder()
-                .withType(AccountTypes.SAVINGS)
+                .withType(TransactionalAccountType.SAVINGS)
                 .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
                 .addAccountFlags((AccountFlag) null)
@@ -83,7 +83,7 @@ public class TransactionalAccountBuilderTest {
     public void testFlagList() {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
-                        .withType(AccountTypes.SAVINGS)
+                        .withType(TransactionalAccountType.SAVINGS)
                         .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
                         .addAccountFlags(AccountFlag.BUSINESS, AccountFlag.BUSINESS)
@@ -101,7 +101,7 @@ public class TransactionalAccountBuilderTest {
 
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
-                        .withType(AccountTypes.OTHER)
+                        .withType(TransactionalAccountType.OTHER)
                         .withId(ID_MODULE)
                         .withBalance(
                                 BalanceModule.builder()
@@ -144,7 +144,7 @@ public class TransactionalAccountBuilderTest {
     public void testHolderName() {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
-                        .withType(AccountTypes.SAVINGS)
+                        .withType(TransactionalAccountType.SAVINGS)
                         .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inNOK(3483.23)))
                         .addHolderName("Britte Larsen")
@@ -159,7 +159,7 @@ public class TransactionalAccountBuilderTest {
     public void testApiIdentifier() {
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
-                        .withType(AccountTypes.SAVINGS)
+                        .withType(TransactionalAccountType.SAVINGS)
                         .withId(ID_MODULE)
                         .withBalance(BalanceModule.of(Amount.inDKK(20)))
                         .setApiIdentifier("2a3ffe-38320c")
@@ -174,7 +174,7 @@ public class TransactionalAccountBuilderTest {
 
         TransactionalAccount account =
                 TransactionalAccount.nxBuilder()
-                        .withType(AccountTypes.SAVINGS)
+                        .withType(TransactionalAccountType.SAVINGS)
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier("321-573-128")
