@@ -24,7 +24,7 @@ import se.tink.libraries.amount.Amount;
  */
 public class TransactionalAccountBuilderTest {
 
-    private static final IdModule ID_MODULE =
+    private final IdModule ID_MODULE =
             IdModule.builder()
                     .withUniqueIdentifier("1234")
                     .withAccountNumber("1234")
@@ -69,14 +69,13 @@ public class TransactionalAccountBuilderTest {
                 .build();
     }
 
-    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
     @Test(expected = NullPointerException.class)
     public void nullFlagList() {
         TransactionalAccount.nxBuilder()
                 .withType(AccountTypes.SAVINGS)
                 .withId(ID_MODULE)
                 .withBalance(BalanceModule.of(Amount.inSEK(2572.28)))
-                .addAccountFlags(null)
+                .addAccountFlags((AccountFlag) null)
                 .build();
     }
 
@@ -121,11 +120,11 @@ public class TransactionalAccountBuilderTest {
     }
 
     @SuppressWarnings("unused")
-    public static class SomeBoxing {
+    private static class SomeBoxing {
         private String x;
         private int y;
 
-        public SomeBoxing() {}
+        private SomeBoxing() {}
 
         SomeBoxing(String x, int y) {
             this.x = x;
