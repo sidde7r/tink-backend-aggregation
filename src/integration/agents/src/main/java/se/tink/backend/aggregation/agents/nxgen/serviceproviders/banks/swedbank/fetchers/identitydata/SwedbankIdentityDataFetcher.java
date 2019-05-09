@@ -21,7 +21,7 @@ public class SwedbankIdentityDataFetcher implements IdentityDataFetcher {
         TouchResponse touchResponse = apiClient.touch();
 
         return SeIdentityData.of(
-                touchResponse.getIdentifiedUserName(), touchResponse.getIdentifiedUser());
+                touchResponse.getIdentifiedUserName(), touchResponse.getIdentifiedUserSsn());
     }
 
     public FetchIdentityDataResponse getIdentityDataResponse() {
