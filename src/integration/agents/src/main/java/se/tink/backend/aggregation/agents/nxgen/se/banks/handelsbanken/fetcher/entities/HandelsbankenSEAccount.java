@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
@@ -57,7 +58,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
 
         return Optional.of(
                 TransactionalAccount.nxBuilder()
-                        .withType(accountType)
+                        .withType(TransactionalAccountType.fromAccountType(accountType))
                         .withId(
                                 IdModule.builder()
                                         .withUniqueIdentifier(number)
