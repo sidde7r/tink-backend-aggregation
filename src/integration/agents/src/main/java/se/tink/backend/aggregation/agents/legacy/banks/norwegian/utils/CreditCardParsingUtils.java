@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.utils;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,15 @@ public class CreditCardParsingUtils {
                 .first()
                 .text()
                 .replaceAll("\\s", "");
+    }
+
+    public static Optional<String> parseAccountName(String htmlContent) {
+        Elements elements = Jsoup.parse(htmlContent).select("div.creditcard");
+
+        String name =
+                elements.get(0).select("div.creditcard__name").first().text().replaceAll("\\s", "");
+
+        return Strings.isNullOrEmpty(name) ? Optional.empty() : Optional.of(name);
     }
 
     public static Optional<String> parseTransactionalAccountNumber(String htmlContent) {
