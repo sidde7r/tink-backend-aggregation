@@ -919,11 +919,9 @@ public class SEBApiAgent extends AbstractAgent
     private List<AccountEntity> listAccounts(String id) {
         ClientResponse response = queryAccounts(id);
         try {
+            // Checks if d and VODB are null.
             if (isValidResponse(response)) {
                 SebResponse sebResponse = response.getEntity(SebResponse.class);
-                if (java.util.Objects.isNull(sebResponse) || sebResponse.hasErrors()) {
-                    return null;
-                }
                 return sebResponse.d.VODB.getAccountEntities();
             }
         } finally {
@@ -940,7 +938,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private boolean isValidResponse(final ClientResponse response) {
-        if (java.util.Objects.isNull(response)) {
+        if (response == null) {
             return false;
         }
 
@@ -951,16 +949,10 @@ public class SEBApiAgent extends AbstractAgent
         }
 
         SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (java.util.Objects.isNull(sebResponse) || sebResponse.hasErrors()) {
+        if (sebResponse == null) {
             return false;
         }
-
-        if (java.util.Objects.isNull(sebResponse.d)
-                || java.util.Objects.isNull(sebResponse.d.VODB)) {
-            return false;
-        }
-
-        return true;
+        return sebResponse.isValid();
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
