@@ -33,6 +33,7 @@ public class GenericTypeMapper<V, T> {
         ignoredKeys = builder.getIgnoredKeys();
 
         defaultValue = builder.getDefaultValue();
+
         ImmutableMap.Builder<T, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<T>> entry : builder.getReversed().entrySet()) {
 
@@ -46,12 +47,6 @@ public class GenericTypeMapper<V, T> {
                     .forEach(key -> tmpTranslator.put(key, entry.getKey()));
         }
         translator = tmpTranslator.build();
-    }
-
-    protected GenericTypeMapper() {
-        translator = new HashMap<>();
-        ignoredKeys = new HashSet<>();
-        defaultValue = Optional.empty();
     }
 
     public static <V, T> Builder<V, T, ?> genericBuilder() {

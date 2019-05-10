@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -17,27 +15,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
     private static final Logger logger = LoggerFactory.getLogger(TypeMapper.class);
 
     private TypeMapper(GenericTypeMapper.Builder<V, String, ?> builder) {
-        ignoredKeys.clear();
-        ignoredKeys.addAll(
-                builder.getIgnoredKeys().stream()
-                        .map(k -> k.toLowerCase())
-                        .collect(Collectors.toSet()));
-        defaultValue = builder.getDefaultValue();
-
-        ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
-        for (Map.Entry<V, Collection<String>> entry : builder.getReversed().entrySet()) {
-
-            entry.getValue().stream()
-                    .peek(
-                            key ->
-                                    Preconditions.checkState(
-                                            !ignoredKeys.contains(key),
-                                            String.format(
-                                                    "Key %s is both mapped and ignored.", key)))
-                    .forEach(key -> tmpTranslator.put(key, entry.getKey()));
-        }
-        translator.clear();
-        translator.putAll(tmpTranslator.build());
+        super(builder);
     }
 
     public static <V> TypeMapperBuilder<V, ?> builder() {
@@ -67,6 +45,7 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
 
         protected TypeMapperBuilder() {
             super();
+            //            self().defaultValue = Optional.empty();
         }
 
         @Override
@@ -93,7 +72,11 @@ public class TypeMapper<V> extends GenericTypeMapper<V, String> {
          */
         @Override
         public TypeMapperBuilder<V, B> ignoreKeys(String... keys) {
-            self().ignoredKeys.addAll(Arrays.asList(keys));
+            self().ignoredKeys
+                    .addAll(
+                            Arrays.asList(keys).stream()
+                                    .map(k -> k.toLowerCase())
+                                    .collect(Collectors.toList()));
             return self();
         }
 
