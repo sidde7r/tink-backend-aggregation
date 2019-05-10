@@ -295,14 +295,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
     }
 
     public void updateSignableOperationStatus(
-            SignableOperation signableOperation, SignableOperationStatuses status) {
-        signableOperation.setStatus(status);
-        signableOperation.setStatusMessage(null);
-
-        updateSignableOperation(signableOperation);
-    }
-
-    public void updateSignableOperationStatus(
             SignableOperation signableOperation,
             SignableOperationStatuses status,
             String statusMessage) {

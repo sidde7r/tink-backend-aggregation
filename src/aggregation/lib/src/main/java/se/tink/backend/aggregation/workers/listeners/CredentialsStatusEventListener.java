@@ -40,7 +40,7 @@ public class CredentialsStatusEventListener implements AgentEventListener {
             case AWAITING_MOBILE_BANKID_AUTHENTICATION:
             case AWAITING_SUPPLEMENTAL_INFORMATION:
                 context.updateSignableOperationStatus(
-                        signableOperation, SignableOperationStatuses.AWAITING_CREDENTIALS);
+                        signableOperation, SignableOperationStatuses.AWAITING_CREDENTIALS, null);
                 break;
             default:
                 break;
