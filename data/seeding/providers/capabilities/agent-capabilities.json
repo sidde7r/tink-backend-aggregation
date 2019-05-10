@@ -1,5 +1,6 @@
 {
     "abnamro.AbnAmroAgent": [],
+    "nxgen.nl.banks.openbanking.abnamro.AbnAmroAgent": [],
     "banks.LansforsakringarAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
