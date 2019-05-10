@@ -78,6 +78,7 @@ public class NorwegianAgent extends AbstractAgent
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
+    private static final String IDENTITY_URL = BASE_URL + "MinSida/Settings/ContactInfo";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
 
@@ -416,10 +417,10 @@ public class NorwegianAgent extends AbstractAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        String creditCardPage = createClientRequest(CREDIT_CARD_URL).get(String.class);
+        String identityPage = createClientRequest(IDENTITY_URL).get(String.class);
         String ssn = request.getCredentials().getField(Key.USERNAME);
 
-        return CreditCardParsingUtils.parseAccountName(creditCardPage)
+        return CreditCardParsingUtils.parseAccountName(identityPage)
                 .map(name -> SeIdentityData.of(name, ssn))
                 .map(FetchIdentityDataResponse::new)
                 .orElse(new FetchIdentityDataResponse(null));

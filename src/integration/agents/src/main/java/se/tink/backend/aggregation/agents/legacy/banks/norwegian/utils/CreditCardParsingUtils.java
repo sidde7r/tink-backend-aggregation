@@ -65,9 +65,15 @@ public class CreditCardParsingUtils {
     }
 
     public static Optional<String> parseAccountName(String htmlContent) {
-        Elements elements = Jsoup.parse(htmlContent).select("div.creditcard");
+        Elements elements =
+                Jsoup.parse(htmlContent)
+                        .select("div.contactinfo-address.contactinfo-address--current");
 
-        String name = elements.get(0).select("div.creditcard__name").first().text().trim();
+        if (elements.size() == 0) {
+            return Optional.empty();
+        }
+
+        String name = elements.get(0).select("p").first().text().trim();
 
         return Strings.isNullOrEmpty(name) ? Optional.empty() : Optional.of(name);
     }
