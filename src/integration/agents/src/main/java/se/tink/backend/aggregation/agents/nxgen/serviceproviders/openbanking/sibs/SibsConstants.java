@@ -103,9 +103,9 @@ public final class SibsConstants {
 
     public static class SignatureValues {
 
-        public static final String RSA_SHA256 = "\"rsa-sha256\"";
-        public static final String HEADERS = "\"Digest TPP-Transaction-ID TPP-Request-ID Date\"";
-        public static final String HEADERS_NO_DIGEST = "\"TPP-Transaction-ID TPP-Request-ID Date\"";
+        public static final String RSA_SHA256 = "rsa-sha256";
+        public static final String HEADERS = "Digest TPP-Transaction-ID TPP-Request-ID Date";
+        public static final String HEADERS_NO_DIGEST = "TPP-Transaction-ID TPP-Request-ID Date";
     }
 
     public static class ConsentStatuses {
