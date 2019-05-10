@@ -49,9 +49,12 @@ public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
         implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
 
+    private EInvoiceRefreshController eInvoiceRefreshController;
+
     public HandelsbankenSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
+        eInvoiceRefreshController = null;
     }
 
     @Override
@@ -164,11 +167,15 @@ public class HandelsbankenSEAgent
 
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
-        EInvoiceRefreshController eInvoiceRefreshController =
-                new EInvoiceRefreshController(
-                        metricRefreshController,
-                        new HandelsbankenSEEInvoiceFetcher(
-                                this.bankClient, this.handelsbankenSessionStorage));
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new HandelsbankenSEEInvoiceFetcher(
+                                                        this.bankClient,
+                                                        this.handelsbankenSessionStorage)));
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
