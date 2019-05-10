@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -46,5 +47,16 @@ public class SebResponse {
 
     public Optional<String> getFirstErrorMessage() {
         return getFirstErrorWithErrorText().map(input -> input.ErrorText.trim());
+    }
+
+    public boolean isValid() {
+        if (hasErrors()) {
+            return false;
+        }
+
+        if (Objects.isNull(d) || Objects.isNull(d.VODB)) {
+            return false;
+        }
+        return true;
     }
 }
