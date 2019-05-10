@@ -33,7 +33,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaSEAgent extends NextGenerationAgent implements RefreshEInvoiceExecutor {
@@ -44,9 +43,6 @@ public class NordeaSEAgent extends NextGenerationAgent implements RefreshEInvoic
         super(request, context, signatureKeyPair);
         apiClient = new NordeaSEApiClient(client, sessionStorage);
     }
-
-    @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
