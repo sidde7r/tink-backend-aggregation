@@ -9,13 +9,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
@@ -297,7 +297,11 @@ public class NorwegianAgent extends AbstractAgent
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return getCachedAccount()
                 .map(this::updateTransactions)
-                .map(e -> ImmutableMap.<Account, List<Transaction>>builder().put(e).build())
+                .map(
+                        accountWithTransactions ->
+                                ImmutableMap.<Account, List<Transaction>>builder()
+                                        .put(accountWithTransactions)
+                                        .build())
                 .map(FetchTransactionsResponse::new)
                 .orElse(new FetchTransactionsResponse(new HashMap<>()));
     }
@@ -314,7 +318,11 @@ public class NorwegianAgent extends AbstractAgent
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return getSavingsAccount()
                 .map(account -> pageTransactions(account, account.getAccountNumber()))
-                .map(e -> ImmutableMap.<Account, List<Transaction>>builder().put(e).build())
+                .map(
+                        accountWithTransactions ->
+                                ImmutableMap.<Account, List<Transaction>>builder()
+                                        .put(accountWithTransactions)
+                                        .build())
                 .map(FetchTransactionsResponse::new)
                 .orElse(new FetchTransactionsResponse(new HashMap<>()));
     }
@@ -354,8 +362,8 @@ public class NorwegianAgent extends AbstractAgent
         String accountNumber = transactionMainPageContent.getAccountNo();
 
         if (accountNumber == null) {
-            log.warn("#norwegian: Could not parse account number when updating transactions.");
-            return new SimpleEntry<>(account, new ArrayList<>());
+            throw new NoSuchElementException(
+                    "Could not parse account number when updating transactions.");
         }
 
         return pageTransactions(account, accountNumber);
@@ -423,7 +431,7 @@ public class NorwegianAgent extends AbstractAgent
         return CreditCardParsingUtils.parseAccountName(identityPage)
                 .map(name -> SeIdentityData.of(name, ssn))
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private Date getOldestTransaction(List<Transaction> transactions) {
