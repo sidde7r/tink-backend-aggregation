@@ -21,7 +21,7 @@ public class GenericTypeMapper<V, T> {
     private static final Logger logger = LoggerFactory.getLogger(GenericTypeMapper.class);
     protected final Map<T, V> translator;
     protected final Set<T> ignoredKeys;
-    protected Optional<V> defaultValue;
+    protected final Optional<V> defaultValue;
 
     private BiPredicate<T, Collection<V>> isOneOfType =
             (input, types) -> {
