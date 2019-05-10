@@ -45,6 +45,7 @@ public class IcaBankenAgent extends NextGenerationAgent
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -54,6 +55,7 @@ public class IcaBankenAgent extends NextGenerationAgent
         this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
+        this.eInvoiceRefreshController = null;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -149,9 +151,14 @@ public class IcaBankenAgent extends NextGenerationAgent
 
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
-        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
-        EInvoiceRefreshController eInvoiceRefreshController =
-                new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher);
+        final IcaBankenEInvoiceFetcher eInvoiceFetcher =
+                new IcaBankenEInvoiceFetcher(apiClient, catalog);
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController, eInvoiceFetcher));
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
