@@ -289,6 +289,9 @@
         "INVESTMENTS",
         "TRANSFERS"
     ],
+    "nxgen.demo.banks.psd2.embedded.EmbeddedAuthenticationDemoAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.demo.banks.finovate.PasswordDemoAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
@@ -472,6 +475,9 @@
     "nxgen.fi.creditcards.amex.AmericanExpressFIAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.fi.openbanking.opbank.OpBankAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
@@ -527,6 +533,9 @@
         "SAVINGS_ACCOUNTS"
     ],
     "nxgen.nl.banks.openbanking.rabobank.RabobankAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
+    "nxgen.nl.banks.openbanking.volksbank.VolksbankAgent": [
         "CHECKING_ACCOUNTS"
     ],
     "nxgen.no.banks.danskebank.DanskeBankNOAgent": [

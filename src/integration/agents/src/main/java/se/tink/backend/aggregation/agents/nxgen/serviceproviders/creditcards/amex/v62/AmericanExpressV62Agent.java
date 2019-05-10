@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -110,11 +110,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.empty();
@@ -136,6 +131,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                 .get(Tags.USER_DATA, UserDataEntity.class)
                 .map(UserDataEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }

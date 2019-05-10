@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants.StatusCode;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.ProfileDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants.StatusCode;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

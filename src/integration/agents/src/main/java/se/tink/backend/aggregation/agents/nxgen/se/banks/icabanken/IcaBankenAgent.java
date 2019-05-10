@@ -1,7 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorHelper;
@@ -10,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.IcaBankenTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.IcaBankenEInvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.identitydata.IcaBankenIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.investment.IcaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.IcaBankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
@@ -33,10 +39,13 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IcaBankenAgent extends NextGenerationAgent {
+public class IcaBankenAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
+
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -46,6 +55,7 @@ public class IcaBankenAgent extends NextGenerationAgent {
         this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
+        this.eInvoiceRefreshController = null;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -112,13 +122,6 @@ public class IcaBankenAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        IcaBankenEInvoiceFetcher eInvoiceFetcher = new IcaBankenEInvoiceFetcher(apiClient, catalog);
-
-        return Optional.of(new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher));
-    }
-
-    @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.of(
@@ -144,5 +147,26 @@ public class IcaBankenAgent extends NextGenerationAgent {
                         new IcaBankenBankTransferExecutor(apiClient, executorHelper, catalog),
                         new IcaBankenEInvoiceExecutor(apiClient, executorHelper, catalog),
                         null));
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        final IcaBankenEInvoiceFetcher eInvoiceFetcher =
+                new IcaBankenEInvoiceFetcher(apiClient, catalog);
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController, eInvoiceFetcher));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        IcaBankenIdentityDataFetcher identityDataFetcher =
+                new IcaBankenIdentityDataFetcher(
+                        apiClient, credentials.getField(Field.Key.USERNAME));
+        return identityDataFetcher.getIdentityDataResponse();
     }
 }

@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -50,11 +49,6 @@ public class NordeaNoAgent extends NordeaV17Agent {
         return new TypedAuthenticationController(
                 new BankIdAuthenticationControllerNO(supplementalRequester, authenticator),
                 new PasswordAuthenticationController(authenticator));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
     }
 
     @Override

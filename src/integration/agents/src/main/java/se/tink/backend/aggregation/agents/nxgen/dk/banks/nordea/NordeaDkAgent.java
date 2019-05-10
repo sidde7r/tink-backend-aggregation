@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -58,11 +57,6 @@ public class NordeaDkAgent extends NordeaV20Agent {
         return new TypedAuthenticationController(
                 new PasswordAuthenticationController(
                         new NemidPasswordAuthenticationController(nemIdAuthenticator)));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
     }
 
     @Override

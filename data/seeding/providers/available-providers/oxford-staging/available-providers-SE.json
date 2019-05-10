@@ -68,6 +68,7 @@
         "se-test-password",
         "se-test-multi-supplemental",
         "se-test-demo-fake-bank",
+        "se-test-psd2-embedded",
         "chevrolet-v2-bankid",
         "circlek-v2-bankid",
         "eurocard-v2-bankid",

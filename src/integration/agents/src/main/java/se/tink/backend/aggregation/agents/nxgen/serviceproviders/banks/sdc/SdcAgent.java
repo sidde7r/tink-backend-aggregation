@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.sessi
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -113,11 +112,6 @@ public abstract class SdcAgent extends NextGenerationAgent {
                         this.updateController,
                         new SdcInvestmentFetcher(
                                 this.bankClient, this.sdcSessionStorage, this.agentConfiguration)));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
     }
 
     @Override

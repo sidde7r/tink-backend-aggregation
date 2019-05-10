@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -124,11 +123,6 @@ public class SparebankenSorAgent extends NextGenerationAgent {
         SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
         return Optional.of(
                 new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
     }
 
     @Override

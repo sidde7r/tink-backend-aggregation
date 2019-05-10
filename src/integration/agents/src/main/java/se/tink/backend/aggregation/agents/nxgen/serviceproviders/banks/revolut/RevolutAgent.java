@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -90,11 +90,6 @@ public class RevolutAgent extends NextGenerationAgent implements RefreshIdentity
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.empty();
@@ -116,6 +111,6 @@ public class RevolutAgent extends NextGenerationAgent implements RefreshIdentity
                 .map(BaseUserResponse::getUser)
                 .map(UserEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }

@@ -14,8 +14,9 @@ test_sources:
 targets:
   //...:all
   //src/integration/agents:agents_test
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk
+
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/ErsteBank
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/volksbank
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa
@@ -25,12 +26,17 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/ing
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/be/banks/kbc
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/commerzbank
-  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fidor
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/fints
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/hvb
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/de/banks/santander
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
+
   -//deb:all
   -//third_party:all
 

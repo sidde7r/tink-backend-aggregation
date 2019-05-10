@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData.EsIdentityDataBuilder;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class IdentityResponse {
@@ -37,8 +38,10 @@ public class IdentityResponse {
         EsIdentityDataBuilder builder = EsIdentityData.builder();
 
         if (surnameOne == null || identity == null) {
-            LOGGER.error("Identity response without actual identity for Openbank ES: {}", this);
-            return null;
+            throw new IllegalStateException(
+                    String.format(
+                            "Identity response without actual identity for Openbank ES: %s",
+                            SerializationUtils.serializeToString(this)));
         }
 
         switch (identity.getDocumentType()) {
