@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -32,9 +31,9 @@ public abstract class HandelsbankenAgent<
                 API extends HandelsbankenApiClient, Config extends HandelsbankenConfiguration>
         extends NextGenerationAgent {
 
-    private final API bankClient;
+    protected final API bankClient;
     private final HandelsbankenPersistentStorage handelsbankenPersistentStorage;
-    private final HandelsbankenSessionStorage handelsbankenSessionStorage;
+    protected final HandelsbankenSessionStorage handelsbankenSessionStorage;
     private final Config handelsbankenConfiguration;
 
     public HandelsbankenAgent(
@@ -94,9 +93,6 @@ public abstract class HandelsbankenAgent<
 
     protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController(
             API bankClient, HandelsbankenSessionStorage handelsbankenSessionStorage);
-
-    protected abstract Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(
-            API client, HandelsbankenSessionStorage sessionStorage);
 
     protected abstract Optional<TransferController> constructTransferController(
             API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
@@ -177,12 +173,6 @@ public abstract class HandelsbankenAgent<
                                 this.bankClient,
                                 this.handelsbankenSessionStorage,
                                 this.credentials)));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return constructEInvoiceRefreshController(
-                this.bankClient, this.handelsbankenSessionStorage);
     }
 
     @Override

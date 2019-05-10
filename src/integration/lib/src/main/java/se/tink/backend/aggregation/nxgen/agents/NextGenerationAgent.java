@@ -11,7 +11,23 @@ import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.*;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
+import se.tink.backend.aggregation.agents.SuperAbstractAgent;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -25,13 +41,17 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.payment.*;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
@@ -59,7 +79,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
                 RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshTransferDestinationExecutor,
-                RefreshEInvoiceExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
                 // TODO auth: remove this implements
@@ -208,7 +227,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
             constructCreditCardRefreshController().ifPresent(refreshers::add);
             constructInvestmentRefreshController().ifPresent(refreshers::add);
             constructLoanRefreshController().ifPresent(refreshers::add);
-            constructEInvoiceRefreshController().ifPresent(refreshers::add);
             constructTransferDestinationRefreshController().ifPresent(refreshers::add);
         }
         return refreshers;
@@ -266,8 +284,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController();
 
     protected abstract Optional<LoanRefreshController> constructLoanRefreshController();
-
-    protected abstract Optional<EInvoiceRefreshController> constructEInvoiceRefreshController();
 
     protected abstract Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController();
@@ -389,16 +405,6 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         Map<Account, List<TransferDestinationPattern>> refreshTransferDestination =
                 destinationRefresher.refreshTransferDestinationsFor(accounts);
         return new FetchTransferDestinationsResponse(refreshTransferDestination);
-    }
-
-    @Override
-    public FetchEInvoicesResponse fetchEInvoices() {
-        EInvoiceRefreshController eInvoiceRefreshController =
-                getRefreshController(EInvoiceRefreshController.class).orElse(null);
-        if (eInvoiceRefreshController == null) {
-            return new FetchEInvoicesResponse(Collections.emptyList());
-        }
-        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     public Optional<PaymentController> constructPaymentController() {

@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.SwedbankDefaultBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.SwedbankTransferHelper;
@@ -39,9 +41,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     public SwedbankAbstractAgent(
             CredentialsRequest request,
@@ -67,6 +70,7 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
+        eInvoiceRefreshController = null;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -139,13 +143,6 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.of(
-                new EInvoiceRefreshController(
-                        metricRefreshController, new SwedbankDefaultEinvoiceFetcher(apiClient)));
-    }
-
-    @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.of(
@@ -178,6 +175,18 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                         transferExecutor,
                         approveEInvoiceExecutor,
                         updatePaymentExecutor));
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new SwedbankDefaultEinvoiceFetcher(apiClient)));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override

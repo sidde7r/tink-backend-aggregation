@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
@@ -45,11 +47,14 @@ import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
+
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     public HandelsbankenSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
+        eInvoiceRefreshController = null;
     }
 
     @Override
@@ -97,15 +102,6 @@ public class HandelsbankenSEAgent
                         updateController,
                         new HandelsbankenSEInvestmentFetcher(
                                 bankClient, handelsbankenSessionStorage, credentials)));
-    }
-
-    @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(
-            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
-        return Optional.of(
-                new EInvoiceRefreshController(
-                        metricRefreshController,
-                        new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)));
     }
 
     @Override
@@ -167,6 +163,20 @@ public class HandelsbankenSEAgent
             HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return new TransactionKeyPaginationController<>(
                 new HandelsbankenSECreditCardTransactionPaginator(client, sessionStorage));
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new HandelsbankenSEEInvoiceFetcher(
+                                                        this.bankClient,
+                                                        this.handelsbankenSessionStorage)));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override
