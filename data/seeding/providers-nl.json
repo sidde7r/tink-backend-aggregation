@@ -158,7 +158,7 @@
             "displayName": "AbnAmro",
             "popular": true,
             "type": "BANK",
-            "status": "ENABLED",
+            "status": "DISABLED",
             "credentialsType": "PASSWORD",
             "multiFactor": false,
             "className": "nxgen.nl.banks.openbanking.abnamro.AbnAmroAgent",

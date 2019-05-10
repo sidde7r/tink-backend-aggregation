@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fe
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
-
-import java.math.BigDecimal;
 
 @JsonObject
 public class BalanceResponse {

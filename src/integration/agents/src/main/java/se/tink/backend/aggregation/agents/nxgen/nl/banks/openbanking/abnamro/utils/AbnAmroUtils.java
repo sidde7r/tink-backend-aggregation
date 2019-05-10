@@ -2,28 +2,23 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.ut
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class AbnAmroUtils {
+public final class AbnAmroUtils {
+
+    private AbnAmroUtils() {
+        throw new AssertionError();
+    }
+
     public static String getDate() {
         final Calendar calendar = Calendar.getInstance();
         final SimpleDateFormat dateFormat = new SimpleDateFormat(AbnAmroConstants.DATE_FORMAT);

@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.AccountCheckConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.BalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionalAccountsResponse;
@@ -75,25 +76,8 @@ public class AbnAmroApiClient {
                 .get(BalanceResponse.class);
     }
 
-    LocalDate today = LocalDate.now();
-
     public TransactionalTransactionsResponse getTransactions(
             final TransactionalAccount account, final int page) {
-
-        final String accountId =
-                account.getFromTemporaryStorage(AbnAmroConstants.StorageKey.RESOURCE_ID);
-        return buildRequest(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
-                .queryParam(
-                        AbnAmroConstants.QueryParams.BOOK_DATE_FROM,
-                        today.plusDays(-30)
-                                .format(
-                                        DateTimeFormatter.ofPattern(
-                                                AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT)))
-                .queryParam(
-                        AbnAmroConstants.QueryParams.BOOK_DATE_TO,
-                        today.format(
-                                (DateTimeFormatter.ofPattern(
-                                        AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT))))
-                .get(TransactionalTransactionsResponse.class);
+        return null;
     }
 }

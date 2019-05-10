@@ -44,11 +44,6 @@ public class Account {
         this.accountHolderName = accountHolderName;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" + "accountNumber = '" + accountNumber + '\'' + ",currency = '" + currency + '\'' + ",accountHolderName = '" + accountHolderName + "}";
-    }
-
     @JsonIgnore
     public TransactionalAccount toCheckingAccount(final BalanceResponse balanceResponse) {
         return CheckingAccount.builder()

@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fe
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collection;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-
-import java.util.Collection;
-import java.util.Optional;
 
 @JsonObject
 public class TransactionalTransactionsResponse implements PaginatorResponse {
@@ -18,7 +17,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @JsonProperty("account")
     private Account account;
 
-    @JsonIgnore
+    @JsonIgnore 
     private int currentPage;
 
     @Override
