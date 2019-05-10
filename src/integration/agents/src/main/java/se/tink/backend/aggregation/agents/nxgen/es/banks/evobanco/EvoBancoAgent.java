@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -133,6 +134,6 @@ public class EvoBancoAgent extends NextGenerationAgent implements RefreshIdentit
                 .get(Storage.USER_INFO, UserinfoEntity.class)
                 .map(UserinfoEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(null);
+                .orElseThrow(NoSuchElementException::new);
     }
 }

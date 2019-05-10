@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -136,6 +137,6 @@ public class AmericanExpressV62Agent extends NextGenerationAgent
                 .get(Tags.USER_DATA, UserDataEntity.class)
                 .map(UserDataEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -93,6 +94,6 @@ public class N26Agent extends NextGenerationAgent implements RefreshIdentityData
     public FetchIdentityDataResponse fetchIdentityData() {
         return Optional.of(n26APiClient.fetchIdentityData())
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }

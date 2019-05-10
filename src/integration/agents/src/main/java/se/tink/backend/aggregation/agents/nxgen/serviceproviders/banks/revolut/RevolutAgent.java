@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
@@ -116,6 +117,6 @@ public class RevolutAgent extends NextGenerationAgent implements RefreshIdentity
                 .map(BaseUserResponse::getUser)
                 .map(UserEntity::toTinkIdentity)
                 .map(FetchIdentityDataResponse::new)
-                .orElse(new FetchIdentityDataResponse(null));
+                .orElseThrow(NoSuchElementException::new);
     }
 }
