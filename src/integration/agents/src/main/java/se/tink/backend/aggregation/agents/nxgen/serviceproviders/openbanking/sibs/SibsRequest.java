@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,38 +14,10 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class SibsRequest {
+public final class SibsRequest {
 
-    private final RequestBuilder request;
-    private final String transactionId;
-    private final String requestId;
-    private final String requestTimestamp;
-
-    public RequestBuilder getRequest() {
-        return request;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public String getRequestTimestamp() {
-        return requestTimestamp;
-    }
-
-    private SibsRequest(
-            RequestBuilder request,
-            String transactionId,
-            String requestId,
-            String requestTimestamp) {
-        this.request = request;
-        this.transactionId = transactionId;
-        this.requestId = requestId;
-        this.requestTimestamp = requestTimestamp;
+    private SibsRequest() {
+        throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
     public static SibsRequestBuilder builder(
@@ -69,25 +42,24 @@ public class SibsRequest {
         }
 
         public SibsRequestBuilder inSession(String consent) {
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(consent));
             this.consent = consent;
             return this;
         }
 
         public SibsRequestBuilder signed() {
-            isSigned = true;
+            this.isSigned = true;
             return this;
         }
 
-        public SibsRequestBuilder withDigest(String digest) {
-            this.digest = digest;
+        public SibsRequestBuilder signed(String withDigest) {
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(withDigest));
+            this.digest = withDigest;
+            this.isSigned = true;
             return this;
         }
 
-        public SibsRequest build() {
-
-            String transactionId = null;
-            String requestId = null;
-            String requestTimestamp = null;
+        public RequestBuilder build() {
 
             RequestBuilder request =
                     client.request(url)
@@ -96,9 +68,9 @@ public class SibsRequest {
 
             if (isSigned) {
 
-                transactionId = SibsUtils.getRequestId();
-                requestId = SibsUtils.getRequestId();
-                requestTimestamp =
+                String transactionId = SibsUtils.getRequestId();
+                String requestId = SibsUtils.getRequestId();
+                String requestTimestamp =
                         new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT)
                                 .format(new Date());
 
@@ -131,7 +103,7 @@ public class SibsRequest {
                 request = request.header(HeaderKeys.DIGEST, HeaderValues.DIGEST_PREFIX + digest);
             }
 
-            return new SibsRequest(request, transactionId, requestId, requestTimestamp);
+            return request;
         }
     }
 }

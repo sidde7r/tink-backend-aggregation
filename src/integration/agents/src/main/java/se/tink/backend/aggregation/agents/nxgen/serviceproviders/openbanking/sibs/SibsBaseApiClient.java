@@ -45,11 +45,6 @@ public class SibsBaseApiClient {
         return SibsRequest.builder(client, configuration, url);
     }
 
-    private SibsRequestBuilder createSignedRequestInSession(URL url) {
-
-        return createRequest(url).signed().inSession(getConsentFromStorage());
-    }
-
     private String getConsentFromStorage() {
         return persistentStorage
                 .get(StorageKeys.CONSENT_ID, String.class)
@@ -59,24 +54,26 @@ public class SibsBaseApiClient {
 
     public AccountsResponse fetchAccounts() {
 
-        return createSignedRequestInSession(
-                        Urls.ACCOUNTS.parameter(
-                                PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
+        return createRequest(
+                        (Urls.ACCOUNTS.parameter(
+                                PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())))
+                .signed()
+                .inSession(getConsentFromStorage())
                 .build()
-                .getRequest()
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .get(AccountsResponse.class);
     }
 
     public BalancesResponse getAccountBalances(String accountId) {
 
-        return createSignedRequestInSession(
+        return createRequest(
                         Urls.ACCOUNT_BALANCES
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(PathParameterKeys.ACCOUNT_ID, accountId))
+                .signed()
+                .inSession(getConsentFromStorage())
                 .build()
-                .getRequest()
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .get(BalancesResponse.class);
     }
@@ -86,14 +83,15 @@ public class SibsBaseApiClient {
 
         SimpleDateFormat formatter = new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
 
-        return createSignedRequestInSession(
+        return createRequest(
                         Urls.ACCOUNT_TRANSACTIONS
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(
                                         PathParameterKeys.ACCOUNT_ID, account.getApiIdentifier()))
+                .signed()
+                .inSession(getConsentFromStorage())
                 .build()
-                .getRequest()
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
@@ -111,10 +109,8 @@ public class SibsBaseApiClient {
                 createRequest(
                                 Urls.CREATE_CONSENT.parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
-                        .signed()
-                        .withDigest(digest)
+                        .signed(digest)
                         .build()
-                        .getRequest()
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(configuration.getRedirectUrl())
@@ -129,13 +125,14 @@ public class SibsBaseApiClient {
 
     public ConsentStatusResponse getConsentStatus() {
 
-        return createSignedRequestInSession(
+        return createRequest(
                         Urls.CONSENT_STATUS
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(PathParameterKeys.CONSENT_ID, getConsentFromStorage()))
+                .signed()
+                .inSession(getConsentFromStorage())
                 .build()
-                .getRequest()
                 .get(ConsentStatusResponse.class);
     }
 
