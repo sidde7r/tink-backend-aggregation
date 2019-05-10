@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,6 +48,13 @@ public class SebResponse {
 
     public Optional<String> getFirstErrorMessage() {
         return getFirstErrorWithErrorText().map(input -> input.ErrorText.trim());
+    }
+
+    public List<AccountEntity> getAccountEntities() {
+        if (!isValid()) {
+            return Collections.emptyList();
+        }
+        return d.VODB.getAccountEntities();
     }
 
     public boolean isValid() {

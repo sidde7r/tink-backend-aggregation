@@ -919,16 +919,19 @@ public class SEBApiAgent extends AbstractAgent
     private List<AccountEntity> listAccounts(String id) {
         ClientResponse response = queryAccounts(id);
         try {
-            // Checks if d and VODB are null.
-            if (isValidResponse(response)) {
-                SebResponse sebResponse = response.getEntity(SebResponse.class);
-                return sebResponse.d.VODB.getAccountEntities();
+            if (!isValidResponse(response)) {
+                return Collections.emptyList();
             }
         } finally {
             response.close();
         }
 
-        return null;
+        SebResponse sebResponse = response.getEntity(SebResponse.class);
+        if (sebResponse == null) {
+            return Collections.emptyList();
+        }
+
+        return sebResponse.getAccountEntities();
     }
 
     private ClientResponse queryAccounts(final String id) {
@@ -947,12 +950,7 @@ public class SEBApiAgent extends AbstractAgent
                 || !response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
             return false;
         }
-
-        SebResponse sebResponse = response.getEntity(SebResponse.class);
-        if (sebResponse == null) {
-            return false;
-        }
-        return sebResponse.isValid();
+        return true;
     }
 
     // Since we're updating investment accounts separately we don't want to update them when
@@ -1827,7 +1825,7 @@ public class SEBApiAgent extends AbstractAgent
     }
 
     private void ensureIsValidSourceAccount(List<AccountEntity> accounts, Transfer transfer) {
-        if (accounts == null) {
+        if (accounts == null || accounts.isEmpty()) {
             failTransfer(
                     catalog.getString(
                             TransferExecutionException.EndUserMessage.INVALID_SOURCE_NO_ENTITIES));
