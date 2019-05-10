@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,8 @@ public class GenericTypeMapper<V, T> {
     private static final Logger logger = LoggerFactory.getLogger(GenericTypeMapper.class);
     protected final Map<T, V> translator;
     protected final Set<T> ignoredKeys;
+    protected final Optional<V> defaultValue;
+
     private BiPredicate<T, Collection<V>> isOneOfType =
             (input, types) -> {
                 Optional<V> type = translate(input);
@@ -28,6 +31,8 @@ public class GenericTypeMapper<V, T> {
 
     protected GenericTypeMapper(GenericTypeMapper.Builder<V, T, ?> builder) {
         ignoredKeys = builder.getIgnoredKeys();
+
+        defaultValue = builder.getDefaultValue();
 
         ImmutableMap.Builder<T, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, Collection<T>> entry : builder.getReversed().entrySet()) {
@@ -42,11 +47,6 @@ public class GenericTypeMapper<V, T> {
                     .forEach(key -> tmpTranslator.put(key, entry.getKey()));
         }
         translator = tmpTranslator.build();
-    }
-
-    protected GenericTypeMapper() {
-        translator = new HashMap<>();
-        ignoredKeys = new HashSet<>();
     }
 
     public static <V, T> Builder<V, T, ?> genericBuilder() {
@@ -69,16 +69,21 @@ public class GenericTypeMapper<V, T> {
      */
     public Optional<V> translate(T typeKey) {
         if (Objects.isNull(typeKey)) {
-            return Optional.empty();
+            return defaultValue;
         }
 
         Optional<V> type = Optional.ofNullable(translator.get(typeKey));
 
         if (!type.isPresent() && !ignoredKeys.contains(typeKey)) {
             logger.warn("Unknown account type for key: {}", typeKey);
+            return defaultValue;
         }
 
         return type;
+    }
+
+    public Collection<V> getMappedTypes() {
+        return translator.values().stream().distinct().collect(Collectors.toList());
     }
 
     public boolean isOneOf(T input, Collection<V> types) {
@@ -91,13 +96,15 @@ public class GenericTypeMapper<V, T> {
 
     public abstract static class Builder<V, T, B extends Builder<V, T, B>> {
 
-        protected Builder() {
-            this.thisObj = self();
-        }
-
         protected final Map<V, Collection<T>> reversed = new HashMap<>();
         protected final Set<T> ignoredKeys = new HashSet<>();
+        protected Optional<V> defaultValue;
         private B thisObj;
+
+        protected Builder() {
+            this.thisObj = self();
+            this.defaultValue = Optional.empty();
+        }
 
         public abstract GenericTypeMapper<V, T> build();
 
@@ -110,6 +117,15 @@ public class GenericTypeMapper<V, T> {
         public Builder<V, T, B> putAll(Map<V, List<T>> map) {
             self().reversed.putAll(map);
             return self();
+        }
+
+        public Builder<V, T, B> setDefaultTranslationValue(V defaultTranslationValue) {
+            self().defaultValue = Optional.ofNullable(defaultTranslationValue);
+            return self();
+        }
+
+        public Optional<V> getDefaultValue() {
+            return self().defaultValue;
         }
 
         protected abstract B self();

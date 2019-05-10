@@ -70,7 +70,6 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
             throws PaymentException {
         PaymentStatus paymentStatus;
         String nextStep;
-        List fields = new ArrayList<>();
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
                 ConfirmPaymentResponse confirmPaymentsResponse =
@@ -100,7 +99,7 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
 
         Payment payment = paymentMultiStepRequest.getPayment();
         payment.setStatus(paymentStatus);
-        return new PaymentMultiStepResponse(payment, nextStep, fields);
+        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }
 
     @Override

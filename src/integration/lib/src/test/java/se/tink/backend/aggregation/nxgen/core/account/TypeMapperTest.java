@@ -160,4 +160,27 @@ public final class TypeMapperTest {
                         .build();
         Assert.assertFalse(mapper.isOf("other_type", AccountTypes.CHECKING));
     }
+
+    @Test
+    public void setDefaultReturnValue_defaultValueSet() {
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, "a")
+                        .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .setDefaultTranslationValue(AccountTypes.DUMMY)
+                        .build();
+
+        Assert.assertEquals(AccountTypes.DUMMY, mapper.translate("z").get());
+    }
+
+    @Test
+    public void setDefaultReturnValue_noDefaulyValueSet() {
+        final TypeMapper<AccountTypes> mapper =
+                TypeMapper.<AccountTypes>builder()
+                        .put(AccountTypes.CHECKING, "a")
+                        .put(AccountTypes.CREDIT_CARD, "b", "c")
+                        .build();
+
+        Assert.assertEquals(Optional.empty(), mapper.translate("z"));
+    }
 }
