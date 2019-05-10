@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
@@ -34,7 +36,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NordeaSEAgent extends NextGenerationAgent {
+public class NordeaSEAgent extends NextGenerationAgent implements RefreshEInvoiceExecutor {
     private final NordeaSEApiClient apiClient;
 
     public NordeaSEAgent(
@@ -99,10 +101,11 @@ public class NordeaSEAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-        return Optional.of(
+    public FetchEInvoicesResponse fetchEInvoices() {
+        EInvoiceRefreshController eInvoiceRefreshController =
                 new EInvoiceRefreshController(
-                        metricRefreshController, new NordeaEInvoiceFetcher(apiClient)));
+                        metricRefreshController, new NordeaEInvoiceFetcher(apiClient));
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 
     @Override
