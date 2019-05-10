@@ -11,6 +11,7 @@ public class SeIdentityDataTest {
     @Test
     public void processSsn() {
         assertEquals("199202022222", SeIdentityData.processSsn(" 1992-02-02 - 2222 "));
+        assertEquals("190412310000", SeIdentityData.processSsn("041231+0000"));
     }
 
     @Test

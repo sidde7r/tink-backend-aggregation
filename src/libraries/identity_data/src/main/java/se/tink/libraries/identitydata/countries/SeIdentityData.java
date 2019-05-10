@@ -60,9 +60,15 @@ public class SeIdentityData extends IdentityData {
 
         String trimmedSsn = ssn.replaceAll("[^\\d]", "");
 
-        // Extend short SSNs to include all 12 digits
+        // For all 10 digit SSNs we extend to 12 digits
         if (trimmedSsn.length() == 10) {
-            trimmedSsn = extendSsn(trimmedSsn);
+            if (ssn.trim().contains("+")) {
+                // Age 100+ according to the Swedish SSN specification
+                trimmedSsn = "19" + trimmedSsn;
+            } else {
+                // Extend short SSNs to include all 12 digits
+                trimmedSsn = extendSsn(trimmedSsn);
+            }
         }
 
         Preconditions.checkState(
