@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
+@Ignore
 public class EmbeddedAuthenticationDemoAgentTest {
     private static final String USERNAME = "tink";
     private static final String PASSWORD = "tink-1234";
