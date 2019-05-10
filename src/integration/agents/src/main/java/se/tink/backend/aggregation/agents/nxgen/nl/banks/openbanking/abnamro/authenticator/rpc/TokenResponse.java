@@ -25,7 +25,9 @@ public class TokenResponse {
         return accessToken;
     }
 
-    public Long getExpiresIn() { return expiresIn; }
+    public Long getExpiresIn() {
+        return expiresIn;
+    }
 
     public String getTokenType() {
         return tokenType;

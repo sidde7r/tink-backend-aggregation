@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Base64;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.utils.AbnAmroUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
-
-import java.util.Base64;
 
 @JsonObject
 public class AbnAmroConfiguration implements ClientConfiguration {

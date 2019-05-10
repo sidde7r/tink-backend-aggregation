@@ -13,12 +13,17 @@ public class AbnAmroConstants {
 
     public static class URLs {
         private static final URL API_ABNAMRO = new URL("https://auth-sandbox.connect.abnamro.com");
-        public static final URL OAUTH2_ABNAMRO = new URL("https://auth-sandbox.connect.abnamro.com:8443");
-        public static final URL AUTHORIZE_ABNAMRO = API_ABNAMRO.concatWithSeparator("as").concatWithSeparator("authorization.oauth2");
-        public static final URL OAUTH2_TOKEN_ABNAMRO = OAUTH2_ABNAMRO.concatWithSeparator("as").concatWithSeparator("token.oauth2");
+        public static final URL OAUTH2_ABNAMRO =
+                new URL("https://auth-sandbox.connect.abnamro.com:8443");
+        public static final URL AUTHORIZE_ABNAMRO =
+                API_ABNAMRO.concatWithSeparator("as").concatWithSeparator("authorization.oauth2");
+        public static final URL OAUTH2_TOKEN_ABNAMRO =
+                OAUTH2_ABNAMRO.concatWithSeparator("as").concatWithSeparator("token.oauth2");
 
-        public static final URL ABNAMRO_CONSENT_INFO = API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("consentinfo");
-        public static final URL ABNAMRO_ACCOUNTS = API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("accounts");
+        public static final URL ABNAMRO_CONSENT_INFO =
+                API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("consentinfo");
+        public static final URL ABNAMRO_ACCOUNTS =
+                API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("accounts");
         private static final String ACCOUNT_DETAILS = "details";
         private static final String BALANCES_SUFFIX = "balances";
         private static final String TRANSACTIONS_SUFFIX = "transactions";
@@ -30,11 +35,10 @@ public class AbnAmroConstants {
         }
 
         public static URL buildBalanceUrl(final String accountId) {
-                return ABNAMRO_ACCOUNTS
-                        .concatWithSeparator(accountId)
-                        .concatWithSeparator(BALANCES_SUFFIX);
+            return ABNAMRO_ACCOUNTS
+                    .concatWithSeparator(accountId)
+                    .concatWithSeparator(BALANCES_SUFFIX);
         }
-
 
         public static URL buildTransactionsUrl(final String accountId) {
             return ABNAMRO_ACCOUNTS
@@ -94,7 +98,8 @@ public class AbnAmroConstants {
     public class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CODE = "code";
-        public static final String SCOPES = "psd2:account:balance:read psd2:account:transaction:read psd2:account:details:read";
+        public static final String SCOPES =
+                "psd2:account:balance:read psd2:account:transaction:read psd2:account:details:read";
         public static final String NLAA01 = "NLAA01";
     }
 }

@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.utils;
 
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -23,6 +19,9 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class AbnAmroUtils {
     public static String getDate() {
@@ -46,7 +45,10 @@ public class AbnAmroUtils {
             final String date, final String digest, final String requestId) {
         String result = AbnAmroConstants.Signature.SIGNING_STRING_DATE + date + "\n";
         result +=
-                AbnAmroConstants.Signature.SIGNING_STRING_DIGEST + AbnAmroConstants.Signature.SIGNING_STRING_SHA_512 + digest + "\n";
+                AbnAmroConstants.Signature.SIGNING_STRING_DIGEST
+                        + AbnAmroConstants.Signature.SIGNING_STRING_SHA_512
+                        + digest
+                        + "\n";
         result += AbnAmroConstants.Signature.SIGNING_STRING_REQUEST_ID + requestId;
         return result;
     }

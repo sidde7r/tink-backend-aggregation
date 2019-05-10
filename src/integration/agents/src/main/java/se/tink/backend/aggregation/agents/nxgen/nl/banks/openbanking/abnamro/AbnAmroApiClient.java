@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.*;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.BalanceResponse;
@@ -13,10 +16,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-import javax.ws.rs.core.MediaType;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 public class AbnAmroApiClient {
 
     private final TinkHttpClient client;
@@ -28,7 +27,9 @@ public class AbnAmroApiClient {
         this.persistentStorage = persistentStorage;
     }
 
-    public AbnAmroConfiguration getConfiguration() { return new AbnAmroConfiguration(); }
+    public AbnAmroConfiguration getConfiguration() {
+        return new AbnAmroConfiguration();
+    }
 
     public void setConfiguration(AbnAmroConfiguration configuration) {
         this.configuration = configuration;
@@ -39,7 +40,8 @@ public class AbnAmroApiClient {
     }
 
     public AccountCheckConsentResponse checkAccountAccessUsingConsent(final URL url) {
-        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_CONSENT_INFO).get(AccountCheckConsentResponse.class);
+        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_CONSENT_INFO)
+                .get(AccountCheckConsentResponse.class);
     }
 
     public TokenResponse refreshAccessToken(final RefreshTokenRequest request) {
@@ -64,11 +66,13 @@ public class AbnAmroApiClient {
     }
 
     public TransactionalAccountsResponse fetchAccounts() {
-        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_ACCOUNTS).get(TransactionalAccountsResponse.class);
+        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_ACCOUNTS)
+                .get(TransactionalAccountsResponse.class);
     }
 
     public BalanceResponse getBalance(final String accountId) {
-        return buildRequest(AbnAmroConstants.URLs.buildBalanceUrl(accountId)).get(BalanceResponse.class);
+        return buildRequest(AbnAmroConstants.URLs.buildBalanceUrl(accountId))
+                .get(BalanceResponse.class);
     }
 
     LocalDate today = LocalDate.now();
@@ -76,11 +80,20 @@ public class AbnAmroApiClient {
     public TransactionalTransactionsResponse getTransactions(
             final TransactionalAccount account, final int page) {
 
-        final String accountId = account.getFromTemporaryStorage(AbnAmroConstants.StorageKey.RESOURCE_ID);
-        return buildRequest(
-                AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
-                .queryParam(AbnAmroConstants.QueryParams.BOOK_DATE_FROM, today.plusDays(-30).format(DateTimeFormatter.ofPattern(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT)))
-                .queryParam(AbnAmroConstants.QueryParams.BOOK_DATE_TO, today.format((DateTimeFormatter.ofPattern(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT))))
+        final String accountId =
+                account.getFromTemporaryStorage(AbnAmroConstants.StorageKey.RESOURCE_ID);
+        return buildRequest(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
+                .queryParam(
+                        AbnAmroConstants.QueryParams.BOOK_DATE_FROM,
+                        today.plusDays(-30)
+                                .format(
+                                        DateTimeFormatter.ofPattern(
+                                                AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT)))
+                .queryParam(
+                        AbnAmroConstants.QueryParams.BOOK_DATE_TO,
+                        today.format(
+                                (DateTimeFormatter.ofPattern(
+                                        AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT))))
                 .get(TransactionalTransactionsResponse.class);
     }
 }

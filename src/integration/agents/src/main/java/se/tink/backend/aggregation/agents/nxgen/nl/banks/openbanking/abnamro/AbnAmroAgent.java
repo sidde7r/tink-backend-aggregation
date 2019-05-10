@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.AbnAmroAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.AccountCheckConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.session.AbnAmroSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -20,17 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Optional;
 
 public class AbnAmroAgent extends NextGenerationAgent {
 
     private final AbnAmroApiClient apiClient;
     private final String clientName;
 
-    public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AbnAmroAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         this.apiClient = new AbnAmroApiClient(client, persistentStorage);
@@ -53,7 +51,10 @@ public class AbnAmroAgent extends NextGenerationAgent {
                 .getIntegrations()
                 .getClientConfiguration(
                         AbnAmroConstants.INTEGRATION_NAME, clientName, AbnAmroConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException(AbnAmroConstants.ErrorMessages.MISSING_CONFIGURATION));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        AbnAmroConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
@@ -74,29 +75,9 @@ public class AbnAmroAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
-        //client.setDebugProxy("http://192.168.237.123:8888");
-    }
-
-    protected Optional<AccountCheckConsentResponse> constructAccountCheckUsingConsent() {
-        System.out.println("Test Account Check Using Consent");
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
-//        return Optional.of(
-//                new TransactionalAccountRefreshController(
-//                        metricRefreshController,
-//                        updateController,
-//                        new TransactionalAccountFetcher(apiClient),
-//                        new TransactionFetcherController<>(
-//                                transactionPaginationHelper,
-//                                new TransactionPagePaginationController<>(
-//                                        new TransactionFetcher(apiClient),
-//                                        AbnAmroConstants.START_PAGE))));
     }
 
     @Override
@@ -120,7 +101,8 @@ public class AbnAmroAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
