@@ -6,11 +6,13 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyTransaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class CrossKeyConfiguration {
 
@@ -37,6 +39,18 @@ public abstract class CrossKeyConfiguration {
 
     public abstract InvestmentAccount parseInvestmentAccount(
             CrossKeyAccount account, Portfolio portfolio);
+
+    public IdentityData parseIdentityData(final IdentityDataResponse identityResponse) {
+        if (identityResponse.isFailure()) {
+            return null;
+        }
+
+        return IdentityData.builder()
+                .addFirstNameElement(identityResponse.getFirstName())
+                .addSurnameElement(identityResponse.getLastName())
+                .setDateOfBirth(null)
+                .build();
+    }
 
     protected boolean noContent(String s) {
         return Strings.nullToEmpty(s).trim().isEmpty();

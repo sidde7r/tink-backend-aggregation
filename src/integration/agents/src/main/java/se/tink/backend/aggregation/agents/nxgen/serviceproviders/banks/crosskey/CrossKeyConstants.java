@@ -37,6 +37,7 @@ public class CrossKeyConstants {
         public static final String FETCH_PORTFOLIO = "showPortfolio.do";
         public static final String FETCH_INSTRUMENT_DETAILS = "v1/security/instrumentDetails.do";
         public static final String FETCH_FUND_INFO = "v1/getFundInfo.do";
+        public static final String IDENTITY_DATA = "customer.do";
     }
 
     public static final class AutoAuthentication {

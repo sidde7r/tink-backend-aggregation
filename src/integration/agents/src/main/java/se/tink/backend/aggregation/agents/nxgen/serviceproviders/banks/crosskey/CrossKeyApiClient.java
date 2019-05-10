@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.AddDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.AddDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankIdAutostartTokenResponse;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.CardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.sessionhandler.rpc.KeepAliveResponse;
@@ -214,6 +216,10 @@ public class CrossKeyApiClient {
                 buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS),
                 InstrumentDetailsResponse.class,
                 InstrumentDetailsRequest.of(isinCode, marketPlace));
+    }
+
+    public IdentityDataResponse fetchIdentityData() {
+        return get(buildRequest(Url.IDENTITY_DATA), IdentityDataResponse.class);
     }
 
     public FundInfoResponse fetchFundInfo(String fundCode) {
