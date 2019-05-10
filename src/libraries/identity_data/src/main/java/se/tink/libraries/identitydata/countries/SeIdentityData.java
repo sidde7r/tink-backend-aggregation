@@ -2,6 +2,7 @@ package se.tink.libraries.identitydata.countries;
 
 import com.google.common.base.Preconditions;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Map;
 import se.tink.libraries.identitydata.IdentityData;
 
@@ -16,6 +17,16 @@ public class SeIdentityData extends IdentityData {
         this.ssn = builder.ssn;
     }
 
+    /**
+     * Create a Swedish Identity Data object from name and SSN ("personnummer")
+     *
+     * <p>Date of birth is extracted from the SSN. The format of the SSN is validated, but the
+     * number itself is not validated.
+     *
+     * @param fullName First and last name
+     * @param ssn SSN (personnummer) with or without dashes/whitespace/etc, of length 10 or 12
+     * @return Swedish Identity Data object with given name, reformatted SSN and date of birth
+     */
     public static IdentityData of(String fullName, String ssn) {
         return builder()
                 .setSsn(ssn)
@@ -24,6 +35,17 @@ public class SeIdentityData extends IdentityData {
                 .build();
     }
 
+    /**
+     * Create a Swedish Identity Data object from name and SSN ("personnummer")
+     *
+     * <p>Date of birth is extracted from the SSN. The format of the SSN is validated, but the
+     * number itself is not validated.
+     *
+     * @param firstName First name
+     * @param lastName Last name
+     * @param ssn SSN (personnummer) with or without dashes/whitespace/etc, of length 10 or 12
+     * @return Swedish Identity Data object with given name, reformatted SSN and date of birth
+     */
     public static IdentityData of(String firstName, String lastName, String ssn) {
         return builder()
                 .setSsn(ssn)
@@ -37,13 +59,41 @@ public class SeIdentityData extends IdentityData {
         Preconditions.checkNotNull(ssn, "SSN must not be null");
 
         String trimmedSsn = ssn.replaceAll("[^\\d]", "");
+
+        // Extend short SSNs to include all 12 digits
+        if (trimmedSsn.length() == 10) {
+            trimmedSsn = extendSsn(trimmedSsn);
+        }
+
         Preconditions.checkState(
                 trimmedSsn.length() == 12, "SSN of invalid length %s", trimmedSsn.length());
 
         Preconditions.checkState(trimmedSsn.matches(SSN_PATTERN), "Invalid SSN");
 
-        // SSN is valid
+        // SSN has valid format
         return trimmedSsn;
+    }
+
+    /**
+     * Extend a 10-digit Swedish SSN to 12 digits. We do this by making the following check:
+     *
+     * <p>Given today's date, we look at how old the customer with the current SSN would be
+     * <strong>today</strong> if we added "19" to the beginning of their SSN.
+     *
+     * <ul>
+     *   <li>If that makes them at most 112 years old, we assume they were born in the 1900s
+     *   <li>If that makes them 113 or older, we instead assume they are born in the 2000s
+     * </ul>
+     *
+     * @param ssn 10 character long SSN String
+     * @return 12 character SSN for a customer of age 13-112
+     */
+    static String extendSsn(String ssn) {
+        Preconditions.checkArgument(ssn.length() == 10, "Invalid length sent to extension");
+        LocalDate assumedBirthDate = getBirthDateFromSsn("19" + ssn);
+        int age = Period.between(assumedBirthDate, LocalDate.now()).getYears();
+
+        return age < 113 ? "19" + ssn : "20" + ssn;
     }
 
     public static LocalDate getBirthDateFromSsn(String ssn) {
@@ -70,6 +120,10 @@ public class SeIdentityData extends IdentityData {
 
         protected Builder() {}
 
+        /**
+         * @param ssn SSN (personnummer) with or without dashes/whitespace/etc, of length 10 or 12
+         * @return The next builder step.
+         */
         @Override
         public SeIdentityDataBuilder setSsn(String ssn) {
             this.ssn = processSsn(ssn);
