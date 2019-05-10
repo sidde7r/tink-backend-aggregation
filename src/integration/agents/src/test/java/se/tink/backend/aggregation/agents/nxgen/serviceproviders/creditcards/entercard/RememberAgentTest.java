@@ -6,6 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RememberAgentTest {
 
@@ -23,6 +24,8 @@ public class RememberAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("se", "remembermastercard-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
