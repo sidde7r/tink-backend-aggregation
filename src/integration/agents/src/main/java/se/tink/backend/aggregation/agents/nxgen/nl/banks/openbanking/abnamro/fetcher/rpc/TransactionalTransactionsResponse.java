@@ -17,8 +17,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @JsonProperty("account")
     private Account account;
 
-    @JsonIgnore 
-    private int currentPage;
+    @JsonIgnore private int currentPage;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
