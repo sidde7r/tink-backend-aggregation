@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.en
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.EnterCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.fetcher.EnterCardTransactionFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -20,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EnterCardAgent extends NextGenerationAgent {
+public class EnterCardAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final EnterCardApiClient apiClient;
     private final EnterCardConfiguration config;
@@ -85,5 +88,11 @@ public class EnterCardAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        EnterCardIdentityFetcher fetcher = new EnterCardIdentityFetcher(apiClient, credentials);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }
