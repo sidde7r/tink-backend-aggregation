@@ -41,6 +41,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
         implements RefreshEInvoiceExecutor {
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
+    private EInvoiceRefreshController eInvoiceRefreshController;
 
     public SwedbankAbstractAgentPaymentsRevamp(
             CredentialsRequest request,
@@ -66,6 +67,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
         this.configuration = configuration;
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
+        eInvoiceRefreshController = null;
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -174,9 +176,13 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
 
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
-        EInvoiceRefreshController eInvoiceRefreshController =
-                new EInvoiceRefreshController(
-                        metricRefreshController, new SwedbankDefaultEinvoiceFetcher(apiClient));
+        eInvoiceRefreshController =
+                Optional.ofNullable(eInvoiceRefreshController)
+                        .orElseGet(
+                                () ->
+                                        new EInvoiceRefreshController(
+                                                metricRefreshController,
+                                                new SwedbankDefaultEinvoiceFetcher(apiClient)));
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
     }
 }
