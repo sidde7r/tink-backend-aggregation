@@ -2,9 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.SebKortAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.SebKortAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.SebKortTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.identitydata.SebKortIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.session.SebKortSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -20,8 +23,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class SebKortAgent extends NextGenerationAgent {
+public class SebKortAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final SebKortApiClient apiClient;
     private final SebKortConfiguration config;
 
@@ -85,5 +89,13 @@ public class SebKortAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final SebKortIdentityDataFetcher fetcher =
+                new SebKortIdentityDataFetcher(this.apiClient, credentials);
+        final IdentityData identityData = fetcher.fetchIdentityData();
+        return new FetchIdentityDataResponse(identityData);
     }
 }
