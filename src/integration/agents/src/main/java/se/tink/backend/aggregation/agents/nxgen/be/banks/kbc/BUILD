@@ -5,6 +5,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier",

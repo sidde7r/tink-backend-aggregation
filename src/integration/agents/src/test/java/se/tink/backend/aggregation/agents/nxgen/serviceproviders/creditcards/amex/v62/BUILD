@@ -15,6 +15,7 @@ junit_test(
     deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:org_mockito_mockito_core",
     ],
