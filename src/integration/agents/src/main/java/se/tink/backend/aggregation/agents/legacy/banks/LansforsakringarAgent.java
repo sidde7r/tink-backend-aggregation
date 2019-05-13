@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -2055,6 +2056,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
+        if (Strings.isNullOrEmpty(loginName)) {
+            throw new NoSuchElementException("Could not find user name in login response.");
+        }
         IdentityData identityData =
                 SeIdentityData.of(loginName, credentials.getField(Field.Key.USERNAME));
         return new FetchIdentityDataResponse(identityData);
