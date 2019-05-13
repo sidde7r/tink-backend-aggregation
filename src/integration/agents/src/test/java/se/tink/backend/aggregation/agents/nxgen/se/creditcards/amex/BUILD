@@ -4,6 +4,7 @@ junit_test(
     name = "amex",
     srcs = glob(["**/*.java"]),
     data = [
+        "//data:agent_unit_tests",
         "//data:provider_configuration_test",
         "//etc:development",
     ],
@@ -18,6 +19,7 @@ junit_test(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
+        "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
     ],
 )
