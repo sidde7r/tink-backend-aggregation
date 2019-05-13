@@ -36,7 +36,7 @@ targets:
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex
   //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62
-
+  //src/integration/agents/src/test/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/abnamro
   -//deb:all
   -//third_party:all
 
