@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbankenbankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -29,27 +28,27 @@ import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
-    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSEConfiguration.class);
+public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSeConfiguration.class);
 
     @Override
     public String getBaseUrl() {
-        return AlandsBankenSEConstants.Url.BASE;
+        return AlandsBankenSeConstants.Url.BASE;
     }
 
     @Override
     public LogTag getLoanLogTag() {
-        return AlandsBankenSEConstants.Fetcher.LOAN_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.LOAN_LOGGING;
     }
 
     @Override
     public LogTag getInvestmentPortfolioLogTag() {
-        return AlandsBankenSEConstants.Fetcher.INVESTMENT_PORTFOLIO_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.INVESTMENT_PORTFOLIO_LOGGING;
     }
 
     @Override
     public LogTag getInvestmentInstrumentLogTag() {
-        return AlandsBankenSEConstants.Fetcher.INVESTMENT_INSTRUMENT_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.INVESTMENT_INSTRUMENT_LOGGING;
     }
 
     @Override
@@ -116,7 +115,7 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
                 LOG.info(
                         String.format(
                                 "%s - %s",
-                                AlandsBankenSEConstants.Fetcher.TRANSACTION_LOGGING,
+                                AlandsBankenSeConstants.Fetcher.TRANSACTION_LOGGING,
                                 SerializationUtils.serializeToString(transaction)));
             }
         } catch (Exception e) {
@@ -170,10 +169,5 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
-    }
-
-    @Override
-    protected Optional<String> getAppVersion() {
-        return Optional.of(AlandsBankenSEConstants.APP_VERSION);
     }
 }

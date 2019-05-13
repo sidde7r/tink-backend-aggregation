@@ -1,8 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbankenbankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
-public class AlandsBankenSEConstants {
+public class AlandsBankenSeConstants {
 
     public static final class Url {
         public static final String BASE =

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbankenbankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.bankid;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -7,7 +7,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class AlandsBankenSEAgentTest {
+public class AlandsBankenBankidSeAgentTest {
     private static final String USERNAME = "";
 
     private AgentIntegrationTest.Builder builder;

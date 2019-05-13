@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.fetcher.i
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.AlandsBankenSEConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.AlandsBankenSeConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.NameElement;
@@ -53,7 +53,7 @@ public class AlandsBankenSeIdentityDataFetcherTest {
 
     @Test
     public void testIdentityDataParsing() {
-        AlandsBankenSEConfiguration config = new AlandsBankenSEConfiguration();
+        AlandsBankenSeConfiguration config = new AlandsBankenSeConfiguration();
         IdentityDataResponse resp =
                 SerializationUtils.deserializeFromString(
                         identityDataResponse, IdentityDataResponse.class);
