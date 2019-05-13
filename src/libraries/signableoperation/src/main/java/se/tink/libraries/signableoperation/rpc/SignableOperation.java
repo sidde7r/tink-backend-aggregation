@@ -32,6 +32,7 @@ public class SignableOperation {
     private UUID userId;
     private UUID credentialsId;
     private String signableObject;
+    private String supplementalInformation;
 
     public SignableOperation() {}
 
@@ -119,6 +120,10 @@ public class SignableOperation {
         return SerializationUtils.deserializeFromString(signableObject, cls);
     }
 
+    public String getSupplementalInformation() {
+        return supplementalInformation;
+    }
+
     @JsonIgnore
     public boolean isInProgress() {
         return IN_PROGRESS_STATUSES.contains(getStatus());
@@ -174,6 +179,10 @@ public class SignableOperation {
 
     public void setSignableObject(String signableObject) {
         this.signableObject = signableObject;
+    }
+
+    public void setSupplementalInformation(String supplementalInfo) {
+        this.supplementalInformation = supplementalInfo;
     }
 
     public static SignableOperation create(Transfer transfer, SignableOperationStatuses status) {
