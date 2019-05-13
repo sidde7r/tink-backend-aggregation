@@ -146,7 +146,7 @@ public class TransactionEntity {
         return relatedReservationId;
     }
 
-    public CreditCardTransaction toTinkTransaction() {
+    public CreditCardTransaction toTinkTransaction(boolean isPending) {
         Amount negatedAmount =
                 new Amount(this.getBillingCurrencyCode(), this.getBillingAmount()).negate();
 
@@ -154,6 +154,7 @@ public class TransactionEntity {
                 .setDate(this.getDate())
                 .setDescription(this.getSpecification())
                 .setAmount(negatedAmount)
+                .setPending(isPending)
                 .build();
     }
 }
