@@ -51,15 +51,6 @@ filegroup(
 )
 
 filegroup(
-    name = "provider_configuration_test",
-    srcs = glob([
-        "seeding/providers-*.json",
-        "seeding/providers/**",
-    ]),
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
     name = "cryptography_test",
     srcs = [
         "test/cryptography/private_rsa_key.pem",

@@ -1,9 +1,0 @@
-{
-  "clusterid" : "leeds-production",
-  "providers" : [
-    "nl-abnamro",
-    "nl-abnamro-abstract",
-    "nl-abnamro-ics-abstract",
-    "nl-bunq-apikey"
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "clusterid": "cardiff-production",
-    "providers": [
-      "pt-test-password",
-      "pt-test-multi-supplemental",
-      "se-cardiff-abstract"
-    ]
-}
