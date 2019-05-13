@@ -38,17 +38,18 @@ public class AccountEntity {
 
     private Amount getBalance() {
 
-        BalanceEntity balance =
-                balances.stream()
-                        .filter(BalanceEntity::isForwardBalanceAvailable)
-                        .findAny()
-                        .orElseGet(
-                                () ->
-                                        balances.stream()
-                                                .filter(BalanceEntity::isInterimBalanceAvailable)
-                                                .findAny()
-                                                .orElse(null));
+        return balances.stream()
+                .filter(BalanceEntity::isForwardBalanceAvailable)
+                .findAny()
+                .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
+                .orElseGet(this::getInterimBalance);
+    }
 
-        return balance != null ? balance.getBalanceAmount().toTinkAmount() : new Amount("EUR", 0);
+    private Amount getInterimBalance() {
+        return balances.stream()
+                .filter(BalanceEntity::isInterimBalanceAvailable)
+                .findAny()
+                .map(balanceEntity -> balanceEntity.getBalanceAmount().toTinkAmount())
+                .orElse(new Amount("EUR", 0));
     }
 }
