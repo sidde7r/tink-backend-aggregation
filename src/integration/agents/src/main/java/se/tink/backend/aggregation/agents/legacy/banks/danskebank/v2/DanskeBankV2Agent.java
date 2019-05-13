@@ -1201,7 +1201,7 @@ public class DanskeBankV2Agent extends AbstractAgent
             return new FetchIdentityDataResponse(
                     SeIdentityData.of(name, credentials.getField(Key.USERNAME)));
         } catch (NullPointerException | IllegalArgumentException | IllegalStateException e) {
-            log.warn("Failed to parse SSN: " + name);
+            log.warn("Failed to parse SSN: " + credentials.getField(Key.USERNAME));
 
             return new FetchIdentityDataResponse(
                     IdentityData.builder().setFullName(name).setDateOfBirth(null).build());
