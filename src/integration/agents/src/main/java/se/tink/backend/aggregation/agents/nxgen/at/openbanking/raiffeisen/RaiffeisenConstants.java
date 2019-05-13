@@ -32,11 +32,18 @@ public final class RaiffeisenConstants {
 
         public static final String BASE_AUTH_URL = "https://sso.raiffeisen.at/as";
         public static final String BASE_API_URL = "https://sandbox.raiffeisen.at/api";
-        public static final URL AUTHENTICATE = new URL(BASE_AUTH_URL + "/token.oauth2");
-        public static final URL ACCOUNTS = new URL(BASE_API_URL + "/psd2-xs2a/rest/v1/accounts");
-        public static final URL CONSENTS = new URL(BASE_API_URL + "/psd2-xs2a/rest/v1/consents");
-        public static final URL TRANSACTIONS =
-                new URL(BASE_API_URL + "/psd2-xs2a/rest/v1/accounts/{account-id}/transactions");
+        public static final URL AUTHENTICATE = new URL(BASE_AUTH_URL + Endpoints.AUTHENTICATE);
+        public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
+        public static final URL CONSENTS = new URL(BASE_API_URL + Endpoints.CONSENTS);
+        public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
+    }
+
+    public static class Endpoints {
+        public static final String AUTHENTICATE = "/token.oauth2";
+        public static final String ACCOUNTS = "/psd2-xs2a/rest/v1/accounts";
+        public static final String CONSENTS = "/psd2-xs2a/rest/v1/consents";
+        public static final String TRANSACTIONS =
+                "/psd2-xs2a/rest/v1/accounts/{account-id}/transactions";
     }
 
     public static class StorageKeys {
