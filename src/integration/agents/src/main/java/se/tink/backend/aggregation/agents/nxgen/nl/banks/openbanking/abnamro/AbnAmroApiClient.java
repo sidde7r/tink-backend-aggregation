@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.AccountCheckConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.TokenResponse;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fet
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.utils.AbnAmroUtils;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -64,6 +67,16 @@ public class AbnAmroApiClient {
                 .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
                 .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    public ConsentResponse consentRequest(OAuth2Token token) {
+
+        final String apiKey = getConfiguration().getApiKey();
+        return client.request(URLs.ABNAMRO_CONSENT_INFO)
+            .addBearerToken(token)
+            .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+            .accept(MediaType.APPLICATION_JSON_TYPE)
+            .get(ConsentResponse.class);
     }
 
     public TransactionalAccountsResponse fetchAccounts() {

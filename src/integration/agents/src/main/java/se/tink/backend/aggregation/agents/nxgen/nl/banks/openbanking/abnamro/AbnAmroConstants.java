@@ -12,14 +12,14 @@ public class AbnAmroConstants {
     public static final String INTEGRATION_NAME = "abnamro";
 
     public static class URLs {
-        private static final URL API_ABNAMRO = new URL("https://auth-sandbox.connect.abnamro.com");
-        public static final URL OAUTH2_ABNAMRO =
+        private static final URL API_ABNAMRO = new URL("https://api-sandbox.abnamro.com");
+        private static final URL OAUTH2_ABNAMRO = new URL("https://auth-sandbox.connect.abnamro.com");
+        public static final URL OAUTH2_ABNAMRO_SSL =
                 new URL("https://auth-sandbox.connect.abnamro.com:8443");
         public static final URL AUTHORIZE_ABNAMRO =
-                API_ABNAMRO.concatWithSeparator("as").concatWithSeparator("authorization.oauth2");
+                OAUTH2_ABNAMRO.concatWithSeparator("as").concatWithSeparator("authorization.oauth2");
         public static final URL OAUTH2_TOKEN_ABNAMRO =
-                OAUTH2_ABNAMRO.concatWithSeparator("as").concatWithSeparator("token.oauth2");
-
+                OAUTH2_ABNAMRO_SSL.concatWithSeparator("as").concatWithSeparator("token.oauth2");
         public static final URL ABNAMRO_CONSENT_INFO =
                 API_ABNAMRO.concatWithSeparator("v1").concatWithSeparator("consentinfo");
         public static final URL ABNAMRO_ACCOUNTS =
@@ -56,6 +56,7 @@ public class AbnAmroConstants {
     public class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
+        public static final String ACCOUNT_CONSENT_ID = "ConsentAccountId";
     }
 
     public class Signature {
@@ -84,14 +85,13 @@ public class AbnAmroConstants {
         public static final String BANK = "bank";
         public static final String FLOW = "flow";
         public static final String REFRESH_TOKEN = "refresh_token";
-        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String REQUEST_ID = "X-Request-ID";
-        public static final String DIGEST = "Digest";
+        public static final String CONTENT_TYPE = "Content-Type";
+        public static final String CONSENT_ID = "Consent-ID";
+        public static final String AUTHORIZATION = "Authorization";
+        public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
         public static final String SIGNATURE = "Signature";
         public static final String DATE = "Date";
-        public static final String BOOK_DATE_FROM = "bookDateFrom";
-        public static final String BOOK_DATE_TO = "bookDateTo";
-        public static final String SIZE = "size";
         public static final String PAGE = "page";
     }
 
