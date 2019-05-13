@@ -22,7 +22,7 @@ public class AccountEntity {
     private String linkedAccounts;
     private String usage;
     private String details;
-    private List<BalanceEntity> balances = null;
+    private List<BalanceEntity> balances;
     private LinksEntity links;
 
     public CheckingAccount toTinkAccount() {
