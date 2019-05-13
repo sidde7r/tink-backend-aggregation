@@ -31,12 +31,12 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
 
     public abstract OAuth2Token refreshToken(String token);
 
-    public void setConfiguration(TConfiguration configuration){
-        this.configuration = configuration;
-    }
-
     public TConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public void setConfiguration(TConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public RequestBuilder getAccountsRequestBuilder(String url) {

@@ -16,7 +16,7 @@ public class BalanceBaseEntity {
     public boolean isInCurrency(String currency) {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
-    
+
     public Amount toAmount() {
         return balanceAmount.toAmount();
     }

@@ -47,17 +47,15 @@ public final class BerlinGroupUtils {
 
     public static String generateSignature(String input, String signingKeyPath, String algorithm) {
         return Base64.getEncoder()
-            .encodeToString(
-                RSA.signSha256(
-                    JWTUtils.readSigningKey(signingKeyPath, algorithm),
-                    input.getBytes()));
+                .encodeToString(
+                        RSA.signSha256(
+                                JWTUtils.readSigningKey(signingKeyPath, algorithm),
+                                input.getBytes()));
     }
-
 
     public static String getFormattedCurrentDate(String format, String timeZone) {
         return formatDate(Calendar.getInstance().getTime(), format, timeZone);
     }
-
 
     public static String formatDate(Date date, String format, String timeZone) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -68,5 +66,4 @@ public final class BerlinGroupUtils {
 
         return sdf.format(date);
     }
-
 }

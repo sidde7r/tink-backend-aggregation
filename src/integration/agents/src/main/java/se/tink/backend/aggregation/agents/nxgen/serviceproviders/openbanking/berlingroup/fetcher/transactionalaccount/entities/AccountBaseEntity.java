@@ -100,11 +100,11 @@ public class AccountBaseEntity {
         return Optional.ofNullable(links).map(AccountLinksEntity::getBalances).orElse("");
     }
 
-    public void setBalances(List<BalanceBaseEntity> balances) {
-        this.balances = balances;
-    }
-
     public List<BalanceBaseEntity> getBalances() {
         return balances;
+    }
+
+    public void setBalances(List<BalanceBaseEntity> balances) {
+        this.balances = balances;
     }
 }

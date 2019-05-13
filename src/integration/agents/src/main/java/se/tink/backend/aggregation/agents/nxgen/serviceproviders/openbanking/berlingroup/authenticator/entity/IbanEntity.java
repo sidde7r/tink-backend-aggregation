@@ -14,9 +14,6 @@ public class IbanEntity {
     }
 
     public String toForm() {
-        return Form.builder()
-            .put("iban", iban)
-            .build()
-            .serialize();
+        return Form.builder().put("iban", iban).build().serialize();
     }
 }

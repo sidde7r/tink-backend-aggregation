@@ -10,6 +10,7 @@ public class AccountLinksEntity {
     public String getTransactions() {
         return transactions;
     }
+
     public String getBalances() {
         return balances;
     }

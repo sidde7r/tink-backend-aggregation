@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormKeys;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
-public class TokenRequestPost extends TokenBaseRequest{
+public class TokenRequestPost extends TokenBaseRequest {
 
     private final String codeVerifier;
 

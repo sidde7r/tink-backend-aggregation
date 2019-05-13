@@ -7,11 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public abstract class BerlinGroupConstants {
 
     public static final String CLIENT_NAME = "tink";
-
-    private BerlinGroupConstants() {
-        throw new AssertionError();
-    }
-
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(
@@ -27,6 +22,10 @@ public abstract class BerlinGroupConstants {
                             "CurrentAccount")
                     .put(AccountTypes.SAVINGS, "LLSV", "ONDP", "SVGS")
                     .build();
+
+    private BerlinGroupConstants() {
+        throw new AssertionError();
+    }
 
     public static class Signature {
         public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";

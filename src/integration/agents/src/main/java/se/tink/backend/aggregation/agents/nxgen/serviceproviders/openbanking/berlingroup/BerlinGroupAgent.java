@@ -53,10 +53,6 @@ public abstract class BerlinGroupAgent<
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected abstract String getIntegrationName();
-
-    protected abstract Class<TConfiguration> getConfigurationClassDescription();
-
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
@@ -67,21 +63,22 @@ public abstract class BerlinGroupAgent<
         getApiClient().setConfiguration(getConfiguration());
     }
 
+    protected abstract String getIntegrationName();
+
+    protected abstract Class<TConfiguration> getConfigurationClassDescription();
 
     @Override
     protected Authenticator constructAuthenticator() {
         final OAuth2AuthenticationController controller =
-            new OAuth2AuthenticationController(
-                persistentStorage,
-                supplementalInformationHelper,
-                getAgentAuthenticator());
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, getAgentAuthenticator());
 
         return new AutoAuthenticationController(
-            request,
-            systemUpdater,
-            new ThirdPartyAppAuthenticationController<>(
-                controller, supplementalInformationHelper),
-            controller);
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     protected BerlinGroupAuthenticator getAgentAuthenticator() {
@@ -92,7 +89,7 @@ public abstract class BerlinGroupAgent<
         return new BerlinGroupAccountFetcher(getApiClient());
     }
 
-    protected BerlinGroupTransactionFetcher getTransactionFetcher(){
+    protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new BerlinGroupTransactionFetcher(getApiClient());
     }
 

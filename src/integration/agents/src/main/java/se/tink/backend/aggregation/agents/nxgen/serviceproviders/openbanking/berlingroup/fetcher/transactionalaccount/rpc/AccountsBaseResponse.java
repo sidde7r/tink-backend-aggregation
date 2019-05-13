@@ -13,14 +13,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountsBaseResponse {
     protected List<AccountBaseEntity> accounts;
 
-    public List<AccountBaseEntity> getAccounts() {
-        return accounts;
-    }
-
     public AccountsBaseResponse() {}
 
     public AccountsBaseResponse(List<AccountBaseEntity> accounts) {
         this.accounts = accounts;
+    }
+
+    public List<AccountBaseEntity> getAccounts() {
+        return accounts;
     }
 
     public Collection<TransactionalAccount> toTinkAccounts() {

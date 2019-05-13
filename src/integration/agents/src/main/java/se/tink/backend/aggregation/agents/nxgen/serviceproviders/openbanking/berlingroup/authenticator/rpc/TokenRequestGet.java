@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 
-public class TokenRequestGet extends TokenBaseRequest{
+public class TokenRequestGet extends TokenBaseRequest {
 
     public TokenRequestGet(
             String clientId,
