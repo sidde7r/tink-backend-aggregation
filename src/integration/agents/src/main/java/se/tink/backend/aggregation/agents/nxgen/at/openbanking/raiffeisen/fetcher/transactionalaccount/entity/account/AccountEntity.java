@@ -30,7 +30,7 @@ public class AccountEntity {
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(iban)
                 .setBalance(getBalance())
-                .setAlias(name)
+                .setAlias(product)
                 .addAccountIdentifier(new IbanIdentifier(iban))
                 .setApiIdentifier(resourceId)
                 .build();
