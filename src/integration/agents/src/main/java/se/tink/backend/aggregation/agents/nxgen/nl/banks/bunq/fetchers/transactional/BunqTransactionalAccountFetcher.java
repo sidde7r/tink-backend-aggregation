@@ -4,6 +4,7 @@ import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc.AccountsResponseWrapper;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -12,7 +13,7 @@ public class BunqTransactionalAccountFetcher implements AccountFetcher<Transacti
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqTransactionalAccountFetcher(SessionStorage sessionStorage, BunqApiClient apiClient) {
+    public BunqTransactionalAccountFetcher(SessionStorage sessionStorage, BunqBaseApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }

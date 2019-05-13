@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transact
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -14,7 +15,7 @@ public class BunqTransactionalTransactionsFetcher
     private final BunqApiClient apiClient;
 
     public BunqTransactionalTransactionsFetcher(
-            SessionStorage sessionStorage, BunqApiClient apiClient) {
+            SessionStorage sessionStorage, BunqBaseApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }

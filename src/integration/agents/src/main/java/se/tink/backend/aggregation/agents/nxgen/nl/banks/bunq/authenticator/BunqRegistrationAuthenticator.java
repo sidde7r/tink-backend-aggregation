@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.error.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseApiClient;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -31,7 +32,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
     public BunqRegistrationAuthenticator(
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            BunqApiClient apiClient,
+            BunqBaseApiClient apiClient,
             String aggregatorIdentifier) {
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;

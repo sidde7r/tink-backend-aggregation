@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.error.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseApiClient;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -27,7 +28,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
             Credentials credentials,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            BunqApiClient apiClient) {
+            BunqBaseApiClient apiClient) {
         this.credentials = credentials;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;

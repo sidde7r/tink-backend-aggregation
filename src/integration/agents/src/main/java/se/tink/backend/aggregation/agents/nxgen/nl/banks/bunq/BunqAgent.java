@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
-import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticator;
@@ -8,10 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.Bunq
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqRegistrationAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqRequiredHeadersFilter;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqSignatureHeaderFilter;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseAgent;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -22,26 +19,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BunqAgent extends NextGenerationAgent {
-    private final BunqApiClient apiClient;
+public class BunqAgent extends BunqBaseAgent {
 
-    public BunqAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BunqAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        configureHttpClient(client);
-
-        String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
-        BunqConfiguration agentConfiguration = new BunqConfiguration(backendHost);
-        this.apiClient = new BunqApiClient(client, agentConfiguration);
     }
 
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new BunqRequiredHeadersFilter(sessionStorage));
-        client.addFilter(new BunqSignatureHeaderFilter(persistentStorage, client.getUserAgent()));
-    }
 
     @Override
     protected Authenticator constructAuthenticator() {
