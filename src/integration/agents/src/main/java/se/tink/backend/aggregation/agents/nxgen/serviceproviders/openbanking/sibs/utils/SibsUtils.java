@@ -19,7 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class SibsUtils {
@@ -119,10 +118,10 @@ public final class SibsUtils {
         return signer.sign();
     }
 
-    public static String getDigest(ConsentRequest consentRequest) {
+    public static String getDigest(Object body) {
 
         byte[] bytes =
-                SerializationUtils.serializeToString(consentRequest)
+                SerializationUtils.serializeToString(body)
                         .getBytes(StandardCharsets.US_ASCII);
         MessageDigest md;
         try {
