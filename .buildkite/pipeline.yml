@@ -49,15 +49,6 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
-  - name: ':docker: tink-backend-provider-configuration'
-    branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh //docker:provider_configuration_push
-    timeout_in_minutes: 10
-    plugins:
-      docker-compose#v2.5.1:
-        run: "app"
-        config: "docker/docker-compose.bazel.yml"
-
   - name: ':docker: tink-backend-integration'
     branches: 'staging'
     command: .buildkite/build-and-push-docker.sh //src/integration/service:docker_push
