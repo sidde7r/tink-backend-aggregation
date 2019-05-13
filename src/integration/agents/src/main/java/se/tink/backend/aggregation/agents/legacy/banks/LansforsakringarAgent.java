@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -45,6 +46,7 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -135,6 +137,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -153,6 +157,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshEInvoiceExecutor,
                 RefreshTransferDestinationExecutor,
+                RefreshIdentityDataExecutor,
                 TransferExecutor,
                 PersistentLogin {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
@@ -262,6 +267,7 @@ public class LansforsakringarAgent extends AbstractAgent
     private final TransferMessageFormatter transferMessageFormatter;
     private String ticket = null;
     private String token = null;
+    private String loginName = null;
 
     // cache
     private Map<AccountEntity, Account> accounts = null;
@@ -346,7 +352,9 @@ public class LansforsakringarAgent extends AbstractAgent
             status = clientLoginResponse.getStatus();
 
             if (status == Status.OK.getStatusCode()) {
-                return clientLoginResponse.getEntity(LoginResponse.class);
+                LoginResponse loginResponse = clientLoginResponse.getEntity(LoginResponse.class);
+                loginName = loginResponse.getName();
+                return loginResponse;
             } else if (status == Status.UNAUTHORIZED.getStatusCode()
                     || status == Status.BAD_REQUEST.getStatusCode()) {
                 switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
@@ -2044,4 +2052,11 @@ public class LansforsakringarAgent extends AbstractAgent
                 new Pair<>(account.get(), AccountFeatures.createForPortfolios(portfolio)));
     }
     /////////////////////////////////////
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        IdentityData identityData =
+                SeIdentityData.of(loginName, credentials.getField(Field.Key.USERNAME));
+        return new FetchIdentityDataResponse(identityData);
+    }
 }
