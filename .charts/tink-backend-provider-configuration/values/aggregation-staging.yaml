@@ -1,5 +1,0 @@
-developmentMode: false
-
-providerdb:
-  host: provider-db.internal.staging.aggregation.tink.network
-  username: tink-provider
