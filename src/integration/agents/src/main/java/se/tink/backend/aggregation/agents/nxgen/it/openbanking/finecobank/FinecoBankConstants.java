@@ -31,10 +31,15 @@ public final class FinecoBankConstants {
     public static class Urls {
 
         public static final String BASE_URL = "https://api.finecobank.com/v1";
-        public static final URL CONSENTS = new URL(BASE_URL + "/consents");
-        public static final URL ACCOUNTS = new URL(BASE_URL + "/accounts");
-        public static final URL TRANSACTIONS =
-                new URL(BASE_URL + "/accounts/{account-id}/transactions");
+        public static final URL CONSENTS = new URL(BASE_URL + Endpoints.CONSENTS);
+        public static final URL ACCOUNTS = new URL(BASE_URL + Endpoints.ACCOUNTS);
+        public static final URL TRANSACTIONS = new URL(BASE_URL + Endpoints.TRANSACTIONS);
+    }
+
+    public static class Endpoints {
+        public static final String CONSENTS = "/consents";
+        public static final String ACCOUNTS = "/accounts";
+        public static final String TRANSACTIONS = "/accounts/{account-id}/transactions";
     }
 
     public static class StorageKeys {
