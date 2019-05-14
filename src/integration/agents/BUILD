@@ -8,6 +8,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/erstebank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/ing",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/volksbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/argenta",
