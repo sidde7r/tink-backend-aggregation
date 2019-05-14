@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fe
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
-public class Account {
+public class AccountsResponse {
 
     @JsonProperty("accountNumber")
     private String accountNumber;
@@ -44,15 +44,15 @@ public class Account {
         this.accountHolderName = accountHolderName;
     }
 
-    @JsonIgnore
-    public TransactionalAccount toCheckingAccount(final BalanceResponse balanceResponse) {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(getAccountNumber())
-                .setAccountNumber(getAccountNumber())
-                .setBalance(balanceResponse.toAmount())
-                .setAlias(getAccountHolderName())
-                .addAccountIdentifier(new IbanIdentifier(getAccountNumber()))
-                .putInTemporaryStorage(AbnAmroConstants.StorageKey.RESOURCE_ID, getAccountNumber())
-                .build();
+    @JsonIgnore private AccountEntity accounts;
+
+    public AccountEntity getAccounts() {
+        return new AccountEntity(accountNumber, currency, accountHolderName);
+    }
+
+    public Stream<AccountEntity> stream() {
+        List<AccountEntity> accounts = new ArrayList<>();
+        accounts.add(getAccounts());
+        return accounts.stream();
     }
 }

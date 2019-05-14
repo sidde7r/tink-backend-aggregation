@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
@@ -66,7 +67,15 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
         request.put(AbnAmroConstants.QueryParams.CLIENT_ID, clientId);
         request.put(AbnAmroConstants.QueryParams.CODE, code);
         request.put(AbnAmroConstants.QueryParams.REDIRECT_URI, redirectUri);
-        return apiClient.exchangeAuthorizationCode(request).toOauthToken();
+
+        OAuth2Token token = apiClient.exchangeAuthorizationCode(request).toOauthToken();
+
+        if (!persistentStorage.containsKey(AbnAmroConstants.StorageKey.ACCOUNT_CONSENT_ID)) {
+            ConsentResponse consent = apiClient.consentRequest(token);
+            persistentStorage.put(
+                    AbnAmroConstants.StorageKey.ACCOUNT_CONSENT_ID, consent.getAccountId());
+        }
+        return token;
     }
 
     @Override

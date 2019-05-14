@@ -12,6 +12,7 @@ public class AbnAmroAgentTest {
         new AgentIntegrationTest.Builder("nl", "nl-abnamro-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
                 .build()
                 .testRefresh();
     }
