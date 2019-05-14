@@ -7,10 +7,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CustodyAccount extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);
@@ -34,6 +36,12 @@ public class CustodyAccount extends BaseResponse {
                     return client.custodyAccount(this)
                             .map(custodyAccount -> custodyAccount.toInvestmentAccount(client));
                 case "kapital":
+
+                    // Temporary logging to investigate the correct parsing of KF portfolios
+                    log.infoExtraLong(
+                            SerializationUtils.serializeToString(this),
+                            LogTag.from("handelsbanken_custody_account_kapital_type"));
+
                     return client.pensionDetails(this)
                             .map(
                                     pensionDetails ->
