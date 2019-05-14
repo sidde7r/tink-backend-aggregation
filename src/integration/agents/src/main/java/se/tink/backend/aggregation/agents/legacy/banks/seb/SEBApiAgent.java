@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -1755,6 +1756,7 @@ public class SEBApiAgent extends AbstractAgent
 
         Session session = new Session();
         session.setCustomerId(customerId);
+        session.setUserName(userName);
         session.setCookiesFromClient(client);
 
         credentials.setPersistentSession(session);
@@ -1766,6 +1768,7 @@ public class SEBApiAgent extends AbstractAgent
 
         if (session != null) {
             customerId = session.getCustomerId();
+            userName = session.getUserName();
             addSessionCookiesToClient(client, session);
         }
     }
@@ -1774,6 +1777,7 @@ public class SEBApiAgent extends AbstractAgent
     public void clearLoginSession() {
         // Clean the session in memory
         customerId = null;
+        userName = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
@@ -2418,6 +2422,9 @@ public class SEBApiAgent extends AbstractAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
+        if (Strings.isNullOrEmpty(userName)) {
+            throw new NoSuchElementException("Missing userName");
+        }
         final IdentityData identityData =
                 SeIdentityData.of(userName.trim(), credentials.getField(Field.Key.USERNAME));
         return new FetchIdentityDataResponse(identityData);
