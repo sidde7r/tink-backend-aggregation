@@ -1141,7 +1141,6 @@ public class SEBApiAgent extends AbstractAgent
         userName = userinfo.USER_NAME;
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
-        Preconditions.checkNotNull(userName);
         checkLoggedInCustomerId(customerId);
 
         return true;
