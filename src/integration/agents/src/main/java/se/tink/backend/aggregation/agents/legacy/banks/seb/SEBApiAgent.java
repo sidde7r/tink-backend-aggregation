@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +62,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -69,6 +71,7 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -151,6 +154,8 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -169,6 +174,7 @@ public class SEBApiAgent extends AbstractAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshLoanAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
+                RefreshIdentityDataExecutor,
                 PersistentLogin,
                 TransferExecutor {
 
@@ -273,6 +279,7 @@ public class SEBApiAgent extends AbstractAgent
 
     private String customerId;
     private String userId;
+    private String userName;
     private final TinkApacheHttpClient4 client;
     private final Credentials credentials;
     private final Catalog catalog;
@@ -1131,6 +1138,7 @@ public class SEBApiAgent extends AbstractAgent
         USRINF01 userinfo = activate();
         customerId = userinfo.SEB_KUND_NR;
         userId = userinfo.IMS_SHORT_USERID;
+        userName = userinfo.USER_NAME;
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
         checkLoggedInCustomerId(customerId);
@@ -1747,6 +1755,7 @@ public class SEBApiAgent extends AbstractAgent
 
         Session session = new Session();
         session.setCustomerId(customerId);
+        session.setUserName(userName);
         session.setCookiesFromClient(client);
 
         credentials.setPersistentSession(session);
@@ -1758,6 +1767,7 @@ public class SEBApiAgent extends AbstractAgent
 
         if (session != null) {
             customerId = session.getCustomerId();
+            userName = session.getUserName();
             addSessionCookiesToClient(client, session);
         }
     }
@@ -1766,6 +1776,7 @@ public class SEBApiAgent extends AbstractAgent
     public void clearLoginSession() {
         // Clean the session in memory
         customerId = null;
+        userName = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
@@ -2406,5 +2417,15 @@ public class SEBApiAgent extends AbstractAgent
         public LocalizableKey getKey() {
             return userMessage;
         }
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        if (Strings.isNullOrEmpty(userName)) {
+            throw new NoSuchElementException("Missing userName");
+        }
+        final IdentityData identityData =
+                SeIdentityData.of(userName.trim(), credentials.getField(Field.Key.USERNAME));
+        return new FetchIdentityDataResponse(identityData);
     }
 }

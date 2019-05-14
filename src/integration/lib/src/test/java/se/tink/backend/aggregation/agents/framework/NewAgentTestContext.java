@@ -484,7 +484,7 @@ public final class NewAgentTestContext extends AgentContext {
                 Assert.assertNotNull(accountFeatures.getPortfolios());
                 for (Portfolio portfolio : accountFeatures.getPortfolios()) {
                     Assert.assertNotNull(portfolio.getInstruments());
-                    Assert.assertFalse(portfolio.getInstruments().isEmpty());
+                    // Assert.assertFalse(portfolio.getInstruments().isEmpty());
                 }
                 printPortfolioDetails(accountFeatures.getPortfolios());
                 break;

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.tra
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
@@ -34,8 +33,8 @@ public class AccountEntity {
     }
 
     @JsonProperty("kontostand")
-    public Amount getBalance() {
-        return balance.getAmount();
+    public BalanceEntity getBalance() {
+        return balance;
     }
 
     @JsonProperty("verfuegbarerBetrag")

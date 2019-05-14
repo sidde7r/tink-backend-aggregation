@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.CountryDateUtils;
+import se.tink.libraries.date.BelgianDateUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -34,7 +34,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 public class BelfiusTransferExecutor implements BankTransferExecutor {
 
     private final BelfiusSessionStorage belfiusSessionStorage;
-    private final CountryDateUtils countryDateUtils;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private BelfiusApiClient apiClient;
@@ -49,7 +48,6 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.belfiusSessionStorage = belfiusSessionStorage;
-        countryDateUtils = CountryDateUtils.getBelgianDateUtils();
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
@@ -287,8 +285,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                                     .toInstant()));
         }
 
-        if (!countryDateUtils.isBusinessDay(transfer.getDueDate())) {
-            transfer.setDueDate(countryDateUtils.getNextBusinessDay(transfer.getDueDate()));
+        if (!BelgianDateUtils.isBusinessDay(transfer.getDueDate())) {
+            transfer.setDueDate(BelgianDateUtils.getNextBusinessDay(transfer.getDueDate()));
         }
     }
 

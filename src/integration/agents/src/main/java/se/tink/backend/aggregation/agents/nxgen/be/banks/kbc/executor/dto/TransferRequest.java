@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.Agreem
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.CountryDateUtils;
+import se.tink.libraries.date.BelgianDateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -102,13 +102,11 @@ public class TransferRequest {
         Calendar nextYear = Calendar.getInstance();
         nextYear.add(Calendar.YEAR, 1);
 
-        CountryDateUtils belgianDateUtils = CountryDateUtils.getBelgianDateUtils();
-
         if (date.after(nextYear.getTime())) {
             cancelTransfer(KbcConstants.TransferMessage.DUE_DATE_TOO_FAR_IN_FUTURE.getKey().get());
         }
 
-        if (!belgianDateUtils.isBusinessDay(date)) {
+        if (!BelgianDateUtils.isBusinessDay(date)) {
             cancelTransfer(
                     TransferExecutionException.EndUserMessage.INVALID_DUEDATE_NOT_BUSINESSDAY
                             .getKey()

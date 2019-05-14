@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.tran
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionsResponse implements PaginatorResponse {
@@ -35,9 +36,14 @@ public class TransactionsResponse implements PaginatorResponse {
                 continue;
             }
 
-            Transaction t =
+            final Amount balance =
+                    new Amount(
+                            transaction.getBalance().getCurrency(),
+                            transaction.getBalance().getAmount());
+
+            final Transaction t =
                     Transaction.builder()
-                            .setAmount(transaction.getBalance())
+                            .setAmount(balance)
                             .setDate(transaction.getBookingDate())
                             .setDescription(getDescription(transaction))
                             .setExternalId(Long.toString(transaction.getId()))

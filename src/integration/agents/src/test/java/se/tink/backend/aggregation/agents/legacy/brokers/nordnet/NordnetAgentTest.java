@@ -1,38 +1,41 @@
 package se.tink.backend.aggregation.agents.brokers.nordnet;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.brokers.NordnetAgent;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.backend.agents.rpc.Field.Key;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class NordnetAgentTest extends AbstractAgentTest<NordnetAgent> {
-    public NordnetAgentTest() {
-        super(NordnetAgent.class);
+public class NordnetAgentTest {
+
+    private enum Arg {
+        USERNAME
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @Before
+    public void setUp() throws Exception {
+        manager.before();
     }
 
     @Test
-    public void testUser1() throws Exception {
-        testAgent("fhedberg", "4fG-wk-X", CredentialsTypes.PASSWORD, false);
+    public void testRefresh() throws Exception {
+        new AgentIntegrationTest.Builder("se", "nordnet-bankid")
+                .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
     }
 
-    @Test
-    public void testUser2() throws Exception {
-        testAgent("danielkj", "55FhR@Mq", CredentialsTypes.PASSWORD, false);
-    }
+    @AfterClass
+    public static void afterClass() {
 
-    @Test
-    public void testUser() throws Exception {
-        testAgent("xxxxxx", "xxxxxxxx", CredentialsTypes.PASSWORD, false);
-    }
-
-    @Test
-    public void testBankID() throws Exception {
-        testAgent(TestSSN.DL, null, CredentialsTypes.MOBILE_BANKID, true);
-    }
-
-    @Test
-    public void testUser1AuthenticationError() throws Exception {
-        testAgentAuthenticationError("fhedberg", "colal");
+        ArgumentManager.afterClass();
     }
 }

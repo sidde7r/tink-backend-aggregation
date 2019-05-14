@@ -1,17 +1,21 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import com.google.api.client.http.HttpStatusCodes;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.net.UrlEscapers;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.ParseException;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
@@ -24,9 +28,15 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
@@ -52,23 +62,30 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
 /**
  * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per
  * person at Norwegian so the only Tink account that will be created right now is a credit-card
  * account. No support for Loans.
  */
-public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+public class NorwegianAgent extends AbstractAgent
+        implements RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshIdentityDataExecutor {
 
     private static final int AUTHENTICATION_BANK_ID_RETRIES = 60;
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
+    private static final String IDENTITY_URL = BASE_URL + "MinSida/Settings/ContactInfo";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
 
     private static final int PAGINATION_MONTH_STEP = 3;
     private static final Date PAGINATION_LIMIT = new GregorianCalendar(2012, 1, 1).getTime();
+
+    private Account cachedAccount;
 
     private static class QueryKeys {
         private static final String ACCOUNT_NUMBER = "accountNo";
@@ -97,7 +114,6 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final String ORDER = "order";
 
     private final Client client;
-    private boolean hasRefreshed = false;
 
     public NorwegianAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -116,40 +132,6 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         return authenticate(request.getCredentials());
-    }
-
-    @Override
-    public void refresh() throws Exception {
-        // The refresh command will call refresh multiple times.
-        // This check ensures the refresh only runs once.
-        if (hasRefreshed) {
-            return;
-        }
-        hasRefreshed = true;
-
-        refreshCreditCardAccount();
-        refreshSavingsAccount();
-    }
-
-    private void refreshCreditCardAccount() throws Exception {
-        // Get card and transactions
-        try {
-            Account account = getAccount();
-            updateTransactions(account);
-        } catch (AccountNotFoundException e) {
-            log.warn("Could not find any creditcard.");
-        }
-    }
-
-    private void refreshSavingsAccount() throws Exception {
-        Optional<Account> savingsAccount = getSavingsAccount();
-
-        if (!savingsAccount.isPresent()) {
-            return;
-        }
-
-        Account account = savingsAccount.get();
-        pageTransactions(account, account.getAccountNumber());
     }
 
     private boolean authenticate(Credentials credentials) throws BankIdException {
@@ -279,7 +261,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
      *
      * @throws AccountNotFoundException if the account could not be found
      */
-    private Account getAccount() throws AccountNotFoundException {
+    private Account refreshAccount() throws AccountNotFoundException {
 
         AccountEntity account = new AccountEntity();
 
@@ -289,6 +271,60 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         account.setBalance(CreditCardParsingUtils.parseBalance(creditcardPage));
 
         return account.toTinkAccount();
+    }
+
+    private Optional<Account> getCachedAccount() {
+        try {
+            if (cachedAccount == null) {
+                cachedAccount = refreshAccount();
+            }
+
+            return Optional.of(cachedAccount);
+        } catch (AccountNotFoundException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return getCachedAccount()
+                .map(Collections::singletonList)
+                .map(FetchAccountsResponse::new)
+                .orElse(new FetchAccountsResponse(Collections.emptyList()));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return getCachedAccount()
+                .map(this::updateTransactions)
+                .map(
+                        accountWithTransactions ->
+                                ImmutableMap.<Account, List<Transaction>>builder()
+                                        .put(accountWithTransactions)
+                                        .build())
+                .map(FetchTransactionsResponse::new)
+                .orElse(new FetchTransactionsResponse(new HashMap<>()));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return getSavingsAccount()
+                .map(Collections::singletonList)
+                .map(FetchAccountsResponse::new)
+                .orElse(new FetchAccountsResponse(Collections.emptyList()));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return getSavingsAccount()
+                .map(account -> pageTransactions(account, account.getAccountNumber()))
+                .map(
+                        accountWithTransactions ->
+                                ImmutableMap.<Account, List<Transaction>>builder()
+                                        .put(accountWithTransactions)
+                                        .build())
+                .map(FetchTransactionsResponse::new)
+                .orElse(new FetchTransactionsResponse(new HashMap<>()));
     }
 
     private Optional<Account> getSavingsAccount() {
@@ -319,18 +355,18 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         return Optional.of(account);
     }
 
-    private void updateTransactions(Account account) throws Exception {
+    private Entry<Account, List<Transaction>> updateTransactions(Account account) {
         CreditCardInfoResponse transactionMainPageContent =
                 createClientRequest(CARD_TRANSACTION_URL).get(CreditCardInfoResponse.class);
 
         String accountNumber = transactionMainPageContent.getAccountNo();
 
         if (accountNumber == null) {
-            log.warn("#norwegian: Could not parse account number when updating transactions.");
-            return;
+            throw new NoSuchElementException(
+                    "Could not parse account number when updating transactions.");
         }
 
-        pageTransactions(account, accountNumber);
+        return pageTransactions(account, accountNumber);
     }
 
     /**
@@ -340,10 +376,11 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
      * <p>The reason for this is that there's an overlap if we fetch uninvoiced transactions and
      * then paginate from current date, leading to duplicate transactions.
      */
-    private void pageTransactions(Account account, String accountNumber)
-            throws ParseException, UnsupportedEncodingException {
+    private Entry<Account, List<Transaction>> pageTransactions(
+            Account account, String accountNumber) {
 
-        final String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
+        final String encodedAccountNumber =
+                UrlEscapers.urlPathSegmentEscaper().escape(accountNumber);
 
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -383,7 +420,18 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         } while (!isContentWithRefresh(account, transactions));
 
-        financialDataCacher.updateTransactions(account, transactions);
+        return new SimpleEntry<>(account, transactions);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        String identityPage = createClientRequest(IDENTITY_URL).get(String.class);
+        String ssn = request.getCredentials().getField(Key.USERNAME);
+
+        return CreditCardParsingUtils.parseAccountName(identityPage)
+                .map(name -> SeIdentityData.of(name, ssn))
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     private Date getOldestTransaction(List<Transaction> transactions) {

@@ -44,7 +44,7 @@ import org.joda.time.format.PeriodFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** * @deprecated Use CountryDateUtils instead. Helper functions for date-related things. */
+/** * @deprecated Use [Country]DateUtils instead. Helper functions for date-related things. */
 public class DateUtils {
     private static final int MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
     protected static final Locale DEFAULT_LOCALE = new Locale("sv", "SE");

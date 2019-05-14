@@ -66,11 +66,12 @@ public class TimelineEntity {
         // Fetch all pending transaction ids from timeline sub items.
         timelineItems.stream()
                 .flatMap(timeLineItem -> timeLineItem.getSubItems().stream())
+                .filter(SubItemsEntity::isPending)
                 .forEach(
                         subItem -> transactionPendingMap.put(subItem.getId(), subItem.isPending()));
         // Map pending transaction ids to the transaction map to get transaction details.
         return getTransactionMap().entrySet().stream()
-                .filter(entry -> entry.getValue().getSuppIndex() == suppIndex)
+                .filter(entry -> suppIndex.equalsIgnoreCase(entry.getValue().getSuppIndex()))
                 .map(
                         entry ->
                                 entry.getValue()

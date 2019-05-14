@@ -131,7 +131,8 @@ class PotFileGenerator {
     }
 
     private function getAllProviders() {
-        $dir = "../../data/seeding/";
+        $dir = $_SERVER["HOME"] . "/src/tink-backend/src/provider_configuration/data/seeding/";
+
         $allProviders = array();
         $it = new RecursiveDirectoryIterator($dir);
         foreach(new RecursiveIteratorIterator($it) as $filename)

@@ -1,7 +1,0 @@
-{
-  "clusterid": "cardiff-staging",
-  "providers": [
-    "uk-n26-password",
-    "uk-revolut-password"
-  ]
-}

@@ -1,7 +1,0 @@
-{
-    "clusterid": "oxford-staging",
-    "providers": [
-        "nl-abnamro",
-        "nl-ics-oauth2"
-    ]
-}

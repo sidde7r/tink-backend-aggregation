@@ -1,9 +1,0 @@
-{
-    "clusterid": "farnham-production",
-    "providers": [
-        "be-belfius-cardreader",
-        "be-bnppf-jwt",
-        "be-ing-cardreader",
-        "be-kbc-cardreader"
-    ]
-}

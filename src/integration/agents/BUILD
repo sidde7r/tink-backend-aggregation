@@ -7,6 +7,7 @@ java_library(
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/erstebank",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/ing",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/raiffeisen",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/volksbank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/creditcards/amex/v62",
@@ -26,6 +27,7 @@ java_library(
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/es/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/fi/creditcards/amex",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/bunq",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/abnamro",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/nl/banks/openbanking/rabobank",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/se/creditcards/amex/v62",
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/creditcards/amex/v62",

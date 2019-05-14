@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.norwegian.utils;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +62,18 @@ public class CreditCardParsingUtils {
                 .first()
                 .text()
                 .replaceAll("\\s", "");
+    }
+
+    public static Optional<String> parseAccountName(String htmlContent) {
+        Elements elements =
+                Jsoup.parse(htmlContent)
+                        .select("div.contactinfo-address.contactinfo-address--current");
+
+        if (elements.size() == 0 || elements.get(0).select("p").size() == 0) {
+            throw new NoSuchElementException("Could not find identity data. HTML changed?");
+        }
+
+        return Optional.of(elements.get(0).select("p").first().text().trim());
     }
 
     public static Optional<String> parseTransactionalAccountNumber(String htmlContent) {
