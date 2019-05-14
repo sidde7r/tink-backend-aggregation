@@ -46,33 +46,6 @@ container_push(
     tag = "{TINK_VERSION}",
 )
 
-container_image(
-    name = "provider_configuration_image",
-    base = "@openjdk_jdk8//image",
-    cmd = [
-        "java",
-        "-jar",
-        "-Xmx2560m",
-        "/usr/share/tink-backend-provider-configuration/provider_configuration_service.jar",
-        "server",
-        "/etc/tink/provider-configuration-server.yml",
-    ],
-    tars = [
-        "//deb:provider_configuration_bin_tar",
-        "//deb:provider_configuration_data_tar",
-    ],
-    workdir = "/usr/share/tink-backend-provider-configuration",
-)
-
-container_push(
-    name = "provider_configuration_push",
-    format = "Docker",
-    image = ":provider_configuration_image",
-    registry = "gcr.io",
-    repository = "tink-containers/tink-backend-provider-configuration",
-    tag = "{TINK_VERSION}",
-)
-
 # You need to have python installed in your PATH and python 2 is currently
 # required to build the docker images:
 #   $ brew install python2
@@ -94,6 +67,5 @@ container_bundle(
     name = "bundle",
     images = {
         "gcr.io/tink-containers/tink-backend-aggregation:latest": ":aggregation_image",
-        "gcr.io/tink-containers/tink-backend-provider-configuration:latest": ":provider_configuration_image",
     },
 )
