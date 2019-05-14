@@ -1,3 +1,8 @@
+# Use the new Skylark version of git_repository. This uses the system's native
+# git client which supports fancy key formats and key passphrases.
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+
 git_repository(
     name = "bazel_skylib",
     remote = "https://github.com/bazelbuild/bazel-skylib",
@@ -13,11 +18,6 @@ versions.check("0.25.0")
 ## Tink virtual monorepsotiroy
 # These are repositories under Tink control. They are trusted, and imported
 # as a part of tink-backend's repository (not checksumed).
-
-# Use the new Skylark version of git_repository. This uses the system's native
-# git client which supports fancy key formats and key passphrases.
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
 git_repository(
     name = "dropwizard_jersey",
