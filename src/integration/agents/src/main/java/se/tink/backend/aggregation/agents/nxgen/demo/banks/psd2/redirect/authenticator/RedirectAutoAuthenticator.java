@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 
 public class RedirectAutoAuthenticator implements AutoAuthenticator {
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException, AuthorizationException {
-
-    }
+    public void autoAuthenticate()
+            throws SessionException, BankServiceException, AuthorizationException {}
 }

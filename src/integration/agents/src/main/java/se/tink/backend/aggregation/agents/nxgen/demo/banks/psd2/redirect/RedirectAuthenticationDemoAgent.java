@@ -44,12 +44,15 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
         ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(
-                        redirectThirdPartyAppAuthenticator,
-                        supplementalInformationHelper);
+                        redirectThirdPartyAppAuthenticator, supplementalInformationHelper);
 
         RedirectAutoAuthenticator redirectAutoAuthenticator = new RedirectAutoAuthenticator();
 
-        return new AutoAuthenticationController(request, systemUpdater, thirdPartyAppAuthenticationController, redirectAutoAuthenticator);
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                thirdPartyAppAuthenticationController,
+                redirectAutoAuthenticator);
     }
 
     @Override

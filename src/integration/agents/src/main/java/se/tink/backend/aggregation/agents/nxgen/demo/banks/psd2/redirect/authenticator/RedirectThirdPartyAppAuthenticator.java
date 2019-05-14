@@ -32,30 +32,35 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
         this(username, successfulAuthentication, null);
     }
 
-    private RedirectThirdPartyAppAuthenticator(String username, boolean successfulAuthentication,
-            FailureCause failureCause) {
+    private RedirectThirdPartyAppAuthenticator(
+            String username, boolean successfulAuthentication, FailureCause failureCause) {
         this.username = username;
         this.successfulAuthentication = successfulAuthentication;
         this.failureCause = failureCause;
     }
 
-    public static RedirectThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(String username) {
+    public static RedirectThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
+            String username) {
         return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.TIMEOUT);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createCancelledFailingAuthenticator(String username) {
+    public static RedirectThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
+            String username) {
         return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.CANCELLED);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(String username) {
+    public static RedirectThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
+            String username) {
         return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.IN_PROGRESS);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createUnknownFailureAuthenticator(String username) {
+    public static RedirectThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
+            String username) {
         return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.UNKNOWN);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createSuccessfulAuthenticator(String username) {
+    public static RedirectThirdPartyAppAuthenticator createSuccessfulAuthenticator(
+            String username) {
         return new RedirectThirdPartyAppAuthenticator(username, true);
     }
 
@@ -69,7 +74,8 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
     }
 
     @Override
-    public ThirdPartyAppResponse collect(Object reference) throws AuthenticationException, AuthorizationException {
+    public ThirdPartyAppResponse collect(Object reference)
+            throws AuthenticationException, AuthorizationException {
         if (attempt <= TOTAL_ATTEMPTS) {
             attempt++;
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
@@ -80,16 +86,16 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
         }
 
         switch (failureCause) {
-        case IN_PROGRESS:
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.ALREADY_IN_PROGRESS);
-        case TIMEOUT:
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
-        case CANCELLED:
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
-        case UNKNOWN:
-            // intentional fall through
-        default:
-            return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.UNKNOWN);
+            case IN_PROGRESS:
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.ALREADY_IN_PROGRESS);
+            case TIMEOUT:
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.TIMED_OUT);
+            case CANCELLED:
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.CANCELLED);
+            case UNKNOWN:
+                // intentional fall through
+            default:
+                return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.UNKNOWN);
         }
     }
 
@@ -98,10 +104,12 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
         payload.setDownloadTitle("Download Bink Authentication app");
-        payload.setDownloadMessage("You need to download the Bink Authentication app in order to continue.");
+        payload.setDownloadMessage(
+                "You need to download the Bink Authentication app in order to continue.");
 
         payload.setUpgradeTitle("Upgrade Bink Authentication app");
-        payload.setUpgradeMessage("You need to upgrade the Bink Authentication app in order to continue.");
+        payload.setUpgradeMessage(
+                "You need to upgrade the Bink Authentication app in order to continue.");
 
         ThirdPartyAppAuthenticationPayload.Ios ios = new ThirdPartyAppAuthenticationPayload.Ios();
         ios.setAppScheme("this.is.not.a.valid.app.scheme");
@@ -110,7 +118,8 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
 
         payload.setIos(ios);
 
-        ThirdPartyAppAuthenticationPayload.Android android = new ThirdPartyAppAuthenticationPayload.Android();
+        ThirdPartyAppAuthenticationPayload.Android android =
+                new ThirdPartyAppAuthenticationPayload.Android();
         android.setIntent("this.is.not.a.valid.intent");
         android.setPackageName("this.is.not.a.valid.package.name");
         android.setRequiredVersion(0);
