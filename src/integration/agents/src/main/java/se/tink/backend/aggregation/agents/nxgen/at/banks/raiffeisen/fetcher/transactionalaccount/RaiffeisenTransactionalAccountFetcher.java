@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAcco
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -58,13 +59,15 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                 logger.warn("Unrecognized account type found: \"{}\".", ae.getAccountTypeCode());
                 continue;
             }
+            final Amount balance =
+                    new Amount(ae.getBalance().getCurrency(), ae.getBalance().getAmount());
             TransactionalAccount ta = null;
             if (at.get().name().equals(AccountTypes.CHECKING.toString())) {
                 ta =
                         CheckingAccount.builder()
                                 .setUniqueIdentifier(ae.getIban())
                                 .setAccountNumber(ae.getIban())
-                                .setBalance(ae.getBalance())
+                                .setBalance(balance)
                                 .setAlias(ae.getIban())
                                 .addAccountIdentifier(
                                         AccountIdentifier.create(
@@ -77,7 +80,7 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                         SavingsAccount.builder()
                                 .setUniqueIdentifier(ae.getIban())
                                 .setAccountNumber(ae.getIban())
-                                .setBalance(ae.getBalance())
+                                .setBalance(balance)
                                 .setAlias(ae.getIban())
                                 .addAccountIdentifier(
                                         AccountIdentifier.create(
