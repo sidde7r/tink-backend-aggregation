@@ -24,9 +24,7 @@ public final class SBABConstants {
     }
 
     public static class Urls {
-
         public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
-
         public static final URL AUTHORIZATION = new URL(Endpoints.BASE_URL + Endpoints.OAUTH);
         public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.TRANSFERS);
         public static final URL CUSTOMERS = new URL(Endpoints.BASE_URL + Endpoints.CUSTOMERS);
