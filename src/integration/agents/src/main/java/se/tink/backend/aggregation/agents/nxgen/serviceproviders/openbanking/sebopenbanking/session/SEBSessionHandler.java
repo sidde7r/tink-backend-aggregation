@@ -18,13 +18,11 @@ public final class SEBSessionHandler implements SessionHandler {
         this.sessionStorage = sessionStorage;
     }
 
-    private OAuth2Token fetchToken() throws SessionException {
-        OAuth2Token token =
-                this.sessionStorage
-                        .get(SebConstants.StorageKeys.TOKEN, OAuth2Token.class)
-                        .orElse(null);
-        if (token == null) throw SessionError.SESSION_EXPIRED.exception();
-        return token;
+    private void fetchToken() throws SessionException {
+        this.sessionStorage
+                .get(SebConstants.StorageKeys.TOKEN, OAuth2Token.class)
+                .filter(t -> t.isValid())
+                .orElseThrow(() -> SessionError.SESSION_EXPIRED.exception());
     }
 
     @Override
@@ -33,10 +31,7 @@ public final class SEBSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
 
-        OAuth2Token token = fetchToken();
-
-        if (!token.isValid()) throw SessionError.SESSION_EXPIRED.exception();
-
+        fetchToken();
         try {
             this.apiClient.fetchAccounts();
         } catch (Exception e) {
