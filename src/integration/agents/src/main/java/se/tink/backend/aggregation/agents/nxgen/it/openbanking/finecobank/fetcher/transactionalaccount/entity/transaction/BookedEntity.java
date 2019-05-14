@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class BookedEntity {
 
-    @JsonFormat(pattern = FinecoBankConstants.Formats.TRANSACTION_DATE_FORMAT)
+    @JsonFormat(pattern = FinecoBankConstants.Formats.DEFAULT_DATE_FORMAT)
     private Date bookingDate;
 
-    @JsonFormat(pattern = FinecoBankConstants.Formats.TRANSACTION_DATE_FORMAT)
+    @JsonFormat(pattern = FinecoBankConstants.Formats.DEFAULT_DATE_FORMAT)
     private Date valueDate;
 
     private String transactionId;

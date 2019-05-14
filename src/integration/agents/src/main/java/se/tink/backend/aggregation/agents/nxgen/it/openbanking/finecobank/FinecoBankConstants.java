@@ -75,9 +75,7 @@ public final class FinecoBankConstants {
 
     public static class Formats {
 
-        public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
-        public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd";
-        public static final String CONSENT_DATE_FORMAT = "yyyy-MM-dd";
+        public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
         public static final String CURRENCY = "EUR";
     }
 

@@ -76,7 +76,7 @@ public final class FinecoBankApiClient {
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         SimpleDateFormat paginationDateFormatter =
-                new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
+                new SimpleDateFormat(Formats.DEFAULT_DATE_FORMAT);
 
         return createRequest(
                         Urls.TRANSACTIONS.parameter(
