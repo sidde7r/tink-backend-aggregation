@@ -1,3 +1,15 @@
+git_repository(
+    name = "bazel_skylib",
+    remote = "https://github.com/bazelbuild/bazel-skylib",
+    commit = "6126842e3db2ec4986752f6dfc0860ca922997f1",
+    shallow_since = "1557756873 +0200"
+)
+
+# This checks that the version of Bazel in use is at least the set version
+# Usually this should be set to the version of Bazel used for CI
+load("@bazel_skylib//lib:versions.bzl", "versions")
+versions.check("0.25.0")
+
 ## Tink virtual monorepsotiroy
 # These are repositories under Tink control. They are trusted, and imported
 # as a part of tink-backend's repository (not checksumed).
