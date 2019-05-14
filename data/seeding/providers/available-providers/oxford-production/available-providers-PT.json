@@ -1,8 +1,0 @@
-{
-    "clusterid": "oxford-production",
-    "providers": [
-        "pt-banco-portugues-de-investimento",
-        "pt-novo-banco",
-        "pt-santander-totta"
-    ]
-}

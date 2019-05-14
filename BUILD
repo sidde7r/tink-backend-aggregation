@@ -6,11 +6,6 @@ alias(
 )
 
 alias(
-    name = "provider_configuration",
-    actual = "//src/provider_configuration/service:bin",
-)
-
-alias(
     name = "integration_framework",
     actual = "//src/integration/lib:framework",
 )
@@ -26,7 +21,6 @@ test_suite(
         "//src/aggregation/api:api_test",
         "//src/aggregation/lib:lib_test",
         "//src/integration/lib:lib_test",
-        "//src/provider_configuration/lib:lib_test",
     ],
 )
 

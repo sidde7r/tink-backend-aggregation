@@ -12,14 +12,6 @@ PROJECTS = {
             'aggregation-staging': {'block': False},
         },
     },
-    'tink-backend-provider-configuration': {
-        'chart': True,
-        'salt': False,
-        'branches': {
-            'aggregation-production': {'block': True},
-            'aggregation-staging': {'block': False},
-        },
-    },
     'tink-backend-aggregation-agents': {
         'chart': True,
         'salt': False,
