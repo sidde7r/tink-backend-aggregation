@@ -8,15 +8,15 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class AbnAmroTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 
-  private final AbnAmroApiClient apiClient;
+    private final AbnAmroApiClient apiClient;
 
-  public AbnAmroTransactionFetcher(final AbnAmroApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
+    public AbnAmroTransactionFetcher(final AbnAmroApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-  @Override
-  public PaginatorResponse getTransactionsFor(
-      final TransactionalAccount account, Date fromDate, Date toDate) {
+    @Override
+    public PaginatorResponse getTransactionsFor(
+            final TransactionalAccount account, Date fromDate, Date toDate) {
         return apiClient.fetchTransactions(fromDate, toDate).getTransactionList();
-  }
+    }
 }

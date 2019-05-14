@@ -72,7 +72,8 @@ public class AbnAmroAuthenticator implements OAuth2Authenticator {
 
         if (!persistentStorage.containsKey(AbnAmroConstants.StorageKey.ACCOUNT_CONSENT_ID)) {
             ConsentResponse consent = apiClient.consentRequest(token);
-            persistentStorage.put(AbnAmroConstants.StorageKey.ACCOUNT_CONSENT_ID, consent.getAccountId());
+            persistentStorage.put(
+                    AbnAmroConstants.StorageKey.ACCOUNT_CONSENT_ID, consent.getAccountId());
         }
         return token;
     }

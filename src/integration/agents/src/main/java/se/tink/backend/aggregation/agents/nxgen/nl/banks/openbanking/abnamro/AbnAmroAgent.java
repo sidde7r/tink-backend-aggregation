@@ -79,16 +79,16 @@ public class AbnAmroAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new AbnAmroAccountFetcher(apiClient),
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(
-                        new AbnAmroTransactionFetcher(apiClient)))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new AbnAmroAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new AbnAmroTransactionFetcher(apiClient)))));
     }
 
     @Override

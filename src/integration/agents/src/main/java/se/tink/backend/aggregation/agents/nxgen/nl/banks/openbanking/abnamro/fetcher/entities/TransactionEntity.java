@@ -19,15 +19,16 @@ public class TransactionEntity {
     private double amount;
     private String currency;
     private String transactionId;
+
     @JsonFormat(pattern = AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT)
     private Date bookDate;
 
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-            .setAmount(new Amount(currency, amount))
-            .setDate(bookDate)
-            .setDescription(String.join(" ", descriptionLines))
-            .build();
+                .setAmount(new Amount(currency, amount))
+                .setDate(bookDate)
+                .setDescription(String.join(" ", descriptionLines))
+                .build();
     }
 }

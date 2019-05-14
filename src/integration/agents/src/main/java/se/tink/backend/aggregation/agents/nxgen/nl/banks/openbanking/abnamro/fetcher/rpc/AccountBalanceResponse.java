@@ -44,9 +44,13 @@ public class AccountBalanceResponse {
         this.currency = currency;
     }
 
-    public double getAmount() { return amount; }
+    public double getAmount() {
+        return amount;
+    }
 
-    public void setAmount(double amount) { this.amount = amount; }
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
     @JsonIgnore
     public Amount toAmount() {

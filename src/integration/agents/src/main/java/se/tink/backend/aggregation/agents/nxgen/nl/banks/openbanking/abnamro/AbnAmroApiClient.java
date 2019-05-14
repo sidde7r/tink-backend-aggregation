@@ -71,10 +71,10 @@ public class AbnAmroApiClient {
 
         final String apiKey = getConfiguration().getApiKey();
         return client.request(URLs.ABNAMRO_CONSENT_INFO)
-            .addBearerToken(token)
-            .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
-            .accept(MediaType.APPLICATION_JSON_TYPE)
-            .get(ConsentResponse.class);
+                .addBearerToken(token)
+                .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .get(ConsentResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {
@@ -85,7 +85,7 @@ public class AbnAmroApiClient {
 
     public AccountHolderResponse fetchAccountHolder(final String accountId) {
         return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
-            .get(AccountHolderResponse.class);
+                .get(AccountHolderResponse.class);
     }
 
     public AccountBalanceResponse fetchAccountBalance(final String accountId) {
@@ -98,15 +98,16 @@ public class AbnAmroApiClient {
         String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
         final String apiKey = getConfiguration().getApiKey();
         final SimpleDateFormat sdf =
-            new SimpleDateFormat(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT);
+                new SimpleDateFormat(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT);
 
-        TransactionsResponse response = client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
-            .queryParam(QueryParams.BOOK_DATE_FROM, sdf.format(from))
-            .queryParam(QueryParams.BOOK_DATE_TO, sdf.format(to))
-            .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
-            .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
-            .accept(MediaType.APPLICATION_JSON_TYPE)
-            .get(TransactionsResponse.class);
+        TransactionsResponse response =
+                client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
+                        .queryParam(QueryParams.BOOK_DATE_FROM, sdf.format(from))
+                        .queryParam(QueryParams.BOOK_DATE_TO, sdf.format(to))
+                        .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
+                        .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .get(TransactionsResponse.class);
         return response;
     }
 }

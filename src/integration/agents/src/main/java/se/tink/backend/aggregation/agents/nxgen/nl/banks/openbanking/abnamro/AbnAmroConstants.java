@@ -12,11 +12,14 @@ public class AbnAmroConstants {
 
     public static class URLs {
         private static final URL API_ABNAMRO = new URL("https://api-sandbox.abnamro.com");
-        private static final URL OAUTH2_ABNAMRO = new URL("https://auth-sandbox.connect.abnamro.com");
+        private static final URL OAUTH2_ABNAMRO =
+                new URL("https://auth-sandbox.connect.abnamro.com");
         public static final URL OAUTH2_ABNAMRO_SSL =
                 new URL("https://auth-sandbox.connect.abnamro.com:8443");
         public static final URL AUTHORIZE_ABNAMRO =
-                OAUTH2_ABNAMRO.concatWithSeparator("as").concatWithSeparator("authorization.oauth2");
+                OAUTH2_ABNAMRO
+                        .concatWithSeparator("as")
+                        .concatWithSeparator("authorization.oauth2");
         public static final URL OAUTH2_TOKEN_ABNAMRO =
                 OAUTH2_ABNAMRO_SSL.concatWithSeparator("as").concatWithSeparator("token.oauth2");
         public static final URL ABNAMRO_CONSENT_INFO =

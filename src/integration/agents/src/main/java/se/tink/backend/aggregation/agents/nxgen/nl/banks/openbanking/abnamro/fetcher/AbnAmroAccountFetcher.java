@@ -23,9 +23,9 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
     public Collection<TransactionalAccount> fetchAccounts() {
 
         return apiClient.fetchAccounts().stream()
-            .map(AccountEntity::getAccountNumber)
-            .map(accountId -> constructAccount(accountId))
-            .collect(Collectors.toList());
+                .map(AccountEntity::getAccountNumber)
+                .map(accountId -> constructAccount(accountId))
+                .collect(Collectors.toList());
     }
 
     private TransactionalAccount constructAccount(final String accountId) {
@@ -34,13 +34,13 @@ public class AbnAmroAccountFetcher implements AccountFetcher<TransactionalAccoun
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountId);
 
         return CheckingAccount.builder()
-            .setUniqueIdentifier(accountId)
-            .setAccountNumber(accountId)
-            .setBalance(balance.toAmount())
-            .setAlias(accountHolder.getAccountHolderName())
-            .addAccountIdentifier(new IbanIdentifier(accountId))
-            .addHolderName(accountHolder.getAccountHolderName())
-            .putInTemporaryStorage(StorageKey.ACCOUNT_CONSENT_ID, accountId)
-            .build();
+                .setUniqueIdentifier(accountId)
+                .setAccountNumber(accountId)
+                .setBalance(balance.toAmount())
+                .setAlias(accountHolder.getAccountHolderName())
+                .addAccountIdentifier(new IbanIdentifier(accountId))
+                .addHolderName(accountHolder.getAccountHolderName())
+                .putInTemporaryStorage(StorageKey.ACCOUNT_CONSENT_ID, accountId)
+                .build();
     }
 }
