@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-// @Ignore
+@Ignore
 public class AbnAmroAgentTest {
 
     @Test
