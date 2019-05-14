@@ -7,13 +7,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class SessionStorageAgreement {
     private String userNumber;
     private String agreementId;
+    private String name;
     private List<String> accountBankIds;
 
     public SessionStorageAgreement() {}
 
-    public SessionStorageAgreement(SdcAgreementEntityKey entityKey) {
+    public SessionStorageAgreement(SdcAgreementEntityKey entityKey, String name) {
         this.userNumber = entityKey.getUserNumber();
         this.agreementId = entityKey.getAgreementNumber();
+        this.name = name;
         this.accountBankIds = new ArrayList<>();
     }
 
@@ -40,6 +42,10 @@ public class SessionStorageAgreement {
         return this;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void addAccountBankId(String accountBankId) {
         accountBankIds.add(accountBankId);
     }
@@ -57,6 +63,7 @@ public class SessionStorageAgreement {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("userNumber", userNumber)
+                .append("name", name)
                 .append("agreementId", agreementId)
                 .append("accountBankIds", accountBankIds)
                 .toString();
