@@ -24,14 +24,23 @@ public final class SBABConstants {
     }
 
     public static class Urls {
+
+        public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
+
+        public static final URL AUTHORIZATION = new URL(Endpoints.BASE_URL + Endpoints.OAUTH);
+        public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.TRANSFERS);
+        public static final URL CUSTOMERS = new URL(Endpoints.BASE_URL + Endpoints.CUSTOMERS);
+        public static final URL TOKEN = new URL(Endpoints.BASE_URL + Endpoints.TOKEN);
+    }
+
+    public static class Endpoints {
         public static final String BASE_URL = "https://developer.sbab.se";
-        public static final URL ACCOUNTS = new URL(BASE_URL + "/sandbox/savings/2.0/accounts");
         public static final String OAUTH = "/sandbox/auth/1.0/authorize";
-        public static final URL AUTHORIZATION = new URL(BASE_URL + OAUTH);
-        public static final URL TRANSACTIONS =
-                new URL(BASE_URL + "/sandbox/savings/2.0/accounts/{accountNumber}/transfers");
-        public static final URL CUSTOMERS = new URL(BASE_URL + "/sandbox/savings/1.0/customers");
-        public static final URL TOKEN = new URL(BASE_URL + "/sandbox/auth/1.0/token");
+        public static final String TRANSFERS =
+                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers";
+        public static final String CUSTOMERS = "/sandbox/savings/1.0/customers";
+        public static final String ACCOUNTS = "/sandbox/savings/2.0/accounts";
+        public static final String TOKEN = "/sandbox/auth/1.0/token";
     }
 
     public static class StorageKeys {
