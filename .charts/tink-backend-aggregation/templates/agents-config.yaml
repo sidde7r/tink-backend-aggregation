@@ -73,7 +73,16 @@ data:
             keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
         {{- end }}
-
+     {{- if $agentsConfig.volksbank }}
+        volksbank:
+          tink:
+            aisConfiguration:
+              clientId: "VOLKSBANK_AIS_CLIENT_ID"
+              clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET"
+              redirectUrl: "{{ $agentsConfig.VOLKSBANK.redirectUrl }}"
+              clientCertificatePath: "dummyPat"
+              clientCertificatePass: "dummyPass"
+        {{- end }}
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
