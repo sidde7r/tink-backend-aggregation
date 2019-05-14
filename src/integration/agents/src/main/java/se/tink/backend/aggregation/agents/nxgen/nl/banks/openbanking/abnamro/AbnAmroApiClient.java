@@ -1,18 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.QueryParams;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.AbnAmroConstants.URLs;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.AccountCheckConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.BalanceResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionalAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionalTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountHolderResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.utils.AbnAmroUtils;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -41,11 +44,6 @@ public class AbnAmroApiClient {
 
     public TokenResponse exchangeAuthorizationCode(final ExchangeAuthorizationCodeRequest request) {
         return post(request);
-    }
-
-    public AccountCheckConsentResponse checkAccountAccessUsingConsent(final URL url) {
-        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_CONSENT_INFO)
-                .get(AccountCheckConsentResponse.class);
     }
 
     public TokenResponse refreshAccessToken(final RefreshTokenRequest request) {
@@ -79,18 +77,36 @@ public class AbnAmroApiClient {
             .get(ConsentResponse.class);
     }
 
-    public TransactionalAccountsResponse fetchAccounts() {
-        return buildRequest(AbnAmroConstants.URLs.ABNAMRO_ACCOUNTS)
-                .get(TransactionalAccountsResponse.class);
+    public AccountsResponse fetchAccounts() {
+        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
+        return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
+                .get(AccountsResponse.class);
     }
 
-    public BalanceResponse getBalance(final String accountId) {
+    public AccountHolderResponse fetchAccountHolder(final String accountId) {
+        return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
+            .get(AccountHolderResponse.class);
+    }
+
+    public AccountBalanceResponse fetchAccountBalance(final String accountId) {
         return buildRequest(AbnAmroConstants.URLs.buildBalanceUrl(accountId))
-                .get(BalanceResponse.class);
+                .get(AccountBalanceResponse.class);
     }
 
-    public TransactionalTransactionsResponse getTransactions(
-            final TransactionalAccount account, final int page) {
-        return null;
+    public TransactionsResponse fetchTransactions(Date from, Date to) {
+
+        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
+        final String apiKey = getConfiguration().getApiKey();
+        final SimpleDateFormat sdf =
+            new SimpleDateFormat(AbnAmroConstants.TRANSACTION_BOOKING_DATE_FORMAT);
+
+        TransactionsResponse response = client.request(AbnAmroConstants.URLs.buildTransactionsUrl(accountId))
+            .queryParam(QueryParams.BOOK_DATE_FROM, sdf.format(from))
+            .queryParam(QueryParams.BOOK_DATE_TO, sdf.format(to))
+            .addBearerToken(AbnAmroUtils.getOauthToken(persistentStorage))
+            .header(AbnAmroConstants.QueryParams.API_KEY, apiKey)
+            .accept(MediaType.APPLICATION_JSON_TYPE)
+            .get(TransactionsResponse.class);
+        return response;
     }
 }

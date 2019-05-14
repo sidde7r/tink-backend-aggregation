@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class AbnAmroConstants {
 
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
-    public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-mm-dd";
+    public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
     public static final int START_PAGE = 1;
     public static final String INTEGRATION_NAME = "abnamro";
 
@@ -28,7 +27,7 @@ public class AbnAmroConstants {
         private static final String BALANCES_SUFFIX = "balances";
         private static final String TRANSACTIONS_SUFFIX = "transactions";
 
-        public static URL buildDetailsUrl(final String accountId) {
+        public static URL buildAccountHolderUrl(final String accountId) {
             return ABNAMRO_ACCOUNTS
                     .concatWithSeparator(accountId)
                     .concatWithSeparator(ACCOUNT_DETAILS);
@@ -93,6 +92,8 @@ public class AbnAmroConstants {
         public static final String SIGNATURE = "Signature";
         public static final String DATE = "Date";
         public static final String PAGE = "page";
+        public static final String BOOK_DATE_FROM = "bookDateFrom";
+        public static final String BOOK_DATE_TO = "bookDateTo";
     }
 
     public class QueryValues {

@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fe
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class BalanceResponse {
+public class AccountBalanceResponse {
 
     @JsonProperty("accountNumber")
     private String accountNumber;
@@ -19,7 +18,7 @@ public class BalanceResponse {
     private String currency;
 
     @JsonProperty("amount")
-    private BigDecimal amount;
+    private double amount;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -45,31 +44,9 @@ public class BalanceResponse {
         this.currency = currency;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+    public double getAmount() { return amount; }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    @Override
-    public String toString() {
-        return "BalanceResponse{"
-                + "accountNumber = '"
-                + accountNumber
-                + '\''
-                + ",balanceType = '"
-                + balanceType
-                + '\''
-                + ",currency = '"
-                + currency
-                + '\''
-                + ",amount = '"
-                + amount
-                + '\''
-                + "}";
-    }
+    public void setAmount(double amount) { this.amount = amount; }
 
     @JsonIgnore
     public Amount toAmount() {
