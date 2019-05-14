@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.workers.commands.ClearSensitiveInformationCom
 import se.tink.backend.aggregation.workers.commands.DebugAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.DecryptCredentialsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.EncryptCredentialsWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.ExpireSessionAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
@@ -262,6 +263,12 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
+                new ExpireSessionAgentWorkerCommand(
+                        !request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()));
+        commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
@@ -465,6 +472,11 @@ public class AgentWorkerOperationFactory {
 
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
+                new ExpireSessionAgentWorkerCommand(
+                        !request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(context),
                 new MigrateCredentialsAndAccountsWorkerCommand(
@@ -692,6 +704,12 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
+                new ExpireSessionAgentWorkerCommand(
+                        !request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()));
+        commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
@@ -771,6 +789,12 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
+        commands.add(
+                new ExpireSessionAgentWorkerCommand(
+                        !request.isManual(),
+                        context,
+                        request.getCredentials(),
+                        request.getProvider()));
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
