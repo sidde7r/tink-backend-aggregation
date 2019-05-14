@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginResponse;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.CustomerInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.LoginAnonymousPostResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsResponse;
@@ -52,6 +53,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 
 public class NordnetApiClient {
@@ -80,6 +82,7 @@ public class NordnetApiClient {
     private static final String GET_ACCOUNTS_URL = BASE_URL + "/api/2/accounts";
     private static final String GET_ACCOUNTS_INFO_URL = BASE_URL + "/api/2/accounts/%s/info";
     private static final String GET_POSITIONS_URL = BASE_URL + "/api/2/accounts/%s/positions";
+    private static final String GET_CUSTOMER_INFO_URL = BASE_URL + "/api/2/customers/contact_info";
 
     private static final AggregationLogger log = new AggregationLogger(NordnetApiClient.class);
     private static final LogTag LOG_ACCOUNT_INFO = LogTag.from("Nordnet-account-info");
@@ -378,6 +381,12 @@ public class NordnetApiClient {
         }
 
         return accounts;
+    }
+
+    public IdentityData fetchIdentityData() {
+        CustomerInfoResponse customerInfo = get(GET_CUSTOMER_INFO_URL, CustomerInfoResponse.class);
+
+        return customerInfo.toTinkIdentity();
     }
 
     private <T> T post(String url, Object request, Class<T> responseEntity) {

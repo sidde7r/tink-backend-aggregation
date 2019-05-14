@@ -21,8 +21,10 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.brokers.nordnet.NordnetApiClient;
@@ -41,7 +43,9 @@ import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordnetAgent extends AbstractAgent
-        implements RefreshSavingsAccountsExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshSavingsAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshIdentityDataExecutor {
     private static final int MAX_ATTEMPTS = 60;
 
     private final Credentials credentials;
@@ -266,5 +270,10 @@ public class NordnetAgent extends AbstractAgent
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
         return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(apiClient.fetchIdentityData());
     }
 }
