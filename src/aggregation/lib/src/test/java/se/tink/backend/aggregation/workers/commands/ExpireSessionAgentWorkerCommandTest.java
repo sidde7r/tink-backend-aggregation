@@ -22,21 +22,23 @@ public class ExpireSessionAgentWorkerCommandTest {
     @Before
     public void setup() {
         systemUpdater = Mockito.mock(SystemUpdater.class);
-        Mockito.doNothing().when(systemUpdater).updateCredentialsExcludingSensitiveInformation(Mockito.any(), Mockito.anyBoolean());
+        Mockito.doNothing()
+                .when(systemUpdater)
+                .updateCredentialsExcludingSensitiveInformation(
+                        Mockito.any(), Mockito.anyBoolean());
     }
 
     @Test
-    public void ensureManualRefreshesReturnCommandResultContinueAndStatusUpdated() throws Exception {
+    public void ensureManualRefreshesReturnCommandResultContinueAndStatusUpdated()
+            throws Exception {
         Credentials credentials = createCredentials(new Date());
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                false,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATED);
     }
 
@@ -45,77 +47,78 @@ public class ExpireSessionAgentWorkerCommandTest {
         Credentials credentials = createCredentials(new Date());
         Provider provider = createProvider(null);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                true,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATED);
     }
 
     @Test
-    public void ensureAccessTypeOtherReturnCommandResultContinueAndStatusUpdated() throws Exception {
+    public void ensureAccessTypeOtherReturnCommandResultContinueAndStatusUpdated()
+            throws Exception {
         Credentials credentials = createCredentials(new Date());
         Provider provider = createProvider(Provider.AccessType.OTHER);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                true,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATED);
     }
 
     @Test
-    public void ensureSessionExpiryDateNullReturnCommandResultContinueAndStatusUpdated() throws Exception {
+    public void ensureSessionExpiryDateNullReturnCommandResultContinueAndStatusUpdated()
+            throws Exception {
         Credentials credentials = createCredentials(null);
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                true,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATED);
     }
 
     @Test
-    public void ensureSessionExpiredTomorrowReturnCommandResultAbortAndStatusUpdated() throws Exception {
-        Date tomorrow = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+    public void ensureSessionExpiredTomorrowReturnCommandResultAbortAndStatusUpdated()
+            throws Exception {
+        Date tomorrow =
+                Date.from(
+                        LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
 
         Credentials credentials = createCredentials(tomorrow);
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                true,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.CONTINUE);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.CONTINUE);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.UPDATED);
     }
 
     @Test
-    public void ensureSessionExpiredYesterdayReturnCommandResultAbortAndStatusSessionExpired() throws Exception {
-        Date yesterday = Date.from(LocalDateTime.now().minusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+    public void ensureSessionExpiredYesterdayReturnCommandResultAbortAndStatusSessionExpired()
+            throws Exception {
+        Date yesterday =
+                Date.from(
+                        LocalDateTime.now()
+                                .minusDays(1)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
 
         Credentials credentials = createCredentials(yesterday);
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
-        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand = new ExpireSessionAgentWorkerCommand(
-                true,
-                systemUpdater,
-                credentials,
-                provider);
+        ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
-        Assertions.assertThat(expireSessionAgentWorkerCommand.execute()).isEqualTo(AgentWorkerCommandResult.ABORT);
+        Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
+                .isEqualTo(AgentWorkerCommandResult.ABORT);
         Assertions.assertThat(credentials.getStatus()).isEqualTo(CredentialsStatus.SESSION_EXPIRED);
     }
 
