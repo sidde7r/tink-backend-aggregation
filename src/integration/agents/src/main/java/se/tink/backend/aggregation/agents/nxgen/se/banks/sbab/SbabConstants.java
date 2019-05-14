@@ -59,6 +59,7 @@ public abstract class SbabConstants {
         private static final String AUTHORIZE = AUTH + "/authorize";
         private static final String AUTH_STATUS = AUTH + "/status?pending_code={pendingCode}";
         private static final String TOKEN = AUTH + "/token";
+        private static final String CUSTOMER = "/savings/1.0/customers";
         private static final String ACCOUNTS = "/savings/2.0/accounts";
         private static final String ACCOUNT = ACCOUNTS + "/{accountNo}";
         private static final String TRANSFERS = ACCOUNT + "/transfers";
@@ -122,6 +123,10 @@ public abstract class SbabConstants {
 
         public static String GET_AMORTISATION(String loanNumber) {
             return new UriTemplate(AMORTISATION).createURI(loanNumber);
+        }
+
+        public static String GET_CUSTOMER() {
+            return new UriTemplate(CUSTOMER).createURI();
         }
     }
 
