@@ -16,9 +16,16 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Provider implements Cloneable {
+
+    public enum AccessType {
+        OPEN_BANKING,
+        OTHER
+    }
+
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
+    private AccessType accessType;
     // Where in the aggregation structure the agent is placed - Format:
     // banks.se.alandsbanken.AlandsBankenAgent
     private String className;
@@ -45,6 +52,10 @@ public class Provider implements Cloneable {
     public Provider() {
         setFields(Lists.newArrayList());
         setSupplementalFields(Lists.newArrayList());
+    }
+
+    public AccessType getAccessType() {
+        return accessType;
     }
 
     public String getClassName() {
@@ -89,6 +100,10 @@ public class Provider implements Cloneable {
 
     public ProviderTypes getType() {
         return type;
+    }
+
+    public void setAccessType(AccessType accessType) {
+        this.accessType = accessType;
     }
 
     public void setClassName(String className) {
