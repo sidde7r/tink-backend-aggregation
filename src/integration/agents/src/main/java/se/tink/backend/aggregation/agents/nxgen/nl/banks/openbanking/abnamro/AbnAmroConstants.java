@@ -3,7 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class AbnAmroConstants {
+public final class AbnAmroConstants {
+
+    private AbnAmroConstants() {
+        throw new AssertionError();
+    }
 
     public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
     public static final String TRANSACTION_BOOKING_DATE_FORMAT = "yyyy-MM-dd";
