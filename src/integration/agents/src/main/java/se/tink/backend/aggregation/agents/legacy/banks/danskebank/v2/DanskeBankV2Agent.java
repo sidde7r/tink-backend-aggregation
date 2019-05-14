@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -31,10 +32,12 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -42,6 +45,7 @@ import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -60,6 +64,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BankIdResponse
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BillRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.BillResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.ChallengeResponseRequest;
+import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveRequest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceApproveResponse;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.EInvoiceDetailsResponse;
@@ -109,6 +114,8 @@ import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -122,6 +129,7 @@ public class DanskeBankV2Agent extends AbstractAgent
                 RefreshCreditCardAccountsExecutor,
                 RefreshInvestmentAccountsExecutor,
                 RefreshLoanAccountsExecutor,
+                RefreshIdentityDataExecutor,
                 TransferExecutor {
 
     private final Client httpClient;
@@ -153,6 +161,7 @@ public class DanskeBankV2Agent extends AbstractAgent
     private static final String DEFAULT_ZONE_ID = "CET";
 
     private Map<AccountEntity, Account> accountMap = null;
+    private CreateSessionResponse sessionResponse;
 
     public DanskeBankV2Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -685,7 +694,7 @@ public class DanskeBankV2Agent extends AbstractAgent
         String orderReference = initBankIdResponse.getOrderReference();
         verifyBankId(BankIdServiceType.VERIFYAUTH, orderReference);
 
-        apiClient.createAuthenticatedSession(credentials);
+        sessionResponse = apiClient.createAuthenticatedSession(credentials);
     }
 
     private void verifyBankId(BankIdServiceType bankIdServiceType, String orderReference)
@@ -718,7 +727,7 @@ public class DanskeBankV2Agent extends AbstractAgent
     }
 
     private boolean loginWithPassword() throws AuthenticationException, AuthorizationException {
-        apiClient.initAndCreateSession(credentials);
+        sessionResponse = apiClient.initAndCreateSession(credentials);
 
         LoginResponse loginResponse = apiClient.loginWithPassword(createLoginRequest());
         String generalLoginErrorMessage = catalog.getString("Could not login, please try again.");
@@ -1176,6 +1185,27 @@ public class DanskeBankV2Agent extends AbstractAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        if (sessionResponse == null
+                || sessionResponse.getLoginInfo() == null
+                || Strings.isNullOrEmpty(sessionResponse.getLoginInfo().getName())) {
+            throw new NoSuchElementException();
+        }
+
+        String name = sessionResponse.getLoginInfo().getName();
+
+        try {
+            return new FetchIdentityDataResponse(
+                    SeIdentityData.of(name, credentials.getField(Key.USERNAME)));
+        } catch (NullPointerException | IllegalArgumentException | IllegalStateException e) {
+            log.warn("Failed to parse SSN: " + credentials.getField(Key.USERNAME));
+
+            return new FetchIdentityDataResponse(
+                    IdentityData.builder().setFullName(name).setDateOfBirth(null).build());
+        }
     }
 
     //////////////////////////////////////

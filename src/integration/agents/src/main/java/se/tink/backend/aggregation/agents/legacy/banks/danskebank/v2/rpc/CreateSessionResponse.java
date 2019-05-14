@@ -11,12 +11,23 @@ public class CreateSessionResponse extends AbstractResponse {
     @JsonProperty("Settings")
     protected SettingsEntity settings;
 
+    @JsonProperty("LoginInfo")
+    protected LoginInfoEntity loginInfo;
+
     public String getMagicKey() {
         return magicKey;
     }
 
     public void setMagicKey(String magicKey) {
         this.magicKey = magicKey;
+    }
+
+    public LoginInfoEntity getLoginInfo() {
+        return loginInfo;
+    }
+
+    public void setLoginInfo(LoginInfoEntity loginInfo) {
+        this.loginInfo = loginInfo;
     }
 
     public String getLoginType() {
