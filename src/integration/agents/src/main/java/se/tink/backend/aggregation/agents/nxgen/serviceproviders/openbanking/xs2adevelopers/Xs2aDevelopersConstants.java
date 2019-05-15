@@ -58,7 +58,6 @@ public final class Xs2aDevelopersConstants {
         public static final String BOTH = "both";
         public static final String CODE = "code";
         public static final String CODE_CHALLENGE_TYPE = "S256";
-        public static final String CODE_CHALLENGE = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 

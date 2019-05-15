@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers;
 
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeChallenge;
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.utils.CryptoUtils.getCodeVerifier;
+
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,7 +94,7 @@ public class Xs2aDevelopersApiClient {
                 .queryParam(QueryKeys.REDIRECT_URI, configuration.getRedirectUrl())
                 .queryParam(QueryKeys.CLIENT_ID, configuration.getClientId())
                 .queryParam(QueryKeys.SCOPE, "AIS:" + getConsentIdFromStorage())
-                .queryParam(QueryKeys.CODE_CHALLENGE, QueryValues.CODE_CHALLENGE)
+                .queryParam(QueryKeys.CODE_CHALLENGE, getCodeChallenge(getCodeVerifier()))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryKeys.CODE_CHALLENGE_TYPE, QueryValues.CODE_CHALLENGE_TYPE);
     }
