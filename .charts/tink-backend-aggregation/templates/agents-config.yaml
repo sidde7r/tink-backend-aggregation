@@ -81,7 +81,7 @@ data:
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET"
               redirectUrl: "{{ $agentsConfig.VOLKSBANK.redirectUrl }}"
               clientCertificatePath: "dummyPat"
-              clientCertificatePass: "dummyPass"
+              clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD"
         {{- end }}
         {{- if $agentsConfig.fints }}
         fints:
