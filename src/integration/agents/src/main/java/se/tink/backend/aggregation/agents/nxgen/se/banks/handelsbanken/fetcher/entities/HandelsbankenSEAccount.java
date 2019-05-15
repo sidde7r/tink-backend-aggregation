@@ -20,7 +20,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
@@ -54,13 +57,20 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         AccountTypes accountType = getAccountType(client, transactionsResponse);
 
         return Optional.of(
-                TransactionalAccount.builder(accountType, number, findBalanceAmount().asAmount())
-                        .setHolderName(new HolderName(holderName))
+                TransactionalAccount.nxBuilder()
+                        .withType(TransactionalAccountType.from(accountType))
+                        .withId(
+                                IdModule.builder()
+                                        .withUniqueIdentifier(number)
+                                        .withAccountNumber(accountNumber)
+                                        .withAccountName(name)
+                                        .addIdentifier(new SwedishIdentifier(accountNumber))
+                                        .addIdentifier(new SwedishSHBInternalIdentifier(number))
+                                        .build())
+                        .withBalance(BalanceModule.of(findBalanceAmount().asAmount()))
+                        .addHolderName(holderName)
+                        .setApiIdentifier(number)
                         .setBankIdentifier(number)
-                        .setAccountNumber(accountNumber)
-                        .setName(name)
-                        .addIdentifier(new SwedishIdentifier(accountNumber))
-                        .addIdentifier(new SwedishSHBInternalIdentifier(number))
                         .build());
     }
 

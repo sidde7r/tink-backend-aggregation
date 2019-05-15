@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.creditcards.supremecard.v2;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 public class SupremeCardParsingUtils {
     static Optional<String> parseBankIdUrl(String htmlResponse) {
@@ -77,5 +79,23 @@ public class SupremeCardParsingUtils {
         queryParameters.put(SupremeCardApiConstants.TARGET_PARAMETER_KEY, target);
 
         return queryParameters.isEmpty() ? Optional.empty() : Optional.of(queryParameters);
+    }
+
+    static String parseName(String myPageHtmlResponse) {
+        Document document = Jsoup.parse(myPageHtmlResponse);
+
+        if (document == null) {
+            throw new IllegalStateException("Could not parse MyPage");
+        }
+
+        Elements infoPanel = document.select("div.contactinfo.panel");
+
+        if (infoPanel.size() == 0
+                || infoPanel.select("p").size() == 0
+                || infoPanel.select("p").first().select("span.string").text() == null) {
+            throw new NoSuchElementException("Could not find customer name, HTML changed?");
+        }
+
+        return infoPanel.select("p").first().select("span.string").text().trim();
     }
 }

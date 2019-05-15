@@ -23,6 +23,8 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -37,19 +39,42 @@ import se.tink.libraries.user.rpc.User;
 public abstract class Account {
     private static final Logger logger = LoggerFactory.getLogger(Account.class);
 
-    private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
-    private String name;
-    private String productName;
-    private String accountNumber;
-    private Amount balance;
-    private Amount availableCredit;
-    private Set<AccountIdentifier> identifiers;
-    private String uniqueIdentifier;
-    private String apiIdentifier;
-    private HolderName holderName;
-    private TemporaryStorage temporaryStorage;
-    private Set<AccountFlag> accountFlags;
+    static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
 
+    protected BalanceModule balanceModule;
+    protected IdModule idModule;
+    protected String name;
+    protected String productName;
+
+    protected String accountNumber;
+    protected Amount balance;
+    protected Amount availableCredit;
+    protected Set<AccountIdentifier> identifiers;
+    protected String uniqueIdentifier;
+    protected String apiIdentifier;
+    protected HolderName holderName;
+    protected TemporaryStorage temporaryStorage;
+    protected Set<AccountFlag> accountFlags;
+
+    // Exists for interoperability only, do not ever use
+    protected Account(AccountBuilder<? extends Account, ?> builder) {
+        // These exist for interoperability and will eventually be removed
+        this.name = builder.getIdModule().getAccountName();
+        this.accountNumber = builder.getIdModule().getAccountNumber();
+        this.balance = builder.getBalanceModule().getBalance();
+        this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
+        this.identifiers = builder.getIdModule().getIdentifiers();
+        this.uniqueIdentifier = builder.getIdModule().getUniqueId();
+
+        this.balanceModule = builder.getBalanceModule();
+        this.idModule = builder.getIdModule();
+        this.apiIdentifier = builder.getApiIdentifier();
+        this.holderName = builder.getHolderNames().stream().findFirst().orElse(null);
+        this.temporaryStorage = builder.getTransientStorage();
+        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
+    }
+
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     @Deprecated
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
@@ -94,6 +119,8 @@ public abstract class Account {
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+    @Deprecated
     public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
             implements BuildStep<A, B> {
 
@@ -227,6 +254,7 @@ public abstract class Account {
         }
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
@@ -267,6 +295,18 @@ public abstract class Account {
     }
 
     public Amount getBalance() {
+        return balance != null ? balance : balanceModule.getBalance();
+    }
+
+    public BalanceModule getBalanceModule() {
+        return balanceModule;
+    }
+
+    public IdModule getIdModule() {
+        return idModule;
+    }
+
+    public Amount getAccountBalance() {
         return new Amount(this.balance.getCurrency(), this.balance.getValue());
     }
 
@@ -363,6 +403,7 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
     /** @deprecated Use StepBuilder instead */
     @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {

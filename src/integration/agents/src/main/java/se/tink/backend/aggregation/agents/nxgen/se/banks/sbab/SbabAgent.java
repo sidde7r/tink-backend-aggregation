@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.identity.SbabIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.SbabLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.SbabSavingsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.session.SbabSessionHandler;
@@ -28,7 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SbabAgent extends NextGenerationAgent {
+public class SbabAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final SbabApiClient apiClient;
     private final String clientName;
 
@@ -120,5 +123,11 @@ public class SbabAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        SbabIdentityFetcher fetcher = new SbabIdentityFetcher(apiClient);
+        return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

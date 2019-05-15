@@ -12,15 +12,6 @@ pkg_tar(
     visibility = ["//docker:__pkg__"],
 )
 
-pkg_tar(
-    name = "provider_configuration_data_tar",
-    srcs = ["//data"],
-    mode = "0444",
-    package_dir = "/usr/share/tink-backend-provider-configuration/data",
-    strip_prefix = "/data",
-    visibility = ["//docker:__pkg__"],
-)
-
 # end data pkgs
 
 # service files
@@ -56,14 +47,6 @@ pkg_tar(
     srcs = ["//src/aggregation/service:bin_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
-    visibility = ["//docker:__pkg__"],
-)
-
-pkg_tar(
-    name = "provider_configuration_bin_tar",
-    srcs = ["//src/provider_configuration/service:bin_deploy"],
-    mode = "0444",
-    package_dir = "/usr/share/tink-backend-provider-configuration",
     visibility = ["//docker:__pkg__"],
 )
 

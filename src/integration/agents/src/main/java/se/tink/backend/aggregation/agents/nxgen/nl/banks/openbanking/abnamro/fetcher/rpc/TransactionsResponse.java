@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.entities.TransactionListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Transactions {
+public class TransactionsResponse {
 
     @JsonProperty("accountNumber")
     private String accountNumber;
@@ -14,7 +17,7 @@ public class Transactions {
     private String nextPageKey;
 
     @JsonProperty("transactions")
-    private List<TransactionItem> transactions;
+    private List<TransactionEntity> transactions;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -32,11 +35,15 @@ public class Transactions {
         this.nextPageKey = nextPageKey;
     }
 
-    public List<TransactionItem> getTransactions() {
+    public List<TransactionEntity> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(List<TransactionItem> transactions) {
-        this.transactions = transactions;
+    @JsonIgnore private TransactionListEntity transactionList;
+
+    public TransactionListEntity getTransactionList() {
+        TransactionListEntity listEntity = new TransactionListEntity();
+        listEntity.setTransactions(transactions);
+        return listEntity;
     }
 }

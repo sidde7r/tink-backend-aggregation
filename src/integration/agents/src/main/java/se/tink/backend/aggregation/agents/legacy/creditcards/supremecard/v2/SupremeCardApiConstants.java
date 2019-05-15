@@ -12,7 +12,7 @@ public class SupremeCardApiConstants {
 
     // Url specific
     public static final String BASE_URL = "https://www.supremecard.se/";
-    static final String MY_PAGE_URL = "min-sida/";
+    static final String MY_PAGE_URL = BASE_URL + "min-sida/";
     static final String COLLECT_AUTH_CHECKPOINT_URL = BASE_URL + "elogin-handler?device=mobile";
     static final String ACCOUNT_INFO_URL =
             BASE_URL + "wp-content/plugins/rb.bank.connector/ajax/accountInfo.php";

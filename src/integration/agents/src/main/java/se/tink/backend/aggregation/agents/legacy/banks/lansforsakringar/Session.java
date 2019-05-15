@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.utils.CookieContainer;
 public class Session extends CookieContainer {
     private String token;
     private String ticket;
+    private String loginName;
+    private String loginSsn;
 
     public String getToken() {
         return token;
@@ -22,5 +24,21 @@ public class Session extends CookieContainer {
 
     public String getTicket() {
         return ticket;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getLoginSsn() {
+        return loginSsn;
+    }
+
+    public void setLoginSsn(String loginSsn) {
+        this.loginSsn = loginSsn;
     }
 }

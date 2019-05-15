@@ -88,6 +88,14 @@ data:
           regNumber: "FINTS_REG_NUMBER"
         {{- end }}
 
+        abnamro:
+          tink:
+            clientId: "dummyId"
+            clientSecret: "dummySecret"
+            redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
+            clientSSLP12: "dummyP12"
+            clientSSLKeyPassword: "dummyPassword"
+
         {{- if $agentsConfig.icsConfiguration }}
         icsConfiguration:
           abn:

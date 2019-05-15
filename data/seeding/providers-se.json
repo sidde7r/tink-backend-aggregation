@@ -2177,6 +2177,30 @@
             "type": "TEST"
         },
         {
+            "name": "se-test-psd2-redirect-success",
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayDescription": "Redirect",
+            "displayName": "Bink PSD2 Redirect",
+            "groupDisplayName": "Demo providers",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
+            "financialInstituteName": "Bink",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using a third party app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
             "name": "se-seb-oauth2",
             "displayName": "SEB (Sandbox)",
             "popular": true,

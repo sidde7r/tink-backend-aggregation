@@ -149,4 +149,12 @@ public class SupremeCardApiAgent {
                         SupremeCardApiConstants.REQUESTED_WITH_HEADER_VALUE)
                 .post(TransactionsResponse.class, transactionsRequest);
     }
+
+    String fetchMyPage() {
+        return createGetRequest(
+                        SupremeCardApiConstants.MY_PAGE_URL,
+                        SupremeCardApiConstants.MY_PAGE_URL,
+                        MediaType.TEXT_HTML)
+                .get(String.class);
+    }
 }

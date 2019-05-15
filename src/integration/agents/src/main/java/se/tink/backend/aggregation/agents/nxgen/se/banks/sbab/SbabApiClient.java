@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.PendingAuthCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.identity.rpc.CustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.rpc.AccountResponse;
@@ -184,5 +185,11 @@ public final class SbabApiClient {
         final String uri = SbabConstants.Uris.GET_LOAN(loanNumber);
 
         return createRequestInSession(uri).get(LoanResponse.class);
+    }
+
+    public CustomerResponse getCustomer() {
+        final String uri = SbabConstants.Uris.GET_CUSTOMER();
+
+        return createRequestInSession(uri).get(CustomerResponse.class);
     }
 }
