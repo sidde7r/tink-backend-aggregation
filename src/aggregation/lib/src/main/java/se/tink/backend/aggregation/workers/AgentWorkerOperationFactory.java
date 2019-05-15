@@ -264,7 +264,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        !request.isManual(),
+                        request.isManual(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -473,7 +473,7 @@ public class AgentWorkerOperationFactory {
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                 new ExpireSessionAgentWorkerCommand(
-                        !request.isManual(),
+                        request.isManual(),
                         context,
                         request.getCredentials(),
                         request.getProvider()),
@@ -705,7 +705,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        !request.isManual(),
+                        request.isManual(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));
@@ -791,7 +791,7 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(
                 new ExpireSessionAgentWorkerCommand(
-                        !request.isManual(),
+                        request.isManual(),
                         context,
                         request.getCredentials(),
                         request.getProvider()));

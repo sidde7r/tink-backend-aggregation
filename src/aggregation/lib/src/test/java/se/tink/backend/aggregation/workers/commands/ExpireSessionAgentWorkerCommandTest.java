@@ -35,7 +35,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
@@ -48,7 +48,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(null);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
@@ -62,7 +62,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(Provider.AccessType.OTHER);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
@@ -76,7 +76,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
@@ -94,7 +94,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.CONTINUE);
@@ -115,7 +115,7 @@ public class ExpireSessionAgentWorkerCommandTest {
         Provider provider = createProvider(Provider.AccessType.OPEN_BANKING);
 
         ExpireSessionAgentWorkerCommand expireSessionAgentWorkerCommand =
-                new ExpireSessionAgentWorkerCommand(true, systemUpdater, credentials, provider);
+                new ExpireSessionAgentWorkerCommand(false, systemUpdater, credentials, provider);
 
         Assertions.assertThat(expireSessionAgentWorkerCommand.execute())
                 .isEqualTo(AgentWorkerCommandResult.ABORT);
