@@ -12,7 +12,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -20,13 +20,15 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BelfiusAgentTransferTest {
-    private final ArgumentHelper helper =
-            new ArgumentHelper(
-                    "tink.username",
-                    "tink.password",
-                    "sourceaccount",
-                    "destinationaccount",
-                    "destinationname");
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
+        SOURCE_ACCOUNT,
+        DESTINATION_ACCOUNT,
+        DESTINATION_NAME,
+    }
+
+    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
 
     // Transfer tests will make actual transfers verify before running.
     // https://www.belfius.be/retail/nl/mijn-belfius/index.aspx#pan=cardNr
@@ -63,12 +65,12 @@ public class BelfiusAgentTransferTest {
 
     @AfterClass
     public static void afterClass() {
-        ArgumentHelper.afterClass();
+        ArgumentManager.afterClass();
     }
 
     private AgentIntegrationTest buildWithCredentials() {
-        return builder.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
-                .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
+        return builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 .build();
     }
 
@@ -76,9 +78,9 @@ public class BelfiusAgentTransferTest {
     // set up
     @Test(expected = TransferExecutionException.class)
     public void testTransferToSavingsAccountThatIsNotAllowed() throws Exception {
-        sourceCheckingAccount = helper.get("sourceaccount");
-        ownSavingsAccountNotAllowedToTransferTo = helper.get("destinationaccount");
-        ownNameForDestination = helper.get("destinationname");
+        sourceCheckingAccount = helper.get(Arg.SOURCE_ACCOUNT);
+        ownSavingsAccountNotAllowedToTransferTo = helper.get(Arg.DESTINATION_ACCOUNT);
+        ownNameForDestination = helper.get(Arg.DESTINATION_NAME);
         Amount amount = Amount.inEUR(AMOUNT_SMALL);
         SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
         SepaEurIdentifier destionationSparrekingPlus =
@@ -99,9 +101,9 @@ public class BelfiusAgentTransferTest {
     @Ignore // Please check that sourceCheckingAccount and ownSavingsAccount set up
     @Test
     public void testTransferToSavingsAccountThatIsAllowed() throws Exception {
-        sourceCheckingAccount = helper.get("sourceaccount");
-        ownSavingsAccount = helper.get("destinationaccount");
-        ownNameForDestination = helper.get("destinationname");
+        sourceCheckingAccount = helper.get(Arg.SOURCE_ACCOUNT);
+        ownSavingsAccount = helper.get(Arg.DESTINATION_ACCOUNT);
+        ownNameForDestination = helper.get(Arg.DESTINATION_NAME);
         Amount amount = Amount.inEUR(AMOUNT_SMALL);
         SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
         SepaEurIdentifier destionationSparreking = new SepaEurIdentifier(ownSavingsAccount);
@@ -121,9 +123,9 @@ public class BelfiusAgentTransferTest {
     @Ignore // Please check that sourceCheckingAccount Beneficiaries and externalAccount set up
     @Test
     public void testTransferToRegisteredExternalAccountThatIsAllowed() throws Exception {
-        sourceCheckingAccount = helper.get("sourceaccount");
-        externalAccount = helper.get("destinationaccount");
-        externalAccountNameMandatory = helper.get("destinationname");
+        sourceCheckingAccount = helper.get(Arg.SOURCE_ACCOUNT);
+        externalAccount = helper.get(Arg.DESTINATION_ACCOUNT);
+        externalAccountNameMandatory = helper.get(Arg.DESTINATION_NAME);
         Amount amount = Amount.inEUR(AMOUNT_LARGE_REQUIRES_SIGN_OF_AMOUNT_OR_BENEFICIARY);
         SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
         SepaEurIdentifier externalAccount = new SepaEurIdentifier(this.externalAccount);
@@ -143,9 +145,9 @@ public class BelfiusAgentTransferTest {
     @Ignore // Please check that sourceCheckingAccount Beneficiaries and externalAccount set up
     @Test
     public void testTransferToUnRegisteredExternalAccountThatIsAllowed() throws Exception {
-        sourceCheckingAccount = helper.get("sourceaccount");
-        externalAccount = helper.get("destinationaccount");
-        externalAccountNameMandatory = helper.get("destinationname");
+        sourceCheckingAccount = helper.get(Arg.SOURCE_ACCOUNT);
+        externalAccount = helper.get(Arg.DESTINATION_ACCOUNT);
+        externalAccountNameMandatory = helper.get(Arg.DESTINATION_NAME);
 
         Amount amount = Amount.inEUR(AMOUNT_LARGE_REQUIRES_SIGN_OF_AMOUNT_OR_BENEFICIARY);
         SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
