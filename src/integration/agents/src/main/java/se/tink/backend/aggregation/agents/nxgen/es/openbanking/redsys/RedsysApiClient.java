@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -82,13 +83,24 @@ public final class RedsysApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
+    private String makeAuthUrl(String path) {
+        assert path.startsWith("/");
+        return String.format(
+                "%s/%s%s",
+                getConfiguration().getBaseAuthUrl(), getConfiguration().getAspsp(), path);
+    }
+
+    private String makeApiUrl(String path) {
+        assert path.startsWith("/");
+        return String.format(
+                "%s/%s%s", getConfiguration().getBaseAPIUrl(), getConfiguration().getAspsp(), path);
+    }
+
     public URL getAuthorizeUrl(String state, String codeChallenge) {
-        final String baseAuthUrl =
-                getConfiguration().getBaseAuthUrl() + "/" + getConfiguration().getAspsp();
         final String clientId = getConfiguration().getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
-        return client.request(baseAuthUrl + RedsysConstants.Urls.OAUTH)
+        return client.request(makeAuthUrl(RedsysConstants.Urls.OAUTH))
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
@@ -100,11 +112,6 @@ public final class RedsysApiClient {
     }
 
     public OAuth2Token getToken(String code, String codeVerifier) {
-        final String url =
-                getConfiguration().getBaseAuthUrl()
-                        + "/"
-                        + getConfiguration().getAspsp()
-                        + Urls.TOKEN;
         final String clientId = getConfiguration().getAuthClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
 
@@ -119,11 +126,10 @@ public final class RedsysApiClient {
                         .serialize();
 
         final OAuth2Token token =
-                client.request(url)
+                client.request(makeAuthUrl(Urls.TOKEN))
                         .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
                         .post(TokenResponse.class)
                         .toTinkToken();
-        getConsent(token);
         return token;
     }
 
@@ -223,7 +229,16 @@ public final class RedsysApiClient {
                 Signature.FORMAT, keyID, headers.toLowerCase(Locale.ENGLISH), signature);
     }
 
-    private RequestBuilder createSignedRequest(String url, Object payload, OAuth2Token token) {
+    private RequestBuilder createSignedRequest(String url, @Nullable Object payload) {
+        return createSignedRequest(url, payload, getTokenFromStorage());
+    }
+
+    private RequestBuilder createSignedRequest(String url) {
+        return createSignedRequest(url, null, getTokenFromStorage());
+    }
+
+    private RequestBuilder createSignedRequest(
+            String url, @Nullable Object payload, OAuth2Token token) {
         String serializedPayload;
         if (payload == null) {
             serializedPayload = "";
