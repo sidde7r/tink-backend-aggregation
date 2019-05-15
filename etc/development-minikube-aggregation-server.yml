@@ -19,19 +19,6 @@ server:
 developmentMode: true
 
 developmentConfiguration:
-  clusterHostConfiguration:
-    clusterId: local-development
-    host: http://localhost:9098  # This should be the the host of the aggregation controller
-    apiToken: devtoken
-    base64EncodedClientCertificate: ""
-    disableRequestCompression: false
-    aggregatorIdentifier: "Tink (+https://www.tink.se/; noc@tink.se)"
-  clusterCryptoConfiguration:
-    cryptoId:
-      clusterId: local-development
-      keyId: 1
-    base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
-
   clusterConfiguration:
     clusterId: local-development
     host: http://localhost:9098
