@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
@@ -43,26 +44,8 @@ public class PensionDetailsResponse extends BaseResponse {
         portfolio.setType(getPortfolioType());
         Amount totalValue = custodyAccount.getTinkAmount();
         portfolio.setTotalValue(totalValue.getValue());
-        portfolio.setTotalProfit(
-                totalValue.getValue()
-                        - Optional.ofNullable(summary)
-                                .flatMap(HandelsbankenSEPensionSummary::toPaymentsMade)
-                                .orElse(0d));
-        portfolio.setInstruments(
-                Optional.ofNullable(funds)
-                        .map(
-                                funds ->
-                                        funds.stream()
-                                                .map(
-                                                        fund ->
-                                                                client.fundHoldingDetail(fund)
-                                                                        .flatMap(
-                                                                                HandelsbankenSEFundAccountHoldingDetail
-                                                                                        ::toInstrument))
-                                                .filter(Optional::isPresent)
-                                                .map(Optional::get)
-                                                .collect(Collectors.toList()))
-                        .orElseGet(Collections::emptyList));
+        portfolio.setTotalProfit(getTotalProfit(totalValue));
+        portfolio.setInstruments(getInstruments(client));
         return portfolio;
     }
 
@@ -78,9 +61,33 @@ public class PensionDetailsResponse extends BaseResponse {
         return Portfolio.Type.OTHER;
     }
 
+    private double getTotalProfit(Amount totalValue) {
+        return totalValue.getValue()
+                - Optional.ofNullable(summary)
+                        .flatMap(HandelsbankenSEPensionSummary::toPaymentsMade)
+                        .orElse(0d);
+    }
+
+    private List<Instrument> getInstruments(HandelsbankenSEApiClient client) {
+        return Optional.ofNullable(funds)
+                .map(
+                        funds ->
+                                funds.stream()
+                                        .map(fund -> parseInstrument(client, fund))
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
+    }
+
+    private Optional<Instrument> parseInstrument(
+            HandelsbankenSEApiClient client, HandelsbankenSEPensionFund fund) {
+        return client.fundHoldingDetail(fund)
+                .flatMap(HandelsbankenSEFundAccountHoldingDetail::toInstrument);
+    }
+
     @Override
     public String toString() {
         return SerializationUtils.serializeToString(this);
     }
 }
-
