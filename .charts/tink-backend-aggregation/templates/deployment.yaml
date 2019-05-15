@@ -266,6 +266,12 @@ spec:
               name: aggregation-secrets
               key: volksbank-ais-cert-password
               optional: true
+        - name: VOLKSBANK_AIS_CERT
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: volksbank-ais-cert
+              optional: true
       containers:
       - name: tink-backend-aggregation
         resources:
