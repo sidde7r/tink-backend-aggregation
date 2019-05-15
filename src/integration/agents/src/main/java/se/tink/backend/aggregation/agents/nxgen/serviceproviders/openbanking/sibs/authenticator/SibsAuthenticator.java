@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.TransactionStatus;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class SibsAuthenticator {
@@ -17,11 +17,12 @@ public class SibsAuthenticator {
         return apiClient.buildAuthorizeUrl(state);
     }
 
-    public boolean isAuthorized() {
-        ConsentStatusResponse consentStatusResponse = apiClient.getConsentStatus();
+    public TransactionStatus getConsentStatus() {
 
-        return consentStatusResponse
-                .getTransactionStatus()
-                .equalsIgnoreCase(SibsConstants.ConsentStatuses.ACCEPTED_TECHNICAL_VALIDATION);
+        try {
+            return TransactionStatus.valueOf(apiClient.getConsentStatus().getTransactionStatus());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE);
+        }
     }
 }

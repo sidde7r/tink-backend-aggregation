@@ -13,6 +13,7 @@ public final class SibsConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String NO_BALANCE = "No balance found!";
+        public static final String UNKNOWN_TRANSACTION_STATE = "Unknown transaction state.";
     }
 
     public static class Urls {
@@ -106,10 +107,5 @@ public final class SibsConstants {
         public static final String RSA_SHA256 = "rsa-sha256";
         public static final String HEADERS = "Digest TPP-Transaction-ID TPP-Request-ID Date";
         public static final String HEADERS_NO_DIGEST = "TPP-Transaction-ID TPP-Request-ID Date";
-    }
-
-    public static class ConsentStatuses {
-
-        public static final String ACCEPTED_TECHNICAL_VALIDATION = "ACTC";
     }
 }
