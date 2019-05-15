@@ -32,7 +32,7 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         Amount amount = new Amount(billingCurrency, billingAmount);
-        boolean isPending = TransactionType.AUTHORIZATION.equals(type);
+        boolean isPending = TransactionType.AUTHORIZATION.equalsIgnoreCase(type);
         ZonedDateTime dateTime =
                 ZonedDateTime.parse(transactionDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
