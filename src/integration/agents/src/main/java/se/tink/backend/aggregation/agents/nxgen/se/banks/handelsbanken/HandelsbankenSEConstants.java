@@ -94,8 +94,16 @@ public class HandelsbankenSEConstants {
             public static final LogTag LOG_TAG = LogTag.from("se_handelsbanken_loans");
         }
 
+        public static class CustodyAccountType {
+            public static final String FUND = "fund_summary";
+            public static final String ISK = "isk";
+            public static final String NORMAL = "normal";
+            public static final String KF_AND_PENSION = "kapital";
+        }
+
         public static class Investments {
             public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
+            public static final String KF_TYPE_PREFIX = "kapitalspar";
 
             public enum InstrumentType {
                 STOCK("stock", Instrument.Type.STOCK),
