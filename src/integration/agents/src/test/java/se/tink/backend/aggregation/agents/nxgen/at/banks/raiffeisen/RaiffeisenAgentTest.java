@@ -5,10 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class RaiffeisenAgentTest {
-    private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
+    }
+
+    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
 
     private final AgentIntegrationTest.Builder builderRaff2 =
             new AgentIntegrationTest.Builder("at", "at-raiffeisen2-password")
@@ -27,14 +32,14 @@ public class RaiffeisenAgentTest {
 
     @AfterClass
     public static void afterClass() {
-        ArgumentHelper.afterClass();
+        ArgumentManager.afterClass();
     }
 
     @Test
     public void testLoginAndRefresh2() throws Exception {
         builderRaff2
-                .addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
-                .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
+                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()
@@ -44,8 +49,8 @@ public class RaiffeisenAgentTest {
     @Test
     public void testLoginAndRefresh6() throws Exception {
         builderRaff6
-                .addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
-                .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
+                .addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()
