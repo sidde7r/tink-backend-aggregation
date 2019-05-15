@@ -47,6 +47,7 @@ filegroup(
         "demo/**",
         "eidas_dev_certificates/**",
         "seeding/providers-*.json",
+        "test/cryptography/ing/**",
     ]),
     visibility = ["//visibility:public"],
 )
