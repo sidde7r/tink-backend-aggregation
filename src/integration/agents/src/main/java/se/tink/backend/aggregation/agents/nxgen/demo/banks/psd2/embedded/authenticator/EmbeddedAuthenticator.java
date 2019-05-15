@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded.authen
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -19,7 +22,11 @@ public class EmbeddedAuthenticator implements MultiFactorAuthenticator {
                     "tink2", "tink-2345",
                     "tink3", "tink-3456");
 
-    public EmbeddedAuthenticator() {}
+    private final int daysUntilSessionExpires;
+
+    public EmbeddedAuthenticator(int daysUntilSessionExpires) {
+        this.daysUntilSessionExpires = daysUntilSessionExpires;
+    }
 
     @Override
     public CredentialsTypes getType() {
@@ -40,5 +47,13 @@ public class EmbeddedAuthenticator implements MultiFactorAuthenticator {
                 && TEST_CREDENTIALS.get(username).equals(password))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
+
+        Date sessionExpiryDate = Date.from(
+                LocalDateTime.now()
+                        .plusDays(daysUntilSessionExpires)
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant());
+
+        credentials.setSessionExpiryDate(sessionExpiryDate);
     }
 }

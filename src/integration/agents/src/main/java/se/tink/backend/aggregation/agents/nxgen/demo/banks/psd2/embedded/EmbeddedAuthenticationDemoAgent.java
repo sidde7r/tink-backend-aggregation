@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
+    private static final int DAYS_UNTIL_SESSION_SHOULD_EXPIRE = 90;
     private static String username;
     private static String provider;
 
@@ -41,7 +42,7 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new EmbeddedAuthenticator(),
+                new EmbeddedAuthenticator(DAYS_UNTIL_SESSION_SHOULD_EXPIRE),
                 new EmbeddedAutoAuthenticator());
     }
 
