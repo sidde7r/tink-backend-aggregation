@@ -40,8 +40,12 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setDate(accountingDate)
                 .setDescription(statement)
-                .setPending(false)
+                .setPending(isPending())
                 .setAmount(new Amount(currency, amount))
                 .build();
+    }
+
+    public Boolean isPending() {
+        return "pending".equals(status);
     }
 }
