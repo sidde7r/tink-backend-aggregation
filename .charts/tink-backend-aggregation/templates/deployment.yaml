@@ -248,7 +248,18 @@ spec:
               name: aggregation-secrets
               key: ics-root-ca-password
               optional: true
-
+        - name: VOLKSBANK_AIS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: voltsbank-ais-client-id
+              optional: true
+        - name: VOLKSBANK_AIS_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: voltsbank-ais-client-secret
+              optional: true
       containers:
       - name: tink-backend-aggregation
         resources:

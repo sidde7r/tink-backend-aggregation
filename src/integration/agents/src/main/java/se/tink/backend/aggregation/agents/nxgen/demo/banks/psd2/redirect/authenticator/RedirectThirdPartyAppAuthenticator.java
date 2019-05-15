@@ -103,13 +103,13 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
-        payload.setDownloadTitle("Download Bink Authentication app");
+        payload.setDownloadTitle("Download Tink Demo Authentication app");
         payload.setDownloadMessage(
-                "You need to download the Bink Authentication app in order to continue.");
+                "You need to download the Tink Demo Authentication app in order to continue.");
 
-        payload.setUpgradeTitle("Upgrade Bink Authentication app");
+        payload.setUpgradeTitle("Upgrade Tink Demo Authentication app");
         payload.setUpgradeMessage(
-                "You need to upgrade the Bink Authentication app in order to continue.");
+                "You need to upgrade the Tink Demo Authentication app in order to continue.");
 
         ThirdPartyAppAuthenticationPayload.Ios ios = new ThirdPartyAppAuthenticationPayload.Ios();
         ios.setAppScheme("this.is.not.a.valid.app.scheme");
