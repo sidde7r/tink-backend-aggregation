@@ -5,10 +5,16 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class AsLhvAgentTest {
-    private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
+
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
+    }
+
+    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("ee", "ee-aslhv-password")
@@ -22,13 +28,13 @@ public class AsLhvAgentTest {
 
     @AfterClass
     public static void afterClass() {
-        ArgumentHelper.afterClass();
+        ArgumentManager.afterClass();
     }
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        builder.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
-                .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
+        builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, helper.get(Arg.PASSWORD))
                 .doLogout(true)
                 .build()
                 .testRefresh();
