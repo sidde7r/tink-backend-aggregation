@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
@@ -19,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
@@ -42,17 +40,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
         RedirectThirdPartyAppAuthenticator redirectThirdPartyAppAuthenticator =
                 RedirectThirdPartyAppAuthenticator.createSuccessfulAuthenticator(username);
 
-        ThirdPartyAppAuthenticationController thirdPartyAppAuthenticationController =
-                new ThirdPartyAppAuthenticationController<>(
-                        redirectThirdPartyAppAuthenticator, supplementalInformationHelper);
-
-        RedirectAutoAuthenticator redirectAutoAuthenticator = new RedirectAutoAuthenticator();
-
-        return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                thirdPartyAppAuthenticationController,
-                redirectAutoAuthenticator);
+        return new ThirdPartyAppAuthenticationController<>(
+                redirectThirdPartyAppAuthenticator, supplementalInformationHelper);
     }
 
     @Override
