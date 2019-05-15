@@ -252,19 +252,19 @@ spec:
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: voltsbank-ais-client-id
+              key: volksbank-ais-client-id
               optional: true
         - name: VOLKSBANK_AIS_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: voltsbank-ais-client-secret
+              key: volksbank-ais-client-secret
               optional: true
         - name: VOLKSBANK_AIS_CERT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: voltsbank-ais-cert-password
+              key: volksbank-ais-cert-password
               optional: true
       containers:
       - name: tink-backend-aggregation
