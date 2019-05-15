@@ -121,8 +121,7 @@ public final class SibsUtils {
     public static String getDigest(Object body) {
 
         byte[] bytes =
-                SerializationUtils.serializeToString(body)
-                        .getBytes(StandardCharsets.US_ASCII);
+                SerializationUtils.serializeToString(body).getBytes(StandardCharsets.US_ASCII);
         MessageDigest md;
         try {
             md = MessageDigest.getInstance(Formats.SHA_256);
