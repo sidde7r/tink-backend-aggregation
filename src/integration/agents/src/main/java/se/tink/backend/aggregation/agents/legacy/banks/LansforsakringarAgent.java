@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -45,6 +47,7 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
@@ -135,6 +138,8 @@ import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -153,6 +158,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 RefreshInvestmentAccountsExecutor,
                 RefreshEInvoiceExecutor,
                 RefreshTransferDestinationExecutor,
+                RefreshIdentityDataExecutor,
                 TransferExecutor,
                 PersistentLogin {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
@@ -262,6 +268,8 @@ public class LansforsakringarAgent extends AbstractAgent
     private final TransferMessageFormatter transferMessageFormatter;
     private String ticket = null;
     private String token = null;
+    private String loginName = null;
+    private String loginSsn = null;
 
     // cache
     private Map<AccountEntity, Account> accounts = null;
@@ -346,7 +354,10 @@ public class LansforsakringarAgent extends AbstractAgent
             status = clientLoginResponse.getStatus();
 
             if (status == Status.OK.getStatusCode()) {
-                return clientLoginResponse.getEntity(LoginResponse.class);
+                LoginResponse loginResponse = clientLoginResponse.getEntity(LoginResponse.class);
+                loginName = loginResponse.getName();
+                loginSsn = loginResponse.getSsn();
+                return loginResponse;
             } else if (status == Status.UNAUTHORIZED.getStatusCode()
                     || status == Status.BAD_REQUEST.getStatusCode()) {
                 switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
@@ -1380,6 +1391,8 @@ public class LansforsakringarAgent extends AbstractAgent
         Session session = new Session();
         session.setToken(token);
         session.setTicket(ticket);
+        session.setLoginName(loginName);
+        session.setLoginSsn(loginSsn);
         session.setCookiesFromClient(client);
 
         credentials.setPersistentSession(session);
@@ -1396,6 +1409,8 @@ public class LansforsakringarAgent extends AbstractAgent
 
         token = session.getToken();
         ticket = session.getTicket();
+        loginName = session.getLoginName();
+        loginSsn = session.getLoginSsn();
 
         addSessionCookiesToClient(client, session);
     }
@@ -1405,6 +1420,8 @@ public class LansforsakringarAgent extends AbstractAgent
         // Clean the session in memory
         token = null;
         ticket = null;
+        loginName = null;
+        loginSsn = null;
 
         // Clean the persisted session
         credentials.removePersistentSession();
@@ -2044,4 +2061,16 @@ public class LansforsakringarAgent extends AbstractAgent
                 new Pair<>(account.get(), AccountFeatures.createForPortfolios(portfolio)));
     }
     /////////////////////////////////////
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        if (Strings.isNullOrEmpty(loginName)) {
+            throw new NoSuchElementException("Could not find user name from login response.");
+        }
+        if (Strings.isNullOrEmpty(loginSsn)) {
+            throw new NoSuchElementException("Could not find SSN from login response.");
+        }
+        IdentityData identityData = SeIdentityData.of(loginName, loginSsn);
+        return new FetchIdentityDataResponse(identityData);
+    }
 }
