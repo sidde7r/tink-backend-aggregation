@@ -13,12 +13,7 @@ public class HandelsbankenAccountConverter implements HandelsbankenBaseAccountCo
     @Override
     public TypeMapper<AccountTypes> getAccountTypeMapper() {
         return TypeMapper.<AccountTypes>builder()
-                .put(
-                        AccountTypes.CHECKING,
-                        "Käyttötili",
-                        "Tuottotili",
-                        "Monitili",
-                        "Valuuttatili")
+                .put(AccountTypes.CHECKING, "Käyttötili", "Tuottotili", "Monitili", "Valuuttatili")
                 .build();
     }
 
