@@ -19,7 +19,6 @@ import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Ignore
 public class BelfiusAgentTransferTest {
     private final ArgumentHelper helper =
             new ArgumentHelper(
