@@ -19,8 +19,10 @@ public class AgreementsResponse extends ArrayList<SdcAgreement> {
         SessionStorageAgreements agreements = new SessionStorageAgreements();
         agreements.addAll(
                 stream()
-                        .map(SdcAgreement::getEntityKey)
-                        .map(SessionStorageAgreement::new)
+                        .map(
+                                agreement ->
+                                        new SessionStorageAgreement(
+                                                agreement.getEntityKey(), agreement.getUserName()))
                         .collect(Collectors.toList()));
 
         return agreements;

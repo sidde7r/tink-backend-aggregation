@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.fetcher.SdcSeCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.fetcher.SdcSeIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse.parser.SdcSeTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcApiClient;
@@ -19,7 +22,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /*
  * Configure market specific client, this is SE
  */
-public class SdcSeAgent extends SdcAgent {
+public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor {
 
     public SdcSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -61,5 +64,10 @@ public class SdcSeAgent extends SdcAgent {
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(creditCardFetcher))));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new SdcSeIdentityDataFetcher(sdcSessionStorage, credentials).fetchIdentityData();
     }
 }
