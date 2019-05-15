@@ -23,4 +23,9 @@ public class NameElement {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "NameElement{" + "type=" + type + ", value='" + value + '\'' + '}';
+    }
 }

@@ -1,6 +1,7 @@
 package se.tink.libraries.identitydata;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -167,5 +168,15 @@ public class IdentityData {
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    @Override
+    public String toString() {
+        return "IdentityData{"
+                + "nameElements="
+                + Joiner.on(",").join(nameElements)
+                + ", dateOfBirth="
+                + dateOfBirth
+                + '}';
     }
 }
