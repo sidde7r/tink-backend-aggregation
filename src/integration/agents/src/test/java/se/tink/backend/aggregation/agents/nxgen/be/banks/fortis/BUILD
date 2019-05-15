@@ -4,7 +4,7 @@ junit_test(
     name = "fortis",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:provider_configuration_test",
+        "//data:aggregation_test",
         "//etc:development",
     ],
     tags = [

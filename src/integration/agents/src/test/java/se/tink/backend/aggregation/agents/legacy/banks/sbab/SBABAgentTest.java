@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -34,6 +35,8 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
                 .addCredentialField(Field.Key.USERNAME, "ssn")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .build()
                 .testRefresh();
     }

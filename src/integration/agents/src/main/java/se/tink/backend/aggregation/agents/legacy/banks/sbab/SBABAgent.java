@@ -27,8 +27,10 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdMessage;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -36,6 +38,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
+import se.tink.backend.aggregation.agents.banks.sbab.client.IdentityDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
@@ -74,6 +77,7 @@ public class SBABAgent extends AbstractAgent
         implements RefreshTransferDestinationExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshLoanAccountsExecutor,
+                RefreshIdentityDataExecutor,
                 TransferExecutor {
 
     private final Credentials credentials;
@@ -87,6 +91,8 @@ public class SBABAgent extends AbstractAgent
     private final UserDataClient userDataClient;
     private final TransferClient transferClient;
     private final BankIdSignClient bankIdSignClient;
+    private final IdentityDataClient identityDataClient;
+
     private final Client client;
     private final Client clientWithoutSSL;
     private final LocalDate lastCredentialsUpdate;
@@ -137,6 +143,8 @@ public class SBABAgent extends AbstractAgent
         authenticationClient =
                 new AuthenticationClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         userDataClient = new UserDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
+        identityDataClient =
+                new IdentityDataClient(client, credentials, CommonHeaders.DEFAULT_USER_AGENT);
         transferClient =
                 new TransferClient(client, credentials, catalog, CommonHeaders.DEFAULT_USER_AGENT);
     }
@@ -514,5 +522,11 @@ public class SBABAgent extends AbstractAgent
             throw new IllegalStateException(e);
         }
     }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(identityDataClient.fetchIdentityData());
+    }
+
     /////////////////////////////////////
 }
