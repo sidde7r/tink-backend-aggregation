@@ -67,4 +67,9 @@ public class EnterCardConstants {
         static final String ACCEPT_LANGUAGE = "sv-se";
         static final String ORIGIN = "https://id.signicat.com";
     }
+
+    public static class TransactionType {
+
+        public static final String AUTHORIZATION = "Authorization";
+    }
 }
