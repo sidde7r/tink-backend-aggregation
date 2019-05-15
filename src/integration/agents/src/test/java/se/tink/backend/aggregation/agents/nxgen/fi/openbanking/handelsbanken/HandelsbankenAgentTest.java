@@ -14,6 +14,7 @@ public class HandelsbankenAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("fi", "fi-handelsbanken-oauth2")
+                        .addCredentialField("accessToken", "MV9QUk9GSUxFLUZJX1BSSVZBVEUz")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);
