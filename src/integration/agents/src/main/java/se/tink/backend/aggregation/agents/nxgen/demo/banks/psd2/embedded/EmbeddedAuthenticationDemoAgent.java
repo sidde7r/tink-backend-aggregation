@@ -6,9 +6,9 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded.authenticator.EmbeddedAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.embedded.authenticator.EmbeddedAutoAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
@@ -41,8 +41,8 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new PasswordAuthenticator(),
-                new PasswordAutoAuthenticator());
+                new EmbeddedAuthenticator(),
+                new EmbeddedAutoAuthenticator());
     }
 
     @Override
