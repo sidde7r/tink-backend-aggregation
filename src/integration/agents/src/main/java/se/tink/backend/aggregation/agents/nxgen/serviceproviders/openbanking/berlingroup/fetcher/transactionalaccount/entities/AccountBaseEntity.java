@@ -14,8 +14,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
-// import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants;
-
 @JsonObject
 public class AccountBaseEntity {
     private String resourceId;

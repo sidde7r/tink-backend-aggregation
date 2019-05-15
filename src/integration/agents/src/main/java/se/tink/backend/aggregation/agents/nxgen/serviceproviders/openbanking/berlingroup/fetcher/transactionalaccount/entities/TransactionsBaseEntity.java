@@ -10,9 +10,6 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-// import
-// se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.fetcher.entities.TransactionLinksEntity;
-
 @JsonObject
 public class TransactionsBaseEntity {
 

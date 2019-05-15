@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public abstract class TransactionDetailsBaseEntity {
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date bookingDate;
 
     protected CreditorAccountEntity creditorAccount;
@@ -20,7 +20,7 @@ public abstract class TransactionDetailsBaseEntity {
     protected BalanceAmountBaseEntity transactionAmount;
     protected String transactionId;
 
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     protected Date valueDate;
 
     public abstract Transaction toTinkTransaction();

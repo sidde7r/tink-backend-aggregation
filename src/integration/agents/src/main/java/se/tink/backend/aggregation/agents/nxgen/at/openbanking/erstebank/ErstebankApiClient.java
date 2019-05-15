@@ -180,7 +180,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         access.addIbans(ibans);
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
-        final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "YYYY-MM-DD", null);
+        final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
 
         final ConsentRequest consentRequest = new ConsentRequest();
         consentRequest.getAccess().addIbans(ibans);
