@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BinaryOperator;
 
 public class IdentityData {
 
@@ -86,6 +87,39 @@ public class IdentityData {
         public IdentityData build() {
             return new IdentityData(this);
         }
+    }
+
+    /**
+     * Shorthand throwing merger/{@link BinaryOperator}&lt;IdentityData&gt; method that can be used
+     * as a reducer when building identity data from multiple sources (e.g. multiple credit cards),
+     * where only one (definite) IdentityData is desired.
+     *
+     * <p>Example usage:
+     *
+     * <pre>
+     * return apiClient
+     *          .getCards()
+     *          .stream()
+     *          .map(Card::getHolderName)
+     *          .distinct()
+     *          .map(name -> SeIdentityData.of(name, ssn))
+     *          .reduce(IdentityData::throwingMerger)
+     *          .get();
+     * </pre>
+     *
+     * Because of how {@link BinaryOperator} reducers work in Java, a Stream with one element will
+     * never invoke the reducer, whereas a Stream with two or more elements of course will. Because
+     * of this, this reducer <strong>only throws</strong> when a Stream contains two or more
+     * possible identities. It is therefore <strong>imperative</strong> to call <code>distinct()
+     * </code> on any data used to build an identity <strong>before</strong> using this as a
+     * reducer. See the example above.
+     *
+     * @return Never returns, always throws an {@link IllegalStateException}
+     */
+    @JsonIgnore
+    public static IdentityData throwingMerger(IdentityData first, IdentityData second) {
+        throw new IllegalStateException(
+                String.format("Found more than one identity: %s, %s", first, second));
     }
 
     @JsonIgnore
