@@ -48,11 +48,12 @@ public class EmbeddedAuthenticator implements MultiFactorAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        Date sessionExpiryDate = Date.from(
-                LocalDateTime.now()
-                        .plusDays(daysUntilSessionExpires)
-                        .atZone(ZoneId.systemDefault())
-                        .toInstant());
+        Date sessionExpiryDate =
+                Date.from(
+                        LocalDateTime.now()
+                                .plusDays(daysUntilSessionExpires)
+                                .atZone(ZoneId.systemDefault())
+                                .toInstant());
 
         credentials.setSessionExpiryDate(sessionExpiryDate);
     }
