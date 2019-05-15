@@ -57,7 +57,7 @@ public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<Investme
             if (response != null && response.hasBody()) {
                 SecurityHoldingsResponse holdingsResponse =
                         response.getBody(SecurityHoldingsResponse.class);
-                if (HandelsbankenSEConstants.Fetcher.Investments.ERROR_TOO_YOUNG_INVESTMENTS
+                if (HandelsbankenSEConstants.Investments.ERROR_TOO_YOUNG_INVESTMENTS
                         .equalsIgnoreCase(holdingsResponse.getCode())) {
                     // If user is too young to use investments in app, just ignore and return empty
                     // list

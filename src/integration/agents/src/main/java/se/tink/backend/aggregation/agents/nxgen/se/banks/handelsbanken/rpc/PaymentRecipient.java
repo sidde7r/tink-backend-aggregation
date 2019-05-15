@@ -48,13 +48,13 @@ public class PaymentRecipient {
     public AccountIdentifier accountIdentifier() {
         Optional<String> reference = Optional.ofNullable(this.reference);
         return reference
-                .filter(HandelsbankenSEConstants.Fetcher.Transfers.PATTERN_BG_RECIPIENT)
+                .filter(HandelsbankenSEConstants.Transfers.PATTERN_BG_RECIPIENT)
                 .map(referenceIgnored -> bankGiroIdentifier())
                 .orElseGet(
                         () ->
                                 reference
                                         .filter(
-                                                HandelsbankenSEConstants.Fetcher.Transfers
+                                                HandelsbankenSEConstants.Transfers
                                                         .PATTERN_PG_RECIPIENT)
                                         .map(referenceIgnored -> plusGiroIdentifier())
                                         .orElseGet(() -> nonValidIdentifier()));

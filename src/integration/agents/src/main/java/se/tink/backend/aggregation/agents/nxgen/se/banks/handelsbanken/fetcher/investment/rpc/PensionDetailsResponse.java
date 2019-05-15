@@ -53,7 +53,7 @@ public class PensionDetailsResponse extends BaseResponse {
         if (!Strings.isNullOrEmpty(pensionName)
                 && pensionName
                         .toLowerCase()
-                        .startsWith(HandelsbankenSEConstants.Fetcher.Investments.KF_TYPE_PREFIX)) {
+                        .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
             return Portfolio.Type.KF;
         }
 

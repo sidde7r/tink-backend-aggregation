@@ -38,7 +38,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     // SHB sends all cards of the user, not 'just' the credit cards.
     // Also sends cards that are "accounts" (typeCode "A")
     public boolean isCreditCard() {
-        return !HandelsbankenSEConstants.Fetcher.CREDIT_CARD_IGNORE_TYPE.equalsIgnoreCase(typeCode)
+        return !HandelsbankenSEConstants.Accounts.CREDIT_CARD_IGNORE_TYPE.equalsIgnoreCase(typeCode)
                 && searchLink(HandelsbankenConstants.URLS.Links.CARD_TRANSACTIONS).isPresent();
     }
 
@@ -50,7 +50,7 @@ public class HandelsbankenSECreditCard extends HandelsbankenCreditCard {
     }
 
     public boolean hasInvertedTransactions() {
-        return HandelsbankenSEConstants.Fetcher.PROVIDERS_WITH_INVERTED_TRANSACTIONS.contains(
+        return HandelsbankenSEConstants.Transactions.PROVIDERS_WITH_INVERTED_TRANSACTIONS.contains(
                 typeCode);
     }
 }

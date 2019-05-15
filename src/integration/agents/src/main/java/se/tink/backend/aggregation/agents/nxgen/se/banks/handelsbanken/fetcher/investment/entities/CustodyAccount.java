@@ -25,16 +25,16 @@ public class CustodyAccount extends BaseResponse {
             HandelsbankenSEApiClient client, Credentials credentials) {
         if (type != null) {
             switch (type.toLowerCase()) {
-                case HandelsbankenSEConstants.Fetcher.CustodyAccountType.FUND:
+                case HandelsbankenSEConstants.Investments.FUND:
                     return client.fundHoldings(this)
                             .map(FundHoldingsResponse::getUserFundHoldings)
                             .map(fundHoldings -> fundHoldings.toAccount(this));
-                case HandelsbankenSEConstants.Fetcher.CustodyAccountType.ISK:
+                case HandelsbankenSEConstants.Investments.ISK:
                     // Intentional fall through
-                case HandelsbankenSEConstants.Fetcher.CustodyAccountType.NORMAL:
+                case HandelsbankenSEConstants.Investments.NORMAL:
                     return client.custodyAccount(this)
                             .map(custodyAccount -> custodyAccount.toInvestmentAccount(client));
-                case HandelsbankenSEConstants.Fetcher.CustodyAccountType.KF_AND_PENSION:
+                case HandelsbankenSEConstants.Investments.KF_AND_PENSION:
                     return client.pensionDetails(this)
                             .map(
                                     pensionDetails ->

@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 public class Failure extends BaseResponse {
 
     public boolean customerIsUnder16() {
-        return HandelsbankenSEConstants.Fetcher.Transfers.UNDER_16.equals(getCode());
+        return HandelsbankenSEConstants.Transfers.UNDER_16.equals(getCode());
     }
 }

@@ -17,15 +17,15 @@ public class SELoanProperty {
     private String value;
 
     public boolean isTermsOfChange() {
-        return hasLabel(HandelsbankenSEConstants.Fetcher.Loans.TERMS_OF_CHANGE);
+        return hasLabel(HandelsbankenSEConstants.Loans.TERMS_OF_CHANGE);
     }
 
     public boolean isAmortization() {
-        return hasLabel(HandelsbankenSEConstants.Fetcher.Loans.AMORTIZATION);
+        return hasLabel(HandelsbankenSEConstants.Loans.AMORTIZATION);
     }
 
     public boolean isMultipleApplicants() {
-        return hasLabel(HandelsbankenSEConstants.Fetcher.Loans.MULTIPLE_APPLICANTS);
+        return hasLabel(HandelsbankenSEConstants.Loans.MULTIPLE_APPLICANTS);
     }
 
     private boolean hasLabel(String text) {
@@ -49,14 +49,14 @@ public class SELoanProperty {
         if (value == null) {
             throw new IllegalStateException("Was not able to return amortization because of null");
         }
-        if (HandelsbankenSEConstants.Fetcher.Loans.NO_AMORTIZATION.equalsIgnoreCase(value)) {
+        if (HandelsbankenSEConstants.Loans.NO_AMORTIZATION.equalsIgnoreCase(value)) {
             return 0.0;
         }
         return AgentParsingUtils.parseAmount(value);
     }
 
     public boolean asMultipleApplicantValue() {
-        boolean isJa = HandelsbankenSEConstants.Fetcher.Loans.YES.equalsIgnoreCase(value);
+        boolean isJa = HandelsbankenSEConstants.Loans.YES.equalsIgnoreCase(value);
         if (!isJa) {
             LOGGER.warn(String.format("Other value than \"ja\" found: %s", value));
         }

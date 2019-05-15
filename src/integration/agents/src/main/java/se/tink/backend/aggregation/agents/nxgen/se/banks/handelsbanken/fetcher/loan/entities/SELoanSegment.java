@@ -13,7 +13,7 @@ public class SELoanSegment {
     private String title;
 
     public boolean loanInformation() {
-        return HandelsbankenSEConstants.Fetcher.Loans.LOAN_INFORMATION.equalsIgnoreCase(title);
+        return HandelsbankenSEConstants.Loans.LOAN_INFORMATION.equalsIgnoreCase(title);
     }
 
     public Optional<SELoanProperty> termsOfChange() {

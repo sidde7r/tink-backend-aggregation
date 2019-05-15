@@ -124,7 +124,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
                         accountInfo
                                 .getValuesByLabel()
                                 .getOrDefault(
-                                        HandelsbankenSEConstants.Fetcher.ACCOUNT_TYPE_NAME_LABEL,
+                                        HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_NAME_LABEL,
                                         name);
             }
         } catch (Exception e) {
@@ -132,7 +132,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         }
 
         AccountTypes accountType =
-                HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
+                HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
                         .translate(Strings.nullToEmpty(accountTypeName).toLowerCase())
                         .orElse(AccountTypes.OTHER);
         // log unknown account types
@@ -140,13 +140,13 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
             LOG.info(
                     String.format(
                             "%s %s",
-                            HandelsbankenSEConstants.Fetcher.Accounts.UNKNOWN_ACCOUNT_TYPE,
+                            HandelsbankenSEConstants.Accounts.UNKNOWN_ACCOUNT_TYPE,
                             SerializationUtils.serializeToString(accountInfo)));
         }
 
         if (accountType == AccountTypes.OTHER) {
             accountType =
-                    HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
+                    HandelsbankenSEConstants.Accounts.ACCOUNT_TYPE_MAPPER
                             .translate(Strings.nullToEmpty(name).toLowerCase())
                             .orElse(AccountTypes.OTHER);
         }
