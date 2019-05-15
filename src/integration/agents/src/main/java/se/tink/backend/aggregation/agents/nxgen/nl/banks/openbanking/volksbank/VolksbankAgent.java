@@ -29,12 +29,14 @@ public class VolksbankAgent extends NextGenerationAgent {
 
     private final VolksbankApiClient volksbankApiClient;
     private VolksbankHttpClient httpClient;
+    private final String redirectUri;
 
     public VolksbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         httpClient = new VolksbankHttpClient(client, "certificate");
         volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage);
+        redirectUri = request.getProvider().getPayload().split(" ")[1];
     }
 
     @Override
@@ -64,7 +66,7 @@ public class VolksbankAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         VolksbankAuthenticator authenticator =
-                new VolksbankAuthenticator(volksbankApiClient, sessionStorage);
+                new VolksbankAuthenticator(volksbankApiClient, sessionStorage, redirectUri);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);

@@ -162,7 +162,6 @@ agentsServiceConfiguration:
         aisConfiguration:
           clientId: "dummyId"
           clientSecret: "dummyClient"
-          redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
           clientCertificatePath: "dummyPath"
           clientCertificatePass: "dummyPass"
     ukOpenBankingJson: |
