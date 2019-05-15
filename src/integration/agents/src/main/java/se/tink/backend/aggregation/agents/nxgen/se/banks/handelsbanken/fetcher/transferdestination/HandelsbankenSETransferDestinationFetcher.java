@@ -103,7 +103,7 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
             Failure failure = e.getResponse().getBody(Failure.class);
             if (!failure.customerIsUnder16()) {
                 LOGGER.error(
-                        HandelsbankenSEConstants.Fetcher.Transfers.LOG_TAG
+                        HandelsbankenSEConstants.Transfers.LOG_TAG
                                 + " - unable to fetch payment context - "
                                 + failure);
             }

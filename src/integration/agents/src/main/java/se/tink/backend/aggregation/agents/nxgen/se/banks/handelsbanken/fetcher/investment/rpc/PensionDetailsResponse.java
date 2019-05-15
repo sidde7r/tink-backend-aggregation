@@ -1,24 +1,26 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.rpc;
 
+import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.CustodyAccount;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionFund;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities.HandelsbankenSEPensionSummary;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PensionDetailsResponse extends BaseResponse {
-    private static final AggregationLogger log =
-            new AggregationLogger(PensionDetailsResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PensionDetailsResponse.class);
 
     private String pensionName;
     private HandelsbankenSEPensionSummary summary;
@@ -26,9 +28,6 @@ public class PensionDetailsResponse extends BaseResponse {
 
     public InvestmentAccount toInvestmentAccount(
             HandelsbankenSEApiClient client, CustodyAccount custodyAccount) {
-
-        // Temporary logging to investigate the correct parsing of KF portfolios
-        log.infoExtraLong(this.toString(), LogTag.from("handelsbanken_pension_details"));
 
         return InvestmentAccount.builder(custodyAccount.getCustodyAccountNumber())
                 .setAccountNumber(custodyAccount.getCustodyAccountNumber())
@@ -42,30 +41,54 @@ public class PensionDetailsResponse extends BaseResponse {
         Portfolio portfolio = new Portfolio();
 
         portfolio.setUniqueIdentifier(custodyAccount.getCustodyAccountNumber());
-        portfolio.setType(Portfolio.Type.PENSION);
+        portfolio.setType(getPortfolioType());
         Amount totalValue = custodyAccount.getTinkAmount();
         portfolio.setTotalValue(totalValue.getValue());
-        portfolio.setTotalProfit(
-                totalValue.getValue()
-                        - Optional.ofNullable(summary)
-                                .flatMap(HandelsbankenSEPensionSummary::toPaymentsMade)
-                                .orElse(0d));
-        portfolio.setInstruments(
-                Optional.ofNullable(funds)
-                        .map(
-                                funds ->
-                                        funds.stream()
-                                                .map(
-                                                        fund ->
-                                                                client.fundHoldingDetail(fund)
-                                                                        .flatMap(
-                                                                                HandelsbankenSEFundAccountHoldingDetail
-                                                                                        ::toInstrument))
-                                                .filter(Optional::isPresent)
-                                                .map(Optional::get)
-                                                .collect(Collectors.toList()))
-                        .orElseGet(Collections::emptyList));
+        portfolio.setTotalProfit(getTotalProfit(totalValue));
+        portfolio.setInstruments(getInstruments(client));
         return portfolio;
+    }
+
+    private Portfolio.Type getPortfolioType() {
+        if (Strings.isNullOrEmpty(pensionName)) {
+            LOGGER.warn("Handelsbanken pension name not present.");
+            return Portfolio.Type.OTHER;
+        }
+
+        if (!pensionName
+                .toLowerCase()
+                .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
+
+            LOGGER.warn("Handelsbanken unknown kapital portfolio type: {}", pensionName);
+            return Portfolio.Type.OTHER;
+        }
+
+        return Portfolio.Type.KF;
+    }
+
+    private double getTotalProfit(Amount totalValue) {
+        return totalValue.getValue()
+                - Optional.ofNullable(summary)
+                        .flatMap(HandelsbankenSEPensionSummary::toPaymentsMade)
+                        .orElse(0d);
+    }
+
+    private List<Instrument> getInstruments(HandelsbankenSEApiClient client) {
+        return Optional.ofNullable(funds)
+                .map(
+                        funds ->
+                                funds.stream()
+                                        .map(fund -> parseInstrument(client, fund))
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
+    }
+
+    private Optional<Instrument> parseInstrument(
+            HandelsbankenSEApiClient client, HandelsbankenSEPensionFund fund) {
+        return client.fundHoldingDetail(fund)
+                .flatMap(HandelsbankenSEFundAccountHoldingDetail::toInstrument);
     }
 
     @Override

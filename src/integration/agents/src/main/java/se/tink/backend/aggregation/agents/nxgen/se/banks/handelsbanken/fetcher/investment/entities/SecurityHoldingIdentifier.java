@@ -12,7 +12,7 @@ public class SecurityHoldingIdentifier {
 
     @JsonIgnore
     public Instrument.Type getTinkType() {
-        return HandelsbankenSEConstants.Fetcher.Investments.InstrumentType.asType(type);
+        return HandelsbankenSEConstants.InstrumentType.asType(type);
     }
 
     public String getType() {

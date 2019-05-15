@@ -60,117 +60,119 @@ public class HandelsbankenSEConstants {
         public static final String DEVICE_MODEL = "IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV";
     }
 
-    public static final class Fetcher {
+    public static class Accounts {
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("unknown_account_type");
+
+        public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
+        public static final String CREDIT_CARD_IGNORE_TYPE = "A";
+
+        public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+                TypeMapper.<AccountTypes>builder()
+                        .put(
+                                AccountTypes.SAVINGS,
+                                "sparkonto",
+                                "e-kapitalkonto",
+                                "framtidskonto",
+                                "placeringskonto privat")
+                        .put(
+                                AccountTypes.CHECKING,
+                                "allkonto",
+                                "allkonto ung",
+                                "privatkonto",
+                                "checkkonto")
+                        .build();
+    }
+
+    public static final class Transactions {
+        public static final Pattern PENDING_PATTERN =
+                Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
 
         public static final ImmutableSet<String> PROVIDERS_WITH_INVERTED_TRANSACTIONS =
                 ImmutableSet.of(
                         "H", // BUSINESS_VISA
                         "I" // // BUSINESS_PRIVATE_VISA
                         );
+    }
 
-        public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
-        public static final String CREDIT_CARD_IGNORE_TYPE = "A";
+    public static class Investments {
+        public static final String FUND = "fund_summary";
+        public static final String ISK = "isk";
+        public static final String NORMAL = "normal";
+        public static final String KF_AND_PENSION = "kapital";
+        public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
+        public static final String KF_TYPE_PREFIX = "kapitalspar";
+    }
 
-        public static final class Transactions {
-            public static final Pattern PENDING_PATTERN =
-                    Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
+    public enum InstrumentType {
+        STOCK("stock", Instrument.Type.STOCK),
+        FUND("fund", Instrument.Type.FUND),
+        OTHER("", Instrument.Type.OTHER);
+        private final String rawType;
+        private final Instrument.Type type;
+
+        InstrumentType(String rawType, Instrument.Type type) {
+            this.rawType = rawType;
+            this.type = type;
         }
 
-        public static final class Loans {
-
-            public static final String FLOATING = "rörligt";
-            public static final int FLOATING_REEVALUATION_PERIOD = 3; // In months
-            public static final Pattern PERIOD_PATTERN =
-                    Pattern.compile("(?<length>\\d)+\\s(?<period>[^\\s\\d]+)");
-            public static final String PERIOD = "period";
-            public static final String LENGTH = "length";
-            public static final String YEAR = "år";
-            public static final String LOAN_INFORMATION = "låneinformation";
-            public static final String TERMS_OF_CHANGE = "villkorsändringsdag";
-            public static final String AMORTIZATION = "amortering";
-            public static final String MULTIPLE_APPLICANTS = "fler låntagare finns";
-            public static final String NO_AMORTIZATION = "amorteringsfritt";
-            public static final String YES = "ja";
-            public static final LogTag LOG_TAG = LogTag.from("se_handelsbanken_loans");
-        }
-
-        public static class Investments {
-            public static final String ERROR_TOO_YOUNG_INVESTMENTS = "10001";
-
-            public enum InstrumentType {
-                STOCK("stock", Instrument.Type.STOCK),
-                FUND("fund", Instrument.Type.FUND),
-                OTHER("", Instrument.Type.OTHER);
-                private final String rawType;
-                private final Instrument.Type type;
-
-                InstrumentType(String rawType, Instrument.Type type) {
-                    this.rawType = rawType;
-                    this.type = type;
-                }
-
-                public static Instrument.Type asType(String type) {
-                    for (InstrumentType instrumentType : values()) {
-                        if (instrumentType.rawType.equalsIgnoreCase(type)) {
-                            return instrumentType.type;
-                        }
-                    }
-                    return OTHER.type;
+        public static Instrument.Type asType(String type) {
+            for (InstrumentType instrumentType : values()) {
+                if (instrumentType.rawType.equalsIgnoreCase(type)) {
+                    return instrumentType.type;
                 }
             }
+            return OTHER.type;
+        }
+    }
 
-            public enum PortfolioType {
-                ISK("isk", Portfolio.Type.ISK),
-                NORMAL("normal", Portfolio.Type.DEPOT),
-                OTHER("", Portfolio.Type.OTHER);
+    public enum PortfolioType {
+        ISK("isk", Portfolio.Type.ISK),
+        NORMAL("normal", Portfolio.Type.DEPOT),
+        OTHER("", Portfolio.Type.OTHER);
 
-                private final String rawType;
-                private final Portfolio.Type type;
+        private final String rawType;
+        private final Portfolio.Type type;
 
-                PortfolioType(String rawType, Portfolio.Type type) {
-                    this.rawType = rawType;
-                    this.type = type;
-                }
+        PortfolioType(String rawType, Portfolio.Type type) {
+            this.rawType = rawType;
+            this.type = type;
+        }
 
-                public static Portfolio.Type asType(String type) {
-                    for (PortfolioType portfolioType : values()) {
-                        if (portfolioType.rawType.equalsIgnoreCase(type)) {
-                            return portfolioType.type;
-                        }
-                    }
-                    return OTHER.type;
+        public static Portfolio.Type asType(String type) {
+            for (PortfolioType portfolioType : values()) {
+                if (portfolioType.rawType.equalsIgnoreCase(type)) {
+                    return portfolioType.type;
                 }
             }
+            return OTHER.type;
         }
+    }
 
-        public static class Transfers {
-            public static final Predicate<String> PATTERN_BG_RECIPIENT =
-                    Pattern.compile(".*\\d{3,4}-\\d{4}").asPredicate();
-            public static final Predicate<String> PATTERN_PG_RECIPIENT =
-                    Pattern.compile(".*\\d{1,7}-\\d").asPredicate();
-            public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
-            public static final String UNDER_16 = "10573";
-        }
+    public static final class Loans {
 
-        public static class Accounts {
-            public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("unknown_account_type");
+        public static final String FLOATING = "rörligt";
+        public static final int FLOATING_REEVALUATION_PERIOD = 3; // In months
+        public static final Pattern PERIOD_PATTERN =
+                Pattern.compile("(?<length>\\d)+\\s(?<period>[^\\s\\d]+)");
+        public static final String PERIOD = "period";
+        public static final String LENGTH = "length";
+        public static final String YEAR = "år";
+        public static final String LOAN_INFORMATION = "låneinformation";
+        public static final String TERMS_OF_CHANGE = "villkorsändringsdag";
+        public static final String AMORTIZATION = "amortering";
+        public static final String MULTIPLE_APPLICANTS = "fler låntagare finns";
+        public static final String NO_AMORTIZATION = "amorteringsfritt";
+        public static final String YES = "ja";
+        public static final LogTag LOG_TAG = LogTag.from("se_handelsbanken_loans");
+    }
 
-            public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-                    TypeMapper.<AccountTypes>builder()
-                            .put(
-                                    AccountTypes.SAVINGS,
-                                    "sparkonto",
-                                    "e-kapitalkonto",
-                                    "framtidskonto",
-                                    "placeringskonto privat")
-                            .put(
-                                    AccountTypes.CHECKING,
-                                    "allkonto",
-                                    "allkonto ung",
-                                    "privatkonto",
-                                    "checkkonto")
-                            .build();
-        }
+    public static class Transfers {
+        public static final Predicate<String> PATTERN_BG_RECIPIENT =
+                Pattern.compile(".*\\d{3,4}-\\d{4}").asPredicate();
+        public static final Predicate<String> PATTERN_PG_RECIPIENT =
+                Pattern.compile(".*\\d{1,7}-\\d").asPredicate();
+        public static final LogTag LOG_TAG = LogTag.from("#se_handelsbanken_payment_context");
+        public static final String UNDER_16 = "10573";
     }
 
     public static class Executor {

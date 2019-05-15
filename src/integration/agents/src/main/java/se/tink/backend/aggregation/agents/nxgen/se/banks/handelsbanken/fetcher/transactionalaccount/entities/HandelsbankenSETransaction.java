@@ -27,7 +27,7 @@ public class HandelsbankenSETransaction extends BaseResponse {
         boolean pending = false;
 
         Matcher matcher =
-                HandelsbankenSEConstants.Fetcher.Transactions.PENDING_PATTERN.matcher(description);
+                HandelsbankenSEConstants.Transactions.PENDING_PATTERN.matcher(description);
         if (matcher.find()) {
             description = matcher.replaceFirst("");
             pending = true;
