@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
@@ -31,7 +32,8 @@ public class HandelsbankenBaseTransactionalAccountFetcher
         this.converter = converter;
     }
 
-    private TransactionalAccount mapToTransactionalAccount(BaseAccountEntity accountEntity) {
+    private Optional<TransactionalAccount> mapToTransactionalAccount(
+            BaseAccountEntity accountEntity) {
         BalancesEntity balances = apiClient.getAccountDetails(accountEntity.getAccountId());
         BalanceEntity availableBalance =
                 balances.getBalances().stream()
@@ -44,7 +46,6 @@ public class HandelsbankenBaseTransactionalAccountFetcher
                                 () ->
                                         new IllegalStateException(
                                                 ExceptionMessages.BALANCE_NOT_FOUND));
-
         return converter.toTinkAccount(accountEntity, availableBalance);
     }
 
@@ -52,6 +53,8 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.getAccountList().getAccounts().stream()
                 .map(this::mapToTransactionalAccount)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
