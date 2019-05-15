@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
+import com.google.common.collect.Maps;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +10,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -22,17 +22,19 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysCons
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.entities.AccountInfoEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.configuration.RedsysConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -133,30 +135,45 @@ public final class RedsysApiClient {
         return token;
     }
 
-    private void getConsent(OAuth2Token token) {
-        final String url =
-                getConfiguration().getBaseAPIUrl()
-                        + "/"
-                        + getConfiguration().getAspsp()
-                        + Urls.CONSENTS;
-        List<AccountInfoEntity> accountInfoEntityList = Collections.emptyList();
+    /**
+     * Performs a standard consent request for all PSD2 accounts. The consent ID will be persisted
+     * as StorageKeys.CONSENT_ID
+     *
+     * @param token the oauth token to use, since it's not persisted yet
+     * @return the redirect URL to approve the consent
+     */
+    public String requestConsent(OAuth2Token token) {
+        final String url = makeApiUrl(Urls.CONSENTS);
 
         GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
-                        new AccessEntity(
-                                accountInfoEntityList,
-                                accountInfoEntityList,
-                                accountInfoEntityList,
-                                FormValues.ALL_ACCOUNTS,
-                                FormValues.ALL_ACCOUNTS),
+                        new AccessEntity(null, null, null, null, FormValues.ALL_ACCOUNTS),
                         FormValues.TRUE,
                         FormValues.VALID_UNTIL,
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.FALSE);
 
         GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest, token).post(GetConsentResponse.class);
-        persistentStorage.put(StorageKeys.CONSENT_ID, getConsentResponse.getConsentId());
+                createSignedRequest(url, getConsentRequest, token)
+                        .headers(getTppRedirectHeaders())
+                        .post(GetConsentResponse.class);
+        String consentId = getConsentResponse.getConsentId();
+        String consentRedirectUrl =
+                getConsentResponse
+                        .getLink(RedsysConstants.Links.SCA_REDIRECT)
+                        .map(LinkEntity::getHref)
+                        .get();
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
+        return consentRedirectUrl;
+    }
+
+    public RedsysConstants.ConsentStatus getConsentStatus(String consentId, OAuth2Token token) {
+        final String url = makeApiUrl(String.format(Urls.CONSENT_STATUS, consentId));
+        ConsentStatusResponse consentStatusResponse =
+                createSignedRequest(url, null, token)
+                        .headers(getTppRedirectHeaders())
+                        .get(ConsentStatusResponse.class);
+        return consentStatusResponse.getConsentStatus();
     }
 
     public OAuth2Token refreshToken(final String refreshToken) {
@@ -235,6 +252,14 @@ public final class RedsysApiClient {
 
     private RequestBuilder createSignedRequest(String url) {
         return createSignedRequest(url, null, getTokenFromStorage());
+    }
+
+    private Map<String, Object> getTppRedirectHeaders() {
+        Map<String, Object> headers = Maps.newHashMap();
+        headers.put(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE);
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl());
+        return headers;
     }
 
     private RequestBuilder createSignedRequest(

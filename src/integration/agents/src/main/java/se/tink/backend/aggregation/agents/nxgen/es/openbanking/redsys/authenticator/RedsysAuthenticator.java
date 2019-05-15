@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.configuration.RedsysConfiguration;
@@ -39,9 +43,45 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
         return apiClient.getAuthorizeUrl(state, this.codeVerifier);
     }
 
+    private boolean storedConsentIsValid(OAuth2Token token) {
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        if (Strings.isNullOrEmpty(consentId)) {
+            return false;
+        }
+        return apiClient.getConsentStatus(consentId, token).isValid();
+    }
+
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
-        return apiClient.getToken(code, this.codeVerifier);
+        OAuth2Token token = apiClient.getToken(code, this.codeVerifier);
+        if (storedConsentIsValid(token)) {
+            return token;
+        }
+
+        // FIXME: ugly hack for testing, handle in an AuthenticationController
+        // request consent
+        String consentUrl = apiClient.requestConsent(token);
+        String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        RedsysConstants.ConsentStatus consentStatus = null;
+        System.out.println("CONSENT REDIRECT: " + consentUrl);
+
+        // wait for consent approval
+        for (int i = 0; i < 10; i++) {
+            consentStatus = apiClient.getConsentStatus(consentId, token);
+            if (consentStatus.isValid()) {
+                // got consent
+                return token;
+            } else if (consentStatus.isReceived()) {
+                // wait some more
+                System.out.println("Waiting for consent acceptance");
+                Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
+            } else {
+                // other status
+                break;
+            }
+        }
+
+        throw new IllegalStateException("Did not get consent: " + consentStatus.toString());
     }
 
     @Override

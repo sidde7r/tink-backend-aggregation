@@ -1,19 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.hu.openbanking.raiffeisen.authenticator.entities.LinksEntity;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.entities.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.entities.TppMessageEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetConsentResponse {
+    @JsonProperty private String psuMessage;
+    @JsonProperty private List<TppMessageEntity> tppMessages;
+    @JsonProperty private RedsysConstants.ConsentStatus consentStatus;
+    @JsonProperty private String consentId;
 
     @JsonProperty("_links")
-    private LinksEntity links;
-
-    private String consentId;
-    private String consentStatus;
+    private Map<String, LinkEntity> links;
 
     public String getConsentId() {
         return consentId;
+    }
+
+    public Map<String, LinkEntity> getLinks() {
+        return links;
+    }
+
+    @JsonIgnore
+    public Optional<LinkEntity> getLink(String linkName) {
+        return Optional.ofNullable(links.get(linkName));
     }
 }

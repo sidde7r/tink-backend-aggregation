@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -32,6 +33,7 @@ public final class RedsysConstants {
         public static final String TOKEN = "/token";
         public static final String REFRESH = "/token";
         public static final String CONSENTS = "/v1/consents";
+        public static final String CONSENT_STATUS = "/v1/consents/%s/status";
     }
 
     public static class StorageKeys {
@@ -53,15 +55,24 @@ public final class RedsysConstants {
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "AIS";
         public static final String CODE_CHALLENGE_METHOD = "plain";
+        public static final String TRUE = "true";
+        public static final String FALSE = "false";
     }
 
     public static class HeaderKeys {
         public static final String REQUEST_ID = "X-Request-ID";
         public static final String IBM_CLIENT_ID = "X-IBM-Client-Id";
+        public static final String CONSENT_ID = "Consent-ID";
         public static final String DIGEST = "Digest";
         public static final String SIGNATURE = "Signature";
+        public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
+        public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
+    }
+
+    public static class HeaderValues {
+        public static final String TRUE = "true";
     }
 
     public static class FormKeys {
@@ -92,5 +103,47 @@ public final class RedsysConstants {
         public static final String KEY_ID_FORMAT = "SN=%d,CA=%s";
         public static final String FORMAT =
                 "keyId=\"%s\",algorithm=\"SHA-256\",headers=\"%s\",signature=\"%s\"";
+    }
+
+    public static class Links {
+        public static final String SCA_REDIRECT = "scaRedirect";
+        public static final String SCA_STATUS = "scaStatus";
+        public static final String REDIRECT = "redirect";
+        public static final String STATUS = "status";
+        public static final String SELF = "self";
+        public static final String OAUTH = "oAuth";
+        public static final String BALANCES = "balances";
+        public static final String TRANSACTIONS = "transactions";
+        public static final String VIEW_ACCOUNT = "viewAccount";
+        public static final String VIEW_BALANCES = "viewBalances";
+        public static final String VIEW_TRANSACTIONS = "viewTransactions";
+        public static final String FIRST = "first";
+        public static final String NEXT = "next";
+        public static final String PREVIOUS = "previous";
+        public static final String LAST = "last";
+        public static final String DOWNLOAD = "download";
+    }
+
+    public enum ConsentStatus {
+        @JsonProperty("received")
+        RECEIVED,
+        @JsonProperty("rejected")
+        REJECTED,
+        @JsonProperty("valid")
+        VALID,
+        @JsonProperty("expired")
+        EXPIRED,
+        @JsonProperty("revokedByPsu")
+        REVOKED_BY_PSU,
+        @JsonProperty("terminatedByTpp")
+        TERMINATED_BY_TPP;
+
+        public boolean isReceived() {
+            return this == RECEIVED;
+        }
+
+        public boolean isValid() {
+            return this == VALID;
+        }
     }
 }
