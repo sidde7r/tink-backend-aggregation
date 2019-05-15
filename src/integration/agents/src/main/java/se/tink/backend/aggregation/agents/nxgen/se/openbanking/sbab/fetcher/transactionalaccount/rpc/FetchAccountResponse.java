@@ -13,10 +13,6 @@ public class FetchAccountResponse {
 
     private List<AccountEntity> accounts;
 
-    public List<AccountEntity> getAccountList() {
-        return accounts;
-    }
-
     public List<TransactionalAccount> toTinkAccounts(String owner) {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .map(account -> account.toTinkAccount(owner))
