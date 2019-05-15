@@ -35,6 +35,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authentica
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.entities.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
@@ -295,5 +297,26 @@ public final class RedsysApiClient {
         }
 
         return request;
+    }
+
+    public ListAccountsResponse fetchAccounts() {
+        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
+                .header(HeaderKeys.CONSENT_ID, consentId)
+                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                .get(ListAccountsResponse.class);
+    }
+
+    public TransactionsResponse fetchTransactions(String accountId, @Nullable String link) {
+        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        final String path =
+                Optional.ofNullable(link).orElse(String.format(Urls.TRANSACTIONS, accountId));
+        RequestBuilder request =
+                createSignedRequest(makeApiUrl(path))
+                        .header(HeaderKeys.CONSENT_ID, consentId)
+                        .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
+                        .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOTH);
+
+        return request.get(TransactionsResponse.class);
     }
 }

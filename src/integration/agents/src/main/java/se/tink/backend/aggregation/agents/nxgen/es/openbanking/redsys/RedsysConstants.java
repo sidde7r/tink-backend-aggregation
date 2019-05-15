@@ -13,12 +13,12 @@ public final class RedsysConstants {
         throw new AssertionError();
     }
 
+    // partial ISO 20022 ExternalCashAccountType1Code
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-                    .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-                    .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-                    .ignoreKeys("some_string4_the_integratee_uses")
+                    .put(AccountTypes.CHECKING, "CACC")
+                    .put(AccountTypes.SAVINGS, "SVGS")
+                    .put(AccountTypes.OTHER, "OTHR")
                     .build();
 
     public static class ErrorMessages {
@@ -34,6 +34,9 @@ public final class RedsysConstants {
         public static final String REFRESH = "/token";
         public static final String CONSENTS = "/v1/consents";
         public static final String CONSENT_STATUS = "/v1/consents/%s/status";
+        public static final String ACCOUNTS = "/v1/accounts";
+        public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
+        public static final String BALANCES = "/v1/accounts/%s/balances";
     }
 
     public static class StorageKeys {
@@ -49,6 +52,8 @@ public final class RedsysConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE_CHALLENGE = "code_challenge";
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
+        public static final String WITH_BALANCE = "withBalance";
+        public static final String BOOKING_STATUS = "bookingStatus";
     }
 
     public static class QueryValues {
@@ -57,6 +62,12 @@ public final class RedsysConstants {
         public static final String CODE_CHALLENGE_METHOD = "plain";
         public static final String TRUE = "true";
         public static final String FALSE = "false";
+
+        public static final class BookingStatus {
+            public static final String BOOKED = "booked";
+            public static final String PENDING = "pending";
+            public static final String BOTH = "both";
+        }
     }
 
     public static class HeaderKeys {
@@ -90,7 +101,7 @@ public final class RedsysConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final boolean TRUE = true;
         public static final boolean FALSE = false;
-        public static final int FREQUENCY_PER_DAY = 4;
+        public static final int FREQUENCY_PER_DAY = 288;
         public static final String VALID_UNTIL = "9999-12-31";
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
@@ -145,5 +156,10 @@ public final class RedsysConstants {
         public boolean isValid() {
             return this == VALID;
         }
+    }
+
+    public static class AccountType {
+        public static final String PERSONAL = "PRIV";
+        public static final String BUSINESS = "ORGA";
     }
 }
