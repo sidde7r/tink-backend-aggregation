@@ -50,15 +50,20 @@ public class PensionDetailsResponse extends BaseResponse {
     }
 
     private Portfolio.Type getPortfolioType() {
-        if (!Strings.isNullOrEmpty(pensionName)
-                && pensionName
-                        .toLowerCase()
-                        .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
-            return Portfolio.Type.KF;
+        if (Strings.isNullOrEmpty(pensionName)) {
+            LOGGER.warn("Handelsbanken pension name not present.");
+            return Portfolio.Type.OTHER;
         }
 
-        LOGGER.warn("Handelsbanken unknown kapital portfolio type: {}", pensionName);
-        return Portfolio.Type.OTHER;
+        if (!pensionName
+                .toLowerCase()
+                .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
+            
+            LOGGER.warn("Handelsbanken unknown kapital portfolio type: {}", pensionName);
+            return Portfolio.Type.OTHER;
+        }
+
+        return Portfolio.Type.KF;
     }
 
     private double getTotalProfit(Amount totalValue) {
