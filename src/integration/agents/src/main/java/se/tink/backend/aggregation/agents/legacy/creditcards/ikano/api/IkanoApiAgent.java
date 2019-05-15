@@ -1,28 +1,36 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+public class IkanoApiAgent extends AbstractAgent
+        implements RefreshCreditCardAccountsExecutor, RefreshIdentityDataExecutor {
     private final IkanoApiClient apiClient;
     private final Credentials credentials;
     private static final int MAX_BANK_ID_POLLING_ATTEMPTS = 60;
     private final int bankIdPollIntervalMS;
-    private boolean hasRefreshed = false;
+    private List<Account> accounts;
 
     public IkanoApiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair)
@@ -55,6 +63,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
         this.apiClient = apiClient;
     }
 
+    @Override
     public boolean login() throws Exception {
 
         try {
@@ -73,6 +82,10 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
             cards.ensureRegisteredCardExists();
 
+            // Fetch and cache accounts, we do this here because we want to throw a NOT_CUSTOMER
+            // login exception if the user has no valid cards.
+            accounts = apiClient.fetchAccounts();
+
             return true;
         } catch (UserErrorException e) {
             stopLoginAttempt(e.getMessage());
@@ -81,7 +94,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
         return false;
     }
 
-    public void pollBankIdSession(String reference) throws Exception {
+    void pollBankIdSession(String reference) throws Exception {
 
         for (int i = 0; i < MAX_BANK_ID_POLLING_ATTEMPTS; i++) {
             boolean sessionReceived = apiClient.fetchBankIdSession(reference);
@@ -97,18 +110,15 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     @Override
-    public void refresh() throws Exception {
-        // The refresh command will call refresh multiple times.
-        // This check ensures the refresh only runs once.
-        if (hasRefreshed) {
-            return;
-        }
-        hasRefreshed = true;
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return new FetchAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        Map<Account, List<Transaction>> response = new HashMap<>();
 
         try {
-            List<Account> accounts = apiClient.fetchAccounts();
-            financialDataCacher.cacheAccounts(accounts);
-
             for (Account account : accounts) {
                 List<Transaction> transactions = apiClient.getTransactionsFor(account);
 
@@ -116,46 +126,33 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
                 while (apiClient.hasMoreTransactionHistory(account)) {
                     if (isContentWithRefresh(account, transactions)) {
-                        /**
+                        /*
                          * Since Ikano transactions can be unsettled for longer periods of time (3-4
                          * weeks), we need to fetch more transactions than usual in order to avoid
                          * duplicates.
                          */
-                        log.info(
-                                account,
-                                "Reached content with refresh date, fetching transactions one more time");
                         stop = true;
                     }
 
-                    log.info(
-                            account,
-                            String.format(
-                                    "fetch more transactions - current transactions size ( %s )",
-                                    transactions.size()));
-
                     transactions = apiClient.fetchMoreTransactionsFor(account);
-
-                    log.info(
-                            account,
-                            String.format(
-                                    "fetched more transactions - new transactions size ( %s )",
-                                    transactions.size()));
 
                     if (stop) {
                         break;
                     }
                 }
 
-                log.info(account, "Finished fetching transactions for account");
-                financialDataCacher.updateTransactions(account, transactions);
+                response.put(account, transactions);
             }
-        } catch (CardNotFoundException e) {
-            stopLoginAttempt(
-                    "Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");
-        } catch (AccountRelationNotFoundException e) {
-            log.error(
-                    "No relation between account and card were found, this SHOULD never happen", e);
+        } catch (LoginException | AccountRelationNotFoundException e) {
+            log.error("No relation between account and card found, this SHOULD never happen", e);
         }
+
+        return new FetchTransactionsResponse(response);
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new IkanoIdentityFetcher(apiClient, credentials).fetchIdentityData();
     }
 
     public void logout() {}
@@ -171,8 +168,6 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
         log.info("Ikano agent user error: " + message);
         statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
     }
-
-    public static class CardNotFoundException extends Exception {}
 
     public static class AccountRelationNotFoundException extends Exception {}
 }

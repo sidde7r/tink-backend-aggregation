@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 
 public class CardEntitiesTest {
 
     @Test
-    public void testValidCardResponse() throws IkanoApiAgent.CardNotFoundException {
+    public void testValidCardResponse() throws LoginException {
         List<CardEntity> cards = createCards();
 
         CardEntities response = new CardEntities();
@@ -24,14 +24,14 @@ public class CardEntitiesTest {
         }
     }
 
-    @Test(expected = IkanoApiAgent.CardNotFoundException.class)
-    public void throwsWhenNoCardsWereFound() throws IkanoApiAgent.CardNotFoundException {
+    @Test(expected = LoginException.class)
+    public void throwsWhenNoCardsWereFound() throws LoginException {
         CardEntities response = new CardEntities();
         response.keepSelectedCardTypes(CardType.PREEM);
     }
 
-    @Test(expected = IkanoApiAgent.CardNotFoundException.class)
-    public void throwsIfSelectedCardTypeDoesNotExist() throws IkanoApiAgent.CardNotFoundException {
+    @Test(expected = LoginException.class)
+    public void throwsIfSelectedCardTypeDoesNotExist() throws LoginException {
         List<CardEntity> cards = createCards();
 
         CardEntities response = new CardEntities();
