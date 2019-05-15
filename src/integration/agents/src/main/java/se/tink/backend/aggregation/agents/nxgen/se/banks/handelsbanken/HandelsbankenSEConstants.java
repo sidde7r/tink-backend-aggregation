@@ -91,7 +91,7 @@ public class HandelsbankenSEConstants {
                 ImmutableSet.of(
                         "H", // BUSINESS_VISA
                         "I" // // BUSINESS_PRIVATE_VISA
-                );
+                        );
     }
 
     public static class Investments {

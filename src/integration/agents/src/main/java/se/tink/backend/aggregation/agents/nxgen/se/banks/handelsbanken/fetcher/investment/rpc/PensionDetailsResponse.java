@@ -58,7 +58,7 @@ public class PensionDetailsResponse extends BaseResponse {
         if (!pensionName
                 .toLowerCase()
                 .startsWith(HandelsbankenSEConstants.Investments.KF_TYPE_PREFIX)) {
-            
+
             LOGGER.warn("Handelsbanken unknown kapital portfolio type: {}", pensionName);
             return Portfolio.Type.OTHER;
         }

@@ -75,8 +75,7 @@ public class CustodyAccountResponse extends BaseResponse {
     }
 
     private Portfolio.Type toType() {
-        Portfolio.Type portfolioType =
-                HandelsbankenSEConstants.PortfolioType.asType(this.type);
+        Portfolio.Type portfolioType = HandelsbankenSEConstants.PortfolioType.asType(this.type);
 
         if (portfolioType == Portfolio.Type.OTHER) {
             LOGGER.warn("Unknown portfolio type: {}", this.type);
