@@ -291,7 +291,7 @@ public final class RedsysApiClient {
                         .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, encodedCertificate);
 
         if (payload != null) {
-            request = request.body(payload, MediaType.APPLICATION_JSON);
+            request = request.body(serializedPayload, MediaType.APPLICATION_JSON);
         }
 
         return request;
