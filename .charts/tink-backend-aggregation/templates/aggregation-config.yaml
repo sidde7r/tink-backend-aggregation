@@ -84,14 +84,6 @@ data:
     developmentMode: true
 
     developmentConfiguration:
-      clusterHostConfiguration:
-        clusterId: local-development
-        host: http://192.168.99.1:5000  # This should be the the host of the aggregation controller
-        apiToken: devtoken
-        base64EncodedClientCertificate: ""
-        disableRequestCompression: false
-        aggregatorIdentifier: "Tink (+https://www.tink.se/; noc@tink.se)"
-
       clusterConfiguration:
         clusterId: local-development
         host: http://nasa-service.notifying-aggregation-service-asserter.svc.cluster.local
