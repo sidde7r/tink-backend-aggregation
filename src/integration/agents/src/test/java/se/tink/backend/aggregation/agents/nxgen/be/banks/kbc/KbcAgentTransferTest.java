@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -19,7 +18,6 @@ import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Ignore
 public class KbcAgentTransferTest {
     // NB  m4ri needs to be installed
     // See ../tools/libkbc_wbaes_src/README
