@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import print_function
 from tinydb import TinyDB, Query, where
 from flask import Flask, request, abort, Response, jsonify, make_response
 from functools import wraps
@@ -13,7 +14,6 @@ import uuid
 import time
 
 from logging.config import dictConfig
-from __future__ import print_function
 
 dictConfig(
     {
@@ -291,6 +291,8 @@ def ping():
 def update_credentials_status():
     responseObject = get_json(request)
     credentials = responseObject["credentials"]
+
+    LOG.info("Request to update credentials: \n %s", prettify_dict(credentials))
 
     try:
         supplemental = credentials["supplementalInformation"]
