@@ -77,7 +77,7 @@ public final class DeutscheBankApiClient {
         final String baseUrl = getConfiguration().getBaseUrl();
         final String redirectUri = getConfiguration().getRedirectUri();
 
-        return createRequestInSession(baseUrl + Urls.OAUTH)
+        return client.request(baseUrl + Urls.OAUTH)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
