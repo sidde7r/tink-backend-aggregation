@@ -41,4 +41,9 @@ public final class KbcAgent extends BerlinGroupAgent<KbcApiClient, BerlinGroupCo
     protected Class<BerlinGroupConfiguration> getConfigurationClassDescription() {
         return BerlinGroupConfiguration.class;
     }
+
+    @Override
+    protected KbcAuthenticator getAgentAuthenticator() {
+        return new KbcAuthenticator(getApiClient());
+    }
 }

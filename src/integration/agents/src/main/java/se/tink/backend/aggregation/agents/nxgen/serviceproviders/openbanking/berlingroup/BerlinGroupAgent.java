@@ -81,9 +81,7 @@ public abstract class BerlinGroupAgent<
                 controller);
     }
 
-    protected BerlinGroupAuthenticator getAgentAuthenticator() {
-        return new BerlinGroupAuthenticator(getApiClient());
-    }
+    protected abstract <T extends BerlinGroupAuthenticator> T getAgentAuthenticator();
 
     protected BerlinGroupAccountFetcher getAccountFetcher() {
         return new BerlinGroupAccountFetcher(getApiClient());

@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authent
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configuration.ErstebankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.fetcher.transactionalaccount.ErstebankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -51,7 +50,7 @@ public final class ErstebankAgent
     }
 
     @Override
-    protected BerlinGroupAuthenticator getAgentAuthenticator() {
-        return new ErstebankAuthenticator(apiClient, sessionStorage);
+    protected ErstebankAuthenticator getAgentAuthenticator() {
+        return new ErstebankAuthenticator(getApiClient(), sessionStorage);
     }
 }

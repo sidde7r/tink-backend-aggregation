@@ -33,6 +33,11 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
     }
 
     @Override
+    public SamlinkAuthenticator getAgentAuthenticator() {
+        return new SamlinkAuthenticator(getApiClient());
+    }
+
+    @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new SamlinkTransactionFetcher(getApiClient(), getConfiguration());
     }

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class BerlinGroupAuthenticator implements OAuth2Authenticator {
+public abstract class BerlinGroupAuthenticator implements OAuth2Authenticator {
     protected final BerlinGroupApiClient apiClient;
 
     public BerlinGroupAuthenticator(BerlinGroupApiClient apiClient) {
@@ -30,7 +30,5 @@ public class BerlinGroupAuthenticator implements OAuth2Authenticator {
         apiClient.setTokenToSession(accessToken, StorageKeys.OAUTH_TOKEN);
     }
 
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return apiClient.getToken(code);
-    }
+    public abstract OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException;
 }
