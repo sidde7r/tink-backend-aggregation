@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 
 public class IdentityData {
@@ -168,6 +169,24 @@ public class IdentityData {
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (Objects.isNull(obj)) {
+            return false;
+        }
+        final IdentityData other = (IdentityData) obj;
+        if (this == other) {
+            return true;
+        } else {
+            return getFullName().equals(other.getFullName());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getFullName());
     }
 
     @Override
