@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.be.openbanking.crelan;
+package se.tink.backend.aggregation.agents.nxgen.be.openbanking.axa;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs2adevelopers.Xs2aDevelopersConstants.CredentialKeys;
 
 @Ignore
-public class CrelanAgentTest {
-
+public class AxaAgentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
@@ -24,7 +23,7 @@ public class CrelanAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("be", "be-crelan-oauth2")
+                new AgentIntegrationTest.Builder("be", "be-axa-oauth2")
                         .addCredentialField(CredentialKeys.IBAN, manager.get(Arg.IBAN))
                         .expectLoggedIn(false)
                         .loadCredentialsBefore(false)
