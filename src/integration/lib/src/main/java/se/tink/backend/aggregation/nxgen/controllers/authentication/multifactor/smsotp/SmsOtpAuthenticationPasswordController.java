@@ -77,7 +77,6 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
     private Field getOtpField() {
         Field otpValue = new Field();
         otpValue.setDescription(catalog.getString("SMS code"));
-        otpValue.setHelpText(catalog.getString("Enter the response code"));
         otpValue.setName(OTP_VALUE_FIELD_KEY);
         otpValue.setNumeric(true);
         otpValue.setMinLength(otpValueLength);
