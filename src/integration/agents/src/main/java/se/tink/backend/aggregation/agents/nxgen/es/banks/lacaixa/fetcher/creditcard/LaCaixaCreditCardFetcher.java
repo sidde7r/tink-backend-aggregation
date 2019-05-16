@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard;
 
 import java.util.Collection;
+import java.util.Collections;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,22 @@ public class LaCaixaCreditCardFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.fetchCards().toTinkCards();
+        try {
+            return apiClient.fetchCards().toTinkCards();
+        } catch (HttpResponseException hre) {
+
+            HttpResponse response = hre.getResponse();
+
+            if (response.getStatus() == HttpStatus.SC_CONFLICT) {
+                LaCaixaErrorResponse errorResponse = response.getBody(LaCaixaErrorResponse.class);
+
+                if (errorResponse.isUserHasNoOwnCards()) {
+                    return Collections.emptyList();
+                }
+            }
+
+            throw hre;
+        }
     }
 
     @Override

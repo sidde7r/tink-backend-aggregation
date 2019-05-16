@@ -36,4 +36,11 @@ public class LaCaixaErrorResponse {
                 .trim()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorMessage.NO_ASSOCIATED_ACCOUNT);
     }
+
+    @JsonIgnore
+    public boolean isUserHasNoOwnCards() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_OWN_CARDS);
+    }
 }
