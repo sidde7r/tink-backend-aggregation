@@ -1189,13 +1189,18 @@ public class DanskeBankV2Agent extends AbstractAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        if (sessionResponse == null
-                || sessionResponse.getLoginInfo() == null
-                || Strings.isNullOrEmpty(sessionResponse.getLoginInfo().getName())) {
-            throw new NoSuchElementException();
+        if (sessionResponse == null) {
+            throw new NoSuchElementException("SessionResponse is null.");
         }
 
-        String name = sessionResponse.getLoginInfo().getName();
+        String name = "";
+
+        if (sessionResponse.getLoginInfo() != null) {
+
+            name = Strings.nullToEmpty(sessionResponse.getLoginInfo().getName());
+        } else {
+            log.warn("SessionResponse.LoginInfo is null.");
+        }
 
         try {
             return new FetchIdentityDataResponse(
