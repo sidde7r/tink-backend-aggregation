@@ -61,13 +61,13 @@ public class AccountEntity {
 
     private TransactionalAccount toSavingsAccount() {
         return SavingsAccount.builder()
-            .setUniqueIdentifier(getIdentifier())
-            .setAccountNumber(getBban())
-            .setBalance(getAvailableBalance())
-            .setAlias(nickname)
-            .addAccountIdentifier(getAccountIdentifier())
-            .setApiIdentifier(accountId)
-            .build();
+                .setUniqueIdentifier(getIdentifier())
+                .setAccountNumber(getBban())
+                .setBalance(getAvailableBalance())
+                .setAlias(nickname)
+                .addAccountIdentifier(getAccountIdentifier())
+                .setApiIdentifier(accountId)
+                .build();
     }
 
     private TransactionalAccount toCheckingAccount() {
