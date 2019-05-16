@@ -71,10 +71,10 @@ public class SeIdentityData extends IdentityData {
             }
         }
 
-        Preconditions.checkState(
+        Preconditions.checkArgument(
                 trimmedSsn.length() == 12, "SSN of invalid length %s", trimmedSsn.length());
 
-        Preconditions.checkState(trimmedSsn.matches(SSN_PATTERN), "Invalid SSN");
+        Preconditions.checkArgument(trimmedSsn.matches(SSN_PATTERN), "Invalid SSN");
 
         // SSN has valid format
         return trimmedSsn;
