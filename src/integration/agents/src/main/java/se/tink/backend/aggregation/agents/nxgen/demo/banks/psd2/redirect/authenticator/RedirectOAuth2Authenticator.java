@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
+
     @Override
     public URL buildAuthorizeUrl(String state) {
         return new URL("").queryParam("state", state);
@@ -20,21 +21,22 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
-        long accessExpiresInSeconds = LocalDate.now().until(LocalDate.now().plusDays(90), ChronoUnit.SECONDS);
+        long accessExpiresInSeconds =
+                LocalDate.now().until(LocalDate.now().plusDays(90), ChronoUnit.SECONDS);
 
         return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(String refreshToken)
+            throws SessionException, BankServiceException {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
-        long accessExpiresInSeconds = LocalDate.now().until(LocalDate.now().plusDays(90), ChronoUnit.SECONDS);
+        long accessExpiresInSeconds =
+                LocalDate.now().until(LocalDate.now().plusDays(90), ChronoUnit.SECONDS);
 
         return OAuth2Token.createBearer(accessToken, refreshToken, accessExpiresInSeconds);
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {
-
-    }
+    public void useAccessToken(OAuth2Token accessToken) {}
 }

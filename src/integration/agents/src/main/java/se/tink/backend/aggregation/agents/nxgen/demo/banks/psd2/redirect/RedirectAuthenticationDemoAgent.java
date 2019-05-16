@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled.authenticator.DecoupledThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
@@ -40,8 +39,11 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator();
-        OAuth2AuthenticationController oAuth2AuthenticationController = new OAuth2AuthenticationController(
-                persistentStorage, supplementalInformationHelper, redirectOAuth2Authenticator);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        redirectOAuth2Authenticator);
 
         return new ThirdPartyAppAuthenticationController<>(
                 oAuth2AuthenticationController, supplementalInformationHelper);
