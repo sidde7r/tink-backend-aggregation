@@ -273,7 +273,7 @@ spec:
               name: aggregation-secrets
               key: volksbank-ais-cert
               optional: true
-        {{ end }}
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         resources:
