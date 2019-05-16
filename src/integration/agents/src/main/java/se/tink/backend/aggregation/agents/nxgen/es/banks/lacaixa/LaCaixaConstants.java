@@ -64,6 +64,7 @@ public class LaCaixaConstants {
     public static class ErrorCode {
         public static String EMPTY_LIST = "ERR_TRXM01_007";
         public static String NO_SECURITIES = "131";
+        public static final String NO_OWN_CARDS = "LIT_NO_PERMITE_CONSULTA_TARJETAS";
     }
 
     public static class ErrorMessage {
