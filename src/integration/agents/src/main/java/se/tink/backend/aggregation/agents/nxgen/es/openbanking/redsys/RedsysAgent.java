@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.RedsysConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.AuthenticationWithConsentController;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.RedsysAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.authenticator.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -11,7 +13,6 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -40,7 +41,9 @@ public final class RedsysAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.setDebugProxy("http://127.0.0.1:8888/");
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -65,12 +68,14 @@ public final class RedsysAgent extends NextGenerationAgent {
                         supplementalInformationHelper,
                         new RedsysAuthenticator(
                                 apiClient, persistentStorage, getClientConfiguration()));
+        final RedsysConsentController consenter =
+                new RedsysConsentController(apiClient, persistentStorage);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
+                new AuthenticationWithConsentController(
+                        controller, consenter, supplementalInformationHelper),
                 controller);
     }
 

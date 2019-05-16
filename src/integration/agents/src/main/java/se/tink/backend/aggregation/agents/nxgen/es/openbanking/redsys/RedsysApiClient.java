@@ -46,6 +46,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class RedsysApiClient {
@@ -137,17 +138,9 @@ public final class RedsysApiClient {
         return token;
     }
 
-    /**
-     * Performs a standard consent request for all PSD2 accounts. The consent ID will be persisted
-     * as StorageKeys.CONSENT_ID
-     *
-     * @param token the oauth token to use, since it's not persisted yet
-     * @return the redirect URL to approve the consent
-     */
-    public String requestConsent(OAuth2Token token) {
+    public Pair<String, URL> requestConsent() {
         final String url = makeApiUrl(Urls.CONSENTS);
-
-        GetConsentRequest getConsentRequest =
+        final GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
                         new AccessEntity(null, null, null, null, FormValues.ALL_ACCOUNTS),
                         FormValues.TRUE,
@@ -155,25 +148,24 @@ public final class RedsysApiClient {
                         FormValues.FREQUENCY_PER_DAY,
                         FormValues.FALSE);
 
-        GetConsentResponse getConsentResponse =
-                createSignedRequest(url, getConsentRequest, token)
-                        .headers(getTppRedirectHeaders())
+        final GetConsentResponse getConsentResponse =
+                createSignedRequest(url, getConsentRequest)
+                        .headers(getConsentTppRedirectHeaders())
                         .post(GetConsentResponse.class);
-        String consentId = getConsentResponse.getConsentId();
-        String consentRedirectUrl =
+        final String consentId = getConsentResponse.getConsentId();
+        final String consentRedirectUrl =
                 getConsentResponse
                         .getLink(RedsysConstants.Links.SCA_REDIRECT)
                         .map(LinkEntity::getHref)
                         .get();
-        persistentStorage.put(StorageKeys.CONSENT_ID, consentId);
-        return consentRedirectUrl;
+        return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
-    public RedsysConstants.ConsentStatus getConsentStatus(String consentId, OAuth2Token token) {
+    public RedsysConstants.ConsentStatus getConsentStatus(String consentId) {
         final String url = makeApiUrl(String.format(Urls.CONSENT_STATUS, consentId));
-        ConsentStatusResponse consentStatusResponse =
-                createSignedRequest(url, null, token)
-                        .headers(getTppRedirectHeaders())
+        final ConsentStatusResponse consentStatusResponse =
+                createSignedRequest(url)
+                        .headers(getConsentTppRedirectHeaders())
                         .get(ConsentStatusResponse.class);
         return consentStatusResponse.getConsentStatus();
     }
@@ -256,11 +248,11 @@ public final class RedsysApiClient {
         return createSignedRequest(url, null, getTokenFromStorage());
     }
 
-    private Map<String, Object> getTppRedirectHeaders() {
+    private Map<String, Object> getConsentTppRedirectHeaders() {
         Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl());
-        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getRedirectUrl());
+        headers.put(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getConsentRedirectUrl());
+        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getConsentRedirectUrl());
         return headers;
     }
 

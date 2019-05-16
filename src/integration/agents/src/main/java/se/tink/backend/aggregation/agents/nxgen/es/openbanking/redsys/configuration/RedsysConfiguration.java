@@ -14,6 +14,7 @@ public class RedsysConfiguration implements ClientConfiguration {
     private String clientId;
     private String authClientId;
     private String redirectUrl;
+    private String consentRedirectUrl;
     private String aspsp;
     private String clientSigningKeyPath;
     private String clientSigningCertificatePath;
@@ -81,5 +82,13 @@ public class RedsysConfiguration implements ClientConfiguration {
                         ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
 
         return clientSigningCertificatePath;
+    }
+
+    public String getConsentRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(consentRedirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL for consent"));
+
+        return consentRedirectUrl;
     }
 }
