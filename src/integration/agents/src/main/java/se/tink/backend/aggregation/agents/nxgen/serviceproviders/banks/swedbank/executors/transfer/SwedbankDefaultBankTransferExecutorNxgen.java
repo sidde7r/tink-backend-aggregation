@@ -110,7 +110,7 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
         if (!confirmTransferLink.isPresent()) {
             InitiateSignTransferResponse initiateSignTransfer =
                     apiClient.signExternalTransfer(links.getSignOrThrow());
-            links = transferHelper.collectBankId(initiateSignTransfer);
+            links = transferHelper.collectBankId(initiateSignTransfer, null);
 
             confirmTransferLink = Optional.ofNullable(links.getNext());
 
@@ -178,7 +178,8 @@ public class SwedbankDefaultBankTransferExecutorNxgen implements BankTransferExe
         AbstractAccountEntity entity =
                 transferHelper.signAndConfirmNewRecipient(
                         registerTransferRecipientResponse.getLinks(),
-                        findNewRecipientFromPaymentResponse(registerTransferRecipientRequest));
+                        findNewRecipientFromPaymentResponse(registerTransferRecipientRequest),
+                        true);
 
         return Beneficiary.builder()
                 .withKeyValue(SwedbankBaseConstants.StorageKey.ID, entity.getId())
