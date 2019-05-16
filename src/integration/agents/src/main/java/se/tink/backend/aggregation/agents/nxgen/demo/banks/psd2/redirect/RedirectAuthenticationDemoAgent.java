@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled.authenticator.DecoupledThirdPartyAppAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
@@ -19,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -37,12 +39,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        DecoupledThirdPartyAppAuthenticator decoupledThirdPartyAppAuthenticator =
-                DecoupledThirdPartyAppAuthenticator.createSuccessfulAuthenticator(
-                        credentials, username);
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator();
+        OAuth2AuthenticationController oAuth2AuthenticationController = new OAuth2AuthenticationController(
+                persistentStorage, supplementalInformationHelper, redirectOAuth2Authenticator);
 
         return new ThirdPartyAppAuthenticationController<>(
-                decoupledThirdPartyAppAuthenticator, supplementalInformationHelper);
+                oAuth2AuthenticationController, supplementalInformationHelper);
     }
 
     @Override
