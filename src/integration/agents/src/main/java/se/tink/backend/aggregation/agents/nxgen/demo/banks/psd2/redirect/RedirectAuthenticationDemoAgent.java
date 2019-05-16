@@ -25,14 +25,14 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
-    private static String username;
-    private static String provider;
+    private static final String USERNAME = "tink";
+
+    private String provider;
 
     public RedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.username = request.getCredentials().getField("username");
         this.provider = request.getProvider().getName();
     }
 
@@ -89,8 +89,7 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                this.username, this.provider);
+        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(USERNAME, this.provider);
     }
 
     @Override
