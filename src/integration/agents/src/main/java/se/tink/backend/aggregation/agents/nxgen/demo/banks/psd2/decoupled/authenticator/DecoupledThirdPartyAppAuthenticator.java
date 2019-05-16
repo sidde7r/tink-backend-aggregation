@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled.authenticator;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenticator {
+public class DecoupledThirdPartyAppAuthenticator implements ThirdPartyAppAuthenticator {
     private enum FailureCause {
         IN_PROGRESS,
         UNKNOWN,
@@ -33,12 +33,12 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
 
     private int attempt = 0;
 
-    private RedirectThirdPartyAppAuthenticator(
+    private DecoupledThirdPartyAppAuthenticator(
             Credentials credentials, String username, boolean successfulAuthentication) {
         this(credentials, username, successfulAuthentication, null);
     }
 
-    private RedirectThirdPartyAppAuthenticator(
+    private DecoupledThirdPartyAppAuthenticator(
             Credentials credentials,
             String username,
             boolean successfulAuthentication,
@@ -49,33 +49,33 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
         this.failureCause = failureCause;
     }
 
-    public static RedirectThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
+    public static DecoupledThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
             Credentials credentials, String username) {
-        return new RedirectThirdPartyAppAuthenticator(
+        return new DecoupledThirdPartyAppAuthenticator(
                 credentials, username, false, FailureCause.TIMEOUT);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
+    public static DecoupledThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
             Credentials credentials, String username) {
-        return new RedirectThirdPartyAppAuthenticator(
+        return new DecoupledThirdPartyAppAuthenticator(
                 credentials, username, false, FailureCause.CANCELLED);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
+    public static DecoupledThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
             Credentials credentials, String username) {
-        return new RedirectThirdPartyAppAuthenticator(
+        return new DecoupledThirdPartyAppAuthenticator(
                 credentials, username, false, FailureCause.IN_PROGRESS);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
+    public static DecoupledThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
             Credentials credentials, String username) {
-        return new RedirectThirdPartyAppAuthenticator(
+        return new DecoupledThirdPartyAppAuthenticator(
                 credentials, username, false, FailureCause.UNKNOWN);
     }
 
-    public static RedirectThirdPartyAppAuthenticator createSuccessfulAuthenticator(
+    public static DecoupledThirdPartyAppAuthenticator createSuccessfulAuthenticator(
             Credentials credentials, String username) {
-        return new RedirectThirdPartyAppAuthenticator(credentials, username, true);
+        return new DecoupledThirdPartyAppAuthenticator(credentials, username, true);
     }
 
     @Override

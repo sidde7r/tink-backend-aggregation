@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +23,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
+public class DecoupledAuthenticationDemoAgent extends NextGenerationDemoAgent {
     private static String username;
     private static String provider;
 
-    public RedirectAuthenticationDemoAgent(
+    public DecoupledAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
