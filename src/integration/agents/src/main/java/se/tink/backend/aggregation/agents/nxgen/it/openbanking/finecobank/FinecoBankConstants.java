@@ -66,12 +66,6 @@ public final class FinecoBankConstants {
         public static final String CONSENT_ID = "Consent-ID";
     }
 
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {}
-
     public static class BalanceTypes {
 
         public static final String FORWARD_AVAILABLE = "forwardAvailable";
