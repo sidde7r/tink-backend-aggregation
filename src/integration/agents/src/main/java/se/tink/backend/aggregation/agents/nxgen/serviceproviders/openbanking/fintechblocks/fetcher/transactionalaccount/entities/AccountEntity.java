@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fin
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
@@ -59,7 +60,14 @@ public class AccountEntity {
     }
 
     private TransactionalAccount toSavingsAccount() {
-        return null;
+        return SavingsAccount.builder()
+            .setUniqueIdentifier(getIdentifier())
+            .setAccountNumber(getBban())
+            .setBalance(getAvailableBalance())
+            .setAlias(nickname)
+            .addAccountIdentifier(getAccountIdentifier())
+            .setApiIdentifier(accountId)
+            .build();
     }
 
     private TransactionalAccount toCheckingAccount() {
