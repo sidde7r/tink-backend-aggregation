@@ -8,25 +8,28 @@ import java.util.Locale;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-@Ignore
 public class KbcAgentTransferTest {
     // NB  m4ri needs to be installed
     // See ../tools/libkbc_wbaes_src/README
 
-    private final ArgumentHelper helper =
-            new ArgumentHelper(
-                    "tink.username", "sourceaccount", "destinationaccount", "destinationname");
+    private enum Arg {
+        USERNAME,
+        SOURCE_ACCOUNT,
+        DESTINATION_ACCOUNT,
+        DESTINATION_NAME,
+    }
+
+    private final ArgumentManager<Arg> helper = new ArgumentManager<>(Arg.values());
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-kbc-cardreader")
@@ -51,19 +54,19 @@ public class KbcAgentTransferTest {
 
     @AfterClass
     public static void afterClass() {
-        ArgumentHelper.afterClass();
+        ArgumentManager.afterClass();
     }
 
     private AgentIntegrationTest buildWithCredentials() {
-        return builder.addCredentialField(Field.Key.USERNAME, helper.get("tink.username")).build();
+        return builder.addCredentialField(Field.Key.USERNAME, helper.get(Arg.USERNAME)).build();
     }
 
     // Will create a real transfer, handle with care
     @Test
     public void testTransfer() throws Exception {
-        String sourceCheckingAccount = helper.get("sourceaccount");
-        String destinationAccount = helper.get("destinationaccount");
-        String holderNameOfDestinationAccount = helper.get("destinationname");
+        String sourceCheckingAccount = helper.get(Arg.SOURCE_ACCOUNT);
+        String destinationAccount = helper.get(Arg.DESTINATION_ACCOUNT);
+        String holderNameOfDestinationAccount = helper.get(Arg.DESTINATION_NAME);
         Amount amount = Amount.inEUR(AMOUNT_SMALL);
         SepaEurIdentifier sourceAccount = new SepaEurIdentifier(sourceCheckingAccount);
         SepaEurIdentifier destionationAccount = new SepaEurIdentifier(destinationAccount);
