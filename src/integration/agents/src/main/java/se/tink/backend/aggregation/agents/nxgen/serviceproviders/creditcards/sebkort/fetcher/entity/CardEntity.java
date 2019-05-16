@@ -60,9 +60,11 @@ public class CardEntity {
                         .setName(contract.getProductName())
                         .setHolderName(new HolderName(getNameOnCard()))
                         .setBankIdentifier(contract.getId())
-                        .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
                         .putInTemporaryStorage(
-                                SebKortConstants.StorageKey.CARD_CONTRACT_ID, contract.getId());
+                                SebKortConstants.StorageKey.CARD_ACCOUNT_ID,
+                                contract.getCardAccountId())
+                        .putInTemporaryStorage(
+                                SebKortConstants.StorageKey.IS_ACCOUNT_OWNER, contract.isOwned());
 
         if (account != null) {
             return (CreditCardAccount)

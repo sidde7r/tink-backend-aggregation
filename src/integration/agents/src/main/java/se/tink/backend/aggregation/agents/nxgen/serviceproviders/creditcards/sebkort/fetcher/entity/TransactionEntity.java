@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
@@ -146,6 +148,7 @@ public class TransactionEntity {
         return relatedReservationId;
     }
 
+    @JsonIgnore
     public CreditCardTransaction toTinkTransaction(boolean isPending) {
         Amount negatedAmount =
                 new Amount(this.getBillingCurrencyCode(), this.getBillingAmount()).negate();
@@ -156,5 +159,11 @@ public class TransactionEntity {
                 .setAmount(negatedAmount)
                 .setPending(isPending)
                 .build();
+    }
+
+    @JsonIgnore
+    public boolean isPaymentOrFee() {
+        return SebKortConstants.TransactionType.PAYMENT.equalsIgnoreCase(type)
+                || SebKortConstants.TransactionType.FEE.equalsIgnoreCase(type);
     }
 }
