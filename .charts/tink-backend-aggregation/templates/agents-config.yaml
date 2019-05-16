@@ -79,7 +79,7 @@ data:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET"
-              redirectUrl: "{{ $agentsConfig.VOLKSBANK.redirectUrl }}"
+              redirectUrl: "{{ $agentsConfig.VOLKSBANK.aisConfiguration.redirectUrl }}"
               clientCertificatePath: "VOLKSBANK_AIS_CERT"
               clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD"
         {{- end }}
