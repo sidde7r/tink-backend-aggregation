@@ -17,12 +17,10 @@ agents:
   demoFakeBank:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
 
-agentsServiceConfiguration:
-  integrations:
-    volksbank:
-      tink:
-        aisConfiguration:
-          redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
+  volksbank:
+    tink:
+      aisConfiguration:
+        redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
 
 
 clients:
