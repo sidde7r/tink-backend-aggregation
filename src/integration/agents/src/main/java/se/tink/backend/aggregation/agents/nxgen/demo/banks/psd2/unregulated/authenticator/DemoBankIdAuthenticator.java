@@ -11,7 +11,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
     public enum FailCauses {
-        TIMEOUT, IN_PROGRESS, CANCELLED, UNKNOWN
+        TIMEOUT,
+        IN_PROGRESS,
+        CANCELLED,
+        UNKNOWN
     }
 
     private static final String demoUserName = "18001212";
@@ -48,16 +51,16 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String> {
         }
 
         switch (failureCause) {
-        case IN_PROGRESS:
-            return BankIdStatus.CANCELLED;
-        case TIMEOUT:
-            return BankIdStatus.TIMEOUT;
-        case CANCELLED:
-            return BankIdStatus.CANCELLED;
-        case UNKNOWN:
-            // intentional fall through
-        default:
-            return BankIdStatus.FAILED_UNKNOWN;
+            case IN_PROGRESS:
+                return BankIdStatus.CANCELLED;
+            case TIMEOUT:
+                return BankIdStatus.TIMEOUT;
+            case CANCELLED:
+                return BankIdStatus.CANCELLED;
+            case UNKNOWN:
+                // intentional fall through
+            default:
+                return BankIdStatus.FAILED_UNKNOWN;
         }
     }
 

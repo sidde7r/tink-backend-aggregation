@@ -45,17 +45,17 @@ public class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoAgent {
         String lastPart = splitProviderName[splitProviderName.length - 1];
 
         switch (lastPart) {
-        case "timeout":
-            failCause = ThirdPartyAppAuthenticator.FailCause.TIMEOUT;
-            break;
-        case "inprogress":
-            failCause = ThirdPartyAppAuthenticator.FailCause.IN_PROGRESS;
-            break;
-        case "cancelled":
-            failCause = ThirdPartyAppAuthenticator.FailCause.CANCELLED;
-            break;
-        default:
-            this.failCause = null;
+            case "timeout":
+                failCause = ThirdPartyAppAuthenticator.FailCause.TIMEOUT;
+                break;
+            case "inprogress":
+                failCause = ThirdPartyAppAuthenticator.FailCause.IN_PROGRESS;
+                break;
+            case "cancelled":
+                failCause = ThirdPartyAppAuthenticator.FailCause.CANCELLED;
+                break;
+            default:
+                this.failCause = null;
         }
     }
 

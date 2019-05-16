@@ -41,17 +41,17 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
 
         DemoBankIdAuthenticator.FailCauses failCause = null;
         switch (lastPart) {
-        case "timeout":
-            failCause = DemoBankIdAuthenticator.FailCauses.TIMEOUT;
-            break;
-        case "inprogress":
-            failCause = DemoBankIdAuthenticator.FailCauses.IN_PROGRESS;
-            break;
-        case "cancelled":
-            failCause = DemoBankIdAuthenticator.FailCauses.CANCELLED;
-            break;
-        default:
-            // do nothing
+            case "timeout":
+                failCause = DemoBankIdAuthenticator.FailCauses.TIMEOUT;
+                break;
+            case "inprogress":
+                failCause = DemoBankIdAuthenticator.FailCauses.IN_PROGRESS;
+                break;
+            case "cancelled":
+                failCause = DemoBankIdAuthenticator.FailCauses.CANCELLED;
+                break;
+            default:
+                // do nothing
         }
 
         this.authenticator = new DemoBankIdAuthenticator(successfulAuthentication, failCause);

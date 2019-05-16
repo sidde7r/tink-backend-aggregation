@@ -10,8 +10,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class ThirdPartyAppAuthenticator implements
-        se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator {
+public class ThirdPartyAppAuthenticator
+        implements se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
+                .thirdpartyapp.ThirdPartyAppAuthenticator {
     public enum FailCause {
         IN_PROGRESS,
         UNKNOWN,
@@ -39,28 +40,23 @@ public class ThirdPartyAppAuthenticator implements
         this.failCause = failCause;
     }
 
-    public static ThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
-            String username) {
+    public static ThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(String username) {
         return new ThirdPartyAppAuthenticator(username, false, FailCause.TIMEOUT);
     }
 
-    public static ThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
-            String username) {
+    public static ThirdPartyAppAuthenticator createCancelledFailingAuthenticator(String username) {
         return new ThirdPartyAppAuthenticator(username, false, FailCause.CANCELLED);
     }
 
-    public static ThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
-            String username) {
+    public static ThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(String username) {
         return new ThirdPartyAppAuthenticator(username, false, FailCause.IN_PROGRESS);
     }
 
-    public static ThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
-            String username) {
+    public static ThirdPartyAppAuthenticator createUnknownFailureAuthenticator(String username) {
         return new ThirdPartyAppAuthenticator(username, false, FailCause.UNKNOWN);
     }
 
-    public static ThirdPartyAppAuthenticator createSuccessfulAuthenticator(
-            String username) {
+    public static ThirdPartyAppAuthenticator createSuccessfulAuthenticator(String username) {
         return new ThirdPartyAppAuthenticator(username, true);
     }
 
