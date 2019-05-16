@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator.RedirectOAuth2Authenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.decoupled.authenticator.DecoupledThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
@@ -19,16 +19,15 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
+public class DecoupledAuthenticationDemoAgent extends NextGenerationDemoAgent {
     private static String username;
     private static String provider;
 
-    public RedirectAuthenticationDemoAgent(
+    public DecoupledAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
@@ -38,15 +37,12 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator();
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        redirectOAuth2Authenticator);
+        DecoupledThirdPartyAppAuthenticator decoupledThirdPartyAppAuthenticator =
+                DecoupledThirdPartyAppAuthenticator.createSuccessfulAuthenticator(
+                        credentials, username);
 
         return new ThirdPartyAppAuthenticationController<>(
-                oAuth2AuthenticationController, supplementalInformationHelper);
+                decoupledThirdPartyAppAuthenticator, supplementalInformationHelper);
     }
 
     @Override
