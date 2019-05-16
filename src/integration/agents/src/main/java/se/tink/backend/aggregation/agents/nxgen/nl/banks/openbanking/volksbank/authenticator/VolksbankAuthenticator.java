@@ -18,10 +18,13 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
 
     private final VolksbankApiClient client;
     private final SessionStorage sessionStorage;
+    private final String redirectUri;
 
-    public VolksbankAuthenticator(VolksbankApiClient client, SessionStorage sessionStorage) {
+    public VolksbankAuthenticator(
+            VolksbankApiClient client, SessionStorage sessionStorage, String redirectUri) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.redirectUri = redirectUri;
     }
 
     @Override
@@ -31,9 +34,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
-                .queryParam(
-                        QueryParams.REDIRECT_URI,
-                        client.getConfiguration().getAisConfiguration().getRedirectUrl())
+                .queryParam(QueryParams.REDIRECT_URI, redirectUri)
                 .queryParam(
                         QueryParams.CLIENT_ID,
                         client.getConfiguration().getAisConfiguration().getClientId());
@@ -52,9 +53,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                 QueryParams.CLIENT_SECRET,
                                 client.getConfiguration().getAisConfiguration().getClientSecret())
                         .queryParam(QueryParams.GRANT_TYPE, TokenParams.AUTHORIZATION_CODE)
-                        .queryParam(
-                                QueryParams.REDIRECT_URI,
-                                client.getConfiguration().getAisConfiguration().getRedirectUrl());
+                        .queryParam(QueryParams.REDIRECT_URI, redirectUri);
 
         OAuth2Token token = client.getBearerToken(url);
 
