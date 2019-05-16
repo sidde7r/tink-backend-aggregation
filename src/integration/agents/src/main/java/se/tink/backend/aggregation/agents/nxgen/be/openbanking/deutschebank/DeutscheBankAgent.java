@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.Deut
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.session.DeutscheBankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -120,7 +119,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new DeutscheBankSessionHandler(apiClient, sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override
