@@ -50,10 +50,8 @@ public class SwedbankTransferHelper {
         this.apiClient = apiClient;
     }
 
-    public LinksEntity collectBankId(
-            AbstractBankIdSignResponse bankIdSignResponse, String autostartToken) {
-
-        supplementalRequester.openBankId(autostartToken, false);
+    public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
+        supplementalRequester.openBankId(null, false);
 
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
             SwedbankBaseConstants.BankIdResponseStatus signingStatus =
@@ -242,10 +240,9 @@ public class SwedbankTransferHelper {
     public AbstractAccountEntity signAndConfirmNewRecipient(
             LinksEntity linksEntity,
             Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>>
-                    findNewRecipientFunction,
-            boolean useAutostartToken) {
+                    findNewRecipientFunction) {
 
-        return signNewRecipient(linksEntity.getSign(), useAutostartToken)
+        return signNewRecipient(linksEntity.getSign())
                 .map(LinksEntity::getNext)
                 .flatMap(this::getConfirmResponse)
                 .flatMap(findNewRecipientFunction)
@@ -259,16 +256,9 @@ public class SwedbankTransferHelper {
                                         .build());
     }
 
-    private Optional<LinksEntity> signNewRecipient(LinkEntity signLink, boolean useAutostartToken) {
-
+    private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
         InitiateSignTransferResponse initiateSignTransfer =
                 apiClient.signExternalTransfer(signLink);
-
-        if (useAutostartToken) {
-            return Optional.ofNullable(
-                    collectBankId(initiateSignTransfer, initiateSignTransfer.getAutoStartToken()));
-        }
-
-        return Optional.ofNullable(collectBankId(initiateSignTransfer, null));
+        return Optional.ofNullable(collectBankId(initiateSignTransfer));
     }
 }
