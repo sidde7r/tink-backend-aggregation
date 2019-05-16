@@ -51,7 +51,7 @@ public class AccountsEntity {
                 .build();
     }
 
-    public boolean isCheckingAccount() {
+    private boolean isCheckingAccount() {
         return accountType.equalsIgnoreCase(DeutscheBankConstants.Accounts.CURRENT_ACCOUNT);
     }
 }
