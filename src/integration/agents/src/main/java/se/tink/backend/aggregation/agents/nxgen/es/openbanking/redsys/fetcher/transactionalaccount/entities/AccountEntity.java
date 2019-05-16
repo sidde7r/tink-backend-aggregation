@@ -105,7 +105,7 @@ public class AccountEntity {
             builder = builder.setProductName(product);
         }
 
-        if (RedsysConstants.AccountType.BUSINESS.equals(accountType)) {
+        if (RedsysConstants.AccountType.BUSINESS.equalsIgnoreCase(accountType)) {
             builder = builder.addAccountFlags(AccountFlag.BUSINESS);
         }
 
@@ -131,7 +131,7 @@ public class AccountEntity {
             builder = builder.setProductName(product);
         }
 
-        if (RedsysConstants.AccountType.BUSINESS.equals(accountType)) {
+        if (RedsysConstants.AccountType.BUSINESS.equalsIgnoreCase(accountType)) {
             builder = builder.addAccountFlags(AccountFlag.BUSINESS);
         }
 
