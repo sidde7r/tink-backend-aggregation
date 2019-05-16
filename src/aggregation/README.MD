@@ -15,7 +15,7 @@ To be able to start aggregation, you also need the database `aggregation-db`, `c
 These can be started from the tink-infrastructure repo:
 
 ```bash
-./setup-minikube --cert-manager
+./setup-minikube.sh --cert-manager
 ```
 
 Set up aggregation-db:
@@ -26,7 +26,7 @@ kubectl create -f kubernetes/development/aggregationdb.yml
 Set up cache:
 
 ```bash
-kubectl kubectl create -f kubernetes/development/cache.yml
+kubectl create -f kubernetes/development/cache.yml
 ```
 
 Set up coordination:
