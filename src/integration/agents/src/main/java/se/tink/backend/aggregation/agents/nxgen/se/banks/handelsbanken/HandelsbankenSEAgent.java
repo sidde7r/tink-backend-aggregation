@@ -181,6 +181,6 @@ public class HandelsbankenSEAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        return HandelsbankenSEIdentityFetcher.fetchIdentityData(persistentStorage, credentials);
+        return HandelsbankenSEIdentityFetcher.fetchIdentityData(persistentStorage);
     }
 }
