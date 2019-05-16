@@ -38,7 +38,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         RedirectThirdPartyAppAuthenticator redirectThirdPartyAppAuthenticator =
-                RedirectThirdPartyAppAuthenticator.createSuccessfulAuthenticator(username);
+                RedirectThirdPartyAppAuthenticator.createSuccessfulAuthenticator(
+                        credentials, username);
 
         return new ThirdPartyAppAuthenticationController<>(
                 redirectThirdPartyAppAuthenticator, supplementalInformationHelper);

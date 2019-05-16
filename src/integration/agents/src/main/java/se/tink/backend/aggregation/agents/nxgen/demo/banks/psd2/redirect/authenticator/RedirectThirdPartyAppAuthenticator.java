@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect.authenticator;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -22,46 +26,56 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
     private static final String DEMO_USERNAME = "tink-demo-user";
     private static final int TOTAL_ATTEMPTS = 5;
 
+    private final Credentials credentials;
     private final String username;
     private final boolean successfulAuthentication;
     private final FailureCause failureCause;
 
     private int attempt = 0;
 
-    private RedirectThirdPartyAppAuthenticator(String username, boolean successfulAuthentication) {
-        this(username, successfulAuthentication, null);
+    private RedirectThirdPartyAppAuthenticator(
+            Credentials credentials, String username, boolean successfulAuthentication) {
+        this(credentials, username, successfulAuthentication, null);
     }
 
     private RedirectThirdPartyAppAuthenticator(
-            String username, boolean successfulAuthentication, FailureCause failureCause) {
+            Credentials credentials,
+            String username,
+            boolean successfulAuthentication,
+            FailureCause failureCause) {
+        this.credentials = credentials;
         this.username = username;
         this.successfulAuthentication = successfulAuthentication;
         this.failureCause = failureCause;
     }
 
     public static RedirectThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
-            String username) {
-        return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.TIMEOUT);
+            Credentials credentials, String username) {
+        return new RedirectThirdPartyAppAuthenticator(
+                credentials, username, false, FailureCause.TIMEOUT);
     }
 
     public static RedirectThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
-            String username) {
-        return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.CANCELLED);
+            Credentials credentials, String username) {
+        return new RedirectThirdPartyAppAuthenticator(
+                credentials, username, false, FailureCause.CANCELLED);
     }
 
     public static RedirectThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
-            String username) {
-        return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.IN_PROGRESS);
+            Credentials credentials, String username) {
+        return new RedirectThirdPartyAppAuthenticator(
+                credentials, username, false, FailureCause.IN_PROGRESS);
     }
 
     public static RedirectThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
-            String username) {
-        return new RedirectThirdPartyAppAuthenticator(username, false, FailureCause.UNKNOWN);
+            Credentials credentials, String username) {
+        return new RedirectThirdPartyAppAuthenticator(
+                credentials, username, false, FailureCause.UNKNOWN);
     }
 
     public static RedirectThirdPartyAppAuthenticator createSuccessfulAuthenticator(
-            String username) {
-        return new RedirectThirdPartyAppAuthenticator(username, true);
+            Credentials credentials, String username) {
+        return new RedirectThirdPartyAppAuthenticator(credentials, username, true);
     }
 
     @Override
@@ -82,6 +96,15 @@ public class RedirectThirdPartyAppAuthenticator implements ThirdPartyAppAuthenti
         }
 
         if (successfulAuthentication || Objects.isNull(failureCause)) {
+            Date sessionExpiryDate =
+                    Date.from(
+                            LocalDateTime.now()
+                                    .plusDays(90)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toInstant());
+
+            credentials.setSessionExpiryDate(sessionExpiryDate);
+
             return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
         }
 
