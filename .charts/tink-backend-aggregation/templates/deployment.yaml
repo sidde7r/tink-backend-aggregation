@@ -248,7 +248,7 @@ spec:
               name: aggregation-secrets
               key: ics-root-ca-password
               optional: true
-        {{- if .Values.agents.volksbank }}
+        {{- if $agentsConfig.volksbank }}
         - name: VOLKSBANK_AIS_CLIENT_ID
           valueFrom:
             secretKeyRef:
