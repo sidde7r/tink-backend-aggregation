@@ -109,8 +109,7 @@ public class SwedbankDefaultBankTransferExecutor extends BaseTransferExecutor
 
         return transferHelper.signAndConfirmNewRecipient(
                 registerTransferRecipientResponse.getLinks(),
-                findNewRecipientFromPaymentResponse(registerTransferRecipientRequest),
-                true);
+                findNewRecipientFromPaymentResponse(registerTransferRecipientRequest));
     }
 
     /**

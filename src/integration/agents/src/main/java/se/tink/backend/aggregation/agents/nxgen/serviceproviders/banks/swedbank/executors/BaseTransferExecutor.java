@@ -85,7 +85,7 @@ public class BaseTransferExecutor {
             if (!confirmTransferLink.isPresent()) {
                 InitiateSignTransferResponse initiateSignTransfer =
                         apiClient.signExternalTransfer(links.getSignOrThrow());
-                links = transferHelper.collectBankId(initiateSignTransfer, null);
+                links = transferHelper.collectBankId(initiateSignTransfer);
 
                 confirmTransferLink = Optional.ofNullable(links.getNext());
 
