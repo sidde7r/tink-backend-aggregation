@@ -73,7 +73,8 @@ public class IkanoApiClient {
         return response.getReference();
     }
 
-    boolean fetchBankIdSession(String reference) throws Exception {
+    boolean fetchBankIdSession(String reference)
+            throws BankIdException, UserErrorException, FatalErrorException {
         String uri = MOBILE_BANK_ID_SESSION_URI + reference;
 
         BankIdSession response =
