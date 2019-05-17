@@ -481,6 +481,19 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(context),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper),
+                // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
+                // connector and if
+                // transactions aren't processed in system. The transaction processing in system will set
+                // the status
+                // to `UPDATED` when transactions have been processed and new statistics are generated.
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c ->
+                                !c.isWaitingOnConnectorTransactions()
+                                        && !c.isSystemProcessingTransactions()),
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
@@ -801,6 +814,20 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper));
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
+        // connector and if
+        // transactions aren't processed in system. The transaction processing in system will set
+        // the status
+        // to `UPDATED` when transactions have been processed and new statistics are generated.
+        commands.add(
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper,
+                        request.getCredentials(),
+                        request.getProvider(),
+                        context,
+                        c ->
+                                !c.isWaitingOnConnectorTransactions()
+                                        && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationMetricName, reportMetricsAgentWorkerCommandState));
