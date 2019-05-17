@@ -39,9 +39,6 @@ public class CredentialsStatusEventListener implements AgentEventListener {
             case AWAITING_THIRD_PARTY_APP_AUTHENTICATION:
             case AWAITING_MOBILE_BANKID_AUTHENTICATION:
             case AWAITING_SUPPLEMENTAL_INFORMATION:
-                signableOperation.setSupplementalInformation(
-                        credentials.getSupplementalInformation());
-
                 context.updateSignableOperationStatus(
                         signableOperation, SignableOperationStatuses.AWAITING_CREDENTIALS, null);
                 break;
