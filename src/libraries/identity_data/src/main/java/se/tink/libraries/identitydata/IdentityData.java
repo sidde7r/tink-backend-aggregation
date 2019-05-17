@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 
 public class IdentityData {
@@ -151,8 +152,10 @@ public class IdentityData {
         StringBuilder fullName = new StringBuilder();
         nameElements.stream()
                 .map(NameElement::getValue)
-                .filter(s -> s.trim().length() > 0)
-                .forEach(s -> fullName.append(" ").append(s.trim()));
+                .filter(s -> !Objects.isNull(s))
+                .map(String::trim)
+                .filter(s -> s.length() > 0)
+                .forEach(s -> fullName.append(" ").append(s));
 
         return fullName.toString().trim();
     }
