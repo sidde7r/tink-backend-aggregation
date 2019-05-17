@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsRepsonse implements TransactionKeyPaginatorResponse<String> {
+public class TransactionsResponse implements TransactionKeyPaginatorResponse<String> {
 
     private List<TransactionEntity> data;
     private TransactionLinksEntity links;
