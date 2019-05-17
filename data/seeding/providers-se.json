@@ -4,7 +4,7 @@
     "providers": [
         {
             "name": "alandsbanken",
-            "className": "nxgen.se.banks.alandsbanken.AlandsBankenSEAgent",
+            "className": "nxgen.se.banks.alandsbanken.keycard.AlandsBankenKeyCardSeAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayName": "Ålandsbanken",
@@ -33,7 +33,7 @@
         },
         {
             "name": "se-alandsbanken-bankid",
-            "className": "nxgen.se.banks.alandsbankenbankid.AlandsBankenSEAgent",
+            "className": "nxgen.se.banks.alandsbanken.bankid.AlandsBankenBankidSeAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Ålandsbanken",

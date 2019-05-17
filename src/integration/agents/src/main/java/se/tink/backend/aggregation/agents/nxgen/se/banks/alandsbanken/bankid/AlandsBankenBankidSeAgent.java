@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbankenbankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken.bankid;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyAgent;
@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AlandsBankenSEAgent extends CrossKeyAgent {
+public class AlandsBankenBankidSeAgent extends CrossKeyAgent {
 
-    public AlandsBankenSEAgent(
+    public AlandsBankenBankidSeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair, new AlandsBankenSEConfiguration());
+        super(request, context, signatureKeyPair, new AlandsBankenBankidSeConfiguration());
     }
 
     @Override

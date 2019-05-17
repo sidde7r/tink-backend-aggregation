@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.CrossKeyCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.identitydata.CrossKeyIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.CrossKeyLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.sessionhandler.CrossKeySessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -21,7 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class CrossKeyAgent extends NextGenerationAgent {
+public abstract class CrossKeyAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
 
     protected final CrossKeyApiClient apiClient;
     protected final CrossKeyConfiguration agentConfiguration;
@@ -99,5 +104,14 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        CrossKeyIdentityDataFetcher fetcher =
+                new CrossKeyIdentityDataFetcher(apiClient, agentConfiguration);
+        return Optional.of(fetcher.fetchIdentityData())
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

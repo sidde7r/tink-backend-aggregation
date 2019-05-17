@@ -148,6 +148,7 @@ junit_test(
         "//src/libraries/date",
         "//src/libraries/enums",
         "//src/libraries/i18n",
+        "//src/libraries/identity_data",
         "//src/libraries/payment:enums",
         "//src/libraries/payment:rpc",
         "//src/libraries/serialization",

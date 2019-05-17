@@ -1,11 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbankenbankid;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.alandsbanken;
 
 import com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -13,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyTransaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -24,29 +24,31 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
-    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSEConfiguration.class);
+public class AlandsBankenSeConfiguration extends CrossKeyConfiguration {
+    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenSeConfiguration.class);
 
     @Override
     public String getBaseUrl() {
-        return AlandsBankenSEConstants.Url.BASE;
+        return AlandsBankenSeConstants.Url.BASE;
     }
 
     @Override
     public LogTag getLoanLogTag() {
-        return AlandsBankenSEConstants.Fetcher.LOAN_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.LOAN_LOGGING;
     }
 
     @Override
     public LogTag getInvestmentPortfolioLogTag() {
-        return AlandsBankenSEConstants.Fetcher.INVESTMENT_PORTFOLIO_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.INVESTMENT_PORTFOLIO_LOGGING;
     }
 
     @Override
     public LogTag getInvestmentInstrumentLogTag() {
-        return AlandsBankenSEConstants.Fetcher.INVESTMENT_INSTRUMENT_LOGGING;
+        return AlandsBankenSeConstants.Fetcher.INVESTMENT_INSTRUMENT_LOGGING;
     }
 
     @Override
@@ -87,6 +89,17 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
     }
 
     @Override
+    public IdentityData parseIdentityData(IdentityDataResponse identityResponse) {
+        if (identityResponse.isFailure()) {
+            return null;
+        }
+        return SeIdentityData.of(
+                identityResponse.getFirstName(),
+                identityResponse.getLastName(),
+                identityResponse.getSsn());
+    }
+
+    @Override
     public Transaction parseTinkTransaction(CrossKeyTransaction transaction) {
         return Transaction.builder()
                 .setAmount(new Amount(transaction.getCurrency(), transaction.getAmount()))
@@ -102,7 +115,7 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
                 LOG.info(
                         String.format(
                                 "%s - %s",
-                                AlandsBankenSEConstants.Fetcher.TRANSACTION_LOGGING,
+                                AlandsBankenSeConstants.Fetcher.TRANSACTION_LOGGING,
                                 SerializationUtils.serializeToString(transaction)));
             }
         } catch (Exception e) {
@@ -156,10 +169,5 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
-    }
-
-    @Override
-    protected Optional<String> getAppVersion() {
-        return Optional.of(AlandsBankenSEConstants.APP_VERSION);
     }
 }
