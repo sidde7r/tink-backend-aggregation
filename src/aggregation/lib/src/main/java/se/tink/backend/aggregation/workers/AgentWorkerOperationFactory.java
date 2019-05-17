@@ -481,11 +481,14 @@ public class AgentWorkerOperationFactory {
                 new LockAgentWorkerCommand(context),
                 new MigrateCredentialsAndAccountsWorkerCommand(
                         context.getRequest(), controllerWrapper),
-                // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
+                // Update the status to `UPDATED` if the credential isn't waiting on transactions
+                // from the
                 // connector and if
-                // transactions aren't processed in system. The transaction processing in system will set
+                // transactions aren't processed in system. The transaction processing in system
+                // will set
                 // the status
-                // to `UPDATED` when transactions have been processed and new statistics are generated.
+                // to `UPDATED` when transactions have been processed and new statistics are
+                // generated.
                 new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper,
                         request.getCredentials(),
