@@ -19,7 +19,7 @@ public abstract class CrosskeyBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String TOKEN = "TOKEN";
+        public static final String TOKEN = "OAUTH_TOKEN";
         public static final String CONSENT = "CONSENT";
     }
 

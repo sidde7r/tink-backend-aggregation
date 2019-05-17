@@ -58,7 +58,7 @@ public final class NordeaBaseConstants {
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
+        public static final String AUTHORIZATION = "AUTHORIZATION";
     }
 
     public static class FormKeys {

@@ -44,7 +44,7 @@ public final class OpenBankProjectConstants {
     }
 
     public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
+        public static final String AUTHORIZATION = "AUTHORIZATION";
         public static final String TOKEN = "token";
         public static final String DIRECT_LOGIN = "DirectLogin token=%s";
     }

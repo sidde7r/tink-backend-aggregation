@@ -18,7 +18,7 @@ public abstract class DeutscheBankConstants {
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String TOKEN = "TOKEN";
+        public static final String TOKEN = "OAUTH_TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 

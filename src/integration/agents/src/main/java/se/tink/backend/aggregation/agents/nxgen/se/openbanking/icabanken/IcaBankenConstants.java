@@ -13,7 +13,7 @@ public final class IcaBankenConstants {
 
     public static class StorageKeys {
         public static final String BASE_URL = "BASE_URL";
-        public static final String TOKEN = "TOKEN";
+        public static final String TOKEN = "OAUTH_TOKEN";
     }
 
     public static class QueryKeys {
