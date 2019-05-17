@@ -37,6 +37,7 @@ public class OmaspAgent extends NextGenerationAgent {
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
+        client.setUserAgent(OmaspConstants.USER_AGENT);
         client.addFilter(new OmaspAccessTokenFilter(sessionStorage));
     }
 
