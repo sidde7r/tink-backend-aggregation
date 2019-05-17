@@ -49,30 +49,6 @@ public class DecoupledThirdPartyAppAuthenticator implements ThirdPartyAppAuthent
         this.failureCause = failureCause;
     }
 
-    public static DecoupledThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(
-            Credentials credentials, String username) {
-        return new DecoupledThirdPartyAppAuthenticator(
-                credentials, username, false, FailureCause.TIMEOUT);
-    }
-
-    public static DecoupledThirdPartyAppAuthenticator createCancelledFailingAuthenticator(
-            Credentials credentials, String username) {
-        return new DecoupledThirdPartyAppAuthenticator(
-                credentials, username, false, FailureCause.CANCELLED);
-    }
-
-    public static DecoupledThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(
-            Credentials credentials, String username) {
-        return new DecoupledThirdPartyAppAuthenticator(
-                credentials, username, false, FailureCause.IN_PROGRESS);
-    }
-
-    public static DecoupledThirdPartyAppAuthenticator createUnknownFailureAuthenticator(
-            Credentials credentials, String username) {
-        return new DecoupledThirdPartyAppAuthenticator(
-                credentials, username, false, FailureCause.UNKNOWN);
-    }
-
     public static DecoupledThirdPartyAppAuthenticator createSuccessfulAuthenticator(
             Credentials credentials, String username) {
         return new DecoupledThirdPartyAppAuthenticator(credentials, username, true);

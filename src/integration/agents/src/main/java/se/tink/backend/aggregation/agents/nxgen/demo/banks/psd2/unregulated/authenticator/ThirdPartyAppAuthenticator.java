@@ -29,35 +29,11 @@ public class ThirdPartyAppAuthenticator
 
     private int attempt = 0;
 
-    private ThirdPartyAppAuthenticator(String username, boolean successfulAuthentication) {
-        this(username, successfulAuthentication, null);
-    }
-
     public ThirdPartyAppAuthenticator(
             String username, boolean successfulAuthentication, FailCause failCause) {
         this.username = username;
         this.successfulAuthentication = successfulAuthentication;
         this.failCause = failCause;
-    }
-
-    public static ThirdPartyAppAuthenticator createTimeoutFailingAuthenticator(String username) {
-        return new ThirdPartyAppAuthenticator(username, false, FailCause.TIMEOUT);
-    }
-
-    public static ThirdPartyAppAuthenticator createCancelledFailingAuthenticator(String username) {
-        return new ThirdPartyAppAuthenticator(username, false, FailCause.CANCELLED);
-    }
-
-    public static ThirdPartyAppAuthenticator createAlreadyInProgressAuthenticator(String username) {
-        return new ThirdPartyAppAuthenticator(username, false, FailCause.IN_PROGRESS);
-    }
-
-    public static ThirdPartyAppAuthenticator createUnknownFailureAuthenticator(String username) {
-        return new ThirdPartyAppAuthenticator(username, false, FailCause.UNKNOWN);
-    }
-
-    public static ThirdPartyAppAuthenticator createSuccessfulAuthenticator(String username) {
-        return new ThirdPartyAppAuthenticator(username, true);
     }
 
     @Override
