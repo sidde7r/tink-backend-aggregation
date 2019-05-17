@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public class FintechblocksConstants {
-    public static final String INTEGRATION_NAME = "fintechblocks";
-
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CurrentAccount")

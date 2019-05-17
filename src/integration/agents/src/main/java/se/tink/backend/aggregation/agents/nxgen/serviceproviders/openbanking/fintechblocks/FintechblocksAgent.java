@@ -3,15 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fi
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.FintechblocksConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.authenticator.FintechblocksAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.configuration.FintechblocksConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.fintechblocks.fetcher.transactionalaccount.FintechblocksTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -19,16 +26,17 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class FintechblocksAgent extends NextGenerationAgent {
+public abstract class FintechblocksAgent extends NextGenerationAgent {
 
     protected final String clientName;
-    protected FintechblocksApiClient apiClient;
+    protected final FintechblocksApiClient apiClient;
 
     protected FintechblocksAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         clientName = request.getProvider().getPayload();
+        apiClient = new FintechblocksApiClient(client, persistentStorage);
     }
 
     @Override
@@ -41,8 +49,10 @@ public class FintechblocksAgent extends NextGenerationAgent {
         apiClient.setConfiguration(getClientConfiguration());
     }
 
+    protected abstract String getIntegrationName();
+
     protected FintechblocksConfiguration getClientConfiguration() {
-        return getClientConfiguration(FintechblocksConstants.INTEGRATION_NAME);
+        return getClientConfiguration(getIntegrationName());
     }
 
     protected FintechblocksConfiguration getClientConfiguration(String integrationName) {
@@ -55,13 +65,35 @@ public class FintechblocksAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        throw new IllegalStateException(ErrorMessages.MISSING_AUTHENTICATOR);
+        final OAuth2AuthenticationController controller =
+                new OAuth2AuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        new FintechblocksAuthenticator(
+                                apiClient, persistentStorage, getClientConfiguration()));
+
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        controller, supplementalInformationHelper),
+                controller);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+        final FintechblocksTransactionalAccountFetcher accountFetcher =
+                new FintechblocksTransactionalAccountFetcher(apiClient);
+
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(accountFetcher, 1))));
     }
 
     @Override
