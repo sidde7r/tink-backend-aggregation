@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Objects;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.SecurityKeyResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.RegisterDeviceResponse;
@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     private static final AggregationLogger LOGGER =
@@ -27,17 +28,17 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
 
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final Credentials credentials;
 
     private SecurityKeyResponseEntity securityKeyEntity;
+    private SessionStorage sessionStorage;
 
     public OmaspKeyCardAuthenticator(
             OmaspApiClient apiClient,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -53,6 +54,7 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
             securityKeyEntity =
                     Preconditions.checkNotNull(
                             loginResponse.getSecurityKey(), "No code card information in response");
+            sessionStorage.put(Storage.FULL_NAME, loginResponse.getPerson().getFullName());
 
             return new KeyCardInitValues(
                     securityKeyEntity.getCardId(), securityKeyEntity.getSecurityKeyIndex());

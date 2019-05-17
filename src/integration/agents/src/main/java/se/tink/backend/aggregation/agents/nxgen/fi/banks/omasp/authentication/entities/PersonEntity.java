@@ -19,4 +19,9 @@ public class PersonEntity {
     public String getLastName() {
         return lastName;
     }
+
+    public String getFullName() {
+        // Omasp sometimes sends the full name in the firstName property, hence this method
+        return lastName == null ? firstName : firstName + " " + lastName;
+    }
 }

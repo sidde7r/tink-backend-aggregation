@@ -33,6 +33,7 @@ public class OmaspAgentTest {
                 .addCredentialField(Key.USERNAME, manager.get(Arg.USERNAME))
                 .addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                 .saveCredentialsAfter(true)
                 .loadCredentialsBefore(true)
                 .expectLoggedIn(false)

@@ -17,6 +17,7 @@ public class OmaspConstants {
     public static final class Storage {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String DEVICE_ID = "device_id";
+        public static final String FULL_NAME = "full_name";
     }
 
     public static final class LogTags {
