@@ -7,6 +7,8 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.BaseResponse;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntities extends BaseResponse {
@@ -37,14 +39,13 @@ public class CardEntities extends BaseResponse {
         throw new IkanoApiAgent.AccountRelationNotFoundException();
     }
 
-    public void ensureHasCards() throws IkanoApiAgent.CardNotFoundException {
+    private void ensureHasCards() throws LoginException {
         if (cards == null || cards.isEmpty()) {
-            throw new IkanoApiAgent.CardNotFoundException();
+            throw LoginError.NOT_CUSTOMER.exception();
         }
     }
 
-    public void keepSelectedCardTypes(CardType cardType)
-            throws IkanoApiAgent.CardNotFoundException {
+    public void keepSelectedCardTypes(CardType cardType) throws LoginException {
         ensureHasCards();
 
         List<CardEntity> cardsWithCorrectType = Lists.newArrayList();

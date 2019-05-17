@@ -19,6 +19,7 @@ public class CardEntity {
     private double creditLimit;
     private double availableCredit;
     private String cardType;
+    private String customerName;
     private List<TransactionEntity> transactions;
 
     public Account toTinkAccount() {
@@ -50,12 +51,21 @@ public class CardEntity {
         return tinkTransactions;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
     public boolean isRelatedTo(Account account) {
         return agreementNumber.equals(account.getBankId());
     }
 
     private double calculateBalance() {
         return availableCredit - creditLimit;
+    }
+
+    @JsonProperty("_CustomerName")
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     @JsonProperty("_ProductCode")

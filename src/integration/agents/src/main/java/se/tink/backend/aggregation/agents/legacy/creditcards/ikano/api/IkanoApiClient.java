@@ -7,6 +7,9 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent.AccountRelationNotFoundException;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.FatalErrorException;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdReference.BankIdReference;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdSession.BankIdSession;
@@ -16,6 +19,8 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engage
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.registerCard.RegisteredCards;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoCrypt;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
@@ -52,7 +57,8 @@ public class IkanoApiClient {
         this.userAgent = userAgent;
     }
 
-    public String authenticateWithBankId() throws Exception {
+    String authenticateWithBankId()
+            throws BankIdException, UserErrorException, FatalErrorException {
         BankIdReference response =
                 createClientRequest(MOBILE_BANK_ID_REFERENCE_URI)
                         .header("Username", credentials.getUsername())
@@ -67,7 +73,8 @@ public class IkanoApiClient {
         return response.getReference();
     }
 
-    public boolean fetchBankIdSession(String reference) throws Exception {
+    boolean fetchBankIdSession(String reference)
+            throws BankIdException, UserErrorException, FatalErrorException {
         String uri = MOBILE_BANK_ID_SESSION_URI + reference;
 
         BankIdSession response =
@@ -95,7 +102,7 @@ public class IkanoApiClient {
         return false;
     }
 
-    public CardList fetchCards() throws Exception {
+    public CardList fetchCards() throws LoginException, UserErrorException, FatalErrorException {
         CardList response =
                 createClientRequest(CARDS_URI)
                         .header("SessionKey", sessionKey)
@@ -113,7 +120,7 @@ public class IkanoApiClient {
         return response;
     }
 
-    public void registerCards(List<Card> cards) throws Exception {
+    public void registerCards(List<Card> cards) {
         for (Card card : cards) {
             RegisterCardRequest request = new RegisterCardRequest();
             request.setCardType(card.getCardType());
@@ -128,7 +135,7 @@ public class IkanoApiClient {
         }
     }
 
-    private void fetchCardsAndTransactions(int limit) throws Exception {
+    private void fetchCardsAndTransactions(int limit) throws LoginException {
         cardsAndTransactionsResponse =
                 createClientRequest(ENGAGEMENTS_URI + limit)
                         .header("SessionKey", sessionKey)
@@ -138,7 +145,7 @@ public class IkanoApiClient {
         cardsAndTransactionsResponse.keepSelectedCardTypes(cardType);
     }
 
-    public List<Account> fetchAccounts() throws Exception {
+    public List<Account> fetchAccounts() throws LoginException {
         if (cardsAndTransactionsResponse == null
                 || cardsAndTransactionsResponse.getCards().isEmpty()) {
             fetchCardsAndTransactions(DEFAULT_LIMIT);
@@ -147,7 +154,8 @@ public class IkanoApiClient {
         return cardsAndTransactionsResponse.getTinkAccounts();
     }
 
-    public List<Transaction> fetchMoreTransactionsFor(Account account) throws Exception {
+    List<Transaction> fetchMoreTransactionsFor(Account account)
+            throws AccountRelationNotFoundException, LoginException {
         if (!hasMoreTransactionHistory(account)) {
             return getTransactionsFor(account);
         }
@@ -168,7 +176,16 @@ public class IkanoApiClient {
         return cardsAndTransactionsResponse.getCardFor(account).getTinkTransactions();
     }
 
-    public boolean hasMoreTransactionHistory(Account account)
+    public CardEntities getResponse() throws LoginException {
+        if (cardsAndTransactionsResponse == null
+                || cardsAndTransactionsResponse.getCards().isEmpty()) {
+            fetchCardsAndTransactions(DEFAULT_LIMIT);
+        }
+
+        return cardsAndTransactionsResponse;
+    }
+
+    boolean hasMoreTransactionHistory(Account account)
             throws IkanoApiAgent.AccountRelationNotFoundException {
         if (cardsAndTransactionsResponse == null) {
             throw new IllegalStateException(
