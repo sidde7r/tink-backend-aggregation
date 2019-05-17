@@ -42,15 +42,15 @@ public class SeIdentityData extends IdentityData {
      * number itself is not validated.
      *
      * @param firstName First name
-     * @param surName Last name
+     * @param surname Last name
      * @param ssn SSN (personnummer) with or without dashes/whitespace/etc, of length 10 or 12
      * @return Swedish Identity Data object with given name, reformatted SSN and date of birth
      */
-    public static IdentityData of(String firstName, String surName, String ssn) {
+    public static IdentityData of(String firstName, String surname, String ssn) {
         return builder()
                 .setSsn(ssn)
                 .addFirstNameElement(firstName)
-                .addSurnameElement(surName)
+                .addSurnameElement(surname)
                 .setDateOfBirth(getBirthDateFromSsn(ssn))
                 .build();
     }
