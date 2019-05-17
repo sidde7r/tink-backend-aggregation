@@ -42,15 +42,15 @@ public class SeIdentityData extends IdentityData {
      * number itself is not validated.
      *
      * @param firstName First name
-     * @param lastName Last name
+     * @param surname Last name
      * @param ssn SSN (personnummer) with or without dashes/whitespace/etc, of length 10 or 12
      * @return Swedish Identity Data object with given name, reformatted SSN and date of birth
      */
-    public static IdentityData of(String firstName, String lastName, String ssn) {
+    public static IdentityData of(String firstName, String surname, String ssn) {
         return builder()
                 .setSsn(ssn)
                 .addFirstNameElement(firstName)
-                .addSurnameElement(lastName)
+                .addSurnameElement(surname)
                 .setDateOfBirth(getBirthDateFromSsn(ssn))
                 .build();
     }
@@ -71,10 +71,10 @@ public class SeIdentityData extends IdentityData {
             }
         }
 
-        Preconditions.checkState(
+        Preconditions.checkArgument(
                 trimmedSsn.length() == 12, "SSN of invalid length %s", trimmedSsn.length());
 
-        Preconditions.checkState(trimmedSsn.matches(SSN_PATTERN), "Invalid SSN");
+        Preconditions.checkArgument(trimmedSsn.matches(SSN_PATTERN), "Invalid SSN");
 
         // SSN has valid format
         return trimmedSsn;

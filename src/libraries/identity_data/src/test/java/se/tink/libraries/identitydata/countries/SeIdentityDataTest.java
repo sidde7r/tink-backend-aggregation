@@ -19,7 +19,7 @@ public class SeIdentityDataTest {
         assertEquals("195606062341", SeIdentityData.processSsn("560606-2341"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void invalidSsn() {
         SeIdentityData.processSsn("19561232-0000");
     }
