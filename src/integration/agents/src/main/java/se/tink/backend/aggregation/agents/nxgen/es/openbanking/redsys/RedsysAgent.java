@@ -41,9 +41,7 @@ public final class RedsysAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://127.0.0.1:8888/");
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
