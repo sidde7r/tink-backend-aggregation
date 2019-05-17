@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.VolvoFinansBankIdAutenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.VolvoFinansCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.VolvoFinansTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.CustomerResponse;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -19,8 +24,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.countries.SeIdentityData;
 
-public class VolvoFinansAgent extends NextGenerationAgent {
+public class VolvoFinansAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final VolvoFinansApiClient apiClient;
 
@@ -88,5 +94,15 @@ public class VolvoFinansAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        // The keepAlive method fetches customer data, so we can just use that
+        return Optional.ofNullable(apiClient.keepAlive())
+                .map(CustomerResponse::getName)
+                .map(name -> SeIdentityData.of(name, credentials.getField(Key.USERNAME)))
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 }
