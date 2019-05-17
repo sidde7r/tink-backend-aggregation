@@ -53,15 +53,15 @@ public class FiIdentityData extends IdentityData {
      * </ol>
      *
      * @param firstName First name
-     * @param lastName Last name
+     * @param surName Last name
      * @param ssn SSN (henkilötunnus) with or without surrounding whitespace, of length 11
      * @return Finnish Identity Data object with given name, reformatted SSN and date of birth
      */
-    public static IdentityData of(String firstName, String lastName, String ssn) {
+    public static IdentityData of(String firstName, String surName, String ssn) {
         return builder()
                 .setSsn(ssn)
                 .addFirstNameElement(firstName)
-                .addSurnameElement(lastName)
+                .addSurnameElement(surName)
                 .setDateOfBirth(getBirthDateFromSsn(ssn))
                 .build();
     }
@@ -118,13 +118,13 @@ public class FiIdentityData extends IdentityData {
         final String preProcessedSsn = ssn.trim().toUpperCase();
         final String trimmedSsn = preProcessedSsn.replaceAll("[^\\dA-Z+-]", "");
 
-        Preconditions.checkArgument(validSsn(trimmedSsn), "Not a valid SSN");
+        Preconditions.checkArgument(isValidSsn(trimmedSsn), "Not a valid SSN");
 
         // SSN has matching format after pre-processing (this does not mean it is validated)
         return trimmedSsn;
     }
 
-    private static boolean validSsn(String trimmedSsn) {
+    private static boolean isValidSsn(String trimmedSsn) {
         Preconditions.checkArgument(
                 trimmedSsn.length() == 11, "SSN of invalid length: %s", trimmedSsn.length());
 
@@ -134,7 +134,7 @@ public class FiIdentityData extends IdentityData {
         int digits = Integer.parseInt(trimmedSsn.substring(0, 6) + trimmedSsn.substring(7, 10));
         char checksumChar = trimmedSsn.substring(10, 11).charAt(0);
 
-        return validControlChar(digits, checksumChar);
+        return isValidControlChar(digits, checksumChar);
     }
 
     public static LocalDate getBirthDateFromSsn(String ssn) {
@@ -164,7 +164,7 @@ public class FiIdentityData extends IdentityData {
         }
     }
 
-    private static boolean validControlChar(int num, char controlChar) {
+    private static boolean isValidControlChar(int num, char controlChar) {
         int actualRemainder = num % 31;
         int expectedRemainder = getRemainderFromControlChar(controlChar);
 
