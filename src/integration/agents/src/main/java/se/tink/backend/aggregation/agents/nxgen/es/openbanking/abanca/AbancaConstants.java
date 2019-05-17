@@ -5,7 +5,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public abstract class AbancaConstants {
+public final class AbancaConstants {
+
+    private AbancaConstants() {
+        throw new AssertionError();
+    }
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
