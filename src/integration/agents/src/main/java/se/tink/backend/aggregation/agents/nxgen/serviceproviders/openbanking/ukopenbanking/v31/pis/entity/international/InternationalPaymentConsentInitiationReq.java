@@ -41,8 +41,7 @@ public class InternationalPaymentConsentInitiationReq {
                         .withCreditor(creditorAccount.toCreditor())
                         .withCurrency(currencyOfTransfer)
                         .putInTemporaryStorage(
-                                UkOpenBankingV31Constants.Storage.CONSENT_ID,
-                                consentId)
+                                UkOpenBankingV31Constants.Storage.CONSENT_ID, consentId)
                         .build());
     }
 }

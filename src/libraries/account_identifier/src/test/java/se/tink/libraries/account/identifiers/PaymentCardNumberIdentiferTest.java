@@ -1,13 +1,14 @@
 package se.tink.libraries.account.identifiers;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import se.tink.libraries.account.AccountIdentifier;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import se.tink.libraries.account.AccountIdentifier;
 
 public class PaymentCardNumberIdentiferTest {
 

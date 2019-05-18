@@ -17,8 +17,7 @@ public class DomesticPaymentInitiation {
      * transaction. OB: The Faster Payments Scheme can only access 31 characters for the
      * EndToEndIdentification field
      *
-     * minLength: 1
-     * maxLength: 35
+     * <p>minLength: 1 maxLength: 35
      */
     private String endToEndIdentification;
     /**
@@ -28,8 +27,7 @@ public class DomesticPaymentInitiation {
      * refer to the individual instruction. It can be included in several messages related to the
      * instruction.
      *
-     * minLength: 1
-     * maxLength: 35
+     * <p>minLength: 1 maxLength: 35
      */
     private String instructionIdentification;
 

@@ -37,8 +37,7 @@ public class PaymentInitiationExtended {
                 .withAmount(instructedAmount.toTinkAmount())
                 .withExecutionDate(parseDate(expectedExecutionDateTime))
                 .putInTemporaryStorage(
-                        UkOpenBankingV31Constants.Storage.PAYMENT_ID,
-                        internationalPaymentId)
+                        UkOpenBankingV31Constants.Storage.PAYMENT_ID, internationalPaymentId)
                 .build();
     }
 

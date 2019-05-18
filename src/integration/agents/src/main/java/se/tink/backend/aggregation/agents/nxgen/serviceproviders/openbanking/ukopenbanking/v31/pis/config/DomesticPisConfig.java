@@ -31,8 +31,7 @@ public class DomesticPisConfig implements UKPisConfig {
     public Payment fetchPayment(Payment payment) throws PaymentException {
         // If payment has already been executed, fetch payment. Otherwise fetch consent
         String paymentId =
-                payment
-                        .getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
+                payment.getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
 
         if (!Strings.isNullOrEmpty(paymentId)) {
             return client.getDomesticPayment(paymentId, DomesticPaymentResponse.class)
@@ -55,18 +54,13 @@ public class DomesticPisConfig implements UKPisConfig {
 
     @Override
     public Payment executePayment(
-            Payment payment,
-            String endToEndIdentification,
-            String instructionIdentification)
+            Payment payment, String endToEndIdentification, String instructionIdentification)
             throws PaymentException {
         String consentId = getConsentId(payment);
 
         DomesticPaymentRequest request =
                 new DomesticPaymentRequest(
-                        payment,
-                        consentId,
-                        endToEndIdentification,
-                        instructionIdentification);
+                        payment, consentId, endToEndIdentification, instructionIdentification);
 
         return client.executeDomesticPayment(request, DomesticPaymentResponse.class)
                 .toTinkPayment();

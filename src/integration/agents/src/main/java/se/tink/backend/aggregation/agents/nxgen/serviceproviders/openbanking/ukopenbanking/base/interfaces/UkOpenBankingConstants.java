@@ -19,19 +19,23 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
         public static final String PAYMENTS = "/payments";
         public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
 
-        //Domestic
+        // Domestic
         public static final String DOMESTIC_PAYMENT_CONSENTS = "/domestic-payment-consents";
-        public static final String DOMESTIC_PAYMENT_CONSENT_STATUS = "/domestic-payment-consents/%s";
-        public static final String DOMESTIC_PAYMENT_FUNDS_CONFIRMATION = "/domestic-payment-consents/%s/funds-confirmation";
+        public static final String DOMESTIC_PAYMENT_CONSENT_STATUS =
+                "/domestic-payment-consents/%s";
+        public static final String DOMESTIC_PAYMENT_FUNDS_CONFIRMATION =
+                "/domestic-payment-consents/%s/funds-confirmation";
         public static final String DOMESTIC_PAYMENT = "/domestic-payments";
         public static final String DOMESTIC_PAYMENT_STATUS = "/domestic-payments/%s";
 
-        //International
-        public static final String INTERNATIONAL_PAYMENT_CONSENTS = "/international-payment-consents";
-        public static final String INTERNATIONAL_PAYMENT_CONSENT_STATUS = "/international-payment-consents/%s";
-        public static final String INTERNATIONAL_PAYMENT_FUNDS_CONFIRMATION = "/international-payment-consents/%s/funds-confirmation";
+        // International
+        public static final String INTERNATIONAL_PAYMENT_CONSENTS =
+                "/international-payment-consents";
+        public static final String INTERNATIONAL_PAYMENT_CONSENT_STATUS =
+                "/international-payment-consents/%s";
+        public static final String INTERNATIONAL_PAYMENT_FUNDS_CONFIRMATION =
+                "/international-payment-consents/%s/funds-confirmation";
         public static final String INTERNATIONAL_PAYMENT = "/international-payments";
         public static final String INTERNATIONAL_PAYMENT_STATUS = "/international-payments/%s";
-
     }
 }

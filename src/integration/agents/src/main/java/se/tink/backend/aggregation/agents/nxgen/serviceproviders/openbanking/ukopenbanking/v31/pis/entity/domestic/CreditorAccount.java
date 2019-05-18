@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.payment.rpc.Creditor;
 
-
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class CreditorAccount {

@@ -9,12 +9,9 @@ public interface UKPisConfig {
 
     Payment fetchPayment(Payment payment) throws PaymentException;
 
-    FundsConfirmationResponse fetchFundsConfirmation(Payment payment)
-            throws PaymentException;
+    FundsConfirmationResponse fetchFundsConfirmation(Payment payment) throws PaymentException;
 
     Payment executePayment(
-            Payment payment,
-            String endToEndIdentification,
-            String instructionIdentification)
+            Payment payment, String endToEndIdentification, String instructionIdentification)
             throws PaymentException;
 }

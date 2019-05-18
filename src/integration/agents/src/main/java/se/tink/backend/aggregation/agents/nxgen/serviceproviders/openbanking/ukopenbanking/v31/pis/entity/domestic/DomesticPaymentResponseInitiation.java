@@ -25,8 +25,7 @@ public class DomesticPaymentResponseInitiation {
                 .withReference(remittanceInformation.getReference())
                 .withCreditor(creditorAccount.toCreditor())
                 .withAmount(instructedAmount.toTinkAmount())
-                .putInTemporaryStorage(
-                        UkOpenBankingV31Constants.Storage.CONSENT_ID, consentId)
+                .putInTemporaryStorage(UkOpenBankingV31Constants.Storage.CONSENT_ID, consentId)
                 .putInTemporaryStorage(
                         UkOpenBankingV31Constants.Storage.PAYMENT_ID, domesticPaymentId)
                 .build();
