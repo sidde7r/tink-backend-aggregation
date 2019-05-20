@@ -1,38 +1,51 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class DanskeBankAgentTest {
+    private enum Arg {
+        USERNAME,
+        PASSWORD,
+        MARKET // "fi" or "dk"
+    }
 
-    private final String FI_MARKET = "fi";
-    private final String FI_PROVIDER_NAME = "fi-danskebank-codecard";
-
-    private final String DK_MARKET = "dk";
-    private final String DK_PROVIDER_NAME = "dk-danskebank-servicecode";
-
-    private final String TEST_USERNAME = "NNNN";
-    private final String TEST_PASSWORD = "NNNN";
+    private final Map<String, String> providerName =
+            new ImmutableMap.Builder<String, String>()
+                    .put("fi", "fi-danskebank-codecard")
+                    .put("dk", "dk-danskebank-servicecode")
+                    .build();
 
     private AgentIntegrationTest.Builder builder;
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
+        manager.before();
+        final String market = manager.get(Arg.MARKET);
+        assert providerName.containsKey(market);
+
         builder =
-                new AgentIntegrationTest.Builder(DK_MARKET, DK_PROVIDER_NAME)
-                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
+                new AgentIntegrationTest.Builder(market, providerName.get(market))
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
 
     @Test
     public void testRefresh() throws Exception {
-
         builder.build().testRefresh();
     }
 }
