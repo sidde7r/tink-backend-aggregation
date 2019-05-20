@@ -74,10 +74,7 @@ public final class SebApiClient {
 
         String url =
                 new URL(SebConstants.Urls.TRANSACTIONS)
-                        .parameter(
-                                SebConstants.IdTags.ACCOUNT_ID,
-                                account.getFromTemporaryStorage(
-                                        SebConstants.StorageKeys.ACCOUNT_ID))
+                        .parameter(SebConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier())
                         .toString();
 
         return fetchTransactions(url);

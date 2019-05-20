@@ -5,11 +5,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.util.Strings;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -56,15 +60,20 @@ public class AccountsEntity {
     private LinksEntity links;
 
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(bban)
-                .setBalance(getAvailableBalance())
-                .setAlias(getName())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(AccountTypes.CHECKING))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(bban)
+                                .withAccountName(name)
+                                .addIdentifier(new SwedishIdentifier(bban))
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(getAvailableBalance()))
                 .addHolderName(getOwnerName())
-                .setApiIdentifier(bban)
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(bban)
                 .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
