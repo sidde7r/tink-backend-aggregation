@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class LiquidationDataEntity {
+public class GenericLiquidationDataEntity {
 
     @JsonProperty("saldoPrepago")
     private double prepaidAmount;
@@ -28,9 +28,5 @@ public class LiquidationDataEntity {
 
     public Amount getAvailableCredit() {
         return Amount.inEUR(availableCredit);
-    }
-
-    public Amount getBalance() {
-        return Amount.inEUR(balance);
     }
 }

@@ -70,7 +70,7 @@ public class GenericCardEntity {
     private String tarMovilType;
 
     @JsonProperty("datosLiquidacion")
-    private LiquidationDataEntity liquidationData;
+    private GenericLiquidationDataEntity liquidationData;
 
     @JsonProperty("refValIdtarjeta")
     private String valIdtarjeta;
@@ -112,9 +112,9 @@ public class GenericCardEntity {
     @JsonProperty("idProveedorTarMovil")
     private String idMobileTarSupplier;
 
-    public CreditCardAccount toTinkCard() {
+    public CreditCardAccount toTinkCard(Amount balance) {
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
-                .setBalance(this.getBalance())
+                .setBalance(balance)
                 .setAvailableCredit(this.getAvailableCredit())
                 .setBankIdentifier(refValNumtarjeta)
                 .build();
@@ -134,7 +134,7 @@ public class GenericCardEntity {
                 : liquidationData.getAvailableCredit();
     }
 
-    private Amount getBalance() {
-        return liquidationData.getBalance();
+    public String getRefValIdContract() {
+        return refValIdContract;
     }
 }

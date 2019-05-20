@@ -2,10 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.credit
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.CardLiquidationDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.GenericCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.LiquidationDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -14,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.amount.Amount;
 
 public class LaCaixaCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
@@ -28,7 +35,11 @@ public class LaCaixaCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            return apiClient.fetchCards().toTinkCards();
+            GenericCardsResponse cardsResponse = apiClient.fetchCards();
+            return cardsResponse.getCards().stream()
+                    .filter(GenericCardEntity::isCreditCard)
+                    .map(card -> card.toTinkCard(fetchBalanceForCard(card)))
+                    .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
             HttpResponse response = hre.getResponse();
@@ -43,6 +54,17 @@ public class LaCaixaCreditCardFetcher
 
             throw hre;
         }
+    }
+
+    private Amount fetchBalanceForCard(GenericCardEntity card) {
+        final CardLiquidationsResponse liquidations =
+                apiClient.fetchCardLiquidations(card.getRefValIdContract(), true);
+        final CardLiquidationDataEntity liquidation = liquidations.getNextFutureLiquidation();
+        final String liquidationDateValue = liquidation.getEndDate().getValue();
+        final LiquidationDetailResponse liquidationDetail =
+                apiClient.fetchCardLiquidationDetail(
+                        liquidations.getRefValNumContract(), liquidationDateValue);
+        return Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt()).negate();
     }
 
     @Override
