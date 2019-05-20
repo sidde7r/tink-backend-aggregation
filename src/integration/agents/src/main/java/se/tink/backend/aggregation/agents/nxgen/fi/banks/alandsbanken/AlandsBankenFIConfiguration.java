@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyTransaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.rpc.IdentityDataResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -23,6 +24,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.identitydata.IdentityData;
+import se.tink.libraries.identitydata.countries.FiIdentityData;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
@@ -156,5 +159,17 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
                 .setInitialDate(loanDetails.getOpeningDate())
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
+    }
+
+    @Override
+    public IdentityData parseIdentityData(IdentityDataResponse identityResponse) {
+        if (identityResponse.isFailure()) {
+            return null;
+        }
+
+        return FiIdentityData.of(
+                identityResponse.getFirstName(),
+                identityResponse.getLastName(),
+                identityResponse.getSsn());
     }
 }
