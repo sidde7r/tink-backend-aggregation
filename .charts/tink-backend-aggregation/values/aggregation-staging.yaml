@@ -17,7 +17,9 @@ s3StorageConfiguration:
 agents:
   icsConfiguration: true
   starling:
-      redirectUrl: tink://thirdparty/callback
+    redirectUrl: tink://thirdparty/callback
+  volksbank:
+    redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   demoFakeBank:
     baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
 
