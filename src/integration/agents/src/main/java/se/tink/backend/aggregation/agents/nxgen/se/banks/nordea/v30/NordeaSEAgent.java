@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.NordeaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.ei
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.NordeaEInvoiceFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.identitydata.NordeaSeIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.NordeaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.NordeaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.NordeaTransactionFetcher;
@@ -33,16 +36,21 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NordeaSEAgent extends NextGenerationAgent implements RefreshEInvoiceExecutor {
+public class NordeaSEAgent extends NextGenerationAgent
+        implements RefreshEInvoiceExecutor, RefreshIdentityDataExecutor {
     private final NordeaSEApiClient apiClient;
 
     public NordeaSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new NordeaSEApiClient(client, sessionStorage);
+        configureHttpClient(client);
     }
+
+    private void configureHttpClient(final TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -129,5 +137,11 @@ public class NordeaSEAgent extends NextGenerationAgent implements RefreshEInvoic
                         new NordeaBankTransferExecutor(apiClient, catalog, executorHelper),
                         new NordeaApproveEInvoiceExecutor(apiClient, catalog, executorHelper),
                         null));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                new NordeaSeIdentityDataFetcher(apiClient, credentials).fetchIdentityData());
     }
 }

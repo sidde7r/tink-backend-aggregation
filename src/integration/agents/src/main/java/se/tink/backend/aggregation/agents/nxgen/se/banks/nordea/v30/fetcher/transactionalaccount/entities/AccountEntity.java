@@ -60,6 +60,10 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonProperty private String currency;
     @JsonProperty private List<AccountOwnerEntity> roles;
 
+    public List<AccountOwnerEntity> getRoles() {
+        return roles;
+    }
+
     @JsonIgnore
     public PermissionsEntity getPermissions() {
         return permissions;

@@ -1,29 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
 public class NordeaSEAgentTest {
-    private static String USERNAME = "";
+    private AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("se", "se-nordea-bankid")
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false)
+                    .doLogout(true);
 
-    private AgentIntegrationTest.Builder builder;
+    private enum Arg {
+        USERNAME // 12 digit SSN
+    }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Before
     public void setup() {
-        builder =
-                new AgentIntegrationTest.Builder("se", "nordea-bankid")
-                        .addCredentialField(Field.Key.USERNAME, USERNAME)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .doLogout(true);
+        manager.before();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build().testRefresh();
+        builder.addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
     }
 }
