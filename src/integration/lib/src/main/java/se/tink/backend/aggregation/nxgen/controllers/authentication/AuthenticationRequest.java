@@ -6,9 +6,9 @@ import se.tink.backend.agents.rpc.Credentials;
 /**
  * In progressive authentication, carry request information such as step, userInputs and credential.
  */
-public class AuthenticationRequest {
-    private String step;
-    private List<String> userInputs;
+public final class AuthenticationRequest {
+    private final String step;
+    private final List<String> userInputs;
     private Credentials credentials;
 
     public AuthenticationRequest(String step, List<String> userInputs) {
