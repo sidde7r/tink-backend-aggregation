@@ -21,7 +21,7 @@ public class SwedbankTransactionFetcher implements TransactionDatePaginator<Tran
         try { // TODO Remove for prod - sandbox request per second limitation
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
 
         return apiClient.getTransactions(account.getAccountNumber(), fromDate, toDate);
