@@ -14,12 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class CrosskeyTransactionsResponse implements PaginatorResponse {
+public class CrosskeyTransactionsResponse {
 
     private TransactionDataEntity data;
     private LinksEntity links;
@@ -27,18 +26,12 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
 
     @JsonIgnore private TransactionTypeEntity transactionType;
 
-    @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
                 .orElse(Collections.emptyList()).stream()
                 .filter(getTransactionFilter())
                 .map(transactionEntity -> transactionEntity.toTinkTransaction(transactionType))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
     }
 
     public CrosskeyTransactionsResponse setTransactionType(TransactionTypeEntity transactionType) {

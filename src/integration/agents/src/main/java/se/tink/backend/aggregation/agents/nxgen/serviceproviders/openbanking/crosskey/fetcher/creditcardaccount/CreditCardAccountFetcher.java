@@ -50,8 +50,7 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
         return CreditCardAccount.builder(uniqueIdentifier)
                 .setAccountNumber(uniqueIdentifier)
                 .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
-                .setBankIdentifier(
-                        accountEntity.getAccountId()) // TODO: To apiIdentifier once possible
+                .setBankIdentifier(accountEntity.getAccountId())
                 .build();
     }
 }

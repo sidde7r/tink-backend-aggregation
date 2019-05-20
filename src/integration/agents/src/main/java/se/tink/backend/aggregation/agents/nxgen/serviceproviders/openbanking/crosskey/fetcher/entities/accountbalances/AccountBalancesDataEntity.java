@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalancesDataEntity {
 
-    @JsonProperty("balance")
+    @JsonProperty("Balance")
     private List<AccountBalanceEntity> balances;
 
     public List<AccountBalanceEntity> getBalances() {

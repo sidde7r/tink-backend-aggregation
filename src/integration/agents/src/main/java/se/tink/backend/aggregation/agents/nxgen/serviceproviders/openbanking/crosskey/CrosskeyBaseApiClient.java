@@ -1,12 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Encryption;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.OIDCValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryKeys;
@@ -28,9 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -205,69 +201,29 @@ public class CrosskeyBaseApiClient {
         return createRequestInSession(url).get(CrosskeyAccountBalancesResponse.class);
     }
 
-    public PaginatorResponse fetchCreditCardTransactions(
-            CreditCardAccount account, Date fromDate, Date toDate) {
-        final AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
+    public CrosskeyTransactionsResponse fetchCreditCardTransactions(CreditCardAccount account) {
 
-        final Date restrictedFromDate =
-                DateUtils.getRestrictedDate(
-                        fromDate,
-                        accessConsentFromSession.getData().getTransactionFromDateTime(),
-                        Date::after);
-        final Date restrictedToDate =
-                DateUtils.getRestrictedDate(
-                        toDate,
-                        accessConsentFromSession.getData().getTransactionToDateTime(),
-                        Date::before);
-
-        if (toDate.before(fromDate)) {
-            return new CrosskeyTransactionsResponse();
-        }
-
-        // TODO Use apiIdentifier once framework is updated
-        return getTransactionsResponse(account.getBankIdentifier(), fromDate, toDate)
-                .setTransactionType(TransactionTypeEntity.CREDIT);
-    }
-
-    public PaginatorResponse fetchTransactionalAccountTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
-        final AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
-
-        final Date restrictedFromDate =
-                DateUtils.getRestrictedDate(
-                        fromDate,
-                        accessConsentFromSession.getData().getTransactionFromDateTime(),
-                        Date::after);
-
-        final Date restrictedToDate =
-                DateUtils.getRestrictedDate(
-                        toDate,
-                        accessConsentFromSession.getData().getTransactionToDateTime(),
-                        Date::before);
-
-        if (toDate.before(fromDate)) {
-            return new CrosskeyTransactionsResponse();
-        }
-
-        return getTransactionsResponse(account.getApiIdentifier(), fromDate, toDate)
-                .setTransactionType(TransactionTypeEntity.DEBIT);
-    }
-
-    private CrosskeyTransactionsResponse getTransactionsResponse(
-            String apiIdentifier, Date fromDate, Date toDate) {
         final String baseApiUrl = getConfiguration().getBaseAPIUrl();
         final URL url =
                 new URL(baseApiUrl + Urls.ACCOUNT_TRANSACTIONS)
-                        .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier);
+                        .parameter(UrlParameters.ACCOUNT_ID, account.getApiIdentifier());
 
         return createRequestInSession(url)
-                .queryParam(
-                        QueryKeys.FROM_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
-                .queryParam(
-                        QueryKeys.TO_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
-                .get(CrosskeyTransactionsResponse.class);
+                .get(CrosskeyTransactionsResponse.class)
+                .setTransactionType(TransactionTypeEntity.CREDIT);
+    }
+
+    public CrosskeyTransactionsResponse fetchTransactionalAccountTransactions(
+            TransactionalAccount account) {
+
+        final String baseApiUrl = getConfiguration().getBaseAPIUrl();
+        final URL url =
+                new URL(baseApiUrl + Urls.ACCOUNT_TRANSACTIONS)
+                        .parameter(UrlParameters.ACCOUNT_ID, account.getApiIdentifier());
+
+        return createRequestInSession(url)
+                .get(CrosskeyTransactionsResponse.class)
+                .setTransactionType(TransactionTypeEntity.DEBIT);
     }
 
     private AccessConsentResponse getConsent(
