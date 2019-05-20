@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
@@ -66,19 +65,10 @@ public class AccountEntity {
         if (balances == null) {
             return new Amount(currency, 0.0);
         }
-        Optional<BalanceEntity> lastBalance =
-                balances.stream().max(Comparator.comparing(BalanceEntity::getReferenceDate));
-        return lastBalance.map(BalanceEntity::getAmount).orElse(new Amount(currency, 0.0));
-    }
-
-    @JsonIgnore
-    private String getAccountNumber() {
-        return Optional.ofNullable(iban).filter(StringUtils::isNotEmpty).orElse(bban);
-    }
-
-    @JsonIgnore
-    private String getAlias() {
-        return Optional.ofNullable(name).filter(StringUtils::isNotEmpty).orElse(getAccountNumber());
+        return balances.stream()
+                .max(Comparator.comparing(BalanceEntity::getReferenceDate))
+                .map(BalanceEntity::getAmount)
+                .orElse(new Amount(currency, 0.0));
     }
 
     @JsonIgnore
@@ -90,14 +80,13 @@ public class AccountEntity {
     private TransactionalAccount toCheckingAccount() {
         AccountIdentifier accountIdentifier =
                 AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-        String accountNumber = getAccountNumber();
 
         CheckingBuildStep builder =
                 CheckingAccount.builder()
-                        .setUniqueIdentifier(accountNumber)
-                        .setAccountNumber(accountNumber)
+                        .setUniqueIdentifier(iban)
+                        .setAccountNumber(iban)
                         .setBalance(getLatestBalance())
-                        .setAlias(getAlias())
+                        .setAlias(name)
                         .addAccountIdentifier(accountIdentifier)
                         .setApiIdentifier(resourceId);
 
@@ -116,14 +105,13 @@ public class AccountEntity {
     private TransactionalAccount toSavingsAccount() {
         AccountIdentifier accountIdentifier =
                 AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
-        String accountNumber = getAccountNumber();
 
         SavingsBuildStep builder =
                 SavingsAccount.builder()
-                        .setUniqueIdentifier(accountNumber)
-                        .setAccountNumber(accountNumber)
+                        .setUniqueIdentifier(iban)
+                        .setAccountNumber(iban)
                         .setBalance(getLatestBalance())
-                        .setAlias(getAlias())
+                        .setAlias(name)
                         .addAccountIdentifier(accountIdentifier)
                         .setApiIdentifier(resourceId);
 
