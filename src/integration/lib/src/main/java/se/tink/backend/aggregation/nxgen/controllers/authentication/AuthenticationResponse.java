@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 
 /**
- * In progressive authentication, carry the intermediate step and fields Yet to see if we need to
+ * In progressive authentication, carry the intermediate step and fields. Yet to see if we need to
  * carry Credential object or any data in it.
  */
 public class AuthenticationResponse {
