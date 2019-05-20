@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class AccountEntity {
@@ -30,14 +32,20 @@ public class AccountEntity {
     }
 
     public TransactionalAccount toTinkAccount(AccountBalanceResponse accountBalanceResponse) {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(id)
-                .setBalance(accountBalanceResponse.getAvailableBalance(currency))
-                .setAlias(id)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(id)
+                                .withAccountName(cashAccountType)
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(accountBalanceResponse.getAvailableBalance(currency)))
                 .putInTemporaryStorage(SwedbankConstants.StorageKeys.ACCOUNT_ID, iban)
                 .setApiIdentifier(id)
+                .setBankIdentifier(id)
                 .build();
     }
 }
