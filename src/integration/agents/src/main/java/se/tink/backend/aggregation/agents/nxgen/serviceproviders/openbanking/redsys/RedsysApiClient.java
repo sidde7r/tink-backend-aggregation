@@ -276,10 +276,8 @@ public final class RedsysApiClient {
 
     private RequestBuilder createSignedRequest(
             String url, @Nullable Object payload, OAuth2Token token) {
-        String serializedPayload;
-        if (payload == null) {
-            serializedPayload = "";
-        } else {
+        String serializedPayload = "";
+        if (payload != null) {
             serializedPayload = SerializationUtils.serializeToString(payload);
         }
         final String digest =

@@ -17,7 +17,6 @@ public final class RedsysConstants {
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CACC")
                     .put(AccountTypes.SAVINGS, "SVGS")
-                    .put(AccountTypes.OTHER, "OTHR")
                     .build();
 
     public static class ErrorMessages {
@@ -100,12 +99,10 @@ public final class RedsysConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final boolean TRUE = true;
         public static final boolean FALSE = false;
-        public static final int FREQUENCY_PER_DAY = 288;
+        public static final int FREQUENCY_PER_DAY = 100;
         public static final String VALID_UNTIL = "9999-12-31";
         public static final String ALL_ACCOUNTS = "allAccounts";
     }
-
-    public static class LogTags {}
 
     public static class Signature {
         public static final String DIGEST_PREFIX = "SHA-256=";

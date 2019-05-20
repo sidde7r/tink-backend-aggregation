@@ -28,9 +28,10 @@ public class TransactionsResponse {
 
     @JsonIgnore
     private Amount getLatestBalance() {
-        Optional<BalanceEntity> lastBalance =
-                balances.stream().max(Comparator.comparing(BalanceEntity::getReferenceDate));
-        return lastBalance.map(BalanceEntity::getAmount).orElse(null);
+        return balances.stream()
+                .max(Comparator.comparing(BalanceEntity::getReferenceDate))
+                .map(BalanceEntity::getAmount)
+                .orElse(null);
     }
 
     @JsonIgnore
