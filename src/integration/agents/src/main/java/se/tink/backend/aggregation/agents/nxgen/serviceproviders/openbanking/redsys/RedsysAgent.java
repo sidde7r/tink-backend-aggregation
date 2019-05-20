@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.RedsysConsentController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.RedsysTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.session.RedsysSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -36,7 +37,7 @@ public final class RedsysAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new RedsysApiClient(client, persistentStorage);
+        apiClient = new RedsysApiClient(client, sessionStorage, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -65,7 +66,7 @@ public final class RedsysAgent extends NextGenerationAgent {
                         persistentStorage,
                         supplementalInformationHelper,
                         new RedsysAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, sessionStorage, getClientConfiguration()));
         final RedsysConsentController consenter =
                 new RedsysConsentController(apiClient, persistentStorage);
 
@@ -121,7 +122,7 @@ public final class RedsysAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return SessionHandler.alwaysFail();
+        return new RedsysSessionHandler(apiClient, sessionStorage);
     }
 
     @Override

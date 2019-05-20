@@ -10,20 +10,20 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class RedsysAuthenticator implements OAuth2Authenticator {
     private final RedsysApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private final RedsysConfiguration configuration;
     private final String codeVerifier;
 
     public RedsysAuthenticator(
             RedsysApiClient apiClient,
-            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
             RedsysConfiguration configuration) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.configuration = configuration;
         this.codeVerifier = generateCodeVerifier();
     }
@@ -50,7 +50,7 @@ public class RedsysAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        persistentStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, accessToken);
     }
 
     private String generateCodeVerifier() {

@@ -46,17 +46,23 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class RedsysApiClient {
 
     private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
     private RedsysConfiguration configuration;
 
-    public RedsysApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public RedsysApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.client = client;
+        this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
     }
 
@@ -82,10 +88,18 @@ public final class RedsysApiClient {
     }
 
     private OAuth2Token getTokenFromStorage() {
-        return persistentStorage
+        return sessionStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
+    }
+
+    public boolean hasValidAccessToken() {
+        try {
+            return getTokenFromStorage().isValid();
+        } catch (IllegalStateException e) {
+            return false;
+        }
     }
 
     private String makeAuthUrl(String path) {
@@ -159,6 +173,10 @@ public final class RedsysApiClient {
                         .map(LinkEntity::getHref)
                         .get();
         return new Pair<>(consentId, new URL(consentRedirectUrl));
+    }
+
+    public String getConsentId() {
+        return persistentStorage.get(StorageKeys.CONSENT_ID);
     }
 
     public String fetchConsentStatus(String consentId) {
@@ -292,7 +310,7 @@ public final class RedsysApiClient {
     }
 
     public ListAccountsResponse fetchAccounts() {
-        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        final String consentId = getConsentId();
         return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
@@ -300,7 +318,7 @@ public final class RedsysApiClient {
     }
 
     public TransactionsResponse fetchTransactions(String accountId, @Nullable String link) {
-        final String consentId = persistentStorage.get(StorageKeys.CONSENT_ID);
+        final String consentId = getConsentId();
         final String path =
                 Optional.ofNullable(link).orElse(String.format(Urls.TRANSACTIONS, accountId));
         RequestBuilder request =
