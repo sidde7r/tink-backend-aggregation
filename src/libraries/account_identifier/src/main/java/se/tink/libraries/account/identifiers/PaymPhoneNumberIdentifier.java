@@ -17,7 +17,7 @@ public class PaymPhoneNumberIdentifier extends AccountIdentifier {
     private static final Pattern UK_PHONE_NUMBER = Pattern.compile("^[0-9]{10,11}$");
 
     public PaymPhoneNumberIdentifier(String phoneNumber) {
-        Preconditions.checkArgument(phoneNumber != null, "PhoneNumber identfier can not be null");
+        Preconditions.checkNotNull(phoneNumber, "PhoneNumber identfier can not be null");
         this.phoneNumber = phoneNumber;
     }
 

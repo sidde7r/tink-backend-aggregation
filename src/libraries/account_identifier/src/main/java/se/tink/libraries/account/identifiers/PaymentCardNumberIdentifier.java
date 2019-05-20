@@ -8,7 +8,7 @@ public class PaymentCardNumberIdentifier extends AccountIdentifier {
     private final String cardNumber;
 
     public PaymentCardNumberIdentifier(String cardNumber) {
-        Preconditions.checkArgument(cardNumber != null, "CardNumber identfier can not be null");
+        Preconditions.checkNotNull(cardNumber, "CardNumber identfier can not be null");
 
         this.cardNumber = cardNumber;
     }
