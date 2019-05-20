@@ -1,14 +1,12 @@
 package se.tink.libraries.account.identifiers;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.libraries.account.AccountIdentifier;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PaymentCardNumberIdentiferTest {
 
@@ -32,7 +30,7 @@ public class PaymentCardNumberIdentiferTest {
 
     @Test
     public void getType_returnsCorrectType_ifValidSortCodeIdentifier() {
-        assertThat(VALID_IDENTIFIER.getType(), is(AccountIdentifier.Type.PAYMENT_CARD_NUMBER));
+        Assert.assertEquals(VALID_IDENTIFIER.getType(), AccountIdentifier.Type.PAYMENT_CARD_NUMBER);
     }
 
     @Test
