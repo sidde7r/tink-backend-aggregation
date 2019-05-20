@@ -17,7 +17,7 @@ public class RefreshRequest {
         this.redirectUri = redirectUri;
     }
 
-    public Object toData() {
+    public String toData() {
         return Form.builder()
                 .put(SwedbankConstants.QueryKeys.CLIENT_ID, clientId)
                 .put(SwedbankConstants.QueryKeys.CLIENT_SECRET, clientSecret)
