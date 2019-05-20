@@ -174,6 +174,24 @@ public class IdentityData {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (Objects.isNull(obj)) {
+            return false;
+        }
+        final IdentityData other = (IdentityData) obj;
+        if (this == other) {
+            return true;
+        } else {
+            return getFullName().equals(other.getFullName());
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.getFullName());
+    }
+
+    @Override
     public String toString() {
         return "IdentityData{"
                 + "nameElements="
