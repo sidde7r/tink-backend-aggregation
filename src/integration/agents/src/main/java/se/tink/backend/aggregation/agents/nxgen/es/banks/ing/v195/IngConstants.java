@@ -105,6 +105,7 @@ public class IngConstants {
     public static final class AccountStatus {
         public static final String ACTIVE = "0"; // Activa
         public static final String OPERATIVE = "5"; // Operative
+        public static final String SINGLE_CONTRACT = "7"; // Solo Contrato
         public static final String CANCELLED = "8"; // Cancelada
     }
 
