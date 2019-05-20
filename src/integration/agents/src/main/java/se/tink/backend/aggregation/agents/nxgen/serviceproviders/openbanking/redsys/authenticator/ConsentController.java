@@ -5,7 +5,7 @@ import se.tink.libraries.pair.Pair;
 
 public interface ConsentController {
     enum ConsentStatus {
-        WAITING,
+        RECEIVED,
         VALID,
         OTHER
     }

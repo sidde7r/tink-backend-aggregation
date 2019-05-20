@@ -88,7 +88,7 @@ public class AuthenticationWithConsentController implements MultiFactorAuthentic
                     // Tell the authenticator which consent ID it can use.
                     consenter.useConsentId(consentId);
                     return;
-                case WAITING:
+                case RECEIVED:
                     Uninterruptibles.sleepUninterruptibly(CONSENT_SLEEP_SECONDS, TimeUnit.SECONDS);
                     break;
                 default:

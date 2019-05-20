@@ -161,7 +161,7 @@ public final class RedsysApiClient {
         return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
-    public RedsysConstants.ConsentStatus getConsentStatus(String consentId) {
+    public String fetchConsentStatus(String consentId) {
         final String url = makeApiUrl(String.format(Urls.CONSENT_STATUS, consentId));
         final ConsentStatusResponse consentStatusResponse =
                 createSignedRequest(url)

@@ -22,7 +22,9 @@ public class RedsysConsentController implements ConsentController {
         if (Strings.isNullOrEmpty(consentId)) {
             return false;
         }
-        return apiClient.getConsentStatus(consentId).isValid();
+        return apiClient
+                .fetchConsentStatus(consentId)
+                .equalsIgnoreCase(RedsysConstants.ConsentStatus.VALID);
     }
 
     @Override
@@ -33,13 +35,13 @@ public class RedsysConsentController implements ConsentController {
 
     @Override
     public ConsentStatus getConsentStatus(String consentId) {
-        switch (apiClient.getConsentStatus(consentId)) {
-            case VALID:
-                return ConsentStatus.VALID;
-            case RECEIVED:
-                return ConsentStatus.WAITING;
-            default:
-                return ConsentStatus.OTHER;
+        final String consentStatus = apiClient.fetchConsentStatus(consentId);
+        if (consentStatus.equalsIgnoreCase(RedsysConstants.ConsentStatus.VALID)) {
+            return ConsentStatus.VALID;
+        } else if (consentStatus.equalsIgnoreCase(RedsysConstants.ConsentStatus.RECEIVED)) {
+            return ConsentStatus.RECEIVED;
+        } else {
+            return ConsentStatus.OTHER;
         }
     }
 

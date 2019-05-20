@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -135,31 +134,13 @@ public final class RedsysConstants {
         public static final String DOWNLOAD = "download";
     }
 
-    public enum ConsentStatus {
-        RECEIVED,
-        REJECTED,
-        VALID,
-        EXPIRED,
-        REVOKED_BY_PSU,
-        TERMINATED_BY_TPP;
-
-        public boolean isReceived() {
-            return this == RECEIVED;
-        }
-
-        public boolean isValid() {
-            return this == VALID;
-        }
-
-        @JsonCreator
-        public static ConsentStatus fromString(String key) {
-            for (ConsentStatus type : ConsentStatus.values()) {
-                if (type.name().replaceAll("_", "").equalsIgnoreCase(key)) {
-                    return type;
-                }
-            }
-            return null;
-        }
+    public static class ConsentStatus {
+        public static final String RECEIVED = "received";
+        public static final String REJECTED = "rejected";
+        public static final String VALID = "valid";
+        public static final String EXPIRED = "expired";
+        public static final String REVOKED_BY_PSU = "revokedByPsu";
+        public static final String TERMINATED_BY_TPP = "terminatedByTpp";
     }
 
     public static class AccountType {
