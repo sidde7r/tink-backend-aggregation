@@ -45,7 +45,6 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -54,16 +53,11 @@ public final class RedsysApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
     private RedsysConfiguration configuration;
 
-    public RedsysApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public RedsysApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -175,8 +169,8 @@ public final class RedsysApiClient {
         return new Pair<>(consentId, new URL(consentRedirectUrl));
     }
 
-    public String getConsentId() {
-        return persistentStorage.get(StorageKeys.CONSENT_ID);
+    private String getConsentId() {
+        return sessionStorage.get(StorageKeys.CONSENT_ID);
     }
 
     public String fetchConsentStatus(String consentId) {

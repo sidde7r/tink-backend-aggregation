@@ -37,7 +37,7 @@ public final class RedsysAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new RedsysApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new RedsysApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -68,7 +68,7 @@ public final class RedsysAgent extends NextGenerationAgent {
                         new RedsysAuthenticator(
                                 apiClient, sessionStorage, getClientConfiguration()));
         final RedsysConsentController consenter =
-                new RedsysConsentController(apiClient, persistentStorage);
+                new RedsysConsentController(apiClient, sessionStorage);
 
         return new AutoAuthenticationController(
                 request,

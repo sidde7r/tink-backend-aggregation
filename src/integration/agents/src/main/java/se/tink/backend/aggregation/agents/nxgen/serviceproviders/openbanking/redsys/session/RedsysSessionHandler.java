@@ -26,7 +26,7 @@ public final class RedsysSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         if (apiClient.hasValidAccessToken()) {
-            final String consentId = apiClient.getConsentId();
+            final String consentId = sessionStorage.get(RedsysConstants.StorageKeys.CONSENT_ID);
             if (Strings.isNullOrEmpty(consentId)) {
                 // no consent
                 throw SessionError.SESSION_EXPIRED.exception();

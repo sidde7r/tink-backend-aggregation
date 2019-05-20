@@ -4,21 +4,21 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.pair.Pair;
 
 public class RedsysConsentController implements ConsentController {
     private final RedsysApiClient apiClient;
-    private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
 
-    public RedsysConsentController(RedsysApiClient apiClient, PersistentStorage persistentStorage) {
+    public RedsysConsentController(RedsysApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
-        this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public boolean storedConsentIsValid() {
-        final String consentId = persistentStorage.get(RedsysConstants.StorageKeys.CONSENT_ID);
+        final String consentId = sessionStorage.get(RedsysConstants.StorageKeys.CONSENT_ID);
         if (Strings.isNullOrEmpty(consentId)) {
             return false;
         }
@@ -47,6 +47,6 @@ public class RedsysConsentController implements ConsentController {
 
     @Override
     public void useConsentId(String consentId) {
-        persistentStorage.put(RedsysConstants.StorageKeys.CONSENT_ID, consentId);
+        sessionStorage.put(RedsysConstants.StorageKeys.CONSENT_ID, consentId);
     }
 }
