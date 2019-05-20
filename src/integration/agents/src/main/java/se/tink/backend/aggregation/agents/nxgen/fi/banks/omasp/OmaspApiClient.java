@@ -33,7 +33,7 @@ public class OmaspApiClient {
     private final TinkHttpClient httpClient;
     private final SessionStorage sessionStorage;
 
-    public OmaspApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
+    OmaspApiClient(TinkHttpClient httpClient, SessionStorage sessionStorage) {
         this.httpClient = httpClient;
         this.sessionStorage = sessionStorage;
     }
@@ -50,23 +50,24 @@ public class OmaspApiClient {
     }
 
     public LoginResponse login(String username, String password) {
-        return login(username, password, null);
+        return login(username, password, null, null);
     }
 
-    public LoginResponse login(String username, String password, String deviceId) {
+    public LoginResponse login(
+            String username, String password, String deviceId, String deviceToken) {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUserId(username).setPassword(password).setDeviceId(deviceId);
+        loginRequest
+                .setUsername(username)
+                .setPassword(password)
+                .setDeviceId(deviceId)
+                .setDeviceToken(deviceToken);
 
         return buildRequest(OmaspConstants.Url.LOGIN).post(LoginResponse.class, loginRequest);
     }
 
-    public RegisterDeviceResponse registerDevice(
-            String codeCardId, String codeCardIndex, String codeCardValue) {
-        RegisterDeviceRequest registerDeviceRequest = new RegisterDeviceRequest();
-        registerDeviceRequest
-                .setCardId(codeCardId)
-                .setSecurityKeyIndex(codeCardIndex)
-                .setSecurityCode(codeCardValue);
+    public RegisterDeviceResponse registerDevice(String deviceId, String codeCardValue) {
+        RegisterDeviceRequest registerDeviceRequest =
+                new RegisterDeviceRequest(deviceId, codeCardValue);
 
         return buildRequest(OmaspConstants.Url.REGISTER_DEVICE)
                 .post(RegisterDeviceResponse.class, registerDeviceRequest);

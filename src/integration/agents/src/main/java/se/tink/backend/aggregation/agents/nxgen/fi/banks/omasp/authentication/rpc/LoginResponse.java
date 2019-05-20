@@ -1,30 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.PersonEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.SecurityKeyResponseEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.SecurityKeyIndexEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings("unused")
 public class LoginResponse extends OmaspBaseResponse {
-    private PersonEntity person;
-    private SecurityKeyResponseEntity securityKey;
+
+    private String name;
+    private SecurityKeyIndexEntity securityKeyIndex;
     private Boolean securityKeyRequired;
-    private Boolean passwordRequired;
+    private Boolean passwordChangeRequired;
 
-    public PersonEntity getPerson() {
-        return person;
-    }
+    // Yes, their naming case is inconsistent
+    @JsonProperty("device_token")
+    private String deviceToken;
 
-    public SecurityKeyResponseEntity getSecurityKey() {
-        return securityKey;
+    public SecurityKeyIndexEntity getSecurityKeyIndex() {
+        return securityKeyIndex;
     }
 
     public Boolean getSecurityKeyRequired() {
         return securityKeyRequired;
     }
 
-    public Boolean getPasswordRequired() {
-        return passwordRequired;
+    public Boolean getPasswordChangeRequired() {
+        return passwordChangeRequired;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
     }
 }
