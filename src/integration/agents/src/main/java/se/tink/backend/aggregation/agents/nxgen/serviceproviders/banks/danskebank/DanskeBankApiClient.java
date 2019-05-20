@@ -63,7 +63,7 @@ public class DanskeBankApiClient {
                 .get(HttpResponse.class);
     }
 
-    private <T> T postRequest(String url, Class<T> responseClazz, Object request) {
+    protected <T> T postRequest(String url, Class<T> responseClazz, Object request) {
         return client.request(url)
                 .header("Referer", configuration.getAppReferer())
                 .post(responseClazz, request);
@@ -77,8 +77,10 @@ public class DanskeBankApiClient {
             FinalizeAuthenticationRequest request) {
         String response = postRequest(DanskeBankConstants.Url.FINALIZE_AUTHENTICATION, request);
 
-        return DanskeBankDeserializer.convertStringToObject(
-                response, FinalizeAuthenticationResponse.class);
+        FinalizeAuthenticationResponse parsedResponse =
+                DanskeBankDeserializer.convertStringToObject(
+                        response, FinalizeAuthenticationResponse.class);
+        return parsedResponse;
     }
 
     public ListAccountsResponse listAccounts(ListAccountsRequest request) {

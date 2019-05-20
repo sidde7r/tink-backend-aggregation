@@ -8,6 +8,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class DanskeBankAgentTest {
     private enum Arg {
@@ -40,6 +41,8 @@ public class DanskeBankAgentTest {
                 new AgentIntegrationTest.Builder(market, providerName.get(market))
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                         .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(true)
                         .saveCredentialsAfter(true);
     }
