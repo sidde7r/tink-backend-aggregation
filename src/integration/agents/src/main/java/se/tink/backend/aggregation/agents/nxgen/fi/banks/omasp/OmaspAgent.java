@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.OmaspAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.OmaspKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditcard.OmaspCreditCardFetcher;
@@ -24,8 +28,9 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class OmaspAgent extends NextGenerationAgent {
+public class OmaspAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final OmaspApiClient apiClient;
 
     public OmaspAgent(
@@ -49,8 +54,10 @@ public class OmaspAgent extends NextGenerationAgent {
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new OmaspKeyCardAuthenticator(apiClient, persistentStorage, credentials)),
-                new OmaspAutoAuthenticator(apiClient, persistentStorage, credentials));
+                        new OmaspKeyCardAuthenticator(
+                                apiClient, persistentStorage, sessionStorage)),
+                new OmaspAutoAuthenticator(
+                        apiClient, persistentStorage, credentials, sessionStorage));
     }
 
     @Override
@@ -109,5 +116,14 @@ public class OmaspAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return sessionStorage
+                .get(Storage.FULL_NAME, String.class)
+                .map(name -> IdentityData.builder().setFullName(name).setDateOfBirth(null).build())
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

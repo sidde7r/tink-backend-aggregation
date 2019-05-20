@@ -7,12 +7,14 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspErrorResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
@@ -22,21 +24,24 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
+    private SessionStorage sessionStorage;
 
     public OmaspAutoAuthenticator(
             OmaspApiClient apiClient,
             PersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public void autoAuthenticate() throws SessionException {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
-        String deviceId = persistentStorage.get(OmaspConstants.Storage.DEVICE_ID);
+        String deviceId = persistentStorage.get(Storage.DEVICE_ID);
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
@@ -49,6 +54,8 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
             if (loginResponse.getSecurityKeyRequired()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
+
+            sessionStorage.put(Storage.FULL_NAME, loginResponse.getPerson().getFullName());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 401) {
                 throw e;
