@@ -107,7 +107,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
                 .getIntentId(this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
     }
 
-    // Payments revamp
+    // General Payments Interface
 
     private RequestBuilder createPISRequest(URL url) {
         return createRequest(url)
