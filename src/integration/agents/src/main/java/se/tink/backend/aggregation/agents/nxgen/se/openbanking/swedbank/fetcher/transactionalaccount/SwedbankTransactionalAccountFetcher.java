@@ -23,7 +23,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
     public Collection<TransactionalAccount> fetchAccounts() {
 
         return apiClient.fetchAccounts().getAccountList().stream()
-                .filter(filterInvalidAccoutns()) // TODO remove this filter for prod
+                .filter(filterInvalidAccounts()) // TODO remove this filter for prod
                 .map(toTinkAccountWithBalance())
                 .collect(Collectors.toList());
     }
@@ -37,7 +37,7 @@ public class SwedbankTransactionalAccountFetcher implements AccountFetcher<Trans
         };
     }
 
-    private Predicate<AccountEntity> filterInvalidAccoutns() { // Sandbox limitation
+    private Predicate<AccountEntity> filterInvalidAccounts() { // Sandbox limitation
         return accountEntity ->
                 !accountEntity.getId().equalsIgnoreCase("Baas786DD5886RT")
                         && !accountEntity.getId().equalsIgnoreCase("458A889B8889T784W");
