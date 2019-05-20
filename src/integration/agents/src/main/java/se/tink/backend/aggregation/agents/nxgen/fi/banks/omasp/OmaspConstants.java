@@ -10,6 +10,10 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class OmaspConstants {
+
+    static final String USER_AGENT =
+            "iOS_OmaSp_PROD/2.2.1 Alamofire2.2.1iPhone iOS 10.3.1Scale/2.0";
+
     public static final class Storage {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String DEVICE_ID = "device_id";
