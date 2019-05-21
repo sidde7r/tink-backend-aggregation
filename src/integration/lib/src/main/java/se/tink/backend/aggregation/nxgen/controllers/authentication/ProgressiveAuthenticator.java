@@ -5,6 +5,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
 // TODO auth: remove extends
 public interface ProgressiveAuthenticator extends Authenticator {
-    AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest)
+    AuthenticationResponse authenticate(LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException;
 }
