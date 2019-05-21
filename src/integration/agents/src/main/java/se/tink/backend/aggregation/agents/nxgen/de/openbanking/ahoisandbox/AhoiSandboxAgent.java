@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox;
 
+import java.time.Duration;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.ahoisandbox.AhoiSandboxConstants.ErrorMessages;
@@ -37,7 +38,7 @@ public final class AhoiSandboxAgent extends NextGenerationAgent {
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
+        client.setTimeout((int) Duration.ofSeconds(60).toMillis());
     }
 
     @Override
