@@ -29,16 +29,13 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
      * Using that id we get all transactions for the credit card account, which for us lead to
      * duplicates since we process each card as an account. Payments and fees are only listed on
      * account level, so when we fetch transactions with only cardContractId those type of
-     * transactions are omitted in the response.
-     *
-     * <p>Not all SEBKort providers supply a cardAccountId, so to fetch with that id and then filter
-     * on card holder would lead to a lot of complex logic. Current logic is that we fetch pending
-     * and booked transactions with cardContractId. Then we fetch booked transactions with
-     * cardAccountId for the credit card account owner and filter out payments and fees. This is
-     * only done if the cardAccountId is set.
-     *
-     * <p>This means that we make an additional request every page for the account owner, but for
-     * now that's a cost we can take in order to avoid complex filtering logic.
+     * transactions are omitted in the response. Not all SEBKort providers supply a cardAccountId,
+     * so to fetch with that id and then filter on card holder would lead to a lot of complex logic.
+     * Current logic is that we fetch pending and booked transactions with cardContractId. Then we
+     * fetch booked transactions with cardAccountId for the credit card account owner and filter out
+     * payments and fees. This is only done if the cardAccountId is set. This means that we make an
+     * additional request every page for the account owner, but for now that's a cost we can take in
+     * order to avoid complex filtering logic.
      */
     @Override
     public PaginatorResponse getTransactionsFor(
