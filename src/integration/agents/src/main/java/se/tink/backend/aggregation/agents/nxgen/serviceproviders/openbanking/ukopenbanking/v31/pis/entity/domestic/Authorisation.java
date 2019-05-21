@@ -9,7 +9,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class Authorisation {
     private String authorisationType;
 
-    public Authorisation() {
-        this.authorisationType = AuthorisationType.ANY.toString();
-    }
+    public Authorisation() {}
 }

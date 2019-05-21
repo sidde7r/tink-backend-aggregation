@@ -8,13 +8,11 @@ import se.tink.libraries.payment.rpc.Payment;
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class DomesticPaymentConsentRequestData {
-    private Authorisation authorisation;
     private Initiation initiation;
 
     public DomesticPaymentConsentRequestData() {}
 
     public DomesticPaymentConsentRequestData(Payment payment) {
-        this.authorisation = new Authorisation();
         this.initiation = new Initiation(payment);
     }
 }
