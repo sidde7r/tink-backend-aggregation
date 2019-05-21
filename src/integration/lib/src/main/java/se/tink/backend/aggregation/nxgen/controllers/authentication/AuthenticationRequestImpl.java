@@ -1,17 +1,21 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
+import javax.annotation.Nonnull;
+import org.assertj.core.util.Preconditions;
 
 /**
  * In progressive authentication, carry request information such as step, userInputs and credential.
  */
 public final class AuthenticationRequestImpl implements AuthenticationRequest {
     private final String step;
-    private final List<String> userInputs;
+    private final ImmutableList<String> userInputs;
 
-    public AuthenticationRequestImpl(final String step, final List<String> userInputs) {
-        this.step = step;
-        this.userInputs = userInputs;
+    public AuthenticationRequestImpl(
+            @Nonnull final String step, @Nonnull final List<String> userInputs) {
+        this.step = Preconditions.checkNotNull(step);
+        this.userInputs = ImmutableList.copyOf(userInputs);
     }
 
     @Override
@@ -20,7 +24,7 @@ public final class AuthenticationRequestImpl implements AuthenticationRequest {
     }
 
     @Override
-    public List<String> getUserInputs() {
+    public ImmutableList<String> getUserInputs() {
         return userInputs;
     }
 }
