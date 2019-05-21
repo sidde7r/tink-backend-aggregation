@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
+    private static final String EIDAS_CERTIFICATE_ID_HEADER = "X-Tink-Eidas-Proxy-Certificate-Id";
 
     private SignatureKeyPair signatureKeyPair;
     private Algorithm algorithm;
@@ -49,6 +50,9 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
     private String proxyUsername;
     private String proxyPassword;
+
+    private boolean shouldAddEidasCertificateId = false;
+    private String eidasCertificateId;
 
     public TinkApacheHttpRequestExecutor(SignatureKeyPair signatureKeyPair) {
         if (signatureKeyPair == null || signatureKeyPair.getPrivateKey() == null) {
@@ -66,6 +70,11 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         this.proxyPassword = password;
     }
 
+    public void setEidasCertificateId(String eidasCertificateId) {
+        this.shouldAddEidasCertificateId = true;
+        this.eidasCertificateId = eidasCertificateId;
+    }
+
     @Override
     public HttpResponse execute(HttpRequest request, HttpClientConnection conn, HttpContext context)
             throws IOException, HttpException {
@@ -73,11 +82,18 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         request.removeHeaders("Cookie2");
         mergeCookieHeaders(request);
 
-        if (isHttpProxyRequest(request)) {
+        // Authentication towards the EIDAS proxy is with TLS-MA, we don't need to add an auth
+        // header for EIDAS requests.
+        if (isHttpProxyRequest(request) && (!shouldAddEidasCertificateId)) {
             addProxyAuthorizationHeader(request);
+        } else if (shouldAddEidasCertificateId) {
+            request.addHeader(EIDAS_CERTIFICATE_ID_HEADER, eidasCertificateId);
         } else if (shouldAddRequestSignature) {
             // Do not add a signature header on the proxy requests.
             // This is because we don't want to leak unnecessary information to proxy providers.
+            //
+            // Requests to the EIDAS proxy do not need to be signed. The proxy will sign the request
+            // on the way out if necessary.
             addRequestSignature(request);
         }
 
