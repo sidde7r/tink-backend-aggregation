@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConfig;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_BALANCE_REQUEST;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_BULK_REQUEST;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_TRANSACTIONS_REQUEST;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants.ApiServices.ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST;
-
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.rpc.AccountPermissionResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConfig;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class UkOpenBankingBaseConfiguration implements UkOpenBankingConfig {
     public URL getBulkAccountRequestURL(URL apiBaseUrl) {
@@ -49,70 +49,76 @@ public class UkOpenBankingBaseConfiguration implements UkOpenBankingConfig {
 
     @Override
     public URL createDomesticPaymentConsentURL(URL pisBaseUrl) {
-        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.DOMESTIC_PAYMENT_CONSENTS);
+        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_CONSENT);
     }
 
     @Override
     public URL getDomesticPaymentConsentURL(URL pisBaseUrl, String consentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.DOMESTIC_PAYMENT_CONSENT_STATUS,
-                        consentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingV31Constants.ApiServices.Domestic.PAYMENT_CONSENT_STATUS)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
+                        consentId);
     }
 
     @Override
     public URL getDomesticFundsConfirmationURL(URL pisBaseUrl, String consentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.DOMESTIC_PAYMENT_FUNDS_CONFIRMATION,
-                        consentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_FUNDS_CONFIRMATION)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
+                        consentId);
     }
 
     @Override
     public URL createDomesticPaymentURL(URL pisBaseUrl) {
-        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.DOMESTIC_PAYMENT);
+        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT);
     }
 
     @Override
     public URL getDomesticPayment(URL pisBaseUrl, String domesticPaymentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.DOMESTIC_PAYMENT_STATUS,
-                        domesticPaymentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingConstants.ApiServices.Domestic.PAYMENT_STATUS)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.paymentId,
+                        domesticPaymentId);
     }
 
     @Override
     public URL createInternationalPaymentConsentURL(URL pisBaseUrl) {
-        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.INTERNATIONAL_PAYMENT_CONSENTS);
+        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_CONSENT);
     }
 
     @Override
     public URL getInternationalPaymentConsentURL(URL pisBaseUrl, String consentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.INTERNATIONAL_PAYMENT_CONSENT_STATUS,
-                        consentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_CONSENT_STATUS)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
+                        consentId);
     }
 
     @Override
     public URL getInternationalFundsConfirmationURL(URL pisBaseUrl, String consentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.INTERNATIONAL_PAYMENT_FUNDS_CONFIRMATION,
-                        consentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_FUNDS_CONFIRMATION)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.consentId,
+                        consentId);
     }
 
     @Override
     public URL createInternationalPaymentURL(URL pisBaseUrl) {
-        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.INTERNATIONAL_PAYMENT);
+        return pisBaseUrl.concat(UkOpenBankingConstants.ApiServices.International.PAYMENT);
     }
 
     @Override
     public URL getInternationalPayment(URL pisBaseUrl, String internationalPaymentId) {
-        return pisBaseUrl.concat(
-                String.format(
-                        UkOpenBankingConstants.ApiServices.INTERNATIONAL_PAYMENT_STATUS,
-                        internationalPaymentId));
+        return pisBaseUrl
+                .concat(UkOpenBankingConstants.ApiServices.International.PAYMENT_STATUS)
+                .parameter(
+                        UkOpenBankingV31Constants.ApiServices.UrlParameterKeys.paymentId,
+                        internationalPaymentId);
     }
 
     public String getInitialTransactionsPaginationKey(String accountId) {
