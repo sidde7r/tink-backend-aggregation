@@ -26,7 +26,7 @@ public final class EnterCardUtils {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
         md.update(bytes, 0, bytes.length);
         byte[] digest = md.digest();
