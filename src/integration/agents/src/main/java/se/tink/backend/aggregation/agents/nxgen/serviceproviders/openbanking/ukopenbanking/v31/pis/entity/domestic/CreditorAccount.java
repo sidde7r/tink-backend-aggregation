@@ -19,7 +19,7 @@ public class CreditorAccount {
         this.schemeName =
                 UkOpenBankingV31Constants.PAYMENT_SCHEME_TYPE_MAPPER
                         .translate(creditor.getAccountIdentifierType().toString())
-                        .get();
+                        .orElseThrow(() -> new IllegalStateException("SchemeName cannot be null!"));
         this.identification = creditor.getAccountNumber();
         this.name = creditor.getName();
     }
