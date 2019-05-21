@@ -21,8 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -89,10 +87,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
                         metricRefreshController,
                         updateController,
                         new TransactionalAccountAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new TransactionalAccountTransactionFetcher(apiClient)))));
+                        new TransactionalAccountTransactionFetcher(apiClient)));
     }
 
     @Override
@@ -102,10 +97,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
                         metricRefreshController,
                         updateController,
                         new CreditCardAccountFetcher(apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        new CreditCardTransactionFetcher(apiClient)))));
+                        new CreditCardTransactionFetcher(apiClient)));
     }
 
     @Override
