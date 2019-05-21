@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -102,8 +102,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 } else {
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
                 }
-            } else if (agent instanceof NextGenerationAgent) {
-                handlePayment((NextGenerationAgent) agent, transferRequest);
+            } else if (agent instanceof SubsequentGenerationAgent) {
+                handlePayment((SubsequentGenerationAgent) agent, transferRequest);
             }
 
             metricAction.completed();
@@ -201,7 +201,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     private void handlePayment(
-            NextGenerationAgent nextGenerationAgent, TransferRequest transferRequest)
+            SubsequentGenerationAgent nextGenerationAgent, TransferRequest transferRequest)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
                 nextGenerationAgent.createPayment(PaymentRequest.of(transferRequest));
