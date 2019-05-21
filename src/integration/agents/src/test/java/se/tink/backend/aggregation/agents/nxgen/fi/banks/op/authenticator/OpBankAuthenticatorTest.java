@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpBankAuthenticatorTest {
 
@@ -48,10 +49,12 @@ public class OpBankAuthenticatorTest {
     private String password;
     private ResultCaptor<OpBankLoginResponseEntity> loginResultCaptor;
     private OpAuthenticator authenticationChallenger;
+    private SessionStorage sessionStorage;
 
     @Before
     public void setUp() throws Exception {
         applicationInstanceId = OpBankTestConfig.APPLICATION_INSTANCE_ID;
+        sessionStorage = new SessionStorage();
 
         username = USERNAME;
         password = PASSWORD;
@@ -80,7 +83,10 @@ public class OpBankAuthenticatorTest {
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
         OpAutoAuthenticator oaa =
                 new OpAutoAuthenticator(
-                        new OpBankApiClient(tinkHttpClient), persistentStorage, credentials);
+                        new OpBankApiClient(tinkHttpClient),
+                        persistentStorage,
+                        credentials,
+                        sessionStorage);
         try {
             oaa.autoAuthenticate();
             oaa.authenticate(username, password);
@@ -200,7 +206,7 @@ public class OpBankAuthenticatorTest {
                                         context.getLogOutputStream(),
                                         null,
                                         null)));
-        loginResultCaptor = new ResultCaptor();
+        loginResultCaptor = new ResultCaptor<>();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())
                 .when(bankClient)
@@ -212,9 +218,13 @@ public class OpBankAuthenticatorTest {
         persistentStorage.put(
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, applicationInstanceId);
         authenticationChallenger =
-                spy(new OpAuthenticator(bankClient, persistentStorage, credentials));
+                spy(
+                        new OpAuthenticator(
+                                bankClient, persistentStorage, credentials, sessionStorage));
         opBankAuthenticator =
-                spy(new OpAutoAuthenticator(bankClient, persistentStorage, credentials));
+                spy(
+                        new OpAutoAuthenticator(
+                                bankClient, persistentStorage, credentials, sessionStorage));
     }
 
     private void authenticate() throws AuthenticationException, AuthorizationException {

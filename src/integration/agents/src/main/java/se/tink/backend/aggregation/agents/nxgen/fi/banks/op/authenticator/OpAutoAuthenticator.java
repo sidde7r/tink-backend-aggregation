@@ -6,13 +6,16 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
@@ -21,14 +24,17 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
     private final Credentials credentials;
     private String authToken;
     private final PasswordAuthenticationController authenticationController;
+    private SessionStorage sessionStorage;
 
     public OpAutoAuthenticator(
             OpBankApiClient client,
             OpBankPersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            SessionStorage sessionStorage) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
         this.authenticationController = new PasswordAuthenticationController(this);
     }
 
@@ -58,7 +64,9 @@ public class OpAutoAuthenticator implements PasswordAuthenticator, AutoAuthentic
                         .setUserid(username)
                         .setApplicationInstanceId(persistentStorage.retrieveInstanceId());
 
-        apiClient.login(request);
+        final OpBankLoginResponseEntity loginResponse = apiClient.login(request);
+        sessionStorage.put(OpBankConstants.Storage.FULL_NAME, loginResponse.getName());
+
         apiClient.setRepresentationType();
         apiClient.postLogin(this.authToken, persistentStorage.retrieveInstanceId());
     }

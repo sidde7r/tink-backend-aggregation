@@ -16,25 +16,30 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.In
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAuthenticateCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginRequestEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankLoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpAuthenticator implements KeyCardAuthenticator {
     public final OpBankApiClient apiClient;
     public final OpBankPersistentStorage persistentStorage;
     private String authToken;
     private Credentials credentials;
+    private SessionStorage sessionStorage;
 
     public OpAuthenticator(
             OpBankApiClient client,
             OpBankPersistentStorage persistentStorage,
-            Credentials credentials) {
+            Credentials credentials,
+            SessionStorage sessionStorage) {
         this.apiClient = client;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -50,7 +55,8 @@ public class OpAuthenticator implements KeyCardAuthenticator {
                         .setApplicationInstanceId(persistentStorage.retrieveInstanceId());
 
         try {
-            apiClient.login(request);
+            final OpBankLoginResponseEntity loginResponse = apiClient.login(request);
+            sessionStorage.put(OpBankConstants.Storage.FULL_NAME, loginResponse.getName());
         } catch (HttpResponseException e) {
             handleAuthenticationException(e);
         }

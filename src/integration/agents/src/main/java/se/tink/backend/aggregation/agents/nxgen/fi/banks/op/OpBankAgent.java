@@ -2,8 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.creditcards.OpBankCreditCardFetcher;
@@ -27,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class OpBankAgent extends NextGenerationAgent {
+public class OpBankAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final OpBankApiClient bankClient;
     private OpBankPersistentStorage opBankPersistentStorage;
@@ -37,7 +40,6 @@ public class OpBankAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         bankClient = new OpBankApiClient(client);
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
-        ;
     }
 
     @Override
@@ -48,9 +50,11 @@ public class OpBankAgent extends NextGenerationAgent {
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new OpAuthenticator(bankClient, opBankPersistentStorage, credentials),
+                        new OpAuthenticator(
+                                bankClient, opBankPersistentStorage, credentials, sessionStorage),
                         OpBankConstants.KEYCARD_PIN_LENGTH),
-                new OpAutoAuthenticator(bankClient, opBankPersistentStorage, credentials));
+                new OpAutoAuthenticator(
+                        bankClient, opBankPersistentStorage, credentials, sessionStorage));
     }
 
     @Override
@@ -115,5 +119,10 @@ public class OpBankAgent extends NextGenerationAgent {
     @Override
     public Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return OpBankIdentityFetcher.fetchIdentity(sessionStorage);
     }
 }

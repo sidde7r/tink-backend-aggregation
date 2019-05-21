@@ -266,4 +266,8 @@ public class OpBankConstants {
         public static final String ACCOUNT = "ACCOUNT";
         public static final String CREDIT_CARD = "Credit";
     }
+
+    public static class Storage {
+        public static final String FULL_NAME = "full_name";
+    }
 }
