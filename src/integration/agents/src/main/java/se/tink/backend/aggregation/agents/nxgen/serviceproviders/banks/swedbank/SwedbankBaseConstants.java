@@ -25,6 +25,11 @@ public class SwedbankBaseConstants {
         public static final String TRANSFER_TO = "TRANSFER_TO";
     }
 
+    public static class TimeoutFilter {
+        public static final int NUM_TIMEOUT_RETRIES = 3;
+        public static final int TIMEOUT_RETRY_SLEEP_MILLISECONDS = 300;
+    }
+
     public static class Description {
         private static final Splitter CLEANUP_SPLITTER =
                 Splitter.on(CharMatcher.whitespace()).omitEmptyStrings();
