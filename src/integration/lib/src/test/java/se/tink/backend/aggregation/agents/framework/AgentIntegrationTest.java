@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequestImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -179,7 +178,8 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                 ((ProgressiveAuthAgent) agent)
                         .login(
                                 new AuthenticationRequestImpl(
-                                        AuthenticationStepConstants.STEP_INIT, null));
+                                        AuthenticationStepConstants.STEP_INIT,
+                                        Collections.emptyList()));
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
             // etc.

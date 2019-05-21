@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,7 +21,6 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequestImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -201,7 +201,8 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                 ((ProgressiveAuthAgent) agent)
                         .login(
                                 new AuthenticationRequestImpl(
-                                        AuthenticationStepConstants.STEP_INIT, null));
+                                        AuthenticationStepConstants.STEP_INIT,
+                                        Collections.emptyList()));
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
             // etc.
