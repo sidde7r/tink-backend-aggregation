@@ -26,13 +26,16 @@ public class DateEntity {
         try {
             return DateEntity.parseDate(value, format);
         } catch (ParseException e) {
-            log.error("Cannot parse date '" + value + "' with format " + format, e);
+            log.error("Cannot parse date {} with format {}", value, format, e);
             return null;
         }
     }
 
     public static Date parseDate(String value, String format) throws ParseException {
         // only seen format as "DDMMAAAA" (ie "ddMMyyyy")
+        if (!"DDMMAAAA".equals(format)) {
+            log.warn("Unexpected date format: {}", format);
+        }
         final String dateFormat = format.replaceAll("D", "d").replaceAll("A", "y");
         return new SimpleDateFormat(dateFormat).parse(value);
     }

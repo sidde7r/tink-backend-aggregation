@@ -35,6 +35,6 @@ public class CardLiquidationDataEntity {
     }
 
     public boolean isSimulation() {
-        return simulationCode.equalsIgnoreCase(LiquidationSimulation.TRUE);
+        return LiquidationSimulation.TRUE.equalsIgnoreCase(simulationCode);
     }
 }
