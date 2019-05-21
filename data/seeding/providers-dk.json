@@ -1198,7 +1198,7 @@
             "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
             "payload": "9695",
             "popular": false,
-            "status": "ENABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "BANK"
         },
