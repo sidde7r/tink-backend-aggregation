@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 /**
  * In progressive authentication, carry request information such as step, userInputs and credential.
@@ -8,5 +8,5 @@ import java.util.List;
 public interface AuthenticationRequest {
     String getStep();
 
-    List<String> getUserInputs();
+    ImmutableList<String> getUserInputs();
 }

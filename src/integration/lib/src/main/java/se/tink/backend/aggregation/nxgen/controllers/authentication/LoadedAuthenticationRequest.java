@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.agents.rpc.Credentials;
 
 /** AuthenticationRequest decorator -- includes all data the agent needs to initiate a request. */
@@ -24,7 +24,7 @@ public final class LoadedAuthenticationRequest implements AuthenticationRequest 
     }
 
     @Override
-    public List<String> getUserInputs() {
+    public ImmutableList<String> getUserInputs() {
         return request.getUserInputs();
     }
 }
