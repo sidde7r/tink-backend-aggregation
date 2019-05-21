@@ -96,8 +96,6 @@ public final class EnterCardConstants {
         public static final String RESPONSE_TYPE = "responseType";
     }
 
-    public static class LogTags {}
-
     public static class AccountType {
         public static final String CREDIT_CARD = "card";
     }
