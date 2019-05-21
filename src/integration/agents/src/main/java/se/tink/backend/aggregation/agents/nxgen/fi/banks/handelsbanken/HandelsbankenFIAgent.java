@@ -2,7 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.authenticator.HandelsbankenFICardDeviceAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.HandelsbankenFIIdentityFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.HandelsbankenFICreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.HandelsbankenFICreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenFIAccountTransactionPaginator;
@@ -25,7 +28,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenFIAgent
-        extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration> {
+        extends HandelsbankenAgent<HandelsbankenFIApiClient, HandelsbankenFIConfiguration>
+        implements RefreshIdentityDataExecutor {
     public HandelsbankenFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenFIConfiguration());
@@ -106,5 +110,10 @@ public class HandelsbankenFIAgent
             HandelsbankenFIApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return new TransactionKeyPaginationController<>(
                 new HandelsbankenFICreditCardTransactionFetcher(client, sessionStorage));
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return HandelsbankenFIIdentityFetcher.fetchIdentityData(persistentStorage);
     }
 }

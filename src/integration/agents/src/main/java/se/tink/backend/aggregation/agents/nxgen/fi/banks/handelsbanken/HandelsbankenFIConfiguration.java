@@ -58,6 +58,7 @@ public class HandelsbankenFIConfiguration implements HandelsbankenConfiguration 
                 .validate();
         AuthorizeResponse authorize = new AuthorizeResponse();
         authorize.setLinks(validateSignature.getLinks());
+        authorize.setMandates(validateSignature.getMandates());
         return authorize;
     }
 

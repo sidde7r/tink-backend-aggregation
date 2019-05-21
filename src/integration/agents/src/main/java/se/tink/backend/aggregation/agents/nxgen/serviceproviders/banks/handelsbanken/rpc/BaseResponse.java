@@ -123,6 +123,10 @@ public abstract class BaseResponse {
         return mandates == null ? new ArrayList<>() : mandates;
     }
 
+    public void setMandates(List<Mandate> mandates) {
+        this.mandates = mandates;
+    }
+
     @Override
     public boolean equals(Object o) {
         return EqualsBuilder.reflectionEquals(this, o);
