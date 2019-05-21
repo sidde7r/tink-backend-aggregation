@@ -137,4 +137,8 @@ public class GenericCardEntity {
     public String getRefValIdContract() {
         return refValIdContract;
     }
+
+    public String getContract() {
+        return contract;
+    }
 }

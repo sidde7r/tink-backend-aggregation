@@ -173,16 +173,16 @@ public class LaCaixaApiClient {
                 .post(CardTransactionsResponse.class);
     }
 
-    public CardLiquidationsResponse fetchCardLiquidations(String contractId, boolean start) {
+    public CardLiquidationsResponse fetchCardLiquidations(String contractRefVal, boolean start) {
         return createRequest(LaCaixaConstants.Urls.FETCH_CARD_LIQUIDATIONS)
-                .body(new CardLiquidationsRequest(contractId, start))
+                .body(new CardLiquidationsRequest(contractRefVal, start))
                 .post(CardLiquidationsResponse.class);
     }
 
     public LiquidationDetailResponse fetchCardLiquidationDetail(
-            String contractRefVal, String liquidationDate) {
+            String contractRefNum, String liquidationDate) {
         return createRequest(Urls.FETCH_CARD_LIQUIDATION_DETAILS)
-                .body(new LiquidationDetailRequest(contractRefVal, liquidationDate))
+                .body(new LiquidationDetailRequest(contractRefNum, liquidationDate))
                 .post(LiquidationDetailResponse.class);
     }
 

@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.credit
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -35,10 +38,26 @@ public class LaCaixaCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            GenericCardsResponse cardsResponse = apiClient.fetchCards();
+            final GenericCardsResponse cardsResponse = apiClient.fetchCards();
+
+            // group cards by contract
+            final Map<String, List<GenericCardEntity>> contracts =
+                    cardsResponse.getCards().stream()
+                            .filter(GenericCardEntity::isCreditCard)
+                            .collect(Collectors.groupingBy(GenericCardEntity::getContract));
+
+            // set balance for first card in contract, zero for the others
             return cardsResponse.getCards().stream()
                     .filter(GenericCardEntity::isCreditCard)
-                    .map(card -> card.toTinkCard(fetchBalanceForCard(card)))
+                    .map(
+                            card -> {
+                                Amount balance = Amount.inEUR(0);
+                                if (contracts.get(card.getContract()).get(0).equals(card)) {
+                                    balance =
+                                            fetchBalanceForCardContract(card.getRefValIdContract());
+                                }
+                                return card.toTinkCard(balance);
+                            })
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
@@ -56,15 +75,24 @@ public class LaCaixaCreditCardFetcher
         }
     }
 
-    private Amount fetchBalanceForCard(GenericCardEntity card) {
+    private Amount fetchBalanceForCardContract(String contractRefVal) {
         final CardLiquidationsResponse liquidations =
-                apiClient.fetchCardLiquidations(card.getRefValIdContract(), true);
-        final CardLiquidationDataEntity liquidation = liquidations.getNextFutureLiquidation();
-        final String liquidationDateValue = liquidation.getEndDate().getValue();
-        final LiquidationDetailResponse liquidationDetail =
-                apiClient.fetchCardLiquidationDetail(
-                        liquidations.getRefValNumContract(), liquidationDateValue);
-        return Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt()).negate();
+                apiClient.fetchCardLiquidations(contractRefVal, true);
+        final Optional<CardLiquidationDataEntity> liquidation =
+                liquidations.getNextFutureLiquidation();
+        if (liquidation.isPresent()) {
+            final String liquidationDateValue = liquidation.get().getEndDate().getValue();
+            final LiquidationDetailResponse liquidationDetail =
+                    apiClient.fetchCardLiquidationDetail(
+                            liquidations.getRefValNumContract(), liquidationDateValue);
+            final Amount debt = Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt());
+            if (debt.isZero()) {
+                return debt;
+            } else {
+                return debt.negate();
+            }
+        }
+        return Amount.inEUR(0);
     }
 
     @Override

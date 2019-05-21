@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.credit
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.CardLiquidationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.LiquidationsListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,7 +19,7 @@ public class CardLiquidationsResponse {
     private double limitAmount;
 
     @JsonIgnore
-    public CardLiquidationDataEntity getNextFutureLiquidation() {
+    public Optional<CardLiquidationDataEntity> getNextFutureLiquidation() {
         return liquidationsList.getNextFutureLiquidation();
     }
 
