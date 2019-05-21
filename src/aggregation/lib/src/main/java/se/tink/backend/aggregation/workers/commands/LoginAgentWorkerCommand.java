@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequestImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -199,7 +200,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         AuthenticationResponse response =
                 ((ProgressiveAuthAgent) agent)
                         .login(
-                                new AuthenticationRequest(
+                                new AuthenticationRequestImpl(
                                         AuthenticationStepConstants.STEP_INIT, null));
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
@@ -212,7 +213,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             response =
                     ((ProgressiveAuthAgent) agent)
                             .login(
-                                    new AuthenticationRequest(
+                                    new AuthenticationRequestImpl(
                                             response.getStep(), new ArrayList<>(map.values())));
         }
     }

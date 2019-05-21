@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
@@ -36,7 +36,7 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest)
+    public AuthenticationResponse authenticate(LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException {
         try {
             if (!forceAutoAuthentication()
@@ -98,7 +98,8 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
                 && !request.isCreate();
     }
 
-    private AuthenticationResponse manualProgressive(AuthenticationRequest authenticationRequest)
+    private AuthenticationResponse manualProgressive(
+            LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException {
         if (!request.isManual()) {
             throw SessionError.SESSION_EXPIRED.exception();

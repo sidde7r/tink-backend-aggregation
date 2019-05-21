@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCa
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
@@ -46,7 +47,7 @@ public final class IngCardReaderAuthenticationController
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest)
+    public AuthenticationResponse authenticate(LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException {
         Credentials credentials = authenticationRequest.getCredentials();
         NotImplementedException.throwIf(
@@ -86,7 +87,7 @@ public final class IngCardReaderAuthenticationController
         return new AuthenticationResponse(STEP_OTP, otpInput);
     }
 
-    private AuthenticationResponse step2(AuthenticationRequest authenticationRequest)
+    private AuthenticationResponse step2(LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException, AuthorizationException {
         logger.info("ING step2: {}", authenticationRequest.getUserInputs());
 
@@ -109,7 +110,7 @@ public final class IngCardReaderAuthenticationController
                         challengeExchangeValues.getChallenge()));
     }
 
-    private AuthenticationResponse step3(AuthenticationRequest authenticationRequest)
+    private AuthenticationResponse step3(LoadedAuthenticationRequest authenticationRequest)
             throws AuthenticationException {
         logger.info("ING step3: {}", authenticationRequest.getUserInputs());
 

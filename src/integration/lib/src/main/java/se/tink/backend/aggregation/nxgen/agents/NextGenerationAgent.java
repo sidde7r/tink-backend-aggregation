@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
@@ -158,8 +159,9 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
     @Override
     public AuthenticationResponse login(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        request.setCredentials(credentials);
-        return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(request);
+        final LoadedAuthenticationRequest loadedRequest =
+                new LoadedAuthenticationRequest(request, credentials);
+        return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(loadedRequest);
     }
 
     @Override
