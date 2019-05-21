@@ -37,6 +37,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
     }
 
     private UKPisConfig getConfig(Payment payment) {
+
         // TODO: add all possible permutations
         GenericTypeMapper<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
                 mapper =
@@ -47,9 +48,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
                                         PaymentType.DOMESTIC,
                                         new Pair<>(
                                                 AccountIdentifier.Type.SORT_CODE,
-                                                AccountIdentifier.Type.SORT_CODE))
-                                .put(
-                                        PaymentType.DOMESTIC,
+                                                AccountIdentifier.Type.SORT_CODE),
                                         new Pair<>(
                                                 AccountIdentifier.Type.PAYM_PHONE_NUMBER,
                                                 AccountIdentifier.Type.PAYM_PHONE_NUMBER))
@@ -60,7 +59,9 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
                                                 AccountIdentifier.Type.IBAN))
                                 .build();
 
-        PaymentType type = mapper.translate(payment.getCreditorAndDebtorAccountType()).get();
+        PaymentType type =
+                mapper.translate(payment.getCreditorAndDebtorAccountType())
+                        .orElseThrow(() -> new IllegalStateException("Cannot map paymentType!"));
 
         switch (type) {
             case DOMESTIC:
