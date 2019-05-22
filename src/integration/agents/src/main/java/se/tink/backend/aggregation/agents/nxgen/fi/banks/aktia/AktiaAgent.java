@@ -1,10 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants.InstanceStorage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaEncapConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.AktiaKeyCardAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.UserAccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -22,11 +27,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.IdentityData;
 
-public class AktiaAgent extends NextGenerationAgent {
+public class AktiaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final AktiaApiClient apiClient;
     private final EncapClient encapClient;
+    private final Storage instanceStorage;
 
     public AktiaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -34,6 +42,7 @@ public class AktiaAgent extends NextGenerationAgent {
         configureHttpClient(client);
 
         this.apiClient = new AktiaApiClient(client);
+        this.instanceStorage = new Storage();
 
         this.encapClient =
                 new EncapClient(
@@ -58,8 +67,8 @@ public class AktiaAgent extends NextGenerationAgent {
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,
-                        new AktiaKeyCardAuthenticator(apiClient, encapClient)),
-                new AktiaAutoAuthenticator(apiClient, encapClient));
+                        new AktiaKeyCardAuthenticator(apiClient, encapClient, instanceStorage)),
+                new AktiaAutoAuthenticator(apiClient, encapClient, instanceStorage));
     }
 
     @Override
@@ -108,5 +117,15 @@ public class AktiaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final IdentityData identityData =
+                instanceStorage
+                        .get(InstanceStorage.USER_ACCOUNT_INFO, UserAccountInfo.class)
+                        .orElseThrow(NoSuchElementException::new)
+                        .toIdentityData();
+        return new FetchIdentityDataResponse(identityData);
     }
 }

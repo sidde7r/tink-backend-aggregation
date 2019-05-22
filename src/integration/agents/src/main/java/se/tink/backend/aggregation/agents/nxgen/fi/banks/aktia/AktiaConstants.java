@@ -96,4 +96,8 @@ public class AktiaConstants {
                     .put(AccountTypes.CHECKING, "CURRENT_ACCOUNT")
                     .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
                     .build();
+
+    public class InstanceStorage {
+        public static final String USER_ACCOUNT_INFO = "userAccountInfo";
+    }
 }

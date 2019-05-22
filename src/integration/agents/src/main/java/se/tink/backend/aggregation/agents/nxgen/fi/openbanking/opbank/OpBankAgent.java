@@ -39,8 +39,8 @@ public final class OpBankAgent extends NextGenerationAgent {
     }
 
     private void configureHttpClient(TinkHttpClient client) {
-        // client.setDebugProxy("https://localhost:9022");
-        client.setDebugProxy("https://192.168.99.100:30922");
+        client.setEidasProxy("https://localhost:9022", "op-fi-sandbox-qwac");
+        // client.setEidasProxy("https://192.168.99.106:30922", "op-fi-sandbox-qwac");
     }
 
     @Override

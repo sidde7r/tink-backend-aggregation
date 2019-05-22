@@ -6,12 +6,15 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaApiClient;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AktiaAutoAuthenticator implements AutoAuthenticator {
     private final AktiaAuthenticationFlow aktiaAuthenticationFlow;
 
-    public AktiaAutoAuthenticator(AktiaApiClient apiClient, EncapClient encapClient) {
-        this.aktiaAuthenticationFlow = new AktiaAuthenticationFlow(apiClient, encapClient);
+    public AktiaAutoAuthenticator(
+            AktiaApiClient apiClient, EncapClient encapClient, final Storage instanceStorage) {
+        this.aktiaAuthenticationFlow =
+                new AktiaAuthenticationFlow(apiClient, encapClient, instanceStorage);
     }
 
     @Override

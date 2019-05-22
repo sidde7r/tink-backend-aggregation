@@ -19,18 +19,23 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final VolksbankApiClient client;
     private final SessionStorage sessionStorage;
     private final String redirectUri;
+    private final VolksbankUtils utils;
 
     public VolksbankAuthenticator(
-            VolksbankApiClient client, SessionStorage sessionStorage, String redirectUri) {
+            VolksbankApiClient client,
+            SessionStorage sessionStorage,
+            String redirectUri,
+            VolksbankUtils utils) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
+        this.utils = utils;
     }
 
     @Override
     public URL buildAuthorizeUrl(String state) {
 
-        return VolksbankUtils.buildURL(Paths.AUTHORIZE)
+        return utils.buildURL(Paths.AUTHORIZE)
                 .queryParam(QueryParams.SCOPE, QueryParams.SCOPE_VALUE)
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryParams.RESPONSE_TYPE_VALUE)
                 .queryParam(QueryParams.STATE, state)
@@ -44,7 +49,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
 
         URL url =
-                VolksbankUtils.buildURL(Paths.TOKEN)
+                utils.buildURL(Paths.TOKEN)
                         .queryParam(QueryParams.CODE, code)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
@@ -84,7 +89,7 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
                                                 "Cannot refresh access token, could not fetch refresh token from old token object"));
 
         URL url =
-                VolksbankUtils.buildURL(Paths.TOKEN)
+                utils.buildURL(Paths.TOKEN)
                         .queryParam(
                                 QueryParams.CLIENT_ID,
                                 client.getConfiguration().getAisConfiguration().getClientId())

@@ -45,6 +45,7 @@ filegroup(
     srcs = glob([
         "aggregation/**",
         "demo/**",
+        "eidas_dev_certificates/**",
         "seeding/providers-*.json",
     ]),
     visibility = ["//visibility:public"],

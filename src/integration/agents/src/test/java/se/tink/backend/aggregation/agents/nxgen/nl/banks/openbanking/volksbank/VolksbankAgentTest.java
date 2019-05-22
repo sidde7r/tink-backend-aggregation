@@ -9,7 +9,7 @@ public class VolksbankAgentTest {
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-volksbank-oauth2")
+        new AgentIntegrationTest.Builder("nl", "nl-snsbank-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)

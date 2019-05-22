@@ -47,7 +47,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         }
 
         String alias =
-                Optional.ofNullable(product.getAlias())
+                Optional.ofNullable(product.getAliasOrProductName())
                         .filter(StringUtils::isNotEmpty)
                         .orElse(product.getIban());
 

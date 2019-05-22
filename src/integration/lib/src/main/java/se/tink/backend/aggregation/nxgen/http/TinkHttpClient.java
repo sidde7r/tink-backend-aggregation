@@ -6,6 +6,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -16,6 +17,7 @@ import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import io.vavr.jackson.datatype.VavrModule;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -28,6 +30,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -47,6 +51,7 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -502,6 +507,41 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public void setProductionProxy(String uri, String username, String password) {
         setProxy(uri);
         requestExecutor.setProxyCredentials(username, password);
+    }
+
+    public void setEidasProxy(String uri, String certificateId) {
+        try {
+            setSslClientCertificate(
+                    Files.toByteArray(new File("data/eidas_dev_certificates/eidas_client.p12")),
+                    "changeme");
+            trustRootCaCertificate(
+                    Files.toByteArray(new File("data/eidas_dev_certificates/eidas_dev_ca.jks")),
+                    "changeme");
+            setProxy(uri);
+            requestExecutor.setEidasCertificateId(certificateId);
+
+            this.internalHttpClientBuilder =
+                    this.internalHttpClientBuilder.setHostnameVerifier(
+                            new AbstractVerifier() {
+                                @Override
+                                public void verify(String host, String[] cns, String[] subjectAlts)
+                                        throws SSLException {
+                                    if (!Arrays.stream(cns)
+                                            .anyMatch(
+                                                    cn ->
+                                                            cn.endsWith(
+                                                                    "eidas-proxy.developer.tink.se"))) {
+                                        throw new SSLException(
+                                                "CNs don't meatch expected EIDAS proxy CN: "
+                                                        + SerializationUtils.serializeToString(
+                                                                cns));
+                                    }
+                                }
+                            });
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Could not initialise client certificate for EIDAS proxy", e);
+        }
     }
 
     public void addRedirectHandler(RedirectHandler handler) {

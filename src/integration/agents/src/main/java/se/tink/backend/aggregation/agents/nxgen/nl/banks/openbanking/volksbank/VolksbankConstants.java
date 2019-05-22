@@ -7,12 +7,11 @@ public class VolksbankConstants {
 
     public static class Urls {
         public static final String HOST = "https://PSD.bancairediensten.nl";
-        public static final String BASE_PATH = "/psd2/snsbank";
+        public static final String BASE_PATH = "/psd2/";
 
         // note: this is placed between BASE_PATH and Paths, for production we only use
         // BASE_PATH/Paths
         public static final String SANDBOX_PATH = "/sandbox";
-        public static final String SANDBOX_URL = HOST + BASE_PATH + SANDBOX_PATH;
     }
 
     public static class QueryParams {
