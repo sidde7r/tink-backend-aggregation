@@ -37,23 +37,27 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                             AccountIdentifier.Type.PAYMENT_CARD_NUMBER.toString())
                     .build();
 
+    private static final TypeMapper<PaymentStatus> paymentStatusMapper =
+            TypeMapper.<PaymentStatus>builder()
+                    .put(
+                            PaymentStatus.PENDING,
+                            "Consumed",
+                            "Authorised",
+                            "Pending",
+                            "AcceptedSettlementInProcess")
+                    .put(PaymentStatus.CREATED, "AwaitingAuthorisation")
+                    .put(PaymentStatus.REJECTED, "Rejected")
+                    .put(PaymentStatus.PAID, "AcceptedSettlementCompleted")
+                    .build();
+
     public static PaymentStatus toPaymentStatus(String consentStatus) {
-        switch (consentStatus) {
-            case "Consumed":
-            case "Authorised":
-            case "Pending":
-            case "AcceptedSettlementInProcess":
-                return PaymentStatus.PENDING;
-            case "AwaitingAuthorisation":
-                return PaymentStatus.CREATED;
-            case "Rejected":
-                return PaymentStatus.REJECTED;
-            case "AcceptedSettlementCompleted":
-                return PaymentStatus.PAID;
-            default:
-                throw new IllegalStateException(
-                        String.format("%s unknown paymentstatus!", consentStatus));
-        }
+
+        return paymentStatusMapper
+                .translate(consentStatus)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format("%s unknown paymentstatus!", consentStatus)));
     }
 
     public static AccountIdentifier toAccountIdentifier(String schemeName, String identification) {
