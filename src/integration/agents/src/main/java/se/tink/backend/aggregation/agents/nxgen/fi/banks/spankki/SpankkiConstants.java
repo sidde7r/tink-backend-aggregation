@@ -182,6 +182,7 @@ public class SpankkiConstants {
         public static final String DEVICE_ID = "DEVICE_ID";
         public static final String DEVICE_TOKEN = "DEVICE_TOKEN";
         public static final String CUSTOMER_ID = "CUSTOMER_ID";
+        public static final String CUSTOMER_ENTITY = "CUSTOMER_ENTITY";
     }
 
     public static class Loan {

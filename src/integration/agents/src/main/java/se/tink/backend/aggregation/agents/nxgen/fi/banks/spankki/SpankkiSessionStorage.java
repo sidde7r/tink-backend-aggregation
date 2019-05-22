@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants.Storage;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.entities.CustomerEntity;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SpankkiSessionStorage {
@@ -26,5 +28,13 @@ public class SpankkiSessionStorage {
 
     public String getCustomerId() {
         return sessionStorage.get(SpankkiConstants.Storage.CUSTOMER_ID);
+    }
+
+    public void putCustomerEntity(CustomerEntity customer) {
+        sessionStorage.put(Storage.CUSTOMER_ENTITY, customer);
+    }
+
+    public Optional<CustomerEntity> getCustomerEntity() {
+        return sessionStorage.get(Storage.CUSTOMER_ENTITY, CustomerEntity.class);
     }
 }

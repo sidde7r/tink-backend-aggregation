@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
+import java.util.Base64;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.VolksbankAuthenticator;
@@ -63,8 +64,11 @@ public class VolksbankAgent extends NextGenerationAgent {
         volksbankApiClient.setConfiguration(volksbankConfiguration);
 
         httpClient.setSslClientCertificate(
-                utils.readFile(
-                        volksbankConfiguration.getAisConfiguration().getClientCertificatePath()),
+                Base64.getDecoder()
+                        .decode(
+                                volksbankConfiguration
+                                        .getAisConfiguration()
+                                        .getClientCertificateContent()),
                 volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
     }
 

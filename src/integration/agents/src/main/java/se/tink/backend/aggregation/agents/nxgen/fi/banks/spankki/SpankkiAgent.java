@@ -1,9 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.SpankkiAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.SpankkiKeyCardAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.entities.CustomerEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.creditcard.SpankkiCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.investment.SpankkiInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.loan.SpankkiLoanFetcher;
@@ -26,7 +30,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SpankkiAgent extends NextGenerationAgent {
+public class SpankkiAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
     private final SpankkiSessionStorage spankkiSessionStorage;
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
@@ -119,5 +123,14 @@ public class SpankkiAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return spankkiSessionStorage
+                .getCustomerEntity()
+                .map(CustomerEntity::toTinkIdentity)
+                .map(FetchIdentityDataResponse::new)
+                .orElseThrow(NoSuchElementException::new);
     }
 }

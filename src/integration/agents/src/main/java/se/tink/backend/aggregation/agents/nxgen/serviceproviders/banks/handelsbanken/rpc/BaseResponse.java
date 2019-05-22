@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -119,11 +119,8 @@ public abstract class BaseResponse {
         this.code = code;
     }
 
-    @JsonIgnore
-    public Optional<String> getCustomerName() {
-        return mandates == null
-                ? Optional.empty()
-                : mandates.stream().map(Mandate::getCustomerName).findFirst();
+    public List<Mandate> getMandates() {
+        return mandates == null ? new ArrayList<>() : mandates;
     }
 
     @Override
