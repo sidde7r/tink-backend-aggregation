@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpBankAuthenticationChallengerTest {
 
@@ -23,10 +24,12 @@ public class OpBankAuthenticationChallengerTest {
     private OpBankApiClient client;
     private OpAuthenticator authenticationChallenger;
     private PersistentStorage persistentStorage;
+    private SessionStorage sessionStorage;
 
     @Before
     public void setUp() throws Exception {
         applicationInstanceId = hashAsUUID("TINK-TEST");
+        sessionStorage = new SessionStorage();
 
         Credentials credentials = new Credentials();
         credentials.setUserId("test user");
@@ -37,7 +40,8 @@ public class OpBankAuthenticationChallengerTest {
         AgentContext context = mock(AgentContext.class);
         SupplementalInformationController supplementalInformationController =
                 new SupplementalInformationController(context, credentials);
-        authenticationChallenger = new OpAuthenticator(client, persistentStorage, credentials);
+        authenticationChallenger =
+                new OpAuthenticator(client, persistentStorage, credentials, sessionStorage);
 
         doReturn("{\"authenticationToken\":\"0000\"}")
                 .when(context)

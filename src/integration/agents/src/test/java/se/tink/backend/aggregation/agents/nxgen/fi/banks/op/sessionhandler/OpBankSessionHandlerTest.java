@@ -24,9 +24,11 @@ import se.tink.backend.aggregation.mocks.ResultCaptor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class OpBankSessionHandlerTest {
     private OpBankApiClient bankClient;
+    private SessionStorage sessionStorage;
 
     @Before
     public void setUp() throws Exception {
@@ -46,13 +48,14 @@ public class OpBankSessionHandlerTest {
                                 context.getLogOutputStream(),
                                 null,
                                 null));
+        sessionStorage = new SessionStorage();
         OpBankPersistentStorage persistentStorage =
                 new OpBankPersistentStorage(credentials, new PersistentStorage());
         persistentStorage.put(
                 OpBankConstants.Authentication.APPLICATION_INSTANCE_ID,
                 OpBankTestConfig.APPLICATION_INSTANCE_ID);
         OpAutoAuthenticator opBankAuthenticator =
-                new OpAutoAuthenticator(bankClient, persistentStorage, credentials);
+                new OpAutoAuthenticator(bankClient, persistentStorage, credentials, sessionStorage);
         opBankAuthenticator.authenticate(USERNAME, PASSWORD);
     }
 
@@ -60,7 +63,7 @@ public class OpBankSessionHandlerTest {
     public void refreshSessionSucceeds() throws Exception {
         bankClient = Mockito.spy(bankClient);
 
-        ResultCaptor<OpBankResponseEntity> resultCaptor = new ResultCaptor();
+        ResultCaptor<OpBankResponseEntity> resultCaptor = new ResultCaptor<>();
         doAnswer(resultCaptor).when(bankClient).refreshSession();
 
         OpBankSessionHandler sessionHandler = new OpBankSessionHandler(bankClient);
