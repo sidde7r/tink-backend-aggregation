@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.Dev
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 
 public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     private final AktiaApiClient apiClient;
@@ -23,10 +24,12 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     private String username;
     private OAuth2Token registrationToken;
 
-    public AktiaKeyCardAuthenticator(AktiaApiClient apiClient, EncapClient encapClient) {
+    public AktiaKeyCardAuthenticator(
+            AktiaApiClient apiClient, EncapClient encapClient, final Storage instanceStorage) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
-        this.aktiaAuthenticationFlow = new AktiaAuthenticationFlow(apiClient, encapClient);
+        this.aktiaAuthenticationFlow =
+                new AktiaAuthenticationFlow(apiClient, encapClient, instanceStorage);
     }
 
     @Override

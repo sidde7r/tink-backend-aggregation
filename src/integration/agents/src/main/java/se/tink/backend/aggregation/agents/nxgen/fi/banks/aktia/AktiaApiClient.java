@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.LoginDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.Oauth2Request;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationCompleteRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationInitResponse;
@@ -165,12 +166,12 @@ public class AktiaApiClient {
         return this.accessToken;
     }
 
-    public String getLoginDetails() {
+    public LoginDetailsResponse getLoginDetails() {
         return httpClient
                 .request(AktiaConstants.Url.LOGIN_DETAILS)
                 .addBearerToken(accessToken)
                 .accept(MediaType.APPLICATION_JSON)
-                .get(String.class);
+                .get(LoginDetailsResponse.class);
     }
 
     public List<AccountSummaryListEntity> getAccountList() {
