@@ -42,6 +42,7 @@ public class SamlinkConstants {
         public static final String DETAILS = "details";
         public static final String CARDS = "cards";
         public static final String LOANS = "loans";
+        public static final String COUNTS = "counts";
     }
 
     public static final class ErrorMessage {
