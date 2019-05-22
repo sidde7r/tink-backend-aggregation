@@ -61,6 +61,21 @@
             "refreshFrequencyFactor": 1
         },
         {
+            "name": "nl-bunq-oauth2",
+            "displayName": "Bunq",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "https://public-api.sandbox.bunq.com"
+        },
+        {
             "name": "nl-test-password",
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "displayDescription": "Password",

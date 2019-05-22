@@ -1,37 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.error.ErrorResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bunq.BunqBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionUserResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class BunqAutoAuthenticator implements AutoAuthenticator {
     private static final AggregationLogger log = new AggregationLogger(BunqAutoAuthenticator.class);
-    private final Credentials credentials;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
+    private final TemporaryStorage temporaryStorage;
     private final BunqApiClient apiClient;
 
     public BunqAutoAuthenticator(
-            Credentials credentials,
             PersistentStorage persistentStorage,
             SessionStorage sessionStorage,
-            BunqBaseApiClient apiClient) {
-        this.credentials = credentials;
+            TemporaryStorage temporaryStorage,
+            BunqApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
+        this.temporaryStorage = temporaryStorage;
         this.apiClient = apiClient;
     }
 
@@ -40,22 +38,25 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
         validateRsaKeyPairUsedLaterInFilter();
         try {
             // Here we need to use the token got from installation
+            BunqAuthenticator.updateClientAuthToken(
+                    sessionStorage, persistentStorage, temporaryStorage);
+            CreateSessionUserResponse createSessionUserResponse =
+                    apiClient.createSessionUser(
+                            sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY));
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
+                    createSessionUserResponse.getToken());
+            BunqAuthenticator.updateClientAuthToken(
+                    sessionStorage, persistentStorage, temporaryStorage);
             sessionStorage.put(
-                    BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN,
-                    persistentStorage.get(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN));
-            String apiKey = credentials.getField(Field.Key.PASSWORD);
-            CreateSessionResponse createSessionResponse = apiClient.createSession(apiKey);
-            sessionStorage.put(
-                    BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, createSessionResponse.getToken());
-            sessionStorage.put(
-                    BunqConstants.StorageKeys.USER_ID,
-                    createSessionResponse.getUserPerson().getId());
+                    BunqBaseConstants.StorageKeys.USER_ID,
+                    createSessionUserResponse.getUserPerson().getId());
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
             ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
             log.warnExtraLong(
                     errorResponse.getErrorDescription().orElse("Error description was null"),
-                    BunqConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
+                    BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED,
                     e);
 
             throw SessionError.SESSION_EXPIRED.exception();
@@ -64,12 +65,13 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
 
     private void validateRsaKeyPairUsedLaterInFilter() {
         if (Strings.isNullOrEmpty(
-                persistentStorage.get(BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR))) {
+                persistentStorage.get(
+                        BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR))) {
             String errorMessage =
                     String.format(
                             "PersistentStorage is missing %s",
-                            BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR);
-            log.warnExtraLong(errorMessage, BunqConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
+                            BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR);
+            log.warnExtraLong(errorMessage, BunqBaseConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
             throw new IllegalStateException(errorMessage);
         }
     }

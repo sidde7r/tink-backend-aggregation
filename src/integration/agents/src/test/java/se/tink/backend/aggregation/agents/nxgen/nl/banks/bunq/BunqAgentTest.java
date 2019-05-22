@@ -1,20 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-//@Ignore
 public class BunqAgentTest {
-    private final String PASSWORD = "sandbox_fbb550093c35cc1066813125f0fce59271de1cdd1bed1a08fe23a5f5";
+    private final ArgumentManager<BunqAgentTest.Arg> manager =
+            new ArgumentManager<>(BunqAgentTest.Arg.values());
+
+    private AgentIntegrationTest.Builder builder;
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
+    @Before
+    public void before() {
+        manager.before();
+
+        builder =
+                new AgentIntegrationTest.Builder("nl", "nl-bunq-sandbox-apikey")
+                        .loadCredentialsBefore(
+                                Boolean.parseBoolean(manager.get(BunqAgentTest.Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
+    }
 
     @Test
     public void testLogin() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-bunq-sandbox-apikey")
-                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false)
-                .build()
-                .testRefresh();
+        builder.addCredentialField(Key.PASSWORD, manager.get(Arg.PASSWORD)).build().testRefresh();
+    }
+
+    private enum Arg {
+        LOAD_BEFORE,
+        SAVE_AFTER,
+        PASSWORD,
     }
 }
