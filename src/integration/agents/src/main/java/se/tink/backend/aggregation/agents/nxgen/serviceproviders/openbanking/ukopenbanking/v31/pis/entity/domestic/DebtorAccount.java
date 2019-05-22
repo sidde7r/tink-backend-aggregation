@@ -12,7 +12,8 @@ public class DebtorAccount {
     private String schemeName;
     private String identification;
 
-    public DebtorAccount() {}
+    // Used in serialization unit tests
+    protected DebtorAccount() {}
 
     public DebtorAccount(Debtor debtor) {
         this.schemeName =

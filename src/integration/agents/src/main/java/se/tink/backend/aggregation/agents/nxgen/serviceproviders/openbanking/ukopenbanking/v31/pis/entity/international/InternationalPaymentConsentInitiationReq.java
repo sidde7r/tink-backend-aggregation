@@ -19,7 +19,8 @@ public class InternationalPaymentConsentInitiationReq {
     private CreditorAccount creditorAccount;
     private InstructedAmount instructedAmount;
 
-    public InternationalPaymentConsentInitiationReq() {}
+    // Used in serialization unit tests
+    protected InternationalPaymentConsentInitiationReq() {}
 
     public InternationalPaymentConsentInitiationReq(
             Payment payment, String endToEndIdentification, String instructionIdentification) {

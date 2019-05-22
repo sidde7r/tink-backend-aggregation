@@ -34,7 +34,8 @@ public class DomesticPaymentInitiation {
     private CreditorAccount creditorAccount;
     private InstructedAmount instructedAmount;
 
-    public DomesticPaymentInitiation() {}
+    // Used in serialization unit tests
+    protected DomesticPaymentInitiation() {}
 
     public DomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {

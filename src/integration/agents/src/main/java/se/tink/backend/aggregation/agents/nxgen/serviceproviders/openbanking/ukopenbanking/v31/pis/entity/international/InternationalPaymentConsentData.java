@@ -10,7 +10,8 @@ import se.tink.libraries.payment.rpc.Payment;
 public class InternationalPaymentConsentData {
     private InternationalPaymentConsentInitiationReq initiation;
 
-    public InternationalPaymentConsentData() {}
+    // Used in serialization unit tests
+    protected InternationalPaymentConsentData() {}
 
     public InternationalPaymentConsentData(Payment payment) {
         this.initiation = new InternationalPaymentConsentInitiationReq();

@@ -18,7 +18,8 @@ public class PaymentInitiation {
     private CreditorAccount creditorAccount;
     private InstructedAmount instructedAmount;
 
-    public PaymentInitiation() {}
+    // Used in serialization unit tests
+    protected PaymentInitiation() {}
 
     public PaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {

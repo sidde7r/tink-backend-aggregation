@@ -29,7 +29,8 @@ public class Initiation {
     private CreditorAccount creditorAccount;
     private RemittanceInformation remittanceInformation;
 
-    public Initiation() {}
+    // Used in serialization unit tests
+    protected Initiation() {}
 
     public Initiation(Payment payment) {
         this.instructedAmount = new InstructedAmount(payment.getAmount());

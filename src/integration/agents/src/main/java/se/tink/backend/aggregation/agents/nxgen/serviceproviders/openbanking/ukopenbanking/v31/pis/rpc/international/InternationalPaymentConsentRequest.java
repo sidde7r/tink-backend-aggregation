@@ -13,7 +13,8 @@ public class InternationalPaymentConsentRequest {
     private Risk risk;
     private InternationalPaymentConsentData data;
 
-    public InternationalPaymentConsentRequest() {}
+    // Used in serialization unit tests
+    protected InternationalPaymentConsentRequest() {}
 
     public InternationalPaymentConsentRequest(Payment payment) {
         this.risk = new Risk();

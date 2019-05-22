@@ -10,7 +10,8 @@ import se.tink.libraries.payment.rpc.Payment;
 public class DomesticPaymentConsentRequestData {
     private Initiation initiation;
 
-    public DomesticPaymentConsentRequestData() {}
+    // Used in serialization unit tests
+    protected DomesticPaymentConsentRequestData() {}
 
     public DomesticPaymentConsentRequestData(Payment payment) {
         this.initiation = new Initiation(payment);

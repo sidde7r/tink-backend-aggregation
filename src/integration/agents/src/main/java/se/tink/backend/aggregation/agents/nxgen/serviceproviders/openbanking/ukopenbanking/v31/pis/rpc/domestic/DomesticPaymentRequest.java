@@ -14,7 +14,8 @@ public class DomesticPaymentRequest {
     private Risk risk;
     private DomesticPaymentRequestData data;
 
-    public DomesticPaymentRequest() {}
+    // Used in serialization unit tests
+    protected DomesticPaymentRequest() {}
 
     public DomesticPaymentRequest(
             Payment payment,

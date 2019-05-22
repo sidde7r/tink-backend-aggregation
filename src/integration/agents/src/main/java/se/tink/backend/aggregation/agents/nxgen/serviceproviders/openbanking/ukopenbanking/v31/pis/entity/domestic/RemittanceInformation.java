@@ -11,7 +11,8 @@ public class RemittanceInformation {
     private String unstructured;
     private String reference;
 
-    public RemittanceInformation() {}
+    // Used in serialization unit tests
+    protected RemittanceInformation() {}
 
     public RemittanceInformation(String unstructured, Reference reference) {
         this.unstructured = unstructured;

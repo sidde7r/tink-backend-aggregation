@@ -13,7 +13,8 @@ public class DomesticPaymentConsentRequest {
     private Risk risk;
     private DomesticPaymentConsentRequestData data;
 
-    public DomesticPaymentConsentRequest() {}
+    // Used in serialization unit tests
+    protected DomesticPaymentConsentRequest() {}
 
     public DomesticPaymentConsentRequest(Payment payment) {
         risk = new Risk();

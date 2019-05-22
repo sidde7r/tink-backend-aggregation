@@ -11,7 +11,8 @@ public class InstructedAmount {
     private String amount;
     private String currency;
 
-    public InstructedAmount() {}
+    // Used in serialization unit tests
+    protected InstructedAmount() {}
 
     public InstructedAmount(Amount amount) {
         this.amount = amount.getValue().toString();

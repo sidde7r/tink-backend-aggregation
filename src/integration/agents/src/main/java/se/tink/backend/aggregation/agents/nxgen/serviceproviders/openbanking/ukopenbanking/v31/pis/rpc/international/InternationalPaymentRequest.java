@@ -13,7 +13,8 @@ public class InternationalPaymentRequest {
     private RiskExtended risk;
     private PaymentData data;
 
-    public InternationalPaymentRequest() {}
+    // Used in serialization unit tests
+    protected InternationalPaymentRequest() {}
 
     public InternationalPaymentRequest(
             Payment payment,

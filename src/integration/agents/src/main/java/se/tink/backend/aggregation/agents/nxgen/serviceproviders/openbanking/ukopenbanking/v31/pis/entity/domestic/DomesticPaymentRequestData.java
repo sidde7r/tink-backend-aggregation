@@ -11,7 +11,8 @@ public class DomesticPaymentRequestData {
     private String consentId;
     private DomesticPaymentInitiation initiation;
 
-    public DomesticPaymentRequestData() {}
+    // Used in serialization unit tests
+    protected DomesticPaymentRequestData() {}
 
     public DomesticPaymentRequestData(
             Payment payment,

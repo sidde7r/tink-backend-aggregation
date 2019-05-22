@@ -13,7 +13,8 @@ public class CreditorAccount {
     private String identification;
     private String name;
 
-    public CreditorAccount() {}
+    // Used in serialization unit tests
+    protected CreditorAccount() {}
 
     public CreditorAccount(Creditor creditor) {
         this.schemeName =
