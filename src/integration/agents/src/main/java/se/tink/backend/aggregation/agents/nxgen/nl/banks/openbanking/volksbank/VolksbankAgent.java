@@ -28,15 +28,20 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class VolksbankAgent extends NextGenerationAgent {
 
     private final VolksbankApiClient volksbankApiClient;
-    private VolksbankHttpClient httpClient;
-    private final String redirectUri;
+    private final VolksbankHttpClient httpClient;
+    private final VolksbankUtils utils;
+    private final String BANK_PATH;
 
     public VolksbankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        httpClient = new VolksbankHttpClient(client, "certificate");
-        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage);
-        redirectUri = request.getProvider().getPayload().split(" ")[1];
+
+        BANK_PATH = request.getProvider().getPayload().split(" ")[1];
+
+        this.httpClient = new VolksbankHttpClient(client, "certificate");
+        this.utils = new VolksbankUtils(BANK_PATH);
+
+        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, utils);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class VolksbankAgent extends NextGenerationAgent {
         volksbankApiClient.setConfiguration(volksbankConfiguration);
 
         httpClient.setSslClientCertificate(
-                VolksbankUtils.readFile(
+                utils.readFile(
                         volksbankConfiguration.getAisConfiguration().getClientCertificatePath()),
                 volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
     }
@@ -66,7 +71,15 @@ public class VolksbankAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         VolksbankAuthenticator authenticator =
-                new VolksbankAuthenticator(volksbankApiClient, sessionStorage, redirectUri);
+                new VolksbankAuthenticator(
+                        volksbankApiClient,
+                        sessionStorage,
+                        volksbankApiClient
+                                .getConfiguration()
+                                .getAisConfiguration()
+                                .getRedirectUrl(),
+                        utils);
+
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);

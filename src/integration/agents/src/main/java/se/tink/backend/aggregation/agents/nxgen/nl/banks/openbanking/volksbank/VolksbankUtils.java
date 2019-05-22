@@ -14,15 +14,24 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class VolksbankUtils {
 
-    public static URL buildURL(String uri) {
+    private String BANK_PATH;
+
+    public VolksbankUtils(String bankPath) {
+        BANK_PATH = bankPath;
+    }
+
+    public URL buildURL(String uri) {
 
         StringBuilder s = new StringBuilder();
-        s.append(VolksbankConstants.Urls.SANDBOX_URL);
+        s.append(VolksbankConstants.Urls.HOST);
+        s.append(VolksbankConstants.Urls.BASE_PATH);
+        s.append(BANK_PATH);
+        s.append(VolksbankConstants.Urls.SANDBOX_PATH);
         s.append(uri);
         return new URL(s.toString());
     }
 
-    public static byte[] readFile(String path) {
+    public byte[] readFile(String path) {
         try {
             return Files.readAllBytes(Paths.get(path));
         } catch (IOException e) {
@@ -30,7 +39,7 @@ public class VolksbankUtils {
         }
     }
 
-    public static Map<String, String> splitURLQuery(String query) {
+    public Map<String, String> splitURLQuery(String query) {
 
         if (query == null) return null;
 
@@ -47,7 +56,7 @@ public class VolksbankUtils {
         return iban.replace(" ", "").substring(8);
     }
 
-    private static DateFormat getDateFormat() {
+    private DateFormat getDateFormat() {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         DateFormat df =
                 new SimpleDateFormat(
@@ -56,11 +65,11 @@ public class VolksbankUtils {
         return df;
     }
 
-    public static String getCurrentDateAsString() {
+    public String getCurrentDateAsString() {
         return getDateFormat().format(new Date());
     }
 
-    public static String getFutureDateAsString(int year) {
+    public String getFutureDateAsString(int year) {
         Calendar date = Calendar.getInstance();
         date.setTime(new Date());
         date.add(Calendar.YEAR, year);

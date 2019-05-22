@@ -8,6 +8,7 @@ public class AISClientConfigurationEntity {
 
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
+    @JsonProperty private String redirectUrl;
     @JsonProperty private String clientCertificatePath;
     @JsonProperty private String clientCertificatePass;
 
@@ -17,6 +18,10 @@ public class AISClientConfigurationEntity {
 
     public String getClientSecret() {
         return clientSecret;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
     public String getClientCertificatePath() {

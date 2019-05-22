@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.fetcher.transactionalaccount;
 
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.entities.transactions.TransactionsEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -22,7 +21,7 @@ public class VolksbankTransactionFetcher
 
         final TransactionsEntity response =
                 apiClient
-                        .readTransactions(account, VolksbankUtils.splitURLQuery(key))
+                        .readTransactions(account, apiClient.getUtils().splitURLQuery(key))
                         .getTransactions();
         return response;
     }
