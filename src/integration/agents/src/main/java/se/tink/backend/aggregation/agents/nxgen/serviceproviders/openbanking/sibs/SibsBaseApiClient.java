@@ -123,6 +123,31 @@ public class SibsBaseApiClient {
         return new URL(consentResponse.getLinks().getRedirect());
     }
 
+    public ConsentResponse createDecoupledAuthConsent(
+            String state, String psuIdType, String psuId) {
+        ConsentRequest consentRequest = getConsentRequest();
+        String digest = SibsUtils.getDigest(consentRequest);
+
+        ConsentResponse consentResponse =
+                createRequest(
+                                Urls.CREATE_CONSENT.parameter(
+                                        PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
+                        .signed(digest)
+                        .build()
+                        .header(
+                                HeaderKeys.TPP_REDIRECT_URI,
+                                new URL(configuration.getRedirectUrl())
+                                        .queryParam(QueryKeys.STATE, state)
+                                        .queryParam(QueryKeys.CODE, SibsUtils.getRequestId()))
+                        .header(SibsConstants.HeaderKeys.PSU_ID_TYPE, psuIdType)
+                        .header(SibsConstants.HeaderKeys.PSU_ID, psuId)
+                        .post(ConsentResponse.class, consentRequest);
+
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+
+        return consentResponse;
+    }
+
     public ConsentStatusResponse getConsentStatus() {
 
         return createRequest(
