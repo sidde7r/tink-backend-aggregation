@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.PaymentScheme;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
@@ -23,19 +23,14 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                     .ignoreKeys("ChargeCard", "EMoney", "PrePaidCard")
                     .build();
 
-    public static final TypeMapper<String> PAYMENT_SCHEME_TYPE_MAPPER =
-            TypeMapper.<String>builder()
-                    .put(PaymentScheme.IBAN.toString(), AccountIdentifier.Type.IBAN.toString())
-                    .put(
-                            PaymentScheme.PAYM.toString(),
-                            AccountIdentifier.Type.PAYM_PHONE_NUMBER.toString())
-                    .put(
-                            PaymentScheme.SORT_CODE_ACCOUNT_NUMBER.toString(),
-                            AccountIdentifier.Type.SORT_CODE.toString())
-                    .put(
-                            PaymentScheme.PAN.toString(),
-                            AccountIdentifier.Type.PAYMENT_CARD_NUMBER.toString())
-                    .build();
+    public static final GenericTypeMapper<String, AccountIdentifier.Type>
+            PAYMENT_SCHEME_TYPE_MAPPER =
+                    GenericTypeMapper.<String, AccountIdentifier.Type>genericBuilder()
+                            .put("UK.OBIE.Paym", AccountIdentifier.Type.PAYM_PHONE_NUMBER)
+                            .put("UK.OBIE.PAN", AccountIdentifier.Type.PAYMENT_CARD_NUMBER)
+                            .put("UK.OBIE.SortCodeAccountNumber", AccountIdentifier.Type.SORT_CODE)
+                            .put("UK.OBIE.IBAN", AccountIdentifier.Type.IBAN)
+                            .build();
 
     private static final TypeMapper<PaymentStatus> paymentStatusMapper =
             TypeMapper.<PaymentStatus>builder()
