@@ -62,6 +62,8 @@ public final class SibsConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String DIGEST = "Digest";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String PSU_ID_TYPE = "PSU-ID-Type";
+        public static final String PSU_ID = "PSU-ID";
     }
 
     public static class FormValues {
@@ -107,5 +109,11 @@ public final class SibsConstants {
         public static final String RSA_SHA256 = "rsa-sha256";
         public static final String HEADERS = "Digest TPP-Transaction-ID TPP-Request-ID Date";
         public static final String HEADERS_NO_DIGEST = "TPP-Transaction-ID TPP-Request-ID Date";
+    }
+
+    public static class CredentialKeys {
+
+        public static final String PSU_ID = "PSU_ID";
+        public static final String PSU_ID_TYPE = "PSU_ID_TYPE";
     }
 }

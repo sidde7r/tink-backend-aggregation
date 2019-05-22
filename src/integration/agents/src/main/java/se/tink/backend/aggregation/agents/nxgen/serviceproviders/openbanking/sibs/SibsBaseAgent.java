@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
@@ -28,7 +28,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class SibsBaseAgent extends NextGenerationAgent {
 
     private final String clientName;
-    private final SibsBaseApiClient apiClient;
+    protected final SibsBaseApiClient apiClient;
 
     public SibsBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -57,10 +57,9 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
 
-        final SibsAuthenticationController controller =
-                new SibsAuthenticationController(
+        final SibsRedirectAuthenticationController controller =
+                new SibsRedirectAuthenticationController(
                         supplementalInformationHelper, new SibsAuthenticator(apiClient));
-
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
