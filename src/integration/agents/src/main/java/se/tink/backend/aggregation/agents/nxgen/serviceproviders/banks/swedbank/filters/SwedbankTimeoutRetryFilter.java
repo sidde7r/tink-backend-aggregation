@@ -42,7 +42,7 @@ public class SwedbankTimeoutRetryFilter extends Filter {
                     throw e;
                 }
 
-                log.error(
+                log.warn(
                         String.format(
                                 "SwedbankRetryFilter caught TimeOut exception, retrying %d more times.",
                                 numRetriesLeft),
