@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.AliasEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.List;
 
 @JsonObject
 public class UserPaymentServiceProviderEntity {

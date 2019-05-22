@@ -37,8 +37,11 @@ public class BunqRequiredHeadersFilter extends Filter {
         }
 
         headers.add(
-                BunqBaseConstants.Headers.LANGUAGE.getKey(), BunqBaseConstants.Headers.LANGUAGE.getValue());
-        headers.add(BunqBaseConstants.Headers.REGION.getKey(), BunqBaseConstants.Headers.REGION.getValue());
+                BunqBaseConstants.Headers.LANGUAGE.getKey(),
+                BunqBaseConstants.Headers.LANGUAGE.getValue());
+        headers.add(
+                BunqBaseConstants.Headers.REGION.getKey(),
+                BunqBaseConstants.Headers.REGION.getValue());
         headers.add(BunqBaseConstants.Headers.REQUEST_ID.getKey(), UUIDUtils.generateUUID());
         headers.add(
                 BunqBaseConstants.Headers.GEOLOCATION.getKey(),

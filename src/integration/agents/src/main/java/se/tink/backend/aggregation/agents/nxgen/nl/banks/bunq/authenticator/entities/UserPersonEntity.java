@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.entities.CustomerEntity;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.entities.CustomerLimitEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

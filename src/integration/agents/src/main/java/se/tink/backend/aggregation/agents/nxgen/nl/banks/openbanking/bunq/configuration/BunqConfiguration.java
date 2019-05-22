@@ -8,11 +8,9 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class BunqConfiguration extends BunqBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty
-    private String redirectUrl;
+    @JsonProperty private String redirectUrl;
 
-    @JsonProperty
-    private String apiKey;
+    @JsonProperty private String apiKey;
 
     public String getApiKey() {
         return apiKey;
