@@ -5,14 +5,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FetchHouseholdFIResponse {
-    @JsonProperty
-    private String customerInternalId;
+    @JsonProperty private String customerInternalId;
 
-    @JsonProperty
-    private String customerExternalId;
+    @JsonProperty private String customerExternalId;
 
-    @JsonProperty
-    private String customerName;
+    @JsonProperty private String customerName;
 
     public String getCustomerExternalId() {
         return customerExternalId;

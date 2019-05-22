@@ -56,16 +56,28 @@ public class DanskeBankFIAgent extends DanskeBankAgent implements RefreshIdentit
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final DanskeBankFIApiClient fiApiClient = (DanskeBankFIApiClient)apiClient;
+        final DanskeBankFIApiClient fiApiClient = (DanskeBankFIApiClient) apiClient;
         final FetchHouseholdFIResponse response = fiApiClient.fetchHousehold();
-        if (Strings.isNullOrEmpty(response.getCustomerName())) {
-            throw new NoSuchElementException("Missing customerName.");
-        }
-        if (Strings.isNullOrEmpty(response.getCustomerExternalId())) {
-            throw new NoSuchElementException("Missing customerExternalId.");
+        final String customerName = response.getCustomerName();
+        final boolean missingName = Strings.isNullOrEmpty(customerName);
+        final boolean missingSsn = Strings.isNullOrEmpty(response.getCustomerExternalId());
+
+        if (missingName && missingSsn) {
+            throw new NoSuchElementException("Missing customer name and external ID.");
         }
 
-        final IdentityData identityData = FiIdentityData.of(response.getCustomerName(), response.getCustomerExternalId());
+        IdentityData identityData;
+        try {
+            identityData = FiIdentityData.of(customerName, response.getCustomerExternalId());
+        } catch (IllegalArgumentException e) {
+            // null or invalid SSN
+            if (missingName) {
+                throw new NoSuchElementException("Missing customer name, invalid external ID.");
+            }
+            identityData =
+                    IdentityData.builder().setFullName(customerName).setDateOfBirth(null).build();
+        }
+
         return new FetchIdentityDataResponse(identityData);
     }
 }
