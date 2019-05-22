@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator;
 
 import java.security.KeyPair;
-import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
@@ -18,13 +17,11 @@ import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -62,6 +59,8 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
+        // If you want to register a new software, the "apiKey" field in development.yml needs to be
+        // empty otherwise you'll get an exception.
         String psd2ApiKey = null;
         if (agentConfiguration.getApiKey() != null && !agentConfiguration.getApiKey().isEmpty()) {
             psd2ApiKey = agentConfiguration.getApiKey();
@@ -71,19 +70,9 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             psd2ApiKey = persistentStorage.get(BunqConstants.StorageKeys.PSD2_API_KEY);
         }
 
-        try {
-            // Register a device by using POST v1/device-server using the API key for the secret and
-            // passing the installation Token in the X-Bunq-Client-Authentication header.
-            apiClient.registerDevice(psd2ApiKey, aggregatorIdentifier);
-        } catch (HttpResponseException e) {
-            List<String> errorDescriptionsFromException =
-                    ErrorResponse.getErrorDescriptionsFromException(e);
-            log.debug(errorDescriptionsFromException.toString());
-            if (!errorDescriptionsFromException.contains(
-                    ErrorResponse.ErrorDescriptions.DEVICE_ALREAY_EXISTS)) {
-                throw e;
-            }
-        }
+        // Register a device by using POST v1/device-server using the API key for the secret and
+        // passing the installation Token in the X-Bunq-Client-Authentication header.
+        apiClient.registerDevice(psd2ApiKey, aggregatorIdentifier);
 
         // Create your first session by executing POST v1/session-server. Provide the installation
         // Token in the X-Bunq-Client-Authentication header. You will receive a session Token. Use
@@ -110,31 +99,13 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                         .getUserPaymentServiceProvider()
                         .getSessionTimeout());
 
-        try {
-            // Call POST /v1/user/{userID}/oauth-client
-            AddOAuthClientIdResponse addOAuthClientIdResponse =
-                    apiClient.addOAuthClientId(
-                            sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID));
-            sessionStorage.put(
-                    BunqConstants.StorageKeys.OAUTH_CLIENT_ID,
-                    addOAuthClientIdResponse.getId().getId());
-        } catch (HttpResponseException e) {
-            List<String> errorDescriptionsFromException =
-                    ErrorResponse.getErrorDescriptionsFromException(e);
-            log.debug(errorDescriptionsFromException.toString());
-            if (!errorDescriptionsFromException.contains(
-                    ErrorResponse.ErrorDescriptions.ONLY_ONE_OAUTH_REGISTERED)) {
-                throw e;
-            } else {
-                GetClientIdAndSecretResponse getClientIdAndSecretResponse =
-                        apiClient.getOAuthClientId(
-                                sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID));
-
-                sessionStorage.put(
-                        BunqConstants.StorageKeys.OAUTH_CLIENT_ID,
-                        getClientIdAndSecretResponse.getOauthClient().getId());
-            }
-        }
+        // Call POST /v1/user/{userID}/oauth-client
+        AddOAuthClientIdResponse addOAuthClientIdResponse =
+                apiClient.addOAuthClientId(
+                        sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID));
+        sessionStorage.put(
+                BunqConstants.StorageKeys.OAUTH_CLIENT_ID,
+                addOAuthClientIdResponse.getId().getId());
 
         // Call GET /v1/user/{userID}/oauth-client/{oauth-clientID}. We will return your Client ID
         // and Client Secret.
@@ -149,23 +120,13 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                 BunqConstants.StorageKeys.CLIENT_SECRET,
                 getClientIdAndSecretResponse.getOauthClient().getClientSecret());
 
-        try {
-            // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
-            // OAuth
-            // callback URL of your application.
-            apiClient.registerCallbackUrl(
-                    sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID),
-                    sessionStorage.get(BunqConstants.StorageKeys.OAUTH_CLIENT_ID),
-                    agentConfiguration.getRedirectUrl());
-        } catch (HttpResponseException e) {
-            List<String> errorDescriptionsFromException =
-                    ErrorResponse.getErrorDescriptionsFromException(e);
-            log.debug(errorDescriptionsFromException.toString());
-            if (!errorDescriptionsFromException.contains(
-                    ErrorResponse.ErrorDescriptions.CALLBACK_URL_ALREADY_REGISTERED)) {
-                throw e;
-            }
-        }
+        // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
+        // OAuth
+        // callback URL of your application.
+        apiClient.registerCallbackUrl(
+                sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID),
+                sessionStorage.get(BunqConstants.StorageKeys.OAUTH_CLIENT_ID),
+                agentConfiguration.getRedirectUrl());
 
         return BunqConstants.Url.AUTHORIZE
                 .queryParam(BunqConstants.QueryParams.RESPONSE_TYPE, BunqConstants.QueryValues.CODE)
