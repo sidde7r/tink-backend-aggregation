@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -24,9 +23,7 @@ import java.util.stream.StreamSupport;
 public class BunqHashMapDeserializer {
     public static class BunqDeserializer extends JsonDeserializer<BunqResponse<?>>
             implements ContextualDeserializer {
-        private static final ObjectMapper mapper =
-                new ObjectMapper()
-                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        private static final ObjectMapper mapper = new ObjectMapper();
         private JavaType valueType;
 
         @Override

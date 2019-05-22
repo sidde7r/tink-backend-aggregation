@@ -44,8 +44,6 @@ public abstract class BunqBaseAgent extends NextGenerationAgent {
         client.addFilter(
                 new BunqSignatureHeaderFilter(
                         sessionStorage, temporaryStorage, client.getUserAgent()));
-        client.setDebugOutput(true);
-        client.setDebugProxy("http://192.168.238.15:8888");
     }
 
     @Override
