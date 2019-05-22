@@ -46,9 +46,10 @@ public class SpankkiKeyCardAuthenticator implements KeyCardAuthenticator {
 
         AddDeviceResponse addDeviceResponse = this.apiClient.addDevice();
 
-        this.sessionStorage.putCustomerId(loginResponse.getCustomer().getCustomerId());
+        sessionStorage.putCustomerId(loginResponse.getCustomer().getCustomerId());
+        sessionStorage.putCustomerEntity(loginResponse.getCustomer());
 
-        this.persistentStorage.putDeviceId(addDeviceResponse.getDeviceId());
-        this.persistentStorage.putDeviceToken(addDeviceResponse.getLoginToken());
+        persistentStorage.putDeviceId(addDeviceResponse.getDeviceId());
+        persistentStorage.putDeviceToken(addDeviceResponse.getLoginToken());
     }
 }

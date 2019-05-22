@@ -62,7 +62,8 @@ public class SpankkiAutoAuthenticator implements AutoAuthenticator {
 
             deviceToken = loginResponse.getNewToken();
             // store customer id in session
-            this.sessionStorage.putCustomerId(loginResponse.getCustomer().getCustomerId());
+            sessionStorage.putCustomerId(loginResponse.getCustomer().getCustomerId());
+            sessionStorage.putCustomerEntity(loginResponse.getCustomer());
         } catch (BankServiceException e) {
             throw e;
         } catch (AuthenticationException | AuthorizationException e) {

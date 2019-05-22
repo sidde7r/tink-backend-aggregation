@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.identitydata.IdentityData;
 
 @JsonObject
 public class CustomerEntity {
@@ -78,5 +79,13 @@ public class CustomerEntity {
 
     public int getWarrantyReceiptCount() {
         return warrantyReceiptCount;
+    }
+
+    public IdentityData toTinkIdentity() {
+        return IdentityData.builder()
+                .addFirstNameElement(firstName)
+                .addSurnameElement(lastName)
+                .setDateOfBirth(null)
+                .build();
     }
 }
