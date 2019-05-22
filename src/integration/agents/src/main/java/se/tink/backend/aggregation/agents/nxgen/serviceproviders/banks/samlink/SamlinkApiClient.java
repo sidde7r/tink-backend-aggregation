@@ -64,6 +64,11 @@ public class SamlinkApiClient {
         Links serviceLinks = fetchServicesEndpoints(loginResponse.getLinks());
         sessionStorage.storeServicesEndpoints(serviceLinks);
 
+        final String loginName = loginResponse.getName();
+        if (!Strings.isNullOrEmpty(loginName)) {
+            sessionStorage.storeLoginName(loginName);
+        }
+
         return loginResponse;
     }
 
