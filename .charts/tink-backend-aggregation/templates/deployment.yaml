@@ -27,7 +27,7 @@ spec:
       - key: node-role.kubernetes.io/spot-worker
         effect: NoSchedule
         operator: Exists
-
+      {{- if not (eq "local" .Values.Cluster) }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -52,6 +52,7 @@ spec:
                 {{- range $zone := .Values.nodeZones }}
                 - "{{ $zone }}"
                 {{- end }}
+        {{- end }}
         {{- end }}
 
       securityContext:
@@ -276,6 +277,7 @@ spec:
         {{- end }}
       containers:
       - name: tink-backend-aggregation
+        {{- if not (eq "local" .Values.Cluster) }}
         resources:
           requests:
             memory: {{ default "700Mi" .Values.podMemoryRequest }}
@@ -283,10 +285,10 @@ spec:
           limits:
             memory: {{ default "1Gi" .Values.podMemoryLimit }}
             cpu: {{ default "1000m" .Values.podCpuLimit }}
-
+          {{- end }}
         {{- if eq "local" .Values.Cluster }}
-        image: bazel/docker:aggregation_image
-        imagePullPolicy: Never
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         {{ else }}
         image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
         imagePullPolicy: IfNotPresent
@@ -308,6 +310,8 @@ spec:
         ports:
         - name: https-api
           containerPort: 8443
+        - name: http-api
+          containerPort: 8080
         - name: metrics
           containerPort: 9130
 
@@ -331,7 +335,7 @@ spec:
           periodSeconds: 3
           failureThreshold: 3
           timeoutSeconds: 1
-          initialDelaySeconds: 60
+          initialDelaySeconds: {{ default 60 .Values.initialDelaySeconds }}
 
         volumeMounts:
         - name: tmp
@@ -379,3 +383,11 @@ spec:
         emptyDir: {}
       - name: tmp
         emptyDir: {}
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aggregation
+{{ end }}
