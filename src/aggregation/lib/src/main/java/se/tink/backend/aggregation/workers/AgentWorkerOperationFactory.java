@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
@@ -146,7 +146,7 @@ public class AgentWorkerOperationFactory {
 
         try {
             Class<? extends Agent> agentClass = AgentClassFactory.getAgentClass(provider);
-            return NextGenerationAgent.class.isAssignableFrom(agentClass);
+            return SubsequentGenerationAgent.class.isAssignableFrom(agentClass);
         } catch (Exception e) {
             return false;
         }

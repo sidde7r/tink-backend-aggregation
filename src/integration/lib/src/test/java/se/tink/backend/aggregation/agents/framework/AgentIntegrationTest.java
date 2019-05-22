@@ -38,7 +38,7 @@ import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequestImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
@@ -278,9 +278,9 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
     private void doGenericPaymentBankTransfer(Agent agent, List<Payment> paymentList)
             throws Exception {
 
-        if (agent instanceof NextGenerationAgent) {
+        if (agent instanceof SubsequentGenerationAgent) {
             PaymentController paymentController =
-                    ((NextGenerationAgent) agent)
+                    ((SubsequentGenerationAgent) agent)
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
 
@@ -454,7 +454,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-            if (agent instanceof NextGenerationAgent) {
+            if (agent instanceof SubsequentGenerationAgent) {
                 doGenericPaymentBankTransfer(agent, paymentList);
             } else {
                 throw new NotImplementedException(
