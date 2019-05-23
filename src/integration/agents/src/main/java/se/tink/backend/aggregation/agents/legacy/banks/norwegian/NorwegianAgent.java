@@ -41,6 +41,7 @@ import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.LoginRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.OrderBankIdResponse;
@@ -265,10 +266,13 @@ public class NorwegianAgent extends AbstractAgent
 
         AccountEntity account = new AccountEntity();
 
+        CreditCardResponse creditCardResponse =
+                createClientRequest(CREDIT_CARD_URL).get(CreditCardResponse.class);
+
         // Parse account number and balance
-        String creditcardPage = createClientRequest(CREDIT_CARD_URL).get(String.class);
-        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(creditcardPage));
-        account.setBalance(CreditCardParsingUtils.parseBalance(creditcardPage));
+        String creditCardPage = createScrapeRequest(CREDIT_CARD_URL).get(String.class);
+        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(creditCardPage));
+        account.setBalance(creditCardResponse.getBalance());
 
         return account.toTinkAccount();
     }
@@ -471,6 +475,12 @@ public class NorwegianAgent extends AbstractAgent
 
     private static String toFormattedDate(final Date date) {
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
+    }
+
+    private WebResource.Builder createScrapeRequest(String url) {
+        return client.resource(url)
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
+                .accept(MediaType.TEXT_HTML);
     }
 
     private WebResource.Builder createClientRequest(String url) {
