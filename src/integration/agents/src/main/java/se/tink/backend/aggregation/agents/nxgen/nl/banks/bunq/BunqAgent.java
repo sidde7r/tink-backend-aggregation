@@ -1,46 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
-import com.google.common.base.Preconditions;
-import java.util.Optional;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqRegistrationAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.BunqTransactionalTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqRequiredHeadersFilter;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.filter.BunqSignatureHeaderFilter;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.session.BunqSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BunqAgent extends NextGenerationAgent {
+public class BunqAgent extends BunqBaseAgent {
+
     private final BunqApiClient apiClient;
 
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        configureHttpClient(client);
-
-        String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
-        BunqConfiguration agentConfiguration = new BunqConfiguration(backendHost);
-        this.apiClient = new BunqApiClient(client, agentConfiguration);
-    }
-
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addFilter(new BunqRequiredHeadersFilter(sessionStorage));
-        client.addFilter(new BunqSignatureHeaderFilter(persistentStorage, client.getUserAgent()));
+        this.apiClient = new BunqApiClient(client, getAgentConfiguration().getBackendHost());
+        sessionStorage.put(
+                BunqBaseConstants.StorageKeys.USER_API_KEY,
+                credentials.getField(Field.Key.PASSWORD));
     }
 
     @Override
@@ -50,55 +33,15 @@ public class BunqAgent extends NextGenerationAgent {
                 new BunqRegistrationAuthenticator(
                         persistentStorage,
                         sessionStorage,
+                        temporaryStorage,
                         apiClient,
                         getAggregatorInfo().getAggregatorIdentifier()),
                 new BunqAutoAuthenticator(
-                        credentials, persistentStorage, sessionStorage, apiClient));
-    }
-
-    @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BunqTransactionalAccountFetcher(sessionStorage, apiClient),
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(
-                                        new BunqTransactionalTransactionsFetcher(
-                                                sessionStorage, apiClient)))));
-    }
-
-    @Override
-    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.empty();
+                        persistentStorage, sessionStorage, temporaryStorage, apiClient));
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BunqSessionHandler(apiClient, sessionStorage);
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 }

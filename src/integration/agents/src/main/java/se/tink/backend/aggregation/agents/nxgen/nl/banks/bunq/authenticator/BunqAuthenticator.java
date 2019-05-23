@@ -6,7 +6,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BunqAuthenticator implements Authenticator {
@@ -21,6 +26,24 @@ public class BunqAuthenticator implements Authenticator {
         this.request = Preconditions.checkNotNull(request);
         this.registrationAuthenticator = Preconditions.checkNotNull(registrationAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(authenticationAuthenticator);
+    }
+
+    public static void updateClientAuthToken(
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage,
+            TemporaryStorage temporaryStorage) {
+        TokenEntity newClientAuthToken =
+                persistentStorage
+                        .get(
+                                BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
+                                TokenEntity.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException("No client auth token found."));
+        sessionStorage.put(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN, newClientAuthToken);
+        temporaryStorage.put(
+                newClientAuthToken.getToken(),
+                persistentStorage.get(
+                        BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR));
     }
 
     @Override
