@@ -25,6 +25,4 @@ clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
 
-image: bazel/src/aggregation/service:aggregation-image
-imagePullPolicy: IfNotPresent
 initialDelaySeconds: 10
