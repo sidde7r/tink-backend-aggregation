@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator;
 
 import java.security.KeyPair;
+import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
@@ -17,11 +18,13 @@ import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -66,15 +69,29 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
             psd2ApiKey = agentConfiguration.getApiKey();
             updateClientAuthToken(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN);
         } else if (!persistentStorage.containsKey(StorageKeys.PSD2_API_KEY)) {
-            registerSoftware();
+            registerAsPSD2ServiceProvider();
             psd2ApiKey = persistentStorage.get(BunqConstants.StorageKeys.PSD2_API_KEY);
         }
 
-        // Register a device by using POST v1/device-server using the API key for the secret and
-        // passing the installation Token in the X-Bunq-Client-Authentication header.
-        apiClient.registerDevice(psd2ApiKey, aggregatorIdentifier);
+        // This is done in a try catch block for the case when the PSD2 session has expired and we
+        // have to open a new one, if we try to open a new one from an IP we haven't used before we
+        // should register it as a new device and this is what we try to do, but this will fail if
+        // we are going to open a session from an IP we have already used before
+        try {
+            // Register a device by using POST v1/device-server using the API key for the secret and
+            // passing the installation Token in the X-Bunq-Client-Authentication header.
+            apiClient.registerDevice(psd2ApiKey, aggregatorIdentifier);
+        } catch (HttpResponseException e) {
+            List<String> errorDescriptionsFromException =
+                    ErrorResponse.getErrorDescriptionsFromException(e);
+            log.info(errorDescriptionsFromException.toString());
+            if (!errorDescriptionsFromException.contains(
+                    ErrorResponse.ErrorDescriptions.DEVICE_ALREAY_EXISTS)) {
+                throw e;
+            }
+        }
 
-        // Create your first session by executing POST v1/session-server. Provide the installation
+        // Create your session by executing POST v1/session-server. Provide the installation
         // Token in the X-Bunq-Client-Authentication header. You will receive a session Token. Use
         // it in any following request in the X-Bunq-Client-Authentication header.
         CreateSessionPSD2ProviderResponse createSessionPSD2ProviderResponse =
@@ -93,6 +110,10 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
         // description 'A session expires after the same amount of time you have set for Auto Logout
         // in your user account. By default this is 1 week.' So we retrieve this to later be set as
         // the OAuth token expiration time.
+        // More info about which timeout should be used in this thread
+        // https://together.bunq.com/d/3581-relationship-between-autologout-time-and-token-from-session-for-oauth2-flow
+        // Specifically: "The session time out is based on the requested by user session time out."
+        // and we are the requesting user.
         sessionStorage.put(
                 BunqConstants.StorageKeys.PSD2_SESSION_TIMEOUT,
                 createSessionPSD2ProviderResponse
@@ -213,7 +234,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     // by other banks, this only needs to be run once per QSealC certificate used to obtain the PSD2
     // API key that can then be saved as a secret and used to create future session/register
     // devices.
-    private void registerSoftware() {
+    private void registerAsPSD2ServiceProvider() {
         KeyPair keyPair = RSA.generateKeyPair(2048);
         persistentStorage.put(
                 StorageKeys.PSD2_DEVICE_RSA_SIGNING_KEY_PAIR,

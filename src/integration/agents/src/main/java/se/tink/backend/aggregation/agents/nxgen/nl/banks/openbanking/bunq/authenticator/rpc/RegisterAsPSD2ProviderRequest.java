@@ -58,10 +58,10 @@ public class RegisterAsPSD2ProviderRequest {
     public static RegisterAsPSD2ProviderRequest of(PublicKey publicKey, TokenEntity tokenEntity) {
         // Generate test certificates following instructions from here
         // https://github.com/bunq/psd2_sample_csharp/blob/97ca777894e401ef85e43f9ae0e54a1e501290ac/Program.cs#L25
-        KeyPair keyPair = generateKeyPair();
+        KeyPair keyPair = generateTestKeyPair();
         PrivateKey qsealPrivateKey = keyPair.getPrivate();
 
-        X509Certificate qsealCert = generateCertificate(keyPair);
+        X509Certificate qsealCert = generateTestCertificate(keyPair);
 
         String rootCertString =
                 "-----BEGIN CERTIFICATE-----\n"
@@ -102,7 +102,7 @@ public class RegisterAsPSD2ProviderRequest {
                 EncodingUtils.encodeAsBase64String(signedClientPublicKeySignature));
     }
 
-    private static X509Certificate generateCertificate(KeyPair keyPair) {
+    private static X509Certificate generateTestCertificate(KeyPair keyPair) {
         // yesterday
         Date from = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
         // in 1 year
@@ -111,7 +111,8 @@ public class RegisterAsPSD2ProviderRequest {
         SubjectPublicKeyInfo subjectPublicKeyInfo =
                 SubjectPublicKeyInfo.getInstance(keyPair.getPublic().getEncoded());
 
-        X500Name x500Name = new X500Name("CN=TINK" + UUIDUtils.generateUUID() + " PISP AISP, C=NL");
+        X500Name x500Name =
+                new X500Name("CN=TINK-" + UUIDUtils.generateUUID() + " PISP AISP, C=NL");
         BigInteger sn = new BigInteger(64, new SecureRandom());
 
         X509v1CertificateBuilder builder =
@@ -144,7 +145,7 @@ public class RegisterAsPSD2ProviderRequest {
         return x509Certificate;
     }
 
-    private static KeyPair generateKeyPair() {
+    private static KeyPair generateTestKeyPair() {
         KeyPairGenerator keyPairGenerator = null;
         try {
             keyPairGenerator = KeyPairGenerator.getInstance("RSA");
