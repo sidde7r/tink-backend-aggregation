@@ -30,8 +30,8 @@ public class SebKortConstants {
 
     public static class StorageKey {
         public static final String AUTHORIZATION = "Authorization";
-        public static final String CARD_ID = "CARD_ID";
-        public static final String CARD_CONTRACT_ID = "CARD_CONTRACT_ID";
+        public static final String CARD_ACCOUNT_ID = "cardAccountId";
+        public static final String IS_ACCOUNT_OWNER = "isAccountOwner";
     }
 
     public static class QueryKey {
@@ -76,6 +76,11 @@ public class SebKortConstants {
         public static final String TARGET = "/nis/m/%s/login/loginSuccess";
         public static final String TYPE = "EID";
         public static final String SEB_AUTH_MECHANISM = "5";
+    }
+
+    public static class TransactionType {
+        public static final String PAYMENT = "PAYMENT";
+        public static final String FEE = "FEE";
     }
 
     public static class Error {

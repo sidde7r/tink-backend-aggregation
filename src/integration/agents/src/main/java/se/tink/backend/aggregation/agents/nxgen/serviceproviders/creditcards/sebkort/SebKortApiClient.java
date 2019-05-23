@@ -78,6 +78,13 @@ public class SebKortApiClient {
                 .get(ReservationsResponse.class);
     }
 
+    public TransactionsResponse fetchTransactionsForCardAccountId(
+            String cardAccountId, Date fromDate, Date toDate) {
+        return fetchTransactionsFor(fromDate, toDate)
+                .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
+                .get(TransactionsResponse.class);
+    }
+
     public BankIdCollectResponse collectBankId(URL collectUrl, BankIdCollectRequest request) {
         return createRequest(collectUrl).post(BankIdCollectResponse.class, request);
     }
