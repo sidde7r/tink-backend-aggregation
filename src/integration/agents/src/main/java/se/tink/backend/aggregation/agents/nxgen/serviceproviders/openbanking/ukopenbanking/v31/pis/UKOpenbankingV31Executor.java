@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -149,15 +150,14 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
     private PaymentMultiStepResponse authorized(Payment payment, String consentId)
             throws PaymentException {
 
-        String nextStep = UkOpenBankingV31Constants.Step.AUTHORIZE;
+        String step =
+                Optional.of(getConfig(payment).fetchPayment(payment))
+                        .map(p -> p.getStatus())
+                        .filter(s -> s == PaymentStatus.PENDING)
+                        .map(s -> UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS)
+                        .orElseGet(() -> UkOpenBankingV31Constants.Step.AUTHORIZE);
 
-        Payment paymentResponse = getConfig(payment).fetchPayment(payment);
-
-        if (paymentResponse.getStatus().equals(PaymentStatus.PENDING)) {
-            nextStep = UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS;
-        }
-
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(payment, step, new ArrayList<>());
     }
 
     private PaymentMultiStepResponse sufficientFunds(Payment payment, String consentId)
