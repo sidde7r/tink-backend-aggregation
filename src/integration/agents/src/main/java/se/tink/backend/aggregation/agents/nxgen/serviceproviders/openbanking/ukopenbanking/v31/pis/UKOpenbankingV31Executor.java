@@ -133,7 +133,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
                 return new PaymentMultiStepResponse(
                         payment, UkOpenBankingV31Constants.Step.AUTHORIZE, new ArrayList<>());
             case REJECTED:
-                throw new PaymentAuthorizationException("Payment is rejected", new Throwable());
+                throw new PaymentAuthorizationException(
+                        "Payment is rejected", new IllegalStateException("Payment is rejected"));
             case PENDING:
                 return new PaymentMultiStepResponse(
                         payment,
@@ -165,7 +166,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
         FundsConfirmationResponse response = getConfig(payment).fetchFundsConfirmation(payment);
 
         if (!response.isFundsAvailable()) {
-            throw new InsufficientFundsException("Insufficient funds", "", new Throwable());
+            throw new InsufficientFundsException(
+                    "Insufficient funds", "", new IllegalStateException("Insufficient funds"));
         }
 
         return new PaymentMultiStepResponse(
@@ -175,7 +177,8 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
     private PaymentMultiStepResponse executePayment(Payment payment, String consentId)
             throws PaymentException {
         String endToEndIdentification = payment.getUniqueId();
-        String instructionIdentification = RandomUtils.generateRandomHexEncoded(UkOpenBankingV31Constants.HEX_SIZE);
+        String instructionIdentification =
+                RandomUtils.generateRandomHexEncoded(UkOpenBankingV31Constants.HEX_SIZE);
 
         Payment responsePayment =
                 getConfig(payment)
