@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticato
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc.FetchCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.rpc.CustomerInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.rpc.FetchLoanResponse;
@@ -213,5 +214,13 @@ public class NordeaFIApiClient {
 
     private String getRefreshToken() {
         return sessionStorage.get(NordeaFIConstants.SessionStorage.REFRESH_TOKEN);
+    }
+
+    public CustomerInfoResponse fetchCustomerInfo() {
+        RequestBuilder request =
+                httpClient
+                        .request(NordeaFIConstants.Urls.FETCH_CUSTOMER_INFO)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshableGet(request, CustomerInfoResponse.class);
     }
 }

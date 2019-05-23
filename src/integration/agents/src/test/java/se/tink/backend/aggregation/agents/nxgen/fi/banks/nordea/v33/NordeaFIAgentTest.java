@@ -27,6 +27,8 @@ public class NordeaFIAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("fi", "fi-nordea-thirdpartyapp")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .doLogout(true);
