@@ -149,7 +149,17 @@ public class TransactionEntity {
     }
 
     @JsonIgnore
-    public CreditCardTransaction toTinkTransaction(boolean isPending) {
+    public CreditCardTransaction getBookedTinkTransaction() {
+        return toTinkTransaction(false);
+    }
+
+    @JsonIgnore
+    public CreditCardTransaction getPendingTinkTransaction() {
+        return toTinkTransaction(true);
+    }
+
+    @JsonIgnore
+    private CreditCardTransaction toTinkTransaction(boolean isPending) {
         Amount negatedAmount =
                 new Amount(this.getBillingCurrencyCode(), this.getBillingAmount()).negate();
 

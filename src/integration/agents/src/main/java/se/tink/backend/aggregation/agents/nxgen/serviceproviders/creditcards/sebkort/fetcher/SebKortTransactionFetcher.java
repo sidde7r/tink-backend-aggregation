@@ -57,7 +57,7 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
         final List<CreditCardTransaction> pendingTransactions =
                 apiClient.fetchReservationsForContractId(account.getBankIdentifier())
                         .getReservations().stream()
-                        .map(transactionEntity -> transactionEntity.toTinkTransaction(true))
+                        .map(TransactionEntity::getPendingTinkTransaction)
                         .collect(Collectors.toList());
 
         pendingFetched = true;
@@ -71,7 +71,7 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
         return apiClient
                 .fetchTransactionsForContractId(account.getBankIdentifier(), fromDate, toDate)
                 .getTransactions().stream()
-                .map(transactionEntity -> transactionEntity.toTinkTransaction(false))
+                .map(TransactionEntity::getBookedTinkTransaction)
                 .collect(Collectors.toList());
     }
 
@@ -93,7 +93,7 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
         return apiClient.fetchTransactionsForCardAccountId(cardAccountId, fromDate, toDate)
                 .getTransactions().stream()
                 .filter(TransactionEntity::isPaymentOrFee)
-                .map(transactionEntity -> transactionEntity.toTinkTransaction(false))
+                .map(TransactionEntity::getBookedTinkTransaction)
                 .collect(Collectors.toList());
     }
 }
