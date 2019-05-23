@@ -71,6 +71,9 @@ public class CardEntity {
 
     private Amount getAvailableCreditForOwnerIfPresent(
             CardAccountEntity account, CardContractEntity cardContract) {
+
+        // Some SEBKort providers do not supply card accounts. In that case we can't set
+        // available credit.
         if (Objects.isNull(account)) {
             return null;
         }
