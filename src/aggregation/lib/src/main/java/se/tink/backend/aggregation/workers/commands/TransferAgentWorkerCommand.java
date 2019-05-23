@@ -2,10 +2,18 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.*;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
@@ -134,9 +142,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 log.error(transfer, "Could not execute transfer.", e);
             }
 
-            signableOperation.setStatus(e.getSignableOperationStatus());
-            signableOperation.setStatusMessage(e.getUserMessage());
-            context.updateSignableOperation(signableOperation);
+            context.updateSignableOperationStatus(
+                    signableOperation, e.getSignableOperationStatus(), e.getUserMessage());
 
             return AgentWorkerCommandResult.ABORT;
 
