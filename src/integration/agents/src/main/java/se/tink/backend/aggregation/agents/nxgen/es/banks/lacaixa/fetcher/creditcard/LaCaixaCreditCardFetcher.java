@@ -4,13 +4,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.CardLiquidationDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.GenericCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
@@ -49,15 +48,7 @@ public class LaCaixaCreditCardFetcher
             // set balance for first card in contract, zero for the others
             return cardsResponse.getCards().stream()
                     .filter(GenericCardEntity::isCreditCard)
-                    .map(
-                            card -> {
-                                Amount balance = Amount.inEUR(0);
-                                if (contracts.get(card.getContract()).get(0).equals(card)) {
-                                    balance =
-                                            fetchBalanceForCardContract(card.getRefValIdContract());
-                                }
-                                return card.toTinkCard(balance);
-                            })
+                    .map(card -> mapCreditCardAccount(card, contracts))
                     .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
@@ -75,24 +66,38 @@ public class LaCaixaCreditCardFetcher
         }
     }
 
-    private Amount fetchBalanceForCardContract(String contractRefVal) {
+    private CreditCardAccount mapCreditCardAccount(
+            GenericCardEntity card, Map<String, List<GenericCardEntity>> contracts) {
+        boolean isFirstCardOnContract = contracts.get(card.getContract()).get(0).equals(card);
+        if (!isFirstCardOnContract) {
+            return card.toTinkCard(Amount.inEUR(0));
+        }
+        try {
+            final Amount balance = fetchBalanceForCardContract(card.getRefValIdContract());
+            return card.toTinkCard(balance);
+        } catch (NoSuchElementException e) {
+            LOG.warn("Unable to fetch card balance");
+            return card.toTinkCard(Amount.inEUR(0));
+        }
+    }
+
+    private Amount fetchBalanceForCardContract(String contractRefVal)
+            throws NoSuchElementException {
         final CardLiquidationsResponse liquidations =
                 apiClient.fetchCardLiquidations(contractRefVal, true);
-        final Optional<CardLiquidationDataEntity> liquidation =
-                liquidations.getNextFutureLiquidation();
-        if (liquidation.isPresent()) {
-            final String liquidationDateValue = liquidation.get().getEndDate().getValue();
-            final LiquidationDetailResponse liquidationDetail =
-                    apiClient.fetchCardLiquidationDetail(
-                            liquidations.getRefValNumContract(), liquidationDateValue);
-            final Amount debt = Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt());
-            if (debt.isZero()) {
-                return debt;
-            } else {
-                return debt.negate();
-            }
+        final String liquidationDateValue =
+                liquidations
+                        .getNextFutureLiquidationDate()
+                        .orElseThrow(NoSuchElementException::new);
+        final LiquidationDetailResponse liquidationDetail =
+                apiClient.fetchCardLiquidationDetail(
+                        liquidations.getRefValNumContract(), liquidationDateValue);
+        final Amount debt = Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt());
+        if (debt.isZero()) {
+            return debt;
+        } else {
+            return debt.negate();
         }
-        return Amount.inEUR(0);
     }
 
     @Override

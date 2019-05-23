@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.CardLiquidationDataEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.DateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.LiquidationsListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -19,8 +20,11 @@ public class CardLiquidationsResponse {
     private double limitAmount;
 
     @JsonIgnore
-    public Optional<CardLiquidationDataEntity> getNextFutureLiquidation() {
-        return liquidationsList.getNextFutureLiquidation();
+    public Optional<String> getNextFutureLiquidationDate() {
+        return liquidationsList
+                .getNextFutureLiquidation()
+                .map(CardLiquidationDataEntity::getEndDate)
+                .map(DateEntity::getValue);
     }
 
     public String getRefValNumContract() {
