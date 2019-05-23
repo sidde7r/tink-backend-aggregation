@@ -61,7 +61,17 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
 
         PaymentType type =
                 mapper.translate(payment.getCreditorAndDebtorAccountType())
-                        .orElseThrow(() -> new IllegalStateException("Cannot map paymentType!"));
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "Cannot map Identifiers, first: %s second: %s",
+                                                        payment.getCreditorAndDebtorAccountType()
+                                                                .first
+                                                                .toString(),
+                                                        payment.getCreditorAndDebtorAccountType()
+                                                                .second
+                                                                .toString())));
 
         switch (type) {
             case DOMESTIC:
