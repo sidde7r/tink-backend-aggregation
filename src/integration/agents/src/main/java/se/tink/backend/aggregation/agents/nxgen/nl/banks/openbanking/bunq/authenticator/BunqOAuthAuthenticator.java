@@ -14,11 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authen
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.RegisterAsPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.TokenExchangeResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.InstallResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.RegisterDeviceResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.ErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -189,13 +189,14 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     // https://github.com/bunq/psd2_sample_csharp/blob/97ca777894e401ef85e43f9ae0e54a1e501290ac/Program.cs#L135
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(BunqConstants.StorageKeys.USER_API_KEY, accessToken.getAccessToken());
+        sessionStorage.put(
+                BunqBaseConstants.StorageKeys.USER_API_KEY, accessToken.getAccessToken());
 
         // Start by sending the server the public key so they can verify our signature header in
         // future requests
         KeyPair keyPair = RSA.generateKeyPair(2048);
         persistentStorage.put(
-                StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR,
+                BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR,
                 SerializationUtils.serializeKeyPair(keyPair));
         sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
         InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
@@ -283,7 +284,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                         .get(storageTokenKey, TokenEntity.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("No client auth token found."));
-        sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, newClientAuthToken);
+        sessionStorage.put(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN, newClientAuthToken);
         String storageDeviceRSASigningKeyPairKey;
         switch (storageTokenKey) {
             case BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN:

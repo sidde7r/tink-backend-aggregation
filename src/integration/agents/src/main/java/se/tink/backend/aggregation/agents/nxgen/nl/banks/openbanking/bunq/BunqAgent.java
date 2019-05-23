@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.BunqOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.session.BunqSessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -17,6 +17,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BunqAgent extends BunqBaseAgent {
     private BunqConfiguration bunqConfiguration;
+    private final BunqApiClient apiClient;
 
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -48,7 +49,7 @@ public class BunqAgent extends BunqBaseAgent {
                         persistentStorage,
                         supplementalInformationHelper,
                         new BunqOAuthAuthenticator(
-                                (BunqApiClient) apiClient,
+                                apiClient,
                                 persistentStorage,
                                 sessionStorage,
                                 temporaryStorage,

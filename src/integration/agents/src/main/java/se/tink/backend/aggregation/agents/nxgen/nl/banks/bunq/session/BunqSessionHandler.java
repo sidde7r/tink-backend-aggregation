@@ -2,16 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.session;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BunqSessionHandler implements SessionHandler {
-    private final BunqBaseApiClient apiClient;
+    private final BunqApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public BunqSessionHandler(BunqBaseApiClient apiClient, SessionStorage sessionStorage) {
+    public BunqSessionHandler(BunqApiClient apiClient, SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }

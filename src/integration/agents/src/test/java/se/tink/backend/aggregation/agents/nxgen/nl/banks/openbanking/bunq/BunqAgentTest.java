@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public class BunqAgentTest {
-    private final ArgumentManager<BunqAgentTest.Arg> manager =
-            new ArgumentManager<>(BunqAgentTest.Arg.values());
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
@@ -22,10 +21,8 @@ public class BunqAgentTest {
 
         builder =
                 new AgentIntegrationTest.Builder("nl", "nl-bunq-oauth2")
-                        .loadCredentialsBefore(
-                                Boolean.parseBoolean(manager.get(BunqAgentTest.Arg.LOAD_BEFORE)))
-                        .saveCredentialsAfter(
-                                Boolean.parseBoolean(manager.get(BunqAgentTest.Arg.SAVE_AFTER)));
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test

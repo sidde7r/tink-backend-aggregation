@@ -19,23 +19,29 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authen
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.RegisterCallbackResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.RegisterCallbackResponseWrapper;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.TokenExchangeResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.CreateSessionRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.authenticator.rpc.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class BunqApiClient extends BunqBaseApiClient {
+public class BunqApiClient {
+
+    private final BunqBaseApiClient baseApiClient;
+    private final TinkHttpClient client;
 
     public BunqApiClient(TinkHttpClient client, String baseApiEndpoint) {
-        super(client, baseApiEndpoint);
+        this.baseApiClient = new BunqBaseApiClient(client, baseApiEndpoint);
+        this.client = client;
     }
 
     public RegisterAsPSD2ProviderResponse registerAsPSD2Provider(
             PublicKey publicKey, TokenEntity tokenEntity) {
         RegisterAsPSD2ProviderResponseWrapper response =
-                client.request(getUrl(BunqConstants.Url.REGISTER_AS_PSD2_PROVIDER))
+                client.request(baseApiClient.getUrl(BunqConstants.Url.REGISTER_AS_PSD2_PROVIDER))
                         .post(
                                 RegisterAsPSD2ProviderResponseWrapper.class,
                                 RegisterAsPSD2ProviderRequest.of(publicKey, tokenEntity));
@@ -51,8 +57,10 @@ public class BunqApiClient extends BunqBaseApiClient {
     public AddOAuthClientIdResponse addOAuthClientId(String userId) {
         AddOAuthClientIdResponseWrapper response =
                 client.request(
-                                getUrl(BunqConstants.Url.GET_OAUTH_CLIENT_ID)
-                                        .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId))
+                                baseApiClient
+                                        .getUrl(BunqConstants.Url.GET_OAUTH_CLIENT_ID)
+                                        .parameter(
+                                                BunqBaseConstants.UrlParameterKeys.USER_ID, userId))
                         .post(
                                 AddOAuthClientIdResponseWrapper.class,
                                 new AddOauthClientIdRequest(Status.ACTIVE));
@@ -65,26 +73,13 @@ public class BunqApiClient extends BunqBaseApiClient {
                                         "Could not deserialize AddOAuthClientIdResponse"));
     }
 
-    public GetClientIdAndSecretResponse getOAuthClientId(String userId) {
-        GetClientIdAndSecretResponseWrapper response =
-                client.request(
-                                getUrl(BunqConstants.Url.GET_OAUTH_CLIENT_ID)
-                                        .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId))
-                        .get(GetClientIdAndSecretResponseWrapper.class);
-
-        return Optional.ofNullable(response.getResponse())
-                .map(BunqResponse::getResponseBody)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not deserialize GetClientIdAndSecretResponse"));
-    }
-
     public GetClientIdAndSecretResponse getClientIdAndSecret(String userId, String oAuthClientId) {
         GetClientIdAndSecretResponseWrapper response =
                 client.request(
-                                getUrl(BunqConstants.Url.GET_CLIENT_ID_AND_SECRET)
-                                        .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId)
+                                baseApiClient
+                                        .getUrl(BunqConstants.Url.GET_CLIENT_ID_AND_SECRET)
+                                        .parameter(
+                                                BunqBaseConstants.UrlParameterKeys.USER_ID, userId)
                                         .parameter(
                                                 BunqConstants.UrlParameterKeys.OAUTH_CLIENT_ID,
                                                 oAuthClientId))
@@ -102,8 +97,10 @@ public class BunqApiClient extends BunqBaseApiClient {
             String userId, String oAuthClientId, String redirectUrl) {
         RegisterCallbackResponseWrapper response =
                 client.request(
-                                getUrl(BunqConstants.Url.REGISTER_CALLBACK_URL)
-                                        .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId)
+                                baseApiClient
+                                        .getUrl(BunqConstants.Url.REGISTER_CALLBACK_URL)
+                                        .parameter(
+                                                BunqBaseConstants.UrlParameterKeys.USER_ID, userId)
                                         .parameter(
                                                 BunqConstants.UrlParameterKeys.OAUTH_CLIENT_ID,
                                                 oAuthClientId))
@@ -134,7 +131,7 @@ public class BunqApiClient extends BunqBaseApiClient {
 
     public CreateSessionPSD2ProviderResponse createSessionPSD2Provider(String apiKey) {
         CreateSessionPSD2ProviderResponseWrapper response =
-                client.request(getUrl(BunqBaseConstants.Url.CREATE_SESSION))
+                client.request(baseApiClient.getUrl(BunqBaseConstants.Url.CREATE_SESSION))
                         .post(
                                 CreateSessionPSD2ProviderResponseWrapper.class,
                                 CreateSessionRequest.createFromApiKey(apiKey));
@@ -149,7 +146,7 @@ public class BunqApiClient extends BunqBaseApiClient {
 
     public CreateSessionUserAsPSD2ProviderResponse createSessionUserAsPSD2Provider(String apiKey) {
         CreateSessionUserAsPSD2ProviderResponseWrapper response =
-                client.request(getUrl(BunqBaseConstants.Url.CREATE_SESSION))
+                client.request(baseApiClient.getUrl(BunqBaseConstants.Url.CREATE_SESSION))
                         .post(
                                 CreateSessionUserAsPSD2ProviderResponseWrapper.class,
                                 CreateSessionRequest.createFromApiKey(apiKey));
@@ -160,5 +157,13 @@ public class BunqApiClient extends BunqBaseApiClient {
                         () ->
                                 new IllegalStateException(
                                         "Could not deserialize CreateSessionUserAsPSD2ProviderResponse"));
+    }
+
+    public RegisterDeviceResponse registerDevice(String apiKey, String aggregatorIdentifier) {
+        return baseApiClient.registerDevice(apiKey, aggregatorIdentifier);
+    }
+
+    public InstallResponse installation(PublicKey publicKey) {
+        return baseApiClient.installation(publicKey);
     }
 }

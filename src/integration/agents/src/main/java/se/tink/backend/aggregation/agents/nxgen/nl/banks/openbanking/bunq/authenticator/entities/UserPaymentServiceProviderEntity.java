@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authe
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.entities.AliasEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.AliasEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

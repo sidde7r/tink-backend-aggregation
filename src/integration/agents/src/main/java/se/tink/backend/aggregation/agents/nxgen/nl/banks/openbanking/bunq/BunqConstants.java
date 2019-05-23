@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq;
 
-import se.tink.backend.aggregation.agents.nxgen.nl.common.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class BunqConstants extends BunqBaseConstants {
+public final class BunqConstants {
 
-    public static class Url extends BunqBaseConstants.Url {
+    private BunqConstants() {}
+
+    public static class Url {
         public static final URL AUTHORIZE = new URL("https://oauth.sandbox.bunq.com/auth");
         public static final URL TOKEN_EXCHANGE =
                 new URL("https://api-oauth.sandbox.bunq.com/v1/token");
@@ -34,11 +35,11 @@ public class BunqConstants extends BunqBaseConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
     }
 
-    public static class UrlParameterKeys extends BunqBaseConstants.UrlParameterKeys {
+    public static class UrlParameterKeys {
         public static final String OAUTH_CLIENT_ID = "oauth-clientId";
     }
 
-    public static class StorageKeys extends BunqBaseConstants.StorageKeys {
+    public static class StorageKeys {
         public static final String OAUTH_CLIENT_ID = "oauth-client-id";
         public static final String CLIENT_ID = "client-id";
         public static final String CLIENT_SECRET = "client-secret";
