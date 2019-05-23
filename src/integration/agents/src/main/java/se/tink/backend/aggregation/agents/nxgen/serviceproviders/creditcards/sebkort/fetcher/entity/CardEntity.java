@@ -59,8 +59,8 @@ public class CardEntity {
                 .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
                 .setHolderName(new HolderName(getNameOnCard()))
-                .setBalance(getBalanceForOwner(account, contract))
-                .setAvailableCredit(getAvailableCreditForOwnerIfPresent(account, contract))
+                .setBalance(getBalanceIfOwner(account, contract))
+                .setAvailableCredit(getAvailableCreditIfOwnerIfPresent(account, contract))
                 .setBankIdentifier(contract.getId())
                 .putInTemporaryStorage(
                         SebKortConstants.StorageKey.CARD_ACCOUNT_ID, contract.getCardAccountId())
@@ -69,7 +69,7 @@ public class CardEntity {
                 .build();
     }
 
-    private Amount getAvailableCreditForOwnerIfPresent(
+    private Amount getAvailableCreditIfOwnerIfPresent(
             CardAccountEntity account, CardContractEntity cardContract) {
 
         // Some SEBKort providers do not supply card accounts. In that case we can't set
@@ -87,7 +87,7 @@ public class CardEntity {
         return new Amount(account.getCurrencyCode(), account.getDisposableAmount());
     }
 
-    private Amount getBalanceForOwner(CardAccountEntity account, CardContractEntity cardContract) {
+    private Amount getBalanceIfOwner(CardAccountEntity account, CardContractEntity cardContract) {
 
         // Some SEBKort providers do not supply card accounts. In this case we have to use the
         // amount from the card contract. This amount is not the whole truth, it's the amount
