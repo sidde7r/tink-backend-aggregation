@@ -20,5 +20,25 @@ public interface UkOpenBankingConfig {
 
     URL createPaymentSubmissionURL(URL authBaseURL);
 
+    URL createDomesticPaymentConsentURL(URL pisBaseUrl);
+
+    URL getDomesticPaymentConsentURL(URL pisBaseUrl, String consentId);
+
+    URL getDomesticFundsConfirmationURL(URL pisBaseUrl, String consentId);
+
+    URL createDomesticPaymentURL(URL pisBaseUrl);
+
+    URL getDomesticPayment(URL pisBaseUrl, String domesticPaymentId);
+
+    URL createInternationalPaymentConsentURL(URL pisBaseUrl);
+
+    URL getInternationalFundsConfirmationURL(URL pisBaseUrl, String consentId);
+
+    URL getInternationalPaymentConsentURL(URL pisBaseUrl, String consentId);
+
+    URL createInternationalPaymentURL(URL pisBaseUrl);
+
+    URL getInternationalPayment(URL pisBaseUrl, String internationalPaymentId);
+
     <T extends AccountPermissionResponse> Class<T> getIntentIdResponseType();
 }

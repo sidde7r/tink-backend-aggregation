@@ -18,5 +18,30 @@ public abstract class UkOpenBankingConstants extends OpenbankConstants {
         public static final String ACCOUNT_REQUESTS = "/account-requests";
         public static final String PAYMENTS = "/payments";
         public static final String PAYMENT_SUBMISSIONS = "/payment-submissions";
+
+        public static class Domestic {
+            public static final String PAYMENT_CONSENT = "/domestic-payment-consents";
+            public static final String PAYMENT_CONSENT_STATUS =
+                    "/domestic-payment-consents/{consentId}";
+            public static final String PAYMENT_FUNDS_CONFIRMATION =
+                    "/domestic-payment-consents/{consentId}/funds-confirmation";
+            public static final String PAYMENT = "/domestic-payments";
+            public static final String PAYMENT_STATUS = "/domestic-payments/{paymentId}";
+        }
+
+        public static class International {
+            public static final String PAYMENT_CONSENT = "/international-payment-consents";
+            public static final String PAYMENT_CONSENT_STATUS =
+                    "/international-payment-consents/{consentId}";
+            public static final String PAYMENT_FUNDS_CONFIRMATION =
+                    "/international-payment-consents/{consentId}/funds-confirmation";
+            public static final String PAYMENT = "/international-payments";
+            public static final String PAYMENT_STATUS = "/international-payments/{paymentId}";
+        }
+
+        public static class UrlParameterKeys {
+            public static final String consentId = "consentId";
+            public static final String paymentId = "paymentId";
+        }
     }
 }

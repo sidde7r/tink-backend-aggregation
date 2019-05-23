@@ -106,4 +106,64 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
         return this.getAisConfig()
                 .getIntentId(this.createAccountIntentId(aisConfig.getIntentIdResponseType()));
     }
+
+    // General Payments Interface
+
+    private RequestBuilder createPISRequest(URL url) {
+        return createRequest(url)
+                .header(
+                        UkOpenBankingConstants.HttpHeaders.X_IDEMPOTENCY_KEY,
+                        RandomUtils.generateRandomHexEncoded(8));
+    }
+
+    public <T> T createDomesticPaymentConsent(Object request, Class<T> responseType) {
+        return createPISRequest(pisConfig.createDomesticPaymentConsentURL(apiBaseUrl))
+                .post(responseType, request);
+    }
+
+    public <T> T getDomesticPaymentConsent(String consentId, Class<T> responseType) {
+        return createPISRequest(pisConfig.getDomesticPaymentConsentURL(apiBaseUrl, consentId))
+                .get(responseType);
+    }
+
+    public <T> T executeDomesticPayment(Object request, Class<T> responseType) {
+        return createPISRequest(pisConfig.createDomesticPaymentURL(apiBaseUrl))
+                .post(responseType, request);
+    }
+
+    public <T> T getDomesticFundsConfirmation(String consentId, Class<T> responseType) {
+        return createPISRequest(pisConfig.getDomesticFundsConfirmationURL(apiBaseUrl, consentId))
+                .get(responseType);
+    }
+
+    public <T> T getDomesticPayment(String paymentId, Class<T> responseType) {
+        return createPISRequest(pisConfig.getDomesticPayment(apiBaseUrl, paymentId))
+                .get(responseType);
+    }
+
+    public <T> T createInternationalPaymentConsent(Object request, Class<T> responseType) {
+        return createPISRequest(pisConfig.createInternationalPaymentConsentURL(apiBaseUrl))
+                .post(responseType, request);
+    }
+
+    public <T> T getInternationalPaymentConsent(String consentId, Class<T> responseType) {
+        return createPISRequest(pisConfig.getInternationalPaymentConsentURL(apiBaseUrl, consentId))
+                .get(responseType);
+    }
+
+    public <T> T getInternationalPayment(String consentId, Class<T> responseType) {
+        return createPISRequest(pisConfig.getInternationalPayment(apiBaseUrl, consentId))
+                .post(responseType, consentId);
+    }
+
+    public <T> T getInternationalFundsConfirmation(String consentId, Class<T> responseType) {
+        return createPISRequest(
+                        pisConfig.getInternationalFundsConfirmationURL(apiBaseUrl, consentId))
+                .get(responseType);
+    }
+
+    public <T> T executeInternationalPayment(Object request, Class<T> responseType) {
+        return createPISRequest(pisConfig.createInternationalPaymentURL(apiBaseUrl))
+                .post(responseType, request);
+    }
 }

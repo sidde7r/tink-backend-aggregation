@@ -9,6 +9,7 @@ java_library(
     srcs = glob(["src/main/**/rpc/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
