@@ -175,7 +175,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
     private PaymentMultiStepResponse executePayment(Payment payment, String consentId)
             throws PaymentException {
         String endToEndIdentification = payment.getUniqueId();
-        String instructionIdentification = RandomUtils.generateRandomHexEncoded(8);
+        String instructionIdentification = RandomUtils.generateRandomHexEncoded(UkOpenBankingV31Constants.HEX_SIZE);
 
         Payment responsePayment =
                 getConfig(payment)

@@ -13,6 +13,8 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 
 public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
 
+    public static final int HEX_SIZE = 8;
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "CurrentAccount")
