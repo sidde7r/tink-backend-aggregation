@@ -40,7 +40,7 @@ public class DomesticPisConfig implements UKPisConfig {
 
         String consentId = getConsentId(payment);
 
-        return client.getDomesticPayment(consentId, DomesticPaymentConsentResponse.class)
+        return client.getDomesticPaymentConsent(consentId, DomesticPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
