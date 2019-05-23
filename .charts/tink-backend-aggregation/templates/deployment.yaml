@@ -42,7 +42,7 @@ spec:
               matchExpressions:
               - key: node-role.kubernetes.io/spot-worker
                 operator: Exists
-        {{- if .Values.nodeZones }}
+          {{- if .Values.nodeZones }}
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
@@ -52,7 +52,7 @@ spec:
                 {{- range $zone := .Values.nodeZones }}
                 - "{{ $zone }}"
                 {{- end }}
-        {{- end }}
+          {{- end }}
         {{- end }}
 
       securityContext:
@@ -285,7 +285,7 @@ spec:
           limits:
             memory: {{ default "1Gi" .Values.podMemoryLimit }}
             cpu: {{ default "1000m" .Values.podCpuLimit }}
-          {{- end }}
+        {{- end }}
         {{- if eq "local" .Values.Cluster }}
         image: {{ .Values.image }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
