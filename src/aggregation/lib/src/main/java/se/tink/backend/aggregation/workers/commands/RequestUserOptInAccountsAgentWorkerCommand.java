@@ -1,19 +1,23 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import com.amazonaws.util.CollectionUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.assertj.core.util.Lists;
+import org.assertj.core.util.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -22,7 +26,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.pair.Pair;
 
 /** TODO adding metrics if necessary */
 public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand {
@@ -32,29 +36,15 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private static final String TRUE = "true";
 
     private final AgentWorkerCommandContext context;
-    private final StatusUpdater statusUpdater;
     private final ConfigureWhitelistInformationRequest request;
-    private final Credentials credentials;
-    private final SupplementalInformationController supplementalInformationController;
-    private final List<Account> accountsInRequest;
-    private List<Account> accountsInContext;
-    private final Catalog catalog;
     private final ControllerWrapper controllerWrapper;
-    private final SystemUpdater systemUpdater;
 
     public RequestUserOptInAccountsAgentWorkerCommand(
             AgentWorkerCommandContext context,
             ConfigureWhitelistInformationRequest request,
             ControllerWrapper controllerWrapper) {
         this.context = context;
-        this.statusUpdater = context;
-        this.systemUpdater = context;
         this.request = request;
-        this.credentials = request.getCredentials();
-        this.supplementalInformationController =
-                new SupplementalInformationController(context, request.getCredentials());
-        this.accountsInRequest = request.getAccounts();
-        this.catalog = context.getCatalog();
         this.controllerWrapper = controllerWrapper;
     }
 
@@ -62,58 +52,55 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     @Override
     public AgentWorkerCommandResult execute() throws Exception {
         // Get accounts that have been fetched from the bank.
-        this.accountsInContext = context.getCachedAccounts();
+        List<Pair<Account, AccountFeatures>> accountsInContext =
+                context.getCachedAccountsWithFeatures();
+        final List<Account> accountsInRequest = request.getAccounts();
 
-        // If the accounts in the context is empty and the accounts in the request is not notify
-        // with supplemental
-        // information and await if this is correct or not.
-        if (accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
-            return handleEmptyCachedAccountsCase();
-        }
-
-        // If the accounts in the context isn't empty and the accounts in the request isn't empty
-        // handle the case
-        // for changed
-        if (!accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
-            return handleNonEmptyRequestAccountsCase();
-        }
-
-        // if the accounts in context is emptu and the account in the request is empty user most
-        // likely does not have
-        // account under credential, we continue with the rest of the operation without requesting
-        // supplemental
-        // information
+        // if the accounts in context is empty and the account in the request is empty user most
+        // likely does not have account under credential, we continue with the rest of the operation
+        // without requesting supplemental information
         if (accountsInContext.isEmpty() && accountsInRequest.isEmpty()) {
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        // If we got here there are not accounts in the request but there are accounts in the
-        // context.
-        Field[] accountsSendToUser =
-                accountsInContext.stream()
-                        .map(
-                                account ->
-                                        createSupplementalInformationField(
-                                                account, accountsInRequest))
-                        .toArray(Field[]::new);
+        // If the accounts in the context and request are not empty, handle the case for changed
+        if (!accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
+            return handleNonEmptyRequestAccountsCase(accountsInContext, accountsInRequest);
+        }
 
-        // Send supplemental information to the user to ask what accounts to optIn for.
-        Map<String, String> supplementalResponse =
-                supplementalInformationController.askSupplementalInformation(accountsSendToUser);
+        // If the accounts in the context is empty
+        // and the accounts in the request is not, notify with supplemental information
+        // and await if this is correct or not.
+        if (accountsInContext.isEmpty() && !accountsInRequest.isEmpty()) {
+            return handleEmptyCachedAccountsCase(accountsInRequest);
+        }
+
+        // If we got here there are not accounts in the request
+        // but there are accounts in the context.
+        return handleEmptyRequestAccountsCase(accountsInContext);
+    }
+
+    @Override
+    public void postProcess() {}
+
+    private AgentWorkerCommandResult handleEmptyRequestAccountsCase(
+            List<Pair<Account, AccountFeatures>> accountsInContext)
+            throws SupplementalInfoException {
+        Map<String, String> supplementalInformation =
+                askAccountSupplementalInformation(accountsInContext, Lists.emptyList());
 
         // Abort if the supplemental information is null or empty.
-        if (supplementalResponse == null || supplementalResponse.isEmpty()) {
-            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+        if (Maps.isNullOrEmpty(supplementalInformation)) {
+            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
-        credentials.setStatus(CredentialsStatus.UPDATING);
-        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        updateCredentialsExcludingSensitiveInformation();
 
         // Add the optIn account id:s to the context to use them when doing the refresh and
         // processing.
         context.addOptInAccountUniqueId(
-                supplementalResponse.entrySet().stream()
+                supplementalInformation.entrySet().stream()
                         .filter(e -> Objects.equals(e.getValue(), "true"))
                         .map(Map.Entry::getKey)
                         .collect(Collectors.toList()));
@@ -121,37 +108,36 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    @Override
-    public void postProcess() {}
-
-    private AgentWorkerCommandResult handleEmptyCachedAccountsCase()
+    private AgentWorkerCommandResult handleEmptyCachedAccountsCase(List<Account> accountsInRequest)
             throws SupplementalInfoException {
         log.info("Got an empty response from the bank, confirming this is correct with the user.");
 
-        // Send supplemental request to notify the user about empty response from the bank.
-        Map<String, String> supplementalInformation =
-                supplementalInformationController.askSupplementalInformation(
-                        Field.builder()
-                                .description(
-                                        catalog.getString(
+        Field fields =
+                Field.builder()
+                        .description(
+                                context.getCatalog()
+                                        .getString(
                                                 "The bank returned an empty list of accounts. Is this correct?"))
-                                .masked(false)
-                                .checkbox(true)
-                                .pattern("true/false")
-                                .name("isCorrect")
-                                .helpText(
-                                        catalog.getString(
+                        .masked(false)
+                        .checkbox(true)
+                        .pattern("true/false")
+                        .name("isCorrect")
+                        .helpText(
+                                context.getCatalog()
+                                        .getString(
                                                 "Please be aware of that checking this box will delete the history of your accounts"))
-                                .build());
+                        .build();
+
+        // Send supplemental request to notify the user about empty response from the bank.
+        Map<String, String> supplementalInformation = askSupplementalInformation(fields);
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
-        credentials.setStatus(CredentialsStatus.UPDATING);
-        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        updateCredentialsExcludingSensitiveInformation();
 
         // Check if the empty response is correct or not.
         boolean isCorrect =
@@ -176,27 +162,19 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         return AgentWorkerCommandResult.CONTINUE;
     }
 
-    private AgentWorkerCommandResult handleNonEmptyRequestAccountsCase()
+    private AgentWorkerCommandResult handleNonEmptyRequestAccountsCase(
+            List<Pair<Account, AccountFeatures>> accountsInContext, List<Account> accountsInRequest)
             throws SupplementalInfoException {
-        Field[] accountsSendToUser =
-                accountsInContext.stream()
-                        .map(
-                                account ->
-                                        createSupplementalInformationField(
-                                                account, accountsInRequest))
-                        .toArray(Field[]::new);
-
         Map<String, String> supplementalInformation =
-                supplementalInformationController.askSupplementalInformation(accountsSendToUser);
+                askAccountSupplementalInformation(accountsInContext, accountsInRequest);
 
         // Abort if the supplemental information is null or empty.
-        if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+        if (Maps.isNullOrEmpty(supplementalInformation)) {
+            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
-        credentials.setStatus(CredentialsStatus.UPDATING);
-        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        updateCredentialsExcludingSensitiveInformation();
 
         // Send supplemental information request to get the optIn account id:s
         List<String> optInAccounts =
@@ -227,6 +205,36 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         return AgentWorkerCommandResult.CONTINUE;
     }
 
+    private Map<String, String> askAccountSupplementalInformation(
+            List<Pair<Account, AccountFeatures>> accountsInContext, List<Account> accountsInRequest)
+            throws SupplementalInfoException {
+        Field[] accountsSendToUser =
+                accountsInContext.stream()
+                        .map(
+                                accWithFeatures ->
+                                        createSupplementalInformationField(
+                                                accWithFeatures.first,
+                                                accWithFeatures.second,
+                                                accountsInRequest))
+                        .toArray(Field[]::new);
+
+        return askSupplementalInformation(accountsSendToUser);
+    }
+
+    private void updateCredentialsExcludingSensitiveInformation() {
+        Credentials credentials = request.getCredentials();
+        credentials.setStatus(CredentialsStatus.UPDATING);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+    }
+
+    private Map<String, String> askSupplementalInformation(Field... fields)
+            throws SupplementalInfoException {
+        SupplementalInformationController supplementalInformationController =
+                new SupplementalInformationController(context, request.getCredentials());
+
+        return supplementalInformationController.askSupplementalInformation(fields);
+    }
+
     /**
      * Use this method to opt out from accounts.
      *
@@ -241,7 +249,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     }
 
     private Field createSupplementalInformationField(
-            Account account, List<Account> existingAccounts) {
+            Account account, AccountFeatures accountFeatures, List<Account> existingAccounts) {
         boolean isIncluded =
                 existingAccounts.stream()
                         .anyMatch(a -> Objects.equals(a.getBankId(), account.getBankId()));
@@ -253,11 +261,11 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                 .name(account.getBankId())
                 .checkbox(true)
                 .value(String.valueOf(isIncluded))
-                .additionalInfo(createAdditionalInfo(account))
+                .additionalInfo(createAdditionalInfo(account, accountFeatures))
                 .build();
     }
 
-    private String createAdditionalInfo(Account account) {
+    private String createAdditionalInfo(Account account, AccountFeatures accountFeatures) {
         JsonObject additionalInfo = new JsonObject();
 
         additionalInfo.addProperty("accountName", account.getName());
@@ -270,6 +278,18 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                 Objects.nonNull(account.getIdentifier(AccountIdentifier.Type.IBAN))
                         ? account.getIdentifier(AccountIdentifier.Type.IBAN).getIdentifier()
                         : null);
+
+        if (accountFeatures != null
+                && !CollectionUtils.isNullOrEmpty(accountFeatures.getPortfolios())) {
+            JsonArray portfolioTypes = new JsonArray();
+
+            accountFeatures.getPortfolios().stream()
+                    .map(p -> p.getType().name())
+                    .map(JsonPrimitive::new)
+                    .forEach(portfolioTypes::add);
+
+            additionalInfo.add("portfolioTypes", portfolioTypes);
+        }
 
         return additionalInfo.toString();
     }
