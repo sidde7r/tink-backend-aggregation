@@ -49,7 +49,7 @@ public class AccountEntity {
 
     private TransactionalAccount toCheckingAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
+                .setUniqueIdentifier(getUniqueId())
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
                 .setAlias(name)
@@ -68,5 +68,11 @@ public class AccountEntity {
 
     public String getResourceId() {
         return resourceId;
+    }
+
+    public String getUniqueId() {
+        String clearingNumber = iban.substring(4, 8);
+
+        return clearingNumber + bban + "-" + clearingNumber + bban;
     }
 }
