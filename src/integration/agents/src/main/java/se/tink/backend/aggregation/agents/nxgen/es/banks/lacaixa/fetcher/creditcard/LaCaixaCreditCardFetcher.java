@@ -2,10 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.credit
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.entities.GenericCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.LiquidationDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.rpc.LaCaixaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -14,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.amount.Amount;
 
 public class LaCaixaCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
@@ -28,7 +37,19 @@ public class LaCaixaCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            return apiClient.fetchCards().toTinkCards();
+            final GenericCardsResponse cardsResponse = apiClient.fetchCards();
+
+            // group cards by contract
+            final Map<String, List<GenericCardEntity>> contracts =
+                    cardsResponse.getCards().stream()
+                            .filter(GenericCardEntity::isCreditCard)
+                            .collect(Collectors.groupingBy(GenericCardEntity::getContract));
+
+            // set balance for first card in contract, zero for the others
+            return cardsResponse.getCards().stream()
+                    .filter(GenericCardEntity::isCreditCard)
+                    .map(card -> mapCreditCardAccount(card, contracts))
+                    .collect(Collectors.toList());
         } catch (HttpResponseException hre) {
 
             HttpResponse response = hre.getResponse();
@@ -42,6 +63,40 @@ public class LaCaixaCreditCardFetcher
             }
 
             throw hre;
+        }
+    }
+
+    private CreditCardAccount mapCreditCardAccount(
+            GenericCardEntity card, Map<String, List<GenericCardEntity>> contracts) {
+        boolean isFirstCardOnContract = contracts.get(card.getContract()).get(0).equals(card);
+        if (!isFirstCardOnContract) {
+            return card.toTinkCard(Amount.inEUR(0));
+        }
+        try {
+            final Amount balance = fetchBalanceForCardContract(card.getRefValIdContract());
+            return card.toTinkCard(balance);
+        } catch (NoSuchElementException e) {
+            LOG.warn("Unable to fetch card balance");
+            return card.toTinkCard(Amount.inEUR(0));
+        }
+    }
+
+    private Amount fetchBalanceForCardContract(String contractRefVal)
+            throws NoSuchElementException {
+        final CardLiquidationsResponse liquidations =
+                apiClient.fetchCardLiquidations(contractRefVal, true);
+        final String liquidationDateValue =
+                liquidations
+                        .getNextFutureLiquidationDate()
+                        .orElseThrow(NoSuchElementException::new);
+        final LiquidationDetailResponse liquidationDetail =
+                apiClient.fetchCardLiquidationDetail(
+                        liquidations.getRefValNumContract(), liquidationDateValue);
+        final Amount debt = Amount.inEUR(liquidationDetail.getLiquidationPeriod().getMyDebt());
+        if (debt.isZero()) {
+            return debt;
+        } else {
+            return debt.negate();
         }
     }
 

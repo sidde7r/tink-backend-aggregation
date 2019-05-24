@@ -45,6 +45,8 @@ public class LaCaixaConstants {
         static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto?";
         static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
         static final String CARD_TRANSACTIONS_PATH = "tarjetasHCE/listaMovimientosGenerica";
+        static final String CARD_LIQUIDATIONS_PATH = "tarjetas/listaLiquidaciones";
+        static final String CARD_LIQUIDATION_DETAILS_PATH = "tarjetas/detalleLiquidacion";
 
         // engagements
         static final String ENGAGEMENTS_PATH = "posGlobal/posicionGlobalProductosAplicacion";
@@ -86,6 +88,11 @@ public class LaCaixaConstants {
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
+        public static final URL FETCH_CARD_LIQUIDATIONS =
+                new URL(BASE + ApiService.CARD_LIQUIDATIONS_PATH);
+        public static final URL FETCH_CARD_LIQUIDATION_DETAILS =
+                new URL(BASE + ApiService.CARD_LIQUIDATION_DETAILS_PATH);
+
         public static final URL FETCH_LOANS_LIST = new URL(BASE + ApiService.LOAN_LIST_PATH);
         public static final URL FETCH_LOANS_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS_PATH);
 
@@ -150,5 +157,15 @@ public class LaCaixaConstants {
 
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("lacaixa_unknown-accountype");
+    }
+
+    public static class Sign {
+        public static final String PLUS = "+";
+        public static final String MINUS = "-";
+    }
+
+    public static class LiquidationSimulation {
+        public static final String TRUE = "S";
+        public static final String FALSE = "N";
     }
 }

@@ -9,10 +9,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.r
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.authenticator.rpc.SessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardLiquidationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.LiquidationDetailRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.LiquidationDetailResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundDetailsResponse;
@@ -167,6 +171,19 @@ public class LaCaixaApiClient {
         return createRequest(LaCaixaConstants.Urls.FETCH_CARD_TRANSACTIONS)
                 .body(new CardTransactionsRequest(cardId, start))
                 .post(CardTransactionsResponse.class);
+    }
+
+    public CardLiquidationsResponse fetchCardLiquidations(String contractRefVal, boolean start) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_CARD_LIQUIDATIONS)
+                .body(new CardLiquidationsRequest(contractRefVal, start))
+                .post(CardLiquidationsResponse.class);
+    }
+
+    public LiquidationDetailResponse fetchCardLiquidationDetail(
+            String contractRefNum, String liquidationDate) {
+        return createRequest(Urls.FETCH_CARD_LIQUIDATION_DETAILS)
+                .body(new LiquidationDetailRequest(contractRefNum, liquidationDate))
+                .post(LiquidationDetailResponse.class);
     }
 
     public LoanListResponse fetchLoansList(boolean fromBegin) {

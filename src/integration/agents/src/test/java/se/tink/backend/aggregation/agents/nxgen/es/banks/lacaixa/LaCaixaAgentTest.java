@@ -1,35 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
 public class LaCaixaAgentTest {
 
-    private final String TEST_USERNAME = "CCCCCCCC";
-    private final String TEST_PASSWORD = "NNNNNN";
+    private enum Arg {
+        USERNAME,
+        PASSWORD
+    }
 
-    private AgentIntegrationTest.Builder builder;
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {
-        builder =
-                new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
-                        .addCredentialField(Field.Key.USERNAME, TEST_USERNAME)
-                        .addCredentialField(Field.Key.PASSWORD, TEST_PASSWORD)
-                        .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false)
-                        .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
-                        .addRefreshableItems(RefreshableItem.IDENTITY_DATA);
+        manager.before();
     }
 
     @Test
     public void testRefresh() throws Exception {
-
-        builder.build().testRefresh();
+        new AgentIntegrationTest.Builder("es", "es-lacaixa-password")
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
+                .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
+                .build()
+                .testRefresh();
     }
 }
