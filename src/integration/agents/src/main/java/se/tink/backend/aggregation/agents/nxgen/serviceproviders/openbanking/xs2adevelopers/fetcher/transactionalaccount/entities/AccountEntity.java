@@ -54,7 +54,7 @@ public class AccountEntity {
     @JsonIgnore
     private TransactionalAccount toCheckingAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
+                .setUniqueIdentifier(bban)
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
                 .setAlias(name)
