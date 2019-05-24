@@ -41,8 +41,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator(
-                redirectToOxfordStaging);
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator =
+                new RedirectOAuth2Authenticator(redirectToOxfordStaging);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
