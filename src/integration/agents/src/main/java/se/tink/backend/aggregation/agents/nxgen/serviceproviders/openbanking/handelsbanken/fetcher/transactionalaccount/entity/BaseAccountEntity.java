@@ -31,8 +31,8 @@ public class BaseAccountEntity {
 
     public CheckingAccount createCheckingAccount(BalanceEntity balance) {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
+                .setUniqueIdentifier(getAccountNumber())
+                .setAccountNumber(getAccountNumber())
                 .setBalance(
                         new Amount(
                                 balance.getAmount().getCurrency(),
@@ -42,6 +42,10 @@ public class BaseAccountEntity {
                 .addHolderName(ownerName)
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
                 .build();
+    }
+
+    private String getAccountNumber() {
+        return iban.substring(9);
     }
 
     public SavingsAccount createSavingsAccount(BalanceEntity balance) {
