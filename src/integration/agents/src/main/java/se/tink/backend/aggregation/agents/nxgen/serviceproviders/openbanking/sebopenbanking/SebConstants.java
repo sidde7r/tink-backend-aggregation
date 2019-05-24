@@ -1,16 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking;
 
+import java.time.ZoneId;
+
 public abstract class SebConstants {
+
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Stockholm");
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public static class Urls {
 
         private static final String BASE_AUTH = "/mga/sps/oauth";
-        private static final String BASE_AIS = "/ais/v4/identified2";
+        private static final String BASE_AIS = "/ais/v5/identified2";
+        private static final String BASE_CREDIT_CARD_ACCOUNTS = "/ais/v2/identified2";
 
         public static final String OAUTH = BASE_AUTH + "/oauth20/authorize";
         public static final String TOKEN = BASE_AUTH + "/oauth20/token";
         public static final String ACCOUNTS = BASE_AIS + "/accounts";
         public static final String TRANSACTIONS = BASE_AIS + "/accounts/{accountId}/transactions";
+        public static final String CREDIT_CARD_ACCOUNTS = BASE_CREDIT_CARD_ACCOUNTS + "/card-accounts";
+        public static final String CREDIT_CARD_TRANSACTIONS = BASE_CREDIT_CARD_ACCOUNTS + "/card-accounts/{accountId}/transactions";
     }
 
     public static class QueryKeys {
@@ -25,6 +33,8 @@ public abstract class SebConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String DATE_FROM = "dateFrom";
+        public static final String DATE_TO = "dateTo";
     }
 
     public static class QueryValues {

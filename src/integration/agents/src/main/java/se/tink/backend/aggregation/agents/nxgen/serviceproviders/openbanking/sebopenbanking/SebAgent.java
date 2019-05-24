@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.SebCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.SebCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.session.SEBSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -17,12 +18,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.Optional;
+
+import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants.ZONE_ID;
 
 public final class SebAgent extends NextGenerationAgent {
     private final SebApiClient apiClient;
@@ -30,6 +37,7 @@ public final class SebAgent extends NextGenerationAgent {
     public SebAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        client.setDebugOutput(true);
         apiClient = new SebApiClient(client, sessionStorage);
     }
 
@@ -68,21 +76,32 @@ public final class SebAgent extends NextGenerationAgent {
             constructTransactionalAccountRefreshController() {
         SebTransactionalAccountFetcher accountFetcher =
                 new SebTransactionalAccountFetcher(apiClient);
-
-        return Optional.of(
-                new TransactionalAccountRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        accountFetcher, SebConstants.Fetcher.START_PAGE))));
+//  DO NOT REMOVE !!!!!!!!!!!!!!!!!!!
+//        return Optional.of(
+//                new TransactionalAccountRefreshController(
+//                        metricRefreshController,
+//                        updateController,
+//                        accountFetcher,
+//                        new TransactionFetcherController<>(
+//                                transactionPaginationHelper,
+//                                new TransactionPagePaginationController<>(
+//                                        accountFetcher, SebConstants.Fetcher.START_PAGE))));
+        return Optional.empty();
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SebCardAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionMonthPaginationController<>(
+                                        new SebCardTransactionsFetcher(apiClient),
+                                        ZONE_ID))));
     }
 
     @Override
