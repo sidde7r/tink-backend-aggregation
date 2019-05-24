@@ -20,7 +20,8 @@ agents:
     redirectUrl: tink://thirdparty/callback
   demoFakeBank:
     baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
-  volksbank: ""
+  volksbank:
+    enabled: "true"
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true
