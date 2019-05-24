@@ -11,7 +11,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
     private static final String REDIRECT_HOST = "https://cdn.tink.se/fake-bank/redirect.html";
     private static final String CODE = "1234";
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
-    private static final long THIRTHY_DAYS_IN_SECONDS = 2592000;
+    private static final long THIRTY_DAYS_IN_SECONDS = 2592000;
 
     private final boolean redirectToOxfordStaging;
 
@@ -32,7 +32,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
         String refreshToken = BASE64_ENCODER.encodeToString("fakeRefreshToken".getBytes());
 
-        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTHY_DAYS_IN_SECONDS);
+        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTY_DAYS_IN_SECONDS);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RedirectOAuth2Authenticator implements OAuth2Authenticator {
             throws SessionException, BankServiceException {
         String accessToken = BASE64_ENCODER.encodeToString("fakeAccessToken".getBytes());
 
-        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTHY_DAYS_IN_SECONDS);
+        return OAuth2Token.createBearer(accessToken, refreshToken, THIRTY_DAYS_IN_SECONDS);
     }
 
     @Override
