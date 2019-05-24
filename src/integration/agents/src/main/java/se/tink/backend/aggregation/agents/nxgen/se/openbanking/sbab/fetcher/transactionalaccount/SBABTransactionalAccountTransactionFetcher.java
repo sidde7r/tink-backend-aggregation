@@ -17,7 +17,7 @@ public class SBABTransactionalAccountTransactionFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, Date fromDate, Date toDate) {
-        return apiClient.fetchTransactions(account);
+            TransactionalAccount account, Date startDate, Date endDate) {
+        return apiClient.fetchTransactions(account, startDate, endDate);
     }
 }

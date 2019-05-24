@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
+import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -7,12 +8,14 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.Utils.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenResponse;
@@ -129,11 +132,19 @@ public final class SBABApiClient {
                 .get(FetchCustomerResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(TransactionalAccount account) {
+    public FetchTransactionsResponse fetchTransactions(
+            TransactionalAccount account, Date startDate, Date endDate) {
+
         return client.request(
                         Urls.TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_NUMBER,
                                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_NUMBER)))
+                .queryParam(
+                        QueryKeys.END_DATE,
+                        DateUtils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(
+                        QueryKeys.START_DATE,
+                        DateUtils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
                 .get(FetchTransactionsResponse.class);

@@ -54,6 +54,8 @@ public final class SBABConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "pending_code";
+        public static final String START_DATE = "startDate";
+        public static final String END_DATE = "endDate";
     }
 
     public static class QueryValues {
@@ -67,11 +69,10 @@ public final class SBABConstants {
         public static final String AUTHORIZATION = "Authorization";
     }
 
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {}
+    public static class Format {
+        public static final String TIMEZONE = "UTC";
+        public static final String TIMESTAMP = "yyyy-MM-dd";
+    }
 
     public static class IdTags {
         public static final String ACCOUNT_NUMBER = "accountNumber";
