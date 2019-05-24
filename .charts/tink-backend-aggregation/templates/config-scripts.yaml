@@ -48,9 +48,7 @@ data:
     substitute-secret ICS_CLIENT_SSL_CERT "$ICS_CLIENT_SSL_CERT"
     substitute-secret ICS_CA_CERT "$ICS_CA_CERT"
     substitute-secret ICS_ROOT_CA_PASSWORD "$ICS_ROOT_CA_PASSWORD"
-    {{- if $agentsConfig.volksbank }}
-    substitute-secret VOLKSBANK_AIS_CLIENT_ID "$VOLKSBANK_AIS_CLIENT_ID"
-    substitute-secret VOLKSBANK_AIS_CLIENT_SECRET "$VOLKSBANK_AIS_CLIENT_SECRET"
-    substitute-secret VOLKSBANK_AIS_CERT_PASSWORD "$VOLKSBANK_AIS_CERT_PASSWORD"
-    substitute-secret VOLKSBANK_AIS_CERT "$VOLKSBANK_AIS_CERT"
-    {{- end }}
+    substitute-secret VOLKSBANK_AIS_CLIENT_ID_TAG "$VOLKSBANK_AIS_CLIENT_ID"
+    substitute-secret VOLKSBANK_AIS_CLIENT_SECRET_TAG "$VOLKSBANK_AIS_CLIENT_SECRET"
+    substitute-secret VOLKSBANK_AIS_CERT_PASSWORD_TAG "$VOLKSBANK_AIS_CERT_PASSWORD"
+    substitute-secret VOLKSBANK_AIS_CERT_TAG "$VOLKSBANK_AIS_CERT"
