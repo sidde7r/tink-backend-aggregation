@@ -14,6 +14,7 @@ public class PopPankkiAgent extends SamlinkAgent {
                 request,
                 context,
                 signatureKeyPair,
-                new SamlinkConfiguration(PopPankkiConstants.Url.BASE));
+                new SamlinkConfiguration(
+                        PopPankkiConstants.Url.BASE, PopPankkiConstants.Header.CLIENT_APP_VALUE));
     }
 }
