@@ -16,8 +16,6 @@ s3StorageConfiguration:
 agents:
   demoFakeBank:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
-  volksbank:
-    enabled: false
 
 clients:
   provision-job-testing:
