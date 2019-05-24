@@ -5,10 +5,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
-public final class OtpStep {
+public final class OtpStep implements AuthenticationStep {
 
     private static Logger logger = LoggerFactory.getLogger(OtpStep.class);
 
@@ -18,12 +20,13 @@ public final class OtpStep {
         this.supplementalInformationFormer = supplementalInformationFormer;
     }
 
-    public AuthenticationResponse respond() {
+    @Override
+    public AuthenticationResponse respond(final AuthenticationRequest request) {
         logger.info("ING OtpStep");
 
         List<Field> otpInput =
                 Collections.singletonList(
                         supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
-        return new AuthenticationResponse(IngCardReaderAuthenticationController.STEP_OTP, otpInput);
+        return new AuthenticationResponse(otpInput);
     }
 }

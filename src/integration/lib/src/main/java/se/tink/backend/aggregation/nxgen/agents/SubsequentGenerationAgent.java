@@ -4,6 +4,7 @@ import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,10 +38,11 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
@@ -151,11 +153,44 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     }
 
     @Override
-    public AuthenticationResponse login(AuthenticationRequest request)
+    public SteppableAuthenticationResponse login(SteppableAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        final LoadedAuthenticationRequest loadedRequest =
-                new LoadedAuthenticationRequest(request, credentials);
-        return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(loadedRequest);
+
+        final AuthenticationRequest loadedRequest =
+                new AuthenticationRequest(request.getUserInputs(), credentials);
+
+        final ProgressiveAuthenticator authenticator =
+                (ProgressiveAuthenticator) getAuthenticator();
+        final Iterator<? extends AuthenticationStep> steps =
+                authenticator.authenticationSteps(loadedRequest.getCredentials()).iterator();
+
+        if (!request.getStep().isPresent()) {
+            final AuthenticationStep step = steps.next();
+            if (steps.hasNext()) {
+                final AuthenticationStep upcomingStep = steps.next();
+                return SteppableAuthenticationResponse.intermediateResponse(
+                        upcomingStep.getClass(), step.respond(loadedRequest));
+            } else {
+                return SteppableAuthenticationResponse.finalResponse(step.respond(loadedRequest));
+            }
+        }
+
+        final Class<? extends AuthenticationStep> cls = request.getStep().get();
+
+        while (steps.hasNext()) {
+            final AuthenticationStep step = steps.next();
+            if (cls.isInstance(step)) {
+                if (steps.hasNext()) {
+                    final AuthenticationStep upcomingStep = steps.next();
+                    return SteppableAuthenticationResponse.intermediateResponse(
+                            upcomingStep.getClass(), step.respond(loadedRequest));
+                } else {
+                    return SteppableAuthenticationResponse.finalResponse(
+                            step.respond(loadedRequest));
+                }
+            }
+        }
+        throw new IllegalStateException("The agent seems to have defined no steps");
     }
 
     @Override

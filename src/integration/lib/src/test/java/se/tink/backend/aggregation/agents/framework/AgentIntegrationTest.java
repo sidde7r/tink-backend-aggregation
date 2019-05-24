@@ -39,9 +39,9 @@ import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequestImpl;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.SteppableAuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
@@ -173,25 +173,21 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         return true;
     }
 
-    private void progressiveLogin(Agent agent) throws Exception {
-        AuthenticationResponse response =
-                ((ProgressiveAuthAgent) agent)
-                        .login(
-                                new AuthenticationRequestImpl(
-                                        AuthenticationStepConstants.STEP_INIT,
-                                        Collections.emptyList()));
-        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
+    private void progressiveLogin(final Agent agent) throws Exception {
+        final ProgressiveAuthAgent progressiveAgent = (ProgressiveAuthAgent) agent;
+        SteppableAuthenticationResponse response =
+                progressiveAgent.login(SteppableAuthenticationRequest.initialRequest());
+        while (response.getStep().isPresent()) {
             // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
             // etc.
-            List<Field> fields = response.getFields();
-            Map<String, String> map =
+            final List<Field> fields = response.getFields();
+            final Map<String, String> map =
                     supplementalInformationController.askSupplementalInformation(
                             fields.toArray(new Field[fields.size()]));
             response =
-                    ((ProgressiveAuthAgent) agent)
-                            .login(
-                                    new AuthenticationRequestImpl(
-                                            response.getStep(), new ArrayList<>(map.values())));
+                    progressiveAgent.login(
+                            SteppableAuthenticationRequest.subsequentRequest(
+                                    response.getStep().get(), new ArrayList<>(map.values())));
         }
     }
 
