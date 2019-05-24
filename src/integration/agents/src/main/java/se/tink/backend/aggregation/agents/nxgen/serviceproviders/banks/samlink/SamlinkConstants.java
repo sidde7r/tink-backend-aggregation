@@ -17,6 +17,7 @@ public class SamlinkConstants {
         public static final String DEVICE_ID = "device_id";
         public static final String DEVICE_TOKEN = "device_token";
         public static final String SERVICES_ENDPOINTS = "services_endpoints";
+        public static final String LOGIN_NAME = "login_name";
     }
 
     public static final class Url {
@@ -41,6 +42,7 @@ public class SamlinkConstants {
         public static final String DETAILS = "details";
         public static final String CARDS = "cards";
         public static final String LOANS = "loans";
+        public static final String COUNTS = "counts";
     }
 
     public static final class ErrorMessage {

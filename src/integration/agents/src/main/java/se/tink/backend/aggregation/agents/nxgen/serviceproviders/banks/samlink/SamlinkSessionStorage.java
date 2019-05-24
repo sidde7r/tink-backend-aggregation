@@ -43,4 +43,12 @@ public class SamlinkSessionStorage {
 
         return serviceEndpoints.getLinkPath(relKey);
     }
+
+    public void storeLoginName(String name) {
+        sessionStorage.put(SamlinkConstants.Storage.LOGIN_NAME, name);
+    }
+
+    public String getLoginName() {
+        return sessionStorage.get(SamlinkConstants.Storage.LOGIN_NAME);
+    }
 }

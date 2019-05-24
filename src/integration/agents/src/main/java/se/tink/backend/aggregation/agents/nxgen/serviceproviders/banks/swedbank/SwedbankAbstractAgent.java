@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankBaseHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.filters.SwedbankTimeoutRetryFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.interfaces.SwedbankApiClientProvider;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -39,12 +40,14 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.MultiIpGateway;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
 
+    private final MultiIpGateway gateway;
     protected final SwedbankConfiguration configuration;
     protected final SwedbankDefaultApiClient apiClient;
     private EInvoiceRefreshController eInvoiceRefreshController;
@@ -74,6 +77,8 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
         this.apiClient =
                 apiClientProvider.getApiAgent(client, configuration, credentials, sessionStorage);
         eInvoiceRefreshController = null;
+
+        this.gateway = new MultiIpGateway(client, credentials);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -82,6 +87,15 @@ public abstract class SwedbankAbstractAgent extends NextGenerationAgent
                 new SwedbankTimeoutRetryFilter(
                         TimeoutFilter.NUM_TIMEOUT_RETRIES,
                         TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS));
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        // Test using non-aggregation IP for adding new transfer destinations.
+        // Todo: remove this when we've verified if it works or not.
+        gateway.setMultiIpGateway(configuration.getIntegrations());
     }
 
     @Override

@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.SamlinkCreditCardFetcher;
@@ -23,10 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.IdentityData;
 
-public abstract class SamlinkAgent extends NextGenerationAgent {
+public abstract class SamlinkAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
 
     private final SamlinkApiClient apiClient;
+    private final SamlinkSessionStorage samlinkSessionStorage;
     private final SamlinkPersistentStorage samlinkPersistentStorage;
 
     public SamlinkAgent(
@@ -35,9 +42,8 @@ public abstract class SamlinkAgent extends NextGenerationAgent {
             SignatureKeyPair signatureKeyPair,
             SamlinkConfiguration agentConfiguration) {
         super(request, context, signatureKeyPair);
-        apiClient =
-                new SamlinkApiClient(
-                        client, new SamlinkSessionStorage(sessionStorage), agentConfiguration);
+        samlinkSessionStorage = new SamlinkSessionStorage(sessionStorage);
+        apiClient = new SamlinkApiClient(client, samlinkSessionStorage, agentConfiguration);
         samlinkPersistentStorage = new SamlinkPersistentStorage(persistentStorage);
     }
 
@@ -106,11 +112,24 @@ public abstract class SamlinkAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SamlinkSessionHandler();
+        return new SamlinkSessionHandler(apiClient, samlinkSessionStorage);
     }
 
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        final String loginName = samlinkSessionStorage.getLoginName();
+        if (Strings.isNullOrEmpty(loginName)) {
+            throw new NoSuchElementException("Did not get name from login.");
+        }
+
+        final IdentityData identityData =
+                IdentityData.builder().setFullName(loginName).setDateOfBirth(null).build();
+
+        return new FetchIdentityDataResponse(identityData);
     }
 }

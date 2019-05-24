@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-public class SpAgentTest {
+public class PopPankkiAgentTest {
     private enum Arg {
         USERNAME,
         PASSWORD
@@ -27,7 +27,7 @@ public class SpAgentTest {
     }
 
     private AgentIntegrationTest.Builder builder() {
-        return new AgentIntegrationTest.Builder("fi", "fi-saastopankki-codecard")
+        return new AgentIntegrationTest.Builder("fi", "fi-poppankki-codecard")
                 .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
                 .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
