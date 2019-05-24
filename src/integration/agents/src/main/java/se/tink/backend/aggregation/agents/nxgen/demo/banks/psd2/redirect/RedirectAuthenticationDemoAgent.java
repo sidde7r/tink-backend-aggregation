@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.psd2.redirect;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -28,17 +29,20 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
     private static final String USERNAME = "tink";
 
     private String provider;
+    private boolean redirectToOxfordStaging;
 
     public RedirectAuthenticationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         this.provider = request.getProvider().getName();
+        this.redirectToOxfordStaging = Objects.equals("oxford-staging", context.getClusterId());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator();
+        RedirectOAuth2Authenticator redirectOAuth2Authenticator = new RedirectOAuth2Authenticator(
+                redirectToOxfordStaging);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
