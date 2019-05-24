@@ -81,7 +81,7 @@ data:
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TAG"
               clientCertificatePath: "VOLKSBANK_AIS_CERT_TAG"
               clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD_TAG"
-        {{- end }}
+        {{ end }}
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
