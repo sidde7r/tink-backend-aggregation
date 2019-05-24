@@ -46,7 +46,7 @@ genrule(
 )
 
 container_image(
-    name = "aggregation-image",
+    name = "aggregation_debug_image",
     base = "@openjdk_jdk8//image",
     cmd = [
         "java",

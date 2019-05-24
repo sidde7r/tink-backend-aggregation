@@ -9,15 +9,15 @@ else
     endpoint=$env
 fi
 
-bazel run //src/aggregation/service:aggregation-image
+bazel run //src/aggregation/service:aggregation_debug_image
 
 if [ $# -ne 0 ]
   then
     echo "#############################################################################################################"
-    echo "Remember to change your image in .charts/tink-backend-aggregation/values/local-development to  $env/aggregation/service:aggregation-image"
+    echo "Remember to change your image in .charts/tink-backend-aggregation/values/local-development to  $env/aggregation/service:aggregation_debug_image"
     echo "#############################################################################################################"
-    docker tag bazel/src/aggregation/service:aggregation-image $env/aggregation/service:aggregation-image
-    docker push $env/aggregation/service:aggregation-image
+    docker tag bazel/src/aggregation/service:aggregation_debug_image $env/aggregation/service:aggregation_debug_image
+    docker push $env/aggregation/service:aggregation_debug_image
 fi
 
 kubectl delete deployment -n aggregation aggregation
