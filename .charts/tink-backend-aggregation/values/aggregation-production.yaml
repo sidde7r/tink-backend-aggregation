@@ -28,7 +28,8 @@ agents:
   collectorSubscriptionKey: true
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
-  volksbank: ""
+  volksbank:
+    enabled: "true"
 
   proxyUri: http://10.88.12.185:8080
 
