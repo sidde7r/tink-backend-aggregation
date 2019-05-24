@@ -1,3 +1,3 @@
 agents:
   volksbank:
-    enabled: false
+    enabled: "false"
