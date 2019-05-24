@@ -28,6 +28,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
+            //There is no clearing number
                 .setUniqueIdentifier(bban)
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
