@@ -33,7 +33,7 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount() {
         // replace function is used because mocked date is not valid
         return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
+                .setUniqueIdentifier(iban.substring(4).replace(" ", ""))
                 .setAccountNumber(iban)
                 .setBalance(getBalance())
                 .setAlias(name)
