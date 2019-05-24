@@ -51,26 +51,32 @@ public class BaseAccountEntity {
                 .build();
     }
 
+
+    public TransactionalAccount createSavingsAccount(BalanceEntity balance) {
+        return TransactionalAccount.nxBuilder()
+            .withType(TransactionalAccountType.SAVINGS)
+            .withId(
+                IdModule.builder()
+                    .withUniqueIdentifier(getAccountNumber())
+                    .withAccountNumber(getAccountNumber())
+                    .withAccountName(name)
+                    .addIdentifier(
+                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                    .build())
+            .withBalance(BalanceModule.of(getAmount(balance)))
+            .addHolderName(ownerName)
+            .setApiIdentifier(accountId)
+            .setBankIdentifier(getAccountNumber())
+            .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+            .build();
+    }
+
     private String getAccountNumber() {
-        return iban.substring(9);
+        return iban.substring(iban.length() - 9);
     }
 
     private Amount getAmount(BalanceEntity balance) {
         return new Amount(balance.getAmount().getCurrency(), balance.getAmount().getContent());
     }
 
-    public SavingsAccount createSavingsAccount(BalanceEntity balance) {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(
-                        new Amount(
-                                balance.getAmount().getCurrency(),
-                                balance.getAmount().getContent()))
-                .setAlias(name)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(ownerName)
-                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-                .build();
-    }
 }
