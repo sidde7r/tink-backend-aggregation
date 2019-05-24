@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
+import java.util.List;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,8 +19,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.strings.StringUtils;
-
-import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequestUserOptInAccountsAgentWorkerCommandTest {
