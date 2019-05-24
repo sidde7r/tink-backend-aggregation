@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import jdk.internal.joptsimple.internal.Strings;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
@@ -137,8 +136,8 @@ public class AccountEntity {
     private String getUniqueId() {
         String bban = getBban();
 
-        return !country.equalsIgnoreCase("SE") ?
-            getIban() :
-            "************" + bban.substring(bban.length() - 4);
+        return !country.equalsIgnoreCase("SE")
+                ? getIban()
+                : "************" + bban.substring(bban.length() - 4);
     }
 }
