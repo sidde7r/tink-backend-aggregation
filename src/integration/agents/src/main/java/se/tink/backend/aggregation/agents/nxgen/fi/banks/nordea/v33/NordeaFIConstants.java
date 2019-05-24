@@ -71,24 +71,27 @@ public class NordeaFIConstants {
                     .build();
 
     public static class Urls {
-        private static final String BASE = "https://private.nordea.fi/api/dbf/ca";
+        private static final String BASE = "https://private.nordea.fi/api/dbf";
 
         public static final URL AUTHENTICATE = new URL(BASE + ApiService.AUTHENTICATE);
         public static final URL FETCH_ACCOUNTS = new URL(BASE + ApiService.FETCH_ACCOUNTS);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.FETCH_CARDS);
         public static final URL FETCH_INVESTMENTS = new URL(BASE + ApiService.FETCH_INVESTMENTS);
         public static final URL FETCH_LOANS = new URL(BASE + ApiService.FETCH_LOANS);
+        public static final URL FETCH_CUSTOMER_INFO =
+                new URL(BASE + ApiService.FETCH_CUSTOMER_INFO);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT);
     }
 
     public static class ApiService {
         public static final String FETCH_TRANSACTIONS = "/transactions";
-        public static final String FETCH_CARDS = "/cards-v2/cards/";
-        public static final String FETCH_INVESTMENTS = "/savings-v1/savings/custodies";
-        public static final String FETCH_LOANS = "/loans-v1/loans/";
-        private static final String AUTHENTICATE = "/authentication-mta-v1/security/oauth/token";
-        private static final String FETCH_ACCOUNTS = "/accounts-v1/accounts/";
-        private static final String LOGOUT = "/token-revocation-v1/token/revoke";
+        private static final String FETCH_CARDS = "/ca/cards-v2/cards/";
+        private static final String FETCH_INVESTMENTS = "/ca/savings-v1/savings/custodies";
+        private static final String FETCH_LOANS = "/ca/loans-v1/loans/";
+        private static final String AUTHENTICATE = "/ca/authentication-mta-v1/security/oauth/token";
+        private static final String FETCH_ACCOUNTS = "/ca/accounts-v1/accounts/";
+        private static final String FETCH_CUSTOMER_INFO = "/fi/customerinfo-v1/customers/info";
+        private static final String LOGOUT = "/ca/token-revocation-v1/token/revoke";
     }
 
     public static class FormParams {
