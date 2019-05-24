@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -51,24 +50,23 @@ public class BaseAccountEntity {
                 .build();
     }
 
-
     public TransactionalAccount createSavingsAccount(BalanceEntity balance) {
         return TransactionalAccount.nxBuilder()
-            .withType(TransactionalAccountType.SAVINGS)
-            .withId(
-                IdModule.builder()
-                    .withUniqueIdentifier(getAccountNumber())
-                    .withAccountNumber(getAccountNumber())
-                    .withAccountName(name)
-                    .addIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                    .build())
-            .withBalance(BalanceModule.of(getAmount(balance)))
-            .addHolderName(ownerName)
-            .setApiIdentifier(accountId)
-            .setBankIdentifier(getAccountNumber())
-            .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-            .build();
+                .withType(TransactionalAccountType.SAVINGS)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountNumber())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .build())
+                .withBalance(BalanceModule.of(getAmount(balance)))
+                .addHolderName(ownerName)
+                .setApiIdentifier(accountId)
+                .setBankIdentifier(getAccountNumber())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+                .build();
     }
 
     private String getAccountNumber() {
@@ -78,5 +76,4 @@ public class BaseAccountEntity {
     private Amount getAmount(BalanceEntity balance) {
         return new Amount(balance.getAmount().getCurrency(), balance.getAmount().getContent());
     }
-
 }
