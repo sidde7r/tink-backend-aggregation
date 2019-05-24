@@ -9,6 +9,10 @@ data:
     server:
       shutdownGracePeriod: 130s
       applicationConnectors:
+        {{- if eq "local" .Values.Cluster }}
+        - type: http
+          port: 8080
+        {{- end }}
         - type: https
           port: 8443
           {{- if eq "local" .Values.Cluster }}

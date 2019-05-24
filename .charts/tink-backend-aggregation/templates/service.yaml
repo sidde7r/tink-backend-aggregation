@@ -10,6 +10,9 @@ spec:
   - port: 443
     targetPort: https-api
     name: https-api
+  - port: 80
+    targetPort: http-api
+    name: http-api
 
 {{- if eq "local" .Values.Cluster }}
 ---
@@ -22,9 +25,9 @@ spec:
   selector:
     app: aggregation-service
   ports:
-  - port: 443
-    targetPort: https-api
-    name: https-api
-    nodePort: 31011
+  - port: 8080
+    targetPort: http-api
+    name: http-api
+    nodePort: 31008
   type: NodePort
 {{ end }}

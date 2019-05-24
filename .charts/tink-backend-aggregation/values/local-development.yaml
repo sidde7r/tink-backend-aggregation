@@ -4,8 +4,8 @@ aggregationdb:
   username: tink
   host: aggregationdb.default
 
-coordinationHosts: coordination.default:2181
-cacheHosts: cache.default:2181
+coordinationHosts: coordination.svc.cluster.local:2181
+cacheHosts: cache.default:11211
 
 sqsQueueConfiguration:
   enabled: false
@@ -20,3 +20,5 @@ agents:
 clients:
   provision-job-testing:
     aggregatorIdentifier: "Provision Job Testing"
+
+initialDelaySeconds: 10
