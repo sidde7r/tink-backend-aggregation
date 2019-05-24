@@ -38,7 +38,7 @@ public class RequestUserOptInAccountsAgentWorkerCommandTest {
 
     @Test
     public void returnContinueWhenContextAndRequestAccountsAreEmpty() throws Exception {
-        Mockito.when(context.getCachedAccounts()).thenReturn(Lists.emptyList());
+        Mockito.when(context.getCachedAccountsWithFeatures()).thenReturn(Lists.emptyList());
         Mockito.when(request.getAccounts()).thenReturn(Lists.emptyList());
 
         Assert.assertEquals(AgentWorkerCommandResult.CONTINUE, command.execute());
