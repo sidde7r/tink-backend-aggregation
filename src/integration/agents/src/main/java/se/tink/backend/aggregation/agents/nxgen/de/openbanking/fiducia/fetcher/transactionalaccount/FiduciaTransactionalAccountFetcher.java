@@ -7,6 +7,7 @@ import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.SignatureValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
@@ -47,34 +48,28 @@ public class FiduciaTransactionalAccountFetcher
 
         GetAccountsResponse getAccountsResponse =
                 apiClient.getAccounts(digest, certificate, signature, reqId, date);
-        getAccountsResponse
-                .getAccounts()
-                .forEach(
-                        acc -> {
-                            String balancesDate = SignatureUtils.getCurrentDateFormatted();
-                            String balancesReqId = String.valueOf(UUID.randomUUID());
-                            String balancesSignature =
-                                    SignatureUtils.createSignature(
-                                            privateKey,
-                                            keyId,
-                                            SignatureValues.HEADERS,
-                                            digest,
-                                            balancesReqId,
-                                            balancesDate,
-                                            null);
-
-                            GetBalancesResponse getBalancesResponse =
-                                    apiClient.getBalances(
-                                            acc,
-                                            digest,
-                                            certificate,
-                                            balancesSignature,
-                                            balancesReqId,
-                                            balancesDate);
-                            acc.setBalances(getBalancesResponse.getBalances());
-                        });
+        getAccountsResponse.getAccounts().forEach(acc -> setBalances(acc, digest));
 
         return getAccountsResponse.toTinkAccounts();
+    }
+
+    private void setBalances(AccountEntity acc, String digest) {
+        String balancesDate = SignatureUtils.getCurrentDateFormatted();
+        String balancesReqId = String.valueOf(UUID.randomUUID());
+        String balancesSignature =
+                SignatureUtils.createSignature(
+                        privateKey,
+                        keyId,
+                        SignatureValues.HEADERS,
+                        digest,
+                        balancesReqId,
+                        balancesDate,
+                        null);
+
+        GetBalancesResponse getBalancesResponse =
+                apiClient.getBalances(
+                        acc, digest, certificate, balancesSignature, balancesReqId, balancesDate);
+        acc.setBalances(getBalancesResponse.getBalances());
     }
 
     @Override
