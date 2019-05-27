@@ -15,6 +15,8 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -35,6 +37,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private static final String TRUE = "true";
 
     private final AgentWorkerCommandContext context;
+    private final StatusUpdater statusUpdater;
+    private final SystemUpdater systemUpdater;
     private final ConfigureWhitelistInformationRequest request;
     private final ControllerWrapper controllerWrapper;
 
@@ -43,6 +47,8 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             ConfigureWhitelistInformationRequest request,
             ControllerWrapper controllerWrapper) {
         this.context = context;
+        this.statusUpdater = context;
+        this.systemUpdater = context;
         this.request = request;
         this.controllerWrapper = controllerWrapper;
     }
@@ -90,7 +96,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -132,7 +138,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -169,7 +175,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -223,7 +229,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private void updateCredentialsExcludingSensitiveInformation() {
         Credentials credentials = request.getCredentials();
         credentials.setStatus(CredentialsStatus.UPDATING);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
     }
 
     private Map<String, String> askSupplementalInformation(Field... fields)
