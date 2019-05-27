@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.amazonaws.util.CollectionUtils;
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.assertj.core.util.Lists;
-import org.assertj.core.util.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
@@ -87,10 +86,10 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             List<Pair<Account, AccountFeatures>> accountsInContext)
             throws SupplementalInfoException {
         Map<String, String> supplementalInformation =
-                askAccountSupplementalInformation(accountsInContext, Lists.emptyList());
+                askAccountSupplementalInformation(accountsInContext, Lists.newArrayList());
 
         // Abort if the supplemental information is null or empty.
-        if (Maps.isNullOrEmpty(supplementalInformation)) {
+        if (supplementalInformation == null || supplementalInformation.isEmpty()) {
             context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
@@ -169,7 +168,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                 askAccountSupplementalInformation(accountsInContext, accountsInRequest);
 
         // Abort if the supplemental information is null or empty.
-        if (Maps.isNullOrEmpty(supplementalInformation)) {
+        if (supplementalInformation == null || supplementalInformation.isEmpty()) {
             context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
@@ -279,17 +278,18 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
                         ? account.getIdentifier(AccountIdentifier.Type.IBAN).getIdentifier()
                         : null);
 
-        if (accountFeatures != null
-                && !CollectionUtils.isNullOrEmpty(accountFeatures.getPortfolios())) {
-            JsonArray portfolioTypes = new JsonArray();
-
-            accountFeatures.getPortfolios().stream()
-                    .map(p -> p.getType().name())
-                    .map(JsonPrimitive::new)
-                    .forEach(portfolioTypes::add);
-
-            additionalInfo.add("portfolioTypes", portfolioTypes);
+        if (accountFeatures == null || account.getType() != AccountTypes.INVESTMENT) {
+            return additionalInfo.toString();
         }
+
+        JsonArray portfolioTypes = new JsonArray();
+
+        accountFeatures.getPortfolios().stream()
+                .map(p -> p.getType().name())
+                .map(JsonPrimitive::new)
+                .forEach(portfolioTypes::add);
+
+        additionalInfo.add("portfolioTypes", portfolioTypes);
 
         return additionalInfo.toString();
     }
