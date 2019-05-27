@@ -10,6 +10,7 @@ steps:
       docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ":kubernetes: Helm Lint"
     branches: '!master'
@@ -21,6 +22,7 @@ steps:
       docker#v2.0.0:
         image: gcr.io/tink-containers/kubernetes-generator:latest
         always-pull: true
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/check-bazel-style.sh
     plugins:
@@ -32,6 +34,7 @@ steps:
     timeout_in_minutes: 10
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/check-java-style.sh
     plugins:
@@ -43,6 +46,7 @@ steps:
     timeout_in_minutes: 30
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
@@ -56,6 +60,7 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-integration'
     branches: 'staging'
@@ -67,6 +72,7 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-aggregation-statuspage-providers-cronjob'
     branches: 'staging'
@@ -78,6 +84,7 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-notifying-aggregation-service-asserter'
     branches: 'staging'
@@ -89,6 +96,7 @@ steps:
         config: "docker/docker-compose.bazel.yml"
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
@@ -97,6 +105,7 @@ steps:
     command: .buildkite/generate-trigger-steps-master.py | buildkite-agent pipeline upload
     agents:
       queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
