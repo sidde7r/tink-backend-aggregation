@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki.SpConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki.SpTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV1Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -59,7 +59,7 @@ public class SpAutoAuthenticatorTest extends NextGenerationAgentTest {
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient =
                 new SamlinkApiClient(
-                        client, sessionStorage, new SamlinkConfiguration(SpConstants.Url.BASE));
+                        client, sessionStorage, new SamlinkV1Configuration(SpConstants.Url.BASE));
         SamlinkAutoAuthenticator autoAuthenticator =
                 new SamlinkAutoAuthenticator(bankClient, persistentStorage, credentials);
 
