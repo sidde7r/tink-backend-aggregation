@@ -213,25 +213,19 @@ public class NordeaExecutorHelper {
     }
 
     public void sign(SignatureRequest signatureRequest, String transferId) {
-        log.info("Starting sign: " + transferId);
         SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
-        log.info(
-                "Signed: "
-                        + transferId
-                        + " Status: "
-                        + signatureResponse.getSignatureState().name());
         if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
+        } else {
+            throw paymentFailedError();
         }
     }
 
     private void pollSignTransfer(String transferId, String orderRef) {
         try {
-            log.info("Polling transfer sign. Order: " + orderRef + " transferid: " + transferId);
             poll(orderRef);
             assertSuccessfulSign(transferId);
         } catch (Exception initialException) {
-            log.info("Exception caught: " + initialException.getClass().getName());
             if (!isTransferFailedButWasSuccessful(transferId)) {
                 if (initialException.getCause() instanceof HttpResponseException) {
                     HttpResponse response =
@@ -255,22 +249,17 @@ public class NordeaExecutorHelper {
 
                 switch (status) {
                     case DONE:
-                        log.info("Completing transfer");
                         completeTransfer(orderRef);
                         return;
                     case WAITING:
-                        log.info("Waiting");
                         break;
                     case CANCELLED:
-                        log.info("Cancelled");
                         throw bankIdCancelledError();
                     default:
-                        log.info("Failiure");
                         throw signTransferFailedError();
                 }
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
-                log.info("Exception in poll: " + e.getMessage());
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw bankIdAlreadyInProgressError();
                 }
