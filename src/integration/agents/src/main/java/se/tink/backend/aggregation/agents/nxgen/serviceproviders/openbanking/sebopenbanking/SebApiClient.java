@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.TokenResponse;
@@ -21,12 +23,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
 
 public final class SebApiClient {
     private final TinkHttpClient client;
@@ -180,25 +176,24 @@ public final class SebApiClient {
         return response.getTransactions();
     }
 
-    public FetchCardAccountsTransactions fetchTransctions(String accountId, LocalDate fromDate, LocalDate toDate) {
+    public FetchCardAccountsTransactions fetchTransctions(
+            String accountId, LocalDate fromDate, LocalDate toDate) {
 
-        URL url = new URL(configuration.getBaseUrl() + SebConstants.Urls.CREDIT_CARD_TRANSACTIONS)
-                .parameter(SebConstants.IdTags.ACCOUNT_ID, accountId);
+        URL url =
+                new URL(configuration.getBaseUrl() + SebConstants.Urls.CREDIT_CARD_TRANSACTIONS)
+                        .parameter(SebConstants.IdTags.ACCOUNT_ID, accountId);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SebConstants.DATE_FORMAT);
 
         FetchCardAccountsTransactions response =
                 client.request(url)
-                        .queryParam(SebConstants.QueryKeys.DATE_FROM, fromDate.format( formatter))
-                        .queryParam(SebConstants.QueryKeys.DATE_TO, toDate.format(formatter))
                         .accept(MediaType.APPLICATION_JSON)
                         .header(SebConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
                         .addBearerToken(getTokenFromSession())
+                        .queryParam(SebConstants.QueryKeys.DATE_FROM, fromDate.format(formatter))
+                        .queryParam(SebConstants.QueryKeys.DATE_TO, toDate.format(formatter))
                         .get(FetchCardAccountsTransactions.class);
 
         return response;
-
-
-
     }
 }

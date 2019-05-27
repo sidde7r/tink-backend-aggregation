@@ -1,18 +1,14 @@
-
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
+import java.util.Date;
 import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
-import java.util.function.Function;
 
 @JsonObject
 public class Booked {
@@ -151,20 +147,16 @@ public class Booked {
 
     @JsonIgnore
     public CreditCardTransaction toTinkTransaction(CreditCardAccount creditAccount) {
-        CreditCardTransaction tr = CreditCardTransaction
-                .builder()
+        return CreditCardTransaction.builder()
                 .setAmount(
                         new Amount(
                                 transactionAmount.getCurrency(),
-                                BigDecimal.valueOf(transactionAmount.getAmount())
-                        )
-                )
+                                BigDecimal.valueOf(transactionAmount.getAmount())))
                 .setCreditAccount(creditAccount)
                 .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
                 .setDate(getValueDate())
                 .setDescription(getTransactionDetails())
                 .setPending(Boolean.FALSE)
                 .build();
-        return tr;
     }
 }

@@ -1,39 +1,37 @@
-
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.BalancesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @JsonObject
 public class CardAccount {
-    
+
     private List<Balance> balances;
-    
+
     private CreditLimit creditLimit;
-    
+
     private String currency;
-    
+
     private String maskedPan;
-    
+
     private String name;
-    
+
     private String product;
-    
+
     private String resourceId;
-    
+
     private String status;
-    
+
     private String usage;
 
-    public List<Balance> getBalancesb() {
+    public List<Balance> getBalances() {
         return balances;
     }
 
@@ -105,15 +103,10 @@ public class CardAccount {
         this.usage = usage;
     }
 
+    @JsonIgnore
     public static CreditCardAccount toTinkTransaction(CardAccount cardAccount) {
-        return CreditCardAccount
-                .builder(cardAccount.createUniqueIdFromMaskedPane())
-                .setAvailableCredit(
-                        new Amount(
-                                cardAccount.getCreditLimit().getCurrency(),
-                                BigDecimal.valueOf(cardAccount.getCreditLimit().getAmount())
-                        )
-                )
+        return CreditCardAccount.builder(cardAccount.createUniqueIdFromMaskedPane())
+                .setAvailableCredit(cardAccount.getAvaliableCredit())
                 .setBalance(cardAccount.getAvailableBalance())
                 .setBankIdentifier(cardAccount.getResourceId())
                 .setName(cardAccount.getProduct())
@@ -121,6 +114,13 @@ public class CardAccount {
                 .build();
     }
 
+    @JsonIgnore
+    private Amount getAvaliableCredit() {
+        return new Amount(
+                getCreditLimit().getCurrency(), BigDecimal.valueOf(getCreditLimit().getAmount()));
+    }
+
+    @JsonIgnore
     private Amount getAvailableBalance() {
 
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
