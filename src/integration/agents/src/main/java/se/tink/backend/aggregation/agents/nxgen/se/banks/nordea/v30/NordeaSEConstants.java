@@ -136,6 +136,7 @@ public class NordeaSEConstants {
         public static final String USER_SIGN = "external_authentication_pending";
         public static final String SIGN_PENDING = "SIGN_PENDING";
         public static final String PENDING = "PENDING";
+        public static final String CANCELLED = "CANCELLED";
         public static final String OK = "OK";
     }
 
