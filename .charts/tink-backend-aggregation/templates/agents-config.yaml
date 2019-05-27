@@ -79,7 +79,7 @@ data:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TAG"
-              clientCertificatePath: "VOLKSBANK_AIS_CERT_TAG"
+              clientCertificateContent: "VOLKSBANK_AIS_CERT_TAG"
               clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD_TAG"
         {{- end }}
         {{- if $agentsConfig.fints }}
