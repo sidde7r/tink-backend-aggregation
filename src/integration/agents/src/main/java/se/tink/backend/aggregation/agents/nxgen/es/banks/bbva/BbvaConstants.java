@@ -111,7 +111,6 @@ public final class BbvaConstants {
         BBVA_USER_AGENT(
                 "BBVA-User-Agent",
                 "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
-        ORIGIN("Origin", "https://beta.movil.bbva.es"),
         REFERER("Referer", "https://beta.movil.bbva.es/versions/woody/6.18.3/index.html");
 
         private final String key;
