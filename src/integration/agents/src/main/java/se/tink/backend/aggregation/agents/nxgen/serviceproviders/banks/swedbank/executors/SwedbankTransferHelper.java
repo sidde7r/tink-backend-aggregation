@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.utils.QrCodeParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
@@ -51,7 +52,7 @@ public class SwedbankTransferHelper {
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
-        supplementalRequester.openBankId(null, false);
+        boolean didOpenBankId = false;
 
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
             SwedbankBaseConstants.BankIdResponseStatus signingStatus =
@@ -60,6 +61,19 @@ public class SwedbankTransferHelper {
             switch (signingStatus) {
                 case CLIENT_NOT_STARTED:
                 case USER_SIGN:
+                    if (!didOpenBankId) {
+                        if (bankIdSignResponse.isQrCodeSigning()) {
+                            final String encodedImage =
+                                    apiClient.getQrCodeImageAsBase64EncodedString(
+                                            bankIdSignResponse.getImageChallengeData());
+                            final String autoStartToken =
+                                    QrCodeParser.decodeBankIdQrCode(encodedImage);
+                            supplementalRequester.openBankId(autoStartToken, false);
+                        } else {
+                            supplementalRequester.openBankId(null, false);
+                        }
+                        didOpenBankId = true;
+                    }
                     break;
                 case COMPLETE:
                     return bankIdSignResponse.getLinks();
@@ -110,6 +124,7 @@ public class SwedbankTransferHelper {
                 // Re-throw unknown exception.
                 throw hre;
             }
+
             Uninterruptibles.sleepUninterruptibly(
                     SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
         }

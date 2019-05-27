@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import javax.ws.rs.core.Cookie;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +99,10 @@ public class SwedbankDefaultApiClient {
 
     private <T> T makeGetRequest(URL url, Class<T> responseClass) {
         return buildAbstractRequest(url).get(responseClass);
+    }
+
+    private HttpResponse makeGetRequest(LinkEntity linkEntity) {
+        return makeRequest(linkEntity, HttpResponse.class);
     }
 
     private <T> T makePostRequest(URL url, Object requestObject, Class<T> responseClass) {
@@ -431,6 +437,17 @@ public class SwedbankDefaultApiClient {
                 linkEntity,
                 InitiateSignTransferRequest.create(),
                 InitiateSignTransferResponse.class);
+    }
+
+    public String getQrCodeImageAsBase64EncodedString(final LinkEntity linkEntity) {
+        final HttpResponse response = makeGetRequest(linkEntity);
+        try {
+            byte[] bytes = IOUtils.toByteArray(response.getBodyInputStream());
+            return Base64.encodeBase64String(bytes);
+        } catch (IOException e) {
+            log.warn("Could not download QR code.");
+            throw new IllegalStateException(e);
+        }
     }
 
     public CollectBankIdSignResponse collectSignBankId(LinkEntity linkEntity) {
