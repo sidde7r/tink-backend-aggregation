@@ -10,7 +10,12 @@ import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class SignatureUtils {
+public final class SignatureUtils {
+
+    private SignatureUtils() {
+        throw new AssertionError();
+    }
+
     public static String createSignature(
             PrivateKey privateKey,
             String keyId,
