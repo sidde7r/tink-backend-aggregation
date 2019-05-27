@@ -2118,6 +2118,18 @@ maven_jar(
 )
 
 maven_jar(
+    name = "com_google_zxing_qrcode_core",
+    artifact = "com.google.zxing:core:3.3.3",
+    sha1 = "b640badcc97f18867c4dfd249ef8d20ec0204c07",
+)
+
+maven_jar(
+    name = "com_google_zxing_qrcode_javase",
+    artifact = "com.google.zxing:javase:3.3.3",
+    sha1 = "44d02048349c96eacb394af7978b3e6f1777bb02",
+)
+
+maven_jar(
     name = "io_prometheus_simpleclient_skeleton_version",
     artifact = "io.prometheus:simpleclient:0.5.0",
     sha1 = "fbbfe2300098798e3d23f93b7b14befeceacf512",

@@ -82,6 +82,7 @@ java_library(
         "//third_party:org_springframework_data_spring_data_jpa",
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
+        "//third_party:zxing-qrcode",
     ],
 )
 
@@ -162,6 +163,7 @@ junit_test(
         "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "//third_party:zxing-qrcode",
     ],
 )
 

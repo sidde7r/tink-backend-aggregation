@@ -1642,6 +1642,15 @@ java_library(
 )
 
 java_library(
+    name = "zxing-qrcode",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_google_zxing_qrcode_core//jar",
+        "@com_google_zxing_qrcode_javase//jar",
+    ],
+)
+
+java_library(
     name = "bouncycastle",
     visibility = ["//visibility:public"],
     exports = [
