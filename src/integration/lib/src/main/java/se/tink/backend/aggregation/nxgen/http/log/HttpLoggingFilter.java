@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.MapValueMasker;
@@ -159,7 +160,10 @@ public class HttpLoggingFilter extends ClientFilter {
         HttpResponseLogEntry logEntry = new HttpResponseLogEntry();
         logEntry.setAgent(agentClass.getName());
         logEntry.setMaskedHeader(getHeaderStringMasked(clientResponse));
-        logEntry.setMaskedBody(getMaskedBody(clientResponse));
+        logEntry.setMaskedBody(
+                getMaskedBody(clientResponse) != null
+                        ? EncodingUtils.encodeAsBase64String(getMaskedBody(clientResponse))
+                        : null);
         logEntry.setMaskedLocation(getMaskedLocation(clientResponse));
         logEntry.setStatusCode(String.valueOf(clientResponse.getStatus()));
         logEntry.setStatusInfo(clientResponse.getStatusInfo().toString());
