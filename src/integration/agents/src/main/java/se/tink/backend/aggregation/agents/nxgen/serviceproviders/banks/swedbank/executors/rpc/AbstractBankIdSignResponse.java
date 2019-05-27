@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 
 public abstract class AbstractBankIdSignResponse extends AbstractBankIdResponse {
     private String signingStatus;
-    private LinkEntity imageChallengeData;
+    private LinkEntity imageChallenge;
     private boolean qrCodeSigning;
 
     public boolean isQrCodeSigning() {
@@ -15,7 +15,7 @@ public abstract class AbstractBankIdSignResponse extends AbstractBankIdResponse 
     }
 
     public LinkEntity getImageChallengeData() {
-        return imageChallengeData;
+        return imageChallenge;
     }
 
     @JsonIgnore
