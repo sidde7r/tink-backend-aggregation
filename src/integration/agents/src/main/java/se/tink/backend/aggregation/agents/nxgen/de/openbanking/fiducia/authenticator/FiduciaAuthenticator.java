@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator;
 
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.createDigest;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.createSignature;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.getCurrentDateFormatted;
-
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Collections;
 import java.util.Optional;
@@ -24,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authentic
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.rpc.CreateConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -83,12 +80,14 @@ public class FiduciaAuthenticator implements Authenticator {
                         FormValues.VALID_UNTIL,
                         FormValues.FALSE);
 
-        String digest = createDigest(SerializationUtils.serializeToString(createConsentRequest));
-        String date = getCurrentDateFormatted();
+        String digest =
+                SignatureUtils.createDigest(
+                        SerializationUtils.serializeToString(createConsentRequest));
+        String date = SignatureUtils.getCurrentDateFormatted();
 
         String reqId = String.valueOf(UUID.randomUUID());
         String signature =
-                createSignature(
+                SignatureUtils.createSignature(
                         privateKey,
                         keyId,
                         SignatureValues.HEADERS_WITH_PSU_ID,
@@ -106,11 +105,12 @@ public class FiduciaAuthenticator implements Authenticator {
         AuthorizeConsentRequest authorizeConsentRequest =
                 new AuthorizeConsentRequest(new PsuData(password));
         String digest2 =
-                createDigest(SerializationUtils.serializeToString(authorizeConsentRequest));
-        String date2 = getCurrentDateFormatted();
+                SignatureUtils.createDigest(
+                        SerializationUtils.serializeToString(authorizeConsentRequest));
+        String date2 = SignatureUtils.getCurrentDateFormatted();
         String reqId2 = String.valueOf(UUID.randomUUID());
         String signature2 =
-                createSignature(
+                SignatureUtils.createSignature(
                         privateKey, keyId, SignatureValues.HEADERS, digest2, reqId2, date2, null);
 
         apiClient.authorizeConsent(

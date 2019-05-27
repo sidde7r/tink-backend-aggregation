@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount;
 
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.createDigest;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.createSignature;
-import static se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils.getCurrentDateFormatted;
-
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Collection;
 import java.util.Date;
@@ -14,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configura
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.utils.SignatureUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
@@ -41,11 +38,11 @@ public class FiduciaTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        String digest = createDigest(SignatureValues.EMPTY_BODY);
-        String date = getCurrentDateFormatted();
+        String digest = SignatureUtils.createDigest(SignatureValues.EMPTY_BODY);
+        String date = SignatureUtils.getCurrentDateFormatted();
         String reqId = String.valueOf(UUID.randomUUID());
         String signature =
-                createSignature(
+                SignatureUtils.createSignature(
                         privateKey, keyId, SignatureValues.HEADERS, digest, reqId, date, null);
 
         GetAccountsResponse getAccountsResponse =
@@ -54,10 +51,10 @@ public class FiduciaTransactionalAccountFetcher
                 .getAccounts()
                 .forEach(
                         acc -> {
-                            String balancesDate = getCurrentDateFormatted();
+                            String balancesDate = SignatureUtils.getCurrentDateFormatted();
                             String balancesReqId = String.valueOf(UUID.randomUUID());
                             String balancesSignature =
-                                    createSignature(
+                                    SignatureUtils.createSignature(
                                             privateKey,
                                             keyId,
                                             SignatureValues.HEADERS,
@@ -83,11 +80,11 @@ public class FiduciaTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        String digest = createDigest(SignatureValues.EMPTY_BODY);
-        String date = getCurrentDateFormatted();
+        String digest = SignatureUtils.createDigest(SignatureValues.EMPTY_BODY);
+        String date = SignatureUtils.getCurrentDateFormatted();
         String reqId = String.valueOf(UUID.randomUUID());
         String signature =
-                createSignature(
+                SignatureUtils.createSignature(
                         privateKey, keyId, SignatureValues.HEADERS, digest, reqId, date, null);
 
         return apiClient.getTransactions(
