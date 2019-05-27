@@ -23,24 +23,28 @@ git_repository(
     name = "dropwizard_jersey",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
     remote = "git@github.com:tink-ab/dropwizard.git",
+    shallow_since = "1490898663 +0200",
 )
 
 git_repository(
     name = "tink_httpcore_4_4_9",
     remote = "git@github.com:tink-ab/httpcomponents-core.git",
-    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2"
+    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2",
+    shallow_since = "1537528950 +0200",
 )
 
 git_repository(
     name = "tink_httpclient_4_5_5",
     remote = "git@github.com:tink-ab/httpcomponents-client.git",
-    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e"
+    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
+    shallow_since = "1537529121 +0200",
 )
 
 git_repository(
     name = "tink_aws_sdk_1_11",
     remote = "git@github.com:tink-ab/aws-sdk-java.git",
-    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a"
+    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
+    shallow_since = "1543992595 +0100",
 )
 
 git_repository(
