@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -45,6 +47,7 @@ public class NordeaExecutorHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final NordeaSEApiClient apiClient;
+    private static final Logger log = LoggerFactory.getLogger(NordeaExecutorHelper.class);
 
     public NordeaExecutorHelper(
             AgentContext context,
@@ -210,8 +213,13 @@ public class NordeaExecutorHelper {
     }
 
     public void sign(SignatureRequest signatureRequest, String transferId) {
+        log.info("Starting sign: " + transferId);
         SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
-
+        log.info(
+                "Signed: "
+                        + transferId
+                        + " Status: "
+                        + signatureResponse.getSignatureState().name());
         if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
         }
@@ -219,9 +227,11 @@ public class NordeaExecutorHelper {
 
     private void pollSignTransfer(String transferId, String orderRef) {
         try {
+            log.info("Polling transfer sign. Order: " + orderRef + " transferid: " + transferId);
             poll(orderRef);
             assertSuccessfulSign(transferId);
         } catch (Exception initialException) {
+            log.info("Exception caught: " + initialException.getClass().getName());
             if (!isTransferFailedButWasSuccessful(transferId)) {
                 if (initialException.getCause() instanceof HttpResponseException) {
                     HttpResponse response =
@@ -245,17 +255,22 @@ public class NordeaExecutorHelper {
 
                 switch (status) {
                     case DONE:
+                        log.info("Completing transfer");
                         completeTransfer(orderRef);
                         return;
                     case WAITING:
+                        log.info("Waiting");
                         break;
                     case CANCELLED:
+                        log.info("Cancelled");
                         throw bankIdCancelledError();
                     default:
+                        log.info("Failiure");
                         throw signTransferFailedError();
                 }
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
             } catch (HttpResponseException e) {
+                log.info("Exception in poll: " + e.getMessage());
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw bankIdAlreadyInProgressError();
                 }
