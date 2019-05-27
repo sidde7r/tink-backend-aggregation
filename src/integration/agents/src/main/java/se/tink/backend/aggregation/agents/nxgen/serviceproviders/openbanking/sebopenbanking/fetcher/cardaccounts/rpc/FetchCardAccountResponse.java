@@ -21,16 +21,8 @@ public class FetchCardAccountResponse {
         return error;
     }
 
-    public void setError(Error error) {
-        this.error = error;
-    }
-
     public List<CardAccount> getCardAccounts() {
         return cardAccounts;
-    }
-
-    public void setCardAccounts(List<CardAccount> cardAccounts) {
-        this.cardAccounts = cardAccounts;
     }
 
     public List<CreditCardAccount> getTransactions() {

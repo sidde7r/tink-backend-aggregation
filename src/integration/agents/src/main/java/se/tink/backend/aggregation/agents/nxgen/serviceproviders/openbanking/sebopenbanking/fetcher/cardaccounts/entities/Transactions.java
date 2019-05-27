@@ -22,16 +22,8 @@ public class Transactions {
         return booked;
     }
 
-    public void setBooked(List<Booked> booked) {
-        this.booked = booked;
-    }
-
     public List<Pending> getPending() {
         return pending;
-    }
-
-    public void setPending(List<Pending> pending) {
-        this.pending = pending;
     }
 
     @JsonIgnore
@@ -52,6 +44,6 @@ public class Transactions {
 
         return Optional.ofNullable(transactions)
                 .map(t -> t.stream().map(tr -> mapMethod.apply(tr)).collect(Collectors.toList()))
-                .orElseGet(() -> Collections.EMPTY_LIST);
+                .orElseGet(Collections::emptyList);
     }
 }

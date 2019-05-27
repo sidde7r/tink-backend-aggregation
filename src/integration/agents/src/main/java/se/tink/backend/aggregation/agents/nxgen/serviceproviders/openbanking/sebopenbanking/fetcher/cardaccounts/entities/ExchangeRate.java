@@ -17,31 +17,15 @@ public class ExchangeRate {
         return currencyFrom;
     }
 
-    public void setCurrencyFrom(String currencyFrom) {
-        this.currencyFrom = currencyFrom;
-    }
-
     public String getCurrencyTo() {
         return currencyTo;
-    }
-
-    public void setCurrencyTo(String currencyTo) {
-        this.currencyTo = currencyTo;
     }
 
     public Double getRate() {
         return rate;
     }
 
-    public void setRate(Double rate) {
-        this.rate = rate;
-    }
-
     public String getRateDate() {
         return rateDate;
-    }
-
-    public void setRateDate(String rateDate) {
-        this.rateDate = rateDate;
     }
 }

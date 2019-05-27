@@ -20,24 +20,12 @@ public class Balance {
         return balanceAmount;
     }
 
-    public void setBalanceAmount(BalanceAmount balanceAmount) {
-        this.balanceAmount = balanceAmount;
-    }
-
     public String getBalanceType() {
         return balanceType;
     }
 
-    public void setBalanceType(String balanceType) {
-        this.balanceType = balanceType;
-    }
-
     public Boolean getCreditLimitincluded() {
         return creditLimitincluded;
-    }
-
-    public void setCreditLimitincluded(Boolean creditLimitincluded) {
-        this.creditLimitincluded = creditLimitincluded;
     }
 
     @JsonIgnore

@@ -19,16 +19,8 @@ public class FetchCardAccountsTransactions {
         return error;
     }
 
-    public void setError(Error error) {
-        this.error = error;
-    }
-
     public Transactions getTransactions() {
         return transactions;
-    }
-
-    public void setTransactions(Transactions transactions) {
-        this.transactions = transactions;
     }
 
     @JsonIgnore

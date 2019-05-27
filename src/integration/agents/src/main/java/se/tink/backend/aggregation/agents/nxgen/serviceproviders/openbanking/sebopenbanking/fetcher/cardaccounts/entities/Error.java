@@ -23,55 +23,27 @@ public class Error {
         return correlationId;
     }
 
-    public void setCorrelationId(String correlationId) {
-        this.correlationId = correlationId;
-    }
-
     public String getDeveloperMessage() {
         return developerMessage;
-    }
-
-    public void setDeveloperMessage(String developerMessage) {
-        this.developerMessage = developerMessage;
     }
 
     public String getErrorAttribute() {
         return errorAttribute;
     }
 
-    public void setErrorAttribute(String errorAttribute) {
-        this.errorAttribute = errorAttribute;
-    }
-
     public String getErrorCode() {
         return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
     }
 
     public String getMoreInformation() {
         return moreInformation;
     }
 
-    public void setMoreInformation(String moreInformation) {
-        this.moreInformation = moreInformation;
-    }
-
     public String getSupportID() {
         return supportID;
     }
 
-    public void setSupportID(String supportID) {
-        this.supportID = supportID;
-    }
-
     public String getUserMessage() {
         return userMessage;
-    }
-
-    public void setUserMessage(String userMessage) {
-        this.userMessage = userMessage;
     }
 }

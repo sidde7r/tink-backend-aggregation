@@ -35,72 +35,36 @@ public class CardAccount {
         return balances;
     }
 
-    public void setBalances(List<Balance> balances) {
-        this.balances = balances;
-    }
-
     public CreditLimit getCreditLimit() {
         return creditLimit;
-    }
-
-    public void setCreditLimit(CreditLimit creditLimit) {
-        this.creditLimit = creditLimit;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
     public String getMaskedPan() {
         return maskedPan;
-    }
-
-    public void setMaskedPan(String maskedPan) {
-        this.maskedPan = maskedPan;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getProduct() {
         return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
     }
 
     public String getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }
-
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getUsage() {
         return usage;
-    }
-
-    public void setUsage(String usage) {
-        this.usage = usage;
     }
 
     @JsonIgnore

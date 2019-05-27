@@ -45,104 +45,52 @@ public class Booked {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
     public String getCardAcceptorCity() {
         return cardAcceptorCity;
-    }
-
-    public void setCardAcceptorCity(String cardAcceptorCity) {
-        this.cardAcceptorCity = cardAcceptorCity;
     }
 
     public String getCardAcceptorCountryCode() {
         return cardAcceptorCountryCode;
     }
 
-    public void setCardAcceptorCountryCode(String cardAcceptorCountryCode) {
-        this.cardAcceptorCountryCode = cardAcceptorCountryCode;
-    }
-
     public String getCardTransactionId() {
         return cardTransactionId;
-    }
-
-    public void setCardTransactionId(String cardTransactionId) {
-        this.cardTransactionId = cardTransactionId;
     }
 
     public ExchangeRate getExchangeRate() {
         return exchangeRate;
     }
 
-    public void setExchangeRate(ExchangeRate exchangeRate) {
-        this.exchangeRate = exchangeRate;
-    }
-
     public Boolean getInvoiced() {
         return invoiced;
-    }
-
-    public void setInvoiced(Boolean invoiced) {
-        this.invoiced = invoiced;
     }
 
     public String getMaskedPan() {
         return maskedPan;
     }
 
-    public void setMaskedPan(String maskedPan) {
-        this.maskedPan = maskedPan;
-    }
-
     public String getNameOnCard() {
         return nameOnCard;
-    }
-
-    public void setNameOnCard(String nameOnCard) {
-        this.nameOnCard = nameOnCard;
     }
 
     public OriginalAmount getOriginalAmount() {
         return originalAmount;
     }
 
-    public void setOriginalAmount(OriginalAmount originalAmount) {
-        this.originalAmount = originalAmount;
-    }
-
     public String getProprietaryBankTransactionCode() {
         return proprietaryBankTransactionCode;
-    }
-
-    public void setProprietaryBankTransactionCode(String proprietaryBankTransactionCode) {
-        this.proprietaryBankTransactionCode = proprietaryBankTransactionCode;
     }
 
     public TransactionAmount getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(TransactionAmount transactionAmount) {
-        this.transactionAmount = transactionAmount;
-    }
-
     public String getTransactionDetails() {
         return transactionDetails;
     }
 
-    public void setTransactionDetails(String transactionDetails) {
-        this.transactionDetails = transactionDetails;
-    }
-
     public Date getValueDate() {
         return valueDate;
-    }
-
-    public void setValueDate(Date valueDate) {
-        this.valueDate = valueDate;
     }
 
     @JsonIgnore
