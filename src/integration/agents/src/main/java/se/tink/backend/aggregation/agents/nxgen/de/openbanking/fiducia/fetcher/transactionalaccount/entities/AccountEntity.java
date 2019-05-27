@@ -41,6 +41,6 @@ public class AccountEntity {
                 .filter(BalanceEntity::isAvailableBalance)
                 .map(BalanceEntity::getAmount)
                 .findFirst()
-                .orElse(BalanceEntity.Default);
+                .orElse(BalanceEntity.defaultAmount);
     }
 }

@@ -6,7 +6,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BalanceEntity {
-    public static final Amount Default = Amount.inEUR(0);
+    public static final Amount defaultAmount = Amount.inEUR(0);
 
     private AmountEntity balanceAmount;
     private String balanceType;
