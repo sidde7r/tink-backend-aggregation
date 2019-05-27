@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
@@ -47,7 +45,6 @@ public class NordeaExecutorHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final NordeaSEApiClient apiClient;
-    private static final Logger log = LoggerFactory.getLogger(NordeaExecutorHelper.class);
 
     public NordeaExecutorHelper(
             AgentContext context,
