@@ -18,6 +18,7 @@ public class OmaspConstants {
         public static final String ACCESS_TOKEN = "access_token";
         public static final String DEVICE_ID = "device_id";
         public static final String FULL_NAME = "full_name";
+        public static final String DEVICE_TOKEN = "device_token";
     }
 
     public static final class LogTags {
@@ -30,8 +31,8 @@ public class OmaspConstants {
     public static final class Url {
         private static final String BASE = "https://gateway.omasp.fi/omasp/api";
 
-        static final URL LOGIN = new URL(BASE + "/auth/login");
-        static final URL REGISTER_DEVICE = new URL(BASE + "/auth/devices");
+        static final URL LOGIN = new URL(BASE + "/v2/identification");
+        static final URL REGISTER_DEVICE = new URL(BASE + "/v2/authentication");
         static final URL ACCOUNTS = new URL(BASE + "/accounts");
         static final URL TRANSACTIONS = new URL(BASE + "/accounts/transactions");
         static final URL TRANSACTION_DETAILS =

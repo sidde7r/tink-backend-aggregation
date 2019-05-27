@@ -3,23 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class SecurityKeyRequestEntity {
-    private String securityKeyIndex;
-    private String cardId;
-    private String securityCode;
+    private String value;
 
-    public SecurityKeyRequestEntity setSecurityKeyIndex(String securityKeyIndex) {
-        this.securityKeyIndex = securityKeyIndex;
-        return this;
-    }
-
-    public SecurityKeyRequestEntity setCardId(String cardId) {
-        this.cardId = cardId;
-        return this;
-    }
-
-    public SecurityKeyRequestEntity setSecurityCode(String securityCode) {
-        this.securityCode = securityCode;
-        return this;
+    public SecurityKeyRequestEntity(String value) {
+        this.value = value;
     }
 }

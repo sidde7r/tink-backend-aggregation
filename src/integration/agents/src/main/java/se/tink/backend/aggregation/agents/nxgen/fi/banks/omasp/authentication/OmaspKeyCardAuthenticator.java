@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Objects;
+import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -10,7 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.SecurityKeyResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.entities.SecurityKeyIndexEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspErrorResponse;
@@ -29,7 +30,6 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     private final OmaspApiClient apiClient;
     private final PersistentStorage persistentStorage;
 
-    private SecurityKeyResponseEntity securityKeyEntity;
     private SessionStorage sessionStorage;
 
     public OmaspKeyCardAuthenticator(
@@ -51,13 +51,17 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
                     loginResponse.getSecurityKeyRequired(),
                     "Code card authentication not required! (it should be)");
 
-            securityKeyEntity =
+            SecurityKeyIndexEntity securityKeyEntity =
                     Preconditions.checkNotNull(
-                            loginResponse.getSecurityKey(), "No code card information in response");
-            sessionStorage.put(Storage.FULL_NAME, loginResponse.getPerson().getFullName());
+                            loginResponse.getSecurityKeyIndex(),
+                            "No code card information in response");
+            Preconditions.checkState(
+                    !Strings.isNullOrEmpty(loginResponse.getSecurityKeyIndex().getIndex()),
+                    "No code card information in response (but entity exists)");
 
-            return new KeyCardInitValues(
-                    securityKeyEntity.getCardId(), securityKeyEntity.getSecurityKeyIndex());
+            sessionStorage.put(Storage.FULL_NAME, loginResponse.getName());
+
+            return new KeyCardInitValues(securityKeyEntity.getIndex());
         } catch (HttpResponseException e) {
             HttpResponse httpResponse = e.getResponse();
             if (httpResponse.getStatus() != 401 && httpResponse.getStatus() != 403) {
@@ -100,18 +104,23 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
         try {
+            String deviceId = persistentStorage.get(Storage.DEVICE_ID);
+
+            // The Omasp App generates a random UUID if none is present
+            if (Strings.isNullOrEmpty(deviceId)) {
+                deviceId = UUID.randomUUID().toString().toUpperCase();
+                persistentStorage.put(Storage.DEVICE_ID, deviceId);
+            }
+
             RegisterDeviceResponse registerDeviceResponse =
-                    apiClient.registerDevice(
-                            securityKeyEntity.getCardId(),
-                            securityKeyEntity.getSecurityKeyIndex(),
-                            code);
+                    apiClient.registerDevice(persistentStorage.get(Storage.DEVICE_ID), code);
 
             Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(registerDeviceResponse.getDeviceId()),
-                    "Device id is null or empty");
+                    !Strings.isNullOrEmpty(registerDeviceResponse.getDeviceToken()),
+                    "Device token is null or empty");
 
             persistentStorage.put(
-                    OmaspConstants.Storage.DEVICE_ID, registerDeviceResponse.getDeviceId());
+                    OmaspConstants.Storage.DEVICE_TOKEN, registerDeviceResponse.getDeviceToken());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 403) {
                 throw e;

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -33,6 +35,7 @@ import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.utils.MetricsUtils;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
@@ -267,6 +270,10 @@ public class AgentWorkerCommandContext extends AgentWorkerContext
         return allAvailableAccountsByUniqueId.values().stream()
                 .map(p -> p.first)
                 .collect(Collectors.toList());
+    }
+
+    public List<Pair<Account, AccountFeatures>> getCachedAccountsWithFeatures() {
+        return new ArrayList<>(allAvailableAccountsByUniqueId.values());
     }
 
     @Override

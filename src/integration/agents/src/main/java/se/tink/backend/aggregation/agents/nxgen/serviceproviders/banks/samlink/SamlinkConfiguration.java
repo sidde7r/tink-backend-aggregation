@@ -2,16 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
 
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class SamlinkConfiguration {
+public interface SamlinkConfiguration {
 
-    private final String baseUrl;
+    URL build(String path);
 
-    public SamlinkConfiguration(String baseUrl) {
+    String getClientApp();
 
-        this.baseUrl = baseUrl;
-    }
-
-    public URL build(String path) {
-        return new URL(baseUrl + path);
-    }
+    boolean isV2();
 }

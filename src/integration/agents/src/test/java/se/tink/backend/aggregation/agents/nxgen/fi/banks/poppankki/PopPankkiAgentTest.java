@@ -32,8 +32,8 @@ public class PopPankkiAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .addRefreshableItems(RefreshableItem.allRefreshableItemsAsArray())
                 .addRefreshableItems(RefreshableItem.IDENTITY_DATA)
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true);
     }
 
     @Test

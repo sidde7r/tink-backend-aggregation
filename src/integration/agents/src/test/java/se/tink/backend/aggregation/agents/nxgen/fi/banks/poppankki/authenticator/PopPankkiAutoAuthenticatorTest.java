@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.PopPankkiConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.PopPankkiTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkV1Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -61,7 +61,7 @@ public class PopPankkiAutoAuthenticatorTest extends NextGenerationAgentTest {
                 new SamlinkApiClient(
                         client,
                         sessionStorage,
-                        new SamlinkConfiguration(PopPankkiConstants.Url.BASE));
+                        new SamlinkV1Configuration(PopPankkiConstants.Url.BASE));
         SamlinkAutoAuthenticator autoAuthenticator =
                 new SamlinkAutoAuthenticator(bankClient, persistentStorage, credentials);
 
