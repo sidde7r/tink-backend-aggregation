@@ -19,7 +19,8 @@ public abstract class BerlinGroupConstants {
                             "SLRY",
                             "TRAN",
                             "TRAS",
-                            "CurrentAccount")
+                            "CurrentAccount",
+                            "Current")
                     .put(AccountTypes.SAVINGS, "LLSV", "ONDP", "SVGS")
                     .build();
 
