@@ -13,16 +13,22 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         this.currencyCode = currencyCode;
     }
 
-    public ExactCurrencyAmount(double value, String currencyCode) {
+    private ExactCurrencyAmount(double value, String currencyCode) {
         this(BigDecimal.valueOf(value), currencyCode);
     }
 
-    public ExactCurrencyAmount(long value, int scale, String currencyCode) {
+    private ExactCurrencyAmount(long value, int scale, String currencyCode) {
         this(new BigDecimal(BigInteger.valueOf(value), scale), currencyCode);
     }
 
     public static ExactCurrencyAmount of(Number i, String currencyCode) {
-        return new ExactCurrencyAmount(BigDecimal.valueOf(i.doubleValue()), currencyCode);
+        return new ExactCurrencyAmount(new BigDecimal(i.toString()), currencyCode);
+    }
+
+    public static ExactCurrencyAmount of(ExactCurrencyAmount exactCurrencyAmount) {
+        return new ExactCurrencyAmount(
+                new BigDecimal(exactCurrencyAmount.toString()),
+                exactCurrencyAmount.getCurrencyCode());
     }
 
     public double getDoubleValue() {

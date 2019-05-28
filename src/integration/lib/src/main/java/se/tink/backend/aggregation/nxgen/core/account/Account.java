@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -327,12 +328,23 @@ public abstract class Account {
         return idModule;
     }
 
+    @Deprecated
     public Amount getAccountBalance() {
         return new Amount(this.balance.getCurrency(), this.balance.getValue());
     }
 
+    @Deprecated
     public Amount getAvailableCredit() {
         return new Amount(this.availableCredit.getCurrency(), this.availableCredit.getValue());
+    }
+
+    public ExactCurrencyAmount getExactAccountBalance() {
+        return ExactCurrencyAmount.of(this.balance.getValue(), this.balance.getCurrency());
+    }
+
+    public ExactCurrencyAmount getExactAvailableCredit() {
+        return ExactCurrencyAmount.of(
+                this.availableCredit.getValue(), this.availableCredit.getCurrency());
     }
 
     public List<AccountIdentifier> getIdentifiers() {

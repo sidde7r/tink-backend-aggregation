@@ -36,7 +36,9 @@ public class Account implements Cloneable {
     private String accountNumber;
     private AccountExclusion accountExclusion;
     private double availableCredit;
+    private ExactCurrencyAmount exactAvailableCredit;
     private double balance;
+    private ExactCurrencyAmount exactAvailableBalance;
     private String currencyCode;
     private String bankId;
     private Date certainDate;
@@ -73,16 +75,49 @@ public class Account implements Cloneable {
         this.accountExclusion = AccountExclusion.NONE;
     }
 
+    public ExactCurrencyAmount getExactAvailableCredit() {
+        return exactAvailableCredit;
+    }
+
+    public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
+        this.exactAvailableCredit = exactAvailableCredit;
+    }
+
+    public ExactCurrencyAmount getExactAvailableBalance() {
+        return exactAvailableBalance;
+    }
+
+    public void setExactAvailableBalance(ExactCurrencyAmount exactAvailableBalance) {
+        this.exactAvailableBalance = exactAvailableBalance;
+    }
+
+    @Override
+    public Account clone() throws CloneNotSupportedException {
+        return (Account) super.clone();
+    }
+
     public String getAccountNumber() {
         return this.accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public double getAvailableCredit() {
         return this.availableCredit;
     }
 
+    public void setAvailableCredit(double availableCredit) {
+        this.availableCredit = availableCredit;
+    }
+
     public double getBalance() {
         return this.balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     /**
@@ -93,20 +128,40 @@ public class Account implements Cloneable {
         return this.bankId;
     }
 
+    public void setBankId(String bankId) {
+        this.bankId = bankId;
+    }
+
     public Date getCertainDate() {
         return this.certainDate;
+    }
+
+    public void setCertainDate(Date certainDate) {
+        this.certainDate = certainDate;
     }
 
     public String getCredentialsId() {
         return this.credentialsId;
     }
 
+    public void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
+    }
+
     public String getId() {
         return this.id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Forces serialization to use this getter in order to ensure account name fallback similar to
