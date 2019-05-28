@@ -38,10 +38,8 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
 
 public abstract class Account {
-    private static final Logger logger = LoggerFactory.getLogger(Account.class);
-
     static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
-
+    private static final Logger logger = LoggerFactory.getLogger(Account.class);
     protected BalanceModule balanceModule;
     protected IdModule idModule;
     protected String name;
@@ -436,12 +434,6 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
-    /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
-     *     CreditCardAccount#nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();
@@ -545,11 +537,6 @@ public abstract class Account {
             return self();
         }
 
-        public T setBankIdentifier(String bankIdentifier) {
-            temporaryStorage.put(BANK_IDENTIFIER_KEY, bankIdentifier);
-            return self();
-        }
-
         public <K> T putInTemporaryStorage(String key, K value) {
             temporaryStorage.put(key, value);
             return self();
@@ -557,6 +544,11 @@ public abstract class Account {
 
         private String getBankIdentifier() {
             return temporaryStorage.get(BANK_IDENTIFIER_KEY);
+        }
+
+        public T setBankIdentifier(String bankIdentifier) {
+            temporaryStorage.put(BANK_IDENTIFIER_KEY, bankIdentifier);
+            return self();
         }
 
         private TemporaryStorage getTransientStorage() {

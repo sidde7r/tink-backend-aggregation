@@ -8,12 +8,6 @@ import se.tink.libraries.amount.Amount;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {
 
-    public enum Type {
-        FUND,
-        STOCK,
-        OTHER
-    }
-
     // Normally the uniqueIdentifier should be isin + market.
     // If isin and market is hard to get hold of and the bank / broker have some other way to
     // identify the instrument
@@ -33,6 +27,27 @@ public class Instrument {
     private String ticker;
     private Type type;
     private String rawType;
+    //    private ExactCurrencyAmount exactCurrencyAmount;
+
+    @JsonIgnore
+    private static Double getAmountValue(Amount amount) {
+        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
+    }
+
+    //    @JsonIgnore
+    //    private static ExactCurrencyAmount getExactCurrencyAmount(Amount amount) {
+    //        return Optional.ofNullable(amount)
+    //                .map(a -> ExactCurrencyAmount.of(a.getValue(), a.getCurrency()))
+    //                .orElse(null);
+    //    }
+
+    //    public ExactCurrencyAmount getExactCurrencyAmount() {
+    //        return exactCurrencyAmount;
+    //    }
+
+    //    public void setExactCurrencyAmount(ExactCurrencyAmount exactCurrencyAmount) {
+    //        this.exactCurrencyAmount = exactCurrencyAmount;
+    //    }
 
     public String getUniqueIdentifier() {
         return uniqueIdentifier;
@@ -158,8 +173,9 @@ public class Instrument {
         this.profit = getAmountValue(profit);
     }
 
-    @JsonIgnore
-    private static Double getAmountValue(Amount amount) {
-        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
+    public enum Type {
+        FUND,
+        STOCK,
+        OTHER
     }
 }
