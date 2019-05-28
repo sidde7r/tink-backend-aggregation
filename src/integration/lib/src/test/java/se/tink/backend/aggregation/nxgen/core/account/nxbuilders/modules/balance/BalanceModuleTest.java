@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance;
 
+import org.junit.Test;
+import se.tink.backend.agents.rpc.ExactCurrencyAmount;
+import se.tink.libraries.amount.Amount;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import se.tink.libraries.amount.Amount;
 
 @SuppressWarnings("ConstantConditions")
 public class BalanceModuleTest {
@@ -33,8 +33,8 @@ public class BalanceModuleTest {
     @Test(expected = IllegalArgumentException.class)
     public void negativeInterest() {
         BalanceModule.builder()
-                .withBalance(Amount.inSEK(20))
-                .setAvailableCredit(Amount.inSEK(10_000))
+                .withBalance(ExactCurrencyAmount.of(20, "SEK"))
+                .setAvailableCredit(ExactCurrencyAmount.of(10_000, "SEK"))
                 .setInterestRate(-0.25)
                 .build();
     }
@@ -58,6 +58,32 @@ public class BalanceModuleTest {
         assertTrue(balance.getInterestRate().isPresent());
         assertTrue(balance.getAvailableCredit().isPresent());
         assertEquals(25_506.32, balance.getBalance().getValue(), 0);
+        assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
+        assertEquals("DKK", balance.getBalance().getCurrency());
+        assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
+        assertEquals(0.0265, balance.getInterestRate().get(), 0);
+    }
+
+    @Test
+    public void successfulBuildWithExactCurrencyAmount() {
+        ExactCurrencyAmount bal = ExactCurrencyAmount.of(25506.32, "DKK");
+        ExactCurrencyAmount credit = ExactCurrencyAmount.of(9473.27, "DKK");
+
+        BalanceModule balance =
+                BalanceModule.builder()
+                        .withBalance(bal)
+                        .setAvailableCredit(credit)
+                        .setInterestRate(0.0265)
+                        .build();
+
+        // TODO: I believe this should not be mutable, so not sure what to do with it
+        // Try to mutate
+        // bal.add(Amount.inDKK(20));
+        // credit.setCurrency("USD");
+
+        assertTrue(balance.getInterestRate().isPresent());
+        assertTrue(balance.getAvailableCredit().isPresent());
+        assertEquals(25506.32, balance.getBalance().getValue(), 0);
         assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
         assertEquals("DKK", balance.getBalance().getCurrency());
         assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
