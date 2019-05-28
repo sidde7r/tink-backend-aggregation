@@ -6,7 +6,7 @@ import java.security.PrivateKey;
 import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -27,6 +28,13 @@ public class BunqSignatureHeaderFilter extends Filter {
     public BunqSignatureHeaderFilter(
             SessionStorage sessionStorage, TemporaryStorage temporaryStorage, String userAgent) {
         this.sessionStorage = sessionStorage;
+        this.temporaryStorage = temporaryStorage;
+        this.userAgent = userAgent;
+    }
+
+    // Used for the register command utility, no session ongoing so no session storage
+    public BunqSignatureHeaderFilter(TemporaryStorage temporaryStorage, String userAgent) {
+        this.sessionStorage = null;
         this.temporaryStorage = temporaryStorage;
         this.userAgent = userAgent;
     }
@@ -87,8 +95,9 @@ public class BunqSignatureHeaderFilter extends Filter {
     // installation call while any call done after a session is started should use the token
     // received from in the session response as the client authentication token.
     private PrivateKey getPrivateKey() {
+        Storage relevantStorage = sessionStorage != null ? sessionStorage : temporaryStorage;
         String relevantClientAuthToken =
-                sessionStorage
+                relevantStorage
                         .get(StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class)
                         .orElseThrow(
                                 () ->
