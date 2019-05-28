@@ -1,0 +1,57 @@
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.entity;
+
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.BalanceTypes;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.Balance;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountBaseEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.amount.Amount;
+
+@JsonObject
+public class AccountEntityResponse extends AccountBaseEntity {
+    private String bban;
+    private String name;
+    private String currency;
+
+    public String getBban() {
+        return bban;
+    }
+
+    public TransactionalAccount toTinkAccount(final BalancesResponse balancesResponse) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(bban)
+                                .withAccountNumber(bban)
+                                .withAccountName(name)
+                                .addIdentifier(AccountIdentifier.create(Type.NO, bban))
+                                .build())
+                .withBalance(BalanceModule.of(getAmount(balancesResponse)))
+                .setApiIdentifier(bban)
+                .setBankIdentifier(bban)
+                .build();
+    }
+
+    private Amount getAmount(final BalancesResponse balancesResponse) {
+        final Balance balance =
+                balancesResponse.getBalances().stream()
+                        .filter(this::isInterimAvailableType)
+                        .findFirst()
+                        .orElseThrow(
+                                () -> new IllegalStateException(ErrorMessages.WRONG_BALANCE_TYPE));
+
+        return new Amount(currency, Double.valueOf(balance.getBalanceAmount().getAmount()));
+    }
+
+    private boolean isInterimAvailableType(final Balance balance) {
+        return balance.getBalanceType().equalsIgnoreCase(BalanceTypes.INTERIM_AVAILABLE);
+    }
+}
