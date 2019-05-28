@@ -100,6 +100,11 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
             public double getAccountBalance() {
                 return 245.33;
             }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                return null;
+            }
         };
     }
 
@@ -167,7 +172,7 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
             }
 
             @Override
-            public AccountIdentifier getIdentifier() {
+            public List<AccountIdentifier> getIdentifiers() {
                 return null;
             }
         };

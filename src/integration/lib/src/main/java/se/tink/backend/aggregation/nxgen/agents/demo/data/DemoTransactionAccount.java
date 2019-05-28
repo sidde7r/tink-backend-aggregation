@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.data;
 
+import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
 
 public interface DemoTransactionAccount {
@@ -9,5 +10,5 @@ public interface DemoTransactionAccount {
 
     double getBalance();
 
-    AccountIdentifier getIdentifier();
+    List<AccountIdentifier> getIdentifiers();
 }

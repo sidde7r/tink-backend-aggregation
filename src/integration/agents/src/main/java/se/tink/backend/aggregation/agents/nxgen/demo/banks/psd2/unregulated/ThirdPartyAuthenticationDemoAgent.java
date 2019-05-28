@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
@@ -124,6 +125,11 @@ public class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoAgent {
             @Override
             public double getAccountBalance() {
                 return 385245.33;
+            }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                return null;
             }
         };
     }
