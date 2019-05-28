@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,21 +13,13 @@ import se.tink.libraries.amount.Amount;
 public class CardAccount {
 
     private List<Balance> balances;
-
     private CreditLimit creditLimit;
-
     private String currency;
-
     private String maskedPan;
-
     private String name;
-
     private String product;
-
     private String resourceId;
-
     private String status;
-
     private String usage;
 
     public List<Balance> getBalances() {
@@ -81,7 +72,7 @@ public class CardAccount {
     @JsonIgnore
     private Amount getAvaliableCredit() {
         return new Amount(
-                getCreditLimit().getCurrency(), BigDecimal.valueOf(getCreditLimit().getAmount()));
+                getCreditLimit().getCurrency(), getCreditLimit().getAmount());
     }
 
     @JsonIgnore
@@ -91,7 +82,7 @@ public class CardAccount {
                 .filter(Balance::isAvailableBalance)
                 .findFirst()
                 .map(Balance::toAmount)
-                .orElse(BalancesEntity.Default);
+                .orElse(BalancesEntity.getDefault());
     }
 
     @JsonIgnore

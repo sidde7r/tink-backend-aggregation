@@ -1,16 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ExchangeRate {
 
     private String currencyFrom;
-
     private String currencyTo;
-
-    private Double rate;
-
+    private BigDecimal rate;
     private String rateDate;
 
     public String getCurrencyFrom() {
@@ -21,7 +19,7 @@ public class ExchangeRate {
         return currencyTo;
     }
 
-    public Double getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 

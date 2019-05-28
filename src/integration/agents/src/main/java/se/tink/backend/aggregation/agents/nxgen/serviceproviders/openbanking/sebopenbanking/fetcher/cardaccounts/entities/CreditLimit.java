@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
+import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CreditLimit {
 
-    private Long amount;
-
+    private BigDecimal amount;
     private String currency;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 

@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class FetchCardAccountsTransactions {
 
     private Error error;
-
     private Transactions transactions;
 
     public Error getError() {

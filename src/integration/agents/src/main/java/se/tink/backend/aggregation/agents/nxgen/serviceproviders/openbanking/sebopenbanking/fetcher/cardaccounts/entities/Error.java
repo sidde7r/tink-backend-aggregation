@@ -6,17 +6,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class Error {
 
     private String correlationId;
-
     private String developerMessage;
-
     private String errorAttribute;
-
     private String errorCode;
-
     private String moreInformation;
-
     private String supportID;
-
     private String userMessage;
 
     public String getCorrelationId() {

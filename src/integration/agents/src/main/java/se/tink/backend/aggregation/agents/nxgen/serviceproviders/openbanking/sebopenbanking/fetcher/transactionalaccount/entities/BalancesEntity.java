@@ -9,12 +9,8 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class BalancesEntity {
 
-    @JsonIgnore public static Amount Default = Amount.inSEK(0);
-
     private String balanceType;
-
     private String creditLimitIncluded;
-
     private BalanceAmountEntity balanceAmount;
 
     public boolean isAvailableBalance() {
@@ -24,6 +20,11 @@ public class BalancesEntity {
     public Amount toAmount() {
         return Optional.ofNullable(balanceAmount)
                 .map(b -> new Amount(b.getCurrency(), b.getAmount()))
-                .orElse(BalancesEntity.Default);
+                .orElse(BalancesEntity.getDefault());
+    }
+
+    @JsonIgnore
+    public static Amount getDefault() {
+        return Amount.inSEK(0);
     }
 }

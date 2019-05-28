@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class Transactions {
 
     private List<Booked> booked;
-
     private List<Pending> pending;
 
     public List<Booked> getBooked() {
@@ -29,9 +28,9 @@ public class Transactions {
     @JsonIgnore
     public List<CreditCardTransaction> toTinkTransactions(CreditCardAccount creditAccount) {
         List<CreditCardTransaction> bookedTransactions =
-                collect(booked, (tr) -> tr.toTinkTransaction(creditAccount));
+                collect(booked, tr -> tr.toTinkTransaction(creditAccount));
         List<CreditCardTransaction> pendingTransactions =
-                collect(pending, (tr) -> tr.toTinkTransaction(creditAccount));
+                collect(pending, tr -> tr.toTinkTransaction(creditAccount));
 
         List<CreditCardTransaction> transactions = new ArrayList<>(bookedTransactions);
         transactions.addAll(pendingTransactions);
@@ -41,7 +40,6 @@ public class Transactions {
     @JsonIgnore
     public <T> List<CreditCardTransaction> collect(
             List<T> transactions, Function<T, CreditCardTransaction> mapMethod) {
-
         return Optional.ofNullable(transactions)
                 .map(t -> t.stream().map(tr -> mapMethod.apply(tr)).collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);

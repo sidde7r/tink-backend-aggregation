@@ -92,7 +92,7 @@ public class AccountsEntity {
                 .filter(BalancesEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalancesEntity::toAmount)
-                .orElse(BalancesEntity.Default);
+                .orElse(BalancesEntity.getDefault());
     }
 
     private String getName() {

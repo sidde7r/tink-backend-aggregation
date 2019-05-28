@@ -15,29 +15,17 @@ public class Pending {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
-
     private String cardAcceptorCity;
-
     private String cardAcceptorCountryCode;
-
     private String cardTransactionId;
-
     private ExchangeRate exchangeRate;
-
     private Boolean invoiced;
-
     private String maskedPan;
-
     private String nameOnCard;
-
     private OriginalAmount originalAmount;
-
     private String proprietaryBankTransactionCode;
-
     private TransactionAmount transactionAmount;
-
     private String transactionDetails;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
@@ -99,7 +87,7 @@ public class Pending {
                 .setAmount(
                         new Amount(
                                 transactionAmount.getCurrency(),
-                                BigDecimal.valueOf(transactionAmount.getAmount())))
+                                transactionAmount.getAmount()))
                 .setCreditAccount(creditAccount)
                 .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
                 .setDate(getValueDate())

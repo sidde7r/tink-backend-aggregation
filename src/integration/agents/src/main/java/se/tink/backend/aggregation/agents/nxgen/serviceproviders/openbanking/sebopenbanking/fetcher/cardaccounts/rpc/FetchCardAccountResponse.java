@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class FetchCardAccountResponse {
 
     private Error error;
-
     private List<CardAccount> cardAccounts;
 
     public Error getError() {

@@ -11,9 +11,7 @@ import se.tink.libraries.amount.Amount;
 public class Balance {
 
     private BalanceAmount balanceAmount;
-
     private String balanceType;
-
     private Boolean creditLimitincluded;
 
     public BalanceAmount getBalanceAmount() {
@@ -37,6 +35,6 @@ public class Balance {
     public Amount toAmount() {
         return Optional.ofNullable(balanceAmount)
                 .map(b -> new Amount(b.getCurrency(), b.getAmount()))
-                .orElse(BalancesEntity.Default);
+                .orElse(BalancesEntity.getDefault());
     }
 }

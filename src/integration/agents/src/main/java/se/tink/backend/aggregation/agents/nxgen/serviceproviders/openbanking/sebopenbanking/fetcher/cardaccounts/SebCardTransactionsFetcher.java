@@ -30,7 +30,7 @@ public class SebCardTransactionsFetcher implements TransactionMonthPaginator<Cre
         }
 
         FetchCardAccountsTransactions response =
-                client.fetchTransctions(account.getBankIdentifier(), fromDate, toDate);
+                client.fetchTransactions(account.getBankIdentifier(), fromDate, toDate);
 
         return PaginatorResponseImpl.create(response.tinkTransactions(account));
     }

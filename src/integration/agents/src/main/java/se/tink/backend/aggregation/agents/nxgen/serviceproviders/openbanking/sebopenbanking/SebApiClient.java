@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Collection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -163,7 +163,7 @@ public final class SebApiClient {
         return java.util.UUID.randomUUID().toString();
     }
 
-    public List<CreditCardAccount> fetchCreditAccounts() {
+    public Collection<CreditCardAccount> fetchCreditAccounts() {
         URL url = new URL(configuration.getBaseUrl() + SebConstants.Urls.CREDIT_CARD_ACCOUNTS);
 
         FetchCardAccountResponse response =
@@ -176,7 +176,7 @@ public final class SebApiClient {
         return response.getTransactions();
     }
 
-    public FetchCardAccountsTransactions fetchTransctions(
+    public FetchCardAccountsTransactions fetchTransactions(
             String accountId, LocalDate fromDate, LocalDate toDate) {
 
         URL url =
