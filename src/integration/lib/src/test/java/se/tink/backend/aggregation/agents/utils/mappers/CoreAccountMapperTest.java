@@ -10,7 +10,18 @@ import se.tink.libraries.account.rpc.Account;
 public class CoreAccountMapperTest {
     @Test
     public void allFieldsMappedToAggregation() {
-        CoreAccountMapper.toAggregationTypeMap.validate();
+        CoreAccountMapper.toAggregationTypeMap
+                .addMappings(
+                        mapper ->
+                                mapper.skip(
+                                        se.tink.backend.agents.rpc.Account
+                                                ::setExactAvailableBalance))
+                .addMappings(
+                        mapper ->
+                                mapper.skip(
+                                        se.tink.backend.agents.rpc.Account
+                                                ::setExactAvailableCredit))
+                .validate();
     }
 
     @Test
