@@ -62,7 +62,7 @@ public final class BunqBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String USER_DEVICE_RSA_SIGNING_KEY_PAIR = "userDeviceRsaSigningKeyPair";
+        public static final String USER_DEVICE_RSA_SIGNING_KEY_PAIR = "deviceRsaSigningKeyPair";
         public static final String DEVICE_SERVER_ID = "deviceServerId";
         public static final String CLIENT_AUTH_TOKEN = "clientAuthToken";
         public static final String USER_CLIENT_AUTH_TOKEN = "userClientAuthToken";
