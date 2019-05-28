@@ -30,17 +30,6 @@ public class BalanceModuleTest {
         BalanceModule.of(null);
     }
 
-    //    @Test(expected = NullPointerException.class)
-    //    public void nullBalance() {
-    //        BalanceModule.builder().withBalance(null).build();
-    //    }
-
-    //    @Test(expected = NullPointerException.class)
-    //    public void nullCredit() {
-    //
-    // BalanceModule.builder().withBalance(Amount.inSEK(20)).setAvailableCredit(null).build();
-    //    }
-
     @Test(expected = IllegalArgumentException.class)
     public void negativeInterest() {
         BalanceModule.builder()
