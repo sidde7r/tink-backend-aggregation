@@ -77,11 +77,6 @@ public class BalanceModuleTest {
                         .setInterestRate(0.0265)
                         .build();
 
-        // TODO: I believe this should not be mutable, so not sure what to do with it
-        // Try to mutate
-        // bal.add(Amount.inDKK(20));
-        // credit.setCurrency("USD");
-
         assertTrue(balance.getInterestRate().isPresent());
         assertTrue(balance.getAvailableCredit().isPresent());
         assertEquals(25506.32, balance.getBalance().getValue(), 0);
