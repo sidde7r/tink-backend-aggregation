@@ -47,7 +47,7 @@ public class Account implements Cloneable {
     private double availableCredit;
     private ExactCurrencyAmount exactAvailableCredit;
     private double balance;
-    private ExactCurrencyAmount exactAvailableBalance;
+    private ExactCurrencyAmount exactBalance;
     private String currencyCode;
     private String bankId;
     private Date certainDate;
@@ -87,12 +87,12 @@ public class Account implements Cloneable {
         this.exactAvailableCredit = exactAvailableCredit;
     }
 
-    public ExactCurrencyAmount getExactAvailableBalance() {
-        return exactAvailableBalance;
+    public ExactCurrencyAmount getExactBalance() {
+        return exactBalance;
     }
 
-    public void setExactAvailableBalance(ExactCurrencyAmount exactAvailableBalance) {
-        this.exactAvailableBalance = exactAvailableBalance;
+    public void setExactBalance(ExactCurrencyAmount exactBalance) {
+        this.exactBalance = exactBalance;
     }
 
     @Override

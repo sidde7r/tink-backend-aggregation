@@ -15,7 +15,7 @@ public class CoreAccountMapperTest {
                         mapper ->
                                 mapper.skip(
                                         se.tink.backend.agents.rpc.Account
-                                                ::setExactAvailableBalance))
+                                                ::setExactBalance))
                 .addMappings(
                         mapper ->
                                 mapper.skip(
