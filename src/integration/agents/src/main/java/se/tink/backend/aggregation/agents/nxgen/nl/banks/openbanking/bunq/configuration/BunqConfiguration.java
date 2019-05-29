@@ -10,13 +10,37 @@ public class BunqConfiguration extends BunqBaseConfiguration implements ClientCo
 
     @JsonProperty private String redirectUrl;
 
-    @JsonProperty private String apiKey;
+    @JsonProperty private String psd2ApiKey;
 
-    public String getApiKey() {
-        return apiKey;
+    @JsonProperty private String clientId;
+
+    @JsonProperty private String clientSecret;
+
+    @JsonProperty private String psd2InstallationKeyPair;
+
+    @JsonProperty private String psd2ClientAuthToken;
+
+    public String getPsd2InstallationKeyPair() {
+        return psd2InstallationKeyPair;
+    }
+
+    public String getPsd2ClientAuthToken() {
+        return psd2ClientAuthToken;
+    }
+
+    public String getPsd2ApiKey() {
+        return psd2ApiKey;
     }
 
     public String getRedirectUrl() {
         return redirectUrl;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 }

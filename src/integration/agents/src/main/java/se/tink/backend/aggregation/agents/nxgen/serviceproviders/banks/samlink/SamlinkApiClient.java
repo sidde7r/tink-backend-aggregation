@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConstants.Header;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.rpc.RegisterDeviceRequest;
@@ -182,20 +183,29 @@ public class SamlinkApiClient {
     }
 
     private RequestBuilder buildRequest(URL url) {
-        RequestBuilder requestBuilder =
-                httpClient
-                        .request(url)
-                        .type(MediaType.APPLICATION_JSON_TYPE)
-                        .accept(SamlinkConstants.Header.VALUE_ACCEPT)
-                        .header(
-                                SamlinkConstants.Header.CLIENT_VERSION,
-                                SamlinkConstants.Header.VALUE_CLIENT_VERSION);
+        final RequestBuilder requestBuilder = buildRequestHeaders(url, agentConfiguration.isV2());
 
         if (sessionStorage.hasAccessToken()) {
             return requestBuilder.header(
                     HttpHeaders.AUTHORIZATION, sessionStorage.getAccessToken());
         }
         return requestBuilder;
+    }
+
+    private RequestBuilder buildRequestHeaders(URL url, boolean isV2) {
+        return isV2
+                ? httpClient
+                        .request(url)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(Header.VALUE_ACCEPT_V2)
+                        .header(Header.CLIENT_VERSION, Header.VALUE_CLIENT_VERSION_V2)
+                        .header(Header.CLIENT_APP, agentConfiguration.getClientApp())
+                        .header(Header.API_KEY, Header.API_KEY_VALUE)
+                : httpClient
+                        .request(url)
+                        .type(MediaType.APPLICATION_JSON_TYPE)
+                        .accept(Header.VALUE_ACCEPT_V1)
+                        .header(Header.CLIENT_VERSION, Header.VALUE_CLIENT_VERSION_V1);
     }
 
     private Links getApiEndpoints() {

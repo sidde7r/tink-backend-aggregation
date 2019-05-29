@@ -211,9 +211,10 @@ public class NordeaExecutorHelper {
 
     public void sign(SignatureRequest signatureRequest, String transferId) {
         SignatureResponse signatureResponse = apiClient.signTransfer(signatureRequest);
-
         if (signatureResponse.getSignatureState().equals(BankIdStatus.WAITING)) {
             pollSignTransfer(transferId, signatureResponse.getOrderReference());
+        } else {
+            throw paymentFailedError();
         }
     }
 

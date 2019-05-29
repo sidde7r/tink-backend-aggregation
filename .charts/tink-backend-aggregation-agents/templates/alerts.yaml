@@ -203,7 +203,7 @@ spec:
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) > 2
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
@@ -221,7 +221,7 @@ spec:
         and sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) > 5
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
@@ -425,7 +425,7 @@ spec:
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) > 2
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
@@ -443,7 +443,7 @@ spec:
         and sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) > 10
     for: 5m
     labels:
-        severity: ping
+        severity: urgent
         who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.

@@ -1,0 +1,20 @@
+java_binary(
+    name = "bunq_register",
+    srcs = glob(["**/*.java"]),
+    main_class = "se.tink.backend.aggregation.register.nl.bunq.BunqRegisterCommand",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register:psd2-register",
+        "//src/integration/agents",
+        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/bunq",
+        "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
+        "//src/libraries/serialization",
+        "//src/libraries/uuid",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_apache_commons_commons_cli",
+        "//third_party:org_bouncycastle_bcpkix_jdk15on",
+        "//third_party:org_bouncycastle_bcprov_jdk15on",
+    ],
+)

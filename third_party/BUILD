@@ -887,6 +887,14 @@ java_library(
 )
 
 java_library(
+    name = "org_apache_commons_commons_cli",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@commons_cli_commons_cli//jar",
+    ],
+)
+
+java_library(
     name = "org_apache_commons_commons_lang3",
     visibility = ["//visibility:public"],
     exports = [
@@ -1638,6 +1646,15 @@ java_library(
         "@io_prometheus_simpleclient_httpserver//jar",
         "@io_prometheus_simpleclient_pushgateway//jar",
         "@io_prometheus_simpleclient_skeleton_version//jar",
+    ],
+)
+
+java_library(
+    name = "zxing-qrcode",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_google_zxing_qrcode_core//jar",
+        "@com_google_zxing_qrcode_javase//jar",
     ],
 )
 

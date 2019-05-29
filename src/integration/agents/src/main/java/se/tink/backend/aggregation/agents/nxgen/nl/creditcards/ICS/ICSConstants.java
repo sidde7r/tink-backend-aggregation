@@ -11,12 +11,12 @@ public class ICSConstants {
     public static final class Urls {
         public static final String AUTH_BASE = "https://auth.vvwpgvhh.icscards.nl";
         public static final String BASE = "https://api.vvwpgvhh.icscards.nl";
-        public static final String ACCOUNT_SETUP = "/1/api/open-banking/v1.0/account-requests";
+        public static final String ACCOUNT_SETUP = "/1/api/open-banking/v1.1/account-requests";
         public static final String ACCOUNT = "/1/api/open-banking/v1.1/accounts";
         public static final String BALANCES = "/1/api/open-banking/v1.1/accounts/%s/balances";
         public static final String TRANSACTIONS =
                 "/1/api/open-banking/v1.1/accounts/%s/transactions";
-        public static final String OAUTH_AUTHORIZE = "/openbanking-nOAuth/oauth/authorize";
+        public static final String OAUTH_AUTHORIZE = "/openbanking-oauth-tokenv1/authorize";
         public static final String OAUTH_TOKEN = "/openbanking-oauth-tokenv1/token";
     }
 

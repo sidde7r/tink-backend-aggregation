@@ -63,5 +63,7 @@ public class ErrorResponse {
                 "The Callback URL has already been registered for this Client.";
         public static final String ONLY_ONE_OAUTH_REGISTERED =
                 "You can only have one active OAuth Client registered.";
+        public static final String AUTH_TOKEN_ALREADY_HAS_USER_SESSION =
+                "Authentication token already has a user session.";
     }
 }

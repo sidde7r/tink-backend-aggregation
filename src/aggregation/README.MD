@@ -15,7 +15,7 @@ To be able to start aggregation, you also need the database `aggregation-db`, `c
 These can be started from the tink-infrastructure repo:
 
 ```bash
-./setup-minikube --cert-manager
+./setup-minikube.sh --cert-manager
 ```
 
 Set up aggregation-db:
@@ -26,7 +26,7 @@ kubectl create -f kubernetes/development/aggregationdb.yml
 Set up cache:
 
 ```bash
-kubectl kubectl create -f kubernetes/development/cache.yml
+kubectl create -f kubernetes/development/cache.yml
 ```
 
 Set up coordination:
@@ -44,6 +44,33 @@ or if you are using intelliJ you can also use the available run configuration "M
 
 ## Deploy and run aggregation using kubernetes
 
+### Prerequisite
+When running locally, the docker image is not downloaded by kubernetes setup, as it is for other environments.
+
+To do that run:
+```bash
+docker pull gcr.io/tink-containers/debian:stretch
+```
+
+Because of missing image, following error can occur:
+
+```bash
+$ kubectl get pods -n aggregation
+NAME                           READY   STATUS                   RESTARTS   AGE
+aggregation-84d6b49dbf-fqfpt   0/1     Init:ErrImageNeverPull   0          6s
+```
+You can also see an error in the events when describing the pods:
+
+```bash
+$ kubectl -n aggregation describe pod <pod>
+Events:
+  Type     Reason             Age                    From               Message
+  ----     ------             ----                   ----               -------
+  Warning  FailedScheduling   45m (x2 over 45m)      default-scheduler  0/1 nodes are available: 1 node(s) didn't match pod affinity/anti-affinity, 1 node(s) didn't satisfy existing pods anti-affinity rules.
+  Normal   Scheduled          45m                    default-scheduler  Successfully assigned aggregation/<pod> to minikube
+  Warning  ErrImageNeverPull  7m56s (x139 over 45m)  kubelet, minikube  Container image "gcr.io/tink-containers/debian:stretch" is not present with pull policy of Never
+  Warning  Failed             2m50s (x163 over 45m)  kubelet, minikube  Error: ErrImageNeverPull
+```
 ### Step by step guide
 
 If you are using minikube, connect docker to the docker server running inside minikube:

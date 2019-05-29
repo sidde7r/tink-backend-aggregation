@@ -73,27 +73,43 @@ data:
             keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
         {{- end }}
-        {{- if $agentsConfig.volksbank }}
+
+        {{- if eq "true" $agentsConfig.volksbank.enabled }}
         volksbank:
           tink:
             aisConfiguration:
               clientId: "VOLKSBANK_AIS_CLIENT_ID_TAG"
               clientSecret: "VOLKSBANK_AIS_CLIENT_SECRET_TAG"
-              clientCertificatePath: "VOLKSBANK_AIS_CERT_TAG"
+              clientCertificateContent: "VOLKSBANK_AIS_CERT_TAG"
               clientCertificatePass: "VOLKSBANK_AIS_CERT_PASSWORD_TAG"
-        {{ end }}
+              redirectUrl: "{{ $agentsConfig.volksbank.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
         {{- end }}
 
+        {{- if $agentsConfig.bunq }}
+        bunq:
+          tink:
+            psd2ClientAuthToken: "BUNQ_PSD2_CLIENT_AUTH_TOKEN"
+            psd2InstallationKeyPair: "BUNQ_PSD2_INSTALLATION_KEY_PAIR"
+            psd2ApiKey: "BUNQ_PSD2_API_KEY"
+            clientId: "BUNQ_CLIENT_ID"
+            clientSecret: "BUNQ_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.bunq.redirectUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.abnamro }}
         abnamro:
           tink:
-            clientId: "dummyId"
-            clientSecret: "dummySecret"
-            redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-            clientSSLP12: "dummyP12"
-            clientSSLKeyPassword: "dummyPassword"
+            clientId: "ABN_AMRO_CLIENT_ID"
+            clientSecret: "ABN_AMRO_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.abnamro.redirectUrl }}"
+            clientSSLP12: "ABN_AMRO_CLIENT_SSL_P12"
+            clientSSLKeyPassword: "ABN_AMRO_CLIENT_SSL_KEY_PASSWORD"
+        {{- end }}
 
         {{- if $agentsConfig.icsConfiguration }}
         icsConfiguration:

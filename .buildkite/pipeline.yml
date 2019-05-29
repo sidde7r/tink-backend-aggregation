@@ -4,21 +4,25 @@ steps:
     branches: '!master'
     command: .buildkite/run-unit-tests.sh
     timeout_in_minutes: 30
+    agents:
+      queue: v4
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ":kubernetes: Helm Lint"
     branches: '!master'
     command: /go/bin/kubernetes-generator --mode lint --repo .
     timeout_in_minutes: 10
     agents:
-      queue: new
+      queue: v4
     plugins:
       docker#v2.0.0:
         image: gcr.io/tink-containers/kubernetes-generator:latest
         always-pull: true
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/check-bazel-style.sh
     plugins:
@@ -28,15 +32,21 @@ steps:
     branches: '!master'
     name: ':bazel: Check BUILD style'
     timeout_in_minutes: 10
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - command: .buildkite/check-java-style.sh
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: app
         config: docker/docker-compose.bazel.yml
     branches: '!master'
     name: ':java: Check Java style'
     timeout_in_minutes: 30
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
@@ -45,42 +55,57 @@ steps:
     command: .buildkite/build-and-push-docker.sh //docker:aggregation_push
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-integration'
     branches: 'staging'
     command: .buildkite/build-and-push-docker.sh //src/integration/service:docker_push
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-aggregation-statuspage-providers-cronjob'
     branches: 'staging'
     command: .buildkite/build-and-push-python-docker.sh
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - name: ':docker: tink-backend-notifying-aggregation-service-asserter'
     branches: 'staging'
     command: .buildkite/build-and-push-docker.sh //src/nasa/service:docker_push
     timeout_in_minutes: 10
     plugins:
-      docker-compose#v2.5.1:
+      docker-compose#v3.0.3:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 
   - name: ':pipeline: Generate trigger steps'
     branches: 'master'
     command: .buildkite/generate-trigger-steps-master.py | buildkite-agent pipeline upload
+    agents:
+      queue: v4
+    retry: {"automatic": [{"exit_status": -1, "limit": 2}, {"exit_status": 255, "limit": 2}]}
 
   - wait
 

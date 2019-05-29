@@ -70,11 +70,16 @@ public class ICSApiClient {
         return client.request(Urls.BASE + url);
     }
 
-    public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
-        final String url = Urls.AUTH_BASE + Urls.OAUTH_AUTHORIZE;
+    private RequestBuilder createAuthRequest(String url) {
+        return client.request(Urls.AUTH_BASE + url);
+    }
 
-        return createRequest(url)
-                .queryParam(QueryKeys.GRANT_TYPE, OAuthGrantTypes.AUTHORIZATION_CODE.toString())
+    public RequestBuilder createAuthorizeRequest(String state, String accountRequestId) {
+
+        return createAuthRequest(Urls.OAUTH_AUTHORIZE)
+                .queryParam(
+                        QueryKeys.GRANT_TYPE,
+                        OAuthGrantTypes.AUTHORIZATION_CODE.toString().toLowerCase())
                 .queryParam(QueryKeys.CLIENT_ID, getConfiguration().getClientId())
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_ACCOUNTS)
                 .queryParam(QueryKeys.ACCOUNT_REQUEST_ID, accountRequestId)
@@ -88,7 +93,7 @@ public class ICSApiClient {
         final String clientSecret = getConfiguration().getClientSecret();
 
         return createRequest(Urls.OAUTH_TOKEN)
-                .queryParam(QueryKeys.GRANT_TYPE, grantType.toString())
+                .queryParam(QueryKeys.GRANT_TYPE, grantType.toString().toLowerCase())
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.CLIENT_SECRET, clientSecret);
     }

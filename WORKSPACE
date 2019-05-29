@@ -23,24 +23,28 @@ git_repository(
     name = "dropwizard_jersey",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
     remote = "git@github.com:tink-ab/dropwizard.git",
+    shallow_since = "1490898663 +0200",
 )
 
 git_repository(
     name = "tink_httpcore_4_4_9",
     remote = "git@github.com:tink-ab/httpcomponents-core.git",
-    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2"
+    commit = "0f72fa2c392fee8388d327cb3462cd10d675c2e2",
+    shallow_since = "1537528950 +0200",
 )
 
 git_repository(
     name = "tink_httpclient_4_5_5",
     remote = "git@github.com:tink-ab/httpcomponents-client.git",
-    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e"
+    commit = "1ed65fa09a4b7bc9f469fbb3625ac5b087f9cc3e",
+    shallow_since = "1537529121 +0200",
 )
 
 git_repository(
     name = "tink_aws_sdk_1_11",
     remote = "git@github.com:tink-ab/aws-sdk-java.git",
-    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a"
+    commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a",
+    shallow_since = "1543992595 +0100",
 )
 
 git_repository(
@@ -1766,8 +1770,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_cli_commons_cli",
-    artifact = "commons-cli:commons-cli:1.2",
-    sha1 = "2bf96b7aa8b611c177d329452af1dc933e14501c",
+    artifact = "commons-cli:commons-cli:1.4",
+    sha1 = "c51c00206bb913cd8612b24abd9fa98ae89719b1",
 )
 
 maven_jar(
@@ -2111,6 +2115,18 @@ maven_jar(
     name = "com_google_protobuf_protobuf_java_util",
     artifact = "com.google.protobuf:protobuf-java-util:3.5.1",
     sha1 = "6e40a6a3f52455bd633aa2a0dba1a416e62b4575",
+)
+
+maven_jar(
+    name = "com_google_zxing_qrcode_core",
+    artifact = "com.google.zxing:core:3.3.3",
+    sha1 = "b640badcc97f18867c4dfd249ef8d20ec0204c07",
+)
+
+maven_jar(
+    name = "com_google_zxing_qrcode_javase",
+    artifact = "com.google.zxing:javase:3.3.3",
+    sha1 = "44d02048349c96eacb394af7978b3e6f1777bb02",
 )
 
 maven_jar(

@@ -42,6 +42,7 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceId = persistentStorage.get(Storage.DEVICE_ID);
+        String deviceToken = persistentStorage.get(Storage.DEVICE_TOKEN);
 
         if (Strings.isNullOrEmpty(username)
                 || Strings.isNullOrEmpty(password)
@@ -50,12 +51,15 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
         }
 
         try {
-            LoginResponse loginResponse = apiClient.login(username, password, deviceId);
+            LoginResponse loginResponse =
+                    apiClient.login(username, password, deviceId, deviceToken);
             if (loginResponse.getSecurityKeyRequired()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            sessionStorage.put(Storage.FULL_NAME, loginResponse.getPerson().getFullName());
+            // We get a new device token every login, to be used upon next login
+            persistentStorage.put(Storage.DEVICE_TOKEN, loginResponse.getDeviceToken());
+            sessionStorage.put(Storage.FULL_NAME, loginResponse.getName());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() != 401) {
                 throw e;
