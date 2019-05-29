@@ -4,6 +4,8 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.SebCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.SebCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.session.SEBSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -17,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -82,7 +85,17 @@ public final class SebAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SebCardAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionMonthPaginationController<>(
+                                        new SebCardTransactionsFetcher(apiClient),
+                                        SebConstants.ZONE_ID))));
     }
 
     @Override
