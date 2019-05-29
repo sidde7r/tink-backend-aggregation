@@ -539,9 +539,75 @@ maven_jar(
 )
 
 maven_jar(
+    name = "io_netty_netty_buffer",
+    artifact = "io.netty:netty-buffer:4.1.30.Final",
+    sha1 = "597adb653306470fb3ec1af3c0f3f30a37b1310a",
+)
+
+maven_jar(
     name = "io_netty_netty_codec",
     artifact = "io.netty:netty-codec:4.1.30.Final",
     sha1 = "515c8f609aaca28a94f984d89a9667dd3359c1b1",
+)
+
+maven_jar(
+    name = "io_netty_netty_codec_dns",
+    artifact = "io.netty:netty-codec-dns:4.1.30.Final",
+    sha1 = "7d28ce324f6cd5ae4ddd7f3e5027e2a7f126740b",
+)
+
+maven_jar(
+    name = "io_netty_netty_codec_http",
+    artifact = "io.netty:netty-codec-http:4.1.30.Final",
+    sha1 = "1384c630e8a0eeef33ad12a28791dce6e1d8767c",
+)
+
+maven_jar(
+    name = "io_netty_netty_codec_http2",
+    artifact = "io.netty:netty-codec-http2:4.1.30.Final",
+    sha1 = "2da92f518409904954d3e8dcc42eb6a562a70302",
+)
+
+maven_jar(
+    name = "io_netty_netty_codec_socks",
+    artifact = "io.netty:netty-codec-socks:4.1.30.Final",
+    sha1 = "ea272e3bb281d3a91d27278f47e61b4de285cc27",
+)
+
+maven_jar(
+    name = "io_netty_netty_common",
+    artifact = "io.netty:netty-common:4.1.30.Final",
+    sha1 = "5dca0c34d8f38af51a2398614e81888f51cf811a",
+)
+
+maven_jar(
+    name = "io_netty_netty_handler",
+    artifact = "io.netty:netty-handler:4.1.30.Final",
+    sha1 = "ecc076332ed103411347f4806a44ee32d9d9cb5f",
+)
+
+maven_jar(
+    name = "io_netty_netty_handler_proxy",
+    artifact = "io.netty:netty-handler-proxy:4.1.30.Final",
+    sha1 = "1baa1568fa936caddca0fae96fdf127fd5cbad16",
+)
+
+maven_jar(
+    name = "io_netty_netty_resolver",
+    artifact = "io.netty:netty-resolver:4.1.30.Final",
+    sha1 = "5106fd687066ffd712e5295d32af4e2ac6482613",
+)
+
+maven_jar(
+    name = "io_netty_netty_resolver_dns",
+    artifact = "io.netty:netty-resolver-dns:4.1.30.Final",
+    sha1 = "3f4bcf2e9fff1361ac9ad0bd27a10a1b31399294",
+)
+
+maven_jar(
+    name = "io_netty_netty_transport",
+    artifact = "io.netty:netty-transport:4.1.30.Final",
+    sha1 = "3d27bb432a3b125167ac161b26415ad29ec17f02",
 )
 
 maven_jar(
@@ -662,12 +728,6 @@ maven_jar(
     name = "c3p0_c3p0",
     artifact = "c3p0:c3p0:0.9.1.1",
     sha1 = "302704f30c6e7abb7a0457f7771739e03c973e80",
-)
-
-maven_jar(
-    name = "io_netty_netty_handler_proxy",
-    artifact = "io.netty:netty-handler-proxy:4.1.30.Final",
-    sha1 = "1baa1568fa936caddca0fae96fdf127fd5cbad16",
 )
 
 maven_jar(
@@ -803,21 +863,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_netty_netty_common",
-    artifact = "io.netty:netty-common:4.1.30.Final",
-    sha1 = "5dca0c34d8f38af51a2398614e81888f51cf811a",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_jetty_servlets",
     artifact = "org.eclipse.jetty:jetty-servlets:9.0.7.v20131107",
     sha1 = "bffeae9b9f75f53d3e5dc1bfd56725f67f2f67c0",
-)
-
-maven_jar(
-    name = "io_netty_netty_handler",
-    artifact = "io.netty:netty-handler:4.1.30.Final",
-    sha1 = "ecc076332ed103411347f4806a44ee32d9d9cb5f",
 )
 
 maven_jar(
@@ -923,18 +971,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_netty_netty_codec_socks",
-    artifact = "io.netty:netty-codec-socks:4.1.30.Final",
-    sha1 = "ea272e3bb281d3a91d27278f47e61b4de285cc27",
-)
-
-maven_jar(
-    name = "io_netty_netty_buffer",
-    artifact = "io.netty:netty-buffer:4.1.30.Final",
-    sha1 = "597adb653306470fb3ec1af3c0f3f30a37b1310a",
-)
-
-maven_jar(
     name = "ch_qos_logback_logback_core",
     artifact = "ch.qos.logback:logback-core:1.1.11",
     sha1 = "88b8df40340eed549fb07e2613879bf6b006704d",
@@ -987,12 +1023,6 @@ maven_jar(
     name = "com_amazonaws_aws_java_sdk_kms",
     artifact = "com.amazonaws:aws-java-sdk-kms:1.11.381",
     sha1 = "17a06d9854f804dfcf2ec799f906f555984084c9"
-    )
-
-maven_jar(
-    name = "io_netty_netty_codec_http2",
-    artifact = "io.netty:netty-codec-http2:4.1.30.Final",
-    sha1 = "2da92f518409904954d3e8dcc42eb6a562a70302",
 )
 
 maven_jar(
@@ -1035,12 +1065,6 @@ maven_jar(
     name = "com_google_code_findbugs_jsr305",
     artifact = "com.google.code.findbugs:jsr305:3.0.0",
     sha1 = "5871fb60dc68d67da54a663c3fd636a10a532948",
-)
-
-maven_jar(
-    name = "io_netty_netty_transport",
-    artifact = "io.netty:netty-transport:4.1.30.Final",
-    sha1 = "3d27bb432a3b125167ac161b26415ad29ec17f02",
 )
 
 maven_jar(
@@ -1125,12 +1149,6 @@ maven_jar(
     name = "commons_collections_commons_collections",
     artifact = "commons-collections:commons-collections:3.1",
     sha1 = "40fb048097caeacdb11dbb33b5755854d89efdeb",
-)
-
-maven_jar(
-    name = "io_netty_netty_codec_http",
-    artifact = "io.netty:netty-codec-http:4.1.30.Final",
-    sha1 = "1384c630e8a0eeef33ad12a28791dce6e1d8767c",
 )
 
 maven_jar(
