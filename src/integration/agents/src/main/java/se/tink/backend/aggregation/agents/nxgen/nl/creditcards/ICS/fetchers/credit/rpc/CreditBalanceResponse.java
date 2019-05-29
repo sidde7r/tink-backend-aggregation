@@ -30,7 +30,7 @@ public class CreditBalanceResponse {
 
         return new Amount(
                 balance.getBalanceEntity().getCurrency(),
-                Double.parseDouble(balance.getBalanceEntity().getAmount()));
+                Double.parseDouble(balance.getBalanceEntity().getCreditLimit()));
     }
 
     public Amount toTinkAvailableCreditAmount(String accountId) {
