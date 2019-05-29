@@ -11,6 +11,7 @@ public abstract class SebConstants {
         public static final String TOKEN = BASE_AUTH + "/oauth20/token";
         public static final String ACCOUNTS = BASE_AIS + "/accounts";
         public static final String TRANSACTIONS = BASE_AIS + "/accounts/{accountId}/transactions";
+        public static final String TRANSACTIONS_NEXT_PAGE_URL_PREFIX = BASE_AIS;
     }
 
     public static class QueryKeys {

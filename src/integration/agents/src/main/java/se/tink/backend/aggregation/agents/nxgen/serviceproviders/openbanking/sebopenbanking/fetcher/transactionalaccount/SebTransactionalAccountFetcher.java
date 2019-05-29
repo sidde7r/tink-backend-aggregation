@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -56,7 +57,9 @@ public class SebTransactionalAccountFetcher
         if (page == 0) response = apiClient.fetchTransactions(account);
         else {
             String url = paginationURLs.get(accountID).get(page - 1);
-            response = apiClient.fetchTransactions(url);
+
+            url = SebConstants.Urls.TRANSACTIONS_NEXT_PAGE_URL_PREFIX + url;
+            response = apiClient.fetchTransactions(url, false);
         }
 
         FetchTransactionsResponse r = (FetchTransactionsResponse) response;

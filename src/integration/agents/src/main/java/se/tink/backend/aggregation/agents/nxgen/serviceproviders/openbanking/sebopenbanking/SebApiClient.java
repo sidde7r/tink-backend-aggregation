@@ -4,6 +4,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.authenticator.rpc.TokenResponse;
@@ -53,19 +54,24 @@ public final class SebApiClient {
         return response;
     }
 
-    public FetchTransactionsResponse fetchTransactions(String urlAddress) {
+    public FetchTransactionsResponse fetchTransactions(
+            String urlAddress, boolean appendQueryParams) {
 
         URL url = new URL(configuration.getBaseUrl() + urlAddress);
 
-        FetchTransactionsResponse response =
+        RequestBuilder requestBuilder =
                 client.request(url)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(SebConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
-                        .addBearerToken(getTokenFromSession())
-                        .queryParam(
-                                SebConstants.QueryKeys.BOOKING_STATUS,
-                                SebConstants.QueryValues.BOOKED_TRANSACTIONS)
-                        .get(FetchTransactionsResponse.class);
+                        .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                        .addBearerToken(getTokenFromSession());
+
+        if (appendQueryParams) {
+            requestBuilder.queryParam(
+                    SebConstants.QueryKeys.BOOKING_STATUS,
+                    SebConstants.QueryValues.BOOKED_TRANSACTIONS);
+        }
+
+        FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
 
         return response;
     }
@@ -77,7 +83,7 @@ public final class SebApiClient {
                         .parameter(SebConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier())
                         .toString();
 
-        return fetchTransactions(url);
+        return fetchTransactions(url, true);
     }
 
     public URL getAuthorizeUrl(String state) {
