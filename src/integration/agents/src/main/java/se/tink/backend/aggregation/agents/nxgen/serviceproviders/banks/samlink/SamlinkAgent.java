@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink;
 
+import com.google.common.base.Strings;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;

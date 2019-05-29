@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;

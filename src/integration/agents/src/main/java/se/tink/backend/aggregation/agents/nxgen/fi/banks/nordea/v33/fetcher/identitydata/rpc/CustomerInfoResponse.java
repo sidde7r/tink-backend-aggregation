@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.ide
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.identitydata.entities.AddressEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.identitydata.IdentityData;
