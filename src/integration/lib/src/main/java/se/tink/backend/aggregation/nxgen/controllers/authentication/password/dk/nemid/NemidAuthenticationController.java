@@ -155,7 +155,11 @@ public abstract class NemidAuthenticationController {
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the
         // authentication.
-        throw new IllegalStateException("[nemid] Could not find nemId token.");
+        IllegalStateException exception =
+                new IllegalStateException("[nemid] Could not find nemId token.");
+        LOGGER.errorExtraLong(
+                driver.getPageSource(), NemIdConstants.NEM_ID_AUTH_ERROR_TAG, exception);
+        throw exception;
     }
 
     private void lookForErrorAndThrowIfFound() throws LoginException {
