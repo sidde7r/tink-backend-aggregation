@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.text.ParseException;
-import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
