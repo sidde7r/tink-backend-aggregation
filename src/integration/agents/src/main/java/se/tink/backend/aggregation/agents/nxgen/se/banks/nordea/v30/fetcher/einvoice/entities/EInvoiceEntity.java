@@ -85,6 +85,8 @@ public class EInvoiceEntity {
                 return TransferType.EINVOICE;
             case NordeaSEConstants.PaymentTypes.IBAN:
                 return TransferType.BANK_TRANSFER;
+            case NordeaSEConstants.PaymentTypes.LBAN:
+                return TransferType.BANK_TRANSFER;
             default:
                 throw new IllegalArgumentException(
                         NordeaSEConstants.PaymentTypes.UNKNOWN_TYPE + ' ' + type);
