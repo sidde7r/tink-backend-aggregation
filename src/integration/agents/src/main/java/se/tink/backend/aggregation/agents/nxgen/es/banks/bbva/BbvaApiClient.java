@@ -60,7 +60,6 @@ public class BbvaApiClient {
 
     private RequestBuilder createRequestInSession(String url) {
         return createRequest(url)
-                .header(Headers.ORIGIN)
                 .header(Headers.REFERER)
                 .header(HeaderKeys.TSEC_KEY, getTsec())
                 .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
