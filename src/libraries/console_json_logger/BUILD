@@ -4,7 +4,7 @@ java_library_maven(
     name = "console_json_logger",
     srcs = glob(["src/main/**/*.java"]),
     groupId = "se.tink.libraries.logger.json",
-    resources = glob(["src/main/resources/META-INF/services/io.dropwizard.logging.AppenderFactory"]),
+    resources = ["src/main/resources/META-INF/services/io.dropwizard.logging.AppenderFactory"],
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:io_dropwizard_dropwizard_logging",

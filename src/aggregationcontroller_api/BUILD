@@ -23,5 +23,6 @@ java_library(
         "@maven//:com_sun_jersey_jersey_client",
         "@maven//:com_sun_jersey_jersey_core",
         "@maven//:org_mockito_mockito_core",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
