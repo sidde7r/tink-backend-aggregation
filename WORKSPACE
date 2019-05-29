@@ -1770,8 +1770,8 @@ maven_jar(
 
 maven_jar(
     name = "commons_cli_commons_cli",
-    artifact = "commons-cli:commons-cli:1.2",
-    sha1 = "2bf96b7aa8b611c177d329452af1dc933e14501c",
+    artifact = "commons-cli:commons-cli:1.4",
+    sha1 = "c51c00206bb913cd8612b24abd9fa98ae89719b1",
 )
 
 maven_jar(

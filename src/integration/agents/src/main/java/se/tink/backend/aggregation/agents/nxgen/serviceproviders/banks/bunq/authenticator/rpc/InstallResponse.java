@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.aut
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.IdEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -22,6 +23,7 @@ public class InstallResponse {
     }
 
     public TokenEntity getToken() {
-        return token;
+        return Optional.ofNullable(token)
+                .orElseThrow(() -> new IllegalStateException("Could not get Token."));
     }
 }

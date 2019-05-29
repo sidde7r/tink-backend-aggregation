@@ -4,29 +4,28 @@ import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class BunqRequiredHeadersFilter extends Filter {
-    private SessionStorage sessionStorage;
+    private Storage storage;
 
-    public BunqRequiredHeadersFilter(SessionStorage sessionStorage) {
-        this.sessionStorage = sessionStorage;
+    public BunqRequiredHeadersFilter(Storage storage) {
+        this.storage = storage;
     }
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
         TokenEntity tokenEntity =
-                sessionStorage
-                        .get(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class)
+                storage.get(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class)
                         .orElse(null);
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();

@@ -12,7 +12,7 @@ alias(
 
 alias(
     name = "ukob_register",
-    actual = "//src/ukob_register",
+    actual = "//src/commands/ukob_register",
 )
 
 test_suite(

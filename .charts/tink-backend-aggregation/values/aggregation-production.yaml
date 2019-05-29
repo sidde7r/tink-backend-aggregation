@@ -30,6 +30,8 @@ agents:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
   volksbank:
     enabled: "true"
+  bunq:
+    redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
 
   proxyUri: http://10.88.12.185:8080
 

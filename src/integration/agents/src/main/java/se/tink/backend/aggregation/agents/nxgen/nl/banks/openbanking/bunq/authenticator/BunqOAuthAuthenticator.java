@@ -1,24 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator;
 
 import java.security.KeyPair;
-import java.util.List;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.AddOAuthClientIdResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponse;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.BunqConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.CreateSessionUserAsPSD2ProviderResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.GetClientIdAndSecretResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.RegisterAsPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.rpc.TokenExchangeResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.TokenEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -62,48 +58,29 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        // If you want to register a new software, the "apiKey" field in development.yml needs to be
-        // empty otherwise you'll get an exception.
-        String psd2ApiKey = null;
-        if (agentConfiguration.getApiKey() != null && !agentConfiguration.getApiKey().isEmpty()) {
-            psd2ApiKey = agentConfiguration.getApiKey();
+        // Only for the case where this is the first session we create after registration, we need
+        // to store the client auth token from the registration process as well as add the correct
+        // key to sign the create session request's header
+        if (!persistentStorage.containsKey(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN)) {
+            persistentStorage.put(
+                    StorageKeys.PSD2_DEVICE_RSA_SIGNING_KEY_PAIR,
+                    agentConfiguration.getPsd2InstallationKeyPair());
+            persistentStorage.put(
+                    BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN,
+                    SerializationUtils.deserializeFromString(
+                            agentConfiguration.getPsd2ClientAuthToken(), TokenEntity.class));
             updateClientAuthToken(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN);
-        } else if (!persistentStorage.containsKey(StorageKeys.PSD2_API_KEY)) {
-            registerAsPSD2ServiceProvider();
-            psd2ApiKey = persistentStorage.get(BunqConstants.StorageKeys.PSD2_API_KEY);
-        }
-
-        // This is done in a try catch block for the case when the PSD2 session has expired and we
-        // have to open a new one, if we try to open a new one from an IP we haven't used before we
-        // should register it as a new device and this is what we try to do, but this will fail if
-        // we are going to open a session from an IP we have already used before
-        try {
-            // Register a device by using POST v1/device-server using the API key for the secret and
-            // passing the installation Token in the X-Bunq-Client-Authentication header.
-            apiClient.registerDevice(psd2ApiKey, aggregatorIdentifier);
-        } catch (HttpResponseException e) {
-            List<String> errorDescriptionsFromException =
-                    ErrorResponse.getErrorDescriptionsFromException(e);
-            log.info(errorDescriptionsFromException.toString());
-            if (!errorDescriptionsFromException.contains(
-                    ErrorResponse.ErrorDescriptions.DEVICE_ALREAY_EXISTS)) {
-                throw e;
-            }
         }
 
         // Create your session by executing POST v1/session-server. Provide the installation
         // Token in the X-Bunq-Client-Authentication header. You will receive a session Token. Use
         // it in any following request in the X-Bunq-Client-Authentication header.
         CreateSessionPSD2ProviderResponse createSessionPSD2ProviderResponse =
-                apiClient.createSessionPSD2Provider(
-                        persistentStorage.get(BunqConstants.StorageKeys.PSD2_API_KEY));
+                apiClient.createSessionPSD2Provider(agentConfiguration.getPsd2ApiKey());
         persistentStorage.put(
                 BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN,
                 createSessionPSD2ProviderResponse.getToken());
         updateClientAuthToken(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN);
-        sessionStorage.put(
-                BunqConstants.StorageKeys.PSD2_USER_ID,
-                createSessionPSD2ProviderResponse.getUserPaymentServiceProvider().getId());
 
         // We can get the timeout for the OAuthToken from here, not well documented but looking here
         // https://doc.bunq.com/#/session-server/Create_SessionServer we see this line in the
@@ -120,40 +97,9 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                         .getUserPaymentServiceProvider()
                         .getSessionTimeout());
 
-        // Call POST /v1/user/{userID}/oauth-client
-        AddOAuthClientIdResponse addOAuthClientIdResponse =
-                apiClient.addOAuthClientId(
-                        sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID));
-        sessionStorage.put(
-                BunqConstants.StorageKeys.OAUTH_CLIENT_ID,
-                addOAuthClientIdResponse.getId().getId());
-
-        // Call GET /v1/user/{userID}/oauth-client/{oauth-clientID}. We will return your Client ID
-        // and Client Secret.
-        GetClientIdAndSecretResponse getClientIdAndSecretResponse =
-                apiClient.getClientIdAndSecret(
-                        sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID),
-                        sessionStorage.get(BunqConstants.StorageKeys.OAUTH_CLIENT_ID));
-        sessionStorage.put(
-                BunqConstants.StorageKeys.CLIENT_ID,
-                getClientIdAndSecretResponse.getOauthClient().getClientId());
-        sessionStorage.put(
-                BunqConstants.StorageKeys.CLIENT_SECRET,
-                getClientIdAndSecretResponse.getOauthClient().getClientSecret());
-
-        // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
-        // OAuth
-        // callback URL of your application.
-        apiClient.registerCallbackUrl(
-                sessionStorage.get(BunqConstants.StorageKeys.PSD2_USER_ID),
-                sessionStorage.get(BunqConstants.StorageKeys.OAUTH_CLIENT_ID),
-                agentConfiguration.getRedirectUrl());
-
-        return BunqConstants.Url.AUTHORIZE
+        return Urls.AUTHORIZE
                 .queryParam(BunqConstants.QueryParams.RESPONSE_TYPE, BunqConstants.QueryValues.CODE)
-                .queryParam(
-                        BunqConstants.QueryParams.CLIENT_ID,
-                        sessionStorage.get(BunqConstants.StorageKeys.CLIENT_ID))
+                .queryParam(BunqConstants.QueryParams.CLIENT_ID, agentConfiguration.getClientId())
                 .queryParam(
                         BunqConstants.QueryParams.REDIRECT_URI, agentConfiguration.getRedirectUrl())
                 .queryParam(BunqConstants.QueryParams.STATE, state);
@@ -165,8 +111,8 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
                 apiClient.getAccessToken(
                         code,
                         agentConfiguration.getRedirectUrl(),
-                        sessionStorage.get(BunqConstants.StorageKeys.CLIENT_ID),
-                        sessionStorage.get(BunqConstants.StorageKeys.CLIENT_SECRET));
+                        agentConfiguration.getClientId(),
+                        agentConfiguration.getClientSecret());
 
         if (!"bearer".equals(tokenExchangeResponse.getTokenType())) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
@@ -189,84 +135,73 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
     // https://github.com/bunq/psd2_sample_csharp/blob/97ca777894e401ef85e43f9ae0e54a1e501290ac/Program.cs#L135
     @Override
     public void useAccessToken(OAuth2Token accessToken) {
-        sessionStorage.put(
-                BunqBaseConstants.StorageKeys.USER_API_KEY, accessToken.getAccessToken());
+        // We don't need to go through the use authentication flow if there is already an open
+        // session for the user
+        if (!isActiveSession()) {
+            sessionStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_API_KEY, accessToken.getAccessToken());
 
-        // Start by sending the server the public key so they can verify our signature header in
-        // future requests
-        KeyPair keyPair = RSA.generateKeyPair(2048);
-        persistentStorage.put(
-                BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR,
-                SerializationUtils.serializeKeyPair(keyPair));
-        sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
-        InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
+            // Start by sending the server the public key so they can verify our signature header in
+            // future requests
+            KeyPair keyPair = RSA.generateKeyPair(2048);
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR,
+                    SerializationUtils.serializeKeyPair(keyPair));
+            sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
+            InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
 
-        // This token is used in one of the required headers. This must be set before the next
-        // request is done.
-        // Persist the client auth token here, cus it will be used in the auto auth
-        persistentStorage.put(
-                BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
-                installationResponse.getToken());
-        updateClientAuthToken(BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN);
+            // This token is used in one of the required headers. This must be set before the next
+            // request is done.
+            // Persist the client auth token here
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
+                    installationResponse.getToken());
+            updateClientAuthToken(BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN);
 
-        // This is just to make it obvious that it's a api key we're using
-        String userApiKey = sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY);
-        RegisterDeviceResponse registerDeviceResponse =
-                apiClient.registerDevice(userApiKey, aggregatorIdentifier);
+            // This is just to make it obvious that it's a api key we're using
+            String userApiKey = sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY);
+            RegisterDeviceResponse registerDeviceResponse =
+                    apiClient.registerDevice(userApiKey, aggregatorIdentifier);
 
-        persistentStorage.put(
-                BunqBaseConstants.StorageKeys.DEVICE_SERVER_ID,
-                registerDeviceResponse.getId().getId());
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.DEVICE_SERVER_ID,
+                    registerDeviceResponse.getId().getId());
 
-        // Create the session and save session values
-        CreateSessionUserAsPSD2ProviderResponse createSessionUserAsPSD2ProviderResponse =
-                apiClient.createSessionUserAsPSD2Provider(userApiKey);
-        persistentStorage.put(
-                BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
-                createSessionUserAsPSD2ProviderResponse.getToken());
-        updateClientAuthToken(BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN);
+            // Create the session and save session values
+            CreateSessionUserAsPSD2ProviderResponse createSessionUserAsPSD2ProviderResponse =
+                    apiClient.createSessionUserAsPSD2Provider(userApiKey);
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN,
+                    createSessionUserAsPSD2ProviderResponse.getToken());
+            updateClientAuthToken(BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN);
 
+            persistentStorage.put(
+                    BunqBaseConstants.StorageKeys.USER_ID,
+                    createSessionUserAsPSD2ProviderResponse.getUserApiKey().getId());
+        }
         sessionStorage.put(
                 BunqBaseConstants.StorageKeys.USER_ID,
-                createSessionUserAsPSD2ProviderResponse.getUserApiKey().getId());
+                persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID));
     }
 
-    // Bunq uses an endpoint to register a PSD2 provider, instead of the usual developer portal used
-    // by other banks, this only needs to be run once per QSealC certificate used to obtain the PSD2
-    // API key that can then be saved as a secret and used to create future session/register
-    // devices.
-    private void registerAsPSD2ServiceProvider() {
-        KeyPair keyPair = RSA.generateKeyPair(2048);
-        persistentStorage.put(
-                StorageKeys.PSD2_DEVICE_RSA_SIGNING_KEY_PAIR,
-                SerializationUtils.serializeKeyPair(keyPair));
+    private boolean isActiveSession() {
+        if (!persistentStorage.containsKey(BunqBaseConstants.StorageKeys.USER_ID)) {
+            return false;
+        }
 
-        // Execute POST v1/installation and get your installation Token with a unique random key
-        // pair.
-        InstallResponse installationResponse = apiClient.installation(keyPair.getPublic());
-
-        // This token is used in one of the required headers. This must be set before the next
-        // request is done.
-        persistentStorage.put(
-                BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN, installationResponse.getToken());
-        updateClientAuthToken(BunqConstants.StorageKeys.PSD2_CLIENT_AUTH_TOKEN);
-
-        // Use the installation Token and your unique PSD2 certificate to call POST
-        // v1/payment-service-provider-credential. This will register your software.
-        RegisterAsPSD2ProviderResponse registerSoftwareResponse =
-                apiClient.registerAsPSD2Provider(
-                        keyPair.getPublic(),
-                        sessionStorage
-                                .get(
-                                        BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN,
-                                        TokenEntity.class)
-                                .orElseThrow(
-                                        () ->
-                                                new IllegalStateException(
-                                                        "No client auth token found.")));
-
-        persistentStorage.put(
-                BunqConstants.StorageKeys.PSD2_API_KEY, registerSoftwareResponse.getToken());
+        try {
+            // Need to update the client authentication token before we can make the list accounts
+            // call
+            updateClientAuthToken(BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN);
+            apiClient.listAccounts(persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID));
+            return true;
+        } catch (HttpResponseException e) {
+            log.info(
+                    "Session was not active for userId : "
+                            + persistentStorage.get(BunqBaseConstants.StorageKeys.USER_ID),
+                    e);
+            return false;
+        }
     }
 
     // This is needed due to Bunq's header signing requirement, see https://doc.bunq.com/#/signing

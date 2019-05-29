@@ -50,6 +50,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
         persistentStorage.put(
                 BunqBaseConstants.StorageKeys.USER_DEVICE_RSA_SIGNING_KEY_PAIR,
                 SerializationUtils.serializeKeyPair(keyPair));
+        sessionStorage.remove(BunqBaseConstants.StorageKeys.CLIENT_AUTH_TOKEN);
 
         try {
             // Start by sending the server the public key so they can verify our signature header in

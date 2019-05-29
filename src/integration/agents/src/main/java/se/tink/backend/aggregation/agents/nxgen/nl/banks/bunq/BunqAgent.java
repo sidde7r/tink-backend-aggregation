@@ -28,20 +28,24 @@ public class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BunqAuthenticator(
-                request,
+        BunqRegistrationAuthenticator bunqRegistrationAuthenticator =
                 new BunqRegistrationAuthenticator(
                         persistentStorage,
                         sessionStorage,
                         temporaryStorage,
                         apiClient,
-                        getAggregatorInfo().getAggregatorIdentifier()),
+                        getAggregatorInfo().getAggregatorIdentifier());
+
+        BunqAutoAuthenticator bunqAutoAuthenticator =
                 new BunqAutoAuthenticator(
-                        persistentStorage, sessionStorage, temporaryStorage, apiClient));
+                        persistentStorage, sessionStorage, temporaryStorage, apiClient);
+
+        return new BunqAuthenticator(request, bunqRegistrationAuthenticator, bunqAutoAuthenticator);
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BunqSessionHandler(apiClient, sessionStorage);
+        return new BunqSessionHandler(
+                apiClient, persistentStorage, sessionStorage, temporaryStorage);
     }
 }
