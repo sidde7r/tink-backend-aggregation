@@ -166,7 +166,7 @@
             "transactional": "true",
             "tutorialUrl": null,
             "fields": [],
-            "payload": "tink snsbank https://127.0.0.1:7357/api/v1/thirdparty/callback"
+            "payload": "tink snsbank https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
         },
         {
             "name": "nl-regiobank-oauth2",
@@ -181,7 +181,7 @@
             "transactional": "true",
             "tutorialUrl": null,
             "fields": [],
-            "payload": "tink regiobank https://127.0.0.1:7357/api/v1/thirdparty/callback"
+            "payload": "tink regiobank https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
         },
         {
             "name": "nl-asnbank-oauth2",
@@ -196,7 +196,7 @@
             "transactional": "true",
             "tutorialUrl": null,
             "fields": [],
-            "payload": "tink asnbank https://127.0.0.1:7357/api/v1/thirdparty/callback"
+            "payload": "tink asnbank https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
         },
         {
             "name": "nl-abnamro-oauth2",
