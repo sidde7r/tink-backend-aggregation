@@ -44,10 +44,11 @@ public abstract class Account {
     protected IdModule idModule;
     protected String name;
     protected String productName;
-
     protected String accountNumber;
     protected Amount balance;
     protected Amount availableCredit;
+    private ExactCurrencyAmount exactBalance;
+    private ExactCurrencyAmount exactAvailableCredit;
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
     protected String apiIdentifier;
@@ -62,9 +63,11 @@ public abstract class Account {
         this.accountNumber = builder.getIdModule().getAccountNumber();
         this.balance = builder.getBalanceModule().getBalance();
         this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
+        this.exactAvailableCredit =
+                builder.getBalanceModule().getExactAvaliableCredit().orElse(null);
+        this.exactBalance = builder.getBalanceModule().getExactBalance();
         this.identifiers = builder.getIdModule().getIdentifiers();
         this.uniqueIdentifier = builder.getIdModule().getUniqueId();
-
         this.balanceModule = builder.getBalanceModule();
         this.idModule = builder.getIdModule();
         this.apiIdentifier = builder.getApiIdentifier();
@@ -397,8 +400,7 @@ public abstract class Account {
         account.setAccountNumber(this.accountNumber);
         account.setBalance(this.balance.getValue());
         account.setCurrencyCode(this.balance.getCurrency());
-        account.setExactBalance(
-                ExactCurrencyAmount.of(this.balance.getValue(), this.balance.getCurrency()));
+        account.setExactBalance(this.exactBalance);
         account.setIdentifiers(this.identifiers);
         account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
@@ -406,6 +408,7 @@ public abstract class Account {
         account.setPayload(createPayload(user));
         account.setAvailableCredit(
                 Optional.ofNullable(this.availableCredit).map(Amount::getValue).orElse(0.0));
+        account.setExactAvailableCredit(Optional.ofNullable(this.exactAvailableCredit).orElse(null));
 
         return account;
     }

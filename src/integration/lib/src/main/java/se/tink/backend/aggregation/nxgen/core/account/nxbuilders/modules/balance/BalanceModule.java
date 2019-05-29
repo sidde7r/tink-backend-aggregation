@@ -32,8 +32,12 @@ public final class BalanceModule {
         return builder().withBalance(amount).build();
     }
 
-    public Amount getBalance() {
+     public Amount getBalance() {
         return new Amount(balance.getCurrency(), balance.getValue());
+    }
+
+    public ExactCurrencyAmount getExactBalance() {
+        return ExactCurrencyAmount.of(this.exactBalance);
     }
 
     public Optional<Double> getInterestRate() {
@@ -43,7 +47,9 @@ public final class BalanceModule {
     public Optional<Amount> getAvailableCredit() {
         return Optional.ofNullable(availableCredit);
     }
-
+    public Optional<ExactCurrencyAmount> getExactAvaliableCredit() {
+        return Optional.ofNullable(this.exactAvailableCredit);
+    }
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
 
         private Double interestRate;
