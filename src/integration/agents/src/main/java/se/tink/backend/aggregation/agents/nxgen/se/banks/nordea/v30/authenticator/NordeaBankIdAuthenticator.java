@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticat
 
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -9,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ResultBankIdResponse;
@@ -19,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResponse> {
     private final NordeaSEApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private static final Logger log = LoggerFactory.getLogger(NordeaBankIdAuthenticator.class);
 
     public NordeaBankIdAuthenticator(NordeaSEApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -32,12 +36,26 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
         try {
             return apiClient.formInitBankIdLogin(ssn);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+            if (isAlreadyInProgressException(e)) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             }
 
-            return e.getResponse().getBody(BankIdResponse.class);
+            throw e;
         }
+    }
+
+    private boolean isAlreadyInProgressException(final HttpResponseException responseException) {
+        BankIdResponse resp = responseException.getResponse().getBody(BankIdResponse.class);
+        if (responseException.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
+            return true;
+        }
+        if (responseException.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
+            if (resp.getError().equalsIgnoreCase(ErrorCodes.AUTHENTICATION_COLLISION)) {
+                return true;
+            }
+        }
+        log.warn("Unhandled BankID error: {}", resp.getError());
+        return false;
     }
 
     @Override

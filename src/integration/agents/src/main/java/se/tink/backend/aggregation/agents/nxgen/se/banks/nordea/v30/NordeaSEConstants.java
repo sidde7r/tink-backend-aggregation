@@ -215,6 +215,7 @@ public class NordeaSEConstants {
         public static final String INVALID_TOKEN = "invalid_token";
         // refresh token has expired
         public static final String INVALID_GRANT = "invalid_grant";
+        public static final String AUTHENTICATION_COLLISION = "authentication_collision";
         public static final String UNABLE_TO_FETCH_ACCOUNTS = "Could not retrieve accounts.";
         public static final String TRANSFER_REJECTED = "Transfer rejected by Nordea";
         public static final String TRANSFER_ERROR = "Something went wrong with the transfer.";
