@@ -37,7 +37,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public GetCodeResponse getCode() {
-        // Authentication for Sweden is still mocked. It differs from authentication for other
+        // Authentication for Sweden is still mocked. It differs of authentication for other
         // countries.
         try {
             Thread.sleep(5000);

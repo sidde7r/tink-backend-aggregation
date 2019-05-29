@@ -2,18 +2,28 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.RefreshTokenForm;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.configuration.NordeaBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.ConfirmPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.executor.payment.rpc.GetPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.rpc.NordeaErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public class NordeaBaseApiClient {
     protected final TinkHttpClient client;
@@ -118,5 +128,79 @@ public class NordeaBaseApiClient {
         return sessionStorage
                 .get(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, PaymentType paymentType)
+            throws PaymentException {
+        try {
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.INITIATE_PAYMENT.parameter(
+                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                    paymentType.toString()))
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public ConfirmPaymentResponse confirmPayment(String paymentId, PaymentType paymentType)
+            throws PaymentException {
+        try {
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.CONFIRM_PAYMENT
+                                    .parameter(
+                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                            paymentType.toString())
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
+                    .put(ConfirmPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public GetPaymentResponse getPayment(String paymentId, PaymentType paymentType)
+            throws PaymentException {
+        try {
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.GET_PAYMENT
+                                    .parameter(
+                                            NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                            paymentType.toString())
+                                    .parameter(NordeaBaseConstants.IdTags.PAYMENT_ID, paymentId))
+                    .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public GetPaymentsResponse fetchPayments(PaymentType paymentType) throws PaymentException {
+        try {
+            return createRequestInSession(
+                            NordeaBaseConstants.Urls.GET_PAYMENTS.parameter(
+                                    NordeaBaseConstants.IdTags.PAYMENT_TYPE,
+                                    paymentType.toString()))
+                    .get(GetPaymentsResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    private void handleHttpResponseException(HttpResponseException httpResponseException)
+            throws PaymentException {
+        if (httpResponseException.getResponse().hasBody()) {
+            try {
+                httpResponseException
+                        .getResponse()
+                        .getBody(NordeaErrorResponse.class)
+                        .checkError(httpResponseException);
+            } catch (HttpClientException | HttpResponseException d) {
+                throw httpResponseException;
+            }
+        }
     }
 }

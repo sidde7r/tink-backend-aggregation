@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
