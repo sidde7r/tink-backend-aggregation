@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.ErrorEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
