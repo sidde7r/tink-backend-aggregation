@@ -580,16 +580,18 @@ public abstract class Account {
             return exactAvailableCredit;
         }
 
-        public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
+        public T setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
             this.exactAvailableCredit = exactAvailableCredit;
+            return self();
         }
 
         public ExactCurrencyAmount getExactBalance() {
             return exactBalance;
         }
 
-        public void setExactBalance(ExactCurrencyAmount exactBalance) {
+        public T setExactBalance(ExactCurrencyAmount exactBalance) {
             this.exactBalance = exactBalance;
+            return self();
         }
     }
 }
