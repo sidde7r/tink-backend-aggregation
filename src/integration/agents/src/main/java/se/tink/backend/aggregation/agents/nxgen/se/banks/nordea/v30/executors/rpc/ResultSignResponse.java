@@ -24,13 +24,12 @@ public class ResultSignResponse {
         switch (status.toUpperCase()) {
             case NordeaSEConstants.BankIdStatus.PENDING:
                 return BankIdStatus.WAITING;
-
             case NordeaSEConstants.BankIdStatus.SIGN_PENDING:
                 return BankIdStatus.WAITING;
-
             case NordeaSEConstants.BankIdStatus.OK:
                 return BankIdStatus.DONE;
-
+            case NordeaSEConstants.BankIdStatus.CANCELLED:
+                return BankIdStatus.CANCELLED;
             default:
                 log.warn("Unknown bankID status: {}", status);
                 return BankIdStatus.FAILED_UNKNOWN;
