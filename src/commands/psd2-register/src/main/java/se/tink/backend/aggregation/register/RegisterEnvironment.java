@@ -4,9 +4,8 @@ import java.util.Arrays;
 
 public enum RegisterEnvironment {
     UNKNOWN("unknown"),
-    LOCAL("local"),
     PRODUCTION("production"),
-    STAGING("staging");
+    SANDBOX("sandbox");
 
     private final String name;
 

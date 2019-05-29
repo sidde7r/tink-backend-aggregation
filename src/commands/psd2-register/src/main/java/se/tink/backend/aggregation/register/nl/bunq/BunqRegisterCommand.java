@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.register.nl.bunq;
 
-import static se.tink.backend.aggregation.register.RegisterEnvironment.fromString;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +11,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants.StorageKeys;
@@ -26,8 +25,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
-import se.tink.backend.aggregation.register.nl.bunq.BunqRegisterConstants.Mappers;
-import se.tink.backend.aggregation.register.nl.bunq.environment.local.BunqRegisterLocalUtils;
+import se.tink.backend.aggregation.register.nl.bunq.environment.sandbox.BunqRegisterSandboxUtils;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.AddOAuthClientIdResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.GetClientIdAndSecretResponse;
 import se.tink.backend.aggregation.register.nl.bunq.rpc.RegisterAsPSD2ProviderRequest;
@@ -37,6 +35,9 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class BunqRegisterCommand {
 
     private static final String OUTFILE_NAME = "bunq_registration_response_%d";
+    private static final String PRODUCTION_OPTION_NAME = "p";
+    private static final String SANDBOX_OPTION_NAME = "s";
+    private static final String REDIRECT_URL_OPTION_NAME = "r";
 
     private static BunqRegistrationResponse bunqRegistrationResponse =
             new BunqRegistrationResponse();
@@ -45,16 +46,7 @@ public class BunqRegisterCommand {
     public static void main(String args[]) throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        Options options = new Options();
-        Option environmentOption =
-                Option.builder("e")
-                        .longOpt("environment")
-                        .required()
-                        .hasArg()
-                        .desc(
-                                "Environment in which you want to register. Currently supported: LOCAL, STAGING, PRODUCTION")
-                        .build();
-        options.addOption(environmentOption);
+        Options options = createOptions();
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -68,14 +60,23 @@ public class BunqRegisterCommand {
             System.exit(1);
         }
 
-        RegisterEnvironment selectedEnvironment = fromString(cmd.getOptionValue("e").toLowerCase());
+        RegisterEnvironment selectedEnvironment;
+        if (cmd.hasOption(PRODUCTION_OPTION_NAME)) {
+            selectedEnvironment = RegisterEnvironment.PRODUCTION;
+        } else if (cmd.hasOption(SANDBOX_OPTION_NAME)) {
+            selectedEnvironment = RegisterEnvironment.SANDBOX;
+        } else {
+            selectedEnvironment = RegisterEnvironment.UNKNOWN;
+        }
+
+        String redirectUrl = cmd.getOptionValue(REDIRECT_URL_OPTION_NAME);
 
         BunqRegisterCommandApiClient apiClient = createApiClient(selectedEnvironment);
 
         CreateSessionPSD2ProviderResponse psd2Session =
                 registerAsPSD2ServiceProvider(apiClient, selectedEnvironment);
         String psd2UserId = String.valueOf(psd2Session.getUserPaymentServiceProvider().getId());
-        registerOAuthCallback(apiClient, psd2UserId, selectedEnvironment);
+        registerOAuthCallback(apiClient, psd2UserId, redirectUrl);
         cleanupSession(apiClient, psd2Session);
 
         System.out.println(
@@ -84,6 +85,39 @@ public class BunqRegisterCommand {
                         + "\n\n################\n");
         String outFile = saveResponse(bunqRegistrationResponse.toString());
         System.out.println(String.format("Done! \nRegistration response saved to: %s", outFile));
+    }
+
+    private static Options createOptions() {
+        Options options = new Options();
+
+        OptionGroup environmentOptionGroup = new OptionGroup();
+        Option productionOption =
+                Option.builder(PRODUCTION_OPTION_NAME)
+                        .longOpt("production")
+                        .desc("Register towards Bunq's production environment.")
+                        .build();
+
+        Option sandboxOption =
+                Option.builder(SANDBOX_OPTION_NAME)
+                        .longOpt("sandbox")
+                        .desc("Register towards Bunq's sandbox environment.")
+                        .build();
+        environmentOptionGroup.setRequired(true);
+        environmentOptionGroup.addOption(productionOption);
+        environmentOptionGroup.addOption(sandboxOption);
+        options.addOptionGroup(environmentOptionGroup);
+
+        Option redirectUrlOption =
+                Option.builder(REDIRECT_URL_OPTION_NAME)
+                        .longOpt("redirectUrl")
+                        .required()
+                        .hasArg()
+                        .argName("URL")
+                        .desc("Redirect URL to use when for the registration.")
+                        .build();
+        options.addOption(redirectUrlOption);
+
+        return options;
     }
 
     private static BunqRegisterCommandApiClient createApiClient(
@@ -99,7 +133,7 @@ public class BunqRegisterCommand {
                         .orElseThrow(
                                 () ->
                                         new IllegalArgumentException(
-                                                "Selected environment is not valid, choose production, staging or local"));
+                                                "Selected environment is not valid, choose production or sandbox"));
 
         return new BunqRegisterCommandApiClient(client, baseApiEndpoint);
     }
@@ -113,21 +147,18 @@ public class BunqRegisterCommand {
                 throw new NotImplementedException(
                         "Registration towards Bunq's for our production environment is not yet implemented.");
 
-            case STAGING:
-                throw new NotImplementedException(
-                        "Registration towards Bunq's for our staging environment is not yet implemented.");
-
-            case LOCAL:
+            case SANDBOX:
                 return new RegisterAsPSD2ProviderRequest(
-                        BunqRegisterLocalUtils.getQSealCCertificateAsString(),
-                        BunqRegisterLocalUtils.getPaymentServiceProviderCertificateChainAsString(),
-                        BunqRegisterLocalUtils.getClientPublicKeySignatureAsString(
+                        BunqRegisterSandboxUtils.getQSealCCertificateAsString(),
+                        BunqRegisterSandboxUtils
+                                .getPaymentServiceProviderCertificateChainAsString(),
+                        BunqRegisterSandboxUtils.getClientPublicKeySignatureAsString(
                                 installationPublicKey, psd2ClientAuthToken));
 
             case UNKNOWN:
             default:
                 throw new IllegalArgumentException(
-                        "Selected environment is not valid, choose production, staging or local");
+                        "Selected environment is not valid, choose production or sandbox");
         }
     }
 
@@ -185,9 +216,7 @@ public class BunqRegisterCommand {
     }
 
     private static void registerOAuthCallback(
-            BunqRegisterCommandApiClient apiClient,
-            String psd2UserId,
-            RegisterEnvironment selectedEnvironment) {
+            BunqRegisterCommandApiClient apiClient, String psd2UserId, String redirectUrl) {
         // Call POST /v1/user/{userID}/oauth-client
         AddOAuthClientIdResponse addOAuthClientIdResponse = apiClient.addOAuthClientId(psd2UserId);
         String oauthClientId = String.valueOf(addOAuthClientIdResponse.getId().getId());
@@ -203,13 +232,6 @@ public class BunqRegisterCommand {
 
         // Call POST /v1/user/{userID}/oauth-client/{oauth-clientID}/callback-url. Include the
         // OAuth callback URL of your application.
-        String redirectUrl =
-                Mappers.environmentToRedirectUrlMapper
-                        .translate(selectedEnvironment)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalArgumentException(
-                                                "Selected environment is not valid, choose production, staging or local"));
         apiClient.registerCallbackUrl(psd2UserId, oauthClientId, redirectUrl);
         bunqRegistrationResponse.setRedirectUrl(redirectUrl);
     }
@@ -233,7 +255,7 @@ public class BunqRegisterCommand {
         }
 
         // Find free filename to prevent deleting old registration response
-        final String fullPath = folder.getPath() + String.format("/%s.json", OUTFILE_NAME);
+        final String fullPath = String.format("%s/%s.json", folder.getPath(), OUTFILE_NAME);
         int fileNum = 0;
         File file;
         do {

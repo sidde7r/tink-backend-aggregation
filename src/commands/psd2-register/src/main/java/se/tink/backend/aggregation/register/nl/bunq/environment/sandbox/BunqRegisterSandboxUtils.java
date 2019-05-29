@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.register.nl.bunq.environment.local;
+package se.tink.backend.aggregation.register.nl.bunq.environment.sandbox;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,11 +32,11 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 // Generate test certificates following instructions from here
 // https://github.com/bunq/psd2_sample_csharp/blob/97ca777894e401ef85e43f9ae0e54a1e501290ac/Program.cs#L25
-public final class BunqRegisterLocalUtils {
+public final class BunqRegisterSandboxUtils {
 
     private static final KeyPair testCertificatesKeyPair = generateTestKeyPair();
 
-    private BunqRegisterLocalUtils() {}
+    private BunqRegisterSandboxUtils() {}
 
     public static String getQSealCCertificateAsString() {
         X509Certificate qsealcCert = generateTestCertificate();

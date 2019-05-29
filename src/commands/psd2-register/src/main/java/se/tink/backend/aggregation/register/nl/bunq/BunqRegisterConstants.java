@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.register.nl.bunq;
 
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.register.PSD2RegisterConstants.RedirectUrls;
 import se.tink.backend.aggregation.register.RegisterEnvironment;
 
 public final class BunqRegisterConstants {
@@ -35,21 +34,8 @@ public final class BunqRegisterConstants {
         public static final GenericTypeMapper<String, RegisterEnvironment>
                 environmentOptionToApiEndpointMapper =
                         GenericTypeMapper.<String, RegisterEnvironment>genericBuilder()
-                                .put(
-                                        Endpoints.PRODUCTION,
-                                        RegisterEnvironment.PRODUCTION,
-                                        RegisterEnvironment.STAGING)
-                                .put(Endpoints.SANDBOX, RegisterEnvironment.LOCAL)
-                                .build();
-
-        public static final GenericTypeMapper<String, RegisterEnvironment>
-                environmentToRedirectUrlMapper =
-                        GenericTypeMapper.<String, RegisterEnvironment>genericBuilder()
-                                .put(
-                                        RedirectUrls.PRODUCTION_CALLBACK_URL,
-                                        RegisterEnvironment.PRODUCTION)
-                                .put(RedirectUrls.STAGING_CALLBACK_URL, RegisterEnvironment.STAGING)
-                                .put(RedirectUrls.LOCAL_CALLBACK_URL, RegisterEnvironment.LOCAL)
+                                .put(Endpoints.PRODUCTION, RegisterEnvironment.PRODUCTION)
+                                .put(Endpoints.SANDBOX, RegisterEnvironment.SANDBOX)
                                 .build();
     }
 }
