@@ -8,6 +8,7 @@ java_library(
         "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/uuid",
         "//src/libraries/giro_validation",
+        "//src/libraries/strings",
 
         # Guava
         "//third_party:com_google_guava_guava",
