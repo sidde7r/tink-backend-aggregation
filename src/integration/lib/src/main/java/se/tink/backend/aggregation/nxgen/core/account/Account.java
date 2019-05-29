@@ -397,6 +397,8 @@ public abstract class Account {
         account.setAccountNumber(this.accountNumber);
         account.setBalance(this.balance.getValue());
         account.setCurrencyCode(this.balance.getCurrency());
+        account.setExactBalance(
+                ExactCurrencyAmount.of(this.balance.getValue(), this.balance.getCurrency()));
         account.setIdentifiers(this.identifiers);
         account.setBankId(this.uniqueIdentifier);
         account.setHolderName(HolderName.toString(this.holderName));
