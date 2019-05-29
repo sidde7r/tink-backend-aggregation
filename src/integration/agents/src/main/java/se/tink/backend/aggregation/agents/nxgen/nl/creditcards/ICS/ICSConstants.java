@@ -38,6 +38,11 @@ public class ICSConstants {
         public static final String RESPONSE_TYPE_CODE = "code";
     }
 
+    public static final class Transaction {
+        public static final String DEBIT = "Debit";
+        public static final String CREDIT = "Credit";
+    }
+
     public enum OAuthGrantTypes {
         @JsonProperty("client_credentials")
         CLIENT_CREDENTIALS,

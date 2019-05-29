@@ -55,8 +55,19 @@ public class TransactionEntity {
     @JsonProperty("TransactionInformation")
     private String transactionInformation;
 
+    private boolean isDebit() {
+        return ICSConstants.Transaction.DEBIT.equalsIgnoreCase(creditDebitIndicator);
+    }
+
     private Amount toTinkAmount() {
-        return new Amount(billingCurrency, Double.parseDouble(billingAmount));
+
+        Amount result = new Amount(billingCurrency, Double.parseDouble(billingAmount)).stripSign();
+
+        if (isDebit()) {
+            return result.negate();
+        }
+
+        return result;
     }
 
     private Date toTransactionDate() {
