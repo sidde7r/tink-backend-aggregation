@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import java.util.List;
 import net.minidev.json.annotate.JsonIgnore;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.Error;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.Transactions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.ErrorEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -11,14 +11,14 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 @JsonObject
 public class FetchCardAccountsTransactions {
 
-    private Error error;
-    private Transactions transactions;
+    private ErrorEntity error;
+    private TransactionsEntity transactions;
 
-    public Error getError() {
+    public ErrorEntity getError() {
         return error;
     }
 
-    public Transactions getTransactions() {
+    public TransactionsEntity getTransactions() {
         return transactions;
     }
 

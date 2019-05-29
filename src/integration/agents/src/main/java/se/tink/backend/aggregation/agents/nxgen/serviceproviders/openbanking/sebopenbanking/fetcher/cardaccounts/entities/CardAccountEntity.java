@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class CardAccount {
+public class CardAccountEntity {
 
-    private List<Balance> balances;
-    private CreditLimit creditLimit;
+    private List<BalanceEntity> balances;
+    private CreditLimitEntity creditLimit;
     private String currency;
     private String maskedPan;
     private String name;
@@ -22,11 +22,11 @@ public class CardAccount {
     private String status;
     private String usage;
 
-    public List<Balance> getBalances() {
+    public List<BalanceEntity> getBalances() {
         return balances;
     }
 
-    public CreditLimit getCreditLimit() {
+    public CreditLimitEntity getCreditLimit() {
         return creditLimit;
     }
 
@@ -59,13 +59,13 @@ public class CardAccount {
     }
 
     @JsonIgnore
-    public static CreditCardAccount toTinkTransaction(CardAccount cardAccount) {
+    public static CreditCardAccount toTinkTransaction(CardAccountEntity cardAccount) {
         return CreditCardAccount.builder(cardAccount.createUniqueIdFromMaskedPane())
                 .setAvailableCredit(cardAccount.getAvaliableCredit())
                 .setBalance(cardAccount.getAvailableBalance())
                 .setBankIdentifier(cardAccount.getResourceId())
                 .setName(cardAccount.getProduct())
-                .setAccountNumber(cardAccount.getName())
+                .setAccountNumber(cardAccount.getMaskedPan())
                 .build();
     }
 
@@ -79,9 +79,9 @@ public class CardAccount {
     private Amount getAvailableBalance() {
 
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
-                .filter(Balance::isAvailableBalance)
+                .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
-                .map(Balance::toAmount)
+                .map(BalanceEntity::toAmount)
                 .orElse(BalancesEntity.getDefault());
     }
 

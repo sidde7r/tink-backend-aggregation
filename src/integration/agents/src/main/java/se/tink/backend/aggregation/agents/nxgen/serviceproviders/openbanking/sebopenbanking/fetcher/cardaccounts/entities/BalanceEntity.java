@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class Balance {
+public class BalanceEntity {
 
-    private BalanceAmount balanceAmount;
+    private BalanceAmountEntity balanceAmount;
     private String balanceType;
     private Boolean creditLimitincluded;
 
-    public BalanceAmount getBalanceAmount() {
+    public BalanceAmountEntity getBalanceAmount() {
         return balanceAmount;
     }
 

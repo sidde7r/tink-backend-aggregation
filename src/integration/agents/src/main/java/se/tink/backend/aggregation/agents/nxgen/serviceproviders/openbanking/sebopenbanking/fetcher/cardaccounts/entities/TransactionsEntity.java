@@ -12,16 +12,16 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
-public class Transactions {
+public class TransactionsEntity {
 
-    private List<Booked> booked;
-    private List<Pending> pending;
+    private List<BookedEntity> booked;
+    private List<PendingEntity> pending;
 
-    public List<Booked> getBooked() {
+    public List<BookedEntity> getBooked() {
         return booked;
     }
 
-    public List<Pending> getPending() {
+    public List<PendingEntity> getPending() {
         return pending;
     }
 

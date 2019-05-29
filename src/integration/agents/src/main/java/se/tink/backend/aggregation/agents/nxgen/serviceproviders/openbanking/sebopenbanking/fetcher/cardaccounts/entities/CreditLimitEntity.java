@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalanceAmount {
+public class CreditLimitEntity {
 
     private BigDecimal amount;
     private String currency;

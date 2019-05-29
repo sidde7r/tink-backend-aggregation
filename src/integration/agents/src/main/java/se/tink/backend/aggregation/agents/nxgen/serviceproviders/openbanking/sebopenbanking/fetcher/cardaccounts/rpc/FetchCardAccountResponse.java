@@ -5,22 +5,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.CardAccount;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.Error;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.CardAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities.ErrorEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 @JsonObject
 public class FetchCardAccountResponse {
 
-    private Error error;
-    private List<CardAccount> cardAccounts;
+    private ErrorEntity error;
+    private List<CardAccountEntity> cardAccounts;
 
-    public Error getError() {
+    public ErrorEntity getError() {
         return error;
     }
 
-    public List<CardAccount> getCardAccounts() {
+    public List<CardAccountEntity> getCardAccounts() {
         return cardAccounts;
     }
 
@@ -29,7 +29,7 @@ public class FetchCardAccountResponse {
         return Optional.ofNullable(cardAccounts)
                 .map(Collection::stream)
                 .orElse(Stream.empty())
-                .map(CardAccount::toTinkTransaction)
+                .map(CardAccountEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.cardaccounts.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.math.BigDecimal;
 import java.util.Date;
 import net.minidev.json.annotate.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,20 +10,20 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class Pending {
+public class PendingEntity {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
     private String cardAcceptorCity;
     private String cardAcceptorCountryCode;
     private String cardTransactionId;
-    private ExchangeRate exchangeRate;
+    private ExchangeRateEntity exchangeRate;
     private Boolean invoiced;
     private String maskedPan;
     private String nameOnCard;
-    private OriginalAmount originalAmount;
+    private OriginalAmountEntity originalAmount;
     private String proprietaryBankTransactionCode;
-    private TransactionAmount transactionAmount;
+    private TransactionAmountEntity transactionAmount;
     private String transactionDetails;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
@@ -45,7 +44,7 @@ public class Pending {
         return cardTransactionId;
     }
 
-    public ExchangeRate getExchangeRate() {
+    public ExchangeRateEntity getExchangeRate() {
         return exchangeRate;
     }
 
@@ -61,7 +60,7 @@ public class Pending {
         return nameOnCard;
     }
 
-    public OriginalAmount getOriginalAmount() {
+    public OriginalAmountEntity getOriginalAmount() {
         return originalAmount;
     }
 
@@ -69,7 +68,7 @@ public class Pending {
         return proprietaryBankTransactionCode;
     }
 
-    public TransactionAmount getTransactionAmount() {
+    public TransactionAmountEntity getTransactionAmount() {
         return transactionAmount;
     }
 
