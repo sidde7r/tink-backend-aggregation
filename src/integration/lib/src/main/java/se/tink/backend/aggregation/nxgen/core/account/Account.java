@@ -45,24 +45,20 @@ public abstract class Account {
     protected String name;
     protected String productName;
     protected String accountNumber;
-    protected Amount balance;
-    protected Amount availableCredit;
-    private ExactCurrencyAmount exactBalance;
-    private ExactCurrencyAmount exactAvailableCredit;
     protected Set<AccountIdentifier> identifiers;
     protected String uniqueIdentifier;
     protected String apiIdentifier;
     protected HolderName holderName;
     protected TemporaryStorage temporaryStorage;
     protected Set<AccountFlag> accountFlags;
+    private ExactCurrencyAmount exactBalance;
+    private ExactCurrencyAmount exactAvailableCredit;
 
     // Exists for interoperability only, do not ever use
     protected Account(AccountBuilder<? extends Account, ?> builder) {
         // These exist for interoperability and will eventually be removed
         this.name = builder.getIdModule().getAccountName();
         this.accountNumber = builder.getIdModule().getAccountNumber();
-        this.balance = builder.getBalanceModule().getBalance();
-        this.availableCredit = builder.getBalanceModule().getAvailableCredit().orElse(null);
         this.exactAvailableCredit =
                 builder.getBalanceModule().getExactAvaliableCredit().orElse(null);
         this.exactBalance = builder.getBalanceModule().getExactBalance();
@@ -81,8 +77,6 @@ public abstract class Account {
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
         this.accountNumber = builder.getAccountNumber();
-        this.balance = builder.getBalance();
-        this.availableCredit = builder.getAvailableCredit();
         this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.apiIdentifier = builder.getBankIdentifier();
@@ -99,7 +93,9 @@ public abstract class Account {
     protected Account(StepBuilder<? extends Account, ?> builder) {
         this.accountNumber = builder.getAccountNumber();
         this.apiIdentifier = builder.getApiIdentifier();
-        this.balance = builder.getBalance();
+        this.exactBalance =
+                ExactCurrencyAmount.of(
+                        builder.getBalance().doubleValue(), builder.getBalance().getCurrency());
         this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = builder.getUniqueIdentifier();
         this.temporaryStorage = builder.getTemporaryStorage();
@@ -318,7 +314,11 @@ public abstract class Account {
     }
 
     public Amount getBalance() {
-        return balance != null ? balance : balanceModule.getBalance();
+        return exactBalance != null
+                ? new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue())
+                : new Amount(
+                        balanceModule.getExactBalance().getCurrencyCode(),
+                        balanceModule.getExactBalance().getDoubleValue());
     }
 
     public BalanceModule getBalanceModule() {
@@ -331,21 +331,22 @@ public abstract class Account {
 
     @Deprecated
     public Amount getAccountBalance() {
-        return new Amount(this.balance.getCurrency(), this.balance.getValue());
+        return new Amount(this.exactBalance.getCurrencyCode(), this.exactBalance.getDoubleValue());
     }
 
     @Deprecated
     public Amount getAvailableCredit() {
-        return new Amount(this.availableCredit.getCurrency(), this.availableCredit.getValue());
+        return new Amount(
+                this.getExactAvailableCredit().getCurrencyCode(),
+                this.getExactAvailableCredit().getDoubleValue());
     }
 
     public ExactCurrencyAmount getExactAccountBalance() {
-        return ExactCurrencyAmount.of(this.balance.getValue(), this.balance.getCurrency());
+        return ExactCurrencyAmount.of(exactBalance);
     }
 
     public ExactCurrencyAmount getExactAvailableCredit() {
-        return ExactCurrencyAmount.of(
-                this.availableCredit.getValue(), this.availableCredit.getCurrency());
+        return ExactCurrencyAmount.of(exactAvailableCredit);
     }
 
     public List<AccountIdentifier> getIdentifiers() {
@@ -398,8 +399,8 @@ public abstract class Account {
         account.setType(getType());
         account.setName(this.name);
         account.setAccountNumber(this.accountNumber);
-        account.setBalance(this.balance.getValue());
-        account.setCurrencyCode(this.balance.getCurrency());
+        account.setBalance(this.exactBalance.getDoubleValue());
+        account.setCurrencyCode(this.exactBalance.getCurrencyCode());
         account.setExactBalance(this.exactBalance);
         account.setIdentifiers(this.identifiers);
         account.setBankId(this.uniqueIdentifier);
@@ -407,8 +408,11 @@ public abstract class Account {
         account.setFlags(this.accountFlags);
         account.setPayload(createPayload(user));
         account.setAvailableCredit(
-                Optional.ofNullable(this.availableCredit).map(Amount::getValue).orElse(0.0));
-        account.setExactAvailableCredit(Optional.ofNullable(this.exactAvailableCredit).orElse(null));
+                Optional.ofNullable(this.exactAvailableCredit)
+                        .map(ExactCurrencyAmount::getDoubleValue)
+                        .orElse(0.0));
+        account.setExactAvailableCredit(
+                Optional.ofNullable(this.exactAvailableCredit).orElse(null));
 
         return account;
     }
@@ -435,7 +439,7 @@ public abstract class Account {
         }
 
         HashMap<String, String> map = Maps.newHashMap();
-        map.put("currency", balance.getCurrency());
+        map.put("currency", exactBalance.getCurrencyCode());
         return SerializationUtils.serializeToString(map);
     }
 
