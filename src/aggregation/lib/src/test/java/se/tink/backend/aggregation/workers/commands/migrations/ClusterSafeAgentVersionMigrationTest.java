@@ -25,6 +25,8 @@ public class ClusterSafeAgentVersionMigrationTest {
     private static final String NEW_AGENT_NAME =
             "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent";
     private static final String OLD_AGENT_NAME = "creditcards.sebkort.SEBKortAgent";
+    private static final String OLD_FORMAT = "123456******1234";
+    private static final String NEW_FORMAT = "1234561234";
 
     private ClusterSafeAgentVersionMigration migration;
     private Provider provider;
@@ -60,11 +62,11 @@ public class ClusterSafeAgentVersionMigrationTest {
                 };
 
         this.oldFormat = new Account();
-        this.oldFormat.setBankId("123456******1234");
+        this.oldFormat.setBankId(OLD_FORMAT);
         this.oldFormat.setType(AccountTypes.CREDIT_CARD);
 
         this.newFormat = this.oldFormat.clone();
-        this.newFormat.setBankId("1234561234");
+        this.newFormat.setBankId(NEW_FORMAT);
 
         this.accountList = Lists.newArrayList();
         this.request.setAccounts(accountList);
@@ -105,92 +107,100 @@ public class ClusterSafeAgentVersionMigrationTest {
         }
     }
 
+    /** Run only for our own agents */
     @Test
     public void shouldChangeRequest_otherAgent() {
-        // Run only for our own agents
         provider.setClassName(NEW_AGENT_NAME + "xx");
         assertFalse(this.migration.shouldChangeRequest(this.request));
     }
 
+    /** Run only for our own agents */
     @Test
     public void shouldChangeRequest_newAgent() {
-        // Run only for our own agents
         provider.setClassName(NEW_AGENT_NAME);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
+    /** Run only for our own agents */
     @Test
     public void shouldChangeRequest_oldAgent() {
-        // Run only for our own agents
         provider.setClassName(OLD_AGENT_NAME);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
+    /**
+     * A request for the old agent with non-migrated credentials will only occur in instances with
+     * old config, so we should not migrate the data
+     */
     @Test
-    public void shouldMigrateData_oldData_oldAgent() {
-        // A request for the old agent with non-migrated credentials will only occur
-        // in instances with old config, so we should not migrate the data
+    public void shouldMigrateData_oldDataOldAgent() {
         this.request.getAccounts().add(this.oldFormat);
         boolean migrateData = migration.shouldMigrateData(request);
         assertFalse(migrateData);
     }
 
+    /**
+     * A request for the new agent with non-migrated credentials will only occur in instances with
+     * the new config, so we should migrate the data
+     */
     @Test
     public void shouldMigrateData_oldDataNewAgent() {
-        // A request for the new agent with non-migrated credentials will only occur
-        // in instances with the new config, so we should migrate the data
         this.request.getProvider().setClassName(NEW_AGENT_NAME);
         this.request.getAccounts().add(this.oldFormat);
         boolean migrateData = migration.shouldMigrateData(request);
         assertTrue(migrateData);
     }
 
+    /** Don't migrate already migrated credentials */
     @Test
     public void shouldMigrateData_alreadyNewFormat() {
-        // Don't migrate already migrated credentials
         this.request.getAccounts().add(this.newFormat);
         boolean migrateData = migration.shouldMigrateData(request);
         assertFalse(migrateData);
     }
 
+    /** Don't migrate credentials which the isDataMigrated check filters */
     @Test
-    public void shouldMigrateData_noAccountsToMigrateFiltering() {
-        // Don't migrate credentials which the isDataMigrated check filters
+    public void shouldMigrateData_noAccountsToMigrateFilteringLoans() {
         this.oldFormat.setType(AccountTypes.LOAN);
         this.request.getAccounts().add(this.oldFormat);
         boolean migrateData = migration.shouldMigrateData(request);
         assertFalse(migrateData);
     }
 
+    /** Don't migrate credentials which the isDataMigrated check filters */
     @Test
-    public void shouldMigrateData_noAccountsToMigrateFiltering2() {
-        // Don't migrate credentials which the isDataMigrated check filters
+    public void shouldMigrateData_noAccountsToMigrateFilteringInvestments() {
         this.oldFormat.setType(AccountTypes.INVESTMENT);
         this.request.getAccounts().add(this.oldFormat);
         boolean migrateData = migration.shouldMigrateData(request);
         assertFalse(migrateData);
     }
 
+    /** Don't migrate requests without accounts */
     @Test
     public void shouldMigrateData_noAccountsToMigrate_noAccounts() {
-        // Don't migrate requests without accounts
         boolean migrateData = migration.shouldMigrateData(request);
         assertFalse(migrateData);
     }
 
+    /**
+     * A request for the old agent with non-migrated credentials will only occur in instances with
+     * old config, so we should continue to use the old agent
+     */
     @Test
     public void changeRequest_oldAgentOldData() {
-        // A request for the old agent with non-migrated credentials will only occur
-        // in instances with old config, so we should continue to use the old agent
         this.accountList.add(this.oldFormat);
         this.migration.changeRequest(request);
         assertEquals(OLD_AGENT_NAME, this.request.getProvider().getClassName());
     }
 
+    /**
+     * A request for the new agent with non-migrated credentials will only occur in instances with
+     * new config, so we should force a switch to the new agent
+     */
     @Test
     public void changeRequest_oldAgentNewData() {
-        // A request for the new agent with non-migrated credentials will only occur
-        // in instances with new config, so we should force a switch to the new agent
         this.accountList.add(this.newFormat);
         this.migration.changeRequest(request);
         assertEquals(NEW_AGENT_NAME, this.request.getProvider().getClassName());
