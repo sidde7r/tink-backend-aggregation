@@ -71,8 +71,7 @@ public class CardAccountEntity {
 
     @JsonIgnore
     private Amount getAvaliableCredit() {
-        return new Amount(
-                getCreditLimit().getCurrency(), getCreditLimit().getAmount());
+        return new Amount(getCreditLimit().getCurrency(), getCreditLimit().getAmount());
     }
 
     @JsonIgnore

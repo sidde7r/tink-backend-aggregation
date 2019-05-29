@@ -14,6 +14,7 @@ public class PendingEntity {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
+
     private String cardAcceptorCity;
     private String cardAcceptorCountryCode;
     private String cardTransactionId;
@@ -25,6 +26,7 @@ public class PendingEntity {
     private String proprietaryBankTransactionCode;
     private TransactionAmountEntity transactionAmount;
     private String transactionDetails;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
@@ -84,9 +86,7 @@ public class PendingEntity {
     public CreditCardTransaction toTinkTransaction(CreditCardAccount creditAccount) {
         return CreditCardTransaction.builder()
                 .setAmount(
-                        new Amount(
-                                transactionAmount.getCurrency(),
-                                transactionAmount.getAmount()))
+                        new Amount(transactionAmount.getCurrency(), transactionAmount.getAmount()))
                 .setCreditAccount(creditAccount)
                 .setCreditCard(CreditCard.create(getNameOnCard(), getMaskedPan()))
                 .setDate(getValueDate())
