@@ -34,10 +34,21 @@ public abstract class ClusterSafeAgentVersionMigration extends AgentVersionMigra
 
     public abstract String getNewAgentClassName(Provider oldProvider);
 
+    /**
+     * Checks if the credentials request is compatible with the new agent.
+     *
+     * @param request
+     * @return true if the data can be used by the new agent, false otherwise.
+     */
     public abstract boolean isDataMigrated(CredentialsRequest request);
 
     @Override
     public final boolean shouldChangeRequest(CredentialsRequest request) {
+        // Called by the worker command to decide if anything in the migration should run.
+        // If using the old agent, the request will be changed to the new agent if the data is
+        // already migrated.
+        // If using the new agent, the request will be changed by updating the request data to the
+        // new agent's format.
         final Provider provider = request.getProvider();
         return isOldAgent(provider) || isNewAgent(provider);
     }
