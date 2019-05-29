@@ -4,11 +4,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
@@ -26,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
@@ -209,5 +216,28 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                 return LocalDate.of(1970, 1, 1);
             }
         };
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
+        for (Account account : accounts) {
+            if (account.getType() == AccountTypes.CHECKING
+                    || account.getType() == AccountTypes.SAVINGS) {
+                List<TransferDestinationPattern> destinations = new ArrayList<>();
+                destinations.add(
+                        TransferDestinationPattern.createForMultiMatch(
+                                AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
+                destinations.add(
+                        TransferDestinationPattern.createForMultiMatch(
+                                AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
+                destinations.add(
+                        TransferDestinationPattern.createForMultiMatch(
+                                AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+                transferDestinations.put(account, destinations);
+            }
+        }
+
+        return new FetchTransferDestinationsResponse(transferDestinations);
     }
 }
