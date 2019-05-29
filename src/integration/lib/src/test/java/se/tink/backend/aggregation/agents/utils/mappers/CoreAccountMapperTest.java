@@ -12,10 +12,7 @@ public class CoreAccountMapperTest {
     public void allFieldsMappedToAggregation() {
         CoreAccountMapper.toAggregationTypeMap
                 .addMappings(
-                        mapper ->
-                                mapper.skip(
-                                        se.tink.backend.agents.rpc.Account
-                                                ::setExactBalance))
+                        mapper -> mapper.skip(se.tink.backend.agents.rpc.Account::setExactBalance))
                 .addMappings(
                         mapper ->
                                 mapper.skip(
