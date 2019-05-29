@@ -38,8 +38,6 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
         validateRsaKeyPairUsedLaterInFilter();
         try {
             // Here we need to use the token got from installation
-            BunqAuthenticator.updateClientAuthToken(
-                    sessionStorage, persistentStorage, temporaryStorage);
             CreateSessionUserResponse createSessionUserResponse =
                     apiClient.createSessionUser(
                             sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY));
