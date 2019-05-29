@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 
 public class AbstractResponse {
     @JsonProperty("MagicKey")
@@ -34,5 +36,10 @@ public class AbstractResponse {
 
     public void setStatus(StatusEntity status) {
         this.status = status;
+    }
+
+    @JsonIgnore
+    public boolean isStatusOk() {
+        return status.getStatusCode() == 0 && Strings.isNullOrEmpty(status.getStatusText());
     }
 }

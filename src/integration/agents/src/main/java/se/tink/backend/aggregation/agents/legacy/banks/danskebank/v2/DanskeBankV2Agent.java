@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -84,10 +83,12 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferRespon
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -743,11 +744,9 @@ public class DanskeBankV2Agent extends AbstractAgent
 
             String challengeResponse = requestChallengeResponse(loginResponse.getChallenge());
 
-            Preconditions.checkState(
-                    !Strings.isNullOrEmpty(challengeResponse),
-                    "#login-refactoring - Login failed with null/empty challenge response, statusCode %s, statusText %s.",
-                    loginResponse.getStatus().getStatusCode(),
-                    loginResponse.getStatus().getStatusText());
+            if (Strings.isNullOrEmpty(challengeResponse)) {
+                handleNullChallengeResponseForLogin(loginResponse, challengeResponse);
+            }
 
             apiClient.loginConfirmChallenge(loginResponse, challengeResponse);
         }
@@ -798,6 +797,23 @@ public class DanskeBankV2Agent extends AbstractAgent
                                 "#login-refactoring - Login failed with statusCode %s, statusText %s",
                                 statusCode, errorMessage));
         }
+    }
+
+    private void handleNullChallengeResponseForLogin(
+            LoginResponse loginResponse, String challengeResponse)
+            throws SupplementalInfoException {
+
+        // If the login response is OK, then the user should have received the challenge. If the
+        // challenge response is null then it's because the user didn't input anything.
+        if (loginResponse.isStatusOk()) {
+            throw SupplementalInfoError.NO_VALID_CODE.exception();
+        }
+
+        throw new IllegalStateException(
+                String.format(
+                        "#login-refactoring - Login failed with null/empty challenge response, statusCode %s, statusText %s.",
+                        loginResponse.getStatus().getStatusCode(),
+                        loginResponse.getStatus().getStatusText()));
     }
 
     private LoginRequest createLoginRequest() {
