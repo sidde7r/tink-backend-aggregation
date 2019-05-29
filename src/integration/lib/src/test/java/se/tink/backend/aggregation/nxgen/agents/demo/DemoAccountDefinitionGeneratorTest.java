@@ -27,7 +27,8 @@ public class DemoAccountDefinitionGeneratorTest {
         Assert.assertTrue(transactionalAccountAccounts.getAccountId().equals("4950-618754677750"));
         Assert.assertTrue(
                 transactionalAccountAccounts.getAccountName().equals("Checking Account Tink"));
-        Assert.assertTrue(transactionalAccountAccounts.getIdentifier().equals(expectedIdentifier));
+        Assert.assertTrue(
+                transactionalAccountAccounts.getIdentifiers().contains(expectedIdentifier));
     }
 
     @Test
@@ -35,8 +36,13 @@ public class DemoAccountDefinitionGeneratorTest {
         DemoSavingsAccount savingsAccount =
                 DemoAccountDefinitionGenerator.getDemoSavingsAccounts(testUserName, testProvider);
 
+        SwedishIdentifier expectedRecipientAccount = new SwedishIdentifier("4410-551254244625");
+        AccountIdentifier expectedIdentifier =
+                AccountIdentifier.create(URI.create(expectedRecipientAccount.toUriAsString()));
+
         Assert.assertTrue(savingsAccount.getAccountBalance() == 42446.25);
         Assert.assertTrue(savingsAccount.getAccountId().equals("4410-551254244625"));
         Assert.assertTrue(savingsAccount.getAccountName().equals("Savings Account Tink"));
+        Assert.assertTrue(savingsAccount.getIdentifiers().contains(expectedIdentifier));
     }
 }

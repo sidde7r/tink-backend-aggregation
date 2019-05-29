@@ -76,6 +76,11 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
             public double getAccountBalance() {
                 return 385245.33;
             }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                return null;
+            }
         };
     }
 
@@ -143,7 +148,7 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
             }
 
             @Override
-            public AccountIdentifier getIdentifier() {
+            public List<AccountIdentifier> getIdentifiers() {
                 return null;
             }
         };

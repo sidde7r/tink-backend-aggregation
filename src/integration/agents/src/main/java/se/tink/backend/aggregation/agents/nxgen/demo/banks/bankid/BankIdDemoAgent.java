@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
+import com.google.common.collect.Lists;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.NameElement;
 
@@ -73,6 +76,14 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
             @Override
             public double getAccountBalance() {
                 return 385245.33;
+            }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                return Lists.newArrayList(identifier);
             }
         };
     }
@@ -141,8 +152,11 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
             }
 
             @Override
-            public AccountIdentifier getIdentifier() {
-                return null;
+            public List<AccountIdentifier> getIdentifiers() {
+                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                return Lists.newArrayList(identifier);
             }
         };
     }

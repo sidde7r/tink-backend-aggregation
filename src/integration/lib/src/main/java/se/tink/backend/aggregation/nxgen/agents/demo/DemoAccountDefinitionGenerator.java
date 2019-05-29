@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import com.google.common.collect.Lists;
 import java.net.URI;
+import java.util.List;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.libraries.account.AccountIdentifier;
@@ -57,6 +59,14 @@ public class DemoAccountDefinitionGenerator {
             public double getAccountBalance() {
                 return generateDouble(deterministicKey, 7);
             }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                return Lists.newArrayList(identifier);
+            }
         };
     }
 
@@ -80,9 +90,11 @@ public class DemoAccountDefinitionGenerator {
             }
 
             @Override
-            public AccountIdentifier getIdentifier() {
+            public List<AccountIdentifier> getIdentifiers() {
                 SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
-                return AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                return Lists.newArrayList(identifier);
             }
         };
     }

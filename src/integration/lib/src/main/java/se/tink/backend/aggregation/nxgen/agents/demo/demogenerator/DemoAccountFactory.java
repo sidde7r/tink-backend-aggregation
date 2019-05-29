@@ -38,7 +38,7 @@ public class DemoAccountFactory {
                             .setName(
                                     catalog.getString(
                                             transactionAccountDefinition.getAccountName()))
-                            .setBankIdentifier(transactionAccountDefinition.getAccountId())
+                            .addIdentifiers(transactionAccountDefinition.getIdentifiers())
                             .build());
         }
 
@@ -54,7 +54,7 @@ public class DemoAccountFactory {
                                                     savingsAccountDefinition.getAccountBalance())))
                             .setAccountNumber(savingsAccountDefinition.getAccountId())
                             .setName(catalog.getString(savingsAccountDefinition.getAccountName()))
-                            .setBankIdentifier(savingsAccountDefinition.getAccountId())
+                            .addIdentifiers(savingsAccountDefinition.getIdentifiers())
                             .build());
         }
 
