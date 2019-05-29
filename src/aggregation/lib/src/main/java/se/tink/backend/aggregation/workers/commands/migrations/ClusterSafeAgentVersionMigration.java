@@ -4,8 +4,12 @@ import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /**
- * Cluster safe version of {@link AgentVersionMigration}. Ensures data safety in a multi-instance
- * environment by doing the following that AgentVersionMigration does not:
+ * Cluster safe version of {@link AgentVersionMigration}. This class should <strong>always</strong>
+ * be used in favor of the non-cluster safe {@link AgentVersionMigration} unless you
+ * <strong>explicitly need</strong> to control {@link #shouldChangeRequest(CredentialsRequest)},
+ * {@link #changeRequest(CredentialsRequest)} or {@link #shouldMigrateData(CredentialsRequest)}.
+ * This class ensures data safety in a multi-instance environment by doing the following that {@link
+ * AgentVersionMigration} does not:
  *
  * <ul>
  *   <li>Triggering migration only on instances where the provider configuration has been updated to
