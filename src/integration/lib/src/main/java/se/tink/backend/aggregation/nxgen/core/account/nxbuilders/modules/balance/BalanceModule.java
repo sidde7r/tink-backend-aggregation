@@ -47,10 +47,8 @@ public final class BalanceModule {
     }
 
     public Optional<Amount> getAvailableCredit() {
-        return Optional.ofNullable(
-                new Amount(
-                        exactAvailableCredit.getCurrencyCode(),
-                        exactAvailableCredit.getDoubleValue()));
+        return Optional.ofNullable(exactAvailableCredit)
+                .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()));
     }
 
     public Optional<ExactCurrencyAmount> getExactAvaliableCredit() {
