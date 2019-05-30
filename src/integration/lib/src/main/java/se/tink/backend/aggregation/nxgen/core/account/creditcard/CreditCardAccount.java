@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.creditcard;
 import com.google.common.base.Preconditions;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardDetailsStep;
@@ -48,9 +49,17 @@ public class CreditCardAccount extends Account {
     @Deprecated
     public static Builder<?, ?> builder(
             String uniqueIdentifier, Amount balance, Amount availableCredit) {
-        return builder(uniqueIdentifier).setBalance(balance).setAvailableCredit(availableCredit);
+        return builder(uniqueIdentifier)
+                .setExactBalance(ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()))
+                .setAvailableCredit(availableCredit);
     }
 
+    public static Builder<?, ?> builder(
+            String uniqueIdentifier, ExactCurrencyAmount balance, Amount availableCredit) {
+        return builder(uniqueIdentifier)
+                .setExactBalance(balance)
+                .setAvailableCredit(availableCredit);
+    }
     /**
      * Variation of {@link #builderFromFullNumber(String, String)} for when there is no suitable
      * card alias.
