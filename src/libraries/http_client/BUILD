@@ -24,7 +24,7 @@ junit_test(
         ":http_client",
         "//src/libraries/request_tracing",
         "@maven//:ch_qos_logback_logback_classic",
-        "@maven//:com_github_tomakehurst_wiremock",
+        "@maven//:com_github_tomakehurst_wiremock_standalone",
         "@maven//:com_sun_jersey_jersey_client",
         "@maven//:com_sun_jersey_jersey_core",
         "@maven//:com_sun_jersey_jersey_server",

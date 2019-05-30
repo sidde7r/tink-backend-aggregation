@@ -28,7 +28,7 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/jersey_utils",
-        "@maven//:com_github_tomakehurst_wiremock",
+        "@maven//:com_github_tomakehurst_wiremock_standalone",
         "@maven//:com_google_guava_guava",
         "@maven//:com_sun_jersey_jersey_client",
         "@maven//:com_sun_jersey_jersey_core",

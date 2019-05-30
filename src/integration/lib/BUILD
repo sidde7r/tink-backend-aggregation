@@ -143,7 +143,7 @@ junit_test(
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
-        "@maven//:com_github_tomakehurst_wiremock",
+        "@maven//:com_github_tomakehurst_wiremock_standalone",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_http_client_google_http_client",
         "@maven//:com_google_inject_guice",

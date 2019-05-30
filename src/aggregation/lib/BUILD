@@ -144,7 +144,7 @@ junit_test(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:io_vavr",
-        "@maven//:com_github_tomakehurst_wiremock",
+        "@maven//:com_github_tomakehurst_wiremock_standalone",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_http_client_google_http_client",
         "@maven//:com_google_inject_guice",

@@ -89,7 +89,7 @@ maven_install(
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.7",
         "com.github.detro.ghostdriver:phantomjsdriver:1.0.3",
         "com.github.rholder:guava-retrying:2.0.0",
-        "com.github.tomakehurst:wiremock:2.1.12",
+        "com.github.tomakehurst:wiremock-standalone:2.1.12",
         "com.google.code.findbugs:jsr305:3.0.0",
         "com.google.code.gson:gson:2.2.2",
         "com.google.errorprone:error_prone_annotations:2.0.11",
