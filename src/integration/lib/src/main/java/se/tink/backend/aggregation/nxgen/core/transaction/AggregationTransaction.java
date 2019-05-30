@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -21,21 +22,35 @@ import se.tink.libraries.user.rpc.User;
 public abstract class AggregationTransaction {
     private static final TypeReference<HashMap<String, String>> HASH_MAP_REFERENCE =
             new TypeReference<HashMap<String, String>>() {};
-    private final Amount amount;
+    private final ExactCurrencyAmount amount;
     private final String description;
     private final Date date;
     private final String rawDetails;
 
+    @Deprecated
     protected AggregationTransaction(
             Amount amount, Date date, String description, String rawDetails) {
-        this.amount = amount;
+        this.amount = ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
         this.date = date;
         this.description = description;
         this.rawDetails = rawDetails;
     }
 
+    protected AggregationTransaction(
+            ExactCurrencyAmount amount, Date date, String description, String rawDetails) {
+        this.amount = ExactCurrencyAmount.of(amount);
+        this.date = date;
+        this.description = description;
+        this.rawDetails = rawDetails;
+    }
+
+    @Deprecated
     public Amount getAmount() {
-        return amount;
+        return new Amount(amount.getCurrencyCode(), amount.getDoubleValue());
+    }
+
+    public ExactCurrencyAmount getExactAmount() {
+        return ExactCurrencyAmount.of(amount);
     }
 
     public String getDescription() {
@@ -57,7 +72,7 @@ public abstract class AggregationTransaction {
     public Transaction toSystemTransaction(User user) {
         Transaction transaction = new Transaction();
 
-        transaction.setAmount(getAmount().getValue());
+        transaction.setAmount(getExactAmount().getDoubleValue());
         transaction.setDescription(getDescription());
         transaction.setDate(getDate());
         transaction.setType(getType());
@@ -90,7 +105,7 @@ public abstract class AggregationTransaction {
         if (map == null) {
             return rawDetails;
         }
-        map.put("currency", amount.getCurrency());
+        map.put("currency", amount.getCurrencyCode());
         return SerializationUtils.serializeToString(map);
     }
 
@@ -100,17 +115,12 @@ public abstract class AggregationTransaction {
         private Date date;
         private String rawDetails;
 
-        public Builder setAmount(Amount amount) {
-            this.amount = amount;
-            return this;
-        }
-
         Amount getAmount() {
             return Preconditions.checkNotNull(amount);
         }
 
-        public Builder setDescription(String description) {
-            this.description = description;
+        public Builder setAmount(Amount amount) {
+            this.amount = amount;
             return this;
         }
 
@@ -118,13 +128,9 @@ public abstract class AggregationTransaction {
             return description;
         }
 
-        public Builder setDate(Date date) {
-            this.date = date;
+        public Builder setDescription(String description) {
+            this.description = description;
             return this;
-        }
-
-        public Builder setDate(LocalDate date) {
-            return setDate(DateUtils.toJavaUtilDate(date));
         }
 
         public Builder setDateTime(ZonedDateTime dateTime) {
@@ -139,6 +145,19 @@ public abstract class AggregationTransaction {
             return date != null ? DateUtils.flattenTime(date) : null;
         }
 
+        public Builder setDate(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public Builder setDate(LocalDate date) {
+            return setDate(DateUtils.toJavaUtilDate(date));
+        }
+
+        String getRawDetails() {
+            return rawDetails;
+        }
+
         public Builder setRawDetails(Object rawDetails) {
             if (rawDetails != null) {
                 if (rawDetails instanceof String) {
@@ -148,10 +167,6 @@ public abstract class AggregationTransaction {
                 }
             }
             return this;
-        }
-
-        String getRawDetails() {
-            return rawDetails;
         }
 
         public abstract AggregationTransaction build();
