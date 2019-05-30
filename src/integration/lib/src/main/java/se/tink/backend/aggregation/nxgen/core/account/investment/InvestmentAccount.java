@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -39,9 +40,9 @@ public class InvestmentAccount extends Account {
     }
 
     public List<Portfolio> getPortfolios() {
-        return this.portfolios != null
-                ? ImmutableList.copyOf(this.portfolios)
-                : Collections.emptyList();
+        return Optional.ofNullable(this.portfolios)
+                .<List<Portfolio>>map(p -> ImmutableList.copyOf(p))
+                .orElseGet(Collections::emptyList);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class InvestmentAccount extends Account {
         }
 
         public Builder<A, T> setCashBalance(ExactCurrencyAmount cashBalance) {
-            this.cashBalance = cashBalance;
+            this.cashBalance = ExactCurrencyAmount.of(cashBalance);
             return this;
         }
 
@@ -93,14 +94,14 @@ public class InvestmentAccount extends Account {
         @Deprecated
         public Amount getBalance() {
             if (cashBalance != null) {
-                Amount retVal =
-                        new Amount(cashBalance.getCurrencyCode(), cashBalance.getDoubleValue());
+                BigDecimal retVal = cashBalance.getExactValue();
                 for (Portfolio portfolio : portfolios) {
-                    retVal = retVal.add(portfolio.getTotalValue());
+                    retVal = retVal.add(BigDecimal.valueOf(portfolio.getTotalValue()));
                 }
-                return retVal;
+                return new Amount(cashBalance.getCurrencyCode(), retVal.doubleValue());
             } else {
-                return super.getBalance();
+                ExactCurrencyAmount exactBalance = super.getExactBalance();
+                return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
             }
         }
 
