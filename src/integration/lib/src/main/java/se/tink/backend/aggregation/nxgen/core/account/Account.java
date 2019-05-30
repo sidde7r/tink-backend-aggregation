@@ -84,7 +84,8 @@ public abstract class Account {
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.exactBalance = builder.getExactBalance();
-        this.exactAvailableCredit = builder.getExactAvailableCredit();
+        this.exactAvailableCredit =
+                Optional.ofNullable(builder.getExactAvailableCredit()).orElse(null);
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
         // '-').
         Preconditions.checkState(
@@ -487,14 +488,19 @@ public abstract class Account {
                     .orElseThrow(NullPointerException::new);
         }
 
-        public ExactCurrencyAmount getExactBalance() {
-            return Optional.ofNullable(thisObj.exactBalance).orElseThrow(NullPointerException::new);
-        }
-
         @Deprecated
         public T setBalance(Amount balance) {
             thisObj.exactBalance =
                     ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency());
+            return self();
+        }
+
+        public ExactCurrencyAmount getExactBalance() {
+            return Optional.ofNullable(thisObj.exactBalance).orElseThrow(NullPointerException::new);
+        }
+
+        public T setExactBalance(ExactCurrencyAmount exactBalance) {
+            this.exactBalance = exactBalance;
             return self();
         }
 
@@ -579,12 +585,7 @@ public abstract class Account {
         }
 
         public T setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
-            this.exactAvailableCredit = exactAvailableCredit;
-            return self();
-        }
-
-        public T setExactBalance(ExactCurrencyAmount exactBalance) {
-            this.exactBalance = exactBalance;
+            this.exactAvailableCredit = ExactCurrencyAmount.of(exactAvailableCredit);
             return self();
         }
     }

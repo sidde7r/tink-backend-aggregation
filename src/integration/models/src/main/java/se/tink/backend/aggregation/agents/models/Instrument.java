@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.util.Optional;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {
@@ -37,8 +37,8 @@ public class Instrument {
     }
 
     @JsonIgnore
-    private static BigDecimal getAmountValue(ExactCurrencyAmount amount) {
-        return Optional.ofNullable(amount).map(ExactCurrencyAmount::getExactValue).orElse(null);
+    private static Double getAmountValueFromExactAmount(ExactCurrencyAmount amount) {
+        return Optional.ofNullable(amount).map(ExactCurrencyAmount::getDoubleValue).orElse(null);
     }
 
     public String getUniqueIdentifier() {
@@ -158,7 +158,8 @@ public class Instrument {
 
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
-        this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice).doubleValue();
+        this.averageAcquisitionPrice =
+                getAmountValueFromExactAmount(averageAcquisitionPrice).doubleValue();
     }
 
     @Deprecated
@@ -169,7 +170,7 @@ public class Instrument {
 
     @JsonIgnore
     public void setMarketValueFromAmount(ExactCurrencyAmount marketValue) {
-        this.marketValue = getAmountValue(marketValue).doubleValue();
+        this.marketValue = getAmountValueFromExactAmount(marketValue).doubleValue();
     }
 
     @Deprecated
@@ -180,7 +181,7 @@ public class Instrument {
 
     @JsonIgnore
     public void setPriceFromAmount(ExactCurrencyAmount price) {
-        this.price = getAmountValue(price).doubleValue();
+        this.price = getAmountValueFromExactAmount(price).doubleValue();
     }
 
     @Deprecated
@@ -191,7 +192,7 @@ public class Instrument {
 
     @JsonIgnore
     public void setProfitFromAmount(ExactCurrencyAmount profit) {
-        this.profit = getAmountValue(profit).doubleValue();
+        this.profit = getAmountValueFromExactAmount(profit).doubleValue();
     }
 
     public enum Type {
