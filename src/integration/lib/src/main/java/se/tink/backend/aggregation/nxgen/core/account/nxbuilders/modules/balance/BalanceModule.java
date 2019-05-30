@@ -87,6 +87,7 @@ public final class BalanceModule {
             return this;
         }
 
+        @Deprecated
         @Override
         public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
