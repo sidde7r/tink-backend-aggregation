@@ -29,6 +29,10 @@ public final class BalanceModule {
         return builder().withBalance(amount).build();
     }
 
+    public static BalanceModule of(ExactCurrencyAmount amount) {
+        return builder().withBalance(amount).build();
+    }
+
     @Deprecated
     public Amount getBalance() {
         return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
