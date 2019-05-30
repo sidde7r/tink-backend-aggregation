@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.math.BigDecimal;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.libraries.amount.Amount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,27 +29,17 @@ public class Instrument {
     private String ticker;
     private Type type;
     private String rawType;
-    //    private ExactCurrencyAmount exactCurrencyAmount;
 
+    @Deprecated
     @JsonIgnore
     private static Double getAmountValue(Amount amount) {
         return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
     }
 
-    //    @JsonIgnore
-    //    private static ExactCurrencyAmount getExactCurrencyAmount(Amount amount) {
-    //        return Optional.ofNullable(amount)
-    //                .map(a -> ExactCurrencyAmount.of(a.getValue(), a.getCurrency()))
-    //                .orElse(null);
-    //    }
-
-    //    public ExactCurrencyAmount getExactCurrencyAmount() {
-    //        return exactCurrencyAmount;
-    //    }
-
-    //    public void setExactCurrencyAmount(ExactCurrencyAmount exactCurrencyAmount) {
-    //        this.exactCurrencyAmount = exactCurrencyAmount;
-    //    }
+    @JsonIgnore
+    private static BigDecimal getAmountValue(ExactCurrencyAmount amount) {
+        return Optional.ofNullable(amount).map(ExactCurrencyAmount::getExactValue).orElse(null);
+    }
 
     public String getUniqueIdentifier() {
         return uniqueIdentifier;
@@ -77,8 +69,13 @@ public class Instrument {
         return averageAcquisitionPrice;
     }
 
+    @Deprecated
     public void setAverageAcquisitionPrice(Double averageAcquisitionPrice) {
         this.averageAcquisitionPrice = averageAcquisitionPrice;
+    }
+
+    public void setAverageAcquisitionPrice(BigDecimal averageAcquisitionPrice) {
+        this.averageAcquisitionPrice = averageAcquisitionPrice.doubleValue();
     }
 
     public String getCurrency() {
@@ -153,24 +150,48 @@ public class Instrument {
         this.rawType = rawType;
     }
 
+    @Deprecated
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(Amount averageAcquisitionPrice) {
         this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice);
     }
 
     @JsonIgnore
+    public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
+        this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice).doubleValue();
+    }
+
+    @Deprecated
+    @JsonIgnore
     public void setMarketValueFromAmount(Amount marketValue) {
         this.marketValue = getAmountValue(marketValue);
     }
 
+    @JsonIgnore
+    public void setMarketValueFromAmount(ExactCurrencyAmount marketValue) {
+        this.marketValue = getAmountValue(marketValue).doubleValue();
+    }
+
+    @Deprecated
     @JsonIgnore
     public void setPriceFromAmount(Amount price) {
         this.price = getAmountValue(price);
     }
 
     @JsonIgnore
+    public void setPriceFromAmount(ExactCurrencyAmount price) {
+        this.price = getAmountValue(price).doubleValue();
+    }
+
+    @Deprecated
+    @JsonIgnore
     public void setProfitFromAmount(Amount profit) {
         this.profit = getAmountValue(profit);
+    }
+
+    @JsonIgnore
+    public void setProfitFromAmount(ExactCurrencyAmount profit) {
+        this.profit = getAmountValue(profit).doubleValue();
     }
 
     public enum Type {

@@ -488,8 +488,7 @@ public abstract class Account {
         }
 
         public ExactCurrencyAmount getExactBalance() {
-            return Optional.ofNullable(thisObj.exactBalance)
-                    .orElseThrow(NullPointerException::new);
+            return Optional.ofNullable(thisObj.exactBalance).orElseThrow(NullPointerException::new);
         }
 
         @Deprecated
