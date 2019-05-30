@@ -24,10 +24,12 @@ public final class BalanceModule {
         return new Builder();
     }
 
+    @Deprecated
     public static BalanceModule of(Amount amount) {
         return builder().withBalance(amount).build();
     }
 
+    @Deprecated
     public Amount getBalance() {
         return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
     }
