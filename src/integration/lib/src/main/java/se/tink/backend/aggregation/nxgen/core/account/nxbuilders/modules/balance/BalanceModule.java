@@ -10,16 +10,12 @@ import se.tink.libraries.amount.Amount;
 
 public final class BalanceModule {
 
-    private final Amount balance;
     private final ExactCurrencyAmount exactBalance;
     private final Double interestRate;
-    private final Amount availableCredit;
     private final ExactCurrencyAmount exactAvailableCredit;
 
     private BalanceModule(Builder builder) {
-        this.balance = builder.balance;
         this.interestRate = builder.interestRate;
-        this.availableCredit = builder.availableCredit;
         this.exactAvailableCredit = builder.exactAvailableCredit;
         this.exactBalance = builder.exactBalance;
     }
@@ -33,7 +29,7 @@ public final class BalanceModule {
     }
 
     public Amount getBalance() {
-        return new Amount(balance.getCurrency(), balance.getValue());
+        return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
     }
 
     public ExactCurrencyAmount getExactBalance() {
@@ -45,7 +41,10 @@ public final class BalanceModule {
     }
 
     public Optional<Amount> getAvailableCredit() {
-        return Optional.ofNullable(availableCredit);
+        return Optional.ofNullable(
+                new Amount(
+                        exactAvailableCredit.getCurrencyCode(),
+                        exactAvailableCredit.getDoubleValue()));
     }
 
     public Optional<ExactCurrencyAmount> getExactAvaliableCredit() {
@@ -55,9 +54,7 @@ public final class BalanceModule {
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
 
         private Double interestRate;
-        private Amount availableCredit;
         private ExactCurrencyAmount exactAvailableCredit;
-        private Amount balance;
         private ExactCurrencyAmount exactBalance;
 
         @Override
@@ -71,8 +68,6 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep setAvailableCredit(@Nonnull Amount availableCredit) {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
-            this.availableCredit =
-                    new Amount(availableCredit.getCurrency(), availableCredit.getValue());
             this.exactAvailableCredit =
                     ExactCurrencyAmount.of(
                             availableCredit.getValue(), availableCredit.getCurrency());
@@ -82,8 +77,6 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep setAvailableCredit(@Nonnull ExactCurrencyAmount availableCredit) {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
-            this.availableCredit =
-                    new Amount(availableCredit.getCurrencyCode(), availableCredit.getDoubleValue());
             this.exactAvailableCredit = ExactCurrencyAmount.of(availableCredit);
             return this;
         }
@@ -91,7 +84,6 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.balance = new Amount(balance.getCurrency(), balance.getValue());
             this.exactBalance =
                     ExactCurrencyAmount.of(balance.doubleValue(), balance.getCurrency());
             return this;
@@ -100,7 +92,6 @@ public final class BalanceModule {
         @Override
         public BalanceBuilderStep withBalance(@Nonnull ExactCurrencyAmount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.balance = new Amount(balance.getCurrencyCode(), balance.getDoubleValue());
             this.exactBalance = ExactCurrencyAmount.of(balance);
             return this;
         }
