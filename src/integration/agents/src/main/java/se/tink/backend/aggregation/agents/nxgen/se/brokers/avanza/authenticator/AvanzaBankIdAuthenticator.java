@@ -113,6 +113,10 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                 throw BankIdError.CANCELLED.exception();
             }
 
+            if (errorResponse.isBankIdTimeout()) {
+                throw BankIdError.TIMEOUT.exception();
+            }
+
             LOGGER.error(
                     "Avanza BankID poll failed with error message: {}", errorResponse.getMessage());
         }
