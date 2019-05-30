@@ -1,12 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.account;
 
-import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
+
+import java.util.List;
+import java.util.Optional;
 
 @JsonObject
 public class AccountEntity {
@@ -21,14 +25,20 @@ public class AccountEntity {
     private String resourceId;
 
     public TransactionalAccount toTinkModel() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getBalance())
-                .setAlias(name)
-                .addAccountIdentifier(new IbanIdentifier(iban))
-                .addHolderName(getOwner())
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(bban)
+                                .withAccountNumber(bban)
+                                .withAccountName(getOwner())
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(getBalance()))
                 .setApiIdentifier(resourceId)
+                .addHolderName(getOwner())
                 .build();
     }
 
