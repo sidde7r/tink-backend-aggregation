@@ -68,6 +68,7 @@ public class InvestmentAccount extends Account {
             return self();
         }
 
+        @Deprecated
         Amount getCashBalance() {
             return new Amount(cashBalance.getCurrencyCode(), cashBalance.getDoubleValue());
         }
@@ -82,6 +83,10 @@ public class InvestmentAccount extends Account {
         public Builder<A, T> setCashBalance(ExactCurrencyAmount cashBalance) {
             this.cashBalance = cashBalance;
             return this;
+        }
+
+        ExactCurrencyAmount getExactCashBalance() {
+            return ExactCurrencyAmount.of(cashBalance);
         }
 
         @Override
@@ -105,13 +110,6 @@ public class InvestmentAccount extends Account {
         public Builder<A, T> setBalance(Amount balance) {
             return super.setExactBalance(
                     ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()));
-        }
-
-        /** @deprecated Use {@link #setCashBalance(ExactCurrencyAmount)} instead */
-//        @Override
-        @Deprecated
-        public Builder<A, T> setBalance(ExactCurrencyAmount balance) {
-            return super.setExactBalance(ExactCurrencyAmount.of(balance));
         }
 
         @Override

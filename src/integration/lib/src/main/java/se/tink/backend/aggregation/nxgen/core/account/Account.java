@@ -119,164 +119,7 @@ public abstract class Account {
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
     }
 
-    /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
-     *     CreditCardAccount#nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
-    public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
-            implements BuildStep<A, B> {
-
-        private String uniqueIdentifier;
-        private String accountNumber;
-        private String apiIdentifier;
-        private Amount balance;
-        private String alias;
-        private String productName;
-
-        private final Collection<String> holderNames = Lists.newArrayList();
-        private final Set<AccountIdentifier> identifiers = new HashSet<>();
-        private final TemporaryStorage temporaryStorage = new TemporaryStorage();
-        private final Set<AccountFlag> accountFlags = new HashSet<>();
-
-        protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(uniqueIdentifier),
-                    "UniqueIdentifier must no be null or empty.");
-
-            uniqueIdentifier = StringUtils.removeNonAlphaNumeric(uniqueIdentifier);
-
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(uniqueIdentifier),
-                    "UniqueIdentifier was empty after sanitation.");
-
-            this.uniqueIdentifier = uniqueIdentifier;
-        }
-
-        protected final void applyAccountNumber(@Nonnull String accountNumber) {
-            Preconditions.checkArgument(
-                    !Strings.isNullOrEmpty(accountNumber),
-                    "AccountNumber must not be null or empty.");
-
-            this.accountNumber = accountNumber;
-        }
-
-        protected final void applyBalance(@Nonnull Amount balance) {
-            Preconditions.checkNotNull(balance, "Balance must not be null.");
-
-            this.balance = balance;
-        }
-
-        protected final void applyAlias(String alias) {
-            this.alias = alias;
-        }
-
-        @Override
-        public final B addAccountIdentifier(@Nonnull AccountIdentifier identifier) {
-            Preconditions.checkNotNull(identifier, "AccountIdentifier must not be null.");
-
-            if (identifiers.add(identifier)) {
-                return buildStep();
-            }
-
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Identifier %s is already present in the set.", identifier.getType()));
-        }
-
-        @Override
-        public final B setApiIdentifier(@Nonnull String identifier) {
-            this.apiIdentifier = identifier;
-            return buildStep();
-        }
-
-        @Override
-        public final B setProductName(@Nonnull String productName) {
-            this.productName = productName;
-            return buildStep();
-        }
-
-        @Override
-        public final B addHolderName(@Nonnull String holderName) {
-            this.holderNames.add(holderName);
-            return buildStep();
-        }
-
-        @Override
-        public final B addAccountFlags(@Nonnull AccountFlag... accountFlags) {
-            this.accountFlags.addAll(Arrays.asList(accountFlags));
-            return buildStep();
-        }
-
-        @Override
-        public final <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value) {
-            this.temporaryStorage.put(key, value);
-            return buildStep();
-        }
-
-        @Deprecated
-        protected abstract B buildStep();
-
-        @Deprecated
-        String getUniqueIdentifier() {
-            return uniqueIdentifier;
-        }
-
-        @Deprecated
-        String getAccountNumber() {
-            return accountNumber;
-        }
-
-        @Deprecated
-        String getApiIdentifier() {
-            return apiIdentifier;
-        }
-
-        @Deprecated
-        Amount getBalance() {
-            return balance;
-        }
-
-        @Deprecated
-        String getAlias() {
-            return alias;
-        }
-
-        @Deprecated
-        String getProductName() {
-            return productName;
-        }
-
-        @Deprecated
-        Collection<String> getHolderNames() {
-            return holderNames;
-        }
-
-        @Deprecated
-        Set<AccountIdentifier> getIdentifiers() {
-            return identifiers;
-        }
-
-        @Deprecated
-        TemporaryStorage getTemporaryStorage() {
-            return temporaryStorage;
-        }
-
-        @Deprecated
-        Set<AccountFlag> getAccountFlags() {
-            return accountFlags;
-        }
-    }
-
-    /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
-     *     CreditCardAccount#nxBuilder()} instead.
-     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
-     *     project
-     */
-    @Deprecated
+   @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
         switch (type) {
@@ -445,6 +288,155 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+    @Deprecated
+    public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
+            implements BuildStep<A, B> {
+
+        private final Collection<String> holderNames = Lists.newArrayList();
+        private final Set<AccountIdentifier> identifiers = new HashSet<>();
+        private final TemporaryStorage temporaryStorage = new TemporaryStorage();
+        private final Set<AccountFlag> accountFlags = new HashSet<>();
+        private String uniqueIdentifier;
+        private String accountNumber;
+        private String apiIdentifier;
+        private ExactCurrencyAmount exactBalance;
+        private String alias;
+        private String productName;
+
+        protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "UniqueIdentifier must no be null or empty.");
+
+            uniqueIdentifier = StringUtils.removeNonAlphaNumeric(uniqueIdentifier);
+
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "UniqueIdentifier was empty after sanitation.");
+
+            this.uniqueIdentifier = uniqueIdentifier;
+        }
+
+        protected final void applyAccountNumber(@Nonnull String accountNumber) {
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(accountNumber),
+                    "AccountNumber must not be null or empty.");
+
+            this.accountNumber = accountNumber;
+        }
+
+        @Deprecated
+        protected final void applyBalance(@Nonnull Amount balance) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+
+            this.exactBalance = ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency());
+        }
+
+        protected final void applyBalance(@Nonnull ExactCurrencyAmount balance) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+            this.exactBalance = balance;
+        }
+
+        protected final void applyAlias(String alias) {
+            this.alias = alias;
+        }
+
+        @Override
+        public final B addAccountIdentifier(@Nonnull AccountIdentifier identifier) {
+            Preconditions.checkNotNull(identifier, "AccountIdentifier must not be null.");
+
+            if (identifiers.add(identifier)) {
+                return buildStep();
+            }
+
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Identifier %s is already present in the set.", identifier.getType()));
+        }
+
+        @Override
+        public final B setApiIdentifier(@Nonnull String identifier) {
+            this.apiIdentifier = identifier;
+            return buildStep();
+        }
+
+        @Override
+        public final B setProductName(@Nonnull String productName) {
+            this.productName = productName;
+            return buildStep();
+        }
+
+        @Override
+        public final B addHolderName(@Nonnull String holderName) {
+            this.holderNames.add(holderName);
+            return buildStep();
+        }
+
+        @Override
+        public final B addAccountFlags(@Nonnull AccountFlag... accountFlags) {
+            this.accountFlags.addAll(Arrays.asList(accountFlags));
+            return buildStep();
+        }
+
+        @Override
+        public final <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value) {
+            this.temporaryStorage.put(key, value);
+            return buildStep();
+        }
+
+        protected abstract B buildStep();
+
+        String getUniqueIdentifier() {
+            return uniqueIdentifier;
+        }
+
+        String getAccountNumber() {
+            return accountNumber;
+        }
+
+        String getApiIdentifier() {
+            return apiIdentifier;
+        }
+
+        @Deprecated
+        Amount getBalance() {
+            return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
+        }
+
+        ExactCurrencyAmount getExactBalance() {
+            return exactBalance;
+        }
+
+        String getAlias() {
+            return alias;
+        }
+
+        String getProductName() {
+            return productName;
+        }
+
+        Collection<String> getHolderNames() {
+            return holderNames;
+        }
+
+        Set<AccountIdentifier> getIdentifiers() {
+            return identifiers;
+        }
+
+        TemporaryStorage getTemporaryStorage() {
+            return temporaryStorage;
+        }
+
+        Set<AccountFlag> getAccountFlags() {
+            return accountFlags;
+        }
+    }
+
+    // This will be removed as part of the improved step builder + agent builder refactoring project
+
+    /** @deprecated Use StepBuilder instead */
+    @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();
@@ -488,12 +480,19 @@ public abstract class Account {
             return self();
         }
 
+        @Deprecated
         public Amount getBalance() {
             return Optional.ofNullable(thisObj.exactBalance)
                     .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
                     .orElseThrow(NullPointerException::new);
         }
 
+        public ExactCurrencyAmount getExactBalance() {
+            return Optional.ofNullable(thisObj.exactBalance)
+                    .orElseThrow(NullPointerException::new);
+        }
+
+        @Deprecated
         public T setBalance(Amount balance) {
             thisObj.exactBalance =
                     ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency());
@@ -583,10 +582,6 @@ public abstract class Account {
         public T setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
             this.exactAvailableCredit = exactAvailableCredit;
             return self();
-        }
-
-        public ExactCurrencyAmount getExactBalance() {
-            return exactBalance;
         }
 
         public T setExactBalance(ExactCurrencyAmount exactBalance) {
