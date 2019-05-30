@@ -180,5 +180,6 @@ public class AvanzaConstants {
     public static class AuthError {
         public static final String USER_CANCEL = "user_cancel";
         public static final String CANCELLED = "cancelled";
+        public static final String TIMEOUT = "expired_transaction";
     }
 }

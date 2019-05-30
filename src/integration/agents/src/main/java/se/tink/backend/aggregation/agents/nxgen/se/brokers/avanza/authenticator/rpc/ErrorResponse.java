@@ -21,6 +21,13 @@ public class ErrorResponse {
                 || lowerCaseMessage.contains(AvanzaConstants.AuthError.CANCELLED);
     }
 
+    @JsonIgnore
+    public boolean isBankIdTimeout() {
+        String lowerCaseMessage = Optional.ofNullable(message).orElse("").toLowerCase();
+
+        return lowerCaseMessage.contains(AvanzaConstants.AuthError.TIMEOUT);
+    }
+
     public int getStatusCode() {
         return statusCode;
     }
