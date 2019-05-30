@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.libraries.amount.Amount;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("ConstantConditions")
 public class BalanceModuleTest {
@@ -36,10 +35,15 @@ public class BalanceModuleTest {
         assertEquals(257.90, balance.getBalance().doubleValue(), 0);
     }
 
-    //    @Test(expected = NullPointerException.class)
-    //    public void nullBalanceOf() {
-    //        BalanceModule.of(null);
-    //    }
+    @Test(expected = NullPointerException.class)
+    public void nullBalanceOf() {
+        BalanceModule.of((Amount) null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullBalanceOf_exactAmount() {
+        BalanceModule.of((ExactCurrencyAmount) null);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void negativeInterest() {
