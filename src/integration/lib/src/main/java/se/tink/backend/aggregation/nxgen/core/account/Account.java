@@ -159,12 +159,25 @@ public abstract class Account {
         return this.accountNumber;
     }
 
+    @Deprecated
     public Amount getBalance() {
-        return exactBalance != null
-                ? new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue())
-                : new Amount(
-                        balanceModule.getExactBalance().getCurrencyCode(),
-                        balanceModule.getExactBalance().getDoubleValue());
+        return Optional.ofNullable(exactBalance)
+                .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()))
+                .orElseGet(
+                        () ->
+                                new Amount(
+                                        balanceModule.getExactBalance().getCurrencyCode(),
+                                        balanceModule.getExactBalance().getDoubleValue()));
+    }
+
+    public ExactCurrencyAmount getExactBalance() {
+        return Optional.ofNullable(exactBalance)
+                .map(ExactCurrencyAmount::of)
+                .orElseGet(
+                        () ->
+                                ExactCurrencyAmount.of(
+                                        balanceModule.getExactBalance().getDoubleValue(),
+                                        balanceModule.getExactBalance().getCurrencyCode()));
     }
 
     public BalanceModule getBalanceModule() {
