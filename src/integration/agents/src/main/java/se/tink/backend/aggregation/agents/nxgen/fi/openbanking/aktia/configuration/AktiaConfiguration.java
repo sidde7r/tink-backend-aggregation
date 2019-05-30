@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class AktiaConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
-    @JsonProperty private String consentId;
+    @JsonProperty private String redirectUrl;
 
     public String getClientId() {
         return clientId;
@@ -18,7 +18,7 @@ public class AktiaConfiguration implements ClientConfiguration {
         return clientSecret;
     }
 
-    public String getConsentId() {
-        return consentId;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 }
