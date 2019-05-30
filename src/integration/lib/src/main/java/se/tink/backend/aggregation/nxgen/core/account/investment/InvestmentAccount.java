@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account.investment;
 
 import com.google.common.collect.ImmutableList;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
@@ -51,7 +53,7 @@ public class InvestmentAccount extends Account {
                     A extends InvestmentAccount, T extends InvestmentAccount.Builder<A, T>>
             extends Account.Builder<InvestmentAccount, Builder<A, T>> {
         private List<Portfolio> portfolios;
-        private Amount cashBalance = null;
+        private ExactCurrencyAmount cashBalance = null;
 
         public Builder(String uniqueIdentifier) {
             super(uniqueIdentifier);
@@ -67,18 +69,27 @@ public class InvestmentAccount extends Account {
         }
 
         Amount getCashBalance() {
-            return cashBalance;
+            return new Amount(cashBalance.getCurrencyCode(), cashBalance.getDoubleValue());
         }
 
+        @Deprecated
         public Builder<A, T> setCashBalance(Amount cashBalance) {
+            this.cashBalance =
+                    ExactCurrencyAmount.of(cashBalance.getValue(), cashBalance.getCurrency());
+            return this;
+        }
+
+        public Builder<A, T> setCashBalance(ExactCurrencyAmount cashBalance) {
             this.cashBalance = cashBalance;
             return this;
         }
 
         @Override
+        @Deprecated
         public Amount getBalance() {
             if (cashBalance != null) {
-                Amount retVal = cashBalance;
+                Amount retVal =
+                        new Amount(cashBalance.getCurrencyCode(), cashBalance.getDoubleValue());
                 for (Portfolio portfolio : portfolios) {
                     retVal = retVal.add(portfolio.getTotalValue());
                 }
@@ -92,7 +103,28 @@ public class InvestmentAccount extends Account {
         @Override
         @Deprecated
         public Builder<A, T> setBalance(Amount balance) {
-            return super.setBalance(balance);
+            return super.setExactBalance(
+                    ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()));
+        }
+
+        /** @deprecated Use {@link #setCashBalance(ExactCurrencyAmount)} instead */
+//        @Override
+        @Deprecated
+        public Builder<A, T> setBalance(ExactCurrencyAmount balance) {
+            return super.setExactBalance(ExactCurrencyAmount.of(balance));
+        }
+
+        @Override
+        public ExactCurrencyAmount getExactBalance() {
+            if (cashBalance != null) {
+                BigDecimal retVal = cashBalance.getExactValue();
+                for (Portfolio portfolio : portfolios) {
+                    retVal = retVal.add(BigDecimal.valueOf(portfolio.getTotalValue()));
+                }
+                return ExactCurrencyAmount.of(retVal, cashBalance.getCurrencyCode());
+            } else {
+                return super.getExactBalance();
+            }
         }
     }
 
