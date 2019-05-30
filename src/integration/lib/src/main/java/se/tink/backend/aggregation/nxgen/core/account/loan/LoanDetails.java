@@ -65,17 +65,13 @@ public class LoanDetails {
 
     @Deprecated
     public Amount getAmortized() {
-        if (amortized != null) {
-            return new Amount(amortized.getCurrencyCode(), amortized.getDoubleValue());
-        }
-        return null;
+        return Optional.ofNullable(amortized)
+                .map(a -> new Amount(a.getCurrencyCode(), a.getDoubleValue()))
+                .orElse(null);
     }
 
     public ExactCurrencyAmount getExactAmortized() {
-        if (amortized != null) {
-            return ExactCurrencyAmount.of(amortized);
-        }
-        return null;
+        return Optional.ofNullable(amortized).map(ExactCurrencyAmount::of).orElse(null);
     }
 
     private Double calculateAmortizedValue(LoanAccount account) {
@@ -85,15 +81,16 @@ public class LoanDetails {
 
         if (initialBalance != null) {
             if (!Objects.equals(
-                    initialBalance.getCurrencyCode(), account.getBalance().getCurrency())) {
+                    initialBalance.getCurrencyCode(),
+                    account.getExactBalance().getCurrencyCode())) {
                 log.warn(
                         String.format(
                                 "Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
-                                account.getBalance().getCurrency(),
+                                account.getExactBalance().getCurrencyCode(),
                                 initialBalance.getCurrencyCode()));
             }
 
-            return initialBalance.getDoubleValue() - account.getBalance().getValue();
+            return initialBalance.getDoubleValue() - account.getExactBalance().getDoubleValue();
         }
 
         return null;
@@ -101,25 +98,17 @@ public class LoanDetails {
 
     @Deprecated
     public Amount getMonthlyAmortization() {
-        if (monthlyAmortization != null) {
-            return Optional.ofNullable(monthlyAmortization)
-                    .map(
-                            e ->
-                                    new Amount(
-                                            monthlyAmortization.getCurrencyCode(),
-                                            monthlyAmortization.getDoubleValue()))
-                    .orElse(null);
-        }
-        return null;
+        return Optional.ofNullable(monthlyAmortization)
+                .map(
+                        e ->
+                                new Amount(
+                                        monthlyAmortization.getCurrencyCode(),
+                                        monthlyAmortization.getDoubleValue()))
+                .orElse(null);
     }
 
     public ExactCurrencyAmount getExactMonthlyAmortization() {
-        if (monthlyAmortization != null) {
-            return Optional.ofNullable(monthlyAmortization)
-                    .map(ExactCurrencyAmount::of)
-                    .orElse(null);
-        }
-        return null;
+        return Optional.ofNullable(monthlyAmortization).map(ExactCurrencyAmount::of).orElse(null);
     }
 
     private Double calculateMonthlyAmortizationValue(LoanAccount account) {
@@ -137,14 +126,17 @@ public class LoanDetails {
     }
 
     public Amount getInitialBalance() {
-        if (initialBalance != null) {
-            return new Amount(initialBalance.getCurrencyCode(), initialBalance.getDoubleValue());
-        }
-        return null;
+        return Optional.ofNullable(initialBalance)
+                .map(
+                        i ->
+                                new Amount(
+                                        initialBalance.getCurrencyCode(),
+                                        initialBalance.getDoubleValue()))
+                .orElse(null);
     }
 
     private Double getInitialBalanceValue() {
-        return initialBalance != null ? initialBalance.getDoubleValue() : null;
+        return Optional.ofNullable(initialBalance).map(i -> i.getDoubleValue()).orElse(null);
     }
 
     public Date getInitialDate() {
@@ -172,7 +164,9 @@ public class LoanDetails {
     }
 
     public List<String> getApplicants() {
-        return applicants != null ? ImmutableList.copyOf(applicants) : Collections.emptyList();
+        return Optional.ofNullable(applicants)
+                .<List<String>>map(a -> ImmutableList.copyOf(a))
+                .orElseGet(Collections::emptyList);
     }
 
     public boolean hasCoApplicant() {
@@ -182,7 +176,7 @@ public class LoanDetails {
     public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
         Loan loan = new Loan();
 
-        loan.setBalance(account.getBalance().getValue());
+        loan.setBalance(account.getExactBalance().getDoubleValue());
         loan.setInterest(account.getInterestRate());
         loan.setName(account.getName());
         loan.setLoanNumber(
