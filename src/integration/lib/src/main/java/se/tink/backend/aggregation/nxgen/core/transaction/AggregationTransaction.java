@@ -110,18 +110,31 @@ public abstract class AggregationTransaction {
     }
 
     public abstract static class Builder {
-        private Amount amount;
+        private ExactCurrencyAmount amount;
         private String description;
         private Date date;
         private String rawDetails;
 
+        @Deprecated
         Amount getAmount() {
-            return Preconditions.checkNotNull(amount);
+            Preconditions.checkNotNull(amount);
+            return new Amount(amount.getCurrencyCode(), amount.getDoubleValue());
         }
 
+        @Deprecated
         public Builder setAmount(Amount amount) {
-            this.amount = amount;
+            this.amount = ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency());
             return this;
+        }
+
+        public Builder setAmount(ExactCurrencyAmount amount) {
+            this.amount = ExactCurrencyAmount.of(amount);
+            return this;
+        }
+
+        ExactCurrencyAmount getExactAmount() {
+            Preconditions.checkNotNull(amount);
+            return ExactCurrencyAmount.of(amount);
         }
 
         String getDescription() {
