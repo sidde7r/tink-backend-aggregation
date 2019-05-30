@@ -5,8 +5,8 @@ import java.math.BigInteger;
 import java.util.Objects;
 
 public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
-    private BigDecimal value;
-    private String currencyCode;
+    private final BigDecimal value;
+    private final String currencyCode;
 
     public ExactCurrencyAmount(BigDecimal value, String currencyCode) {
         this.value = value;
