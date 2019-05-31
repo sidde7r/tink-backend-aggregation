@@ -46,7 +46,7 @@ public final class BerlinGroupUtils {
     }
 
     public static String generateSignature(
-        final String input, final String signingKeyPath, final String algorithm) {
+            final String input, final String signingKeyPath, final String algorithm) {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(

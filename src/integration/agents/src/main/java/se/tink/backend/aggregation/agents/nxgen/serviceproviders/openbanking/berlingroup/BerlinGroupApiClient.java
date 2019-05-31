@@ -72,7 +72,11 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     }
 
     protected RequestBuilder getAuthorizeUrlWithCode(
-            final String url, final String state, final String consentId, final String clientId, final String redirectUrl) {
+            final String url,
+            final String state,
+            final String consentId,
+            final String clientId,
+            final String redirectUrl) {
         final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
 
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);

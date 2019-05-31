@@ -34,7 +34,9 @@ public abstract class BerlinGroupAgent<
     private final String clientName;
 
     public BerlinGroupAgent(
-            final CredentialsRequest request, final AgentContext context, final SignatureKeyPair signatureKeyPair) {
+            final CredentialsRequest request,
+            final AgentContext context,
+            final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();

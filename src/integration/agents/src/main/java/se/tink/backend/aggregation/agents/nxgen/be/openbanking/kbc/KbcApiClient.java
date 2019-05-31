@@ -23,7 +23,9 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     private final Credentials credentials;
 
     public KbcApiClient(
-            final TinkHttpClient client, final SessionStorage sessionStorage, final Credentials credentials) {
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final Credentials credentials) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;

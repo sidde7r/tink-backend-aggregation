@@ -13,7 +13,9 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     private final TriodosApiClient apiClient;
 
     public TriodosAgent(
-            final CredentialsRequest request, final AgentContext context, final SignatureKeyPair signatureKeyPair) {
+            final CredentialsRequest request,
+            final AgentContext context,
+            final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new TriodosApiClient(client, sessionStorage);
