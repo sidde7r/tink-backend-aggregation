@@ -20,9 +20,6 @@ public class PermissionsEntity {
     @JsonProperty("can_transfer_to_account")
     private boolean canTransferToAccount;
 
-    @JsonProperty("can_pay_pgbg_from_account")
-    private boolean canPayPgbgFromAccount;
-
     public boolean isCanView() {
         return canView;
     }
@@ -41,9 +38,5 @@ public class PermissionsEntity {
 
     public boolean isCanTransferToAccount() {
         return canTransferToAccount;
-    }
-
-    public boolean isCanPayPgbgFromAccount() {
-        return canPayPgbgFromAccount;
     }
 }

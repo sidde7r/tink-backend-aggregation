@@ -1,21 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount;
 
-import org.apache.http.HttpStatus;
+import org.apache.commons.httpclient.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class NordeaTransactionFetcher implements TransactionIndexPaginator<TransactionalAccount> {
+public class NordeaTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
     private static final Logger LOG = LoggerFactory.getLogger(NordeaTransactionFetcher.class);
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
     private static final int MAX_RETRY_ATTEMPTS = 2;
-    private static final int GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS = 500;
+    private static final int FETCH_TRANSACTIONS_LIMIT = 30;
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -25,28 +25,23 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(
-            TransactionalAccount account, int numberOfTransactions, int startIndex) {
-        return fetchTransactions(account, numberOfTransactions, startIndex, 1);
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
+        return fetchTransactions(account, key, 1);
     }
 
-    private PaginatorResponse fetchTransactions(
-            TransactionalAccount account, int numberOfTransactions, int startIndex, int attempt) {
+    private TransactionKeyPaginatorResponse<String> fetchTransactions(
+            TransactionalAccount account, String key, int attempt) {
         try {
             return apiClient.fetchTransactions(
-                    startIndex, numberOfTransactions, account.getBankIdentifier());
+                    FETCH_TRANSACTIONS_LIMIT, key, account.getApiIdentifier());
         } catch (HttpResponseException hre) {
-            return fetchWithBackoffAndRetry(
-                    hre, account, numberOfTransactions, startIndex, attempt);
+            return fetchWithBackoffAndRetry(hre, account, key, attempt);
         }
     }
 
-    private PaginatorResponse fetchWithBackoffAndRetry(
-            HttpResponseException hre,
-            TransactionalAccount account,
-            int numberOfTransactions,
-            int startIndex,
-            int attempt) {
+    private TransactionKeyPaginatorResponse<String> fetchWithBackoffAndRetry(
+            HttpResponseException hre, TransactionalAccount account, String key, int attempt) {
 
         if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
                 || hre.getResponse().getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
@@ -54,18 +49,10 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
                 backoffAWhile();
                 LOG.debug(
                         String.format(
-                                "Retry [%d] fetch transactions account[%s], offset[%d], numTrans[%d] after backoff ",
-                                attempt,
-                                account.getAccountNumber(),
-                                startIndex,
-                                numberOfTransactions));
+                                "Retry [%d] fetch transactions account[%s] after backoff ",
+                                attempt, account.getAccountNumber()));
 
-                return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
-            }
-            // this is an ugly fix for Nordea FI since they tend to throw INTERNAL SERVER ERROR
-            // after 500 tx fetched
-            if (startIndex > GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS) {
-                return PaginatorResponseImpl.createEmpty(false);
+                return fetchTransactions(account, key, ++attempt);
             }
         }
 
