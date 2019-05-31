@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.transfer.PasswordDemoTransferExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
@@ -76,8 +77,9 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     protected Optional<TransferController> constructTransferController() {
         PasswordDemoTransferExecutor transferExecutor =
                 new PasswordDemoTransferExecutor(credentials, supplementalRequester);
+        PasswordDemoPaymentExecutor paymentExecutor = new PasswordDemoPaymentExecutor();
 
-        return Optional.of(new TransferController(null, transferExecutor, null, null));
+        return Optional.of(new TransferController(paymentExecutor, transferExecutor, null, null));
     }
 
     @Override
