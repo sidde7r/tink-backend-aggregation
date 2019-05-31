@@ -63,7 +63,13 @@ public class AvanzaTransactionalAccountFetcher
 
         Collection<? extends Transaction> transactions =
                 authSessionStorage.keySet().stream()
-                        .map(a -> apiClient.fetchTransactions(accId, fromDateStr, toDateStr, a))
+                        .filter(
+                                authSession ->
+                                        apiClient.authSessionHasAccountId(authSession, accId))
+                        .map(
+                                authSession ->
+                                        apiClient.fetchTransactions(
+                                                accId, fromDateStr, toDateStr, authSession))
                         .map(TransactionsResponse::getTransactions)
                         .flatMap(Collection::stream)
                         .filter(TransactionEntity::isDepositOrWithdraw)
