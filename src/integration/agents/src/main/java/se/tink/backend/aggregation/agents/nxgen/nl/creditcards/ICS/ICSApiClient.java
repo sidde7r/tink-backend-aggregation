@@ -157,7 +157,8 @@ public class ICSApiClient {
     public OAuth2Token refreshToken(String refreshToken) {
         return createTokenRequest(OAuthGrantTypes.REFRESH_TOKEN)
                 .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
-                .get(OAuth2Token.class);
+                .get(TokenResponse.class)
+                .toTinkToken();
     }
 
     public void setToken(OAuth2Token token) {
