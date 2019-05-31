@@ -12,6 +12,7 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction implements Comparable<Transaction>, Cloneable {
+    //TODO: Find out if we can add ExactCurrencyAmount in this model
 
     public static class Fields {
         public static final String AccountId = "accountId";
