@@ -34,7 +34,7 @@ public abstract class BerlinGroupAgent<
     private final String clientName;
 
     public BerlinGroupAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            final CredentialsRequest request, final AgentContext context, final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         clientId = request.getProvider().getPayload();
         clientName = request.getProvider().getPayload();
@@ -42,7 +42,7 @@ public abstract class BerlinGroupAgent<
 
     protected abstract TApiCliient getApiClient();
 
-    protected void setupClient(TinkHttpClient client) {}
+    protected void setupClient(final TinkHttpClient client) {}
 
     protected TConfiguration getConfiguration() {
         return configuration
@@ -53,7 +53,7 @@ public abstract class BerlinGroupAgent<
     }
 
     @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
+    public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
         setupClient(client);

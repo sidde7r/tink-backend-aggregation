@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class BerlinGroupAccountFetcher implements AccountFetcher<TransactionalAccount> {
     protected BerlinGroupApiClient apiClient;
 
-    public BerlinGroupAccountFetcher(BerlinGroupApiClient apiClient) {
+    public BerlinGroupAccountFetcher(final BerlinGroupApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

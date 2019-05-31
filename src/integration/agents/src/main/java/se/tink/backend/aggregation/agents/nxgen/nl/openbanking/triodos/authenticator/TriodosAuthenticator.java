@@ -7,12 +7,12 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class TriodosAuthenticator extends BerlinGroupAuthenticator {
 
-    public TriodosAuthenticator(BerlinGroupApiClient apiClient) {
+    public TriodosAuthenticator(final BerlinGroupApiClient apiClient) {
         super(apiClient);
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    public OAuth2Token exchangeAuthorizationCode(final String code) throws BankServiceException {
         return apiClient.getToken(code);
     }
 }

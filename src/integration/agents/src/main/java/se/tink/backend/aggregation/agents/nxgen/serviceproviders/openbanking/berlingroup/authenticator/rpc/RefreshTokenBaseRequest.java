@@ -11,7 +11,7 @@ public class RefreshTokenBaseRequest {
     protected final String clientSecret;
 
     public RefreshTokenBaseRequest(
-            String grantType, String token, String clientId, String clientSecret) {
+            final String grantType, final String token, final String clientId, final String clientSecret) {
         this.grantType = grantType;
         this.token = token;
         this.clientId = clientId;

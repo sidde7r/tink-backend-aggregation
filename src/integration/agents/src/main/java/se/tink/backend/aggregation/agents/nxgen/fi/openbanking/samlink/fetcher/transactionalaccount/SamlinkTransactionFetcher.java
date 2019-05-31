@@ -11,14 +11,14 @@ public class SamlinkTransactionFetcher extends BerlinGroupTransactionFetcher {
     private final SamlinkConfiguration configuration;
 
     public SamlinkTransactionFetcher(
-            BerlinGroupApiClient apiClient, SamlinkConfiguration configuration) {
+            final BerlinGroupApiClient apiClient, final SamlinkConfiguration configuration) {
         super(apiClient);
         this.configuration = configuration;
     }
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, String nextUrl) {
+            final TransactionalAccount account, final String nextUrl) {
 
         return TransactionKeyPaginatorResponseImpl.createEmpty();
 

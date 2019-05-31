@@ -35,11 +35,11 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
         return configuration;
     }
 
-    public void setConfiguration(TConfiguration configuration) {
+    public void setConfiguration(final TConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    public RequestBuilder getAccountsRequestBuilder(String url) {
+    public RequestBuilder getAccountsRequestBuilder(final String url) {
         return client.request(url)
                 .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
@@ -47,13 +47,13 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    public AccountsBaseResponse fetchAccounts(String url, String webApiKey) {
+    public AccountsBaseResponse fetchAccounts(final String url, final String webApiKey) {
         return getAccountsRequestBuilder(url)
                 .header(HeaderKeys.WEB_API_KEY, webApiKey)
                 .get(AccountsBaseResponse.class);
     }
 
-    public RequestBuilder getTransactionsRequestBuilder(String url) {
+    public RequestBuilder getTransactionsRequestBuilder(final String url) {
         return client.request(url)
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
@@ -63,7 +63,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     public abstract URL getAuthorizeUrl(String state);
 
     protected RequestBuilder getAuthorizeUrl(
-            String url, String state, String clientId, String redirectUrl) {
+            final String url, final String state, final String clientId, final String redirectUrl) {
         return client.request(url)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
@@ -72,7 +72,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     }
 
     protected RequestBuilder getAuthorizeUrlWithCode(
-            String url, String state, String consentId, String clientId, String redirectUrl) {
+            final String url, final String state, final String consentId, final String clientId, final String redirectUrl) {
         final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
 
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
@@ -84,13 +84,13 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD);
     }
 
-    protected OAuth2Token getTokenFromSession(String storageKey) {
+    protected OAuth2Token getTokenFromSession(final String storageKey) {
         return sessionStorage
                 .get(storageKey, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
-    public void setTokenToSession(OAuth2Token token, String storageKey) {
+    public void setTokenToSession(final OAuth2Token token, final String storageKey) {
         sessionStorage.put(storageKey, token);
     }
 }

@@ -7,11 +7,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 public class TokenRequestGet extends TokenBaseRequest {
 
     public TokenRequestGet(
-            String clientId,
-            String clientSecret,
-            String redirectUri,
-            String code,
-            String grantType) {
+            final String clientId,
+            final String clientSecret,
+            final String redirectUri,
+            final String code,
+            final String grantType) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;

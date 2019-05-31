@@ -7,9 +7,9 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 @JsonObject
 public class IbanEntity {
 
-    @JsonProperty private String iban;
+    @JsonProperty private final String iban;
 
-    public IbanEntity(String iban) {
+    public IbanEntity(final String iban) {
         this.iban = iban;
     }
 

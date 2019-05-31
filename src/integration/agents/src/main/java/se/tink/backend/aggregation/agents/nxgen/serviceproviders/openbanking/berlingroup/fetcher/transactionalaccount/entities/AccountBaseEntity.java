@@ -39,7 +39,7 @@ public class AccountBaseEntity {
                 .orElse(toSavingsAccount());
     }
 
-    private boolean isCheckingType(AccountTypes accountType) {
+    private boolean isCheckingType(final AccountTypes accountType) {
         return accountType == AccountTypes.CHECKING;
     }
 
@@ -78,7 +78,7 @@ public class AccountBaseEntity {
                 .orElse(getDefaultAmount());
     }
 
-    private boolean doesMatchWithAccountCurrency(BalanceBaseEntity balance) {
+    private boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
         return balance.isClosingBooked() && balance.isInCurrency(currency);
     }
 
@@ -88,6 +88,10 @@ public class AccountBaseEntity {
 
     public String getIban() {
         return iban;
+    }
+
+    public void setIban(final String iban) {
+        this.iban = iban;
     }
 
     public String getTransactionLink() {
@@ -102,7 +106,47 @@ public class AccountBaseEntity {
         return balances;
     }
 
-    public void setBalances(List<BalanceBaseEntity> balances) {
+    public void setBalances(final List<BalanceBaseEntity> balances) {
         this.balances = balances;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(final String resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(final String currency) {
+        this.currency = currency;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getCashAccountType() {
+        return cashAccountType;
+    }
+
+    public void setCashAccountType(final String cashAccountType) {
+        this.cashAccountType = cashAccountType;
+    }
+
+    public AccountLinksEntity getLinks() {
+        return links;
+    }
+
+    public void setLinks(final AccountLinksEntity links) {
+        this.links = links;
     }
 }

@@ -13,11 +13,27 @@ public class BalanceBaseEntity {
         return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED);
     }
 
-    public boolean isInCurrency(String currency) {
+    public boolean isInCurrency(final String currency) {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
 
     public Amount toAmount() {
         return balanceAmount.toAmount();
+    }
+
+    public BalanceAmountBaseEntity getBalanceAmount() {
+        return balanceAmount;
+    }
+
+    public void setBalanceAmount(final BalanceAmountBaseEntity balanceAmount) {
+        this.balanceAmount = balanceAmount;
+    }
+
+    public String getBalanceType() {
+        return balanceType;
+    }
+
+    public void setBalanceType(final String balanceType) {
+        this.balanceType = balanceType;
     }
 }

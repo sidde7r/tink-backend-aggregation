@@ -8,7 +8,7 @@ public class SignatureEntity {
     private final String digest;
     private final String xIngRequestId;
 
-    public SignatureEntity(String digest, String xIngRequestId) {
+    public SignatureEntity(final String digest, final String xIngRequestId) {
         this.digest = digest;
         this.xIngRequestId = xIngRequestId;
     }

@@ -11,14 +11,14 @@ public class BerlinGroupTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, String> {
     protected final BerlinGroupApiClient apiClient;
 
-    public BerlinGroupTransactionFetcher(BerlinGroupApiClient apiClient) {
+    public BerlinGroupTransactionFetcher(final BerlinGroupApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, String nextUrl) {
-        String url =
+            final TransactionalAccount account, final String nextUrl) {
+        final String url =
                 Strings.isNullOrEmpty(nextUrl)
                         ? account.getFromTemporaryStorage(StorageKeys.TRANSACTIONS_URL)
                         : nextUrl;

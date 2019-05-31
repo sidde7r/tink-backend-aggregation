@@ -8,12 +8,12 @@ public class TokenRequestPost extends TokenBaseRequest {
     private final String codeVerifier;
 
     public TokenRequestPost(
-            String grantType,
-            String code,
-            String redirectUri,
-            String clientId,
-            String clientSecret,
-            String codeVerifier) {
+            final String grantType,
+            final String code,
+            final String redirectUri,
+            final String clientId,
+            final String clientSecret,
+            final String codeVerifier) {
         this.grantType = grantType;
         this.code = code;
         this.redirectUri = redirectUri;

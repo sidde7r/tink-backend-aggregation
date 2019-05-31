@@ -13,7 +13,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     private final TriodosApiClient apiClient;
 
     public TriodosAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            final CredentialsRequest request, final AgentContext context, final SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new TriodosApiClient(client, sessionStorage);
@@ -26,7 +26,7 @@ public final class TriodosAgent extends BerlinGroupAgent<TriodosApiClient, Triod
     }
 
     @Override
-    protected void setupClient(TinkHttpClient client) {
+    protected void setupClient(final TinkHttpClient client) {
         client.setSslClientCertificate(
                 BerlinGroupUtils.readFile(getConfiguration().getClientKeyStorePath()),
                 getConfiguration().getClientKeyStorePassword());

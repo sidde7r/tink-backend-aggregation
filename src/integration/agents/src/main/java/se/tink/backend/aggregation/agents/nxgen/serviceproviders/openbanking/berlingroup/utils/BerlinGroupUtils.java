@@ -29,10 +29,10 @@ public final class BerlinGroupUtils {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(Hash.sha256(input));
     }
 
-    public static byte[] readFile(String path) {
+    public static byte[] readFile(final String path) {
         try {
             return Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -41,11 +41,12 @@ public final class BerlinGroupUtils {
         return UUID.randomUUID().toString();
     }
 
-    public static String calculateDigest(String data) {
+    public static String calculateDigest(final String data) {
         return Base64.getEncoder().encodeToString(Hash.sha256(data));
     }
 
-    public static String generateSignature(String input, String signingKeyPath, String algorithm) {
+    public static String generateSignature(
+        final String input, final String signingKeyPath, final String algorithm) {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(
@@ -53,12 +54,12 @@ public final class BerlinGroupUtils {
                                 input.getBytes()));
     }
 
-    public static String getFormattedCurrentDate(String format, String timeZone) {
+    public static String getFormattedCurrentDate(final String format, final String timeZone) {
         return formatDate(Calendar.getInstance().getTime(), format, timeZone);
     }
 
-    public static String formatDate(Date date, String format, String timeZone) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    public static String formatDate(final Date date, final String format, final String timeZone) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(format);
 
         if (!Strings.isNullOrEmpty(timeZone)) {
             sdf.setTimeZone(TimeZone.getTimeZone(timeZone));

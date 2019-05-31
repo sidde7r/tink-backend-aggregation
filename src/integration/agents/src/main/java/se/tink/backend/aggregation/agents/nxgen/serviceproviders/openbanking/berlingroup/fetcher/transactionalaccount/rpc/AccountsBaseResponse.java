@@ -15,12 +15,16 @@ public class AccountsBaseResponse {
 
     public AccountsBaseResponse() {}
 
-    public AccountsBaseResponse(List<AccountBaseEntity> accounts) {
+    public AccountsBaseResponse(final List<AccountBaseEntity> accounts) {
         this.accounts = accounts;
     }
 
     public List<AccountBaseEntity> getAccounts() {
         return accounts;
+    }
+
+    public void setAccounts(final List<AccountBaseEntity> accounts) {
+        this.accounts = accounts;
     }
 
     public Collection<TransactionalAccount> toTinkAccounts() {

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.Form;
 public class RefreshTokenRequest extends RefreshTokenBaseRequest {
 
     public RefreshTokenRequest(
-            String grantType, String token, String clientId, String clientSecret) {
+            final String grantType, final String token, final String clientId, final String clientSecret) {
         super(grantType, token, clientId, clientSecret);
     }
 
