@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.Objects;
 import java.util.UUID;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
@@ -64,7 +65,9 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
             return new KeyCardInitValues(securityKeyEntity.getIndex());
         } catch (HttpResponseException e) {
             HttpResponse httpResponse = e.getResponse();
-            if (httpResponse.getStatus() != 401 && httpResponse.getStatus() != 403) {
+            if (httpResponse.getStatus() != HttpStatus.SC_UNAUTHORIZED
+                    && httpResponse.getStatus() != HttpStatus.SC_FORBIDDEN
+                    && httpResponse.getStatus() != HttpStatus.SC_BAD_REQUEST) {
                 throw e;
             }
 
@@ -78,6 +81,12 @@ public class OmaspKeyCardAuthenticator implements KeyCardAuthenticator {
             switch (error.toLowerCase()) {
                 case OmaspConstants.Error.AUTHENTICATION_FAILED:
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
+                case OmaspConstants.Error.BAD_REQUEST:
+                    if (errorResponse.isPasswordError()) {
+                        throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    } else {
+                        throw e;
+                    }
                 case OmaspConstants.Error.OTHER_BANK_CUSTOMER:
                     throw LoginError.NOT_CUSTOMER.exception();
                 case OmaspConstants.Error.LOGIN_WARNING:

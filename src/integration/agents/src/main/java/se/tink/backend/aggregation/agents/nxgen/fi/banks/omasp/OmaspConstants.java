@@ -62,6 +62,7 @@ public class OmaspConstants {
                     .build();
 
     public static final class Error {
+        public static final String BAD_REQUEST = "bad_request";
         public static final String LOGIN_WARNING = "login_warning";
         public static final String AUTHENTICATION_FAILED = "authentication_failed";
         public static final String SECURITY_KEY_FAILED = "security_key_failed";

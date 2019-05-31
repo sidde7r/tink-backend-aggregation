@@ -66,6 +66,8 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
+                    "minLength": 6,
+                    "maxLength": 8,
                     "name": "password"
                 }
             ],
