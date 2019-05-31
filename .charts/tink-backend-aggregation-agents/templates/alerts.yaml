@@ -204,7 +204,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: '#integration-oncall'
+        who: integration
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -222,7 +222,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: '#integration-oncall'
+        who: integration
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -426,7 +426,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: '#integration-oncall'
+        who: integration
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -444,7 +444,7 @@ spec:
     for: 5m
     labels:
         severity: urgent
-        who: '#integration-oncall'
+        who: integration
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
