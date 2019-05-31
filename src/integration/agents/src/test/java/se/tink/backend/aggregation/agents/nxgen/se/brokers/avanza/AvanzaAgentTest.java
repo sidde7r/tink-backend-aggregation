@@ -2,14 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
-@Ignore
 public class AvanzaAgentTest {
 
     private enum Arg {
@@ -20,11 +18,6 @@ public class AvanzaAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
-    @Before
-    public void setUp() throws Exception {
-        manager.before();
-    }
-
     @AfterClass
     public static void afterClass() {
         ArgumentManager.afterClass();
@@ -32,6 +25,7 @@ public class AvanzaAgentTest {
 
     @Before
     public void setup() {
+        manager.before();
         builder =
                 new AgentIntegrationTest.Builder("se", "se-avanza-bankid")
                         .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))

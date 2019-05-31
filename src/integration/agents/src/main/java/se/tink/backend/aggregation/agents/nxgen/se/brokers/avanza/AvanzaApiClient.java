@@ -187,4 +187,10 @@ public class AvanzaApiClient {
 
         return createRequestInSession(logoutUrl, authSession).delete(String.class);
     }
+
+    public boolean authSessionHasAccountId(String authSession, String accountId) {
+        final AccountsOverviewResponse overview = fetchAccounts(authSession);
+        return overview.getAccounts().stream()
+                .anyMatch(accountEntity -> accountEntity.getAccountId().equals(accountId));
+    }
 }
