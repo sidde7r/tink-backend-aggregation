@@ -26,7 +26,8 @@ public class SdcConstants {
         PASSWORD_EXPIRED("the password has expired", false),
         PIN_OR_CODE_NOT_VALID("pin or code is not valid", false),
         PASSWORD_BLOCKED("the password is blocked", true),
-        NO_AGREEMENT("you have no agreement", false);
+        NO_AGREEMENT("you have no agreement", false),
+        DEVICE_REGISTRATION_NOT_ALLOWED("your bank doesn't allow device registration", false);
 
         private final String message;
         private final boolean blocked;
@@ -42,6 +43,11 @@ public class SdcConstants {
 
         public static boolean isNotCustomer(String msg) {
             return msg.toLowerCase().contains(NO_AGREEMENT.message);
+        }
+
+        public static boolean isDeviceRegistrationNotAllowed(String msg) {
+            return msg.toLowerCase()
+                    .contains(DEVICE_REGISTRATION_NOT_ALLOWED.message.toLowerCase());
         }
 
         public boolean isLoginError(String msg) {

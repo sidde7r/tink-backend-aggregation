@@ -96,6 +96,10 @@ public class SdcSmsOtpAuthenticator
                                 .orElse("");
                 if (this.agentConfiguration.isNotCustomer(errorMessage)) {
                     throw LoginError.NOT_CUSTOMER.exception();
+                }
+                if (this.agentConfiguration.isDeviceRegistrationNotAllowed(errorMessage)) {
+                    throw new IllegalStateException(
+                            "This bank does not support device registration! Configure this provider to use PIN instead of SMS");
                 } else if (this.agentConfiguration.isLoginError(errorMessage)) {
                     LOGGER.info(errorMessage);
 
