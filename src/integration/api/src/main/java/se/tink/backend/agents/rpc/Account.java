@@ -80,21 +80,21 @@ public class Account implements Cloneable {
         this.accountExclusion = AccountExclusion.NONE;
     }
 
-        public ExactCurrencyAmount getExactAvailableCredit() {
-            return exactAvailableCredit;
-        }
+    public ExactCurrencyAmount getExactAvailableCredit() {
+        return exactAvailableCredit;
+    }
 
-        public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
-            this.exactAvailableCredit = exactAvailableCredit;
-        }
+    public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
+        this.exactAvailableCredit = exactAvailableCredit;
+    }
 
-        public ExactCurrencyAmount getExactBalance() {
-            return exactBalance;
-        }
+    public ExactCurrencyAmount getExactBalance() {
+        return exactBalance;
+    }
 
-        public void setExactBalance(ExactCurrencyAmount exactBalance) {
-            this.exactBalance = exactBalance;
-        }
+    public void setExactBalance(ExactCurrencyAmount exactBalance) {
+        this.exactBalance = exactBalance;
+    }
 
     @Override
     public Account clone() throws CloneNotSupportedException {
