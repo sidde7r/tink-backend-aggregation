@@ -73,8 +73,14 @@ public class Transaction extends AggregationTransaction {
         private boolean pending;
         private String externalId;
 
+        @Deprecated
         @Override
         public Builder setAmount(Amount amount) {
+            return (Builder) super.setAmount(amount);
+        }
+
+        @Override
+        public Builder setAmount(ExactCurrencyAmount amount) {
             return (Builder) super.setAmount(amount);
         }
 
