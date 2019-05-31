@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -78,8 +79,8 @@ public class SibsBaseApiClient {
                 .get(BalancesResponse.class);
     }
 
-    public TransactionsResponse getAccountTransactions(
-            TransactionalAccount account, Date fromDate, Date toDate) {
+    public TransactionKeyPaginatorResponse<String> getAccountTransactions(
+            TransactionalAccount account) {
 
         SimpleDateFormat formatter = new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
 
@@ -95,8 +96,16 @@ public class SibsBaseApiClient {
                 .queryParam(QueryKeys.WITH_BALANCE, String.valueOf(true))
                 .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .queryParam(QueryKeys.BOOKING_STATUS, SibsConstants.QueryValues.BOTH)
-                .queryParam(QueryKeys.DATE_FROM, formatter.format(fromDate))
-                .queryParam(QueryKeys.DATE_TO, formatter.format(toDate))
+                .queryParam(QueryKeys.DATE_FROM, formatter.format(new Date(0)))
+                .get(TransactionsResponse.class);
+    }
+
+    public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
+        return createRequest(new URL(Urls.BASE_URL + key))
+                .signed()
+                .inSession(getConsentFromStorage())
+                .build()
+                .queryParam(QueryKeys.PSU_INVOLVED, String.valueOf(true))
                 .get(TransactionsResponse.class);
     }
 

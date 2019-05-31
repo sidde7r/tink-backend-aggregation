@@ -1,8 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.transaction;
 
+import java.util.Optional;
+import org.assertj.core.util.Strings;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class TransactionLinksEntity {
 
-    public String viewAccount;
-    public String first;
-    public String last;
+    private String viewAccount;
+    private String first;
+    private String next;
+    private String last;
+
+    public String getNextKey() {
+        return Optional.ofNullable(next)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SibsConstants.ErrorMessages.MISSING_PAGINATON_KEY));
+    }
+
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(!Strings.isNullOrEmpty(next));
+    }
 }

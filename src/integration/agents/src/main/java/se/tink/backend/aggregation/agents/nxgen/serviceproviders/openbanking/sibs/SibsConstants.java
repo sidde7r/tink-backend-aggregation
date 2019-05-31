@@ -14,6 +14,8 @@ public final class SibsConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String NO_BALANCE = "No balance found!";
         public static final String UNKNOWN_TRANSACTION_STATE = "Unknown transaction state.";
+        public static final String MISSING_LINKS_OBJECT = "Response is missing links object";
+        public static final String MISSING_PAGINATON_KEY = "Missing pagination key";
     }
 
     public static class Urls {
