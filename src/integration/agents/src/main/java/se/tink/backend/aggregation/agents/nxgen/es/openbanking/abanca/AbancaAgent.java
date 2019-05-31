@@ -32,7 +32,7 @@ public final class AbancaAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new AbancaApiClient(client);
+        apiClient = new AbancaApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -53,7 +53,7 @@ public final class AbancaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AbancaAuthenticator();
+        return new AbancaAuthenticator(apiClient);
     }
 
     @Override
