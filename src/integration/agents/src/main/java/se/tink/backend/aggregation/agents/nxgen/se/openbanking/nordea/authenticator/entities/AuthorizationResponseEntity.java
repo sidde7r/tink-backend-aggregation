@@ -5,7 +5,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ResponseEntity {
+public class AuthorizationResponseEntity {
 
     private List<LinkEntity> links;
 
