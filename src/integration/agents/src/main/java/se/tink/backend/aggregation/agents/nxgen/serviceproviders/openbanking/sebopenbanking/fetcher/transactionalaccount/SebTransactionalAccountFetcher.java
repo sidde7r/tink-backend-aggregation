@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebAccountsAndCardsApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebAccountsAndCardsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -17,13 +17,13 @@ public class SebTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionPagePaginator<TransactionalAccount> {
 
-    private final SebApiClient apiClient;
+    private final SebAccountsAndCardsApiClient apiClient;
 
     // accountID -> [<URL to get first page of transactions>, <URL to get the second page of
     // transactions>, ...]
     private final Map<String, List<String>> paginationURLs;
 
-    public SebTransactionalAccountFetcher(SebApiClient apiClient) {
+    public SebTransactionalAccountFetcher(SebAccountsAndCardsApiClient apiClient) {
         this.apiClient = apiClient;
         this.paginationURLs = new HashMap<>();
     }
@@ -58,7 +58,7 @@ public class SebTransactionalAccountFetcher
         else {
             String url = paginationURLs.get(accountID).get(page - 1);
 
-            url = SebConstants.Urls.TRANSACTIONS_NEXT_PAGE_URL_PREFIX + url;
+            url = SebAccountsAndCardsConstants.Urls.TRANSACTIONS_NEXT_PAGE_URL_PREFIX + url;
             response = apiClient.fetchTransactions(url, false);
         }
 

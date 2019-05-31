@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -74,12 +74,12 @@ public class AccountsEntity {
                 .addHolderName(getOwnerName())
                 .setApiIdentifier(resourceId)
                 .setBankIdentifier(bban)
-                .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .putInTemporaryStorage(SebCommonConstants.StorageKeys.ACCOUNT_ID, resourceId)
                 .build();
     }
 
     public boolean isEnabled() {
-        return status.equalsIgnoreCase(SebConstants.Accounts.STATUS_ENABLED);
+        return status.equalsIgnoreCase(SebCommonConstants.Accounts.STATUS_ENABLED);
     }
 
     private String getOwnerName() {
