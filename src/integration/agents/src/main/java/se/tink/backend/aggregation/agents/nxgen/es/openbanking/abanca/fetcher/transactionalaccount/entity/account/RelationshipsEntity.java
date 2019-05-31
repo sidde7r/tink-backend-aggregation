@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.t
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Movimientos {
+public class RelationshipsEntity {
 
-    private AccountLinksEntity links;
+    private AccountLinkTypesEntity transactions;
+    private AccountLinkTypesEntity fundsAvailability;
+    private AccountLinkTypesEntity balance;
 }

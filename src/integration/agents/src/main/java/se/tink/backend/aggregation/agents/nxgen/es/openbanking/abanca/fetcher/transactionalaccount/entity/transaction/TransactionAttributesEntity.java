@@ -9,48 +9,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionAttributesEntity {
 
-    @JsonProperty("fechaDeOperacion")
+    @JsonProperty("date")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date operationDate;
+    private Date date;
 
-    @JsonProperty("fechaContable")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date accountingDate;
-
-    @JsonProperty("fechaValor")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date valueDate;
-
-    @JsonProperty("codigoDeReferencia")
-    private String referenceCode;
-
-    @JsonProperty("codigoDeTipoDeMovimiento")
-    private String movementTypeCode;
-
-    @JsonProperty("codigoSubtipoDeMovimiento")
-    private String movementTypeSubcode;
-
-    @JsonProperty("concepto")
+    @JsonProperty("concept")
     private String concept;
 
-    @JsonProperty("importe")
-    private AmountEntity imported;
+    @JsonProperty("amount")
+    private AmountEntity amount;
 
-    @JsonProperty("saldoDespuesDeLaOperacion")
-    private AmountEntity balanceAfterOperation;
-
-    @JsonProperty("numeroDeOperacion")
-    private String operationNumber;
-
-    @JsonProperty("tieneJustificante")
-    private Boolean hasProof;
-
-    public AmountEntity getBalanceAfterOperation() {
-        return balanceAfterOperation;
+    public Date getDate() {
+        return date;
     }
 
-    public Date getValueDate() {
-        return valueDate;
+    public AmountEntity getAmount() {
+        return amount;
     }
 
     public String getConcept() {

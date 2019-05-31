@@ -13,8 +13,8 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(attributes.getBalanceAfterOperation().toTinkAmount())
-                .setDate(attributes.getValueDate())
+                .setAmount(attributes.getAmount().toTinkAmount())
+                .setDate(attributes.getDate())
                 .setDescription(attributes.getConcept())
                 .build();
     }
