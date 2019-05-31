@@ -55,7 +55,7 @@ public class AccountsEntity {
 
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
+                .setUniqueIdentifier(bban)
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
                 .setAlias(getName())
