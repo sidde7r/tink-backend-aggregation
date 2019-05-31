@@ -30,7 +30,7 @@ public class ConsentBaseRequest {
         this.combinedServiceIndicator = false;
     }
 
-    public ConsentBaseRequest(
+    private ConsentBaseRequest(
             final boolean recurringIndicator,
             final Date validUntil,
             final int frequencyPerDay,
