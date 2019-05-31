@@ -1,8 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.sdcdk;
 
+import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class SdcDkConstants {
+
+    public static class Authentication {
+        public static final ImmutableList<String> BANKS_WITH_PIN_AUTHENTICATION =
+                ImmutableList.of("9740");
+    }
 
     public static class Market {
         public static final String DENMARK = "DK";
