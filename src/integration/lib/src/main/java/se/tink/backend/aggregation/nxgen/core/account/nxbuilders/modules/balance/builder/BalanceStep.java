@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder;
 
 import javax.annotation.Nonnull;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface BalanceStep<T> {
 

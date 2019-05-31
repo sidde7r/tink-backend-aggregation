@@ -23,6 +23,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
@@ -79,21 +80,21 @@ public class Account implements Cloneable {
         this.accountExclusion = AccountExclusion.NONE;
     }
 
-    public ExactCurrencyAmount getExactAvailableCredit() {
-        return exactAvailableCredit;
-    }
+        public ExactCurrencyAmount getExactAvailableCredit() {
+            return exactAvailableCredit;
+        }
 
-    public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
-        this.exactAvailableCredit = exactAvailableCredit;
-    }
+        public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
+            this.exactAvailableCredit = exactAvailableCredit;
+        }
 
-    public ExactCurrencyAmount getExactBalance() {
-        return exactBalance;
-    }
+        public ExactCurrencyAmount getExactBalance() {
+            return exactBalance;
+        }
 
-    public void setExactBalance(ExactCurrencyAmount exactBalance) {
-        this.exactBalance = exactBalance;
-    }
+        public void setExactBalance(ExactCurrencyAmount exactBalance) {
+            this.exactBalance = exactBalance;
+        }
 
     @Override
     public Account clone() throws CloneNotSupportedException {

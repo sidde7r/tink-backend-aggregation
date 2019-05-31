@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class InvestmentAccount extends Account {
     public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES =

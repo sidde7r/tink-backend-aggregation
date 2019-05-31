@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balanc
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceStep;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class BalanceModule {
 

@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanAccount extends Account {
     public static final int BIGGER_THAN = 1;

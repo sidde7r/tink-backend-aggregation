@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.nxgen.core.account.creditcard;
 import com.google.common.base.Preconditions;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.ExactCurrencyAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardDetailsStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class CreditCardAccount extends Account {
 

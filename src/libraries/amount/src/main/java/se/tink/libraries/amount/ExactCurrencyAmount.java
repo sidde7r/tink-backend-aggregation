@@ -1,4 +1,4 @@
-package se.tink.backend.agents.rpc;
+package se.tink.libraries.amount;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
