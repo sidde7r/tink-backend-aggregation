@@ -27,6 +27,25 @@ public class AccountBaseEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
+    public AccountBaseEntity() {}
+
+    AccountBaseEntity(
+            final String resourceId,
+            final String iban,
+            final String currency,
+            final String name,
+            final String cashAccountType,
+            final List<BalanceBaseEntity> balances,
+            final AccountLinksEntity links) {
+        this.resourceId = resourceId;
+        this.iban = iban;
+        this.currency = currency;
+        this.name = name;
+        this.cashAccountType = cashAccountType;
+        this.balances = balances;
+        this.links = links;
+    }
+
     public boolean isCheckingOrSavingsType() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
     }
@@ -90,10 +109,6 @@ public class AccountBaseEntity {
         return iban;
     }
 
-    public void setIban(final String iban) {
-        this.iban = iban;
-    }
-
     public String getTransactionLink() {
         return Optional.ofNullable(links).map(AccountLinksEntity::getTransactions).orElse("");
     }
@@ -106,47 +121,27 @@ public class AccountBaseEntity {
         return balances;
     }
 
-    public void setBalances(final List<BalanceBaseEntity> balances) {
-        this.balances = balances;
-    }
-
     public String getResourceId() {
         return resourceId;
-    }
-
-    public void setResourceId(final String resourceId) {
-        this.resourceId = resourceId;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(final String currency) {
-        this.currency = currency;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
     }
 
     public String getCashAccountType() {
         return cashAccountType;
     }
 
-    public void setCashAccountType(final String cashAccountType) {
-        this.cashAccountType = cashAccountType;
-    }
-
     public AccountLinksEntity getLinks() {
         return links;
     }
 
-    public void setLinks(final AccountLinksEntity links) {
-        this.links = links;
+    public void setBalances(final List<BalanceBaseEntity> balances) {
+        this.balances = balances;
     }
 }

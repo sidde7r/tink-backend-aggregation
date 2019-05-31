@@ -30,6 +30,17 @@ public class ConsentBaseRequest {
         this.combinedServiceIndicator = false;
     }
 
+    public ConsentBaseRequest(
+            final boolean recurringIndicator,
+            final Date validUntil,
+            final int frequencyPerDay,
+            final boolean combinedServiceIndicator) {
+        this.recurringIndicator = recurringIndicator;
+        this.validUntil = validUntil;
+        this.frequencyPerDay = frequencyPerDay;
+        this.combinedServiceIndicator = combinedServiceIndicator;
+    }
+
     public String toData() {
         return SerializationUtils.serializeToString(this);
     }
@@ -42,31 +53,51 @@ public class ConsentBaseRequest {
         return recurringIndicator;
     }
 
-    public void setRecurringIndicator(final boolean recurringIndicator) {
-        this.recurringIndicator = recurringIndicator;
-    }
-
     public Date getValidUntil() {
         return validUntil;
-    }
-
-    public void setValidUntil(final Date validUntil) {
-        this.validUntil = validUntil;
     }
 
     public int getFrequencyPerDay() {
         return frequencyPerDay;
     }
 
-    public void setFrequencyPerDay(final int frequencyPerDay) {
-        this.frequencyPerDay = frequencyPerDay;
-    }
-
     public boolean isCombinedServiceIndicator() {
         return combinedServiceIndicator;
     }
 
-    public void setCombinedServiceIndicator(final boolean combinedServiceIndicator) {
-        this.combinedServiceIndicator = combinedServiceIndicator;
+    public static class ConsentBaseRequestBuilder {
+
+        private boolean recurringIndicator;
+        private Date validUntil;
+        private int frequencyPerDay;
+        private boolean combinedServiceIndicator;
+
+        ConsentBaseRequestBuilder() {}
+
+        public ConsentBaseRequestBuilder recurringIndicator(final boolean recurringIndicator) {
+            this.recurringIndicator = recurringIndicator;
+            return this;
+        }
+
+        public ConsentBaseRequestBuilder validUntil(final Date validUntil) {
+            this.validUntil = validUntil;
+            return this;
+        }
+
+        public ConsentBaseRequestBuilder frequencyPerDay(final int frequencyPerDay) {
+            this.frequencyPerDay = frequencyPerDay;
+            return this;
+        }
+
+        public ConsentBaseRequestBuilder combinedServiceIndicator(
+                final boolean combinedServiceIndicator) {
+            this.combinedServiceIndicator = combinedServiceIndicator;
+            return this;
+        }
+
+        public ConsentBaseRequest build() {
+            return new ConsentBaseRequest(
+                    recurringIndicator, validUntil, frequencyPerDay, combinedServiceIndicator);
+        }
     }
 }

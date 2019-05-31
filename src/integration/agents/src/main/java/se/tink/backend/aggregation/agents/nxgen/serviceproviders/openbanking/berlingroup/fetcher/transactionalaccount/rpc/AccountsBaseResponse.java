@@ -23,10 +23,6 @@ public class AccountsBaseResponse {
         return accounts;
     }
 
-    public void setAccounts(final List<AccountBaseEntity> accounts) {
-        this.accounts = accounts;
-    }
-
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(AccountBaseEntity::isCheckingOrSavingsType)

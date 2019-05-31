@@ -9,6 +9,13 @@ public class BalanceBaseEntity {
     private BalanceAmountBaseEntity balanceAmount;
     private String balanceType;
 
+    public BalanceBaseEntity() {}
+
+    BalanceBaseEntity(final BalanceAmountBaseEntity balanceAmount, final String balanceType) {
+        this.balanceAmount = balanceAmount;
+        this.balanceType = balanceType;
+    }
+
     public boolean isClosingBooked() {
         return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED);
     }
@@ -25,15 +32,7 @@ public class BalanceBaseEntity {
         return balanceAmount;
     }
 
-    public void setBalanceAmount(final BalanceAmountBaseEntity balanceAmount) {
-        this.balanceAmount = balanceAmount;
-    }
-
     public String getBalanceType() {
         return balanceType;
-    }
-
-    public void setBalanceType(final String balanceType) {
-        this.balanceType = balanceType;
     }
 }
