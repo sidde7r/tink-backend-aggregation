@@ -125,4 +125,8 @@ public abstract class SdcConfiguration {
 
         return false;
     }
+
+    public boolean isDeviceRegistrationNotAllowed(String errorMessage) {
+        return SdcConstants.ErrorMessage.isDeviceRegistrationNotAllowed(errorMessage);
+    }
 }
