@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.transaction.MetaEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.abanca.fetcher.transactionalaccount.entity.transaction.TransactionLinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,6 +16,7 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
 
     private List<TransactionEntity> data;
     private TransactionLinksEntity links;
+    private MetaEntity meta;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

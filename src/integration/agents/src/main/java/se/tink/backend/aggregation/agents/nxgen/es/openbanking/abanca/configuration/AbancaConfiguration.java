@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class AbancaConfiguration implements ClientConfiguration {
 
     private String authKey;
+    private String apiKey;
 
     public String getAuthKey() {
         Preconditions.checkNotNull(
@@ -17,5 +18,13 @@ public class AbancaConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Key"));
 
         return authKey;
+    }
+
+    public String getApiKey() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(apiKey),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Auth Key"));
+
+        return apiKey;
     }
 }
