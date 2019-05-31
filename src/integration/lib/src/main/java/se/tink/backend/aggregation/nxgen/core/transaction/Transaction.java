@@ -25,6 +25,11 @@ public class Transaction extends AggregationTransaction {
     }
 
     protected Transaction(
+            ExactCurrencyAmount amount, Date date, String description, boolean pending) {
+        this(amount, date, description, pending, null);
+    }
+
+    protected Transaction(
             ExactCurrencyAmount amount,
             Date date,
             String description,
