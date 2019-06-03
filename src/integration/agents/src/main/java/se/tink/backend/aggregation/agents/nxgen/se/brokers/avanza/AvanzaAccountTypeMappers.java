@@ -53,7 +53,8 @@ public final class AvanzaAccountTypeMappers {
                                                 AccountTypes.INVESTMENT,
                                                 AvanzaAccountTypes.AKTIE_FONDKONTO,
                                                 AvanzaAccountTypes.INVESTERINGSSPARKONTO,
-                                                AvanzaAccountTypes.KAPITALFORSAKRING)
+                                                AvanzaAccountTypes.KAPITALFORSAKRING,
+                                                AvanzaAccountTypes.KAPITALFORSAKRING_BARN)
                                         .put(
                                                 AccountTypes.SAVINGS,
                                                 AvanzaAccountTypes.SPARKONTO,

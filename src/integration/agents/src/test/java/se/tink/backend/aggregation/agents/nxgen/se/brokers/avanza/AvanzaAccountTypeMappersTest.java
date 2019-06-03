@@ -25,6 +25,9 @@ public final class AvanzaAccountTypeMappersTest {
                 Optional.of(AccountTypes.SAVINGS), mappers.inferAccountType("SparkontoPlus"));
         Assert.assertEquals(
                 Optional.of(AccountTypes.PENSION), mappers.inferAccountType("Tjanstepension"));
+        Assert.assertEquals(
+                Optional.of(AccountTypes.INVESTMENT),
+                mappers.inferAccountType("KapitalforsakringBarn"));
     }
 
     @Test

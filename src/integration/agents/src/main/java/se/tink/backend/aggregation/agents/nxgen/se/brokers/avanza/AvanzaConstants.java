@@ -42,6 +42,7 @@ public class AvanzaConstants {
         public static final String AKTIE_FONDKONTO = "AktieFondkonto";
         public static final String INVESTERINGSSPARKONTO = "Investeringssparkonto";
         public static final String KAPITALFORSAKRING = "Kapitalforsakring";
+        public static final String KAPITALFORSAKRING_BARN = "KapitalforsakringBarn";
         public static final String SPARKONTO = "Sparkonto";
         public static final String SPARKONTOPLUS = "SparkontoPlus";
         public static final String TJANSTEPENSION = "Tjanstepension";
