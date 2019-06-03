@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.pt.openbanking.caixa;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
 
-//@Ignore
+@Ignore
 public class CaixaAgentTest {
 
     private AgentIntegrationTest.Builder builder;
