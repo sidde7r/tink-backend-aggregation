@@ -38,6 +38,18 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
         validateRsaKeyPairUsedLaterInFilter();
         try {
             // Here we need to use the token got from installation
+            // This if is to handle the users registered before the Bunq
+            // refactoring took place where we moved common parts from
+            // Bunq's pre-psd2 agent and ps2 agent to a service provider package, as part of that
+            // move, and to be able to reuse the http client filters, the USER_CLIENT_AUNTH_TOKEN is
+            // saved in persistent storage in this agent. The customers who registered before the
+            // code changes do not have this entry in persistent storage and the method call will
+            // fail, for those users we force a session expiry that will put that entry in
+            // persistent storage. For all other users this doesn't have any effect.
+            if (!persistentStorage.containsKey(
+                    BunqBaseConstants.StorageKeys.USER_CLIENT_AUTH_TOKEN)) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             BunqAuthenticator.updateClientAuthToken(
                     sessionStorage, persistentStorage, temporaryStorage);
             CreateSessionUserResponse createSessionUserResponse =
