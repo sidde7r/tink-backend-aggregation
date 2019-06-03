@@ -1,20 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
@@ -25,15 +17,9 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public final class IngCardReaderAuthenticationController
         implements MultiFactorAuthenticator, ProgressiveAuthenticator {
-    private static Logger logger =
-            LoggerFactory.getLogger(IngCardReaderAuthenticationController.class);
 
-    private static final String CARD_ID_FIELD = "cardId";
-
-    private static final String STEP_OTP = "otp";
-    private static final String STEP_SIGN = "sign";
-
-    private static final String SIGN_ID = "signId";
+    static final String STEP_OTP = "otp";
+    static final String STEP_SIGN = "sign";
 
     private final IngCardReaderAuthenticator authenticator;
     private final SupplementalInformationFormer supplementalInformationFormer;
@@ -57,70 +43,15 @@ public final class IngCardReaderAuthenticationController
                         credentials.getType()));
         switch (authenticationRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                return step1();
+                return new OtpStep(supplementalInformationFormer).respond();
             case STEP_OTP:
-                return step2(authenticationRequest);
+                return new SignStep(supplementalInformationFormer, authenticator)
+                        .respond(authenticationRequest);
             case STEP_SIGN:
-                return step3(authenticationRequest);
+                return new FinalStep(authenticator).respond(authenticationRequest);
             default:
                 throw new IllegalStateException("bad step!");
         }
-    }
-
-    private static String extractSignCodeInput(final AuthenticationRequest request) {
-        // MIYAG-490: In production it has been observed that, in general, the list of user inputs
-        // only consists of the 'signcodeinput', which is what we are interested in:
-        // {signcodeinput=12345678}
-        // In rare cases however, the 'signcodedescription' is also included for some reason:
-        // {signcodedescription=4321 8765 09, signcodeinput=12345678}
-
-        return request.getUserInputs().stream()
-                .filter(input -> !input.contains(" "))
-                .findAny()
-                .orElseThrow(IllegalStateException::new);
-    }
-
-    private AuthenticationResponse step1() {
-        List<Field> otpInput =
-                Collections.singletonList(
-                        supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
-        return new AuthenticationResponse(STEP_OTP, otpInput);
-    }
-
-    private AuthenticationResponse step2(LoadedAuthenticationRequest authenticationRequest)
-            throws AuthenticationException, AuthorizationException {
-        logger.info("ING step2: {}", authenticationRequest.getUserInputs());
-
-        String username = authenticationRequest.getCredentials().getField(Field.Key.USERNAME);
-        String cardNumber = authenticationRequest.getCredentials().getField(CARD_ID_FIELD);
-        String otp = authenticationRequest.getUserInputs().get(0);
-        if (Strings.isNullOrEmpty(username)
-                || Strings.isNullOrEmpty(cardNumber)
-                || Strings.isNullOrEmpty(otp)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-        ChallengeExchangeValues challengeExchangeValues =
-                authenticator.initEnroll(username, cardNumber, otp);
-        authenticationRequest
-                .getCredentials()
-                .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
-        return new AuthenticationResponse(
-                STEP_SIGN,
-                supplementalInformationFormer.formChallengeResponseFields(
-                        challengeExchangeValues.getChallenge()));
-    }
-
-    private AuthenticationResponse step3(LoadedAuthenticationRequest authenticationRequest)
-            throws AuthenticationException {
-        logger.info("ING step3: {}", authenticationRequest.getUserInputs());
-
-        authenticator.confirmEnroll(
-                authenticationRequest.getCredentials().getField(Field.Key.USERNAME),
-                extractSignCodeInput(authenticationRequest),
-                authenticationRequest.getCredentials().getSensitivePayload(SIGN_ID));
-        authenticator.authenticate(
-                authenticationRequest.getCredentials().getField(Field.Key.USERNAME));
-        return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
     }
 
     @Override
