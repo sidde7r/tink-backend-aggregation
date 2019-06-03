@@ -25,7 +25,7 @@ public final class FinalStep {
 
     public AuthenticationResponse respond(LoadedAuthenticationRequest request)
             throws AuthenticationException {
-        logger.info("ING step3: {}", request.getUserInputs());
+        logger.info("ING FinalStep: {}", request.getUserInputs());
 
         authenticator.confirmEnroll(
                 request.getCredentials().getField(Field.Key.USERNAME),

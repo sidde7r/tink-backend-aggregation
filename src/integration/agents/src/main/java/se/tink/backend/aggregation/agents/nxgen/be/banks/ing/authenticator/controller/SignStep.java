@@ -31,7 +31,7 @@ public final class SignStep {
 
     public AuthenticationResponse respond(LoadedAuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        logger.info("ING step2: {}", request.getUserInputs());
+        logger.info("ING SignStep: {}", request.getUserInputs());
 
         String username = request.getCredentials().getField(Field.Key.USERNAME);
         String cardNumber = request.getCredentials().getField(CARD_ID_FIELD);
