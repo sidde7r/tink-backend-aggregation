@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
 public class TransactionFetcherController<A extends Account> implements TransactionFetcher<A> {
@@ -43,14 +42,12 @@ public class TransactionFetcherController<A extends Account> implements Transact
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
         transactions.addAll(fetchUpcomingTransactionsFor(account));
-
         do {
             PaginatorResponse response = paginator.fetchTransactionsFor(account);
             if (response != null) {
-                Collection<? extends Transaction> tinkTransactions = response.getTinkTransactions();
-                if (tinkTransactions != null) {
-                    transactions.addAll(tinkTransactions);
-                }
+                Optional.ofNullable(response)
+                        .map(resp -> resp.getTinkTransactions())
+                        .ifPresent(tinkTransactions -> transactions.addAll(tinkTransactions));
             }
 
             if (!response.canFetchMore()
