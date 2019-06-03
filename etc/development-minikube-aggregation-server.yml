@@ -62,7 +62,7 @@ agentsServiceConfiguration:
   integrations:
     sbab:
       signBaseUrl: https://secure.sbab.se
-    demoFakeBank:
+    demoFinancialInstitution:
       tink:
         baseUrl: http://localhost:9271
   creditsafe:

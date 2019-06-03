@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution;
 
-public class DemoFakeBankConstants {
-    public static final String INTEGRATION_NAME = "demoFakeBank";
+public class DemoFinancialInstitutionConstants {
+    public static final String INTEGRATION_NAME = "demoFinancialInstitution";
 
     public static class Urls {
         public static final String AUTHENTICATE = "/authenticate";

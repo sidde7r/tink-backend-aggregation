@@ -1,15 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.configuration.DemoFakeBankConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankIdentityDataFetcher;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankTransactionalAccountsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.sessionhandler.DemoFakeBankSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.DemoFinancialInstitutionAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionIdentityDataFetcher;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionTransactionalAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.sessionhandler.DemoFinancialInstitutionSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -28,21 +28,20 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-/* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
+/* This is the agent for the Demo Financial Institution which is a Tink developed test & demo bank */
 
-public final class DemoFakeBankAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+public final class DemoFinancialInstitutionAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
 
     private final String clientName;
-    private final DemoFakeBankApiClient apiClient;
+    private final DemoFinancialInstitutionApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public DemoFakeBankAgent(
+    public DemoFinancialInstitutionAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         clientName = request.getProvider().getPayload();
-        apiClient = new DemoFakeBankApiClient(client);
+        apiClient = new DemoFinancialInstitutionApiClient(client);
         sessionStorage = new SessionStorage();
     }
 
@@ -53,27 +52,27 @@ public final class DemoFakeBankAgent extends NextGenerationAgent
         apiClient.setConfiguration(getClientConfiguration());
     }
 
-    public DemoFakeBankConfiguration getClientConfiguration() {
+    public DemoFinancialInstitutionConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        DemoFakeBankConstants.INTEGRATION_NAME,
+                        DemoFinancialInstitutionConstants.INTEGRATION_NAME,
                         clientName,
-                        DemoFakeBankConfiguration.class)
+                        DemoFinancialInstitutionConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DemoFakeBankAuthenticator(apiClient, sessionStorage));
+                new DemoFinancialInstitutionAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final DemoFakeBankTransactionalAccountsFetcher transactionalAccountsFetcher =
-                new DemoFakeBankTransactionalAccountsFetcher(apiClient, sessionStorage);
+        final DemoFinancialInstitutionTransactionalAccountsFetcher transactionalAccountsFetcher =
+                new DemoFinancialInstitutionTransactionalAccountsFetcher(apiClient, sessionStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -109,7 +108,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new DemoFakeBankSessionHandler(apiClient);
+        return new DemoFinancialInstitutionSessionHandler(apiClient);
     }
 
     @Override
@@ -119,7 +118,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent
 
     @Override
     public FetchIdentityDataResponse fetchIdentityData() {
-        final IdentityDataFetcher fetcher = new DemoFakeBankIdentityDataFetcher();
+        final IdentityDataFetcher fetcher = new DemoFinancialInstitutionIdentityDataFetcher();
         return new FetchIdentityDataResponse(fetcher.fetchIdentityData());
     }
 }

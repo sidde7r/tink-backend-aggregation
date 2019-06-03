@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount;
 
 import java.time.LocalDate;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.libraries.identitydata.IdentityData;
 import se.tink.libraries.identitydata.countries.EsIdentityData;
 
-public class DemoFakeBankIdentityDataFetcher implements IdentityDataFetcher {
+public class DemoFinancialInstitutionIdentityDataFetcher implements IdentityDataFetcher {
     @Override
     public IdentityData fetchIdentityData() {
 

@@ -14,7 +14,7 @@ s3StorageConfiguration:
   enabled: false
 
 agents:
-  demoFakeBank:
+  demoFinancialInstitution:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
   bunq:
     tink:

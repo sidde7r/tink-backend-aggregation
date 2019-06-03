@@ -2152,12 +2152,12 @@
             "type": "TEST"
         },
         {
-            "name": "se-test-demo-fake-bank",
-            "className": "nxgen.demo.banks.demofakebank.DemoFakeBankAgent",
+            "name": "se-test-demo-financial-institution",
+            "className": "nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent",
             "displayDescription": "Password",
             "credentialsType": "PASSWORD",
-            "displayName": "Test Demo Fake Bank",
-            "groupDisplayName": "Test Demo Fake Bank",
+            "displayName": "Test Demo Financial Institution",
+            "groupDisplayName": "Test Demo Financial Institution",
             "fields": [
                 {
                     "description": "Username",

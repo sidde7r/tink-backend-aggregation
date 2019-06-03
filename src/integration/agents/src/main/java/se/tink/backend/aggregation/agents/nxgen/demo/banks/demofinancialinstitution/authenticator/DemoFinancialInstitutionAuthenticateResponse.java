@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class DemoFakeBankAuthenticateResponse {
+public class DemoFinancialInstitutionAuthenticateResponse {
     @JsonProperty("token")
     private String token;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount;
 
 import java.util.Collections;
 import java.util.Date;
@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class DemoFakeBankTransactionFetcher {
+public class DemoFinancialInstitutionTransactionFetcher {
 
-    public DemoFakeBankTransactionFetcher() {}
+    public DemoFinancialInstitutionTransactionFetcher() {}
 
     public TransactionKeyPaginatorResponse<Date> fetchTransactionsFor(
             TransactionalAccount account, Date date) {

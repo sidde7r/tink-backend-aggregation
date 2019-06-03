@@ -18,7 +18,7 @@ agents:
   icsConfiguration: true
   starling:
     redirectUrl: tink://thirdparty/callback
-  demoFakeBank:
+  demoFinancialInstitution:
     baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
   bunq:
     redirectUrl: "https://staging.oxford.tink.se/api/v1/credentials/third-party/callback"

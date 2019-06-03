@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.configuration;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class DemoFakeBankConfiguration implements ClientConfiguration {
+public class DemoFinancialInstitutionConfiguration implements ClientConfiguration {
 
     private String baseUrl;
 
