@@ -104,4 +104,14 @@ public class SparebankenSorConstants {
     public static class Link {
         public static final String DETAILS = "details";
     }
+
+    public static class HTMLTags {
+        public static final String BANKID_REF_WORD = "bidm_ref-word";
+        public static final String LOGIN_ERROR_CLASS = "bidmob-login-error";
+    }
+
+    public static class ErrorText {
+        public static final String BANKID_BLOCKED =
+                "Det har dessverre oppstått en feil. Ditt mobilabonnement kan ha blitt endret eller din BankID på mobil kan være sperret.  Aktiver BankID på mobil på nytt i din nettbank dersom feilen vedvarer.";
+    }
 }
