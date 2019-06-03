@@ -128,10 +128,8 @@ public class GenericCardEntity {
         return "C".equalsIgnoreCase(cardType) || "P".equalsIgnoreCase(cardType);
     }
 
-    private Amount getAvailableCredit() {
-        return "P".equalsIgnoreCase(cardType)
-                ? liquidationData.getPrepaidAmount()
-                : liquidationData.getAvailableCredit();
+    public Amount getAvailableCredit() {
+        return liquidationData.getAvailableCredit();
     }
 
     public String getRefValIdContract() {
