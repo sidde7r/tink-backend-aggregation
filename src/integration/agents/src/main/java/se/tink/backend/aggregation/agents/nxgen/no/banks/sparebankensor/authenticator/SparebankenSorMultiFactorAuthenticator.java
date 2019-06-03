@@ -11,10 +11,14 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.ErrorText;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.SparebankenSorConstants.HTMLTags;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FinalizeBankIdBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginResponse;
@@ -81,7 +85,10 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         String initBankIdResponseString = apiClient.initBankId(initBankIdBody);
 
         Document doc = Jsoup.parse(initBankIdResponseString);
-        Element referenceWordsElement = doc.getElementsByClass("bidm_ref-word").first();
+
+        handleLoginErrors(doc);
+
+        Element referenceWordsElement = doc.getElementsByClass(HTMLTags.BANKID_REF_WORD).first();
 
         if (referenceWordsElement == null) {
             throw new IllegalStateException(
@@ -91,6 +98,24 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
         }
 
         return referenceWordsElement.text();
+    }
+
+    private void handleLoginErrors(final Document doc) throws BankIdException {
+
+        Element errorElement = doc.getElementsByClass(HTMLTags.LOGIN_ERROR_CLASS).first();
+
+        if (errorElement == null) {
+            return; // No errors found
+        }
+
+        if (errorElement.hasText()) {
+
+            if (ErrorText.BANKID_BLOCKED.equalsIgnoreCase(errorElement.text().trim())) {
+                throw BankIdError.BLOCKED.exception();
+            }
+        }
+
+        LOGGER.warn(String.format("Potential unknown login error %s", errorElement.toString()));
     }
 
     @Override
