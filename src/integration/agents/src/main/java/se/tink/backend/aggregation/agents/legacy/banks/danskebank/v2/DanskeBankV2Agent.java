@@ -669,20 +669,31 @@ public class DanskeBankV2Agent extends AbstractAgent
             }
         } catch (BankIdException bankIdException) {
             BankIdResponse bankIdResponse = bankIdException.getResponse();
-            String bankIDStatusCode = bankIdResponse.getBankIdStatusCode();
+            String bankIdStatusCode = bankIdResponse.getBankIdStatusCode();
+            String bankIdStatusText = bankIdResponse.getBankIdStatusText();
+
+            if (bankIdResponse.isAlreadyInProgress()) {
+                log.info(
+                        String.format(
+                                "Status code: %s, status text: %s, interpreted as bankID already in progress.",
+                                bankIdStatusCode, bankIdStatusText));
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
 
             if (bankIdResponse.isUserCancelled()) {
-                log.info(bankIDStatusCode + " - User cancelled BankID authentication");
+                log.info(bankIdStatusCode + " - User cancelled BankID authentication");
                 throw BankIdError.CANCELLED.exception();
-            } else if (bankIdResponse.isTimeout() || bankIdResponse.isWaitingForUserInput()) {
-                log.info(bankIDStatusCode + " - User timeout authenticating with BankID");
-                throw BankIdError.TIMEOUT.exception();
-            } else {
-                throw new IllegalStateException(
-                        String.format(
-                                "#login-refactoring - DanskeBank - Login failed with BankId status: %s",
-                                bankIDStatusCode));
             }
+
+            if (bankIdResponse.isTimeout() || bankIdResponse.isWaitingForUserInput()) {
+                log.info(bankIdStatusCode + " - User timeout authenticating with BankID");
+                throw BankIdError.TIMEOUT.exception();
+            }
+
+            throw new IllegalStateException(
+                    String.format(
+                            "#danskebankV2 - BankID authentication failed with status code: %s, and status text: %s",
+                            bankIdStatusCode, bankIdStatusText));
         }
     }
 
