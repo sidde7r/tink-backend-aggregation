@@ -41,6 +41,10 @@ public class ConsentBaseRequest {
         this.combinedServiceIndicator = combinedServiceIndicator;
     }
 
+    public static ConsentBaseRequestBuilder builder() {
+        return new ConsentBaseRequestBuilder();
+    }
+
     public String toData() {
         return SerializationUtils.serializeToString(this);
     }
@@ -72,7 +76,7 @@ public class ConsentBaseRequest {
         private int frequencyPerDay;
         private boolean combinedServiceIndicator;
 
-        ConsentBaseRequestBuilder() {}
+        public ConsentBaseRequestBuilder() {}
 
         public ConsentBaseRequestBuilder recurringIndicator(final boolean recurringIndicator) {
             this.recurringIndicator = recurringIndicator;
