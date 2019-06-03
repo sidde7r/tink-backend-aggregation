@@ -23,12 +23,8 @@ public class BawagAuthenticator {
     }
 
     public URL buildAuthorizeUrl(String state) {
-<<<<<<< HEAD
         ConsentBaseRequest consentRequest = new ConsentBaseRequest(new AccessEntityBerlinGroup());
         consentRequest.setFrequencyPerDay(100);
-=======
-        BawagConsentRequest consentRequest = new BawagConsentRequest(100);
->>>>>>> fix(BAWAG): Used constructor instead of setter
         consentRequest.getAccess().addIban(iban);
         Calendar date = Calendar.getInstance();
         date.add(Calendar.MONTH, 1);
