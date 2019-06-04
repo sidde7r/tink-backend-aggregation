@@ -60,8 +60,50 @@ clients:
     aggregatorIdentifier: "Collector Bank"
   collector-verified:
     aggregatorIdentifier: "Collector Bank"
+  dk-bank-nordic-production:
+    aggregatorIdentifier: "Bank Nordic"
+  dk-basisbank-as-production:
+    aggregatorIdentifier: "Basisbank A/S"
+  dk-broager-sparekasse-production:
+    aggregatorIdentifier: "Broager Sparekasse"
+  dk-dragsholm-sparekasse-production:
+    aggregatorIdentifier: "Dragsholm Sparekasse"
+  dk-dronninglund-sparekasse-production:
+    aggregatorIdentifier: "Dronninglund Sparekasse"
+  dk-folkesparekassen-production:
+    aggregatorIdentifier: "Folkesparekassen"
+  dk-fros-sparekasse-production:
+    aggregatorIdentifier: "Frøs Sparekasse"
+  dk-jutlander-bank-production:
+    aggregatorIdentifier: "Jutlander Bank"
+  dk-lan-spar-production:
+    aggregatorIdentifier: "Lån & Spar"
+  dk-rise-flemlose-sparekasse-production:
+    aggregatorIdentifier: "Rise Flemløse Sparekasse"
+  dk-sparekassen-balling-production:
+    aggregatorIdentifier: "Sparekassen Balling"
+  dk-sparekassen-bredebro-production:
+    aggregatorIdentifier: "Sparekassen Bredebro"
+  dk-sparekassen-djursland-production:
+    aggregatorIdentifier: "Sparekassen Djursland"
+  dk-sparekassen-for-norre-nebel-og-omegn-production:
+    aggregatorIdentifier: "Sparekassen for Nørre Nebel og Omegn"
+  dk-sparekassen-kronjylland-production:
+    aggregatorIdentifier: "Sparekassen Kronjylland"
+  dk-sparekassen-thy-production:
+    aggregatorIdentifier: "Sparekassen Thy"
+  dk-sparekassen-vendsyssel-production:
+    aggregatorIdentifier: "Sparekassen Vendsyssel"
+  evobanco-testing:
+    aggregatorIdentifier: "Evo Banco"
   fintonic-testing:
     aggregatorIdentifier: "Fintonic"
+  fo-bank-nordic-production:
+    aggregatorIdentifier: "Bank Nordic"
+  fo-betri-production:
+    aggregatorIdentifier: "Betri"
+  fo-suduroyar-sparikassi-production:
+    aggregatorIdentifier: "Suduroyar Sparikassi"
   icaspara-production:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
@@ -74,19 +116,37 @@ clients:
     aggregatorIdentifier: "Lunarway"
   lunarway-test:
     aggregatorIdentifier: "Lunarway"
-  sbab-production:
-    aggregatorIdentifier: "SBAB"
-  sbab-testing:
-    aggregatorIdentifier: "SBAB"
-  zimpler-production:
-    aggregatorIdentifier: "Zimpler"
-  zimpler-test:
-    aggregatorIdentifier: "Zimpler"
-  evobanco-testing:
-    aggregatorIdentifier: "Evo Banco"
+  middelfart-production:
+    aggregatorIdentifier: "Middelfart Sparekasse"
   middelfart-testing:
     aggregatorIdentifier: "Middelfart Sparekasse"
+  no-easybank-asa-production:
+    aggregatorIdentifier: "Easybank ASA"
+  no-sandnes-sparebank-production:
+    aggregatorIdentifier: "Sandnes Sparebank"
+  no-sandnes-sparebank-testing:
+    aggregatorIdentifier: "Sandnes Sparebank"
+  no-storebrand-production:
+    aggregatorIdentifier: "Storebrand"
+  no-totens-sparebank-production:
+    aggregatorIdentifier: "Totens Sparebank"
+  no-totens-sparebank-testing:
+    aggregatorIdentifier: "Totens Sparebank"
   saxobank-production:
     aggregatorIdentifier: "SAXO Bank"
   saxobank-testing:
     aggregatorIdentifier: "SAXO Bank"
+  sbab-production:
+    aggregatorIdentifier: "SBAB"
+  sbab-testing:
+    aggregatorIdentifier: "SBAB"
+  se-ekobanken-medlemsbank-production:
+    aggregatorIdentifier: "Ekobanken Medlemsbank"
+  se-lan-spar-sverige-testing:
+    aggregatorIdentifier: "Lån & Spar Sverige"
+  se-sparbanken-syd-production:
+    aggregatorIdentifier: "Sparbanken Syd"
+  zimpler-production:
+    aggregatorIdentifier: "Zimpler"
+  zimpler-test:
+    aggregatorIdentifier: "Zimpler"
