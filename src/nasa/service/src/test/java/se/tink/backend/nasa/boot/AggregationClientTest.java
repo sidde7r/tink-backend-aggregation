@@ -19,7 +19,7 @@ import se.tink.backend.nasa.boot.rpc.UserProfile;
 
 public class AggregationClientTest {
 
-    private static final String PROVIDER_NAME = "se-test-demo-fake-bank";
+    private static final String PROVIDER_NAME = "se-test-demofinancialinstitution-mobilebanking-password";
     private static final String API_CLIENT_KEY = "00000000-0000-0000-0000-000000000000";
 
     // To get a response from aggregation, configure NASA as the aggregation controller in
@@ -39,7 +39,7 @@ public class AggregationClientTest {
 
         Provider provider = new Provider();
         provider.setName(PROVIDER_NAME);
-        provider.setClassName("nxgen.demo.banks.demofakebank.DemoFakeBankAgent");
+        provider.setClassName("nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent");
         provider.setMarket("SE");
 
         Credentials credentials = new Credentials();

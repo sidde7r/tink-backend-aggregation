@@ -2152,7 +2152,7 @@
             "type": "TEST"
         },
         {
-            "name": "se-test-demo-financial-institution",
+            "name": "se-test-demofinancialinstitution-mobilebanking-password",
             "className": "nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent",
             "displayDescription": "Password",
             "credentialsType": "PASSWORD",
@@ -2174,7 +2174,7 @@
             "multiFactor": false,
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
-            "payload": "tink",
+            "payload": "mobilebanking",
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"

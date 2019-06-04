@@ -123,7 +123,8 @@ data:
 
         {{- if $agentsConfig.demoFinancialInstitution }}
         demoFinancialInstitution:
-          baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}"
+          mobilebanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}/mobilebanking"
         {{- end }}
 
       abnAmro:

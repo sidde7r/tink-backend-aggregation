@@ -35,6 +35,9 @@ agentsServiceConfiguration:
   integrations:
     sbab:
       signBaseUrl: https://secure.sbab.se
+    demoFinancialInstitution:
+      mobilebanking:
+        baseUrl: http://localhost:9271/mobilebanking
   creditsafe:
     username: TINKTESTIN
     password: cU7356rwx
