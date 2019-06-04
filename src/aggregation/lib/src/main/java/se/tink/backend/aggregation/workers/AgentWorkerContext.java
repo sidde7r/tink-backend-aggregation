@@ -336,6 +336,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
+        account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
 
         // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
         // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
@@ -387,6 +388,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
+        account.setFinancialInstitutionId(request.getProvider().getFinancialInstitutionId());
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest
                 updateAccountRequest =
