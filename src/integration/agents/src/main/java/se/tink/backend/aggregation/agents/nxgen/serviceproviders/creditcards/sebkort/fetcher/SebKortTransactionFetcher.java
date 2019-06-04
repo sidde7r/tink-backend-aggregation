@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity.TransactionEntity;
@@ -18,6 +20,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 public class SebKortTransactionFetcher implements TransactionDatePaginator<CreditCardAccount> {
     private final SebKortApiClient apiClient;
     private boolean pendingFetched = false;
+
+    private final Logger log = LoggerFactory.getLogger(SebKortTransactionFetcher.class);
 
     public SebKortTransactionFetcher(SebKortApiClient apiClient) {
         this.apiClient = apiClient;
@@ -86,9 +90,18 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
         String cardAccountId =
                 account.getFromTemporaryStorage(SebKortConstants.StorageKey.CARD_ACCOUNT_ID);
 
+        log.debug(
+                "Initiating fetchPaymentsAndFeesIfAccountOwner[isAccountOwner={}, cardAccountId={}, isNullOrEmpty(cardAccountId)={}",
+                isAccountOwner,
+                cardAccountId,
+                Strings.isNullOrEmpty(cardAccountId));
+
         if (!isAccountOwner || Strings.isNullOrEmpty(cardAccountId)) {
+            log.debug("Not account owner, or no cardAccountId present, returning empty list.");
             return Collections.emptyList();
         }
+
+        log.debug("Trying to fetch payments and fees from SEB kort.");
 
         return apiClient.fetchTransactionsForCardAccountId(cardAccountId, fromDate, toDate)
                 .getTransactions().stream()
