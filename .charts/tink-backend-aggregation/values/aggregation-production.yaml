@@ -104,6 +104,8 @@ clients:
     aggregatorIdentifier: "Betri"
   fo-suduroyar-sparikassi-production:
     aggregatorIdentifier: "Suduroyar Sparikassi"
+  fintonic-production:
+    aggregatorIdentifier: "Fintonic"
   icaspara-production:
     aggregatorIdentifier: "Ica Spara"
   icaspara-test:
