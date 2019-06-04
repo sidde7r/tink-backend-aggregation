@@ -35,7 +35,8 @@ public class NasaRequestHandler implements NasaApi {
 
         Provider provider = new Provider();
         provider.setName(PROVIDER_NAME);
-        provider.setClassName("nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent");
+        provider.setClassName(
+                "nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent");
         provider.setMarket("SE");
 
         Credentials credentials = new Credentials();

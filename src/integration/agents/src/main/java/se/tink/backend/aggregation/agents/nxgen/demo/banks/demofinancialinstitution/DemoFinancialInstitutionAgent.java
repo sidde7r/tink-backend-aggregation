@@ -30,7 +30,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /* This is the agent for the Demo Financial Institution which is a Tink developed test & demo bank */
 
-public final class DemoFinancialInstitutionAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
 
     private final String clientName;
     private final DemoFinancialInstitutionApiClient apiClient;

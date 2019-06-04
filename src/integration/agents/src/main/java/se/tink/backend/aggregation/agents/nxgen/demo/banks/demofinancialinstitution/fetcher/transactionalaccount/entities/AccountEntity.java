@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.math.BigDecimal;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.util.DemoFinancialInstituteUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
