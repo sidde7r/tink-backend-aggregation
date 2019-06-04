@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.mobilebanking.util;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.util;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;

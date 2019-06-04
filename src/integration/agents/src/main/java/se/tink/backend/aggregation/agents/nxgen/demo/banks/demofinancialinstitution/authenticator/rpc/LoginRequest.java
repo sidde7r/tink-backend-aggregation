@@ -3,11 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitu
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class DemoFinancialInstitutionAuthenticationBody {
+public class LoginRequest {
+
     public String username;
     public String password;
 
-    public DemoFinancialInstitutionAuthenticationBody(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitu
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.DemoFinancialInstitutionAuthenticateResponse;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.rpc.DemoFinancialInstitutionAuthenticationBody;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.DemoFinancialInstitutionAccountBody;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.DemoFinancialInstitutionAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -29,10 +29,9 @@ public class DemoFinancialInstitutionApiClient {
         this.configuration = configuration;
     }
 
-    public DemoFinancialInstitutionAuthenticateResponse authenticate(
-            DemoFinancialInstitutionAuthenticationBody authenticationBody) {
-        return createRequest(createBaseUrl().concat(DemoFinancialInstitutionConstants.Urls.AUTHENTICATE))
-                .post(DemoFinancialInstitutionAuthenticateResponse.class, authenticationBody);
+    public LoginResponse login(LoginRequest loginRequest) {
+        return createRequest(createBaseUrl().concat(Urls.LOGIN))
+                .post(LoginResponse.class, loginRequest);
     }
 
     private URL createBaseUrl() {
@@ -45,10 +44,9 @@ public class DemoFinancialInstitutionApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
-    public DemoFinancialInstitutionAccountsResponse fetchAccounts(String username, String token) {
-        return createRequest(createBaseUrl().concat(DemoFinancialInstitutionConstants.Urls.ACCOUNTS))
-                .post(
-                        DemoFinancialInstitutionAccountsResponse.class,
-                        new DemoFinancialInstitutionAccountBody(username, token));
+    public FetchAccountsResponse fetchAccounts() {
+        final URL url = createBaseUrl().concat(Urls.ACCOUNTS);
+
+        return createRequest(url).get(FetchAccountsResponse.class);
     }
 }

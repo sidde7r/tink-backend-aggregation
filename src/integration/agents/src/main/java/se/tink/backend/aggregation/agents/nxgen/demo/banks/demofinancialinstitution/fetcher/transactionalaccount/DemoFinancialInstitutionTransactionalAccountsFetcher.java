@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities.FakeAccount;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.DemoFinancialInstitutionAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -30,14 +29,9 @@ public class DemoFinancialInstitutionTransactionalAccountsFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        DemoFinancialInstitutionAccountsResponse demoFinancialInstitutionAccountsResponse =
-                apiClient.fetchAccounts(
-                        sessionStorage.get(DemoFinancialInstitutionConstants.Storage.USERNAME),
-                        sessionStorage.get(DemoFinancialInstitutionConstants.Storage.AUTH_TOKEN));
-
-        return demoFinancialInstitutionAccountsResponse.getAccounts().stream()
-                .filter(FakeAccount::isTransactionalAccount)
-                .map(FakeAccount::toTinkCheckingAccount)
+        return apiClient.fetchAccounts().getAccounts().stream()
+                .filter(AccountEntity::isTransactionalAccount)
+                .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 

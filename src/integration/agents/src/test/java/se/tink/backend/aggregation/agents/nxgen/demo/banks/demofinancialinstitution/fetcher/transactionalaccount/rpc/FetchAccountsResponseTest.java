@@ -8,15 +8,15 @@ import static org.junit.Assert.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities.FakeAccount;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities.AccountEntity;
 
-public class DemoFinancialInstitutionAccountsResponseTest {
+public class FetchAccountsResponseTest {
 
     @Test
     public void getAccountsShouldNotReturnNull() {
 
-        DemoFinancialInstitutionAccountsResponse demoFinancialInstitutionAccountsResponse =
-                new DemoFinancialInstitutionAccountsResponse();
+        FetchAccountsResponse demoFinancialInstitutionAccountsResponse =
+                new FetchAccountsResponse();
         demoFinancialInstitutionAccountsResponse.setAccounts(null);
 
         assertThat(demoFinancialInstitutionAccountsResponse.getAccounts(), notNullValue());
@@ -26,9 +26,9 @@ public class DemoFinancialInstitutionAccountsResponseTest {
     @Test
     public void getAccountsShouldReturnListOfFakeAccountsWhenNotNull() {
 
-        DemoFinancialInstitutionAccountsResponse demoFinancialInstitutionAccountsResponse =
-                new DemoFinancialInstitutionAccountsResponse();
-        List<FakeAccount> fakeAccounts = ImmutableList.of(new FakeAccount());
+        FetchAccountsResponse demoFinancialInstitutionAccountsResponse =
+                new FetchAccountsResponse();
+        List<AccountEntity> fakeAccounts = ImmutableList.of(new AccountEntity());
         demoFinancialInstitutionAccountsResponse.setAccounts(fakeAccounts);
 
         assertThat(demoFinancialInstitutionAccountsResponse.getAccounts(), is(fakeAccounts));
