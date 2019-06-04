@@ -13,7 +13,12 @@ public class PasswordDemoPaymentExecutor implements PaymentExecutor {
     public void executePayment(Transfer transfer) {
         Optional<String> sourceAccountName = transfer.getSource().getName();
 
-        if (sourceAccountName.isPresent() && sourceAccountName.get().contains("Savings Account")) {
+        if (sourceAccountName.isPresent()
+                && sourceAccountName
+                        .get()
+                        .toLowerCase()
+                        .replaceAll("\\s+", "")
+                        .contains("savingsaccount")) {
             // Mock the user cancel for transfers from the saving account
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage("Cancel on payment signing (test)")
