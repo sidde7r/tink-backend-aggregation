@@ -134,7 +134,7 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionalAccountAccounts() {
+    public DemoTransactionAccount getTransactionAccounts() {
         return new DemoTransactionAccount() {
             @Override
             public String getAccountId() {
