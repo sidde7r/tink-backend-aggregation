@@ -13,7 +13,7 @@ public class TransactionEntity {
     private String receiverBank;
     private String receiverAccount;
     private String transactionId;
-    private String statement;
+    private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
@@ -37,8 +37,8 @@ public class TransactionEntity {
         return transactionId;
     }
 
-    public String getStatement() {
-        return statement;
+    public String getDescription() {
+        return description;
     }
 
     public Date getDate() {
@@ -58,7 +58,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(new Amount(currency, amount))
                 .setDate(date)
-                .setDescription(statement)
+                .setDescription(description)
                 .setExternalId(String.valueOf(id))
                 .build();
     }

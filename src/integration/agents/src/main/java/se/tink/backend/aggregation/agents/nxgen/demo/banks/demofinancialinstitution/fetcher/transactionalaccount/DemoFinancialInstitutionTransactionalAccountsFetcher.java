@@ -26,7 +26,7 @@ public class DemoFinancialInstitutionTransactionalAccountsFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts().getAccounts().stream()
+        return apiClient.fetchAccounts().stream()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());

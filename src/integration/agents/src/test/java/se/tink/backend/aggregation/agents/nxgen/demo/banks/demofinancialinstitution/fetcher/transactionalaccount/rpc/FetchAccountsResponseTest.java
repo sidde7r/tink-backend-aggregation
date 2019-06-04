@@ -14,23 +14,19 @@ public class FetchAccountsResponseTest {
 
     @Test
     public void getAccountsShouldNotReturnNull() {
+        final FetchAccountsResponse accountsResponse = new FetchAccountsResponse();
+        accountsResponse.clear();
 
-        FetchAccountsResponse demoFinancialInstitutionAccountsResponse =
-                new FetchAccountsResponse();
-        demoFinancialInstitutionAccountsResponse.setAccounts(null);
-
-        assertThat(demoFinancialInstitutionAccountsResponse.getAccounts(), notNullValue());
-        assertThat(demoFinancialInstitutionAccountsResponse.getAccounts(), empty());
+        assertThat(accountsResponse, notNullValue());
+        assertThat(accountsResponse, empty());
     }
 
     @Test
     public void getAccountsShouldReturnListOfFakeAccountsWhenNotNull() {
+        final FetchAccountsResponse accountsResponse = new FetchAccountsResponse();
+        final List<AccountEntity> fakeAccounts = ImmutableList.of(new AccountEntity());
+        accountsResponse.addAll(fakeAccounts);
 
-        FetchAccountsResponse demoFinancialInstitutionAccountsResponse =
-                new FetchAccountsResponse();
-        List<AccountEntity> fakeAccounts = ImmutableList.of(new AccountEntity());
-        demoFinancialInstitutionAccountsResponse.setAccounts(fakeAccounts);
-
-        assertThat(demoFinancialInstitutionAccountsResponse.getAccounts(), is(fakeAccounts));
+        assertThat(accountsResponse, is(fakeAccounts));
     }
 }

@@ -16,13 +16,31 @@ import se.tink.libraries.amount.Amount;
 public class AccountEntity {
 
     private long id;
+    private String username;
+    private String name;
+    private double balance;
+    private String currency;
     private String accountType;
     private String accountNumber;
-    private BigDecimal balance;
-    private String currency;
 
     public long getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 
     public String getAccountType() {
@@ -31,14 +49,6 @@ public class AccountEntity {
 
     public String getAccountNumber() {
         return accountNumber;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public String getCurrency() {
-        return currency;
     }
 
     public boolean isTransactionalAccount() {
@@ -54,15 +64,16 @@ public class AccountEntity {
                 .withType(TransactionalAccountType.from(AccountTypes.CHECKING))
                 .withId(
                         IdModule.builder()
-                                .withUniqueIdentifier(getAccountNumber())
-                                .withAccountNumber(getAccountNumber())
-                                .withAccountName(getAccountNumber())
+                                .withUniqueIdentifier(accountNumber)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountNumber)
                                 // TODO: What should the identifier be? Clearing etc?
-                                .addIdentifier(new SwedishIdentifier(getAccountNumber()))
+                                .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
                 .withBalance(BalanceModule.of(new Amount(currency, balance)))
-                .setApiIdentifier(getAccountNumber())
-                .setBankIdentifier(getAccountNumber())
+                .addHolderName(name)
+                .setApiIdentifier(accountNumber)
+                .setBankIdentifier(accountNumber)
                 .build();
     }
 }
