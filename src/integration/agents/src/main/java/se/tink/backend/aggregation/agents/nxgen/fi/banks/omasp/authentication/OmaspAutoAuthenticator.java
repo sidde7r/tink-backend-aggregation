@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication;
 
 import com.google.common.base.Strings;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -61,7 +62,8 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
             persistentStorage.put(Storage.DEVICE_TOKEN, loginResponse.getDeviceToken());
             sessionStorage.put(Storage.FULL_NAME, loginResponse.getName());
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() != 401) {
+            if (e.getResponse().getStatus() != HttpStatus.SC_UNAUTHORIZED
+                    && e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 throw e;
             }
 
@@ -74,6 +76,7 @@ public class OmaspAutoAuthenticator implements AutoAuthenticator {
 
             switch (error.toLowerCase()) {
                 case OmaspConstants.Error.AUTHENTICATION_FAILED:
+                case OmaspConstants.Error.BAD_REQUEST:
                     throw SessionError.SESSION_EXPIRED.exception();
                 default:
                     LOGGER.warn(

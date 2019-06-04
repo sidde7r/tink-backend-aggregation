@@ -4,8 +4,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class OmaspErrorResponse {
+
+    private static final String PASSWORD = "password";
+
     private String error;
     private String message;
+    private String reason;
 
     public String getError() {
         return error;
@@ -17,5 +21,10 @@ public class OmaspErrorResponse {
 
     public boolean isError(String cmp) {
         return cmp.equalsIgnoreCase(getError());
+    }
+
+    public boolean isPasswordError() {
+        return (message != null && message.contains(PASSWORD))
+                || (reason != null && reason.contains(PASSWORD));
     }
 }
