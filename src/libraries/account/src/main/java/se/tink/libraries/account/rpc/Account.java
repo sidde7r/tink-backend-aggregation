@@ -57,6 +57,7 @@ public class Account implements Cloneable {
     private boolean closed;
     private String flags;
     private AccountExclusion accountExclusion;
+    private String financialInstitutionId;
 
     @Override
     public Account clone() throws CloneNotSupportedException {
@@ -209,6 +210,14 @@ public class Account implements Cloneable {
 
     public void setUserModifiedType(boolean userModifiedType) {
         this.userModifiedType = userModifiedType;
+    }
+
+    public String getFinancialInstitutionId() {
+        return financialInstitutionId;
+    }
+
+    public void setFinancialInstitutionId(String financialInstitutionId) {
+        this.financialInstitutionId = financialInstitutionId;
     }
 
     public List<TransferDestination> getTransferDestinations() {
