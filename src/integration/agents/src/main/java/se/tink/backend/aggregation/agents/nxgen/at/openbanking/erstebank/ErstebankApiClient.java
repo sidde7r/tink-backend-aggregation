@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestGet;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
@@ -33,12 +33,12 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConfiguration> {
-    public ErstebankApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public ErstebankApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
-    public URL getAuthorizeUrl(String state) {
+    public URL getAuthorizeUrl(final String state) {
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
         return getAuthorizeUrl(
                         authUrl,
@@ -49,7 +49,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     @Override
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token getToken(final String code) {
         final TokenRequestGet request =
                 new TokenRequestGet(
                         getConfiguration().getClientId(),
@@ -72,7 +72,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         return getConsent(Collections.EMPTY_LIST).getConsentId();
     }
 
-    public OAuth2Token refreshToken(String refreshToken) {
+    public OAuth2Token refreshToken(final String refreshToken) {
         final RefreshTokenRequest request =
                 new RefreshTokenRequest(
                         getConfiguration().getClientId(),
@@ -97,13 +97,13 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
         return getTransactionsRequestBuilder(getConfiguration().getBaseUrl() + url)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
                 .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
-    public ConsentBaseResponse getConsent(List<String> ibans) {
+    public ConsentBaseResponse getConsent(final List<String> ibans) {
         return new ConsentBaseResponse("received", "1234-wertiq-983");
 
         //         TODO: Wait for erste's api to be fixed
@@ -116,7 +116,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         //                        .post(ConsentBaseResponse.class);
     }
 
-    public ConsentSignResponse signConsent(String consentId) {
+    public ConsentSignResponse signConsent(final String consentId) {
         return buildRequestWithSignature(
                         String.format(Urls.SIGN_CONSENT, consentId), FormValues.EMPTY)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
@@ -124,7 +124,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                 .post(ConsentSignResponse.class);
     }
 
-    private String getSignature(final String digest, String requestId) {
+    private String getSignature(final String digest, final String requestId) {
         final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
 
         final SignatureEntity signatureEntity = new SignatureEntity(digest, requestId);
@@ -133,7 +133,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                 signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
     }
 
-    private String getAuthorization(final String digest, String requestId) {
+    private String getAuthorization(final String digest, final String requestId) {
         final String clientId = getConfiguration().getClientId();
 
         return new AuthorizationEntity(clientId, getSignature(digest, requestId)).toString();
@@ -175,14 +175,14 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
                                                         ErrorMessages.MISSING_TOKEN)));
     }
 
-    private RequestBuilder buildRequestForIbans(final String reqPath, List<String> ibans) {
+    private RequestBuilder buildRequestForIbans(final String reqPath, final List<String> ibans) {
         final AccessEntity access = new AccessEntity();
         access.addIbans(ibans);
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
         final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
 
-        final ConsentRequest consentRequest = new ConsentRequest();
+        final ConsentBaseRequest consentRequest = new ConsentBaseRequest();
         consentRequest.getAccess().addIbans(ibans);
 
         final String payload = consentRequest.toData();

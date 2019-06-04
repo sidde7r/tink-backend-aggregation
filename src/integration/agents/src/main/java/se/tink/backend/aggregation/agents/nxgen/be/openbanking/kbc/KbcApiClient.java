@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.kbc.KbcConstants.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
@@ -20,10 +20,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class KbcApiClient extends BerlinGroupApiClient {
 
-    private Credentials credentials;
+    private final Credentials credentials;
 
     public KbcApiClient(
-            TinkHttpClient client, SessionStorage sessionStorage, Credentials credentials) {
+            final TinkHttpClient client,
+            final SessionStorage sessionStorage,
+            final Credentials credentials) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
@@ -36,13 +38,13 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     }
 
     @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
         return getTransactionsRequestBuilder(
                         getConfiguration().getBaseUrl() + Urls.AIS_PRODUCT + url)
                 .get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
-    public URL getAuthorizeUrl(String state) {
+    public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
@@ -56,7 +58,7 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     }
 
     @Override
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token getToken(final String code) {
         final TokenRequestPost tokenRequest =
                 new TokenRequestPost(
                         FormValues.AUTHORIZATION_CODE,
@@ -75,7 +77,7 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     }
 
     @Override
-    public OAuth2Token refreshToken(String token) {
+    public OAuth2Token refreshToken(final String token) {
         final RefreshTokenRequest refreshTokenRequest =
                 new RefreshTokenRequest(
                         FormValues.REFRESH_TOKEN_GRANT_TYPE,
@@ -93,7 +95,7 @@ public final class KbcApiClient extends BerlinGroupApiClient {
 
     @Override
     public String getConsentId() {
-        final ConsentRequest consentsRequest = new ConsentRequest();
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.getAccess().addIban(credentials.getField("IBAN"));
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)

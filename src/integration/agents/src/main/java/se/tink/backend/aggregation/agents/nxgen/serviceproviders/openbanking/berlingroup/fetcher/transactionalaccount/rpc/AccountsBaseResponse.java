@@ -15,7 +15,7 @@ public class AccountsBaseResponse {
 
     public AccountsBaseResponse() {}
 
-    public AccountsBaseResponse(List<AccountBaseEntity> accounts) {
+    public AccountsBaseResponse(final List<AccountBaseEntity> accounts) {
         this.accounts = accounts;
     }
 

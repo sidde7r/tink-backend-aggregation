@@ -28,9 +28,9 @@ public class TransactionsBaseEntity {
     }
 
     public Collection<Transaction> toTinkTransactions() {
-        Stream<Transaction> bookedTransactionsStream =
+        final Stream<Transaction> bookedTransactionsStream =
                 booked.stream().map(BookedTransactionBaseEntity::toTinkTransaction);
-        Stream<Transaction> pendingTransactionsStream =
+        final Stream<Transaction> pendingTransactionsStream =
                 pending.stream().map(PendingTransactionBaseEntity::toTinkTransaction);
 
         return Stream.concat(bookedTransactionsStream, pendingTransactionsStream)

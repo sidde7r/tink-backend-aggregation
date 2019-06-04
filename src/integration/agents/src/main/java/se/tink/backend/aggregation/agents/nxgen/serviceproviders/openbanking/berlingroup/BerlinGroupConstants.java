@@ -86,6 +86,10 @@ public abstract class BerlinGroupConstants {
         public static final String SSL_CERTIFICATE = "SSL-Certificate";
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String AUTHORIZATION = "AUTHORIZATION";
+        public static final String TPP_ID = "TPP-ID";
+        public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
+        public static final String PSU_ID = "PSU-ID";
+        public static final String PSU_ID_TYPE = "PSU-ID-Type";
     }
 
     public static class FormKeys {

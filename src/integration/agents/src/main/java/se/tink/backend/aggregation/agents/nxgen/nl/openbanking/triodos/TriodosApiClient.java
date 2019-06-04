@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
@@ -42,12 +42,12 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     private Credentials credentials;
 
-    public TriodosApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public TriodosApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
-    public void setCredentials(Credentials credentials) {
+    public void setCredentials(final Credentials credentials) {
         this.credentials = credentials;
     }
 
@@ -66,7 +66,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         return new AccountsBaseResponse(accountsWithBalances);
     }
 
-    public URL getAuthorizeUrl(String state) {
+    public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
         final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
         sessionStorage.put(BerlinGroupConstants.StorageKeys.CODE_VERIFIER, codeVerifier);
@@ -85,7 +85,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .getUrl();
     }
 
-    private AccountBaseEntity fetchBalances(AccountBaseEntity accountBaseEntity) {
+    private AccountBaseEntity fetchBalances(final AccountBaseEntity accountBaseEntity) {
         final String digest = BerlinGroupUtils.calculateDigest(FormValues.EMPTY);
         final URL url =
                 new URL(
@@ -100,7 +100,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
         final String digest = BerlinGroupUtils.calculateDigest(FormValues.EMPTY);
         final URL fullUrl = new URL(getConfiguration().getBaseUrl() + Urls.AIS_BASE + url);
 
@@ -113,7 +113,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     @Override
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token getToken(final String code) {
         final String codeVerifier =
                 sessionStorage.get(BerlinGroupConstants.StorageKeys.CODE_VERIFIER);
         final String body =
@@ -141,7 +141,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public String getConsentId() {
-        final ConsentRequest consentsRequest = new ConsentRequest();
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
         consentsRequest.getAccess().addIban(credentials.getField("IBAN"));
         final String digest = BerlinGroupUtils.calculateDigest(consentsRequest.toData());
         if (StringUtils.isNotEmpty(
@@ -176,7 +176,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     @Override
-    public OAuth2Token refreshToken(String token) {
+    public OAuth2Token refreshToken(final String token) {
         return null;
     }
 
@@ -194,7 +194,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
     }
 
-    private RequestBuilder createRequest(URL url, String digest) {
+    private RequestBuilder createRequest(final URL url, final String digest) {
         final String requestId = UUID.randomUUID().toString();
 
         return client.request(url)
@@ -208,7 +208,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, requestId));
     }
 
-    private RequestBuilder createRequestInSession(URL url, String digest) {
+    private RequestBuilder createRequestInSession(final URL url, final String digest) {
         return createRequest(url, digest)
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .addBearerToken(getTokenFromSession(BerlinGroupConstants.StorageKeys.OAUTH_TOKEN));
@@ -222,7 +222,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
         try {
 
             return URLEncoder.encode(certificate, Certificate.UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             throw new IllegalStateException(ErrorMessages.ENCODE_CERTIFICATE_ERROR, e);
         }
     }

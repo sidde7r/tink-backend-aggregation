@@ -27,6 +27,25 @@ public class AccountBaseEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
+    public AccountBaseEntity() {}
+
+    AccountBaseEntity(
+            final String resourceId,
+            final String iban,
+            final String currency,
+            final String name,
+            final String cashAccountType,
+            final List<BalanceBaseEntity> balances,
+            final AccountLinksEntity links) {
+        this.resourceId = resourceId;
+        this.iban = iban;
+        this.currency = currency;
+        this.name = name;
+        this.cashAccountType = cashAccountType;
+        this.balances = balances;
+        this.links = links;
+    }
+
     public boolean isCheckingOrSavingsType() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
     }
@@ -39,7 +58,7 @@ public class AccountBaseEntity {
                 .orElse(toSavingsAccount());
     }
 
-    private boolean isCheckingType(AccountTypes accountType) {
+    private boolean isCheckingType(final AccountTypes accountType) {
         return accountType == AccountTypes.CHECKING;
     }
 
@@ -78,7 +97,7 @@ public class AccountBaseEntity {
                 .orElse(getDefaultAmount());
     }
 
-    private boolean doesMatchWithAccountCurrency(BalanceBaseEntity balance) {
+    private boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
         return balance.isClosingBooked() && balance.isInCurrency(currency);
     }
 
@@ -102,7 +121,27 @@ public class AccountBaseEntity {
         return balances;
     }
 
-    public void setBalances(List<BalanceBaseEntity> balances) {
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCashAccountType() {
+        return cashAccountType;
+    }
+
+    public AccountLinksEntity getLinks() {
+        return links;
+    }
+
+    public void setBalances(final List<BalanceBaseEntity> balances) {
         this.balances = balances;
     }
 }

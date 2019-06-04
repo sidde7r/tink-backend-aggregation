@@ -10,23 +10,23 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public abstract class BerlinGroupAuthenticator implements OAuth2Authenticator {
     protected final BerlinGroupApiClient apiClient;
 
-    public BerlinGroupAuthenticator(BerlinGroupApiClient apiClient) {
+    public BerlinGroupAuthenticator(final BerlinGroupApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
-    public URL buildAuthorizeUrl(String state) {
+    public URL buildAuthorizeUrl(final String state) {
         return apiClient.getAuthorizeUrl(state);
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+    public OAuth2Token refreshAccessToken(final String refreshToken) throws BankServiceException {
         final OAuth2Token token = apiClient.refreshToken(refreshToken);
         apiClient.setTokenToSession(token, StorageKeys.OAUTH_TOKEN);
         return token;
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {
+    public void useAccessToken(final OAuth2Token accessToken) {
         apiClient.setTokenToSession(accessToken, StorageKeys.OAUTH_TOKEN);
     }
 

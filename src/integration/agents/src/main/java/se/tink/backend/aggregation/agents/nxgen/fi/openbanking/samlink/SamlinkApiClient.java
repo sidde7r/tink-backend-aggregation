@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponseWithoutHref;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
@@ -22,12 +22,12 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfiguration> {
 
-    public SamlinkApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public SamlinkApiClient(final TinkHttpClient client, final SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
     }
 
-    public URL getAuthorizeUrl(String state) {
+    public URL getAuthorizeUrl(final String state) {
         final String consentId = getConsentId();
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
         final String authUrl = getConfiguration().getBaseUrl() + Urls.AUTH;
@@ -51,12 +51,12 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
     }
 
     @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(String url) {
+    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String url) {
         return createRequest(new URL(url)).get(TransactionsKeyPaginatorBaseResponse.class);
     }
 
     @Override
-    public OAuth2Token getToken(String code) {
+    public OAuth2Token getToken(final String code) {
         final TokenRequestPost tokenRequest =
                 new TokenRequestPost(
                         FormValues.AUTHORIZATION_CODE,
@@ -76,20 +76,20 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
 
     @Override
     public String getConsentId() {
-        final ConsentRequest consentsRequest = new ConsentRequest();
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
 
         return createRequest(new URL(getConfiguration().getBaseUrl() + Urls.CONSENT))
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .post(ConsentBaseResponse.class)
+                .post(ConsentBaseResponseWithoutHref.class)
                 .getConsentId();
     }
 
     @Override
-    public OAuth2Token refreshToken(String token) {
+    public OAuth2Token refreshToken(final String token) {
         return null;
     }
 
-    private RequestBuilder createRequest(URL url) {
+    private RequestBuilder createRequest(final URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())

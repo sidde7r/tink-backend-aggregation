@@ -9,15 +9,30 @@ public class BalanceBaseEntity {
     private BalanceAmountBaseEntity balanceAmount;
     private String balanceType;
 
+    public BalanceBaseEntity() {}
+
+    BalanceBaseEntity(final BalanceAmountBaseEntity balanceAmount, final String balanceType) {
+        this.balanceAmount = balanceAmount;
+        this.balanceType = balanceType;
+    }
+
     public boolean isClosingBooked() {
         return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED);
     }
 
-    public boolean isInCurrency(String currency) {
+    public boolean isInCurrency(final String currency) {
         return balanceAmount.getCurrency().equalsIgnoreCase(currency);
     }
 
     public Amount toAmount() {
         return balanceAmount.toAmount();
+    }
+
+    public BalanceAmountBaseEntity getBalanceAmount() {
+        return balanceAmount;
+    }
+
+    public String getBalanceType() {
+        return balanceType;
     }
 }

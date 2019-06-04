@@ -7,7 +7,7 @@ public class AuthorizationEntity {
     private final String clientId;
     private final String signature;
 
-    public AuthorizationEntity(String clientId, String signature) {
+    public AuthorizationEntity(final String clientId, final String signature) {
         this.clientId = clientId;
         this.signature = signature;
     }

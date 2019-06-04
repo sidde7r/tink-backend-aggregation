@@ -7,17 +7,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccessEntity {
 
-    private List<IbanEntity> accounts = new ArrayList<>();
-    private List<IbanEntity> transactions = new ArrayList<>();
-    private List<IbanEntity> balances = new ArrayList<>();
+    private final List<IbanEntity> accounts = new ArrayList<>();
+    private final List<IbanEntity> transactions = new ArrayList<>();
+    private final List<IbanEntity> balances = new ArrayList<>();
 
-    public void addIban(String iban) {
+    public void addIban(final String iban) {
         accounts.add(new IbanEntity(iban));
         transactions.add(new IbanEntity(iban));
         balances.add(new IbanEntity(iban));
     }
 
-    public void addIbans(List<String> ibans) {
+    public void addIbans(final List<String> ibans) {
         ibans.forEach(
                 iban -> {
                     accounts.add(new IbanEntity(iban));
