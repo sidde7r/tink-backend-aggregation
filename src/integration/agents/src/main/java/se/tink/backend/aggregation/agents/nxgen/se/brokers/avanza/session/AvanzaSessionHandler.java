@@ -18,10 +18,10 @@ public class AvanzaSessionHandler implements SessionHandler {
 
     @Override
     public void logout() {
-        if (!authSessionStorage.isEmpty()) {
-            // all auth sessions will be logged out
-            final String firstSession = authSessionStorage.keySet().iterator().next();
-            apiClient.logout(firstSession);
+        // FIXME: logging out from the wrong session fails with 401
+        if (authSessionStorage.size() == 1) {
+            final String authSession = authSessionStorage.keySet().iterator().next();
+            apiClient.logout(authSession);
         }
     }
 
