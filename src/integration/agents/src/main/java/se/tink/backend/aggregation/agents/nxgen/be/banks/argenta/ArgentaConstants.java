@@ -31,7 +31,7 @@ public class ArgentaConstants {
                     .put("language", "NL")
                     .put("Accept-Language", "nl")
                     .put("Connection", "keep-alive")
-                    .put("User-Agent", "Argenta-PROD/1136 CFNetwork/889.9 Darwin/17.2.0")
+                    .put("User-Agent", "Argenta-PROD/2129 CFNetwork/893.14.2 Darwin/17.3.0")
                     .build();
 
     public static class HEADER {
@@ -66,8 +66,8 @@ public class ArgentaConstants {
     public static class Device {
         public static final String VENDOR = "Apple";
         public static final String NAME = "Tink";
-        public static final String MODEL = "iPhone 7";
-        public static final String OS_VERSION = "11.0";
+        public static final String MODEL = "iPhone9,4";
+        public static final String OS_VERSION = "11.2";
         public static final String OS = "iOS";
     }
 
