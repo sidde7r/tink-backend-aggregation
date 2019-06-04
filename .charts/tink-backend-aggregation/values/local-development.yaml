@@ -18,7 +18,7 @@ agents:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
   bunq:
     tink:
-      redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   volksbank:
     enabled: "false"
 
