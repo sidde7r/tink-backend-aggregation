@@ -73,7 +73,12 @@ public class LaCaixaCreditCardFetcher
             return card.toTinkCard(Amount.inEUR(0));
         }
         try {
-            final Amount balance = fetchBalanceForCardContract(card.getRefValIdContract());
+            // Prepaid cards have no contract, so we use their balance directly
+            final Amount balance =
+                    card.getRefValIdContract() != null
+                            ? fetchBalanceForCardContract(card.getRefValIdContract())
+                            : card.getAvailableCredit();
+
             return card.toTinkCard(balance);
         } catch (NoSuchElementException e) {
             LOG.warn("Unable to fetch card balance");
