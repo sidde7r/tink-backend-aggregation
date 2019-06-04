@@ -1,0 +1,32 @@
+{
+  "accounts": [
+    {
+      "accountType": "Kapitalforsakring",
+      "interestRate": 0.00,
+      "depositable": true,
+      "name": "Hopp och lek",
+      "active": true,
+      "accountId": "13371337",
+      "tradable": true,
+      "totalBalance": 3719.61,
+      "totalBalanceDue": 0.00,
+      "ownCapital": 449894.55,
+      "accountPartlyOwned": false,
+      "buyingPower": 98939.55,
+      "totalProfitPercent": -28.23,
+      "performancePercent": 3.127223200365248,
+      "performance": 13668.5,
+      "totalProfit": -175492.27,
+      "attorney": false
+    }
+  ],
+  "numberOfOrders": 6,
+  "numberOfDeals": 0,
+  "totalBalance": 24785.41,
+  "totalBuyingPower": 104537.35,
+  "totalOwnCapital": 922113.78,
+  "numberOfTransfers": 0,
+  "numberOfIntradayTransfers": 0,
+  "totalPerformancePercent": 5.935278298159341,
+  "totalPerformance": 47304.310000000056
+}
