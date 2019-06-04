@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33;
 
+import com.google.common.base.Strings;
+import javax.annotation.Nullable;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.entities.Form;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
@@ -66,7 +69,8 @@ public class NordeaFIApiClient {
         return requestRefreshableGet(request, FetchTransactionalAccountResponse.class);
     }
 
-    public FetchTransactionResponse fetchTransactions(int offset, int limit, String accountId) {
+    public FetchTransactionResponse fetchTransactions(
+            int limit, @Nullable String continuationKey, String accountId) {
         RequestBuilder request =
                 httpClient
                         .request(
@@ -76,12 +80,12 @@ public class NordeaFIApiClient {
                                                         + NordeaFIConstants.ApiService
                                                                 .FETCH_TRANSACTIONS)
                                         .queryParam(
-                                                NordeaFIConstants.QueryParams.OFFSET,
-                                                Integer.toString(offset))
-                                        .queryParam(
                                                 NordeaFIConstants.QueryParams.LIMIT,
                                                 Integer.toString(limit)))
                         .accept(MediaType.APPLICATION_JSON_TYPE);
+        if (!Strings.isNullOrEmpty(continuationKey)) {
+            request = request.queryParam(QueryParams.CONTINUATION_KEY, continuationKey);
+        }
         return requestRefreshableGet(request, FetchTransactionResponse.class);
     }
 

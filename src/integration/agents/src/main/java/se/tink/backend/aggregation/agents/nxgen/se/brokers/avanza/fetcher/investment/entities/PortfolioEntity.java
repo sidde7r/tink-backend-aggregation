@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
@@ -75,8 +76,10 @@ public class PortfolioEntity {
 
         portfolio.setRawType(accountType);
         portfolio.setType(getPortfolioType());
-        portfolio.setCashValue(totalBuyingPower);
-        portfolio.setTotalValue(totalOwnCapital);
+        portfolio.setCashValue(totalBalance);
+        final Double totalValue =
+                instruments.stream().collect(Collectors.summingDouble(Instrument::getMarketValue));
+        portfolio.setTotalValue(totalValue);
         portfolio.setTotalProfit(totalProfit);
         portfolio.setUniqueIdentifier(accountId);
         portfolio.setInstruments(instruments);
@@ -90,11 +93,12 @@ public class PortfolioEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount(HolderName holderName, Portfolio portfolio) {
+        final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         return InvestmentAccount.builder(getAccountId())
                 .setAccountNumber(getAccountId())
                 .setName(getAccountType())
                 .setHolderName(holderName)
-                .setCashBalance(Amount.inSEK(getTotalBuyingPower()))
+                .setCashBalance(Amount.inSEK(totalBalance + interestPayable))
                 .setBankIdentifier(getAccountId())
                 .setPortfolios(Lists.newArrayList(portfolio))
                 .build();

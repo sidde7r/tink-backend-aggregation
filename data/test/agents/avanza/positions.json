@@ -1,0 +1,68 @@
+{
+  "instrumentPositions": [
+    {
+      "instrumentType": "STOCK",
+      "positions": [
+        {
+          "value": 317400.00,
+          "volume": 30000,
+          "collateralValue": 95220.00,
+          "averageAcquiredPrice": 17.51390900,
+          "profitPercent": -39.59,
+          "acquiredValue": 525417.2700000,
+          "profit": -208017.27,
+          "name": "Stark Industries",
+          "currency": "SEK",
+          "orderbookId": "234567",
+          "tradable": true,
+          "lastPrice": 10.58,
+          "lastPriceUpdated": "2019-06-03T00:00:00.000+0200",
+          "change": -0.02,
+          "changePercent": -0.19,
+          "flagCode": "SE"
+        }
+      ],
+      "totalValue": 317400.0000,
+      "totalProfitValue": -208017.27,
+      "totalProfitPercent": -39.59,
+      "todaysProfitPercent": -0.19
+    },
+    {
+      "instrumentType": "WARRANT",
+      "positions": [
+        {
+          "value": 128775.00,
+          "volume": 500,
+          "collateralValue": 0.00,
+          "averageAcquiredPrice": 192.50000000,
+          "profitPercent": 33.79,
+          "acquiredValue": 96250.00000,
+          "profit": 32525.00,
+          "name": "Wayne Enterprises",
+          "currency": "SEK",
+          "orderbookId": "123456",
+          "tradable": true,
+          "lastPrice": 257.55,
+          "lastPriceUpdated": "2019-06-03T00:00:00.000+0200",
+          "change": 0.00,
+          "changePercent": 0.00,
+          "flagCode": "SE"
+        }
+      ],
+      "totalValue": 128775.0000,
+      "totalProfitValue": 32525.00,
+      "totalProfitPercent": 33.79,
+      "todaysProfitPercent": 0.00
+    }
+  ],
+  "totalBalance": 3719.61,
+  "totalProfitPercent": -28.23,
+  "totalProfit": -175492.27,
+  "totalBuyingPower": 98939.55,
+  "totalOwnCapital": 449894.55,
+  "accountName": "Hopp och lek",
+  "accountType": "Kapitalforsakring",
+  "depositable": true,
+  "withdrawable": true,
+  "accountId": "13371337"
+}

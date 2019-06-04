@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -12,11 +14,11 @@ import se.tink.libraries.amount.Amount;
 public class AccountEntity {
     @JsonProperty public PermissionsEntity permissions;
 
-    @JsonProperty("account_number")
-    private String accountNumber;
+    @JsonProperty("account_id")
+    private String accountId;
 
     @JsonProperty("display_account_number")
-    private String accountId;
+    private String displayAccountNumber;
 
     @JsonProperty private String iban;
     @JsonProperty private String bic;
@@ -50,7 +52,21 @@ public class AccountEntity {
     private double availableBalance;
 
     @JsonProperty private String currency;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("latest_transaction_date")
+    private Date latestTransactionDate;
+
+    @JsonProperty("statement_format")
+    private String statementFormat;
+
     @JsonProperty private List<AccountOwnerEntity> roles;
+
+    @JsonProperty("transaction_list_search_criteria")
+    private TransactionListSearchCriteriaEntity transactionListSearchCriteria;
+
+    @JsonProperty("interest_info")
+    private InterestInfoEntity interestInfo;
 
     public String getCategory() {
         return category;
@@ -71,8 +87,8 @@ public class AccountEntity {
                 .setName(nickname)
                 .setBalance(new Amount(NordeaFIConstants.CURRENCY, availableBalance))
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .setAccountNumber(accountId)
-                .setBankIdentifier(accountNumber)
+                .setAccountNumber(displayAccountNumber)
+                .setBankIdentifier(accountId)
                 .build();
     }
 }

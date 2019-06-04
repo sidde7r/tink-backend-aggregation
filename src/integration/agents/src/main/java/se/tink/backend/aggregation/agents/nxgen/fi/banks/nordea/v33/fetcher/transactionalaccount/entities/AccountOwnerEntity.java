@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 public class AccountOwnerEntity {
-    @JsonProperty("last_name")
-    private String lastName;
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty private String role;
 
@@ -16,6 +16,6 @@ public class AccountOwnerEntity {
     }
 
     public HolderName getHolderName() {
-        return new HolderName(lastName);
+        return new HolderName(name);
     }
 }
