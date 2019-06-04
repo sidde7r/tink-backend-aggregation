@@ -48,6 +48,7 @@ public class Provider implements Cloneable {
     private String payload;
     private ProviderStatuses status;
     private ProviderTypes type;
+    private String financialInstitutionId;
 
     public Provider() {
         setFields(Lists.newArrayList());
@@ -102,6 +103,10 @@ public class Provider implements Cloneable {
         return type;
     }
 
+    public String getFinancialInstitutionId() {
+        return financialInstitutionId;
+    }
+
     public void setAccessType(AccessType accessType) {
         this.accessType = accessType;
     }
@@ -149,6 +154,10 @@ public class Provider implements Cloneable {
 
     public void setType(ProviderTypes type) {
         this.type = type;
+    }
+
+    public void setFinancialInstitutionId(String financialInstitutionId) {
+        this.financialInstitutionId = financialInstitutionId;
     }
 
     @JsonIgnore
