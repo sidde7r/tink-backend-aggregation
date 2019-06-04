@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class CommerzbankConstants {
 
+    public static final String APP_ID = "650ceace-3a27-4a39-881e-8e89c1bd1a5d";
     public static final String MULTIPLE_SPACES = "  ";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
     public static final String TIMEZONE_CET = "CET";
@@ -29,8 +30,8 @@ public class CommerzbankConstants {
 
     public static class VALUES {
         public static final String JSON = "application/json";
-        public static final String CCB_VALUE = "MobBkniOS+10.0.0+10.3.1";
-        public static final String USER_AGENT_VALUE = "MobBkniOS-10.0.0";
+        public static final String CCB_VALUE = "MobBkniOS+10.0.3+11.2";
+        public static final String USER_AGENT_VALUE = "MobBkniOS-10.0.3";
         public static final String SESSION_TOKEN_VALUE = "false";
         public static final String CURRENCY_VALUE = "EUR";
         public static final String AMOUNT_TYPE = "ALL";

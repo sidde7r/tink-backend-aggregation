@@ -52,7 +52,7 @@ public class CommerzbankApiClient {
     public HttpResponse login(String username, String password) throws JsonProcessingException {
 
         LoginRequestBody loginRequestBody =
-                new LoginRequestBody(
+                new LoginRequestBody(CommerzbankConstants.APP_ID,
                         username, password, CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
         String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
 
