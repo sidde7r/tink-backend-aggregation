@@ -56,7 +56,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
                         request.getAccounts(),
                         currency,
                         catalog,
-                        getTransactionalAccountAccounts(),
+                        getTransactionAccounts(),
                         getDemoSavingsAccounts());
 
         return Optional.of(
@@ -125,7 +125,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     public abstract DemoLoanAccount getDemoLoanAccounts();
 
-    public abstract DemoTransactionAccount getTransactionalAccountAccounts();
+    public abstract DemoTransactionAccount getTransactionAccounts();
 
     public abstract List<DemoCreditCardAccount> getCreditCardAccounts();
 

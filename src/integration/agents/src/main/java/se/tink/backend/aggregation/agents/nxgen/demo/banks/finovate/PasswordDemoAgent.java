@@ -169,7 +169,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionalAccountAccounts() {
+    public DemoTransactionAccount getTransactionAccounts() {
         if (request.getProvider().getName().equals("at-test-erste-bank")) {
             return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                     this.username, this.provider);
@@ -187,7 +187,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                         request.getAccounts(),
                         currency,
                         catalog,
-                        getTransactionalAccountAccounts(),
+                        getTransactionAccounts(),
                         getDemoSavingsAccounts());
 
         return Optional.of(

@@ -154,7 +154,7 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionalAccountAccounts() {
+    public DemoTransactionAccount getTransactionAccounts() {
         return null;
     }
 

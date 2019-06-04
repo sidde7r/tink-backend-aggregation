@@ -84,7 +84,7 @@ public class DecoupledAuthenticationDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionalAccountAccounts() {
+    public DemoTransactionAccount getTransactionAccounts() {
         return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                 this.username, this.provider);
     }
