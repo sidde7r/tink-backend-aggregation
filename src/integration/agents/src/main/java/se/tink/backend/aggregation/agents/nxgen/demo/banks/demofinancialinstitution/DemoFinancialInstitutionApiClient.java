@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitut
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -48,5 +49,16 @@ public class DemoFinancialInstitutionApiClient {
         final URL url = createBaseUrl().concat(Urls.ACCOUNTS);
 
         return createRequest(url).get(FetchAccountsResponse.class);
+    }
+
+    public FetchTransactionsResponse fetchTransactions(String accountNumber) {
+        final URL url =
+                createBaseUrl().concat(Urls.TRANSACTIONS).parameter("accountNumber", accountNumber);
+
+        return createRequest(url).get(FetchTransactionsResponse.class);
+    }
+
+    public FetchTransactionsResponse fetchTransactionsForNextUrl(URL nextUrl) {
+        return createRequest(nextUrl).get(FetchTransactionsResponse.class);
     }
 }
