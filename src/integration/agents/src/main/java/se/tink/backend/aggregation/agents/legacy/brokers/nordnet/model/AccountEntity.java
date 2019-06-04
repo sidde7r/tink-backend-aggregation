@@ -110,10 +110,15 @@ public class AccountEntity {
 
         Account account = new Account();
 
+        final String bankAccountNumber = this.getBankAccountNumber();
+        if (Strings.isNullOrEmpty(bankAccountNumber)) {
+            account.setAccountNumber(this.getAccountNumber());
+        } else {
+            account.setAccountNumber(bankAccountNumber);
+            account.putIdentifier(
+                    AccountIdentifier.create(AccountIdentifier.Type.SE, bankAccountNumber));
+        }
         account.setBankId(this.getAccountNumber());
-        account.setAccountNumber(this.getBankAccountNumber());
-        account.putIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.SE, this.getBankAccountNumber()));
         account.setType(accountType);
         account.setName(this.getName());
         account.setBalance(this.getCashBalance() + this.getMarketValue());
