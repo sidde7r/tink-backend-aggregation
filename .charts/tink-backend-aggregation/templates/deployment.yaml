@@ -275,6 +275,38 @@ spec:
               key: volksbank-ais-cert
               optional: true
         {{- end }}
+        {{- if $agentsConfig.bunq }}
+        - name: BUNQ_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bunq-client-id
+              optional: true
+        - name: BUNQ_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bunq-client-secret
+              optional: true
+        - name: BUNQ_PSD2_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bunq-psd2-api-key
+              optional: true
+        - name: BUNQ_PSD2_CLIENT_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bunq-psd2-client-auth-token
+              optional: true
+        - name: BUNQ_PSD2_INSTALLATION_KEY_PAIR
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: bunq-psd2-installation-key-pair
+              optional: true
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         {{- if not (eq "local" .Values.Cluster) }}
