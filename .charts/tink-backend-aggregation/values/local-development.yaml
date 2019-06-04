@@ -17,6 +17,8 @@ agents:
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/mobilebanking
+    openbanking:
+      baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/openbanking
   bunq:
     tink:
       redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"

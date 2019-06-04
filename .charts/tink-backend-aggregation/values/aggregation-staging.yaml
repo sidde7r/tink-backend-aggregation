@@ -21,6 +21,8 @@ agents:
   demoFinancialInstitution:
     mobilebanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
+    openbanking:
+      baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
   bunq:
     redirectUrl: "https://staging.oxford.tink.se/api/v1/credentials/third-party/callback"
   volksbank:

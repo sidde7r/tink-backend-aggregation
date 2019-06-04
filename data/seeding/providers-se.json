@@ -2180,6 +2180,34 @@
             "type": "TEST"
         },
         {
+            "name": "se-test-demofinancialinstitution-openbanking-password",
+            "className": "nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Demo Financial Institution",
+            "groupDisplayName": "Test Demo Financial Institution",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "payload": "openbanking",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
             "name": "se-test-psd2-embedded",
             "accessType": "OPEN_BANKING",
             "className": "nxgen.demo.banks.psd2.embedded.EmbeddedAuthenticationDemoAgent",

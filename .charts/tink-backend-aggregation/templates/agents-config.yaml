@@ -125,6 +125,8 @@ data:
         demoFinancialInstitution:
           mobilebanking:
             baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}/mobilebanking"
+          openbanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}/openbanking"
         {{- end }}
 
       abnAmro:
