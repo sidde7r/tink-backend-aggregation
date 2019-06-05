@@ -39,16 +39,10 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
     private <R> R getRepository(Class<R> cls, RepositorySource source) {
         Preconditions.checkNotNull(source);
 
-        switch (source) {
-            case CENTRALIZED:
-                if (applicationContext == null) {
-                    log.warn("Centralized repository not initialized.");
-                    return null;
-                }
-                return applicationContext.getBean(cls);
-            default:
-                // Default to centralized
-                return getRepository(cls, RepositorySource.CENTRALIZED);
+        if (applicationContext == null) {
+            log.warn("Centralized repository not initialized.");
+            return null;
         }
+        return applicationContext.getBean(cls);
     }
 }
