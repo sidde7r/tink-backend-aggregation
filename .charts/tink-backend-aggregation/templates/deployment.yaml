@@ -275,7 +275,7 @@ spec:
               key: volksbank-ais-cert
               optional: true
         {{- end }}
-        {{- if $agentsConfig.bunq.tink }}
+        {{- if $agentsConfig.bunq }}
         - name: BUNQ_CLIENT_ID_TINK
           valueFrom:
             secretKeyRef:
@@ -306,8 +306,6 @@ spec:
               name: aggregation-secrets
               key: bunq-psd2-installation-key-pair-tink
               optional: true
-        {{- end }}
-        {{- if $agentsConfig.bunq.abn }}
         - name: BUNQ_CLIENT_ID_ABN
           valueFrom:
             secretKeyRef:
