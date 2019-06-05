@@ -13,6 +13,7 @@ public final class BankinterConstants {
         public static final String LOGIN_PAGE = BASE + "/gestion/login.xhtml";
         public static final String LOGIN = BASE + "/gestion/services/auth/login";
         public static final String KEEP_ALIVE = BASE + "/gestion/rest/usuario/numavisos";
+        public static final String IDENTITY_DATA = BASE + "/gestion/rest/usuario/datos";
         public static final String GLOBAL_POSITION =
                 BASE + "/extracto/secure/extracto_integral.xhtml";
     }
