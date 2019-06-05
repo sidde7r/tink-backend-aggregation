@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 public class SebKortTransactionFetcher implements TransactionDatePaginator<CreditCardAccount> {
+
     private final SebKortApiClient apiClient;
     private boolean pendingFetched = false;
 
@@ -87,21 +88,18 @@ public class SebKortTransactionFetcher implements TransactionDatePaginator<Credi
                                 SebKortConstants.StorageKey.IS_ACCOUNT_OWNER, Boolean.class)
                         .orElse(false);
 
+        // When serializing the session, null becomes the String "null" through SerializationUtils,
+        // so we have to explicitly check for that here to avoid asking for a null contract (and
+        // thereby triggering a server error)
         String cardAccountId =
-                account.getFromTemporaryStorage(SebKortConstants.StorageKey.CARD_ACCOUNT_ID);
-
-        log.debug(
-                "Initiating fetchPaymentsAndFeesIfAccountOwner[isAccountOwner={}, cardAccountId={}, isNullOrEmpty(cardAccountId)={}",
-                isAccountOwner,
-                cardAccountId,
-                Strings.isNullOrEmpty(cardAccountId));
+                account.getFromTemporaryStorage(
+                                SebKortConstants.StorageKey.CARD_ACCOUNT_ID, String.class)
+                        .filter(acctId -> !SebKortConstants.StorageValue.NULL.equals(acctId))
+                        .orElse(null);
 
         if (!isAccountOwner || Strings.isNullOrEmpty(cardAccountId)) {
-            log.debug("Not account owner, or no cardAccountId present, returning empty list.");
             return Collections.emptyList();
         }
-
-        log.debug("Trying to fetch payments and fees from SEB kort.");
 
         return apiClient.fetchTransactionsForCardAccountId(cardAccountId, fromDate, toDate)
                 .getTransactions().stream()

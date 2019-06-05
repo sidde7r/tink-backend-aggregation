@@ -34,6 +34,10 @@ public class SebKortConstants {
         public static final String IS_ACCOUNT_OWNER = "isAccountOwner";
     }
 
+    public static class StorageValue {
+        public static final String NULL = "null";
+    }
+
     public static class QueryKey {
         public static final String LANGUAGE_CODE = "languageCode";
         public static final String CARD_ACCOUNT_ID = "cardAccountId";
