@@ -31,7 +31,10 @@ agents:
   volksbank:
     enabled: "true"
   bunq:
-    enabled: true
+    tink:
+      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
 
   proxyUri: http://10.88.12.185:8080
 

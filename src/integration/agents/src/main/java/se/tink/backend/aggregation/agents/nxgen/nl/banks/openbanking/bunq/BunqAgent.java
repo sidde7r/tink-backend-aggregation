@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authen
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.session.BunqSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -16,13 +15,24 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BunqAgent extends BunqBaseAgent {
-    private BunqConfiguration bunqConfiguration;
     private final BunqApiClient apiClient;
+    private final String clientName;
+    private String backendHost;
+    private BunqConfiguration bunqConfiguration;
 
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new BunqApiClient(client, super.getAgentConfiguration().getBackendHost());
+        clientName = request.getProvider().getPayload().split(" ")[0];
+        this.apiClient = new BunqApiClient(client, getBackendHost());
+    }
+
+    @Override
+    protected String getBackendHost() {
+        if (backendHost == null) {
+            backendHost = request.getProvider().getPayload().split(" ")[1];
+        }
+        return backendHost;
     }
 
     @Override
@@ -33,13 +43,10 @@ public class BunqAgent extends BunqBaseAgent {
                         .getIntegrations()
                         .getClientConfiguration(
                                 BunqConstants.Market.INTEGRATION_NAME,
-                                BunqConstants.Market.CLIENT_NAME,
+                                clientName,
                                 BunqConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("Bunq configuration missing."));
-
-        BunqBaseConfiguration bunqBaseConfiguration = super.getAgentConfiguration();
-        bunqConfiguration.setBackendHost(bunqBaseConfiguration.getBackendHost());
     }
 
     @Override
