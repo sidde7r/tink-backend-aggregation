@@ -12,7 +12,7 @@ import spark.Request;
 import spark.Response;
 
 public class NasaRequestHandler implements NasaApi {
-    private final String PROVIDER_NAME = "se-test-demo-fake-bank";
+    private final String PROVIDER_NAME = "se-test-demofinancialinstitution-mobilebanking-password";
     private final String API_CLIENT_KEY = "00000000-0000-0000-0000-000000000000";
 
     private NasaRequestHandler() {}
@@ -35,7 +35,8 @@ public class NasaRequestHandler implements NasaApi {
 
         Provider provider = new Provider();
         provider.setName(PROVIDER_NAME);
-        provider.setClassName("nxgen.demo.banks.demofakebank.DemoFakeBankAgent");
+        provider.setClassName(
+                "nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionAgent");
         provider.setMarket("SE");
 
         Credentials credentials = new Credentials();

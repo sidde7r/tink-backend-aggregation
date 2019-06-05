@@ -283,6 +283,11 @@ agentsServiceConfiguration:
         clientId: "app.bbva.bbvatestapp"
         clientSecret: "9$YyzM4UTAI9$xlH5faHRybL$lJJVYBcIhYvaVFJWE1HJGwyfOz8WTAlAtDDcxb7"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    demoFinancialInstitution:
+      mobilebanking:
+        baseUrl: "http://localhost:9271/mobilebanking"
+      openbanking:
+        baseUrl: "http://localhost:9271/openbanking"
   signatureKeyPair:
     privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
     publicKeyPath: "data/test/cryptography/public_rsa_key.pub"

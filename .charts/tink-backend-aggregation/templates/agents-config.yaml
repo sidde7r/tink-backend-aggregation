@@ -121,9 +121,12 @@ data:
             rootCAPassword: "ICS_ROOT_CA_PASSWORD"
         {{- end }}
 
-        {{- if $agentsConfig.demoFakeBank }}
-        demoFakeBank:
-          baseUrl: "{{ $agentsConfig.demoFakeBank.baseUrl }}"
+        {{- if $agentsConfig.demoFinancialInstitution }}
+        demoFinancialInstitution:
+          mobilebanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}/mobilebanking"
+          openbanking:
+            baseUrl: "{{ $agentsConfig.demoFinancialInstitution.baseUrl }}/openbanking"
         {{- end }}
 
       abnAmro:
