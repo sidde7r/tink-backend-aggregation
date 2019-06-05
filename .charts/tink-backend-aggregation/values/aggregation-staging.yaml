@@ -21,8 +21,7 @@ agents:
   demoFakeBank:
     baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
   bunq:
-    tink:
-      redirectUrl: https://staging.oxford.tink.se/api/v1/credentials/third-party/callback
+    enabled: true
   volksbank:
     enabled: "true"
 

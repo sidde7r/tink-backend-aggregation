@@ -92,15 +92,12 @@ data:
 
         {{- if $agentsConfig.bunq }}
         bunq:
-          {{- if $agentsConfig.bunq.tink }}
           tink:
             clientId: "BUNQ_CLIENT_ID_TAG"
             clientSecret: "BUNQ_CLIENT_SECRET_TAG"
             psd2ApiKey: "BUNQ_PSD2_API_KEY_TAG"
             psd2ClientAuthToken: 'BUNQ_PSD2_CLIENT_AUTH_TOKEN_TAG'
             psd2InstallationKeyPair: 'BUNQ_PSD2_INSTALLATION_KEY_PAIR_TAG'
-            redirectUrl: "{{ $agentsConfig.bunq.tink.redirectUrl }}"
-          {{- end }}
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}
