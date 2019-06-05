@@ -17,7 +17,6 @@ public class SebBrandedCardsAgent extends SebAbstractAgent<SebBrandedCardsApiCli
     public SebBrandedCardsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        client.setDebugOutput(true);
         this.apiClient = new SebBrandedCardsApiClient(client, sessionStorage);
     }
 
@@ -28,6 +27,7 @@ public class SebBrandedCardsAgent extends SebAbstractAgent<SebBrandedCardsApiCli
                         metricRefreshController,
                         updateController,
                         new SebCardAccountFetcher(apiClient),
+                    // TODO: restore TransactionFetcherController and remove LoopProofTransactionFetcherController
                         new LoopProofTransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionMonthPaginationController<>(

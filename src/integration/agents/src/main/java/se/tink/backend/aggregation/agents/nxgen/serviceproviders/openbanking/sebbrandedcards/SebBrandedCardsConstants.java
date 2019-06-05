@@ -8,7 +8,7 @@ public abstract class SebBrandedCardsConstants {
         public static final String CREDIT_CARD_ACCOUNTS =
                 BASE_CREDIT_CARD_ACCOUNTS + "/branded-card-accounts";
         public static final String CREDIT_CARD_TRANSACTIONS =
-                BASE_CREDIT_CARD_ACCOUNTS + "/branded-card-accounts//{accountId}/transactions";
+                BASE_CREDIT_CARD_ACCOUNTS + "/branded-card-accounts/{accountId}/transactions";
     }
 
     public static class Market {

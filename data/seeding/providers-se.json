@@ -1,2283 +1,2282 @@
 {
-  "market": "SE",
-  "currency": "SEK",
-  "providers": [
-    {
-      "name": "alandsbanken",
-      "className": "nxgen.se.banks.alandsbanken.keycard.AlandsBankenKeyCardSeAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Ålandsbanken",
-      "fields": [
+    "market": "SE",
+    "currency": "SEK",
+    "providers": [
         {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "alandsbanken",
+            "className": "nxgen.se.banks.alandsbanken.keycard.AlandsBankenKeyCardSeAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Ålandsbanken",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-alandsbanken-bankid",
-      "className": "nxgen.se.banks.alandsbanken.bankid.AlandsBankenBankidSeAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Ålandsbanken",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username",
-          "numeric": true
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "americanexpress",
-      "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "se-alandsbanken-bankid",
+            "className": "nxgen.se.banks.alandsbanken.bankid.AlandsBankenBankidSeAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Ålandsbanken",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username",
+                    "numeric": true
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-      "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE",
-      "payload": "SE",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "avanza-bankid",
-      "className": "brokers.avanza.AvanzaV2Agent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Avanza",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Avanza",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BROKER"
-    },
-    {
-      "name": "se-avanza-bankid",
-      "className": "nxgen.se.brokers.avanza.AvanzaAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Avanza",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Avanza",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BROKER"
-    },
-    {
-      "name": "chevroletmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Chevrolet Big Plus Card",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "chse:0086",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "choicemastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Nordic Choice Club MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "cose:0108",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "collector-bankid",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "banks.se.collector.CollectorAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Collector Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "coop",
-      "className": "nxgen.se.creditcards.coop.CoopAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Coop MedMera",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username"
+            "name": "americanexpress",
+            "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE",
+            "payload": "SE",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "refreshschedule": {
-        "from": "09:00",
-        "to": "01:00"
-      },
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "creditsafe",
-      "className": "fraud.CreditSafeAgent",
-      "credentialsType": "FRAUD",
-      "currency": "SEK",
-      "displayName": "ID-Koll",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Fraud",
-      "market": "SE",
-      "multiFactor": false,
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "OBSOLETE",
-      "transactional": false,
-      "type": "FRAUD"
-    },
-    {
-      "name": "csn",
-      "className": "other.CSNAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "CSN",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
+            "name": "avanza-bankid",
+            "className": "brokers.avanza.AvanzaV2Agent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Avanza",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Avanza",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BROKER"
         },
         {
-          "hint": "NNNN",
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "masked": true,
-          "pattern": "([0-9]{4})",
-          "maxLength": 4,
-          "minLength": 4,
-          "description": "PIN",
-          "patternError": "Please enter four digits."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "You use the same 4-digit PIN as when you log in at the service provider's web site.",
-      "tutorialUrl": "https://www.csn.se/bas/ekund/personligKod.do",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": false,
-      "type": "OTHER"
-    },
-    {
-      "name": "danskebank",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.danskebank.v2.DanskeBankV2Agent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayDescription": "Token generator",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
+            "name": "se-avanza-bankid",
+            "className": "nxgen.se.brokers.avanza.AvanzaAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Avanza",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Avanza",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BROKER"
         },
         {
-          "hint": "NNNN",
-          "sensitive": true,
-          "name": "password",
-          "masked": true,
-          "numeric": true,
-          "pattern": "([0-9]{4})",
-          "maxLength": 4,
-          "minLength": 4,
-          "description": "Password",
-          "patternError": "Please enter four digits."
-        }
-      ],
-      "groupDisplayName": "Danske Bank",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "You use the same 4-digit service code as for the bank's mobile app. You also need access to your token generator to create a screen code.",
-      "tutorialUrl": "http://www.danskebank.se/en-us/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx",
-      "payload": "SE",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "danskebank-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.danskebank.v2.DanskeBankV2Agent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Danske Bank",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "payload": "SE",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-danskebank-password",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "description": "Social security number",
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "maxLength": 12,
-          "minLength": 12,
-          "numeric": true
+            "name": "chevroletmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Chevrolet Big Plus Card",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "chse:0086",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "description": "Service code",
-          "hint": "NNNN",
-          "masked": true,
-          "maxLength": 4,
-          "minLength": 4,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{4})",
-          "patternError": "Please enter 4 digits."
-        }
-      ],
-      "multiFactor": false,
-      "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-danskebank-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please supply a valid social security number."
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use Mobile BankID the same way as with the Danske Bank mobile app. You can order a Mobile BankID using the bank's web service.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "demo",
-      "className": "demo.DemoAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Demo",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "choicemastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Nordic Choice Club MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "cose:0108",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "djurgardskortetmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Djurgårdskortet MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "djse:0116",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "eurocard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Eurocard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "ecse:0005",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "finnairmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Finnair Plus MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "fase:0129",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "forex",
-      "className": "demo.DemoAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Forex Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "You use your social security number and PIN the same way as when you log in to the bank's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "TEMPORARY_DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "handelsbanken",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayDescription": "Card reader",
-      "displayName": "Handelsbanken",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
+            "name": "collector-bankid",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "banks.se.collector.CollectorAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Collector Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "hint": "NNNN",
-          "sensitive": true,
-          "name": "password",
-          "masked": true,
-          "numeric": true,
-          "pattern": "([0-9]{4})",
-          "maxLength": 4,
-          "minLength": 4,
-          "description": "PIN",
-          "patternError": "Please enter four digits."
-        }
-      ],
-      "groupDisplayName": "Handelsbanken",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "You use your card reader and personal code the same way as you would in the bank's mobile app.",
-      "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "handelsbanken-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Handelsbanken",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Handelsbanken",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "icabanken-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.icabanken.IcaBankenAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayName": "ICAbanken",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "ICAbanken",
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "multiFactor": true,
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "icabanken-bankid-disabled",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.se.icabanken.ICABankenAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayName": "ICAbanken",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "ICAbanken",
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "multiFactor": true,
-      "popular": true,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "ikanokort-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Ikanokortet",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "IKANOKORT",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "jetmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "INGO MasterCard (JET)",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "jese:0032",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "lansforsakringar-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.LansforsakringarAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Länsförsäkringar",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Länsförsäkringar",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "lysa",
-      "className": "brokers.lysa.LysaAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Lysa",
-      "fields": [
-        {
-          "description": "Social security number",
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 0,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "BROKER"
-    },
-    {
-      "name": "nknyckelnmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "NK Nyckeln MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "nkse:0007",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "nordea-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.nordea.NordeaAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Nordea",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
+            "name": "coop",
+            "className": "nxgen.se.creditcards.coop.CoopAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Coop MedMera",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "refreshschedule": {
+                "from": "09:00",
+                "to": "01:00"
+            },
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "hint": "NNNN",
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{4})?",
-          "immutable": true,
-          "masked": true,
-          "maxLength": 4,
-          "minLength": 0,
-          "optional": true,
-          "description": "PIN",
-          "patternError": "Please enter four digits.",
-          "helpText": "Use the same code that you use in the bank's mobile app after you log in with Bank ID once. If you forgot your code, you can choose a new one in the bank's mobile app. By filling in this, transactions can be downloaded automatically in the background, so you do not need to use Bank ID every time.",
-          "sensitive": true
-        }
-      ],
-      "groupDisplayName": "Nordea",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-nordea-bankid",
-      "className": "nxgen.se.banks.nordea.v30.NordeaSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Nordea",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Nordea",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "nordnet",
-      "className": "brokers.NordnetAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayDescription": "Password",
-      "displayName": "Nordnet",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "creditsafe",
+            "className": "fraud.CreditSafeAgent",
+            "credentialsType": "FRAUD",
+            "currency": "SEK",
+            "displayName": "ID-Koll",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Fraud",
+            "market": "SE",
+            "multiFactor": false,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "transactional": false,
+            "type": "FRAUD"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "Nordnet",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the broker's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": false,
-      "type": "BROKER"
-    },
-    {
-      "name": "nordnet-bankid",
-      "className": "brokers.NordnetAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Nordnet",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Nordnet",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": false,
-      "type": "BROKER"
-    },
-    {
-      "name": "norwegian-bankid",
-      "className": "banks.norwegian.NorwegianAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Norwegian Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "okq8bank",
-      "className": "creditcards.okq8.OKQ8BankAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "OKQ8 Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
+            "name": "csn",
+            "className": "other.CSNAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "CSN",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "hint": "NNNN",
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "masked": true,
+                    "pattern": "([0-9]{4})",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "description": "PIN",
+                    "patternError": "Please enter four digits."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "You use the same 4-digit PIN as when you log in at the service provider's web site.",
+            "tutorialUrl": "https://www.csn.se/bas/ekund/personligKod.do",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": false,
+            "type": "OTHER"
         },
         {
-          "sensitive": true,
-          "name": "password",
-          "masked": true,
-          "description": "Password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "opelmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Opel MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "opse:0107",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "preem-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Preem",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "PREEM",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "rikskortet",
-      "className": "creditcards.rikskortet.RikskortetAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Ticket Rikskortet",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "danskebank",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.danskebank.v2.DanskeBankV2Agent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Token generator",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "hint": "NNNN",
+                    "sensitive": true,
+                    "name": "password",
+                    "masked": true,
+                    "numeric": true,
+                    "pattern": "([0-9]{4})",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "description": "Password",
+                    "patternError": "Please enter four digits."
+                }
+            ],
+            "groupDisplayName": "Danske Bank",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "You use the same 4-digit service code as for the bank's mobile app. You also need access to your token generator to create a screen code.",
+            "tutorialUrl": "http://www.danskebank.se/en-us/privat/Onlinetjanster/mobila-tjanster/Pages/mobilbank.aspx",
+            "payload": "SE",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-      "tutorialUrl": "https://edenred.se/rikskuponger/mina-sidor/glomt-losenord/",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": false,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "saabmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SAAB MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "sbse:0106",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "saseurobonusamericanexpress",
-      "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "SAS EuroBonus American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "danskebank-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.danskebank.v2.DanskeBankV2Agent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Danske Bank",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "payload": "SE",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-      "payload": "SE",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "saseurobonusmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SAS EuroBonus MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "sase:0102",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "savingsbank-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Sparbankerna",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Swedbank och Sparbankerna",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "You use Mobile BankID the same way as in the bank's mobile app. If you have a personal code for simplified login, we recommend using it instead of Mobile BankID.",
-      "payload": "savingsbank",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "savingsbank-bankid-youth",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Sparbankerna Ung",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Swedbank och Sparbankerna",
-      "market": "SE",
-      "multiFactor": true,
-      "payload": "savingsbank-youth",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "sbab-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.sbab.SBABAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SBAB",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "http://www.sbab.se",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-sbab_sandbox-oauth2",
-      "className": "nxgen.se.banks.sbab.SbabAgent",
-      "credentialsType": "THIRD_PARTY_APP",
-      "currency": "SEK",
-      "displayName": "SBAB",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "http://www.sbab.se",
-      "payload": "tink",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "seatkortet-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Seatkortet",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "SEAT",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "seb-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "banks.seb.SEBApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SEB",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "SEB",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "sebwalletmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SEB Wallet MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "wase:0121",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "shellmastercard-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Shell MasterCard",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Shell MasterCard",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "SHELL",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "sjpriomastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "SJ Prio MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "sjse:0104",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "skandiabanken-bankid",
-      "className": "banks.SkandiabankenAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Skandiabanken",
-      "fields": [],
-      "market": "SE",
-      "multiFactor": false,
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "skandiabanken-ssn-bankid",
-      "className": "banks.SkandiabankenAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Skandiabanken",
-      "fields": [],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "skodakortet-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Skodakortet",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Skodakortet",
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "SKODA",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "sparbankensyd-bankid",
-      "className": "nxgen.se.banks.sdcse.SdcSeAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Sparbanken Syd",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "payload": "9570",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "statoilmastercard-bankid",
-      "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Circle K MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "stse:0122",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "supremecard-bankid",
-      "className": "creditcards.supremecard.v2.SupremeCardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Supreme Card",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "swedbank-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Swedbank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Swedbank och Sparbankerna",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "payload": "swedbank",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "swedbank-payment-revamp-bankid",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.swedbank.SwedbankSEAgentPaymentsRevamp",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Swedbank Payment Revamp",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Swedbank Payment Revamp",
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "payload": "swedbank",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "swedbank-bankid-youth",
-      "capabilities": [
-        "TRANSFERS",
-        "MORTGAGE_AGGREGATION"
-      ],
-      "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Swedbank Ung",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "groupDisplayName": "Swedbank och Sparbankerna",
-      "market": "SE",
-      "multiFactor": true,
-      "payload": "swedbank-youth",
-      "popular": true,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "volkswagenkortet-bankid",
-      "className": "creditcards.ikano.api.IkanoApiAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Volkswagenkortet",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": false,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": "VOLKSWAGEN",
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "coop-bankid",
-      "className": "nxgen.se.creditcards.entercard.coop.CoopMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "Coop Mastercard Mer",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": null,
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "moregolfmastercard-bankid",
-      "className": "nxgen.se.creditcards.entercard.moregolf.MoreGolfMastercardAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "More Golf MasterCard",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": null,
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "remembermastercard-bankid",
-      "className": "nxgen.se.creditcards.entercard.remember.RememberAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "currency": "SEK",
-      "displayName": "re:member",
-      "fields": [
-        {
-          "description": "Social security number",
-          "exposed": true,
-          "hint": "YYYYMMDDNNNN",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "name": "username",
-          "numeric": true,
-          "optional": false,
-          "pattern": "(19|20)[0-9]{10}",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
-      "payload": null,
-      "popular": false,
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "credentialsType": "PASSWORD",
-      "displayName": "TEST_PARTNER Abstract",
-      "groupDisplayName": null,
-      "name": "se-testpartner-abstract",
-      "popular": false,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "volvofinans-bankid",
-      "className": "nxgen.se.banks.volvofinans.VolvoFinansAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayName": "Volvofinans Bank",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(19|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "se-test-bankid-successful",
-      "className": "nxgen.demo.banks.bankid.BankIdDemoAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Test BankID (successful) ",
-      "groupDisplayName": "Test BankID",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(18|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-bankid-failing",
-      "className": "nxgen.demo.banks.bankid.FailingBankIdDemoAgent",
-      "credentialsType": "MOBILE_BANKID",
-      "displayDescription": "Mobile BankID",
-      "displayName": "Test BankID (failing) ",
-      "groupDisplayName": "Test BankID",
-      "fields": [
-        {
-          "hint": "YYYYMMDDNNNN",
-          "name": "username",
-          "numeric": true,
-          "pattern": "(18|20)[0-9]{10}",
-          "immutable": true,
-          "maxLength": 12,
-          "minLength": 12,
-          "description": "Social security number",
-          "patternError": "Please enter a valid social security number."
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-password",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "se-danskebank-password",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "numeric": true
+                },
+                {
+                    "description": "Service code",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter 4 digits."
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-demo-fake-bank",
-      "className": "nxgen.demo.banks.demofakebank.DemoFakeBankAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Demo Fake Bank",
-      "groupDisplayName": "Test Demo Fake Bank",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "se-danskebank-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please supply a valid social security number."
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use Mobile BankID the same way as with the Danske Bank mobile app. You can order a Mobile BankID using the bank's web service.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "payload": "tink",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-psd2-embedded",
-      "accessType": "OPEN_BANKING",
-      "className": "nxgen.demo.banks.psd2.embedded.EmbeddedAuthenticationDemoAgent",
-      "credentialsType": "PASSWORD",
-      "displayDescription": "Password",
-      "displayName": "Bink PSD2 Embedded",
-      "groupDisplayName": "Demo providers",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "demo",
+            "className": "demo.DemoAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Demo",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "TEST"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
-      "financialInstituteName": "Bink",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using password.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-test-psd2-redirect-success",
-      "accessType": "OPEN_BANKING",
-      "className": "nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgent",
-      "credentialsType": "THIRD_PARTY_APP",
-      "displayDescription": "Redirect",
-      "displayName": "Bink PSD2 Redirect",
-      "groupDisplayName": "Demo providers",
-      "fields": [
+            "name": "djurgardskortetmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Djurgårdskortet MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "djse:0116",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
         {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "eurocard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Eurocard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "ecse:0005",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "finnairmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Finnair Plus MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "fase:0129",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "forex",
+            "className": "demo.DemoAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Forex Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "You use your social security number and PIN the same way as when you log in to the bank's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "TEMPORARY_DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "handelsbanken",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Card reader",
+            "displayName": "Handelsbanken",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "hint": "NNNN",
+                    "sensitive": true,
+                    "name": "password",
+                    "masked": true,
+                    "numeric": true,
+                    "pattern": "([0-9]{4})",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "description": "PIN",
+                    "patternError": "Please enter four digits."
+                }
+            ],
+            "groupDisplayName": "Handelsbanken",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "You use your card reader and personal code the same way as you would in the bank's mobile app.",
+            "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "handelsbanken-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.handelsbanken.HandelsbankenSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Handelsbanken",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Handelsbanken",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/qF01AA1F3402ECCE2C12581A0003CC76F",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "icabanken-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.icabanken.IcaBankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "ICAbanken",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "ICAbanken",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "multiFactor": true,
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "icabanken-bankid-disabled",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.se.icabanken.ICABankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "ICAbanken",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "ICAbanken",
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "multiFactor": true,
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "ikanokort-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Ikanokortet",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "IKANOKORT",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "jetmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "INGO MasterCard (JET)",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "jese:0032",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "lansforsakringar-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.LansforsakringarAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Länsförsäkringar",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Länsförsäkringar",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "lysa",
+            "className": "brokers.lysa.LysaAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Lysa",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 0,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "BROKER"
+        },
+        {
+            "name": "nknyckelnmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "NK Nyckeln MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "nkse:0007",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "nordea-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.nordea.NordeaAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "hint": "NNNN",
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{4})?",
+                    "immutable": true,
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 0,
+                    "optional": true,
+                    "description": "PIN",
+                    "patternError": "Please enter four digits.",
+                    "helpText": "Use the same code that you use in the bank's mobile app after you log in with Bank ID once. If you forgot your code, you can choose a new one in the bank's mobile app. By filling in this, transactions can be downloaded automatically in the background, so you do not need to use Bank ID every time.",
+                    "sensitive": true
+                }
+            ],
+            "groupDisplayName": "Nordea",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },{
+            "name": "se-nordea-bankid",
+            "className": "nxgen.se.banks.nordea.v30.NordeaSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Nordea",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.nordea.se/privat/vardagstjanster/internet-mobil-telefon/mobilbanken.html",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "nordnet",
+            "className": "brokers.NordnetAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayDescription": "Password",
+            "displayName": "Nordnet",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "Nordnet",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the broker's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": false,
+            "type": "BROKER"
+        },
+        {
+            "name": "nordnet-bankid",
+            "className": "brokers.NordnetAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Nordnet",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Nordnet",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": false,
+            "type": "BROKER"
+        },
+        {
+            "name": "norwegian-bankid",
+            "className": "banks.norwegian.NorwegianAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Norwegian Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "okq8bank",
+            "className": "creditcards.okq8.OKQ8BankAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "OKQ8 Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                },
+                {
+                    "sensitive": true,
+                    "name": "password",
+                    "masked": true,
+                    "description": "Password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "opelmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Opel MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "opse:0107",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "preem-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Preem",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "PREEM",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "rikskortet",
+            "className": "creditcards.rikskortet.RikskortetAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Ticket Rikskortet",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "tutorialUrl": "https://edenred.se/rikskuponger/mina-sidor/glomt-losenord/",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": false,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "saabmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SAAB MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "sbse:0106",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "saseurobonusamericanexpress",
+            "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "SAS EuroBonus American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
+            "payload": "SE",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "saseurobonusmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SAS EuroBonus MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "sase:0102",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "savingsbank-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Sparbankerna",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "You use Mobile BankID the same way as in the bank's mobile app. If you have a personal code for simplified login, we recommend using it instead of Mobile BankID.",
+            "payload": "savingsbank",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "savingsbank-bankid-youth",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Sparbankerna Ung",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "payload": "savingsbank-youth",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "sbab-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.sbab.SBABAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SBAB",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.sbab.se",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "se-sbab_sandbox-oauth2",
+            "className": "nxgen.se.banks.sbab.SbabAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "currency": "SEK",
+            "displayName": "SBAB",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.sbab.se",
+            "payload": "tink",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "seatkortet-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Seatkortet",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "SEAT",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "seb-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "banks.seb.SEBApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SEB",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "SEB",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "tutorialUrl": "http://www.seb.se/pow/wcp/index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "sebwalletmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SEB Wallet MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "wase:0121",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "shellmastercard-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Shell MasterCard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Shell MasterCard",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "SHELL",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "sjpriomastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SJ Prio MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "sjse:0104",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "skandiabanken-bankid",
+            "className": "banks.SkandiabankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Skandiabanken",
+            "fields": [],
+            "market": "SE",
+            "multiFactor": false,
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "skandiabanken-ssn-bankid",
+            "className": "banks.SkandiabankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Skandiabanken",
+            "fields": [],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "skodakortet-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Skodakortet",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Skodakortet",
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "SKODA",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "sparbankensyd-bankid",
+            "className": "nxgen.se.banks.sdcse.SdcSeAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Sparbanken Syd",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "payload": "9570",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "statoilmastercard-bankid",
+            "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Circle K MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "stse:0122",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "supremecard-bankid",
+            "className": "creditcards.supremecard.v2.SupremeCardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Supreme Card",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "swedbank-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Swedbank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "payload": "swedbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "swedbank-payment-revamp-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgentPaymentsRevamp",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Swedbank Payment Revamp",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Swedbank Payment Revamp",
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "payload": "swedbank",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "swedbank-bankid-youth",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.swedbank.SwedbankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Swedbank Ung",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "groupDisplayName": "Swedbank och Sparbankerna",
+            "market": "SE",
+            "multiFactor": true,
+            "payload": "swedbank-youth",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "volkswagenkortet-bankid",
+            "className": "creditcards.ikano.api.IkanoApiAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Volkswagenkortet",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": "VOLKSWAGEN",
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "coop-bankid",
+            "className": "nxgen.se.creditcards.entercard.coop.CoopMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Coop Mastercard Mer",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "moregolfmastercard-bankid",
+            "className": "nxgen.se.creditcards.entercard.moregolf.MoreGolfMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "More Golf MasterCard",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "remembermastercard-bankid",
+            "className": "nxgen.se.creditcards.entercard.remember.RememberAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "re:member",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "exposed": true,
+                    "hint": "YYYYMMDDNNNN",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "payload": null,
+            "popular": false,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "credentialsType": "PASSWORD",
+            "displayName": "TEST_PARTNER Abstract",
+            "groupDisplayName": null,
+            "name": "se-testpartner-abstract",
+            "popular": false,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "volvofinans-bankid",
+            "className": "nxgen.se.banks.volvofinans.VolvoFinansAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "Volvofinans Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "se-test-bankid-successful",
+            "className": "nxgen.demo.banks.bankid.BankIdDemoAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Test BankID (successful) ",
+            "groupDisplayName": "Test BankID",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(18|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-bankid-failing",
+            "className": "nxgen.demo.banks.bankid.FailingBankIdDemoAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayDescription": "Mobile BankID",
+            "displayName": "Test BankID (failing) ",
+            "groupDisplayName": "Test BankID",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(18|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-password",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-demo-fake-bank",
+            "className": "nxgen.demo.banks.demofakebank.DemoFakeBankAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Demo Fake Bank",
+            "groupDisplayName": "Test Demo Fake Bank",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "payload": "tink",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-psd2-embedded",
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.demo.banks.psd2.embedded.EmbeddedAuthenticationDemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
+            "displayName": "Bink PSD2 Embedded",
+            "groupDisplayName": "Demo providers",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
+            "financialInstituteName": "Bink",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using password.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-test-psd2-redirect-success",
+            "accessType": "OPEN_BANKING",
+            "className": "nxgen.demo.banks.psd2.redirect.RedirectAuthenticationDemoAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayDescription": "Redirect",
+            "displayName": "Bink PSD2 Redirect",
+            "groupDisplayName": "Demo providers",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
+            "financialInstituteName": "Bink",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using a third party app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "se-seb-oauth2",
+            "displayName": "SEB (Sandbox)",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.openbanking.sebopenbanking.SebAccountsAndCardsAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "payload": null,
+            "tutorialUrl": null,
+            "fields": []
+        },
+        {
+            "name": "se-sebkort-oauth2",
+            "displayName": "SEB (Sandbox)",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "payload": null,
+            "tutorialUrl": null,
+            "fields": []
+        },
+        {
+            "name": "se-nordea-oauth2",
+            "displayName": "Nordea",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.se.openbanking.nordea.NordeaSeAgent",
+            "passwordHelpText": "Please authenticate to use this bank.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
-      ],
-      "financialInstituteId": "f128639c-171b-46eb-8eff-219705bcbbcc",
-      "financialInstituteName": "Bink",
-      "multiFactor": true,
-      "passwordHelpText": "To connect your bank, you need to identify yourself using a third party app.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "se-seb-oauth2",
-      "displayName": "SEB (Sandbox)",
-      "popular": true,
-      "type": "BANK",
-      "status": "DISABLED",
-      "credentialsType": "THIRD_PARTY_APP",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.openbanking.sebopenbanking.SebAccountsAndCardsAgent",
-      "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-      "transactional": "true",
-      "payload": null,
-      "tutorialUrl": null,
-      "fields": []
-    },
-    {
-      "name": "se-sebkort-oauth2",
-      "displayName": "SEB (Sandbox)",
-      "popular": true,
-      "type": "BANK",
-      "status": "DISABLED",
-      "credentialsType": "THIRD_PARTY_APP",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.openbanking.sebbrandedcards.SebBrandedCardsAgent",
-      "passwordHelpText": "In order to use this bank, please authenticate yourself.",
-      "transactional": "true",
-      "payload": null,
-      "tutorialUrl": null,
-      "fields": []
-    },
-    {
-      "name": "se-nordea-oauth2",
-      "displayName": "Nordea",
-      "popular": true,
-      "type": "BANK",
-      "status": "DISABLED",
-      "credentialsType": "THIRD_PARTY_APP",
-      "multiFactor": false,
-      "className": "nxgen.se.openbanking.nordea.NordeaSeAgent",
-      "passwordHelpText": "Please authenticate to use this bank.",
-      "transactional": true,
-      "tutorialUrl": null,
-      "fields": [],
-      "payload": "tink"
-    }
-  ]
+    ]
 }

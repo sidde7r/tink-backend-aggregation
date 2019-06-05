@@ -68,19 +68,24 @@ public class LoopProofTransactionFetcherController<A extends Account>
                 Collection<? extends Transaction> tinkTransactions = response.getTinkTransactions();
                 if (tinkTransactions != null) {
 
-                    if (verifyForDuplicationsAndAppendSet(tinkTransactions, ids)) {
+                    Set<String> pageTransactionIds = extractIdsFromCurrentPage(tinkTransactions);
+                    if (ids.containsAll(pageTransactionIds)) {
                         transactions.addAll(response.getTinkTransactions());
+                        ids.addAll(pageTransactionIds);
                     } else {
                         break;
                     }
                 }
-            }
-
-            if (!response.canFetchMore()
+                if (!response.canFetchMore()
                     .orElseThrow(
-                            () -> new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+                        () -> new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+                    break;
+                }
+            }else{
                 break;
             }
+
+
         } while (!paginationHelper.isContentWithRefresh(account, transactions));
 
         return transactions;
@@ -98,16 +103,14 @@ public class LoopProofTransactionFetcherController<A extends Account>
                 .orElseGet(Collections::emptyList);
     }
 
-    private boolean verifyForDuplicationsAndAppendSet(
-            Collection<? extends Transaction> tinkTransactions, Set<String> ids) {
+    private Set<String> extractIdsFromCurrentPage(
+            Collection<? extends Transaction> tinkTransactions) {
 
         Set<String> resultIds =
                 tinkTransactions.stream()
                         .map(t -> ((Transaction) t).getExternalId())
                         .collect(Collectors.toSet());
 
-        boolean breakLoop = ids.containsAll(resultIds);
-        ids.addAll(resultIds);
-        return !breakLoop;
+       return resultIds;
     }
 }

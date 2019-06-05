@@ -21,7 +21,6 @@ public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccounts
     public SebAccountsAndCardsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        client.setDebugOutput(true);
         this.apiClient = new SebAccountsAndCardsApiClient(client, sessionStorage);
     }
 
@@ -50,8 +49,7 @@ public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccounts
                         metricRefreshController,
                         updateController,
                         new SebCardAccountFetcher(apiClient),
-                        // TODO: mandruszkiewicz restore TransactionFetcherController and remove
-                        // LoopProofTransactionFetcherController
+                        // TODO: restore TransactionFetcherController and remove LoopProofTransactionFetcherController
                         new LoopProofTransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionMonthPaginationController<>(
