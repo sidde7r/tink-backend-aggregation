@@ -1,13 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
-load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library_maven(
+java_library(
     name = "demo",
     srcs = glob(["src/main/**/demo/*.java"]),
-    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
-        "@maven//:com_google_guava_guava",
+        "//third_party:com_google_guava_guava",
     ],
 )
 
@@ -17,8 +15,8 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:demo",
-        "@maven//:junit_junit",
-        "@maven//:org_assertj_assertj_core",
+        "//third_party:junit_junit",
+        "//third_party:org_assertj_assertj_core",
     ],
 )
 
@@ -28,48 +26,43 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:service",
-        "@maven//:com_fasterxml_jackson_core_jackson_databind",
-        "@maven//:junit_junit",
-        "@maven//:org_assertj_assertj_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:junit_junit",
+        "//third_party:org_assertj_assertj_core",
     ],
 )
 
-java_library_maven(
+java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
-    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
 )
 
-java_library_maven(
+java_library(
     name = "rpc",
     srcs = glob(["src/main/**/rpc/*.java"]),
-    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/credentials:enums",
         "//src/libraries/field:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
-        "@maven//:com_fasterxml_jackson_core_jackson_core",
-        "@maven//:com_google_guava_guava",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_guava_guava",
     ],
 )
 
-java_library_maven(
+java_library(
     name = "service",
     srcs = glob(["src/main/**/service/*.java"]),
-    groupId = "se.tink.libraries.credentials",
     visibility = ["//visibility:public"],
     deps = [
         "//src/integration/api",
         "//src/libraries/strings",
         "//src/libraries/user:rpc",
-        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
-        "@maven//:com_fasterxml_jackson_core_jackson_core",
-        "@maven//:com_fasterxml_jackson_core_jackson_databind",
-        "@maven//:com_google_guava_guava",
-        "@maven//:commons_codec_commons_codec",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:commons_codec_commons_codec",
     ],
 )
