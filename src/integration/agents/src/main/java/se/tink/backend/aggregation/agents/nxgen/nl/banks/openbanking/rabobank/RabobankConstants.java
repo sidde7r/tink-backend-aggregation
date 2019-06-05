@@ -43,6 +43,8 @@ public class RabobankConstants {
     }
 
     public static class ErrorMessages {
+        public static final String BOOKING_STATUS_INVALID =
+                "currently only bookingstatus booked is allowed";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
@@ -92,6 +94,7 @@ public class RabobankConstants {
     public class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CODE = "code";
+        public static final String BOOKED = "booked";
         public static final String BOTH = "both";
         public static final String TRANSACTIONS_SIZE = "100";
         public static final String SCOPES =

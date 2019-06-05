@@ -13,5 +13,6 @@ java_library(
         "@maven//:com_google_guava_guava",
         "@maven//:com_sun_jersey_jersey_core",
         "@maven//:org_assertj_assertj_core",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )
