@@ -25,18 +25,14 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
 
     @Override
     public T get() {
-        return getRepository(cls);
-    }
-
-    public static <T> SpringIntegrationProvider<T> fromSpring(Class<T> tClass) {
-        return new SpringIntegrationProvider<>(tClass);
-    }
-
-    private <R> R getRepository(Class<R> cls) {
         if (applicationContext == null) {
             log.warn("Centralized repository not initialized.");
             return null;
         }
         return applicationContext.getBean(cls);
+    }
+
+    public static <T> SpringIntegrationProvider<T> fromSpring(Class<T> tClass) {
+        return new SpringIntegrationProvider<>(tClass);
     }
 }
