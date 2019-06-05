@@ -66,7 +66,6 @@ public class TransactionEntity {
                 .setAmount(new Amount(currency, amount))
                 .setDate(verificationDate)
                 .setDescription(description)
-                .setExternalId(id)
                 .setPending(false)
                 .build();
     }
