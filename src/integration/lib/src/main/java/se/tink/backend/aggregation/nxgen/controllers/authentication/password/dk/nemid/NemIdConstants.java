@@ -8,6 +8,7 @@ public class NemIdConstants {
     public static final URL BASE_URL = new URL("https://applet.danid.dk");
 
     public static final LogTag NEM_ID_AUTH_ERROR_TAG = LogTag.from("nem-id-auth-error");
+    public static final LogTag NEM_ID_AUTH_SUCCESS_TAG = LogTag.from("nem-id-auth-success");
 
     // This html is taken from Nordea DK iOS and android. It has been modified to only include
     // necessary parts.

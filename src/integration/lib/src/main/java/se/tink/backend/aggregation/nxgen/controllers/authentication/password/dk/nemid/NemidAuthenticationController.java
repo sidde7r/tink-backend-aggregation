@@ -149,12 +149,13 @@ public abstract class NemidAuthenticationController {
             Optional<String> nemIdToken = getNemIdToken();
 
             if (nemIdToken.isPresent()) {
+                LOGGER.infoExtraLong(
+                        driver.getPageSource(), NemIdConstants.NEM_ID_AUTH_SUCCESS_TAG);
                 return nemIdToken.get();
             }
         }
         // We will only reach this state if we could not find the nemId token -> something went
-        // wrong in the
-        // authentication.
+        // wrong in the authentication.
         IllegalStateException exception =
                 new IllegalStateException("[nemid] Could not find nemId token.");
         LOGGER.errorExtraLong(
