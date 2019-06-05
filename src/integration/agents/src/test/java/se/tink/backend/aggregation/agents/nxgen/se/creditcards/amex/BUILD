@@ -20,6 +20,6 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/libraries/serialization",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
     ],
 )

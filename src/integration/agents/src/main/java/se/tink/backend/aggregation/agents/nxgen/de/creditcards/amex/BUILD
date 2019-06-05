@@ -8,6 +8,6 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/date",
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
     ],
 )
