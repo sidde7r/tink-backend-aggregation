@@ -77,14 +77,15 @@ public class LoopProofTransactionFetcherController<A extends Account>
                     }
                 }
                 if (!response.canFetchMore()
-                    .orElseThrow(
-                        () -> new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Pagee must indicate canFetchMore!"))) {
                     break;
                 }
-            }else{
+            } else {
                 break;
             }
-
 
         } while (!paginationHelper.isContentWithRefresh(account, transactions));
 
@@ -111,6 +112,6 @@ public class LoopProofTransactionFetcherController<A extends Account>
                         .map(t -> ((Transaction) t).getExternalId())
                         .collect(Collectors.toSet());
 
-       return resultIds;
+        return resultIds;
     }
 }

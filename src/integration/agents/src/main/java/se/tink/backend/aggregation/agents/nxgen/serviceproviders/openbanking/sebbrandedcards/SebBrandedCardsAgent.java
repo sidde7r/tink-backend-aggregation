@@ -27,7 +27,8 @@ public class SebBrandedCardsAgent extends SebAbstractAgent<SebBrandedCardsApiCli
                         metricRefreshController,
                         updateController,
                         new SebCardAccountFetcher(apiClient),
-                    // TODO: restore TransactionFetcherController and remove LoopProofTransactionFetcherController
+                        // TODO: restore TransactionFetcherController and remove
+                        // LoopProofTransactionFetcherController
                         new LoopProofTransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionMonthPaginationController<>(
