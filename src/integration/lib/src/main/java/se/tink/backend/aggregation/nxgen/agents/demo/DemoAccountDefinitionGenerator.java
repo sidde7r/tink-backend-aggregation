@@ -98,4 +98,34 @@ public class DemoAccountDefinitionGenerator {
             }
         };
     }
+
+    public static DemoTransactionAccount getDemoTransactionalAccountWithZeroBalance(
+            String username, String providerName) {
+        String deterministicKey =
+                createDeterministicKey("Transaction with zero balance" + username + providerName);
+        return new DemoTransactionAccount() {
+            @Override
+            public String getAccountId() {
+                return generateAccoutNumbers(deterministicKey);
+            }
+
+            @Override
+            public String getAccountName() {
+                return "Checking Account " + username + " zero balance";
+            }
+
+            @Override
+            public double getBalance() {
+                return 0.00;
+            }
+
+            @Override
+            public List<AccountIdentifier> getIdentifiers() {
+                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                AccountIdentifier identifier =
+                        AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
+                return Lists.newArrayList(identifier);
+            }
+        };
+    }
 }

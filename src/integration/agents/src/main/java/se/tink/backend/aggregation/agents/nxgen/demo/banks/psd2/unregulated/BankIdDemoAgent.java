@@ -155,7 +155,7 @@ public class BankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
+    public List<DemoTransactionAccount> getTransactionAccounts() {
         return null;
     }
 
