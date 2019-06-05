@@ -1,6 +1,5 @@
 package se.tink.libraries.repository.providers;
 
-import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import javax.annotation.Nullable;
@@ -29,16 +28,14 @@ public class SpringIntegrationProvider<T> implements Provider<T> {
 
     @Override
     public T get() {
-        return getRepository(cls, source);
+        return getRepository(cls);
     }
 
     public static <T> SpringIntegrationProvider<T> fromSpring(Class<T> tClass) {
         return new SpringIntegrationProvider<>(tClass, RepositorySource.DEFAULT);
     }
 
-    private <R> R getRepository(Class<R> cls, RepositorySource source) {
-        Preconditions.checkNotNull(source);
-
+    private <R> R getRepository(Class<R> cls) {
         if (applicationContext == null) {
             log.warn("Centralized repository not initialized.");
             return null;
