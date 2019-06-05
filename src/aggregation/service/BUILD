@@ -12,11 +12,10 @@ java_library(
         "//src/aggregation/lib",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_netflix_governator",
         "//third_party:io_dropwizard_dropwizard_core",
-        "@maven//:com_codahale_metrics_metrics_healthchecks",
-        "@maven//:com_google_guava_guava",
-        "@maven//:com_google_inject_guice",
-        "@maven//:com_netflix_governator_governator",
     ],
 )
 
@@ -30,10 +29,9 @@ java_binary(
     main_class = "se.tink.backend.aggregation.AggregationServiceContainer",
     visibility = ["//visibility:public"],
     runtime_deps = [
-        ":service",
+        "//src/aggregation/service",
         "//src/libraries/console_json_logger",
-        "@maven//:mysql_mysql_connector_java",
-        "@maven//:org_hibernate_hibernate_entitymanager",
+        "//third_party:mysql_mysql_connector_java",
     ],
 )
 
