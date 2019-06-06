@@ -1,12 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1;
 
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.formatSupplementalKey;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.generateNonce;
-
+import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -18,6 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -41,7 +39,7 @@ public class OAuth1AuthenticationController
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
-        this.state = generateNonce();
+        this.state = OAuthUtils.generateNonce();
     }
 
     @Override
@@ -83,7 +81,9 @@ public class OAuth1AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                                OAuthUtils.formatSupplementalKey(state),
+                                WAIT_FOR_MINUTES,
+                                TimeUnit.MINUTES)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
         String oauthToken =

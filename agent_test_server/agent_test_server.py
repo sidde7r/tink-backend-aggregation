@@ -130,6 +130,7 @@ def thirdparty_open():
 
     return "", 204
 
+
 # This endpoint will be accessed/opened by the web browser as a result
 # of a redirect from the bank's backend.
 @app.route("/api/v1/thirdparty/callback", methods=("GET", "POST"))
