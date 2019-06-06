@@ -1,16 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
-
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -23,6 +13,15 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
 
 public class OAuthUtils {
 
@@ -152,7 +151,8 @@ public class OAuthUtils {
     // Get request token is signed only by consumer secret, every other request with
     // consumer&oauthSecret combination
     private static SecretKey getSecretKey(String consumerSecret, String oauthSecret) {
-        String key = consumerSecret
+        String key =
+                consumerSecret
                         + AMPERSAND
                         + StringUtils.defaultString(oauthSecret, StringUtils.EMPTY);
         return new SecretKeySpec(key.getBytes(UTF_8), HMAC_SHA1);

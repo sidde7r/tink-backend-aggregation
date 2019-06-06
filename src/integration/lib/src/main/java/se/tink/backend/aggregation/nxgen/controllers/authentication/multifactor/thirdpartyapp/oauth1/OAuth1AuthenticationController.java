@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1;
 
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.formatSupplementalKey;
+import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.generateNonce;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -17,13 +23,6 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.formatSupplementalKey;
-import static se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils.generateNonce;
 
 public class OAuth1AuthenticationController
         implements ThirdPartyAppAuthenticator<String>, AutoAuthenticator {

@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class OAuthUtilsTest {
 

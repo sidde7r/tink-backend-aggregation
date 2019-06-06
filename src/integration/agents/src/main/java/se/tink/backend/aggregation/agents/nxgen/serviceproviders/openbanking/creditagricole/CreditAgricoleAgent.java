@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
@@ -18,8 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Optional;
 
 public final class CreditAgricoleAgent extends NextGenerationAgent {
     private final CreditAgricoleApiClient apiClient;
