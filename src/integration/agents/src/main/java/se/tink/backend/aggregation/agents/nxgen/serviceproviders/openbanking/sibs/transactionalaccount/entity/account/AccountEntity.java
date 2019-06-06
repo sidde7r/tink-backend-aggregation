@@ -3,8 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -29,13 +32,18 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public CheckingAccount toTinkAccount(Amount balance) {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(balance)
-                .setAlias(name)
-                .addAccountIdentifier(new IbanIdentifier(iban))
+    public TransactionalAccount toTinkAccount(Amount balance) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(iban)
+                                .withAccountNumber(iban)
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .build())
+                .withBalance(BalanceModule.of(balance))
                 .setApiIdentifier(id)
                 .build();
     }

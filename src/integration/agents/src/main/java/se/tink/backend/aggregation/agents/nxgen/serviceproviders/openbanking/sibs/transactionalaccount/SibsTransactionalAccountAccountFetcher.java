@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.entity.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
 
@@ -29,7 +28,7 @@ public class SibsTransactionalAccountAccountFetcher
                 .collect(Collectors.toList());
     }
 
-    protected CheckingAccount toTinkAccount(AccountEntity accountEntity) {
+    protected TransactionalAccount toTinkAccount(AccountEntity accountEntity) {
 
         Amount balanceAmount =
                 apiClient.getAccountBalances(accountEntity.getId()).getBalances().stream()
