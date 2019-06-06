@@ -42,11 +42,12 @@ public class TransactionFetcherController<A extends Account> implements Transact
         List<AggregationTransaction> transactions = Lists.newArrayList();
 
         transactions.addAll(fetchUpcomingTransactionsFor(account));
-
         do {
             PaginatorResponse response = paginator.fetchTransactionsFor(account);
-            if (response != null && response.getTinkTransactions() != null) {
-                transactions.addAll(response.getTinkTransactions());
+            if (response != null) {
+                Optional.ofNullable(response)
+                        .map(resp -> resp.getTinkTransactions())
+                        .ifPresent(tinkTransactions -> transactions.addAll(tinkTransactions));
             }
 
             if (!response.canFetchMore()
