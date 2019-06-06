@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator;
 
+import java.util.Arrays;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
@@ -19,12 +20,23 @@ public class SibsAuthenticator {
     }
 
     public ConsentStatus getConsentStatus() {
-
-        try {
-            return ConsentStatus.valueOf(apiClient.getConsentStatus().getTransactionStatus());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException(SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE);
-        }
+        return Arrays.stream(ConsentStatus.values())
+                .filter(
+                        v ->
+                                v.toString()
+                                        .equalsIgnoreCase(
+                                                apiClient
+                                                        .getConsentStatus()
+                                                        .getTransactionStatus()))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        SibsConstants.ErrorMessages.UNKNOWN_TRANSACTION_STATE
+                                                + ": "
+                                                + apiClient
+                                                        .getConsentStatus()
+                                                        .getTransactionStatus()));
     }
 
     public ConsentResponse initializeConsent(String state, String psuIdType, String psuId) {
