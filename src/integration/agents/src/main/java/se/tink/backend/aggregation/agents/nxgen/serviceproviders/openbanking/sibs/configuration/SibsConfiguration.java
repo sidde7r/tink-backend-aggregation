@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -46,7 +46,7 @@ public class SibsConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningKeyPath),
                 String.format(
-                        IngConstants.ErrorMessages.INVALID_CONFIGURATION,
+                        SibsConstants.ErrorMessages.INVALID_CONFIGURATION,
                         "Client Signing Key Path"));
 
         return clientSigningKeyPath;
@@ -56,7 +56,7 @@ public class SibsConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningCertificatePath),
                 String.format(
-                        IngConstants.ErrorMessages.INVALID_CONFIGURATION,
+                        SibsConstants.ErrorMessages.INVALID_CONFIGURATION,
                         "Client Signing Certificate Path"));
 
         return clientSigningCertificatePath;
@@ -66,7 +66,7 @@ public class SibsConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningCertificateSerialNumber),
                 String.format(
-                        IngConstants.ErrorMessages.INVALID_CONFIGURATION,
+                        SibsConstants.ErrorMessages.INVALID_CONFIGURATION,
                         "Client Signing Certificate Serial Number"));
 
         return clientSigningCertificateSerialNumber;
@@ -75,7 +75,7 @@ public class SibsConfiguration implements ClientConfiguration {
     public String getAspspCode() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(aspspCode),
-                String.format(IngConstants.ErrorMessages.INVALID_CONFIGURATION, "Aspsp Code"));
+                String.format(SibsConstants.ErrorMessages.INVALID_CONFIGURATION, "Aspsp Code"));
 
         return aspspCode;
     }
