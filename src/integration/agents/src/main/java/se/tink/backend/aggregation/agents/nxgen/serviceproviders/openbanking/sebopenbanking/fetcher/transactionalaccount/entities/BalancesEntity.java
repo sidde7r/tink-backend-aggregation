@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.SebConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -14,7 +14,7 @@ public class BalancesEntity {
     private BalanceAmountEntity balanceAmount;
 
     public boolean isAvailableBalance() {
-        return balanceType.equalsIgnoreCase(SebConstants.Accounts.AVAILABLE_BALANCE);
+        return balanceType.equalsIgnoreCase(SebCommonConstants.Accounts.AVAILABLE_BALANCE);
     }
 
     public Amount toAmount() {
