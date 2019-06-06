@@ -1,0 +1,146 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
+import se.tink.backend.aggregation.nxgen.http.HttpMethod;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
+
+public final class CreditAgricoleApiClient {
+
+    private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
+    private CreditAgricoleConfiguration configuration;
+
+    public CreditAgricoleApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+        this.client = client;
+        this.client.disableSignatureRequestHeader();
+        this.sessionStorage = sessionStorage;
+    }
+
+    public OAuth1Token getRequestToken(String state) {
+        String callbackUrl = getCallbackUrlWithState(state);
+        String consumerKey = configuration.getClientId();
+
+        List<NameValuePair> params = OAuthUtils.getRequestTokenParams(callbackUrl, consumerKey);
+
+        String requestTokenUrl = getRequestTokenUrl();
+        String authorizationHeader = getOauthAuthorizationHeader(requestTokenUrl, params);
+        String response = oauthSignedRequest(requestTokenUrl, authorizationHeader);
+
+        Map<String, String> responsePairs = OAuthUtils.parseFormResponse(response);
+        return createToken(StringUtils.EMPTY, responsePairs);
+    }
+
+    public OAuth1Token getAccessToken(String oauthToken, String oauthVerifier)
+            throws SessionException {
+        String accessTokenUrl = getAccessTokenUrl();
+        String consumerKey = configuration.getClientId();
+
+        OAuth1Token temporaryToken = fetchTokenFromSession();
+
+        List<NameValuePair> params =
+                OAuthUtils.getAccessTokenParams(consumerKey, oauthToken, oauthVerifier);
+        String authorizationHeader =
+                getOauthAuthorizationHeader(
+                        accessTokenUrl, params, temporaryToken.getOauthTokenSecret());
+        String response = oauthSignedRequest(accessTokenUrl, authorizationHeader);
+
+        Map<String, String> responsePairs = OAuthUtils.parseFormResponse(response);
+        return createToken(oauthVerifier, responsePairs);
+    }
+
+    public void setConfiguration(CreditAgricoleConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    public CreditAgricoleConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    public URL getAuthorizeUrl(String token) {
+        return client.request(
+                        new URL(
+                                configuration.getBaseUrl()
+                                        + CreditAgricoleConstants.Urls.AUTHENTICATION))
+                .queryParam(CreditAgricoleConstants.QueryKeys.OAUTH_TOKEN, token)
+                .getUrl();
+    }
+
+    public void setTokenToSession(OAuth1Token token) {
+        sessionStorage.put(CreditAgricoleConstants.StorageKeys.TEMPORARY_TOKEN, token);
+    }
+
+    private String oauthSignedRequest(String url, String oauthSignedHeader) {
+        return client.request(new URL(url))
+                .accept(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HttpHeaders.AUTHORIZATION, oauthSignedHeader)
+                .post(String.class);
+    }
+
+    private String getRequestTokenUrl() {
+        return configuration.getBaseUrl() + CreditAgricoleConstants.Urls.GET_REQUEST_TOKEN;
+    }
+
+    private OAuth1Token createToken(String oauthVerifier, Map<String, String> responsePairs) {
+        return new OAuth1Token(
+                responsePairs.get(CreditAgricoleConstants.FormKeys.OAUTH_TOKEN),
+                responsePairs.get(CreditAgricoleConstants.FormKeys.OAUTH_TOKEN_SECRET),
+                responsePairs.get(CreditAgricoleConstants.FormKeys.OAUTH_CALLBACK_CONFIRMED),
+                oauthVerifier);
+    }
+
+    private OAuth1Token fetchTokenFromSession() throws SessionException {
+        return sessionStorage
+                .get(CreditAgricoleConstants.StorageKeys.TEMPORARY_TOKEN, OAuth1Token.class)
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+    }
+
+    private String getAccessTokenUrl() {
+        return configuration.getBaseUrl() + CreditAgricoleConstants.Urls.GET_ACCESS_TOKEN;
+    }
+
+    private String getOauthAuthorizationHeader(String baseUrl, List<NameValuePair> params) {
+        return getOauthAuthorizationHeader(baseUrl, params, StringUtils.EMPTY);
+    }
+
+    private String getOauthAuthorizationHeader(
+            String url, List<NameValuePair> params, String oauthSecret) {
+        try {
+            String consumerSecret = configuration.getClientSecret();
+            String signature =
+                    OAuthUtils.getSignature(
+                            url, HttpMethod.POST.name(), params, consumerSecret, oauthSecret);
+            params.add(
+                    new BasicNameValuePair(OAuth1Constants.QueryParams.OAUTH_SIGNATURE, signature));
+            return OAuthUtils.getAuthorizationHeaderValue(params);
+
+        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Cannot sign OAuth request.", e);
+        }
+    }
+
+    private String getCallbackUrlWithState(String state) {
+        return UriBuilder.fromUri(configuration.getRedirectUrl())
+                .queryParam(CreditAgricoleConstants.QueryKeys.TINK_STATE, state)
+                .build()
+                .toString();
+    }
+}

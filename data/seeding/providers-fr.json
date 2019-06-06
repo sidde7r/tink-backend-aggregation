@@ -2463,6 +2463,21 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "name": "fr-creditagricole-oauth1",
+            "displayName": "CreditAgricole (Sandbox)",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "THIRD_PARTY_APP",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "payload": null,
+            "tutorialUrl": null,
+            "fields": []
         }
     ]
 }
