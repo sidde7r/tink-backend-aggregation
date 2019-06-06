@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ConsentResponse {
     @JsonProperty("_links")
     public LinksEntity links;
+
     private String consentStatus;
     private String consentId;
 
