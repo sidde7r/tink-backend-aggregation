@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SBABAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SBABConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SBABPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SBABTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SBABTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -35,6 +36,11 @@ public final class SBABAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new SBABPaymentExecutor(apiClient)));
     }
 
     protected SBABConfiguration getClientConfiguration() {

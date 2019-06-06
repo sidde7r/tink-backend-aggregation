@@ -9,7 +9,9 @@ public final class SBABConstants {
 
     public static final String INTEGRATION_NAME = "sbab";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.SAVINGS, "savings").build();
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.SAVINGS, "savings", "minor_savings_account")
+                    .build();
 
     private SBABConstants() {
         throw new AssertionError();
@@ -29,6 +31,9 @@ public final class SBABConstants {
         public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.TRANSFERS);
         public static final URL CUSTOMERS = new URL(Endpoints.BASE_URL + Endpoints.CUSTOMERS);
         public static final URL TOKEN = new URL(Endpoints.BASE_URL + Endpoints.TOKEN);
+        public static final URL INITIATE_PAYMENT =
+                new URL(Endpoints.BASE_URL + Endpoints.INITIATE_PAYMENT);
+        public static final URL GET_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.GET_PAYMENT);
     }
 
     public static class Endpoints {
@@ -39,6 +44,10 @@ public final class SBABConstants {
         public static final String CUSTOMERS = "/sandbox/savings/1.0/customers";
         public static final String ACCOUNTS = "/sandbox/savings/2.0/accounts";
         public static final String TOKEN = "/sandbox/auth/1.0/token";
+        public static final String INITIATE_PAYMENT =
+                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers";
+        public static final String GET_PAYMENT =
+                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
     }
 
     public static class StorageKeys {
@@ -76,6 +85,7 @@ public final class SBABConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_NUMBER = "accountNumber";
+        public static final String PAYMENT_ID = "referenceId";
     }
 
     public static class CredentialKeys {

@@ -20,6 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SBABConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
@@ -64,6 +67,8 @@ public final class SBABApiClient {
     }
 
     private OAuth2Token getTokenFromStorage() {
+        persistentStorage.put(
+                SBABConstants.StorageKeys.OAUTH_TOKEN, configuration.getBearerToken());
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
@@ -134,7 +139,6 @@ public final class SBABApiClient {
 
     public FetchTransactionsResponse fetchTransactions(
             TransactionalAccount account, Date startDate, Date endDate) {
-
         return client.request(
                         Urls.TRANSACTIONS.parameter(
                                 IdTags.ACCOUNT_NUMBER,
@@ -148,6 +152,24 @@ public final class SBABApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
                 .get(FetchTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, String debtorAccountNumber) {
+        return createRequest(
+                        SBABConstants.Urls.INITIATE_PAYMENT.parameter(
+                                IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
+                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public GetPaymentResponse getPayment(String transferId, String debtorId) {
+        return createRequest(
+                        SBABConstants.Urls.GET_PAYMENT
+                                .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
+                                .parameter(IdTags.PAYMENT_ID, transferId))
+                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .get(GetPaymentResponse.class);
     }
 
     public void setTokenToSession(OAuth2Token token) {
