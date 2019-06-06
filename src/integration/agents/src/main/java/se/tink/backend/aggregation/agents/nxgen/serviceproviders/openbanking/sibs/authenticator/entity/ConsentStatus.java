@@ -16,7 +16,7 @@ public enum ConsentStatus {
         return this == RJCT || this == CANC;
     }
 
-    public boolean isAwaitableStatus() {
+    public boolean isWaitingStatus() {
         return this == RCVD || this == PDNG;
     }
 

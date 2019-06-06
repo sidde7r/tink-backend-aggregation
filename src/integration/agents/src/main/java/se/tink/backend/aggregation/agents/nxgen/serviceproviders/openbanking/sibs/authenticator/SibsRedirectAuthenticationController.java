@@ -102,7 +102,7 @@ public class SibsRedirectAuthenticationController
 
     private Retryer<ConsentStatus> getConsentStatusRetryer() {
         return RetryerBuilder.<ConsentStatus>newBuilder()
-                .retryIfResult(status -> status != null && status.isAwaitableStatus())
+                .retryIfResult(status -> status != null && status.isWaitingStatus())
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
