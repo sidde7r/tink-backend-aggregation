@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticat
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -87,7 +87,7 @@ public final class AktiaApiClient {
                 .get(GetTransactionsResponse.class);
     }
 
-    public ConsentResponse createConsent(ConsentRequest consentRequest, String state) {
+    public ConsentResponse createConsent(ConsentBaseRequest consentRequest, String state) {
         return createRequest(Urls.CREATE_CONSENT)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,

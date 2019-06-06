@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiCli
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.AuthorizeConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.ConsentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
@@ -21,7 +21,7 @@ public class AktiaAuthenticator {
     }
 
     public URL buildAuthorizeUrl(String state) {
-        ConsentRequest consentRequest = new ConsentRequest();
+        ConsentBaseRequest consentRequest = new ConsentBaseRequest();
         consentRequest.getAccess().addIban(iban);
         ConsentResponse consentResponse = apiClient.createConsent(consentRequest, state);
 
