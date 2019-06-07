@@ -1,5 +1,6 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("//tools/bzl:template_file.bzl", "templated_file")
 
 java_library(
     name = "service",
@@ -21,10 +22,13 @@ java_library(
 
 java_binary(
     name = "bin",
+    args = [
+        "server",
+        "$(location :development_config.out)",
+    ],
     data = [
+        ":development_config.out",
         "//data",
-        "//etc:development_aggregation_server",
-        "//etc:development_minikube_aggregation_server",
     ],
     main_class = "se.tink.backend.aggregation.AggregationServiceContainer",
     visibility = ["//visibility:public"],
@@ -63,6 +67,11 @@ container_image(
     ],
     visibility = ["//visibility:public"],
     workdir = "/usr/share/tink-backend-aggregation",
+)
+
+templated_file(
+    name = "development_config",
+    template = "development-minikube.yaml",
 )
 
 pkg_tar(
