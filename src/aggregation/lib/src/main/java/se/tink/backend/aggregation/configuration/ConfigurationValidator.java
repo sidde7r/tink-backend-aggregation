@@ -37,7 +37,7 @@ public final class ConfigurationValidator {
     public void validate() {
         try {
             clientConfigurations.forEach(this::validateClientConfiguration);
-        } catch (Exception innerException) {
+        } catch (RuntimeException innerException) {
             throw new InvalidConfigurationException(innerException);
         }
     }
