@@ -32,11 +32,9 @@ public final class ConfigurationValidator {
         this.clusterConfigurations = clusterConfigurations;
         this.aggregatorConfigurations = aggregatorConfigurations;
         this.cryptoConfigurationDao = cryptoConfigurationDao;
-
-        validate();
     }
 
-    private void validate() {
+    public void validate() {
         clientConfigurations.forEach(this::validateClientConfiguration);
     }
 

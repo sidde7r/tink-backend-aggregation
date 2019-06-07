@@ -50,7 +50,8 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                                 aggregationServiceConfiguration, environment));
 
         // Validate the configurations on start up
-        injector.getInstance(ConfigurationValidator.class);
+        ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
+        validator.validate();
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
