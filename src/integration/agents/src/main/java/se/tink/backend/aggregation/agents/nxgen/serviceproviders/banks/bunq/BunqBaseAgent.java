@@ -23,22 +23,20 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BunqBaseAgent extends NextGenerationAgent {
 
+    protected final String payload;
     private final BunqBaseApiClient apiClient;
     protected TemporaryStorage temporaryStorage;
 
     public BunqBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new BunqBaseApiClient(client, getAgentConfiguration().getBackendHost());
+        payload = Preconditions.checkNotNull(request.getProvider().getPayload());
+        this.apiClient = new BunqBaseApiClient(client, getBackendHost());
         temporaryStorage = new TemporaryStorage();
         configureHttpClient(client);
     }
 
-    protected BunqBaseConfiguration getAgentConfiguration() {
-        String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
-        BunqBaseConfiguration agentConfiguration = new BunqBaseConfiguration(backendHost);
-        return agentConfiguration;
-    }
+    protected abstract String getBackendHost();
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new BunqRequiredHeadersFilter(sessionStorage));

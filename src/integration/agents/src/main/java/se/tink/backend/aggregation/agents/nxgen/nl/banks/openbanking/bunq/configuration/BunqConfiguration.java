@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConfiguration;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class BunqConfiguration extends BunqBaseConfiguration implements ClientConfiguration {
+public class BunqConfiguration implements ClientConfiguration {
 
     @JsonProperty private String redirectUrl;
 

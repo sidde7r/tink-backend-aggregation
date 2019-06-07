@@ -20,7 +20,7 @@ public class BunqAgentTest {
         manager.before();
 
         builder =
-                new AgentIntegrationTest.Builder("nl", "nl-bunq-oauth2")
+                new AgentIntegrationTest.Builder("nl", "nl-bunq-sandbox-oauth2")
                         .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
                         .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }

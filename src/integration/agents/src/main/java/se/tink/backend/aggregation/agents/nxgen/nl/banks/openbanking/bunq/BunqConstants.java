@@ -35,6 +35,5 @@ public final class BunqConstants {
 
     public static final class Market {
         public static final String INTEGRATION_NAME = "bunq";
-        public static final String CLIENT_NAME = "tink";
     }
 }
