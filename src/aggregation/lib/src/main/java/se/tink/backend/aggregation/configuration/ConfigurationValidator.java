@@ -10,6 +10,11 @@ import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 
 public final class ConfigurationValidator {
+    private final Map<String, ClientConfiguration> clientConfigurations;
+    private final Map<String, ClusterConfiguration> clusterConfigurations;
+    private final Map<String, AggregatorConfiguration> aggregatorConfigurations;
+    private final CryptoConfigurationDao cryptoConfigurationDao;
+
     @Inject
     ConfigurationValidator(
             @Named("clientConfigurationByClientKey")
@@ -18,7 +23,15 @@ public final class ConfigurationValidator {
             @Named("aggregatorConfiguration")
                     Map<String, AggregatorConfiguration> aggregatorConfigurations,
             CryptoConfigurationDao cryptoConfigurationDao) {
+        this.clientConfigurations = clientConfigurations;
+        this.clusterConfigurations = clusterConfigurations;
+        this.aggregatorConfigurations = aggregatorConfigurations;
+        this.cryptoConfigurationDao = cryptoConfigurationDao;
 
+        validate();
+    }
+
+    private void validate() {
         clientConfigurations.forEach(
                 (clientApiKey, clientConfiguration) -> {
                     Preconditions.checkNotNull(
