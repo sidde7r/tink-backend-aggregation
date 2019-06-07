@@ -1,8 +1,8 @@
 # Aggregation Service
 
-The responsibility of the aggregation service is to aggregate data 
+The responsibility of the aggregation service is to aggregate data
 incoming from our bank connectors, i.e. agents.
-It communicates to the rest of Tink's ecosystem via the aggregation 
+It communicates to the rest of Tink's ecosystem via the aggregation
 controller.
 
 The function of the aggregation api is to communicate with external
@@ -34,10 +34,10 @@ Set up coordination:
 kubectl create -f kubernetes/development/coordination.yml
 ```
 
-## Running aggregation locally 
+## Running aggregation locally
 
 ```bash
-bazel run //src/aggregation/service:bin server etc/development-minikube-aggregation-server.yml
+bazel run //src/aggregation/service:bin
 ```
 
 or if you are using intelliJ you can also use the available run configuration "Minikube-Server: Aggregation"
@@ -89,7 +89,7 @@ Deploy aggregation to your local kubernetes cluster:
 
 Verify that the pods are up and healthy:
 ```bash
-kubectl -n aggregation get pods 
+kubectl -n aggregation get pods
 ```
 
 Done!
