@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.BunqOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
@@ -29,10 +30,12 @@ public class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected String getBackendHost() {
-        if (backendHost == null) {
-            backendHost = payload.split(" ")[1];
-        }
-        return backendHost;
+        return Optional.ofNullable(backendHost)
+                .orElseGet(
+                        () -> {
+                            backendHost = payload.split(" ")[1];
+                            return backendHost;
+                        });
     }
 
     @Override
