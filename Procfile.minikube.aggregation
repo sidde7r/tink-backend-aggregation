@@ -1,1 +1,1 @@
-aggregation: bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-aggregation-server.yml
+aggregation: bazel run :aggregation --jvmopt=-Djava.net.preferIPv4Stack=true
