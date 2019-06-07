@@ -212,6 +212,21 @@
             "tutorialUrl": null,
             "fields": [],
             "payload": "tink"
+        },
+        {
+            "name": "nl-ing-oauth2",
+            "displayName": "ING",
+            "popular": true,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.ing.IngAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }
