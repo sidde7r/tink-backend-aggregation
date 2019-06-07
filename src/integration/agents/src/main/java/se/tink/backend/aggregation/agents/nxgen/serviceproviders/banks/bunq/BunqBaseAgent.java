@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq;
 
+import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.fetchers.transactional.BunqTransactionalAccountFetcher;
@@ -22,12 +23,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class BunqBaseAgent extends NextGenerationAgent {
 
+    protected final String payload;
     private final BunqBaseApiClient apiClient;
     protected TemporaryStorage temporaryStorage;
 
     public BunqBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        payload = Preconditions.checkNotNull(request.getProvider().getPayload());
         this.apiClient = new BunqBaseApiClient(client, getBackendHost());
         temporaryStorage = new TemporaryStorage();
         configureHttpClient(client);

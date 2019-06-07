@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
-import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.BunqAuthenticator;
@@ -29,8 +28,7 @@ public class BunqAgent extends BunqBaseAgent {
 
     @Override
     protected String getBackendHost() {
-        String backendHost = Preconditions.checkNotNull(request.getProvider().getPayload());
-        return backendHost;
+        return payload;
     }
 
     @Override

@@ -23,14 +23,14 @@ public class BunqAgent extends BunqBaseAgent {
     public BunqAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        clientName = request.getProvider().getPayload().split(" ")[0];
+        clientName = payload.split(" ")[0];
         this.apiClient = new BunqApiClient(client, getBackendHost());
     }
 
     @Override
     protected String getBackendHost() {
         if (backendHost == null) {
-            backendHost = request.getProvider().getPayload().split(" ")[1];
+            backendHost = payload.split(" ")[1];
         }
         return backendHost;
     }
