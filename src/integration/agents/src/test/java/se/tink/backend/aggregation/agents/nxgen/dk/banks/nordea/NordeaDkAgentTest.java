@@ -16,7 +16,7 @@ public class NordeaDkAgentTest {
                 .addCredentialField(Field.Key.PASSWORD, PASSWORD)
                 .expectLoggedIn(false)
                 .loadCredentialsBefore(false)
-                .saveCredentialsAfter(true);
+                .saveCredentialsAfter(false);
     }
 
     @Test
