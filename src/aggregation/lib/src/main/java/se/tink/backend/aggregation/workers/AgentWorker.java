@@ -33,7 +33,7 @@ public class AgentWorker implements Managed {
     private final MetricRegistry metricRegistry;
     private final boolean queueAvailable;
 
-    // On Leeds(running 3g heap size), we started GC:ing aggressively when above 180k elements in
+    // On Leeds (running 3g heap size), we started GC:ing aggressively when above 180k elements in
     // the queue here. At
     // 300k elements we ran out of memory entirely and all aggregation deadlocked (note that they
     // did not restart). The

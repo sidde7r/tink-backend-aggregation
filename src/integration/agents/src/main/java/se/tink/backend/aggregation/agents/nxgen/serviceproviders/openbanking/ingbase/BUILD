@@ -3,6 +3,7 @@ java_library(
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/libraries/account_identifier",
@@ -13,7 +14,6 @@ java_library(
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_core",
         "//third_party:org_assertj_assertj_core",
-        "//src/integration/api",
         "@tink_httpclient_4_5_5",
     ],
 )
