@@ -53,7 +53,10 @@ public class CommerzbankApiClient {
 
         LoginRequestBody loginRequestBody =
                 new LoginRequestBody(
-                        username, password, CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
+                        CommerzbankConstants.APP_ID,
+                        username,
+                        password,
+                        CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
         String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
 
         return firstRequest().post(HttpResponse.class, serialized);
