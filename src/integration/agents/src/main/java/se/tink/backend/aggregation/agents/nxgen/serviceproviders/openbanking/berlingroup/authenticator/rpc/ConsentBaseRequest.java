@@ -11,7 +11,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonObject
 public class ConsentBaseRequest {
 
-    private final AccessEntity access = new AccessEntity();
+    private final AccessEntity access = AccessEntity.builder().build();
     @JsonProperty protected boolean recurringIndicator;
 
     @JsonProperty
