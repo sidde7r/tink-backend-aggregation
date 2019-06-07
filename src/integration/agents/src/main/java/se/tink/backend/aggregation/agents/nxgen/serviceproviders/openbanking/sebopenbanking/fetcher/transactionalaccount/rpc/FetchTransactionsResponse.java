@@ -6,11 +6,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionPaginationLinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebopenbanking.fetcher.transactionalaccount.entities.TransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class FetchTransactionsResponse implements PaginatorResponse {
+public class FetchTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
     private String iban;
 
     private String bban;
@@ -30,7 +30,8 @@ public class FetchTransactionsResponse implements PaginatorResponse {
         return Optional.of(links.hasMore());
     }
 
-    public String getNextURL() {
-        return links.getNext();
+    @Override
+    public String nextKey() {
+        return links != null ? links.getNext() : null;
     }
 }

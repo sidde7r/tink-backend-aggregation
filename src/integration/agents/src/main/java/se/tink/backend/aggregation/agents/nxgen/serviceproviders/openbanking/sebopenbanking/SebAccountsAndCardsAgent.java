@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -37,8 +37,7 @@ public final class SebAccountsAndCardsAgent extends SebAbstractAgent<SebAccounts
                         accountFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        accountFetcher, SebCommonConstants.Fetcher.START_PAGE))));
+                                new TransactionKeyPaginationController<>(accountFetcher))));
     }
 
     @Override

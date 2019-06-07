@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.se
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebAbstractApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sebbase.SebCommonConstants;
@@ -60,6 +61,25 @@ public class SebAccountsAndCardsApiClient extends SebAbstractApiClient {
         FetchTransactionsResponse response = requestBuilder.get(FetchTransactionsResponse.class);
 
         return response;
+    }
+
+    public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, String key) {
+
+        URL url =
+                Optional.ofNullable(key)
+                        .map(
+                                k ->
+                                        new URL(
+                                                SebAccountsAndCardsConstants.Urls
+                                                                .TRANSACTIONS_NEXT_PAGE_URL_PREFIX
+                                                        + k))
+                        .orElse(
+                                new URL(SebAccountsAndCardsConstants.Urls.TRANSACTIONS)
+                                        .parameter(
+                                                SebCommonConstants.IdTags.ACCOUNT_ID,
+                                                account.getApiIdentifier()));
+
+        return fetchTransactions(url.toString(), key == null);
     }
 
     public FetchTransactionsResponse fetchTransactions(TransactionalAccount account) {
