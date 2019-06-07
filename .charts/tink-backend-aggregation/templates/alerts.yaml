@@ -7,22 +7,6 @@ metadata:
 spec:
   rules:
 
-### Logs ###
-  # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
-  # Threshold: old canonical threshold of 20 errors / 15 min.
-  - alert: TooManyLoggedAggregationErrors
-    expr: sum(rate(logback_appender_total{app="aggregation-service",at!~"^(?:(se.tink.backend.aggregation.nxgen.*)|(se.tink.backend.aggregation.agents.*))$",level="error"}[5m]))
-      BY (at, app) * 15 * 60 > 20
-    for: 15m
-    labels:
-      severity: urgent
-      who: aggregation
-      priority: P2
-    annotations:
-      description: App <{ $labels.app }> has logged <{ $value }> errors past 15m in class
-        '<{ $labels.at }>'.
-      summary: Too many errors logged by <{ $labels.app }>
-
 ### Response time alerts ###
   - alert: HighResponseTimeAggregationService
     expr: histogram_quantile(0.95, sum(increase(tink_api_response_duration_seconds_bucket{app="tink-aggregation-controller", team_owner="INTEGRATION", path=~'/aggregation.*', path!~'/aggregation/update'}[5m])) by (method, path, le, instance)) > 0.5
