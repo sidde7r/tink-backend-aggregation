@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 public abstract class SebAgentBaseTest {
 
-    // To get sandbox identification number please visit https://developer.sebgroup.com/node/1653
+    // To get sandbox identification number please visit https://developer.sebgroup.com/node/2187
 
     private AgentIntegrationTest.Builder builder;
 
