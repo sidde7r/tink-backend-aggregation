@@ -17,12 +17,12 @@ public class RabobankConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
-    public class StorageKey {
+    public static class StorageKey {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String RESOURCE_ID = "resource_id";
     }
 
-    public class Signature {
+    public static class Signature {
         public static final String ALGORITHM = "algorithm";
         public static final String HEADERS = "headers";
         public static final String KEY_ID = "keyId";
@@ -36,7 +36,7 @@ public class RabobankConstants {
         public static final String HEADERS_VALUE = "date digest x-request-id";
     }
 
-    public class QueryParams {
+    public static class QueryParams {
         public static final String IBM_CLIENT_ID = "x-ibm-client-id";
         public static final String CLIENT_ID = "client_id";
         public static final String CODE = "code";
@@ -58,7 +58,7 @@ public class RabobankConstants {
         public static final String PAGE = "page";
     }
 
-    public class QueryValues {
+    public static class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
