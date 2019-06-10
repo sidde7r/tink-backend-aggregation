@@ -6,7 +6,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.NordeaBankIdStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -27,12 +27,9 @@ public class BankIdResponse {
         String status = getError();
         Preconditions.checkState(status != null, "BankID status was null");
         switch (status.toLowerCase()) {
-            case NordeaSEConstants.BankIdStatus.OUTSTANDING_TRANSACTION:
+            case NordeaBankIdStatus.EXTERNAL_AUTHENTICATION_PENDING:
+            case NordeaBankIdStatus.EXTERNAL_AUTHENTICATION_REQUIRED:
                 return BankIdStatus.WAITING;
-
-            case NordeaSEConstants.BankIdStatus.USER_SIGN:
-                return BankIdStatus.WAITING;
-
             default:
                 log.warn("Unknown bankID status: {}", status);
                 return BankIdStatus.FAILED_UNKNOWN;

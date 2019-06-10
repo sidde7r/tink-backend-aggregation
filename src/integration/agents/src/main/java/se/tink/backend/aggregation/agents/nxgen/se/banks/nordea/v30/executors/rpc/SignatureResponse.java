@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.NordeaBankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -27,7 +27,7 @@ public class SignatureResponse {
 
     public BankIdStatus getSignatureState() {
         switch (orderStatus.toUpperCase()) {
-            case NordeaSEConstants.BankIdStatus.PENDING:
+            case NordeaBankIdStatus.PENDING:
                 return BankIdStatus.WAITING;
 
             default:

@@ -36,12 +36,19 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
         try {
             return apiClient.formInitBankIdLogin(ssn);
         } catch (HttpResponseException e) {
-            if (isAlreadyInProgressException(e)) {
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            }
-
-            throw e;
+            return handleBankIdInitErrors(e);
         }
+    }
+
+    private BankIdResponse handleBankIdInitErrors(final HttpResponseException responseException)
+            throws BankIdException, HttpResponseException {
+        if (isAlreadyInProgressException(responseException)) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
+        if (shouldKeepPolling(responseException)) {
+            return responseException.getResponse().getBody(BankIdResponse.class);
+        }
+        throw responseException;
     }
 
     private boolean isAlreadyInProgressException(final HttpResponseException responseException) {
@@ -49,13 +56,19 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
         if (responseException.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
             return true;
         }
-        if (responseException.getResponse().getStatus() == HttpStatus.SC_UNAUTHORIZED) {
-            if (resp.getError().equalsIgnoreCase(ErrorCodes.AUTHENTICATION_COLLISION)) {
-                return true;
-            }
+        if (resp.getError().equalsIgnoreCase(ErrorCodes.AUTHENTICATION_COLLISION)) {
+            return true;
         }
         log.warn("Unhandled BankID error: {}", resp.getError());
         return false;
+    }
+
+    private boolean shouldKeepPolling(final HttpResponseException responseException) {
+        if (responseException.getResponse().getStatus() != HttpStatus.SC_UNAUTHORIZED) {
+            return false;
+        }
+        BankIdResponse resp = responseException.getResponse().getBody(BankIdResponse.class);
+        return BankIdStatus.WAITING.equals(resp.getBankIdStatus());
     }
 
     @Override

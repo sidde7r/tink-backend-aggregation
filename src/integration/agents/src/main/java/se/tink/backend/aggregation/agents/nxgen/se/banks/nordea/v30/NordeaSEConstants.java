@@ -131,9 +131,11 @@ public class NordeaSEConstants {
         public static final String SSN = "ssn";
     }
 
-    public static final class BankIdStatus {
-        public static final String OUTSTANDING_TRANSACTION = "external_authentication_required";
-        public static final String USER_SIGN = "external_authentication_pending";
+    public static final class NordeaBankIdStatus {
+        public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
+                "external_authentication_required";
+        public static final String EXTERNAL_AUTHENTICATION_PENDING =
+                "external_authentication_pending";
         public static final String SIGN_PENDING = "SIGN_PENDING";
         public static final String PENDING = "PENDING";
         public static final String CANCELLED = "CANCELLED";
