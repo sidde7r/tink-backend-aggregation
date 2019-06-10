@@ -30,7 +30,6 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +37,6 @@ import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -51,7 +49,6 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.ssl.AbstractVerifier;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -520,24 +517,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             setProxy(uri);
             requestExecutor.setEidasCertificateId(certificateId);
 
-            this.internalHttpClientBuilder =
-                    this.internalHttpClientBuilder.setHostnameVerifier(
-                            new AbstractVerifier() {
-                                @Override
-                                public void verify(String host, String[] cns, String[] subjectAlts)
-                                        throws SSLException {
-                                    if (!Arrays.stream(cns)
-                                            .anyMatch(
-                                                    cn ->
-                                                            cn.endsWith(
-                                                                    "eidas-proxy.developer.tink.se"))) {
-                                        throw new SSLException(
-                                                "CNs don't meatch expected EIDAS proxy CN: "
-                                                        + SerializationUtils.serializeToString(
-                                                                cns));
-                                    }
-                                }
-                            });
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Could not initialise client certificate for EIDAS proxy", e);
