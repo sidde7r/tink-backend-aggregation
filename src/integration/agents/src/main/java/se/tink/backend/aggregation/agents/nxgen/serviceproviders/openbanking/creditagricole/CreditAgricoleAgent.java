@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class CreditAgricoleAgent extends NextGenerationAgent {
+
     private final CreditAgricoleApiClient apiClient;
 
     public CreditAgricoleAgent(
@@ -31,14 +32,12 @@ public final class CreditAgricoleAgent extends NextGenerationAgent {
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
-
         final CreditAgricoleConfiguration creditAgricoleConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                CreditAgricoleConstants.Market.INTEGRATION_NAME,
-                                CreditAgricoleConstants.Market.CLIENT_NAME,
+                                CreditAgricoleConstants.INTEGRATION_NAME,
+                                request.getProvider().getPayload(),
                                 CreditAgricoleConfiguration.class)
                         .orElseThrow(
                                 () ->

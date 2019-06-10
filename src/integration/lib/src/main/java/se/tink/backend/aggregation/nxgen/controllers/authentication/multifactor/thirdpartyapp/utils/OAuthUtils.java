@@ -5,31 +5,25 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import javax.crypto.Mac;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
+import se.tink.libraries.cryptography.HMACUtils;
 
 public class OAuthUtils {
 
     private static final Base64.Encoder URL_ENCODER = Base64.getUrlEncoder();
-    private static final Base64.Encoder BASE64 = Base64.getEncoder();
     private static final Random RANDOM = new SecureRandom();
     private static final String UNIQUE_PREFIX_TPCB = "tpcb_%s";
-    private static final String HMAC_SHA1 = "HmacSHA1";
     private static final String AMPERSAND = "&";
     private static final Charset UTF_8 = StandardCharsets.UTF_8;
     private static final String COMMA = ",";
@@ -46,15 +40,10 @@ public class OAuthUtils {
             String method,
             List<NameValuePair> params,
             String consumerSecret,
-            String oauthSecret)
-            throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
-        String paramsString =
-                URLEncoder.encode(URLEncodedUtils.format(params, UTF_8), UTF_8.name());
-
-        String signingBaseString = getSigningBaseString(url, method, paramsString);
-        SecretKey key = getSecretKey(consumerSecret, oauthSecret);
-        byte[] macBytes = calculateMac(signingBaseString, key);
-        return new String(BASE64.encode(macBytes), UTF_8).trim();
+            String oauthSecret) {
+        String signingBaseString = getSigningBaseString(url, method, params);
+        String oauthKey = getOAuthKey(consumerSecret, oauthSecret);
+        return HMACUtils.calculateMac(signingBaseString, oauthKey);
     }
 
     public static String getAuthorizationHeaderValue(List<NameValuePair> queryParams) {
@@ -84,7 +73,8 @@ public class OAuthUtils {
     }
 
     public static String getTimestamp() {
-        return StringUtils.EMPTY + System.currentTimeMillis() / 1000;
+        long timestamp = System.currentTimeMillis() / 1000;
+        return Long.toString(timestamp);
     }
 
     // IMPORTANT: Orders of parameters is crucial in OAuth 1 - https://oauth.net/core/1.0a/
@@ -130,11 +120,15 @@ public class OAuthUtils {
         return String.format(UNIQUE_PREFIX_TPCB, key);
     }
 
-    private static byte[] calculateMac(String signingBaseString, SecretKey key)
-            throws NoSuchAlgorithmException, InvalidKeyException {
-        Mac mac = Mac.getInstance(HMAC_SHA1);
-        mac.init(key);
-        return mac.doFinal(signingBaseString.getBytes(UTF_8));
+    private static String getSigningBaseString(
+            String url, String method, List<NameValuePair> params) {
+        try {
+            String paramsString =
+                    URLEncoder.encode(URLEncodedUtils.format(params, UTF_8), UTF_8.name());
+            return getSigningBaseString(url, method, paramsString);
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("Cannot encode OAuth header params.", e);
+        }
     }
 
     private static String getSigningBaseString(String url, String method, String paramsString)
@@ -150,12 +144,10 @@ public class OAuthUtils {
 
     // Get request token is signed only by consumer secret, every other request with
     // consumer&oauthSecret combination
-    private static SecretKey getSecretKey(String consumerSecret, String oauthSecret) {
-        String key =
-                consumerSecret
-                        + AMPERSAND
-                        + StringUtils.defaultString(oauthSecret, StringUtils.EMPTY);
-        return new SecretKeySpec(key.getBytes(UTF_8), HMAC_SHA1);
+    private static String getOAuthKey(String consumerSecret, String oauthSecret) {
+        return consumerSecret
+                + AMPERSAND
+                + StringUtils.defaultString(oauthSecret, StringUtils.EMPTY);
     }
 
     private static BasicNameValuePair pair(String name, String value) {

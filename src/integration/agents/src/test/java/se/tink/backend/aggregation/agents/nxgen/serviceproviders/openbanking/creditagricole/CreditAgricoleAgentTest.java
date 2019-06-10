@@ -9,6 +9,11 @@ public class CreditAgricoleAgentTest {
 
     @Test
     public void testAuthenticate() throws Exception {
-        new AgentIntegrationTest.Builder("fr", "fr-creditagricole-oauth1").build().testRefresh();
+        new AgentIntegrationTest.Builder("fr", "fr-creditagricole-oauth1")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
     }
 }

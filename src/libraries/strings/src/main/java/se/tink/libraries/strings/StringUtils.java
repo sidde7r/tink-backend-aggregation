@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,20 +135,6 @@ public class StringUtils {
         if (description.length() == 0) return "";
 
         return description.substring(0, 1).toUpperCase() + description.substring(1).toLowerCase();
-    }
-
-    public static String calculateHMAC(String data, String key) {
-        try {
-            Mac SHA256_HMAC = Mac.getInstance("HmacSHA256");
-
-            SHA256_HMAC.init(new SecretKeySpec(Charsets.UTF_8.encode(key).array(), "HmacSHA256"));
-
-            return new String(
-                    Hex.encodeHex(SHA256_HMAC.doFinal(Charsets.UTF_8.encode(data).array())));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /**

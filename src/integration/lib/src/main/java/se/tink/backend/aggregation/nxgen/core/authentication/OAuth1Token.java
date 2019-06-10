@@ -6,16 +6,25 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class OAuth1Token {
 
+    @JsonProperty("oauthToken")
     private String oauthToken;
+
+    @JsonProperty("oauthTokenSecret")
     private String oauthTokenSecret;
+
+    @JsonProperty("oauthCallbackConfirmed")
     private String oauthCallbackConfirmed;
+
+    @JsonProperty("oauthVerifier")
     private String oauthVerifier;
 
+    public OAuth1Token() {}
+
     public OAuth1Token(
-            @JsonProperty("oauthToken") String oauthToken,
-            @JsonProperty("oauthTokenSecret") String oauthTokenSecret,
-            @JsonProperty("oauthCallbackConfirmed") String oauthCallbackConfirmed,
-            @JsonProperty("oauthVerifier") String oauthVerifier) {
+            String oauthToken,
+            String oauthTokenSecret,
+            String oauthCallbackConfirmed,
+            String oauthVerifier) {
         this.oauthToken = oauthToken;
         this.oauthTokenSecret = oauthTokenSecret;
         this.oauthCallbackConfirmed = oauthCallbackConfirmed;

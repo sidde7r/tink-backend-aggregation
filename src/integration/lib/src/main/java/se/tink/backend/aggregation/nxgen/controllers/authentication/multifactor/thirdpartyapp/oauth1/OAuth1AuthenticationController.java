@@ -54,7 +54,7 @@ public class OAuth1AuthenticationController
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
         OAuth1Token token = authenticator.getRequestToken(state);
 
-        authenticator.useAccessToken(token);
+        authenticator.useTemporaryToken(token);
 
         URL authorizeUrl = authenticator.buildAuthorizeUrl(token.getOauthToken());
 

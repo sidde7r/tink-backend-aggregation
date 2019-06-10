@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 public abstract class CreditAgricoleConstants {
 
+    public static final String INTEGRATION_NAME = "creditagricole";
+    public static final String CLIENT_NAME = "tink";
+
     public static class Urls {
+        private static final String BASE_PATH = "/castore-oauth/resources/1/oauth/";
         public static final String AUTHENTICATION = "/castore-data-provider/authentification/";
-        public static final String GET_REQUEST_TOKEN =
-                "/castore-oauth/resources/1/oauth/get_request_token";
-        public static final String GET_ACCESS_TOKEN =
-                "/castore-oauth/resources/1/oauth/get_access_token";
+        public static final String GET_REQUEST_TOKEN = BASE_PATH + "get_request_token";
+        public static final String GET_ACCESS_TOKEN = BASE_PATH + "get_access_token";
     }
 
     public static class QueryKeys {
@@ -30,10 +32,5 @@ public abstract class CreditAgricoleConstants {
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
         public static final String TEMPORARY_TOKEN = "TEMPORARY_TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
-    }
-
-    public static class Market {
-        public static final String INTEGRATION_NAME = "creditagricoleoauth";
-        public static final String CLIENT_NAME = "tink";
     }
 }

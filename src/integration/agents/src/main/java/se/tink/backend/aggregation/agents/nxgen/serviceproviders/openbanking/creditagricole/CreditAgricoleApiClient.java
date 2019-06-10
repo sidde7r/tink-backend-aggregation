@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
@@ -30,6 +27,7 @@ public final class CreditAgricoleApiClient {
 
     public CreditAgricoleApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
+        // Credit Agricole seems to not like our signature and returns 401 Unauthorized Proxy
         this.client.disableSignatureRequestHeader();
         this.sessionStorage = sessionStorage;
     }
@@ -122,18 +120,12 @@ public final class CreditAgricoleApiClient {
 
     private String getOauthAuthorizationHeader(
             String url, List<NameValuePair> params, String oauthSecret) {
-        try {
-            String consumerSecret = configuration.getClientSecret();
-            String signature =
-                    OAuthUtils.getSignature(
-                            url, HttpMethod.POST.name(), params, consumerSecret, oauthSecret);
-            params.add(
-                    new BasicNameValuePair(OAuth1Constants.QueryParams.OAUTH_SIGNATURE, signature));
-            return OAuthUtils.getAuthorizationHeaderValue(params);
-
-        } catch (UnsupportedEncodingException | InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Cannot sign OAuth request.", e);
-        }
+        String consumerSecret = configuration.getClientSecret();
+        String signature =
+                OAuthUtils.getSignature(
+                        url, HttpMethod.POST.name(), params, consumerSecret, oauthSecret);
+        params.add(new BasicNameValuePair(OAuth1Constants.QueryParams.OAUTH_SIGNATURE, signature));
+        return OAuthUtils.getAuthorizationHeaderValue(params);
     }
 
     private String getCallbackUrlWithState(String state) {

@@ -2475,7 +2475,7 @@
             "className": "nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleAgent",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
             "transactional": "true",
-            "payload": null,
+            "payload": "tink",
             "tutorialUrl": null,
             "fields": []
         }

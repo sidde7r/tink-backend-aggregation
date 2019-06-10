@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.http.HttpMethod;
 
 public class OAuthUtilsTest {
 
-    private static final String REQUEST_RESPONSE = "oauth_token=TOKEN&oauth_verifier=VERIFIER";
+    private static final String GET_REQUEST_TOKEN_RESPONSE =
+            "oauth_token=TOKEN&oauth_verifier=VERIFIER";
     private static final String URL = "https://www.tink.se";
     private static final String CONSUMER_SECRET = "consumerSecret";
     private static final String CALLBACK_URL = "https://www.tink.se/?state=UNIQUE_STATE";
@@ -26,10 +27,7 @@ public class OAuthUtilsTest {
 
     @Test
     public void shouldGenerateSignatureForRequestTokenWithEmptyOAuthSecret() throws Exception {
-        List<NameValuePair> params =
-                OAuthUtils.getRequestTokenParams(CALLBACK_URL, CONSUMER_SECRET);
-
-        params = replaceRandomParamsWithNoRandom(params);
+        List<NameValuePair> params = getOAuthHeaderParams();
 
         String signature =
                 OAuthUtils.getSignature(URL, HttpMethod.POST.name(), params, CONSUMER_SECRET, "");
@@ -39,10 +37,7 @@ public class OAuthUtilsTest {
 
     @Test
     public void shouldGenerateSignatureForRequestTokenWithNullOauthSecret() throws Exception {
-        List<NameValuePair> params =
-                OAuthUtils.getRequestTokenParams(CALLBACK_URL, CONSUMER_SECRET);
-
-        params = replaceRandomParamsWithNoRandom(params);
+        List<NameValuePair> params = getOAuthHeaderParams();
 
         String signature =
                 OAuthUtils.getSignature(URL, HttpMethod.POST.name(), params, CONSUMER_SECRET, null);
@@ -71,7 +66,8 @@ public class OAuthUtilsTest {
 
     @Test
     public void shouldExtractTokenAndVerifierFromResponse() {
-        Map<String, String> parsedResponse = OAuthUtils.parseFormResponse(REQUEST_RESPONSE);
+        Map<String, String> parsedResponse =
+                OAuthUtils.parseFormResponse(GET_REQUEST_TOKEN_RESPONSE);
 
         Assertions.assertThat(
                         parsedResponse.get(OAuth1Constants.QueryParams.OAUTH_TOKEN.toUpperCase()))
@@ -85,12 +81,20 @@ public class OAuthUtilsTest {
     @Test
     public void shouldGenerateTimestamp() {
         Long timestamp = Long.parseLong(OAuthUtils.getTimestamp());
-        Assertions.assertThat(timestamp).isLessThanOrEqualTo(System.currentTimeMillis());
+        Long currentTimestamp = System.currentTimeMillis() / 1000;
+        Assertions.assertThat(timestamp).isLessThanOrEqualTo(currentTimestamp);
     }
 
     @Test
     public void shouldGenerateNonce() {
         Assertions.assertThat(OAuthUtils.generateNonce()).isNotEqualTo(OAuthUtils.generateNonce());
+    }
+
+    private List<NameValuePair> getOAuthHeaderParams() {
+        List<NameValuePair> params =
+                OAuthUtils.getRequestTokenParams(CALLBACK_URL, CONSUMER_SECRET);
+
+        return replaceRandomParamsWithNoRandom(params);
     }
 
     private List<NameValuePair> replaceRandomParamsWithNoRandom(List<NameValuePair> params) {
@@ -100,22 +104,17 @@ public class OAuthUtilsTest {
                 new BasicNameValuePair(
                         OAuth1Constants.QueryParams.OAUTH_TIMESTAMP, NOT_RANDOM_VALUE);
 
-        params =
-                params.stream()
-                        .map(
-                                p ->
-                                        p.getName().equals(OAuth1Constants.QueryParams.OAUTH_NONCE)
-                                                ? p
-                                                : NOT_RANDOM_NONCE)
-                        .map(
-                                p ->
-                                        p.getName()
-                                                        .equals(
-                                                                OAuth1Constants.QueryParams
-                                                                        .OAUTH_TIMESTAMP)
-                                                ? p
-                                                : NOT_RANDOM_TIMESTAMP)
-                        .collect(Collectors.toList());
-        return params;
+        return params.stream()
+                .map(
+                        p ->
+                                p.getName().equals(OAuth1Constants.QueryParams.OAUTH_NONCE)
+                                        ? p
+                                        : NOT_RANDOM_NONCE)
+                .map(
+                        p ->
+                                p.getName().equals(OAuth1Constants.QueryParams.OAUTH_TIMESTAMP)
+                                        ? p
+                                        : NOT_RANDOM_TIMESTAMP)
+                .collect(Collectors.toList());
     }
 }

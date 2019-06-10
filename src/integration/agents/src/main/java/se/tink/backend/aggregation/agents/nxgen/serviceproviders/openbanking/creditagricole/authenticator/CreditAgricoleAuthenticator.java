@@ -34,7 +34,7 @@ public class CreditAgricoleAuthenticator implements OAuth1Authenticator {
     }
 
     @Override
-    public void useAccessToken(OAuth1Token temporaryToken) {
+    public void useTemporaryToken(OAuth1Token temporaryToken) {
         client.setTokenToSession(temporaryToken);
     }
 }
