@@ -27,12 +27,12 @@ s3StorageConfiguration:
 agents:
   collectorSubscriptionKey: true
   monzo:
-    redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+    redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
   volksbank:
     enabled: "true"
   bunq:
     tink:
-      redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
 

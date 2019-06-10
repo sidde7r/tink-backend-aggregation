@@ -25,7 +25,7 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
   bunq:
     tink:
-      redirectUrl: https://staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
   volksbank:
