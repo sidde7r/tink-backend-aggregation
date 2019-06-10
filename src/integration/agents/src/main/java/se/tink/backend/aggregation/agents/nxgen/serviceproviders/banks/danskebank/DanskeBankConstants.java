@@ -154,4 +154,8 @@ public final class DanskeBankConstants {
         public static final String DEVICE_SECRET = "DeviceSecret";
         public static final String DEVICE_SERIAL_NUMBER = "DeviceSerialNumber";
     }
+
+    public static class Errors {
+        public static final String READ_TIMEOUT_ERROR = "Read timed out";
+    }
 }

@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import com.google.common.base.Strings;
 import javax.ws.rs.core.MediaType;
 import org.json.JSONObject;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.BindDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.CheckDeviceResponse;
@@ -33,6 +34,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
 public class DanskeBankApiClient {
     private static final AggregationLogger log = new AggregationLogger(DanskeBankApiClient.class);
@@ -181,10 +183,17 @@ public class DanskeBankApiClient {
     public PollCodeAppResponse pollCodeApp(String url, String ticket) {
         PollCodeAppRequest request = new PollCodeAppRequest(ticket);
 
-        return client.request(url)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .post(PollCodeAppResponse.class, request);
+        try {
+            return client.request(url)
+                    .accept(MediaType.APPLICATION_JSON_TYPE)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .post(PollCodeAppResponse.class, request);
+        } catch (HttpClientException e) {
+            if (DanskeBankConstants.Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+            throw e;
+        }
     }
 
     public CheckDeviceResponse checkDevice(
