@@ -8,7 +8,17 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 public class RabobankAgentTest {
 
     @Test
-    public void refresh() throws Exception {
+    public void refreshSandbox() throws Exception {
+        new AgentIntegrationTest.Builder("nl", "nl-rabobank-sandbox-oauth2")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
+    }
+
+    @Test
+    public void refreshProduction() throws Exception {
         new AgentIntegrationTest.Builder("nl", "nl-rabobank-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
