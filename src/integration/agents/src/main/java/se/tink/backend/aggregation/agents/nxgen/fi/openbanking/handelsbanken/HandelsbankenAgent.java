@@ -2,12 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.handelsbanken.executor.payment.HandelsbankenPaymentExecutorSelector;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
@@ -39,5 +42,11 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     @Override
     protected HandelsbankenBaseAccountConverter getAccountConverter() {
         return accountConverter;
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(
+                new PaymentController(new HandelsbankenPaymentExecutorSelector(apiClient)));
     }
 }

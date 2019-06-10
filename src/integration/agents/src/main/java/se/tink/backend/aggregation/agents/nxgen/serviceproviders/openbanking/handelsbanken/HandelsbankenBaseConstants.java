@@ -6,7 +6,6 @@ public final class HandelsbankenBaseConstants {
     public static final String INTEGRATION_NAME = "handelsbanken";
 
     public static class Urls {
-
         private static final String BASE_URL = "https://api.handelsbanken.com/openbanking";
         private static final String BASE_AUTH_URL = "https://api.handelsbanken.com/bb/gls5";
 
@@ -29,6 +28,12 @@ public final class HandelsbankenBaseConstants {
                                 + "/accounts/{"
                                 + UrlParams.ACCOUNT_ID
                                 + "}/transactions");
+
+        public static final String PIS_BASE_URL =
+                "https://sandbox.handelsbanken.com/openbanking/psd2/v1";
+        public static final String INITIATE_PAYMENT = "/payments/{paymentProduct}";
+        public static final String CONFIRM_PAYMENT = "/payments/{paymentProduct}/{paymentId}";
+        public static final String GET_PAYMENT = "/payments/{paymentProduct}/{paymentId}/status";
     }
 
     public static class UrlParams {
@@ -46,6 +51,8 @@ public final class HandelsbankenBaseConstants {
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
         public static final String WITH_BALANCE = "withBalance";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
         public static final String BEARER = "Bearer";
     }
 
@@ -123,5 +130,9 @@ public final class HandelsbankenBaseConstants {
         public static final String IN_PROGRESS = "IN_PROGRESS";
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String COMPLETE = "COMPLETE";
+    }
+
+    public static class Currency {
+        public static final String EURO = "EUR";
     }
 }

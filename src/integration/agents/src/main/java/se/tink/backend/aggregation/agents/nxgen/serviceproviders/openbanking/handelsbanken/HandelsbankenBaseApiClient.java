@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.HeaderKeys;
@@ -16,14 +17,22 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.enums.HandelsbankenPaymentType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.ConfirmPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.rpc.HandelsbankenErrorResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -164,5 +173,62 @@ public class HandelsbankenBaseApiClient {
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, HandelsbankenPaymentType paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.PIS_BASE_URL + Urls.INITIATE_PAYMENT)
+                                    .parameter(
+                                            QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString()))
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public ConfirmPaymentResponse confirmPayment(
+            String paymentId, HandelsbankenPaymentType paymentProduct) throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.PIS_BASE_URL + Urls.CONFIRM_PAYMENT)
+                                    .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct.toString())
+                                    .parameter(QueryKeys.PAYMENT_ID, paymentId))
+                    .put(ConfirmPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    public GetPaymentResponse getPayment(String paymentId, String paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequest(
+                            new URL(Urls.PIS_BASE_URL + Urls.GET_PAYMENT)
+                                    .parameter(QueryKeys.PAYMENT_PRODUCT, paymentProduct)
+                                    .parameter(QueryKeys.PAYMENT_ID, paymentId))
+                    .get(GetPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            handleHttpResponseException(e);
+            throw e;
+        }
+    }
+
+    private void handleHttpResponseException(HttpResponseException httpResponseException)
+            throws PaymentException {
+        if (httpResponseException.getResponse().hasBody()) {
+            try {
+                httpResponseException
+                        .getResponse()
+                        .getBody(HandelsbankenErrorResponse.class)
+                        .parseAndThrow(httpResponseException);
+            } catch (HttpClientException | HttpResponseException d) {
+                throw httpResponseException;
+            }
+        }
     }
 }
