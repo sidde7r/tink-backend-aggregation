@@ -53,7 +53,6 @@ public class AccountTransaction {
                 .setDescription(getTransactionDescription())
                 .setDate(transactionDate)
                 .setAmount(amount.toTinkAmount())
-                .setExternalId(transactionId)
                 .setPending(isPending())
                 .build();
     }

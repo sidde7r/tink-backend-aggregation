@@ -35,7 +35,6 @@ public class TransactionDetailsEntity {
                 .setAmount(new Amount(IberCajaConstants.currency, amount))
                 .setDate(dateOfTransaction)
                 .setDescription(getDescription())
-                .setExternalId(idMovimientopfm)
                 .build();
     }
 

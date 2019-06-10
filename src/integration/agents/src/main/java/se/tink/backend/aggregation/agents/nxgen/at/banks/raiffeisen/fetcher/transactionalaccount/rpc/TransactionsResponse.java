@@ -46,7 +46,6 @@ public class TransactionsResponse implements PaginatorResponse {
                             .setAmount(balance)
                             .setDate(transaction.getBookingDate())
                             .setDescription(getDescription(transaction))
-                            .setExternalId(Long.toString(transaction.getId()))
                             .build();
             res.add(t);
         }

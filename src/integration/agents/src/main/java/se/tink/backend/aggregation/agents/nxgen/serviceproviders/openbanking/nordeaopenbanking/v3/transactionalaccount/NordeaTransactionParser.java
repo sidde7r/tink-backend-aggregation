@@ -25,7 +25,6 @@ public class NordeaTransactionParser {
                                 new Amount(
                                         transactionEntity.getCurrency(),
                                         new BigDecimal(transactionEntity.getAmount())))
-                        .setExternalId(transactionEntity.getTransactionId())
                         .setPending(
                                 NordeaBaseConstants.Transaction.RESERVED.equalsIgnoreCase(
                                         transactionEntity.getStatus()))

@@ -83,7 +83,6 @@ public class TransactionEntity {
                 .setAmount(toTinkAmount())
                 .setDescription(transactionInformation)
                 .setDate(toTransactionDate())
-                .setExternalId(transactionId)
                 .build();
     }
 }

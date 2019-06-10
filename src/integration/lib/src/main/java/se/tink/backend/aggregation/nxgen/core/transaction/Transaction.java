@@ -105,7 +105,12 @@ public class Transaction extends AggregationTransaction {
             return (Builder) super.setRawDetails(rawDetails);
         }
 
-        public Builder setExternalId(String externalId) {
+        /**
+         * @deprecated Agents should not set external id. externalid is set by processing and if we
+         *     do it, it will mess up the duplicate transaction detection we have in place.
+         */
+        @Deprecated
+        private Builder setExternalId(String externalId) {
             this.externalId = externalId;
             return this;
         }

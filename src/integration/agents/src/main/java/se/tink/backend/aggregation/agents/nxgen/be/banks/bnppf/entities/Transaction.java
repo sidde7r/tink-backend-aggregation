@@ -49,7 +49,6 @@ public class Transaction {
                 .setRawDetails(getPayloadTransactionDetails())
                 .setDate(parseTransactionDate())
                 .setPending(BnpPfConstants.PENDING.equalsIgnoreCase(status))
-                .setExternalId(getExternalId(externalAccountId))
                 .build();
     }
 

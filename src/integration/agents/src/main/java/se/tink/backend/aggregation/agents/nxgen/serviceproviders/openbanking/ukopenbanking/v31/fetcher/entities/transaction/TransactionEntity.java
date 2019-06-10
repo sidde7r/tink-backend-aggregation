@@ -84,7 +84,6 @@ public class TransactionEntity {
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
-                .setExternalId(transactionId)
                 .setAmount(getSignedAmount())
                 .setDescription(transactionInformation)
                 .setPending(status == UkOpenBankingApiDefinitions.EntryStatusCode.PENDING)
