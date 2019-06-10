@@ -24,7 +24,7 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
     @Override
     public Optional<Boolean> canFetchMore() {
 
-        return transactions.getLinks().canFetchMore();
+        return Optional.of(transactions.getLinks().canFetchMore());
     }
 
     @Override

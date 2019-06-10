@@ -21,7 +21,7 @@ public class TransactionLinksEntity {
                                         SibsConstants.ErrorMessages.MISSING_PAGINATON_KEY));
     }
 
-    public Optional<Boolean> canFetchMore() {
-        return Optional.of(!Strings.isNullOrEmpty(next));
+    public Boolean canFetchMore() {
+        return !Strings.isNullOrEmpty(next);
     }
 }
