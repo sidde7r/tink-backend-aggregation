@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.TransactionStatus;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class SibsAuthenticationController
+public class SibsRedirectAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
     private static final Random random = new SecureRandom();
     private static final Encoder encoder = Base64.getUrlEncoder();
@@ -40,7 +40,7 @@ public class SibsAuthenticationController
     private static final long SLEEP_TIME = 5L;
     private static final int RETRY_ATTEMPTS = 3;
 
-    public SibsAuthenticationController(
+    public SibsRedirectAuthenticationController(
             SupplementalInformationHelper supplementalInformationHelper,
             SibsAuthenticator authenticator) {
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -63,12 +63,12 @@ public class SibsAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        Retryer<TransactionStatus> transactionStatusRetryer = getTransactionStatusRetryer();
+        Retryer<ConsentStatus> consentStatusRetryer = getConsentStatusRetryer();
 
         try {
-            TransactionStatus status =
+            ConsentStatus status =
                     Preconditions.checkNotNull(
-                            transactionStatusRetryer.call(authenticator::getConsentStatus));
+                            consentStatusRetryer.call(authenticator::getConsentStatus));
 
             if (!status.isAcceptedStatus()) {
                 throw new IllegalStateException("Authorization failed!");
@@ -100,8 +100,8 @@ public class SibsAuthenticationController
         return Optional.empty();
     }
 
-    private Retryer<TransactionStatus> getTransactionStatusRetryer() {
-        return RetryerBuilder.<TransactionStatus>newBuilder()
+    private Retryer<ConsentStatus> getConsentStatusRetryer() {
+        return RetryerBuilder.<ConsentStatus>newBuilder()
                 .retryIfResult(status -> status != null && status.isAwaitableStatus())
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))

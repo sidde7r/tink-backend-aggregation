@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity;
 
-public enum TransactionStatus {
+public enum ConsentStatus {
     RCVD, // Recieved
     PDNG, // Pending
     PATC,

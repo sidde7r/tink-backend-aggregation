@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.SibsRedirectAuthenticationController;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.SibsTransactionalAccountTransactionFetcher;
@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
@@ -28,7 +28,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class SibsBaseAgent extends NextGenerationAgent {
 
     private final String clientName;
-    private final SibsBaseApiClient apiClient;
+    protected final SibsBaseApiClient apiClient;
 
     public SibsBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -57,10 +57,9 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
 
-        final SibsAuthenticationController controller =
-                new SibsAuthenticationController(
+        final SibsRedirectAuthenticationController controller =
+                new SibsRedirectAuthenticationController(
                         supplementalInformationHelper, new SibsAuthenticator(apiClient));
-
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
@@ -85,7 +84,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
                         accountFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionFetcher))));
+                                new TransactionKeyPaginationController<>(transactionFetcher))));
     }
 
     @Override
