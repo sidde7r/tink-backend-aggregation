@@ -25,6 +25,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
     private final Credentials credentials;
     private final HandelsbankenPersistentStorage persistentStorage;
     private final HandelsbankenSessionStorage sessionStorage;
+    private int pollCount;
 
     public HandelsbankenBankIdAuthenticator(
             HandelsbankenSEApiClient client,
@@ -39,6 +40,7 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
     @Override
     public InitBankIdResponse init(String ssn) throws BankIdException, AuthorizationException {
+        pollCount = 0;
         EntryPointResponse entryPoint = client.fetchEntryPoint();
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest().setPersonalNumber(ssn);
         return client.initBankId(entryPoint, initBankIdRequest)
@@ -69,7 +71,12 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
             persistentStorage.persist(authorize);
             sessionStorage.persist(applicationEntryPoint);
+        } else if (bankIdStatus == BankIdStatus.WAITING) {
+            pollCount++;
+        } else if (bankIdStatus == BankIdStatus.TIMEOUT && pollCount < 10) {
+            return BankIdStatus.FAILED_UNKNOWN;
         }
+
         return bankIdStatus;
     }
 
