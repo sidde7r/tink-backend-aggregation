@@ -38,7 +38,6 @@ public class OperationEntity {
                 .setDate(parsedDate)
                 .setDescription(label)
                 .setRawDetails(this)
-                .setExternalId(id)
                 .build();
     }
 }

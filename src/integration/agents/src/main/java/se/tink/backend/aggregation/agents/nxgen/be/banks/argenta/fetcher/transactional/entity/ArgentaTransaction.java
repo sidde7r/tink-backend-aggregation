@@ -35,7 +35,6 @@ public class ArgentaTransaction {
                 .setAmount(getAmount())
                 .setDescription(getDescription())
                 .setDate(getDate())
-                .setExternalId(reference)
                 .build();
     }
 

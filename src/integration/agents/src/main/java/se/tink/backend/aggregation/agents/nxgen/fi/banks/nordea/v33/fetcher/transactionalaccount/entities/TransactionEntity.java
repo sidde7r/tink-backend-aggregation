@@ -42,7 +42,6 @@ public class TransactionEntity {
                 .setPending(!booked)
                 .setDescription(String.format("%s", title))
                 .setDate(getDate())
-                .setExternalId(transactionId)
                 .build();
     }
 

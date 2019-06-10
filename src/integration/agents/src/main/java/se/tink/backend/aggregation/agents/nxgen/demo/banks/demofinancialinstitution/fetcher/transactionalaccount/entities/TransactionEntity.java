@@ -59,7 +59,6 @@ public class TransactionEntity {
                 .setAmount(new Amount(currency, amount))
                 .setDate(date)
                 .setDescription(description)
-                .setExternalId(String.valueOf(id))
                 .build();
     }
 }

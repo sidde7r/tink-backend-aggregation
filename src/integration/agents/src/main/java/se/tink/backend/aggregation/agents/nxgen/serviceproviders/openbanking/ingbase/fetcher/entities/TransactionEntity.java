@@ -41,7 +41,6 @@ public class TransactionEntity {
 
         return Transaction.builder()
                 .setPending(isPending)
-                .setExternalId(transactionId)
                 .setDescription(remittanceInformationUnstructured)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
