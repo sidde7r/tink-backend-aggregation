@@ -46,16 +46,16 @@ database:
   driverClass: com.mysql.jdbc.Driver
   username: tink
   password: tink
-  url: jdbc:mysql://192.168.99.100:31001/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+  url: jdbc:mysql://$STABLE_AGGREGATIONDB_HOSTPORT/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
   showSql: false
   persistenceUnitName: tink-aggregation-api
   generateDdl: true
 
 coordination:
-  hosts: 192.168.99.100:31003
+  hosts: $STABLE_COORDINATION_HOSTPORT
 
 cache:
-  hosts: 192.168.99.100:31005
+  hosts: $STABLE_CACHE_HOSTPORT
   enabled: true
 
 agentsServiceConfiguration:
