@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.handelsbanken;
 
-public final class SpareBank1Constants {
+public final class HandelsbankenConstants {
 
-    public static final String INTEGRATION_NAME = "sparebank1";
+    public static final String INTEGRATION_NAME = "handelsbanken-norway";
 
-    private SpareBank1Constants() {
+    private HandelsbankenConstants() {
         throw new AssertionError();
     }
 

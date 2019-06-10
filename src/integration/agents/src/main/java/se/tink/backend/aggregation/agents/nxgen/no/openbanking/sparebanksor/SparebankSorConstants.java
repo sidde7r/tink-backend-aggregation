@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1;
+package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebanksor;
 
-public final class SpareBank1Constants {
+public final class SparebankSorConstants {
 
-    public static final String INTEGRATION_NAME = "sparebank1";
+    public static final String INTEGRATION_NAME = "sparebanksor";
 
-    private SpareBank1Constants() {
+    private SparebankSorConstants() {
         throw new AssertionError();
     }
 
