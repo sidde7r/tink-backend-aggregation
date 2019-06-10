@@ -88,7 +88,8 @@ public class DkbAuthenticator implements PasswordAuthenticator {
 
     private GetTokenForm createGetTokenForm(String username, String password) {
         return GetTokenForm.builder()
-                .setGrantType(FormValues.PASSWORD)
+                .setGrantType(FormValues.CLIENT_CREDENTIALS) // had to change this from password to
+                // client_credentials so it could work
                 .setUsername(username)
                 .setPassword(password)
                 .build();

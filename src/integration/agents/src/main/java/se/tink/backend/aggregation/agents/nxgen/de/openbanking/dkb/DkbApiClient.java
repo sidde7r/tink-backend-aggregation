@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.DkbConstants.IdTags;
@@ -19,11 +20,15 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.configuration.DkbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.dkb.payments.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -104,5 +109,42 @@ public final class DkbApiClient {
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest createPaymentRequest, String paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequestInSession(
+                            Urls.CREATE_PAYMENT.parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
+                    .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                    .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                    .post(CreatePaymentResponse.class, createPaymentRequest);
+        } catch (HttpResponseException e) {
+            throw e;
+        }
+    }
+
+    public FetchPaymentResponse getPayment(String paymentId, String paymentProduct)
+            throws PaymentException {
+        try {
+            return createRequestInSession(
+                            Urls.FETCH_PAYMENT
+                                    .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                    .parameter(IdTags.PAYMENT_ID, paymentId))
+                    .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                    .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                    .get(FetchPaymentResponse.class);
+        } catch (HttpResponseException e) {
+            throw e;
+        }
+    }
+
+    public String getPsuIpAddress() {
+        return "82.117.210.2";
+    }
+
+    public String getRequestId() {
+        return UUID.randomUUID().toString();
     }
 }
