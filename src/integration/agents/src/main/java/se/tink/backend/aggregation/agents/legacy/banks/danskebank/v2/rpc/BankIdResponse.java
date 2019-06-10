@@ -39,6 +39,15 @@ public class BankIdResponse {
         return moduleOutput.getBankIDStatusCode();
     }
 
+    public String getBankIdStatusText() {
+        BankIdModuleOutput moduleOutput = getModuleOutput();
+        if (moduleOutput == null) {
+            return null;
+        }
+
+        return moduleOutput.getBankIDStatusText();
+    }
+
     private BankIdModuleOutput getModuleOutput() {
         if (output == null
                 || output.getStaticOutput() == null
@@ -68,5 +77,13 @@ public class BankIdResponse {
                 || Objects.equal(
                         getBankIdStatusCode(),
                         "CANCELLED"); // note difference between cancelled and user_cancel
+    }
+
+    /**
+     * INTERNAL_ERR is interpreted as bankID already in progress as we've gotten these results while
+     * testing. We're logging the status text for this code as well just to be sure.
+     */
+    public boolean isAlreadyInProgress() {
+        return "INTERNAL_ERR".equalsIgnoreCase(getBankIdStatusCode());
     }
 }
