@@ -132,6 +132,7 @@ public class NordeaSEConstants {
     }
 
     public static final class NordeaBankIdStatus {
+        public static final String AGREEMENTS_UNAVAILABLE = "agreements_unavailable";
         public static final String EXTERNAL_AUTHENTICATION_REQUIRED =
                 "external_authentication_required";
         public static final String EXTERNAL_AUTHENTICATION_PENDING =

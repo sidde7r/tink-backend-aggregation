@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.ErrorCodes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.NordeaBankIdStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ResultBankIdResponse;
@@ -80,6 +82,10 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
             sessionStorage.put(StorageKeys.REFRESH_TOKEN, response.getRefreshToken());
             sessionStorage.put(StorageKeys.TOKEN_TYPE, response.getTokenType());
         } catch (HttpResponseException e) {
+            final BankIdResponse resp = e.getResponse().getBody(BankIdResponse.class);
+            if (NordeaBankIdStatus.AGREEMENTS_UNAVAILABLE.equalsIgnoreCase(resp.getError())) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
             return e.getResponse().getBody(BankIdResponse.class).getBankIdStatus();
         }
         // If request does not generate a http error we have successfully authenticated.
