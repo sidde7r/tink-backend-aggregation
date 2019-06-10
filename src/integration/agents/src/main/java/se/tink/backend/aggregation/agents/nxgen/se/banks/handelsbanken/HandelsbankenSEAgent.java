@@ -60,6 +60,7 @@ public class HandelsbankenSEAgent
     @Override
     protected HandelsbankenSEApiClient constructApiClient(
             HandelsbankenSEConfiguration handelsbankenConfiguration) {
+        client.addFilter(new HandelsbankenSEContentTypeFilter());
         return new HandelsbankenSEApiClient(client, handelsbankenConfiguration);
     }
 
