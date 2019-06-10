@@ -914,7 +914,9 @@ public class SEBApiAgent extends AbstractAgent
 
         SebResponse response = postAsJSON(UPCOMING_TRANSACTIONS_URL, payload, SebResponse.class);
 
-        if (response.d.VODB.UpcomingTransactions != null) {
+        if (response.d != null
+                && response.d.VODB != null
+                && response.d.VODB.UpcomingTransactions != null) {
             return FluentIterable.from(response.d.VODB.UpcomingTransactions)
                     .filter(Predicates.<UpcomingTransactionEntity>notNull())
                     .toList();
