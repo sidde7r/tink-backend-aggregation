@@ -5,27 +5,3 @@ filegroup(
     ],
     visibility = ["//visibility:public"],
 )
-
-filegroup(
-    name = "development_aggregation_server",
-    srcs = [
-        "development-aggregation-server.yml",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
-    name = "development_credit_safe_server",
-    srcs = [
-        "development-credit-safe-server.yml",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
-    name = "abn_development",
-    srcs = [
-        "abn/development.yml",
-    ],
-    visibility = ["//visibility:public"],
-)
