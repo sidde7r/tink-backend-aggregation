@@ -347,7 +347,12 @@ spec:
           limits:
             memory: {{ default "1Gi" .Values.podMemoryLimit }}
             cpu: {{ default "1000m" .Values.podCpuLimit }}
-        {{- end }}
+        {{ else }}
+        resources:
+          limits:
+            memory: {{ default "200Mi" .Values.podMemoryLimit }}
+            cpu: {{ default "500m" .Values.podCpuLimit }}
+        {{ end }}
         {{- if eq "local" .Values.Cluster }}
         image: {{ default "bazel/src/aggregation/service:aggregation_debug_image" .Values.image }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
