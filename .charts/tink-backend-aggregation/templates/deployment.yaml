@@ -339,7 +339,12 @@ spec:
         {{- end }}
       containers:
       - name: tink-backend-aggregation
-        {{- if not (eq "local" .Values.Cluster) }}
+        {{- if eq "local" .Values.Cluster }}
+        resources:
+          limits:
+            memory: {{ default "200Mi" .Values.podMemoryLimit }}
+            cpu: {{ default "500m" .Values.podCpuLimit }}
+        {{ else }}
         resources:
           requests:
             memory: {{ default "700Mi" .Values.podMemoryRequest }}
@@ -347,7 +352,7 @@ spec:
           limits:
             memory: {{ default "1Gi" .Values.podMemoryLimit }}
             cpu: {{ default "1000m" .Values.podCpuLimit }}
-        {{- end }}
+        {{ end }}
         {{- if eq "local" .Values.Cluster }}
         image: {{ default "bazel/src/aggregation/service:aggregation_debug_image" .Values.image }}
         imagePullPolicy: {{ default "IfNotPresent" .Values.imagePullPolicy }}
