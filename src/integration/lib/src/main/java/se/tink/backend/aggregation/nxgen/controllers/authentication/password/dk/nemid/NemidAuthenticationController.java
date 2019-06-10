@@ -145,22 +145,16 @@ public abstract class NemidAuthenticationController {
         // Try to get the token/errors multiple times. It (both token or error) might not have
         // loaded yet.
         driver.switchTo().defaultContent();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 15; i++) {
             Optional<String> nemIdToken = getNemIdToken();
 
             if (nemIdToken.isPresent()) {
-                LOGGER.infoExtraLong(
-                        driver.getPageSource(), NemIdConstants.NEM_ID_AUTH_SUCCESS_TAG);
                 return nemIdToken.get();
             }
         }
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the authentication.
-        IllegalStateException exception =
-                new IllegalStateException("[nemid] Could not find nemId token.");
-        LOGGER.errorExtraLong(
-                driver.getPageSource(), NemIdConstants.NEM_ID_AUTH_ERROR_TAG, exception);
-        throw exception;
+        throw new IllegalStateException("[nemid] Could not find nemId token.");
     }
 
     private void lookForErrorAndThrowIfFound() throws LoginException {
