@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -191,7 +192,9 @@ public class OpenIdAuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                formatSupplementalKey(pseudoId), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                                OAuthUtils.formatSupplementalKey(pseudoId),
+                                WAIT_FOR_MINUTES,
+                                TimeUnit.MINUTES)
                         .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
         handleErrors(callbackData);
@@ -296,12 +299,5 @@ public class OpenIdAuthenticationController
 
         throw new IllegalStateException(
                 String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
-    }
-
-    private String formatSupplementalKey(String key) {
-        // Ensure third party callback information does not collide with other Supplemental
-        // Information by using a
-        // prefix. This prefix is the same in MAIN.
-        return String.format("tpcb_%s", key);
     }
 }
