@@ -40,7 +40,7 @@ public class AggregationControllerAggregationClient {
     private static final Logger log =
             LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
     private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
-            ImmutableSet.of("oxford-staging");
+            ImmutableSet.of("oxford-staging", "oxford-production");
 
     @Inject
     public AggregationControllerAggregationClient() {}
