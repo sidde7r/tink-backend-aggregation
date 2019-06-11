@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.session.SantanderEsSessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsBankServiceExceptionFilter;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -26,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderEsAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
@@ -37,6 +39,11 @@ public class SantanderEsAgent extends NextGenerationAgent implements RefreshIden
         super(request, context, signatureKeyPair);
         santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
         this.apiClient = new SantanderEsApiClient(client);
+        configureHttpClient(client);
+    }
+
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.addFilter(new SantanderEsBankServiceExceptionFilter());
     }
 
     @Override
