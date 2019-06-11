@@ -50,14 +50,7 @@ public class AbnAmroAgent extends NextGenerationAgent {
     }
 
     public AbnAmroConfiguration getClientConfiguration() {
-        return configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                        AbnAmroConstants.INTEGRATION_NAME, clientName, AbnAmroConfiguration.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        AbnAmroConstants.ErrorMessages.MISSING_CONFIGURATION));
+        return new AbnAmroConfiguration();
     }
 
     @Override
