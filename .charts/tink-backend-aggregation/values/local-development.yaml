@@ -24,6 +24,11 @@ agents:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+  rabobank:
+    abn_sandbox:
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+    abn:
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   volksbank:
     enabled: "false"
 

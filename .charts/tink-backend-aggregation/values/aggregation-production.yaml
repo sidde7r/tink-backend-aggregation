@@ -35,6 +35,11 @@ agents:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+  rabobank:
+    abn_sandbox:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
 
   proxyUri: http://10.88.12.185:8080
 

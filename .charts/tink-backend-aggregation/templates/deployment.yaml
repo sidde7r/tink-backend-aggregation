@@ -337,6 +337,56 @@ spec:
               key: bunq-psd2-installation-key-pair-abn
               optional: true
         {{- end }}
+        {{- if $agentsConfig.rabobank }}
+        - name: RABOBANK_CLIENT_ID_ABN_SANDBOX
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-client-id-abn-sandbox
+              optional: true
+        - name: RABOBANK_CLIENT_SECRET_ABN_SANDBOX
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-client-secret-abn-sandbox
+              optional: true
+        - name: RABOBANK_CERTIFICATE_P12_ABN_SANDBOX
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-certificate-p12-abn-sandbox
+              optional: true
+        - name: RABOBANK_CERTIFICATE_PASSWORD_ABN_SANDBOX
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-certificate-password-abn-sandbox
+              optional: true
+        - name: RABOBANK_CLIENT_ID_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-client-id-abn
+              optional: true
+        - name: RABOBANK_CLIENT_SECRET_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-client-secret-abn
+              optional: true
+        - name: RABOBANK_CERTIFICATE_P12_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-certificate-p12-abn
+              optional: true
+        - name: RABOBANK_CERTIFICATE_PASSWORD_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-certificate-password-abn
+              optional: true
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         {{- if eq "local" .Values.Cluster }}
