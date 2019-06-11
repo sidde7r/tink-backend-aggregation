@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class PaymentMultiStepRequest extends PaymentRequest {
@@ -12,8 +13,12 @@ public class PaymentMultiStepRequest extends PaymentRequest {
     private List<String> userInputs;
 
     public PaymentMultiStepRequest(
-            Payment payment, String step, List<Field> fields, List<String> userInputs) {
-        super(payment);
+            Payment payment,
+            Storage paymentStorage,
+            String step,
+            List<Field> fields,
+            List<String> userInputs) {
+        super(payment, paymentStorage);
         this.step = step;
         this.fields = fields;
         this.userInputs = userInputs;
@@ -22,6 +27,7 @@ public class PaymentMultiStepRequest extends PaymentRequest {
     public static PaymentMultiStepRequest of(PaymentResponse paymentResponse) {
         return new PaymentMultiStepRequest(
                 paymentResponse.getPayment(),
+                Storage.copyOf(paymentResponse.getPaymentStorage()),
                 AuthenticationStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());
