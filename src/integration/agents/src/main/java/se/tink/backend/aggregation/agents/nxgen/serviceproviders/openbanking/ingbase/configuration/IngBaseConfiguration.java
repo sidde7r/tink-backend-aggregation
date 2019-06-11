@@ -1,10 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import java.util.Base64;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
@@ -45,18 +42,10 @@ public class IngBaseConfiguration implements ClientConfiguration {
     }
 
     public String getRedirectUrl() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
-
-        return redirectUrl;
+        return "xxx";
     }
 
     public String getClientKeyStorePassword() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientKeyStorePassword),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
-
-        return clientKeyStorePassword;
+        return "123456";
     }
 }
