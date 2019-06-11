@@ -12,6 +12,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Othe
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
 
+/**
+ * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+ *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+ *     project
+ */
+@Deprecated
 public class OtherAccount extends TransactionalAccount {
     private static final Logger LOG = LoggerFactory.getLogger(OtherAccount.class);
 
@@ -26,18 +32,34 @@ public class OtherAccount extends TransactionalAccount {
         LOG.info("Unknown_account_type " + this.getName());
     }
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultOtherAccountBuilder(uniqueIdentifier);
     }
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier).setBalance(balance);
     }
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     public static UniqueIdentifierStep<OtherBuildStep> builder() {
         return new OtherAccountBuilder();
     }
 
+    @Deprecated
     private static class OtherAccountBuilder extends StepBuilder<OtherAccount, OtherBuildStep>
             implements UniqueIdentifierStep<OtherBuildStep>,
                     AccountNumberStep<OtherBuildStep>,
@@ -87,7 +109,11 @@ public class OtherAccount extends TransactionalAccount {
         return AccountTypes.OTHER;
     }
 
-    /** @deprecated Use OtherAccountBuilder instead */
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public abstract static class Builder<
                     A extends OtherAccount, T extends OtherAccount.Builder<A, T>>
@@ -98,7 +124,11 @@ public class OtherAccount extends TransactionalAccount {
         }
     }
 
-    /** @deprecated Use OtherAccountBuilder instead */
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static class DefaultOtherAccountBuilder
             extends OtherAccount.Builder<OtherAccount, DefaultOtherAccountBuilder> {
