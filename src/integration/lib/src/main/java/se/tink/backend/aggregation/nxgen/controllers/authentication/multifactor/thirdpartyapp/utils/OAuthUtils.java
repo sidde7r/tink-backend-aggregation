@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -73,7 +74,8 @@ public class OAuthUtils {
     }
 
     public static String getTimestamp() {
-        long timestamp = System.currentTimeMillis() / 1000;
+        long timestamp =
+                TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         return Long.toString(timestamp);
     }
 
@@ -116,6 +118,10 @@ public class OAuthUtils {
         return params;
     }
 
+    /*
+        Ensure third party callback information does not collide with other Supplemental
+        Information by using a prefix. This prefix is the same in MAIN.
+    */
     public static String formatSupplementalKey(String key) {
         return String.format(UNIQUE_PREFIX_TPCB, key);
     }

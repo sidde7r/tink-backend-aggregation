@@ -26,7 +26,7 @@ public class OAuthUtilsTest {
             "uhk++maTbT8UbObG7b36aWxCn0M=";
 
     @Test
-    public void shouldGenerateSignatureForRequestTokenWithEmptyOAuthSecret() throws Exception {
+    public void shouldGenerateSignatureForRequestTokenWithEmptyOAuthSecret() {
         List<NameValuePair> params = getOAuthHeaderParams();
 
         String signature =
@@ -36,7 +36,7 @@ public class OAuthUtilsTest {
     }
 
     @Test
-    public void shouldGenerateSignatureForRequestTokenWithNullOauthSecret() throws Exception {
+    public void shouldGenerateSignatureForRequestTokenWithNullOauthSecret() {
         List<NameValuePair> params = getOAuthHeaderParams();
 
         String signature =
@@ -46,7 +46,7 @@ public class OAuthUtilsTest {
     }
 
     @Test
-    public void shouldGenerateSignatureForAccessToken() throws Exception {
+    public void shouldGenerateSignatureForAccessToken() {
         List<NameValuePair> params =
                 OAuthUtils.getAccessTokenParams(CALLBACK_URL, CONSUMER_SECRET, OAUTH_VERIFIER);
 

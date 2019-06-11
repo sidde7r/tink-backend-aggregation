@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -38,8 +39,7 @@ public class OAuth2AuthenticationController
     private final String state;
 
     // This wait time is for the whole user authentication. Different banks have different
-    // cumbersome
-    // authentication flows.
+    // cumbersome authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
     public OAuth2AuthenticationController(
@@ -127,7 +127,9 @@ public class OAuth2AuthenticationController
         Map<String, String> callbackData =
                 supplementalInformationHelper
                         .waitForSupplementalInformation(
-                                formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                                OAuthUtils.formatSupplementalKey(state),
+                                WAIT_FOR_MINUTES,
+                                TimeUnit.MINUTES)
                         .orElseThrow(
                                 LoginError.INCORRECT_CREDENTIALS
                                         ::exception); // todo: change this exception
@@ -159,12 +161,5 @@ public class OAuth2AuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private String formatSupplementalKey(String key) {
-        // Ensure third party callback information does not collide with other Supplemental
-        // Information by using a
-        // prefix. This prefix is the same in MAIN.
-        return String.format("tpcb_%s", key);
     }
 }
