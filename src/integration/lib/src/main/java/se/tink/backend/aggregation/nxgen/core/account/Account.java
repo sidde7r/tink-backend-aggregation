@@ -120,7 +120,8 @@ public abstract class Account {
     }
 
     /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
      *     project
      */
@@ -270,7 +271,8 @@ public abstract class Account {
     }
 
     /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
      *     project
      */
@@ -423,11 +425,11 @@ public abstract class Account {
     }
 
     /**
-     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
      *     <p>This will be removed as part of the improved step builder + agent builder refactoring
      *     project
      */
-    @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();
