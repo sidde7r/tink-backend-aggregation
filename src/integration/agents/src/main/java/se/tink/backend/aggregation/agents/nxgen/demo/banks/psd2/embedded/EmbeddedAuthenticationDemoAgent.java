@@ -85,9 +85,10 @@ public class EmbeddedAuthenticationDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                this.username, this.provider);
+    public List<DemoTransactionAccount> getTransactionAccounts() {
+        return Collections.singletonList(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        this.username, this.provider));
     }
 
     @Override

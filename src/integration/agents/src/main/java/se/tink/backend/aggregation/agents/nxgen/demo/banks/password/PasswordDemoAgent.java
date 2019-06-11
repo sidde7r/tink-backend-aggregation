@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.password;
 
+import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -161,9 +162,18 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
-                this.username, this.provider);
+    public List<DemoTransactionAccount> getTransactionAccounts() {
+        List<DemoTransactionAccount> accounts = Lists.newArrayList();
+
+        accounts.add(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        this.username, this.provider));
+
+        accounts.add(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccountWithZeroBalance(
+                        this.username, this.provider));
+
+        return accounts;
     }
 
     @Override

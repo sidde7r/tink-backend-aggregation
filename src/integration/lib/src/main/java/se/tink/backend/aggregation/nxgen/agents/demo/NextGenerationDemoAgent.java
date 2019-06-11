@@ -125,7 +125,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     public abstract DemoLoanAccount getDemoLoanAccounts();
 
-    public abstract DemoTransactionAccount getTransactionAccounts();
+    public abstract List<DemoTransactionAccount> getTransactionAccounts();
 
     public abstract List<DemoCreditCardAccount> getCreditCardAccounts();
 

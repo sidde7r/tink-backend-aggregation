@@ -180,7 +180,7 @@ public class ThirdPartyAuthenticationDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
+    public List<DemoTransactionAccount> getTransactionAccounts() {
         return null;
     }
 

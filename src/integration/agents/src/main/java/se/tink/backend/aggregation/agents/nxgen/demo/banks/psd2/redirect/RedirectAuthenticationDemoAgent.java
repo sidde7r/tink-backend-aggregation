@@ -92,8 +92,10 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(USERNAME, this.provider);
+    public List<DemoTransactionAccount> getTransactionAccounts() {
+        return Collections.singletonList(
+                DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
+                        USERNAME, this.provider));
     }
 
     @Override

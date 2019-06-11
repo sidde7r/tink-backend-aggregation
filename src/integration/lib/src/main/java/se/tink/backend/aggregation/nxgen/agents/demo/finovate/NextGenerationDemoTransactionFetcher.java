@@ -32,14 +32,14 @@ public class NextGenerationDemoTransactionFetcher
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final String currency;
     private final Catalog catalog;
-    private final DemoTransactionAccount transactionAccountDefinition;
+    private final List<DemoTransactionAccount> transactionAccountDefinition;
     private final DemoSavingsAccount savingsAccountDefinition;
 
     public NextGenerationDemoTransactionFetcher(
             List<Account> accounts,
             String currency,
             Catalog catalog,
-            DemoTransactionAccount transactionAccountDefinition,
+            List<DemoTransactionAccount> transactionAccountDefinition,
             DemoSavingsAccount savingsAccountDefinition) {
         this.accounts = accounts;
         this.purchaseHistoryGenerator = new PurchaseHistoryGenerator(BASE_PATH);

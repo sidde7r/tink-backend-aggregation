@@ -130,28 +130,29 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
     }
 
     @Override
-    public DemoTransactionAccount getTransactionAccounts() {
-        return new DemoTransactionAccount() {
-            @Override
-            public String getAccountId() {
-                return "9999-111111111111";
-            }
+    public List<DemoTransactionAccount> getTransactionAccounts() {
+        return Collections.singletonList(
+                new DemoTransactionAccount() {
+                    @Override
+                    public String getAccountId() {
+                        return "9999-111111111111";
+                    }
 
-            @Override
-            public String getAccountName() {
-                return "Debt Account";
-            }
+                    @Override
+                    public String getAccountName() {
+                        return "Debt Account";
+                    }
 
-            @Override
-            public double getBalance() {
-                return 26245.33;
-            }
+                    @Override
+                    public double getBalance() {
+                        return 26245.33;
+                    }
 
-            @Override
-            public List<AccountIdentifier> getIdentifiers() {
-                return null;
-            }
-        };
+                    @Override
+                    public List<AccountIdentifier> getIdentifiers() {
+                        return null;
+                    }
+                });
     }
 
     @Override

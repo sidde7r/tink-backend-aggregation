@@ -20,26 +20,25 @@ public class DemoAccountFactory {
     public static Collection<TransactionalAccount> fetchTransactionalAccounts(
             String currency,
             Catalog catalog,
-            DemoTransactionAccount transactionAccountDefinition,
+            List<DemoTransactionAccount> transactionAccountDefinition,
             DemoSavingsAccount savingsAccountDefinition) {
         ArrayList<TransactionalAccount> accounts = Lists.newArrayList();
 
         if (Objects.nonNull(transactionAccountDefinition)) {
-            accounts.add(
-                    TransactionalAccount.builder(
-                                    AccountTypes.CHECKING,
-                                    transactionAccountDefinition.getAccountId(),
-                                    new Amount(
-                                            currency,
-                                            DemoConstants.getSekToCurrencyConverter(
-                                                    currency,
-                                                    transactionAccountDefinition.getBalance())))
-                            .setAccountNumber(transactionAccountDefinition.getAccountId())
-                            .setName(
-                                    catalog.getString(
-                                            transactionAccountDefinition.getAccountName()))
-                            .addIdentifiers(transactionAccountDefinition.getIdentifiers())
-                            .build());
+            for (DemoTransactionAccount transactionAccount : transactionAccountDefinition) {
+                accounts.add(
+                        TransactionalAccount.builder(
+                                        AccountTypes.CHECKING,
+                                        transactionAccount.getAccountId(),
+                                        new Amount(
+                                                currency,
+                                                DemoConstants.getSekToCurrencyConverter(
+                                                        currency, transactionAccount.getBalance())))
+                                .setAccountNumber(transactionAccount.getAccountId())
+                                .setName(catalog.getString(transactionAccount.getAccountName()))
+                                .addIdentifiers(transactionAccount.getIdentifiers())
+                                .build());
+            }
         }
 
         if (Objects.nonNull(savingsAccountDefinition)) {
