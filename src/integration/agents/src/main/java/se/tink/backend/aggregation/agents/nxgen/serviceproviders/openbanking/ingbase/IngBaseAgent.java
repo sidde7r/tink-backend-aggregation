@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.in
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.authenticator.IngBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration.IngBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.fetcher.IngBaseAccountsFetcher;
@@ -42,17 +41,8 @@ public abstract class IngBaseAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final IngBaseConfiguration config =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(
-                                IngBaseConstants.INTEGRATION_NAME,
-                                request.getProvider().getPayload(),
-                                IngBaseConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                ErrorMessages.MISSING_CONFIGURATION));
+        IngBaseConfiguration config = new IngBaseConfiguration();
+
         apiClient.setConfiguration(config);
 
         final byte[] p12 = config.getClientSSLP12bytes();
