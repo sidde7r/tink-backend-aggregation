@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import javax.ws.rs.core.Response;
@@ -38,6 +39,8 @@ public class AggregationControllerAggregationClient {
     private static final String EMPTY_PASSWORD = "";
     private static final Logger log =
             LoggerFactory.getLogger(AggregationControllerAggregationClient.class);
+    private static final ImmutableSet<String> IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS =
+            ImmutableSet.of("oxford-staging");
 
     @Inject
     public AggregationControllerAggregationClient() {}
@@ -172,7 +175,7 @@ public class AggregationControllerAggregationClient {
             HostConfiguration hostConfiguration, UpdateIdentityDataRequest request) {
 
         // TODO: Remove this after identity service is fully implemented.
-        if (hostConfiguration.getClusterId().equals("oxford-staging")) {
+        if (IDENTITY_AGGREGATOR_ENABLED_ENVIRONMENTS.contains(hostConfiguration.getClusterId())) {
             log.info("Updating identity temporarily disabled!");
             return getIdentityAggregatorService(hostConfiguration).updateIdentityData(request);
         }
