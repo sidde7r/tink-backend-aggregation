@@ -52,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
@@ -301,10 +302,12 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
             for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();
+                Storage paymentStorage = Storage.copyOf(paymentResponse.getPaymentStorage());
 
                 PaymentMultiStepRequest paymentMultiStepRequest =
                         new PaymentMultiStepRequest(
                                 retrievedPayment,
+                                paymentStorage,
                                 AuthenticationStepConstants.STEP_INIT,
                                 Collections.emptyList(),
                                 Collections.emptyList());
@@ -334,6 +337,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                             paymentController.sign(
                                     new PaymentMultiStepRequest(
                                             retrievedPayment,
+                                            paymentStorage,
                                             nextStep,
                                             fields,
                                             new ArrayList<>(map.values())));
