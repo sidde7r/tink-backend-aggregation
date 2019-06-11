@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.Balance;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -15,7 +14,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class AccountEntityResponse extends AccountBaseEntity {
+public class AccountEntityResponse {
     private String bban;
     private String name;
     private String currency;

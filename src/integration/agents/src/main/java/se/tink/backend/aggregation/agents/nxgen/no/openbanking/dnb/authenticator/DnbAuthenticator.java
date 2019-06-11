@@ -2,14 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticato
 
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public class DnbAuthenticator extends BerlinGroupAuthenticator {
+public class DnbAuthenticator implements OAuth2Authenticator {
+
+    private final DnbApiClient apiClient;
 
     public DnbAuthenticator(final DnbApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
     }
 
     public URL buildAuthorizeUrl(final String state) {
@@ -20,4 +22,12 @@ public class DnbAuthenticator extends BerlinGroupAuthenticator {
     public OAuth2Token exchangeAuthorizationCode(final String code) throws BankServiceException {
         return null;
     }
+
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken) throws BankServiceException {
+        return null;
+    }
+
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {}
 }

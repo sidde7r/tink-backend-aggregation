@@ -12,15 +12,7 @@ public class Balance {
         return balanceAmount;
     }
 
-    public void setBalanceAmount(final BalanceAmount balanceAmount) {
-        this.balanceAmount = balanceAmount;
-    }
-
     public String getBalanceType() {
         return balanceType;
-    }
-
-    public void setBalanceType(final String balanceType) {
-        this.balanceType = balanceType;
     }
 }

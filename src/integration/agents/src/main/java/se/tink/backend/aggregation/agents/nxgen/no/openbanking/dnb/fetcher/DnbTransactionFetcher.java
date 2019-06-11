@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher;
 
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class DnbTransactionFetcher extends BerlinGroupTransactionFetcher {
+public class DnbTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
+
+    private final DnbApiClient apiClient;
 
     public DnbTransactionFetcher(final DnbApiClient apiClient) {
-        super(apiClient);
+        this.apiClient = apiClient;
     }
 
     @Override

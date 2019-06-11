@@ -4,34 +4,36 @@ import static org.apache.commons.lang3.CharEncoding.UTF_8;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.CredentialsKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.entity.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.BalancesResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.rpc.TransactionResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class DnbApiClient extends BerlinGroupApiClient<BerlinGroupConfiguration> {
+public final class DnbApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
+    private DnbConfiguration configuration;
 
     public DnbApiClient(
             final TinkHttpClient client,
@@ -42,64 +44,35 @@ public final class DnbApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
         this.credentials = credentials;
     }
 
-    @Override
+    private DnbConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(DnbConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     public AccountsResponse fetchAccounts() {
         return createRequest(new URL(getConfiguration().getBaseUrl() + Urls.ACCOUNTS))
-                .header(HeaderKeys.CONSENT_ID, getConsentId())
+                .header(DnbConstants.HeaderKeys.CONSENT_ID, getConsentId())
                 .get(AccountsResponse.class);
     }
 
-    @Override
-    public TransactionsKeyPaginatorBaseResponse fetchTransactions(final String accountId) {
+    public TransactionResponse fetchTransactions(final String accountId) {
         return createRequest(
                         new URL(
                                 getConfiguration().getBaseUrl()
                                         + String.format(Urls.TRANSACTIONS, accountId)))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
-                .get(TransactionsKeyPaginatorBaseResponse.class);
+                .get(TransactionResponse.class);
     }
 
-    @Override
-    public String getConsentId() {
-        return getConsent().getConsentId();
-    }
-
-    @Override
-    public OAuth2Token refreshToken(final String token) {
-        throw new IllegalStateException(ErrorMessages.OAUTH_TOKEN_ERROR);
-    }
-
-    @Override
-    public OAuth2Token getToken(final String code) {
-        throw new IllegalStateException(ErrorMessages.OAUTH_TOKEN_ERROR);
-    }
-
-    @Override
     public URL getAuthorizeUrl(final String state) {
         sessionStorage.put(StorageKeys.STATE, state);
         final ConsentResponse consentResponse = getConsent();
         return new URL(consentResponse.getScaRedirectLink()).queryParam(QueryKeys.STATE, state);
-    }
-
-    public ConsentResponse getConsent() {
-        return sessionStorage
-                .get(StorageKeys.CONSENT_OBJECT, ConsentResponse.class)
-                .orElseGet(
-                        () -> {
-                            final ConsentResponse consentResponse = fetchConsent();
-                            sessionStorage.put(StorageKeys.CONSENT_OBJECT, consentResponse);
-                            return consentResponse;
-                        });
-    }
-
-    private ConsentResponse fetchConsent() {
-        final ConsentRequest consentsRequest = new ConsentRequest(5);
-        final URL url = new URL(getConfiguration().getBaseUrl() + Urls.CONSENTS);
-
-        return createRequestWithRedirectStateAndCode(url)
-                .body(consentsRequest.toData())
-                .post(ConsentResponse.class);
     }
 
     public BalancesResponse fetchBalance(final String accountId) {
@@ -109,6 +82,21 @@ public final class DnbApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                                         + String.format(Urls.BALANCES, accountId)))
                 .header(HeaderKeys.CONSENT_ID, getConsentId())
                 .get(BalancesResponse.class);
+    }
+
+    private ConsentResponse fetchConsent() {
+        final ConsentRequest consentsRequest =
+                ConsentRequest.builder()
+                        .frequencyPerDay(5)
+                        .recurringIndicator(true)
+                        .combinedServiceIndicator(false)
+                        .validUntil(getValidUntilForConsent())
+                        .build();
+        final URL url = new URL(getConfiguration().getBaseUrl() + Urls.CONSENTS);
+
+        return createRequestWithRedirectStateAndCode(url)
+                .body(consentsRequest.toData())
+                .post(ConsentResponse.class);
     }
 
     private RequestBuilder createRequestWithoutRedirectHeader(final URL url) {
@@ -138,11 +126,32 @@ public final class DnbApiClient extends BerlinGroupApiClient<BerlinGroupConfigur
                 .header(HeaderKeys.TPP_REDIRECT_URI, decodeUrl(redirectUrl));
     }
 
+    private ConsentResponse getConsent() {
+        return sessionStorage
+                .get(StorageKeys.CONSENT_OBJECT, ConsentResponse.class)
+                .orElseGet(
+                        () -> {
+                            final ConsentResponse consentResponse = fetchConsent();
+                            sessionStorage.put(StorageKeys.CONSENT_OBJECT, consentResponse);
+                            return consentResponse;
+                        });
+    }
+
+    private String getConsentId() {
+        return getConsent().getConsentId();
+    }
+
     private String decodeUrl(final URL url) {
         try {
             return URLDecoder.decode(url.toString(), UTF_8);
         } catch (final UnsupportedEncodingException e) {
             throw new IllegalArgumentException(ErrorMessages.URL_ENCODING_ERROR);
         }
+    }
+
+    private Date getValidUntilForConsent() {
+        final Calendar now = Calendar.getInstance();
+        now.add(Calendar.MONTH, 11);
+        return now.getTime();
     }
 }

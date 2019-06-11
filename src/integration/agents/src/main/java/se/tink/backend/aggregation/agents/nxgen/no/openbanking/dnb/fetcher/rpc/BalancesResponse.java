@@ -11,8 +11,4 @@ public class BalancesResponse {
     public List<Balance> getBalances() {
         return balances;
     }
-
-    public void setBalances(final List<Balance> balances) {
-        this.balances = balances;
-    }
 }
