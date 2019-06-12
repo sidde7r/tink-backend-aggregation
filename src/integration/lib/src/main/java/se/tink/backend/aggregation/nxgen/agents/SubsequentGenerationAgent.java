@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthen
 import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -436,11 +437,11 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                 .cancel(paymentRequest);
     }
 
-    public PaymentListResponse fetchMultiplePayments(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiplePayments(PaymentListRequest paymentListRequest)
             throws PaymentException {
         return getPaymentController()
                 .orElseThrow(
                         () -> new NotImplementedException("PaymentController not implemented."))
-                .fetchMultiple(paymentRequest);
+                .fetchMultiple(paymentListRequest);
     }
 }

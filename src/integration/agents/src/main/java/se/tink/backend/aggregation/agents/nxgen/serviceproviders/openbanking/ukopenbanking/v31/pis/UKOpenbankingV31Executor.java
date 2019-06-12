@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -202,7 +203,7 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());

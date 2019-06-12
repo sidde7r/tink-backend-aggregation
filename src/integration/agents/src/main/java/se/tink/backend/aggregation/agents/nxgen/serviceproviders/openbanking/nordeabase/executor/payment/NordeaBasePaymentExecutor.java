@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -116,7 +117,7 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
         Collector<PaymentListResponse, ArrayList<PaymentResponse>, PaymentListResponse>
                 paymentListResponseCollector =

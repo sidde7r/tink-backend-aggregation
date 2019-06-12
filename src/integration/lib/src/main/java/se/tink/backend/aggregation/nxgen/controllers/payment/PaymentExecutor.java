@@ -15,5 +15,6 @@ public interface PaymentExecutor {
 
     PaymentResponse cancel(PaymentRequest paymentRequest);
 
-    PaymentListResponse fetchMultiple(PaymentRequest paymentRequest) throws PaymentException;
+    PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
+            throws PaymentException;
 }

@@ -31,8 +31,8 @@ public class PaymentController {
         return paymentExecutor.cancel(paymentRequest);
     }
 
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
-        return paymentExecutor.fetchMultiple(paymentRequest);
+        return paymentExecutor.fetchMultiple(paymentListRequest);
     }
 }
