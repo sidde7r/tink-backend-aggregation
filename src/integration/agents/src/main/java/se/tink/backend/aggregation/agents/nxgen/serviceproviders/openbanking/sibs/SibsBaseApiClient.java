@@ -101,7 +101,7 @@ public class SibsBaseApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
-        return createRequest(new URL(Urls.BASE_URL + key))
+        return createRequest(new URL(Urls.BASE_URL + key.replace(" ", "%20")))
                 .signed()
                 .inSession(getConsentFromStorage())
                 .build()
