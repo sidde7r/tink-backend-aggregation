@@ -216,6 +216,21 @@
             "payload": "tink",
             "tutorialUrl": null,
             "fields": []
+        },
+      {
+            "name": "pt-milleniumbcp-oauth2",
+            "displayName": "Activo Bank (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.pt.openbanking.milleniumbcp.MilleniumBcpAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "fields": []
         }
     ]
 }
