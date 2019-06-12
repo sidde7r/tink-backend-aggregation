@@ -24,7 +24,6 @@ public class AccountEntity {
   private String currency;
   private String name;
   private String cashAccountType;
-  private String iban;
 
   private List<BalanceBaseEntity> balances;
 
@@ -32,16 +31,12 @@ public class AccountEntity {
   AccountLinksEntity links;
 
   public AccountBaseEntity toBerlinGroupAccountBaseResponse(){
-    return new AccountBaseEntity(resourceId, "FR14 2004 1010 0505 0001 3M02 606" , currency, name, cashAccountType,
+    return new AccountBaseEntity(resourceId, resourceId , currency, name, cashAccountType,
         new se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountLinksEntity
             (links.getBalances().getHref(), links.getTransactions().getHref()), balances);
   }
 
   public String getResourceId() {return resourceId;}
-
-  public String getIban() {return iban; }
-
-  public void setIban(String iban) {this.iban = iban;}
 
   public List<BalanceBaseEntity> getBalances() {return balances;}
 

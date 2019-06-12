@@ -40,9 +40,6 @@ public final class LaBanquePostaleApiClient extends BerlinGroupApiClient<LaBanqu
         .get(AccountResponse.class);
 
     for(AccountEntity accountEntity : accountResponse.getAccounts()){
-      if(accountEntity.getIban() == null){
-        accountEntity.setIban("FR14 2004 1010 0505 0001 3M02 606");  //iban is hardcoded because their response doesn't return any account identifier, which is required to map the response to tink response
-      }
       BalanceResponse balanceResponse = buildRequestWithSignature(String.format(Urls.FETCH_BALANCES, accountEntity.getResourceId(), clientId, clientSecret), "")
           .get(BalanceResponse.class);
       accountEntity.setBalances(balanceResponse.getBalances());
