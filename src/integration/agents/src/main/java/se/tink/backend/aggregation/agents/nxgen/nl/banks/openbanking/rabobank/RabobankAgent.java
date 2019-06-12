@@ -38,6 +38,9 @@ public class RabobankAgent extends NextGenerationAgent {
 
         apiClient = new RabobankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
+
+        // Necessary to circumvent HTTP 413: Payload too large
+        client.disableSignatureRequestHeader();
     }
 
     @Override

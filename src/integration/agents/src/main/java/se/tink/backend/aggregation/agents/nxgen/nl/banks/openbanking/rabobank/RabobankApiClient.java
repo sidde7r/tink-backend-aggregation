@@ -21,8 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -74,7 +74,7 @@ public class RabobankApiClient {
             final String signatureHeader,
             final String date) {
         final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getClientCert();
+        final String clientCert = rabobankConfiguration.getQSealCertificate();
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         return client.request(url)
@@ -161,11 +161,15 @@ public class RabobankApiClient {
     private String buildSignatureHeader(
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
-        final byte[] signatureBytes = RSA.signSha512(getPrivateKey(), signingString.getBytes());
+
+        final byte[] signatureBytes =
+                new QsealcEidasProxySigner(new TinkHttpClient())
+                        .getSignature(signingString.getBytes());
+
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
-        final String clientCertSerial = rabobankConfiguration.getClientCertSerial();
+        final String clientCertSerial = rabobankConfiguration.getQsealcSerial();
 
         return RabobankUtils.createSignatureHeader(
-                clientCertSerial, Signature.RSA_SHA_512, b64Signature, Signature.HEADERS_VALUE);
+                clientCertSerial, Signature.RSA_SHA_256, b64Signature, Signature.HEADERS_VALUE);
     }
 }

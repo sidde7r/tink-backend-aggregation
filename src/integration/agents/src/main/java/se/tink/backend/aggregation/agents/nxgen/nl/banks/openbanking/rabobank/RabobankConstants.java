@@ -26,11 +26,13 @@ public class RabobankConstants {
         public static final String ALGORITHM = "algorithm";
         public static final String HEADERS = "headers";
         public static final String KEY_ID = "keyId";
-        public static final String SHA_512 = "sha-512";
-        public static final String RSA_SHA_512 = "rsa-sha512";
+        private static final String SHA_256 = "sha-256";
+        private static final String SHA_512 = "sha-512";
+        public static final String RSA_SHA_256 = "rsa-sha256";
         public static final String SIGNING_STRING_DIGEST = "digest: ";
         public static final String SIGNING_STRING_DATE = "date: ";
         public static final String SIGNING_STRING_REQUEST_ID = "x-request-id: ";
+        public static final String SIGNING_STRING_SHA_256 = SHA_256 + "=";
         public static final String SIGNING_STRING_SHA_512 = SHA_512 + "=";
         public static final String SIGNATURE = "signature";
         public static final String HEADERS_VALUE = "date digest x-request-id";

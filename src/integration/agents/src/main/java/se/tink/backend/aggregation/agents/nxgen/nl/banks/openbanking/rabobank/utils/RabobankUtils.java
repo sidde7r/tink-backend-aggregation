@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.u
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +12,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -117,6 +119,24 @@ public class RabobankUtils {
 
     public static PrivateKey getPrivateKey(final byte[] pkcs12Bytes, final String password) {
         return getPrivateKeyFromKeyStore(getKeyStore(pkcs12Bytes, password), password);
+    }
+
+    public static String getQsealcSerialNumber(final String qsealcB64Pem) {
+        final CertificateFactory certFactory;
+        try {
+            certFactory = CertificateFactory.getInstance("X.509");
+        } catch (CertificateException e) {
+            throw new IllegalStateException(e);
+        }
+        final byte[] qsealcBytes = Base64.getDecoder().decode(qsealcB64Pem);
+        final InputStream qsealcB64PemStream = new ByteArrayInputStream(qsealcBytes);
+        final X509Certificate x509;
+        try {
+            x509 = (X509Certificate) certFactory.generateCertificate(qsealcB64PemStream);
+        } catch (CertificateException e) {
+            throw new IllegalStateException(e);
+        }
+        return x509.getSerialNumber().toString();
     }
 
     public static String getCertificateSerialNumber(

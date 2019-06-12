@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.c
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Base64;
+import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
@@ -16,6 +17,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     private String clientSSLKeyPassword;
     private String clientSSLP12;
     private String redirectUrl;
+    private String qsealcPem;
 
     public String getClientId() {
         return clientId;
@@ -46,9 +48,20 @@ public final class RabobankConfiguration implements ClientConfiguration {
     }
 
     @JsonIgnore
+    public String getQsealcSerial() {
+        Preconditions.checkNotNull(qsealcPem);
+        return RabobankUtils.getQsealcSerialNumber(qsealcPem);
+    }
+
+    @JsonIgnore
     public String getClientCertSerial() {
         return RabobankUtils.getCertificateSerialNumber(
                 getClientSSLP12bytes(), getClientSSLKeyPassword());
+    }
+
+    @JsonIgnore
+    public String getQSealCertificate() {
+        return qsealcPem;
     }
 
     public RabobankUrlFactory getUrls() {
