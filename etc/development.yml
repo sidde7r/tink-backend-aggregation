@@ -187,6 +187,7 @@ agentsServiceConfiguration:
         redirectUrl: "https://127.0.0.1:7357/api/v1/credentials/third-party/callback"
     activobank:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -196,6 +197,7 @@ agentsServiceConfiguration:
         aspspCode: "ABPT"
     atlanticoeuropa:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -205,6 +207,7 @@ agentsServiceConfiguration:
         aspspCode: "ATLEU"
     bancobpi-pt:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -214,6 +217,7 @@ agentsServiceConfiguration:
         aspspCode: "BBPI"
     bancoctt:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -223,6 +227,7 @@ agentsServiceConfiguration:
         aspspCode: "BCTT"
     bancomontepio:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -232,6 +237,7 @@ agentsServiceConfiguration:
         aspspCode: "CEMG"
     bankinter:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -241,6 +247,7 @@ agentsServiceConfiguration:
         aspspCode: "BNKI"
     bpg:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -250,6 +257,7 @@ agentsServiceConfiguration:
         aspspCode: "BPG"
     caixa-pt:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -259,6 +267,7 @@ agentsServiceConfiguration:
         aspspCode: "CGDPT"
     cemah:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -268,6 +277,7 @@ agentsServiceConfiguration:
         aspspCode: "CEMAH"
     creditoagricola:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -277,6 +287,7 @@ agentsServiceConfiguration:
         aspspCode: "GCA"
     eurobic-pt:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -286,6 +297,7 @@ agentsServiceConfiguration:
         aspspCode: "BIC"
     milleniumbcp:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -295,6 +307,7 @@ agentsServiceConfiguration:
         aspspCode: "BCPPT"
     novobanco:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -304,6 +317,7 @@ agentsServiceConfiguration:
         aspspCode: "NVB"
     novobancoacores:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -313,6 +327,7 @@ agentsServiceConfiguration:
         aspspCode: "NVBA"
     santander-pt:
       tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
