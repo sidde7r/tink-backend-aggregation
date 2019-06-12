@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -69,6 +70,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
+import se.tink.backend.aggregation.nxgen.http.hostnameverifier.ProxyHostnameVerifier;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
 import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
@@ -517,7 +519,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             setProxy(uri);
             requestExecutor.setEidasCertificateId(certificateId);
 
-        } catch (IOException e) {
+            this.internalHttpClientBuilder =
+                    this.internalHttpClientBuilder.setHostnameVerifier(
+                            new ProxyHostnameVerifier(new URI(uri).getHost()));
+
+        } catch (IOException | URISyntaxException e) {
             throw new IllegalStateException(
                     "Could not initialise client certificate for EIDAS proxy", e);
         }
