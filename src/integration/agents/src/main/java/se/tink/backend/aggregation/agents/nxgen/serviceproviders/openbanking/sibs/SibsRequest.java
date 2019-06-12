@@ -16,9 +16,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SibsRequest {
 
-    private SibsRequest() {
-        throw new AssertionError("Suppress default constructor for noninstantiability");
-    }
+    private SibsRequest() {}
 
     public static SibsRequestBuilder builder(
             TinkHttpClient client, SibsConfiguration configuration, URL url) {

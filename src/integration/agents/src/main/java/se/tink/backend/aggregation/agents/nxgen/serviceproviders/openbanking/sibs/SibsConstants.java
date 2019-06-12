@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs;
 
-import se.tink.backend.aggregation.nxgen.http.URL;
-
 public final class SibsConstants {
 
-    private SibsConstants() {
-        throw new AssertionError();
-    }
+    private SibsConstants() {}
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
@@ -15,22 +11,18 @@ public final class SibsConstants {
         public static final String NO_BALANCE = "No balance found!";
         public static final String UNKNOWN_TRANSACTION_STATE = "Unknown transaction state.";
         public static final String MISSING_LINKS_OBJECT = "Response is missing links object";
-        public static final String MISSING_PAGINATON_KEY = "Missing pagination key";
+        public static final String MISSING_PAGINATION_KEY = "Missing pagination key";
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://site1.sibsapimarket.com:8444/sibs/apimarket";
-
-        public static final URL ACCOUNTS = new URL(BASE_URL + "/{aspsp-cde}/v1/accounts");
-        public static final URL ACCOUNT_DETAILS =
-                new URL(BASE_URL + "/{aspsp-cde}/v1/accounts/{account-id}");
-        public static final URL CREATE_CONSENT = new URL(BASE_URL + "/{aspsp-cde}/v1/consents");
-        public static final URL CONSENT_STATUS =
-                new URL(BASE_URL + "/{aspsp-cde}/v1/consents/{consent-id}/status");
-        public static final URL ACCOUNT_BALANCES =
-                new URL(BASE_URL + "/{aspsp-cde}/v1/accounts/{account-id}/balances");
-        public static final URL ACCOUNT_TRANSACTIONS =
-                new URL(BASE_URL + "/{aspsp-cde}/v1/accounts/{account-id}/transactions");
+        public static final String ACCOUNTS = "/{aspsp-cde}/v1/accounts";
+        public static final String ACCOUNT_DETAILS = "/{aspsp-cde}/v1/accounts/{account-id}";
+        public static final String CREATE_CONSENT = "/{aspsp-cde}/v1/consents";
+        public static final String CONSENT_STATUS = "/{aspsp-cde}/v1/consents/{consent-id}/status";
+        public static final String ACCOUNT_BALANCES =
+                "/{aspsp-cde}/v1/accounts/{account-id}/balances";
+        public static final String ACCOUNT_TRANSACTIONS =
+                "/{aspsp-cde}/v1/accounts/{account-id}/transactions";
     }
 
     public static class StorageKeys {

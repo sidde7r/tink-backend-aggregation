@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class SibsConfiguration implements ClientConfiguration {
 
+    private String baseUrl;
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
@@ -17,6 +18,14 @@ public class SibsConfiguration implements ClientConfiguration {
     private String clientSigningCertificatePath;
     private String clientSigningCertificateSerialNumber;
     private String aspspCode;
+
+    public String getBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
+
+        return baseUrl;
+    }
 
     public String getClientId() {
         Preconditions.checkNotNull(
