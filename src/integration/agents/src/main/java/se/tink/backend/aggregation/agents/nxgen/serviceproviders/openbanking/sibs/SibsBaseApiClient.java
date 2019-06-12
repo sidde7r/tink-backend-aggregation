@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.PathParameterKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsRequest.SibsRequestBuilder;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentAccessEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.rpc.ConsentRequest;
@@ -54,9 +53,9 @@ public class SibsBaseApiClient {
     }
 
     public AccountsResponse fetchAccounts() {
-
+        URL accounts = createUrl(SibsConstants.Urls.ACCOUNTS);
         return createRequest(
-                        (Urls.ACCOUNTS.parameter(
+                        (accounts.parameter(
                                 PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())))
                 .signed()
                 .inSession(getConsentFromStorage())
@@ -66,9 +65,9 @@ public class SibsBaseApiClient {
     }
 
     public BalancesResponse getAccountBalances(String accountId) {
-
+        URL accountBalances = createUrl(SibsConstants.Urls.ACCOUNT_BALANCES);
         return createRequest(
-                        Urls.ACCOUNT_BALANCES
+                        accountBalances
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(PathParameterKeys.ACCOUNT_ID, accountId))
@@ -81,11 +80,10 @@ public class SibsBaseApiClient {
 
     public TransactionKeyPaginatorResponse<String> getAccountTransactions(
             TransactionalAccount account) {
-
+        URL accountTransactions = createUrl(SibsConstants.Urls.ACCOUNT_TRANSACTIONS);
         SimpleDateFormat formatter = new SimpleDateFormat(Formats.PAGINATION_DATE_FORMAT);
-
         return createRequest(
-                        Urls.ACCOUNT_TRANSACTIONS
+                        accountTransactions
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(
@@ -101,7 +99,8 @@ public class SibsBaseApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactionsForKey(String key) {
-        return createRequest(new URL(Urls.BASE_URL + key))
+        String baseUrl = configuration.getBaseUrl();
+        return createRequest(new URL(baseUrl + key))
                 .signed()
                 .inSession(getConsentFromStorage())
                 .build()
@@ -110,13 +109,12 @@ public class SibsBaseApiClient {
     }
 
     public URL buildAuthorizeUrl(String state) {
-
         ConsentRequest consentRequest = getConsentRequest();
         String digest = SibsUtils.getDigest(consentRequest);
-
+        URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
         ConsentResponse consentResponse =
                 createRequest(
-                                Urls.CREATE_CONSENT.parameter(
+                                createConsent.parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
                         .signed(digest)
                         .build()
@@ -136,10 +134,10 @@ public class SibsBaseApiClient {
             String state, String psuIdType, String psuId) {
         ConsentRequest consentRequest = getConsentRequest();
         String digest = SibsUtils.getDigest(consentRequest);
-
+        URL createConsent = createUrl(SibsConstants.Urls.CREATE_CONSENT);
         ConsentResponse consentResponse =
                 createRequest(
-                                Urls.CREATE_CONSENT.parameter(
+                                createConsent.parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode()))
                         .signed(digest)
                         .build()
@@ -158,9 +156,9 @@ public class SibsBaseApiClient {
     }
 
     public ConsentStatusResponse getConsentStatus() {
-
+        URL consentStatus = createUrl(SibsConstants.Urls.CONSENT_STATUS);
         return createRequest(
-                        Urls.CONSENT_STATUS
+                        consentStatus
                                 .parameter(
                                         PathParameterKeys.ASPSP_CDE, configuration.getAspspCode())
                                 .parameter(PathParameterKeys.CONSENT_ID, getConsentFromStorage()))
@@ -183,5 +181,10 @@ public class SibsBaseApiClient {
                 formatter.format(c.getTime()),
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
+    }
+
+    private URL createUrl(String path) {
+        String baseUrl = configuration.getBaseUrl();
+        return new URL(baseUrl + path);
     }
 }

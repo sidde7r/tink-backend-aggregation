@@ -18,7 +18,7 @@ public class TransactionLinksEntity {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        SibsConstants.ErrorMessages.MISSING_PAGINATON_KEY));
+                                        SibsConstants.ErrorMessages.MISSING_PAGINATION_KEY));
     }
 
     public Boolean canFetchMore() {
