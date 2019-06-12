@@ -186,6 +186,21 @@
             "payload": "tink",
             "tutorialUrl": null,
             "fields": []
-       }
+       },
+      {
+            "name": "pt-creditoagricola-oauth2",
+            "displayName": "Credito Agricola (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.pt.openbanking.creditoagricola.CreditoAgricolaAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "fields": []
+        }
     ]
 }
