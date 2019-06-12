@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class CreateBeneficiaryMultiStepRequest {
@@ -21,6 +22,7 @@ public class CreateBeneficiaryMultiStepRequest {
     public static PaymentMultiStepRequest of(PaymentResponse paymentResponse) {
         return new PaymentMultiStepRequest(
                 paymentResponse.getPayment(),
+                Storage.copyOf(paymentResponse.getPaymentStorage()),
                 AuthenticationStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());

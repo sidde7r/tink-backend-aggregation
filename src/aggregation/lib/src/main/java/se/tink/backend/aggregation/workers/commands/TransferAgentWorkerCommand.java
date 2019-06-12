@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.utils.CredentialsStringMasker;
 import se.tink.backend.aggregation.utils.StringMasker;
@@ -219,6 +220,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
         Payment payment = signPaymentMultiStepResponse.getPayment();
+        Storage paymentStorage = Storage.copyOf(signPaymentMultiStepResponse.getPaymentStorage());
+
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
             fields = signPaymentMultiStepResponse.getFields();
             map = Collections.emptyMap();
@@ -226,7 +229,11 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             signPaymentMultiStepResponse =
                     nextGenerationAgent.signPayment(
                             new PaymentMultiStepRequest(
-                                    payment, nextStep, fields, new ArrayList<>(map.values())));
+                                    payment,
+                                    paymentStorage,
+                                    nextStep,
+                                    fields,
+                                    new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             payment = signPaymentMultiStepResponse.getPayment();
         }

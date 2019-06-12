@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
+import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.payment.rpc.Creditor;
@@ -11,17 +13,29 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PaymentRequest {
     private Payment payment;
+    private Storage paymentStorage;
 
     public PaymentRequest(Payment payment) {
         this.payment = payment;
+        this.paymentStorage = new Storage();
+    }
+
+    public PaymentRequest(Payment payment, Storage paymentStorage) {
+        this.payment = payment;
+        this.paymentStorage = Storage.copyOf(paymentStorage);
     }
 
     public Payment getPayment() {
         return payment;
     }
 
+    public ImmutableMap getPaymentStorage() {
+        return paymentStorage.getImmutableCopy();
+    }
+
     public static PaymentRequest of(PaymentResponse paymentResponse) {
-        return new PaymentRequest(paymentResponse.getPayment());
+        return new PaymentRequest(
+                paymentResponse.getPayment(), Storage.copyOf(paymentResponse.getPaymentStorage()));
     }
 
     @Deprecated
