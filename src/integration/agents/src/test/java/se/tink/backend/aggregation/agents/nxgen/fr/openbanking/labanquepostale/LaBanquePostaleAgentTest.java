@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+//@Ignore
 public class LaBanquePostaleAgentTest {
     private final String TEST_USERNAME = "";
     private final String TEST_PASSWORD = "";

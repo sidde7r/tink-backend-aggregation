@@ -17,6 +17,10 @@ public class AccountsBaseResponse implements AccountResponseToTink {
         this.accounts = accounts;
     }
 
+    public void setAccounts(List<AccountBaseEntity> accounts) {
+        this.accounts = accounts;
+    }
+
     @Override
     public List<AccountBaseEntity> getAccounts() {
         return accounts;

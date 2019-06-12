@@ -26,6 +26,21 @@ public class AccountBaseEntity implements BerlinGroupAccount {
 
     private List<BalanceBaseEntity> balances;
 
+    public AccountBaseEntity(){}
+
+    public AccountBaseEntity(String resourceId, String iban, String currency, String name,
+        String cashAccountType,
+        AccountLinksEntity links,
+        List<BalanceBaseEntity> balances) {
+        this.resourceId = resourceId;
+        this.iban = iban;
+        this.currency = currency;
+        this.name = name;
+        this.cashAccountType = cashAccountType;
+        this.balances = balances;
+        this.links = links;
+    }
+
     @JsonProperty("_links")
     private AccountLinksEntity links;
 

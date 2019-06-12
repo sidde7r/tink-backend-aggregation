@@ -12,6 +12,13 @@ public class AccountLinksEntity implements BerlinGroupAccountLinks {
         return transactions;
     }
 
+    public AccountLinksEntity() {}
+
+    public AccountLinksEntity(String balances, String transactions) {
+        this.balances = balances;
+        this.transactions = transactions;
+    }
+
     @Override
     public String getBalanceLink() {
         return balances;
