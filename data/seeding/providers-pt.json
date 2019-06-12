@@ -111,6 +111,21 @@
             "payload": "tink",
             "tutorialUrl": null,
             "fields": []
+        },
+      {
+            "name": "pt-bancomontepio-oauth2",
+            "displayName": "Banco Montepio (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.pt.openbanking.bancomontepio.BancoMontepioAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "fields": []
         }
     ]
 }
