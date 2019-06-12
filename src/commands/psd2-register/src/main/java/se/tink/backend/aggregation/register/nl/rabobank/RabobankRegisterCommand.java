@@ -22,6 +22,8 @@ import org.bouncycastle.operator.InputDecryptorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.pkcs.PKCS8EncryptedPrivateKeyInfo;
 import org.bouncycastle.pkcs.PKCSException;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.Signer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.register.nl.rabobank.rpc.JwsRequest;
@@ -92,24 +94,26 @@ public final class RabobankRegisterCommand {
 
     public static void main(final String[] args) {
 
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
         final TinkHttpClient client = new TinkHttpClient();
+
         client.setDebugOutput(true);
 
         final URL url =
                 new URL("https://api.rabobank.nl/openapi/open-banking/third-party-providers");
 
-        final String qsealcPrivateKeyPath =
-                "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/rabobank/resources/privatekey.pem";
         final String qsealcCertificatePath =
-                "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/rabobank/resources/cert.pem";
+                "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/rabobank/resources/tink_qsealc.pem";
 
-        final PrivateKey privateKey = readPemPrivateKey(qsealcPrivateKeyPath);
         final String qsealcB64 = readPemCertificateAsB64(qsealcCertificatePath);
         final int exp = 1559920641;
-        final String email = "openbanking@tink.se";
+        final String email = "sebastian.olsson@tink.se";
         final String organization = "Tink AB";
 
-        final JwsRequest body = JwsRequest.create(qsealcB64, privateKey, exp, email, organization);
+        final Signer jwsSigner = new QsealcEidasProxySigner(client);
+
+        final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 
         client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_TYPE)

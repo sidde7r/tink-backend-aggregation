@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.register.nl.rabobank.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.security.PrivateKey;
 import java.util.Base64;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.Signer;
 import se.tink.backend.aggregation.register.nl.rabobank.entities.PayloadEntity;
 import se.tink.backend.aggregation.register.nl.rabobank.entities.ProtectedEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -21,7 +20,7 @@ public final class JwsRequest {
     @JsonIgnore
     public static JwsRequest create(
             final String qsealB64,
-            final PrivateKey privateKey,
+            final Signer jwsSigner,
             final int exp,
             final String email,
             final String organization) {
@@ -30,7 +29,7 @@ public final class JwsRequest {
 
         request.protekted = createProtected(qsealB64);
         request.payload = createPayload(exp, email, organization);
-        request.signature = createSignature(request.protekted, request.payload, privateKey);
+        request.signature = createSignature(request.protekted, request.payload, jwsSigner);
 
         return request;
     }
@@ -51,11 +50,11 @@ public final class JwsRequest {
     }
 
     private static String createSignature(
-            final String protectedB64Url, final String payloadB64Url, final PrivateKey privateKey) {
+            final String protectedB64Url, final String payloadB64Url, final Signer signer) {
         final String signingString = protectedB64Url + "." + payloadB64Url;
         final byte[] signingBytes = signingString.getBytes();
+        final byte[] signatureBytes = signer.getSignature(signingBytes);
 
-        final byte[] signatureBytes = RSA.signSha256(privateKey, signingBytes);
-        return Base64.getUrlEncoder().encodeToString(signatureBytes);
+        return Base64.getEncoder().encodeToString(signatureBytes);
     }
 }
