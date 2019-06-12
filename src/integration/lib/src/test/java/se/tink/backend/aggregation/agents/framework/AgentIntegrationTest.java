@@ -43,6 +43,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticati
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -284,6 +285,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                             .constructPaymentController()
                             .orElseThrow(Exception::new);
 
+            ArrayList<PaymentRequest> paymentRequests = new ArrayList<>();
             for (Payment payment : paymentList) {
                 log.info("Executing bank transfer.");
 
@@ -295,9 +297,12 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                                 new PaymentRequest(createPaymentResponse.getPayment()));
 
                 assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
+
+                paymentRequests.add(new PaymentRequest(fetchPaymentResponse.getPayment()));
             }
 
-            PaymentListResponse paymentListResponse = paymentController.fetchMultiple(null);
+            PaymentListResponse paymentListResponse =
+                    paymentController.fetchMultiple(new PaymentListRequest(paymentRequests));
 
             for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();
