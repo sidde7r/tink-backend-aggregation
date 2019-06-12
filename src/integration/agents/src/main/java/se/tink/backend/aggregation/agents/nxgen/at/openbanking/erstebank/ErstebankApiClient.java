@@ -176,7 +176,7 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     private RequestBuilder buildRequestForIbans(final String reqPath, final List<String> ibans) {
-        final AccessEntity access = new AccessEntity();
+        final AccessEntity access = AccessEntity.builder().build();
         access.addIbans(ibans);
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
