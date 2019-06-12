@@ -14,6 +14,6 @@ public class BancoBpiAgent extends SibsBaseAgent {
 
     @Override
     public String getIntegrationName() {
-        return BancoBpiConstants.Market.INTEGRATION_NAME;
+        return BancoBpiConstants.INTEGRATION_NAME;
     }
 }
