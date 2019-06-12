@@ -29,6 +29,10 @@ agents:
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
   rabobank:
+    tink_sandbox:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+    tink:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     abn_sandbox:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
     abn:

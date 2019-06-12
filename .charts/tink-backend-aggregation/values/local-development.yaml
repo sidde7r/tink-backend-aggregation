@@ -25,6 +25,10 @@ agents:
     abn:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
   rabobank:
+    tink_sandbox:
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
+    tink:
+      redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     abn_sandbox:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
     abn:
