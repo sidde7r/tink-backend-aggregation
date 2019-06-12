@@ -42,7 +42,7 @@ public class IngBaseConfiguration implements ClientConfiguration {
     }
 
     public String getRedirectUrl() {
-        return "xxx";
+        return "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback";
     }
 
     public String getClientKeyStorePassword() {
