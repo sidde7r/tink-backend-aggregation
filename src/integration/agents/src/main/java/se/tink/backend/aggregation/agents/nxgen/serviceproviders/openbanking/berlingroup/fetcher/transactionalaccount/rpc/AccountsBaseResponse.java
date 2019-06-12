@@ -10,19 +10,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public class AccountsBaseResponse {
+public class AccountsBaseResponse implements AccountResponseToTink {
     protected List<AccountBaseEntity> accounts;
-
-    public AccountsBaseResponse() {}
 
     public AccountsBaseResponse(final List<AccountBaseEntity> accounts) {
         this.accounts = accounts;
     }
 
+    @Override
     public List<AccountBaseEntity> getAccounts() {
         return accounts;
     }
 
+    @Override
     public Collection<TransactionalAccount> toTinkAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(AccountBaseEntity::isCheckingOrSavingsType)

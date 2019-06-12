@@ -8,14 +8,16 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class AccountBaseEntity {
+public class AccountBaseEntity implements BerlinGroupAccount {
     private String resourceId;
     private String iban;
     private String currency;
@@ -27,29 +29,12 @@ public class AccountBaseEntity {
     @JsonProperty("_links")
     private AccountLinksEntity links;
 
-    public AccountBaseEntity() {}
-
-    AccountBaseEntity(
-            final String resourceId,
-            final String iban,
-            final String currency,
-            final String name,
-            final String cashAccountType,
-            final List<BalanceBaseEntity> balances,
-            final AccountLinksEntity links) {
-        this.resourceId = resourceId;
-        this.iban = iban;
-        this.currency = currency;
-        this.name = name;
-        this.cashAccountType = cashAccountType;
-        this.balances = balances;
-        this.links = links;
-    }
-
+    @Override
     public boolean isCheckingOrSavingsType() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER.translate(cashAccountType).isPresent();
     }
 
+    @Override
     public TransactionalAccount toTinkAccount() {
         return BerlinGroupConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cashAccountType)
@@ -58,38 +43,53 @@ public class AccountBaseEntity {
                 .orElse(toSavingsAccount());
     }
 
-    private boolean isCheckingType(final AccountTypes accountType) {
+    @Override
+    public boolean isCheckingType(final AccountTypes accountType) {
         return accountType == AccountTypes.CHECKING;
     }
 
-    private TransactionalAccount toCheckingAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getBalance())
-                .setAlias(name)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(name)
-                .setApiIdentifier(resourceId)
+    @Override
+    public TransactionalAccount toCheckingAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(cashAccountType)
+                                .addIdentifier(getAccountIdentifier())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
-                .build();
-    }
-
-    private TransactionalAccount toSavingsAccount() {
-        return SavingsAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(iban)
-                .setBalance(getBalance())
-                .setAlias(name)
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(name)
                 .setApiIdentifier(resourceId)
-                .putInTemporaryStorage(
-                        StorageKeys.TRANSACTIONS_URL, getTransactionLink()) // TODO: check if needed
+                .setBankIdentifier(getUniqueIdentifier())
+                .addHolderName(name)
                 .build();
     }
 
-    private Amount getBalance() {
+    @Override
+    public TransactionalAccount toSavingsAccount() {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.SAVINGS)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getUniqueIdentifier())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(cashAccountType)
+                                .addIdentifier(getAccountIdentifier())
+                                .addIdentifier(new IbanIdentifier(iban))
+                                .build())
+                .withBalance(BalanceModule.of(getBalance()))
+                .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
+                .setApiIdentifier(resourceId)
+                .setBankIdentifier(getUniqueIdentifier())
+                .addHolderName(name)
+                .build();
+    }
+
+    @Override
+    public Amount getBalance() {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
@@ -97,11 +97,13 @@ public class AccountBaseEntity {
                 .orElse(getDefaultAmount());
     }
 
-    private boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
+    @Override
+    public boolean doesMatchWithAccountCurrency(final BalanceBaseEntity balance) {
         return balance.isClosingBooked() && balance.isInCurrency(currency);
     }
 
-    private Amount getDefaultAmount() {
+    @Override
+    public Amount getDefaultAmount() {
         return new Amount(currency, 0);
     }
 
@@ -109,12 +111,29 @@ public class AccountBaseEntity {
         return iban;
     }
 
+    @Override
     public String getTransactionLink() {
-        return Optional.ofNullable(links).map(AccountLinksEntity::getTransactions).orElse("");
+        return Optional.ofNullable(links).map(AccountLinksEntity::getTransactionLink).orElse("");
     }
 
+    @Override
+    public String getUniqueIdentifier() {
+        return iban;
+    }
+
+    @Override
+    public String getAccountNumber() {
+        return iban;
+    }
+
+    @Override
+    public AccountIdentifier getAccountIdentifier() {
+        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
+    }
+
+    @Override
     public String getBalancesLink() {
-        return Optional.ofNullable(links).map(AccountLinksEntity::getBalances).orElse("");
+        return Optional.ofNullable(links).map(AccountLinksEntity::getBalanceLink).orElse("");
     }
 
     public List<BalanceBaseEntity> getBalances() {

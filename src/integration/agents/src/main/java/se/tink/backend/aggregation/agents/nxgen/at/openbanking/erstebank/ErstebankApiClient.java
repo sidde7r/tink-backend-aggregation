@@ -176,14 +176,13 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     private RequestBuilder buildRequestForIbans(final String reqPath, final List<String> ibans) {
-        final AccessEntity access = AccessEntity.builder().build();
-        access.addIbans(ibans);
         final Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, 2);
         final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
 
-        final ConsentBaseRequest consentRequest = new ConsentBaseRequest();
-        consentRequest.getAccess().addIbans(ibans);
+        final AccessEntity access = AccessEntity.builder().addIbans(ibans).build();
+        final ConsentBaseRequest consentRequest =
+                ConsentBaseRequest.builder().access(access).build();
 
         final String payload = consentRequest.toData();
         final String digest = generateDigest(payload);

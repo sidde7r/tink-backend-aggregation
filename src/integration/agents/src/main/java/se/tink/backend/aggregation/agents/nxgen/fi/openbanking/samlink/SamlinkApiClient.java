@@ -76,7 +76,7 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
 
     @Override
     public String getConsentId() {
-        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
+        final ConsentBaseRequest consentsRequest = ConsentBaseRequest.builder().buildDefault();
 
         return createRequest(new URL(getConfiguration().getBaseUrl() + Urls.CONSENT))
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)

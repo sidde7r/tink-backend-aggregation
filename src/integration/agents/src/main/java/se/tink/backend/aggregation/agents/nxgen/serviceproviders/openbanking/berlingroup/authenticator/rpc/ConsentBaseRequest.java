@@ -21,7 +21,7 @@ public class ConsentBaseRequest {
     @JsonProperty protected int frequencyPerDay;
     @JsonProperty protected boolean combinedServiceIndicator;
 
-    public ConsentBaseRequest() {
+    private ConsentBaseRequest() {
         final Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, 11);
         this.recurringIndicator = true;
@@ -75,6 +75,7 @@ public class ConsentBaseRequest {
         private Date validUntil;
         private int frequencyPerDay;
         private boolean combinedServiceIndicator;
+        private AccessEntity accessEntity = AccessEntity.builder().build();
 
         public ConsentBaseRequestBuilder() {}
 
@@ -99,9 +100,18 @@ public class ConsentBaseRequest {
             return this;
         }
 
+        public ConsentBaseRequestBuilder access(final AccessEntity accessEntity) {
+            this.accessEntity = accessEntity;
+            return this;
+        }
+
         public ConsentBaseRequest build() {
             return new ConsentBaseRequest(
                     recurringIndicator, validUntil, frequencyPerDay, combinedServiceIndicator);
+        }
+
+        public ConsentBaseRequest buildDefault() {
+            return new ConsentBaseRequest();
         }
     }
 }
