@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
+import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
@@ -36,6 +37,7 @@ public abstract class AccountIdentifier {
 
     public enum Type {
         BE("be"),
+        DK("dk"),
         SE("se"),
         SE_SHB_INTERNAL("se-internal"),
         FI("fi"),
@@ -242,6 +244,8 @@ public abstract class AccountIdentifier {
         switch (type) {
             case BE:
                 return new BelgianIdentifier(id);
+            case DK:
+                return new DanishIdentifier(id);
             case SE:
                 return new SwedishIdentifier(id);
             case SE_SHB_INTERNAL:
