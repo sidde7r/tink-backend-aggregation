@@ -11,11 +11,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class LaBanquePostaleConfiguration extends BerlinGroupConfiguration {
     @JsonProperty private String apiKey;
 
-    public String getApiKey(){
-      Preconditions.checkNotNull(
-          Strings.emptyToNull(apiKey),
-          String.format(ErrorMessages.INVALID_CONFIGURATION, "Api key"));
+    public String getApiKey() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(apiKey),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Api key"));
 
-      return apiKey;
+        return apiKey;
     }
 }

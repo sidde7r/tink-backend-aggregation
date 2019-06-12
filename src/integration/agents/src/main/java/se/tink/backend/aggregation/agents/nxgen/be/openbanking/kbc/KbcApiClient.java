@@ -7,12 +7,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -33,9 +34,9 @@ public final class KbcApiClient extends BerlinGroupApiClient {
     }
 
     @Override
-    public AccountsBaseResponse fetchAccounts() {
+    public AccountsBaseResponseBerlinGroup fetchAccounts() {
         return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
-                .get(AccountsBaseResponse.class);
+                .get(AccountsBaseResponseBerlinGroup.class);
     }
 
     @Override
@@ -94,12 +95,14 @@ public final class KbcApiClient extends BerlinGroupApiClient {
                 .toTinkToken();
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public String getConsentId() {
-        final AccessEntity accessEntity =
-                AccessEntity.builder().addIban(credentials.getField("IBAN")).build();
-        final ConsentBaseRequest consentsRequest =
-                ConsentBaseRequest.builder().access(accessEntity).build();
+        final AccessEntity accessEntity = new AccessEntityBerlinGroup();
+        accessEntity.addIban(credentials.getField("IBAN"));
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
+        consentsRequest.setAccess(accessEntity);
+
         return client.request(getConfiguration().getBaseUrl() + Urls.CONSENT)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
                 .post(ConsentBaseResponse.class)

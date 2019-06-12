@@ -4,8 +4,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-  private String href;
-  private boolean templated;
+    private String href;
+    private boolean templated;
 
-  public String getHref() {return href;}
+    public String getHref() {
+        return href;
+    }
 }

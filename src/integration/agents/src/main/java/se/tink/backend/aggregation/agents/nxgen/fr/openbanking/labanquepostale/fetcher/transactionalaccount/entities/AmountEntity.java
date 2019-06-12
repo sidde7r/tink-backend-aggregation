@@ -5,12 +5,14 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AmountEntity {
-  private String currency;
-  private String amount;
+    private String currency;
+    private String amount;
 
-  public Amount toAmount(){
-    return new Amount(currency, Double.parseDouble(amount));
-  }
+    public Amount toAmount() {
+        return new Amount(currency, Double.parseDouble(amount));
+    }
 
-  public String getCurrency(){return currency;}
+    public String getCurrency() {
+        return currency;
+    }
 }

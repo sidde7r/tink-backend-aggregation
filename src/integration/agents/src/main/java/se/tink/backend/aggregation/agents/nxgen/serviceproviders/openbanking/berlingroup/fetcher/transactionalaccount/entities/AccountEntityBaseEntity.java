@@ -17,7 +17,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class AccountBaseEntity implements BerlinGroupAccount {
+public class AccountEntityBaseEntity implements BerlinGroupAccountEntity {
     private String resourceId;
     private String iban;
     private String currency;
@@ -26,12 +26,19 @@ public class AccountBaseEntity implements BerlinGroupAccount {
 
     private List<BalanceBaseEntity> balances;
 
-    public AccountBaseEntity(){}
+    @JsonProperty("_links")
+    private AccountLinksEntity links;
 
-    public AccountBaseEntity(String resourceId, String iban, String currency, String name,
-        String cashAccountType,
-        AccountLinksEntity links,
-        List<BalanceBaseEntity> balances) {
+    public AccountEntityBaseEntity() {}
+
+    public AccountEntityBaseEntity(
+            String resourceId,
+            String iban,
+            String currency,
+            String name,
+            String cashAccountType,
+            AccountLinksEntity links,
+            List<BalanceBaseEntity> balances) {
         this.resourceId = resourceId;
         this.iban = iban;
         this.currency = currency;
@@ -40,9 +47,6 @@ public class AccountBaseEntity implements BerlinGroupAccount {
         this.balances = balances;
         this.links = links;
     }
-
-    @JsonProperty("_links")
-    private AccountLinksEntity links;
 
     @Override
     public boolean isCheckingOrSavingsType() {
@@ -73,7 +77,7 @@ public class AccountBaseEntity implements BerlinGroupAccount {
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(cashAccountType)
                                 .addIdentifier(getAccountIdentifier())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(getIdentifier())
                                 .build())
                 .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
@@ -93,7 +97,7 @@ public class AccountBaseEntity implements BerlinGroupAccount {
                                 .withAccountNumber(getAccountNumber())
                                 .withAccountName(cashAccountType)
                                 .addIdentifier(getAccountIdentifier())
-                                .addIdentifier(new IbanIdentifier(iban))
+                                .addIdentifier(getIdentifier())
                                 .build())
                 .withBalance(BalanceModule.of(getBalance()))
                 .putInTemporaryStorage(StorageKeys.TRANSACTIONS_URL, getTransactionLink())
@@ -134,6 +138,11 @@ public class AccountBaseEntity implements BerlinGroupAccount {
     @Override
     public String getUniqueIdentifier() {
         return iban;
+    }
+
+    @Override
+    public AccountIdentifier getIdentifier() {
+        return new IbanIdentifier(iban);
     }
 
     @Override

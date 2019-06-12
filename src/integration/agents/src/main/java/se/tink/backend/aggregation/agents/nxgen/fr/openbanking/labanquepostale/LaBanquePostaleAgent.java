@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LaBanquePostaleAgent
-    extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration> {
+        extends BerlinGroupAgent<LaBanquePostaleApiClient, LaBanquePostaleConfiguration> {
 
     private final String clientName;
     private final LaBanquePostaleApiClient apiClient;
@@ -44,12 +44,7 @@ public final class LaBanquePostaleAgent
     }
 
     @Override
-    protected LaBanquePostaleAuthenticator getAgentAuthenticator() {
-        return new LaBanquePostaleAuthenticator(getApiClient(), sessionStorage);
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator(){
+    protected Authenticator constructAuthenticator() {
         return new LaBanquePostaleAuthenticator(getApiClient(), sessionStorage);
     }
 
@@ -59,10 +54,9 @@ public final class LaBanquePostaleAgent
     }
 
     @Override
-    protected BerlinGroupTransactionFetcher getTransactionFetcher(){
+    protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new LaBanquePostaleTransactionFetcher(getApiClient());
     }
-
 
     @Override
     public String getClientName() {

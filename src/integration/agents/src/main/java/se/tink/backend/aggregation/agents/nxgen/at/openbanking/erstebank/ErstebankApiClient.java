@@ -17,13 +17,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestGet;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -90,10 +91,10 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
     }
 
     @Override
-    public AccountsBaseResponse fetchAccounts() {
+    public AccountsBaseResponseBerlinGroup fetchAccounts() {
         return getAccountsRequestBuilder(getConfiguration().getBaseUrl() + Urls.ACCOUNTS)
                 .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
-                .get(AccountsBaseResponse.class);
+                .get(AccountsBaseResponseBerlinGroup.class);
     }
 
     @Override
@@ -180,9 +181,11 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         calendar.add(Calendar.YEAR, 2);
         final String date = BerlinGroupUtils.formatDate(calendar.getTime(), "yyyy-MM-dd", null);
 
-        final AccessEntity access = AccessEntity.builder().addIbans(ibans).build();
-        final ConsentBaseRequest consentRequest =
-                ConsentBaseRequest.builder().access(access).build();
+        final AccessEntity access = new AccessEntityBerlinGroup();
+        access.addIbans(ibans);
+
+        final ConsentBaseRequest consentRequest = new ConsentBaseRequest();
+        consentRequest.setAccess(access);
 
         final String payload = consentRequest.toData();
         final String digest = generateDigest(payload);

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public interface AccountResponseToTink {
+public interface BerlinGroupAccountResponse {
     Collection<TransactionalAccount> toTinkAccounts();
 
     List getAccounts();

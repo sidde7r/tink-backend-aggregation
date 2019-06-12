@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.BerlinGroupAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -21,7 +22,7 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
     protected SessionStorage sessionStorage;
     private TConfiguration configuration;
 
-    public abstract AccountsBaseResponse fetchAccounts();
+    public abstract BerlinGroupAccountResponse fetchAccounts();
 
     public abstract TransactionsKeyPaginatorBaseResponse fetchTransactions(String url);
 
@@ -47,10 +48,10 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    public AccountsBaseResponse fetchAccounts(final String url, final String webApiKey) {
+    public BerlinGroupAccountResponse fetchAccounts(final String url, final String webApiKey) {
         return getAccountsRequestBuilder(url)
                 .header(HeaderKeys.WEB_API_KEY, webApiKey)
-                .get(AccountsBaseResponse.class);
+                .get(AccountsBaseResponseBerlinGroup.class);
     }
 
     public RequestBuilder getTransactionsRequestBuilder(final String url) {

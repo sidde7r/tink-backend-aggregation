@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
-public interface BerlinGroupAccount {
+public interface BerlinGroupAccountEntity {
 
     boolean isCheckingOrSavingsType();
 
@@ -28,6 +28,8 @@ public interface BerlinGroupAccount {
     String getTransactionLink();
 
     String getUniqueIdentifier();
+
+    AccountIdentifier getIdentifier();
 
     String getAccountNumber();
 

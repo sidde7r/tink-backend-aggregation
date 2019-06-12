@@ -23,13 +23,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AccessEntityBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.entity.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenBaseResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountBaseEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.AccountEntityBaseEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.entities.BalanceBaseEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -53,18 +54,18 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
     }
 
     @Override
-    public AccountsBaseResponse fetchAccounts() {
+    public AccountsBaseResponseBerlinGroup fetchAccounts() {
         final String digest = BerlinGroupUtils.calculateDigest(FormValues.EMPTY);
         final URL accountsUrl = new URL(getConfiguration().getBaseUrl() + Urls.ACCOUNTS);
-        final AccountsBaseResponse res =
+        final AccountsBaseResponseBerlinGroup res =
                 createRequestInSession(accountsUrl, digest)
                         .queryParam(QueryKeys.WITH_BALANCE, QueryValues.TRUE)
-                        .get(AccountsBaseResponse.class);
+                        .get(AccountsBaseResponseBerlinGroup.class);
 
-        final List<AccountBaseEntity> accountsWithBalances =
+        final List<AccountEntityBaseEntity> accountsWithBalances =
                 res.getAccounts().stream().map(this::fetchBalances).collect(Collectors.toList());
 
-        return new AccountsBaseResponse(accountsWithBalances);
+        return new AccountsBaseResponseBerlinGroup(accountsWithBalances);
     }
 
     public URL getAuthorizeUrl(final String state) {
@@ -86,7 +87,7 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                 .getUrl();
     }
 
-    private AccountBaseEntity fetchBalances(final AccountBaseEntity accountBaseEntity) {
+    private AccountEntityBaseEntity fetchBalances(final AccountEntityBaseEntity accountBaseEntity) {
         final String digest = BerlinGroupUtils.calculateDigest(FormValues.EMPTY);
         final URL url =
                 new URL(
@@ -94,7 +95,9 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
                                 + Urls.AIS_BASE
                                 + accountBaseEntity.getBalancesLink());
         final List<BalanceBaseEntity> balances =
-                createRequestInSession(url, digest).get(AccountBaseEntity.class).getBalances();
+                createRequestInSession(url, digest)
+                        .get(AccountEntityBaseEntity.class)
+                        .getBalances();
         accountBaseEntity.setBalances(balances);
 
         return accountBaseEntity;
@@ -142,10 +145,11 @@ public final class TriodosApiClient extends BerlinGroupApiClient<TriodosConfigur
 
     @Override
     public String getConsentId() {
-        final AccessEntity accessEntity =
-                AccessEntity.builder().addIban(credentials.getField("IBAN")).build();
-        final ConsentBaseRequest consentsRequest =
-                ConsentBaseRequest.builder().access(accessEntity).buildDefault();
+        final AccessEntity accessEntity = new AccessEntityBerlinGroup();
+        accessEntity.addIban(credentials.getField("IBAN"));
+        final ConsentBaseRequest consentsRequest = new ConsentBaseRequest();
+        consentsRequest.setAccess(accessEntity);
+
         final String digest = BerlinGroupUtils.calculateDigest(consentsRequest.toData());
         if (StringUtils.isNotEmpty(
                 sessionStorage.get(BerlinGroupConstants.StorageKeys.CONSENT_ID))) {

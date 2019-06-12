@@ -17,7 +17,8 @@ public class BalanceBaseEntity {
     }
 
     public boolean isClosingBooked() {
-        return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED) || balanceType.equalsIgnoreCase(Accounts.CLBD);
+        return balanceType.equalsIgnoreCase(Accounts.BALANCE_CLOSING_BOOKED)
+                || balanceType.equalsIgnoreCase(Accounts.CLBD);
     }
 
     public boolean isInCurrency(final String currency) {
