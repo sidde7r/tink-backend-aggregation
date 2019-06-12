@@ -26,6 +26,8 @@ public final class RaiffeisenConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String MAPPING =
+                "Cannot map Ica payment status: %s to Tink payment status.";
     }
 
     public static class Urls {
@@ -36,6 +38,8 @@ public final class RaiffeisenConstants {
         public static final URL ACCOUNTS = new URL(BASE_API_URL + Endpoints.ACCOUNTS);
         public static final URL CONSENTS = new URL(BASE_API_URL + Endpoints.CONSENTS);
         public static final URL TRANSACTIONS = new URL(BASE_API_URL + Endpoints.TRANSACTIONS);
+        public static final URL INITIATE_PAYMENT = new URL(BASE_API_URL + Endpoints.INITIATION);
+        public static final URL GET_PAYMENT = new URL(BASE_API_URL + Endpoints.GET_PAYMENT);
     }
 
     public static class Endpoints {
@@ -44,6 +48,9 @@ public final class RaiffeisenConstants {
         public static final String CONSENTS = "/psd2-xs2a/rest/v1/consents";
         public static final String TRANSACTIONS =
                 "/psd2-xs2a/rest/v1/accounts/{account-id}/transactions";
+        public static final String INITIATION = "/psd2-xs2a/rest/v1/payments/sepa-credit-transfers";
+        public static final String GET_PAYMENT =
+                "/psd2-xs2a/rest/v1/payments/sepa-credit-transfers/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -67,6 +74,7 @@ public final class RaiffeisenConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
         public static final String AUTHORIZATION = "Authorization";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class FormKeys {
@@ -109,5 +117,11 @@ public final class RaiffeisenConstants {
         public static final String TOKEN_PREFIX = "Bearer ";
         public static final Object X_REQUEST_ID =
                 "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"; // Constant for sandbox
+        public static final String PSU_IP_ADDRESS = "192.168.65.37";
+    }
+
+    public static class IdTags {
+
+        public static final String PAYMENT_ID = "paymentId";
     }
 }
