@@ -23,7 +23,6 @@ public class TransactionEntity {
                 .setDate(bookingDate)
                 .setAmount(transactionAmount.toAmount())
                 .setPending(false)
-                .setExternalId(transactionId)
                 .build();
     }
 
@@ -33,7 +32,6 @@ public class TransactionEntity {
                 .setDate(bookingDate)
                 .setAmount(transactionAmount.toAmount())
                 .setPending(true)
-                .setExternalId(transactionId)
                 .build();
     }
 }
