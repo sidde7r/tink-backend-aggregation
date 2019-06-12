@@ -11,9 +11,9 @@ public final class PayloadEntity {
     public static PayloadEntity create(
             final int exp, final String email, final String organization) {
         final PayloadEntity entity = new PayloadEntity();
-        entity.ptc_email = "sebastian.olsson@tink.se";
-        entity.exp = 1559920641;
-        entity.organization = "Tink AB";
+        entity.ptc_email = email;
+        entity.exp = exp;
+        entity.organization = organization;
         return entity;
     }
 }
