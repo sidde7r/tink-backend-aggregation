@@ -13,6 +13,13 @@ import java.security.cert.CertificateFactory;
 import java.util.Base64;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMException;
 import org.bouncycastle.openssl.PEMParser;
@@ -25,14 +32,13 @@ import org.bouncycastle.pkcs.PKCSException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.Signer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Cli;
+import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Header;
+import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Jwt;
+import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Url;
 import se.tink.backend.aggregation.register.nl.rabobank.rpc.JwsRequest;
 
 public final class RabobankRegisterCommand {
-
-    // Client ID used specifically for enrollment:
-    // https://developer.rabobank.nl/reference/third-party-providers/1-0-0
-    private static final String ENROLLMENT_CLIENT_ID = "64f38624-718d-4732-b579-b8979071fcb0";
 
     private static PrivateKey readPemPrivateKey(final String path) {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -92,7 +98,54 @@ public final class RabobankRegisterCommand {
         return Base64.getEncoder().encodeToString(certificateBytes);
     }
 
+    private static Options createOptions() {
+
+        final Option qsealcPathOption =
+                Option.builder("c")
+                        .longOpt("qsealc-pem-path")
+                        .required()
+                        .hasArg()
+                        .argName("Path")
+                        .desc("Path to your QSeal certificate PEM file.")
+                        .build();
+
+        final Option emailOption =
+                Option.builder("e")
+                        .longOpt("email")
+                        .required()
+                        .hasArg()
+                        .argName("Email")
+                        .desc("Email address and username of the production account to be created.")
+                        .build();
+
+        final Options options = new Options();
+
+        options.addOption(qsealcPathOption);
+        options.addOption(emailOption);
+
+        return options;
+    }
+
     public static void main(final String[] args) {
+
+        final Options options = createOptions();
+
+        final CommandLineParser parser = new DefaultParser();
+        final HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd = null;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            formatter.printHelp(
+                    "bazel run //src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/rabobank --",
+                    options);
+            System.exit(1);
+        }
+
+        final String qsealcCertificatePath = cmd.getOptionValue(Cli.CERTIFICATE_PATH);
+        final String email = cmd.getOptionValue(Cli.EMAIL);
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
@@ -100,25 +153,20 @@ public final class RabobankRegisterCommand {
 
         client.setDebugOutput(true);
 
-        final URL url =
-                new URL("https://api.rabobank.nl/openapi/open-banking/third-party-providers");
-
-        final String qsealcCertificatePath =
-                "src/commands/psd2-register/src/main/java/se/tink/backend/aggregation/register/nl/rabobank/resources/tink_qsealc.pem";
-
         final String qsealcB64 = readPemCertificateAsB64(qsealcCertificatePath);
-        final int exp = 1559920641;
-        final String email = "sebastian.olsson@tink.se";
-        final String organization = "Tink AB";
+
+        // Expire after 6 hours
+        final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
         final Signer jwsSigner = new QsealcEidasProxySigner(client);
 
-        final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
+        final JwsRequest body =
+                JwsRequest.create(qsealcB64, jwsSigner, exp, email, Jwt.ORGANIZATION);
 
-        client.request(url)
+        client.request(Url.REGISTER)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_TYPE)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_TYPE)
-                .header("x-ibm-client-id", ENROLLMENT_CLIENT_ID)
+                .header(Header.ENROLLMENT_CLIENT_ID_KEY, Header.ENROLLMENT_CLIENT_ID)
                 .body(body)
                 .post();
     }
