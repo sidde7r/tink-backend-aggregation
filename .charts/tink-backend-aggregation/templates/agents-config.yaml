@@ -126,7 +126,7 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: "RABOBANK_CERTIFICATE_PASSWORD_ABN_TAG"
             qsealc: "RABOBANK_QSEALC_ABN_TAG"
-          abn_sandbox:
+          abn-sandbox:
             clientId: "RABOBANK_CLIENT_ID_ABN_SANDBOX_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_SANDBOX_TAG"
             redirectUrl: "{{ $agentsConfig.rabobank.abn_sandbox.redirectUrl }}"
