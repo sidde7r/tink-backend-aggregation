@@ -24,6 +24,5 @@ public class BelfiusAuthenticator implements PasswordAuthenticator {
 
     @Override
     public void authenticate(String username, String password)
-            throws AuthenticationException, AuthorizationException {
-    }
+            throws AuthenticationException, AuthorizationException {}
 }

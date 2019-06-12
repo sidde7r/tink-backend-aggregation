@@ -7,11 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public final class BelfiusConstants {
 
     public static final String INTEGRATION_NAME = "belfius";
-
-    private BelfiusConstants() {
-        throw new AssertionError();
-    }
-
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
@@ -19,6 +14,10 @@ public final class BelfiusConstants {
                     .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
                     .ignoreKeys("some_string4_the_integratee_uses")
                     .build();
+
+    private BelfiusConstants() {
+        throw new AssertionError();
+    }
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
