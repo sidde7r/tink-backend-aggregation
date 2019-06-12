@@ -36,7 +36,6 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
 
         apiClient = new SibsBaseApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-        client.setDebugOutput(true);
     }
 
     protected abstract String getIntegrationName();
