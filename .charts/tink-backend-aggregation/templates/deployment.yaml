@@ -386,6 +386,12 @@ spec:
               name: aggregation-secrets
               key: rabobank-certificate-password-abn
               optional: true
+        - name: RABOBANK_QSEALC_ABN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-qsealc-abn
+              optional: true
         {{- end }}
       containers:
       - name: tink-backend-aggregation
