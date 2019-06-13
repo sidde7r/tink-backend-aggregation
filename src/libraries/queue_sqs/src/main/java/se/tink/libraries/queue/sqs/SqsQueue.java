@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
@@ -52,16 +51,16 @@ public class SqsQueue {
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private boolean isQueueCreated(CreateQueueRequest createRequest) {
+    private void retryUntilCreated(CreateQueueRequest createRequest) {
         do {
             try {
                 sqs.createQueue(createRequest);
-                return true;
+                break;
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
                     LOG.warn("Queue already exists.", e);
                 }
-                return true;
+                break;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 long backoffTime = calculateBackoffTime();
@@ -129,11 +128,11 @@ public class SqsQueue {
                                         configuration.getAwsSecretKey()));
 
                 sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
-                isQueueCreated(createRequest);
+                retryUntilCreated(createRequest);
             } else {
                 credentialsProvider = null;
                 sqs = amazonSQSClientBuilder.build();
-                isQueueCreated(createRequest);
+                retryUntilCreated(createRequest);
             }
         }
 
