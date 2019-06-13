@@ -31,22 +31,14 @@ public class SqsQueue {
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
+    private final SqsQueueConfiguration configuration;
     private final MetricRegistry metricRegistry;
     private final AWSStaticCredentialsProvider credentialsProvider;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
+        this.configuration = configuration;
         this.metricRegistry = metricRegistry;
-
-        if (!configuration.isEnabled()
-                || Objects.isNull(configuration.getUrl())
-                || Objects.isNull(configuration.getRegion())) {
-            this.isAvailable = false;
-            this.url = "";
-            this.sqs = null;
-            this.credentialsProvider = null;
-            return;
-        }
 
         // Enable long polling when creating a queue
         CreateQueueRequest createRequest =
@@ -152,10 +144,26 @@ public class SqsQueue {
     }
 
     public String getUrl() {
+        if (!isAvailable()) {
+            return "";
+        }
+
         return url;
     }
 
     public boolean isAvailable() {
+        if (!configuration.isEnabled()) {
+            return false;
+        }
+
+        if (Objects.isNull(configuration.getUrl())) {
+            return false;
+        }
+
+        if (Objects.isNull(configuration.getRegion())) {
+            return false;
+        }
+
         return isAvailable;
     }
 }
