@@ -47,8 +47,8 @@ public class InternationalPisConfig implements UKPisConfig {
     }
 
     @Override
-    public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest payment) {
-        String consentId = getConsentId(payment);
+    public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest paymentRequest) {
+        String consentId = getConsentId(paymentRequest);
 
         return client.getInternationalFundsConfirmation(consentId, FundsConfirmationResponse.class);
     }

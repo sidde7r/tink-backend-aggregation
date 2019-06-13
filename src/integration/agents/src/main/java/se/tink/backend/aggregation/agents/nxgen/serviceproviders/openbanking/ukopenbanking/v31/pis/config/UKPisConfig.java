@@ -6,14 +6,16 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 public interface UKPisConfig {
-    PaymentResponse createPaymentConsent(PaymentRequest payment) throws PaymentException;
+    PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) throws PaymentException;
 
-    PaymentResponse fetchPayment(PaymentRequest payment) throws PaymentException;
+    PaymentResponse fetchPayment(PaymentRequest paymentRequest) throws PaymentException;
 
-    FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest payment)
+    FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest paymentRequest)
             throws PaymentException;
 
     PaymentResponse executePayment(
-            PaymentRequest payment, String endToEndIdentification, String instructionIdentification)
+            PaymentRequest paymentRequest,
+            String endToEndIdentification,
+            String instructionIdentification)
             throws PaymentException;
 }
