@@ -42,7 +42,6 @@ public class TransactionEntity {
     public Transaction constructCreditCardTransaction() {
         return CreditCardTransaction.builder()
                 .setPending(Transactions.OPEN.equalsIgnoreCase(movementStatus))
-                .setExternalId(String.valueOf(transactionID))
                 .setDate(transactionPostedDate)
                 .setDescription(accountLevelTransactionDescription)
                 .setAmount(new Amount(billingCurrency, billingAmount))

@@ -28,7 +28,6 @@ public class BookedEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setExternalId(transactionId)
                 .setDescription(remittanceInformationStructured)
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())

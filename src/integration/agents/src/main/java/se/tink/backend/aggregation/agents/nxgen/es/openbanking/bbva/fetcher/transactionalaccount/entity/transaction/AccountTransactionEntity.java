@@ -26,7 +26,6 @@ public class AccountTransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setExternalId(id)
                 .setAmount(new Amount(currency, amount))
                 .setDate(valueDate)
                 .setDescription(description)

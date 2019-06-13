@@ -56,7 +56,6 @@ public class TransactionEntity {
     private Transaction constructCreditCardTransaction() {
         return CreditCardTransaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-                .setExternalId(accountId)
                 .setDate(getBookedDate())
                 .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
                 .build();
@@ -65,7 +64,6 @@ public class TransactionEntity {
     private Transaction constructTransactionalAccountTransaction() {
         return Transaction.builder()
                 .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-                .setExternalId(accountId)
                 .setDate(getBookedDate())
                 .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
                 .build();
