@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Base64;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
+import se.tink.backend.aggregation.agents.utils.crypto.Certificate;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -50,7 +51,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonIgnore
     public String getQsealcSerial() {
         Preconditions.checkNotNull(qsealcPem);
-        return RabobankUtils.getX509SerialNumber(qsealcPem);
+        return Certificate.getX509SerialNumber(qsealcPem);
     }
 
     @JsonIgnore
