@@ -31,16 +31,12 @@ public class SqsQueue {
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
-    private final Counter produced;
-    private final Counter consumed;
-    private final Counter rejected;
+    private final MetricRegistry metricRegistry;
     private final AWSStaticCredentialsProvider credentialsProvider;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
-        this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
-        this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
-        this.rejected = metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected"));
+        this.metricRegistry = metricRegistry;
 
         if (!configuration.isEnabled()
                 || Objects.isNull(configuration.getUrl())
@@ -140,15 +136,15 @@ public class SqsQueue {
     }
 
     public void consumed() {
-        this.consumed.inc();
+        metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed")).inc();
     }
 
     public void produced() {
-        this.produced.inc();
+        metricRegistry.meter(METRIC_ID_BASE.label("event", "produced")).inc();
     }
 
     public void rejected() {
-        this.rejected.inc();
+        metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected")).inc();
     }
 
     public AmazonSQS getSqs() {
