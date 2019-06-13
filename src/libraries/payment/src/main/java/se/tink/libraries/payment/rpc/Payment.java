@@ -1,11 +1,14 @@
 package se.tink.libraries.payment.rpc;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
+import org.iban4j.IbanUtil;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
@@ -23,6 +26,11 @@ public class Payment {
     private String currency;
     private Reference reference;
     private TemporaryStorage temporaryStorage;
+
+    private static ImmutableList<String> sepaCountriesWithEur =
+            ImmutableList.of(
+                    "AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "IE", "IT", "LT", "LU",
+                    "LV", "MT", "NL", "PT", "SI", "SK");
 
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
@@ -166,6 +174,17 @@ public class Payment {
 
         public Payment build() {
             return new Payment(this);
+        }
+
+        public boolean isSepa() {
+            if (debtor.getAccountIdentifierType() == Type.IBAN
+                    && creditor.getAccountIdentifierType() == Type.IBAN) {
+                if (sepaCountriesWithEur.contains(
+                                IbanUtil.getCountryCode(debtor.getAccountNumber()))
+                        && sepaCountriesWithEur.contains(
+                                IbanUtil.getCountryCode(creditor.getAccountNumber()))) return true;
+            }
+            return false;
         }
     }
 }
