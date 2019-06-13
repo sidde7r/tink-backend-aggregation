@@ -37,7 +37,7 @@ agents:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
   rabobank:
     tink_sandbox:
-      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
     abn_sandbox:
