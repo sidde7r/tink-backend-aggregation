@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
@@ -44,7 +43,9 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
 
-        return URLs.AUTHORIZE_RABOBANK
+        return configuration
+                .getUrls()
+                .getAuthorizeUrl()
                 .queryParam(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
                 .queryParam(QueryParams.REDIRECT_URI, redirectUri)
                 .queryParam(QueryParams.CLIENT_ID, clientId)

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.au
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.session.RabobankSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -29,6 +28,7 @@ public class RabobankAgent extends NextGenerationAgent {
 
     private final RabobankApiClient apiClient;
     private final String clientName;
+    private RabobankConfiguration rabobankConfiguration;
 
     public RabobankAgent(
             final CredentialsRequest request,
@@ -38,21 +38,29 @@ public class RabobankAgent extends NextGenerationAgent {
 
         apiClient = new RabobankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
+
+        // Necessary to circumvent HTTP 413: Payload too large
+        client.disableSignatureRequestHeader();
     }
 
     @Override
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
+        rabobankConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                RabobankConstants.Market.INTEGRATION_NAME,
+                                clientName,
+                                RabobankConfiguration.class)
+                        .orElseThrow(
+                                () -> new IllegalStateException("Rabobank configuration missing."));
+        apiClient.setConfiguration(rabobankConfiguration);
 
-        final RabobankConfiguration rabobankConfiguration = getClientConfiguration();
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
 
         client.setSslClientCertificate(p12, password);
-    }
-
-    public RabobankConfiguration getClientConfiguration() {
-        return new RabobankConfiguration();
     }
 
     @Override
@@ -62,7 +70,7 @@ public class RabobankAgent extends NextGenerationAgent {
                         persistentStorage,
                         supplementalInformationHelper,
                         new RabobankAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                                apiClient, persistentStorage, rabobankConfiguration));
 
         return new AutoAuthenticationController(
                 request,
@@ -110,7 +118,7 @@ public class RabobankAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new RabobankSessionHandler();
+        return SessionHandler.alwaysFail();
     }
 
     @Override

@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.URLs;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
@@ -23,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -38,19 +37,15 @@ public class RabobankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private RabobankConfiguration configuration;
+    private RabobankConfiguration rabobankConfiguration;
 
     RabobankApiClient(final TinkHttpClient client, final PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
     }
 
-    public RabobankConfiguration getConfiguration() {
-        return new RabobankConfiguration();
-    }
-
-    public void setConfiguration(RabobankConfiguration configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(final RabobankConfiguration configuration) {
+        this.rabobankConfiguration = configuration;
     }
 
     public TokenResponse exchangeAuthorizationCode(final ExchangeAuthorizationCodeRequest request) {
@@ -62,10 +57,10 @@ public class RabobankApiClient {
     }
 
     private TokenResponse post(final AbstractForm request) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientSecret = getConfiguration().getClientSecret();
+        final String clientId = rabobankConfiguration.getClientId();
+        final String clientSecret = rabobankConfiguration.getClientSecret();
 
-        return client.request(URLs.OAUTH2_TOKEN_RABOBANK)
+        return client.request(rabobankConfiguration.getUrls().getOauth2TokenUrl())
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addBasicAuth(clientId, clientSecret)
@@ -78,8 +73,8 @@ public class RabobankApiClient {
             final String digest,
             final String signatureHeader,
             final String date) {
-        final String clientId = getConfiguration().getClientId();
-        final String clientCert = getConfiguration().getClientCert();
+        final String clientId = rabobankConfiguration.getClientId();
+        final String clientCert = rabobankConfiguration.getQsealCert();
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         return client.request(url)
@@ -99,7 +94,12 @@ public class RabobankApiClient {
         final String date = RabobankUtils.getDate();
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
-        return buildRequest(URLs.AIS_RABOBANK_ACCOUNTS, uuid, digest, signatureHeader, date)
+        return buildRequest(
+                        rabobankConfiguration.getUrls().getAisAccountsUrl(),
+                        uuid,
+                        digest,
+                        signatureHeader,
+                        date)
                 .get(TransactionalAccountsResponse.class);
     }
 
@@ -109,13 +109,18 @@ public class RabobankApiClient {
         final String date = RabobankUtils.getDate();
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
 
-        return buildRequest(URLs.buildBalanceUrl(accountId), uuid, digest, signatureHeader, date)
+        return buildRequest(
+                        rabobankConfiguration.getUrls().buildBalanceUrl(accountId),
+                        uuid,
+                        digest,
+                        signatureHeader,
+                        date)
                 .get(BalanceResponse.class);
     }
 
     private PrivateKey getPrivateKey() {
-        final byte[] pkcs12 = getConfiguration().getClientSSLP12bytes();
-        final String clientSSLKeyPassword = getConfiguration().getClientSSLKeyPassword();
+        final byte[] pkcs12 = rabobankConfiguration.getClientSSLP12bytes();
+        final String clientSSLKeyPassword = rabobankConfiguration.getClientSSLKeyPassword();
 
         return RabobankUtils.getPrivateKey(pkcs12, clientSSLKeyPassword);
     }
@@ -130,7 +135,7 @@ public class RabobankApiClient {
         final String accountId = account.getFromTemporaryStorage(StorageKey.RESOURCE_ID);
         final SimpleDateFormat sdf =
                 new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
-        final URL url = URLs.buildTransactionsUrl(accountId);
+        final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
         final List<String> bookingStatuses = Arrays.asList(QueryValues.BOTH, QueryValues.BOOKED);
 
@@ -156,11 +161,15 @@ public class RabobankApiClient {
     private String buildSignatureHeader(
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
-        final byte[] signatureBytes = RSA.signSha512(getPrivateKey(), signingString.getBytes());
+
+        final byte[] signatureBytes =
+                new QsealcEidasProxySigner(new TinkHttpClient())
+                        .getSignature(signingString.getBytes());
+
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
-        final String clientCertSerial = getConfiguration().getClientCertSerial();
+        final String clientCertSerial = rabobankConfiguration.getQsealcSerial();
 
         return RabobankUtils.createSignatureHeader(
-                clientCertSerial, Signature.RSA_SHA_512, b64Signature, Signature.HEADERS_VALUE);
+                clientCertSerial, Signature.RSA_SHA_256, b64Signature, Signature.HEADERS_VALUE);
     }
 }

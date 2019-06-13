@@ -126,11 +126,19 @@ agentsServiceConfiguration:
         clientSecret: "dummySecret"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     rabobank:
+      tink-sandbox:
+        clientId: "dummyClientId"
+        clientSecret: "dummyClientSecret"
+        redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
+        baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
+        clientSSLP12: "dummyCertificateBase64"
+        clientSSLKeyPassword: "dummyPassword"
       tink:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        clientSSLP12: "dummyP12"
+        clientId: "dummyClientId"
+        clientSecret: "dummyClientSecret"
+        redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
+        baseUrl: "https://api.rabobank.nl/openapi"
+        clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: "dummyPassword"
     abnamro:
       tink:
