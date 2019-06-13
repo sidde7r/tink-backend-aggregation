@@ -164,6 +164,8 @@ public class SqsQueue {
             return false;
         }
 
+        getSqs();
+
         return true;
     }
 }
