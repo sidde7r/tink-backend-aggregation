@@ -29,7 +29,6 @@ public class SqsQueue {
     private static final String LOCAL_REGION = "local";
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final AmazonSQS sqs;
-    private final boolean isAvailable;
     private final String url;
     private final SqsQueueConfiguration configuration;
     private final MetricRegistry metricRegistry;
@@ -50,6 +49,7 @@ public class SqsQueue {
                                 new AwsClientBuilder.EndpointConfiguration(
                                         configuration.getUrl(), configuration.getRegion()));
 
+        boolean isAvailable;
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
@@ -61,13 +61,13 @@ public class SqsQueue {
 
             this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
 
-            this.isAvailable = isQueueCreated(createRequest);
-            this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
+            isAvailable = isQueueCreated(createRequest);
+            this.url = isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
             this.credentialsProvider = null;
             this.sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
-            this.isAvailable = isQueueCreated(createRequest);
+            isQueueCreated(createRequest);
         }
     }
 
@@ -164,6 +164,6 @@ public class SqsQueue {
             return false;
         }
 
-        return isAvailable;
+        return true;
     }
 }
