@@ -34,6 +34,7 @@ public class SqsQueue {
     private final Counter produced;
     private final Counter consumed;
     private final Counter rejected;
+    private final AWSStaticCredentialsProvider credentialsProvider;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
@@ -47,6 +48,7 @@ public class SqsQueue {
             this.isAvailable = false;
             this.url = "";
             this.sqs = null;
+            this.credentialsProvider = null;
             return;
         }
 
@@ -63,18 +65,18 @@ public class SqsQueue {
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
-            this.sqs =
-                    amazonSQSClientBuilder
-                            .withCredentials(
-                                    new AWSStaticCredentialsProvider(
-                                            new BasicAWSCredentials(
-                                                    configuration.getAwsAccessKeyId(),
-                                                    configuration.getAwsSecretKey())))
-                            .build();
+            this.credentialsProvider =
+                    new AWSStaticCredentialsProvider(
+                            new BasicAWSCredentials(
+                                    configuration.getAwsAccessKeyId(),
+                                    configuration.getAwsSecretKey()));
+
+            this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
 
             this.isAvailable = isQueueCreated(createRequest);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
+            this.credentialsProvider = null;
             this.sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
             this.isAvailable = isQueueCreated(createRequest);
@@ -113,6 +115,13 @@ public class SqsQueue {
                         e);
 
                 Uninterruptibles.sleepUninterruptibly(backoffTime, TimeUnit.MILLISECONDS);
+
+                // Try to refresh the credentials
+                if (Objects.isNull(credentialsProvider)) {
+                    continue;
+                }
+
+                credentialsProvider.refresh();
             }
         } while (true);
     }
