@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public class IdentityData {
     private String name;
     private String ssn;
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dateOfBirth;
