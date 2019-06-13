@@ -65,6 +65,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -80,6 +81,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -95,6 +97,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -110,6 +113,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -125,6 +129,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -140,6 +145,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -155,6 +161,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -170,6 +177,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -185,6 +193,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
        },
       {
@@ -200,6 +209,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -215,6 +225,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -230,6 +241,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -245,6 +257,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -260,6 +273,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         },
       {
@@ -275,6 +289,7 @@
             "transactional": true,
             "payload": "tink",
             "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
             "fields": []
         }
     ]
