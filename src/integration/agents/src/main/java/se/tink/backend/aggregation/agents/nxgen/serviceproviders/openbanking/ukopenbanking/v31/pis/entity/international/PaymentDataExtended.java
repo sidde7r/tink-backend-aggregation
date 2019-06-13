@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.payment.rpc.Payment;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -21,7 +21,8 @@ public class PaymentDataExtended {
     private String expectedSettlementDateTime;
     private MultiAuthorisation multiAuthorisation;
 
-    public Payment toTinkPayment() {
-        return initiation.toTinkPayment(status, expectedExecutionDateTime, internationalPaymentId);
+    public PaymentResponse toTinkPaymentResponse() {
+        return initiation.toTinkPaymentResponse(
+                status, expectedExecutionDateTime, internationalPaymentId);
     }
 }

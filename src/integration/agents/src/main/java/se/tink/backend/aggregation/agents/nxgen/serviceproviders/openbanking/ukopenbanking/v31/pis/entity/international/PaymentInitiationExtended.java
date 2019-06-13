@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.InstructedAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.domestic.RemittanceInformation;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -29,16 +31,20 @@ public class PaymentInitiationExtended {
     private Creditor creditor;
     private InstructedAmount instructedAmount;
 
-    public Payment toTinkPayment(
+    public PaymentResponse toTinkPaymentResponse(
             String status, String expectedExecutionDateTime, String internationalPaymentId) {
-        return new Payment.Builder()
-                .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
-                .withCreditor(creditorAccount.toCreditor())
-                .withAmount(instructedAmount.toTinkAmount())
-                .withExecutionDate(parseDate(expectedExecutionDateTime))
-                .putInTemporaryStorage(
-                        UkOpenBankingV31Constants.Storage.PAYMENT_ID, internationalPaymentId)
-                .build();
+        Payment payment =
+                new Payment.Builder()
+                        .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
+                        .withCreditor(creditorAccount.toCreditor())
+                        .withAmount(instructedAmount.toTinkAmount())
+                        .withExecutionDate(parseDate(expectedExecutionDateTime))
+                        .build();
+
+        Storage storage = new Storage();
+        storage.put(UkOpenBankingV31Constants.Storage.PAYMENT_ID, internationalPaymentId);
+
+        return new PaymentResponse(payment, storage);
     }
 
     private LocalDate parseDate(String expectedExecutionDateTime) {

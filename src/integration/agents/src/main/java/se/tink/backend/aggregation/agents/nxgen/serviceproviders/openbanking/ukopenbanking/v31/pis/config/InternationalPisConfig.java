@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
@@ -9,7 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.InternationalPaymentConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.InternationalPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.InternationalPaymentResponse;
-import se.tink.libraries.payment.rpc.Payment;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 public class InternationalPisConfig implements UKPisConfig {
 
@@ -20,25 +20,26 @@ public class InternationalPisConfig implements UKPisConfig {
     }
 
     @Override
-    public Payment createPaymentConsent(Payment payment) throws PaymentException {
+    public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
         return client.createInternationalPaymentConsent(
-                        new InternationalPaymentConsentRequest(payment),
+                        new InternationalPaymentConsentRequest(paymentRequest.getPayment()),
                         InternationalPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
     @Override
-    public Payment fetchPayment(Payment payment) throws PaymentException {
-        // If payment has already been executed, fetch payment. Otherwise fetch consent
+    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+        // If paymentRequest has already been executed, fetch paymentRequest. Otherwise fetch
+        // consent
         String paymentId =
-                payment.getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
+                paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
 
         if (!Strings.isNullOrEmpty(paymentId)) {
             return client.getInternationalPayment(paymentId, InternationalPaymentResponse.class)
-                    .toTinkPayment();
+                    .toTinkPaymentResponse();
         }
 
-        String consentId = getConsentId(payment);
+        String consentId = getConsentId(paymentRequest);
 
         return client.getInternationalPaymentConsent(
                         consentId, InternationalPaymentConsentResponse.class)
@@ -46,30 +47,33 @@ public class InternationalPisConfig implements UKPisConfig {
     }
 
     @Override
-    public FundsConfirmationResponse fetchFundsConfirmation(Payment payment)
-            throws PaymentException {
+    public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest payment) {
         String consentId = getConsentId(payment);
 
         return client.getInternationalFundsConfirmation(consentId, FundsConfirmationResponse.class);
     }
 
     @Override
-    public Payment executePayment(
-            Payment payment, String endToEndIdentification, String instructionIdentification)
-            throws PaymentException {
-        String consentId = getConsentId(payment);
+    public PaymentResponse executePayment(
+            PaymentRequest paymentRequest,
+            String endToEndIdentification,
+            String instructionIdentification) {
+        String consentId = getConsentId(paymentRequest);
 
         InternationalPaymentRequest request =
                 new InternationalPaymentRequest(
-                        payment, consentId, endToEndIdentification, instructionIdentification);
+                        paymentRequest.getPayment(),
+                        consentId,
+                        endToEndIdentification,
+                        instructionIdentification);
 
         return client.executeInternationalPayment(request, InternationalPaymentResponse.class)
-                .toTinkPayment();
+                .toTinkPaymentResponse();
     }
 
-    private String getConsentId(Payment payment) {
+    private String getConsentId(PaymentRequest paymentRequest) {
         String consentId =
-                payment.getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.CONSENT_ID);
+                paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.CONSENT_ID);
 
         if (Strings.isNullOrEmpty(consentId)) {
             throw new IllegalStateException("consentId cannot be null or empty!");

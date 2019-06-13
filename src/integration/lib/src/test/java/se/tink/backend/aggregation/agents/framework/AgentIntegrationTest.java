@@ -307,7 +307,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
             for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();
-                Storage paymentStorage = Storage.copyOf(paymentResponse.getPaymentStorage());
+                Storage paymentStorage = Storage.copyOf(paymentResponse.getStorage());
 
                 PaymentMultiStepRequest paymentMultiStepRequest =
                         new PaymentMultiStepRequest(

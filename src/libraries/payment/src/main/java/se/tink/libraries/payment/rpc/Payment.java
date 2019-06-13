@@ -1,12 +1,9 @@
 package se.tink.libraries.payment.rpc;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableList;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.UUID;
 import org.iban4j.IbanUtil;
-import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.amount.Amount;
@@ -15,6 +12,10 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public class Payment {
+    private static ImmutableList<String> sepaCountriesWithEur =
+            ImmutableList.of(
+                    "AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "IE", "IT", "LT", "LU",
+                    "LV", "MT", "NL", "PT", "SI", "SK");
     private Creditor creditor;
     private Debtor debtor;
     private Amount amount;
@@ -25,12 +26,6 @@ public class Payment {
     private PaymentType type;
     private String currency;
     private Reference reference;
-    private TemporaryStorage temporaryStorage;
-
-    private static ImmutableList<String> sepaCountriesWithEur =
-            ImmutableList.of(
-                    "AT", "BE", "CY", "DE", "EE", "ES", "FI", "FR", "GR", "IE", "IT", "LT", "LU",
-                    "LV", "MT", "NL", "PT", "SI", "SK");
 
     private Payment(Builder builder) {
         this.creditor = builder.creditor;
@@ -43,7 +38,6 @@ public class Payment {
         this.uniqueId = builder.uniqueId;
         this.reference = builder.reference;
         this.id = UUID.randomUUID();
-        this.temporaryStorage = builder.getTransientStorage();
     }
 
     public String getCurrency() {
@@ -74,6 +68,10 @@ public class Payment {
         return status;
     }
 
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
+    }
+
     public String getUniqueId() {
         return uniqueId;
     }
@@ -86,24 +84,18 @@ public class Payment {
         return reference;
     }
 
-    public void setStatus(PaymentStatus status) {
-        this.status = status;
-    }
-
     public Pair<AccountIdentifier.Type, AccountIdentifier.Type> getCreditorAndDebtorAccountType() {
         return new Pair<>(debtor.getAccountIdentifierType(), creditor.getAccountIdentifierType());
     }
 
-    public String getFromTemporaryStorage(String key) {
-        return temporaryStorage.get(key);
-    }
-
-    public <T> Optional<T> getFromTemporaryStorage(String key, Class<T> valueType) {
-        return temporaryStorage.get(key, valueType);
-    }
-
-    public <T> Optional<T> getFromTemporaryStorage(String key, TypeReference<T> valueType) {
-        return temporaryStorage.get(key, valueType);
+    public boolean isSepa() {
+        if (debtor.getAccountIdentifierType() == Type.IBAN
+                && creditor.getAccountIdentifierType() == Type.IBAN) {
+            if (sepaCountriesWithEur.contains(IbanUtil.getCountryCode(debtor.getAccountNumber()))
+                    && sepaCountriesWithEur.contains(
+                            IbanUtil.getCountryCode(creditor.getAccountNumber()))) return true;
+        }
+        return false;
     }
 
     public static class Builder {
@@ -116,7 +108,6 @@ public class Payment {
         private PaymentType type = PaymentType.UNDEFINED;
         private String currency;
         private Reference reference;
-        protected final TemporaryStorage temporaryStorage = new TemporaryStorage();
 
         public Builder withCreditor(Creditor creditor) {
             this.creditor = creditor;
@@ -163,28 +154,8 @@ public class Payment {
             return this;
         }
 
-        public <K> Builder putInTemporaryStorage(String key, K value) {
-            temporaryStorage.put(key, value);
-            return this;
-        }
-
-        private TemporaryStorage getTransientStorage() {
-            return temporaryStorage;
-        }
-
         public Payment build() {
             return new Payment(this);
-        }
-
-        public boolean isSepa() {
-            if (debtor.getAccountIdentifierType() == Type.IBAN
-                    && creditor.getAccountIdentifierType() == Type.IBAN) {
-                if (sepaCountriesWithEur.contains(
-                                IbanUtil.getCountryCode(debtor.getAccountNumber()))
-                        && sepaCountriesWithEur.contains(
-                                IbanUtil.getCountryCode(creditor.getAccountNumber()))) return true;
-            }
-            return false;
         }
     }
 }

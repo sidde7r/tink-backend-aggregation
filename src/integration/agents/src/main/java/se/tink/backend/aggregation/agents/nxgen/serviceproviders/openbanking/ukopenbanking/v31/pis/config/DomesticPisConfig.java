@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentRequest;
@@ -9,7 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
-import se.tink.libraries.payment.rpc.Payment;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 public class DomesticPisConfig implements UKPisConfig {
 
@@ -20,55 +20,58 @@ public class DomesticPisConfig implements UKPisConfig {
     }
 
     @Override
-    public Payment createPaymentConsent(Payment payment) throws PaymentException {
+    public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
         return client.createDomesticPaymentConsent(
-                        new DomesticPaymentConsentRequest(payment),
+                        new DomesticPaymentConsentRequest(paymentRequest.getPayment()),
                         DomesticPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
     @Override
-    public Payment fetchPayment(Payment payment) throws PaymentException {
+    public PaymentResponse fetchPayment(PaymentRequest paymentRequest) {
         // If payment has already been executed, fetch payment. Otherwise fetch consent
         String paymentId =
-                payment.getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
+                paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
 
         if (!Strings.isNullOrEmpty(paymentId)) {
             return client.getDomesticPayment(paymentId, DomesticPaymentResponse.class)
-                    .toTinkPayment();
+                    .toTinkPaymentResponse();
         }
 
-        String consentId = getConsentId(payment);
+        String consentId = getConsentId(paymentRequest);
 
         return client.getDomesticPaymentConsent(consentId, DomesticPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
     @Override
-    public FundsConfirmationResponse fetchFundsConfirmation(Payment payment)
-            throws PaymentException {
-        String consentId = getConsentId(payment);
+    public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest paymentRequest) {
+        String consentId = getConsentId(paymentRequest);
 
         return client.getDomesticFundsConfirmation(consentId, FundsConfirmationResponse.class);
     }
 
     @Override
-    public Payment executePayment(
-            Payment payment, String endToEndIdentification, String instructionIdentification)
-            throws PaymentException {
-        String consentId = getConsentId(payment);
+    public PaymentResponse executePayment(
+            PaymentRequest paymentRequest,
+            String endToEndIdentification,
+            String instructionIdentification) {
+        String consentId = getConsentId(paymentRequest);
 
         DomesticPaymentRequest request =
                 new DomesticPaymentRequest(
-                        payment, consentId, endToEndIdentification, instructionIdentification);
+                        paymentRequest.getPayment(),
+                        consentId,
+                        endToEndIdentification,
+                        instructionIdentification);
 
         return client.executeDomesticPayment(request, DomesticPaymentResponse.class)
-                .toTinkPayment();
+                .toTinkPaymentResponse();
     }
 
-    private String getConsentId(Payment payment) {
+    private String getConsentId(PaymentRequest paymentRequest) {
         String consentId =
-                payment.getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.CONSENT_ID);
+                paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.CONSENT_ID);
 
         if (Strings.isNullOrEmpty(consentId)) {
             throw new IllegalStateException("consentId cannot be null or empty!");

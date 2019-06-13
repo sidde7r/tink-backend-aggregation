@@ -88,15 +88,12 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
-        return new PaymentResponse(
-                getConfig(paymentRequest.getPayment())
-                        .createPaymentConsent(paymentRequest.getPayment()));
+        return getConfig(paymentRequest.getPayment()).createPaymentConsent(paymentRequest);
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        return new PaymentResponse(
-                getConfig(paymentRequest.getPayment()).fetchPayment(paymentRequest.getPayment()));
+        return getConfig(paymentRequest.getPayment()).fetchPayment(paymentRequest);
     }
 
     @Override
@@ -105,66 +102,74 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
 
         String consentId =
                 paymentMultiStepRequest
-                        .getPayment()
-                        .getFromTemporaryStorage(UkOpenBankingV31Constants.Storage.CONSENT_ID);
-
-        Payment payment = paymentMultiStepRequest.getPayment();
+                        .getStorage()
+                        .get(UkOpenBankingV31Constants.Storage.CONSENT_ID);
 
         switch (paymentMultiStepRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                return init(payment);
+                return init(paymentMultiStepRequest);
 
             case UkOpenBankingV31Constants.Step.AUTHORIZE:
-                return authorized(payment, consentId);
+                return authorized(paymentMultiStepRequest, consentId);
 
             case UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS:
-                return sufficientFunds(payment, consentId);
+                return sufficientFunds(paymentMultiStepRequest);
 
             case UkOpenBankingV31Constants.Step.EXECUTE_PAYMENT:
-                return executePayment(payment, consentId);
+                return executePayment(paymentMultiStepRequest);
             default:
                 throw new IllegalStateException(
                         String.format("Unknown step %s", paymentMultiStepRequest.getStep()));
         }
     }
 
-    private PaymentMultiStepResponse init(Payment payment) throws PaymentException {
+    private PaymentMultiStepResponse init(PaymentMultiStepRequest paymentMultiStepRequest)
+            throws PaymentException {
 
-        switch (payment.getStatus()) {
+        switch (paymentMultiStepRequest.getPayment().getStatus()) {
             case CREATED:
                 return new PaymentMultiStepResponse(
-                        payment, UkOpenBankingV31Constants.Step.AUTHORIZE, new ArrayList<>());
+                        paymentMultiStepRequest,
+                        UkOpenBankingV31Constants.Step.AUTHORIZE,
+                        new ArrayList<>());
             case REJECTED:
                 throw new PaymentAuthorizationException(
                         "Payment is rejected", new IllegalStateException("Payment is rejected"));
             case PENDING:
                 return new PaymentMultiStepResponse(
-                        payment,
+                        paymentMultiStepRequest,
                         UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS,
                         new ArrayList<>());
             default:
                 throw new IllegalStateException(
-                        String.format("Unknown status %s", payment.getStatus()));
+                        String.format(
+                                "Unknown status %s",
+                                paymentMultiStepRequest.getPayment().getStatus()));
         }
     }
 
-    private PaymentMultiStepResponse authorized(Payment payment, String consentId)
+    private PaymentMultiStepResponse authorized(
+            PaymentMultiStepRequest paymentMultiStepRequest, String consentId)
             throws PaymentException {
 
         String step =
-                Optional.of(getConfig(payment).fetchPayment(payment))
-                        .map(p -> p.getStatus())
+                Optional.of(
+                                getConfig(paymentMultiStepRequest.getPayment())
+                                        .fetchPayment(paymentMultiStepRequest))
+                        .map(p -> p.getPayment().getStatus())
                         .filter(s -> s == PaymentStatus.PENDING)
                         .map(s -> UkOpenBankingV31Constants.Step.SUFFICIENT_FUNDS)
                         .orElseGet(() -> UkOpenBankingV31Constants.Step.AUTHORIZE);
 
-        return new PaymentMultiStepResponse(payment, step, new ArrayList<>());
+        return new PaymentMultiStepResponse(paymentMultiStepRequest, step, new ArrayList<>());
     }
 
-    private PaymentMultiStepResponse sufficientFunds(Payment payment, String consentId)
-            throws PaymentException {
+    private PaymentMultiStepResponse sufficientFunds(
+            PaymentMultiStepRequest paymentMultiStepRequest) throws PaymentException {
 
-        FundsConfirmationResponse response = getConfig(payment).fetchFundsConfirmation(payment);
+        FundsConfirmationResponse response =
+                getConfig(paymentMultiStepRequest.getPayment())
+                        .fetchFundsConfirmation(paymentMultiStepRequest);
 
         if (!response.isFundsAvailable()) {
             throw new InsufficientFundsException(
@@ -172,21 +177,26 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
         }
 
         return new PaymentMultiStepResponse(
-                payment, UkOpenBankingV31Constants.Step.EXECUTE_PAYMENT, new ArrayList<>());
+                paymentMultiStepRequest,
+                UkOpenBankingV31Constants.Step.EXECUTE_PAYMENT,
+                new ArrayList<>());
     }
 
-    private PaymentMultiStepResponse executePayment(Payment payment, String consentId)
+    private PaymentMultiStepResponse executePayment(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
-        String endToEndIdentification = payment.getUniqueId();
+        String endToEndIdentification = paymentMultiStepRequest.getPayment().getUniqueId();
         String instructionIdentification =
                 RandomUtils.generateRandomHexEncoded(UkOpenBankingV31Constants.HEX_SIZE);
 
-        Payment responsePayment =
-                getConfig(payment)
-                        .executePayment(payment, endToEndIdentification, instructionIdentification);
+        PaymentResponse paymentResponse =
+                getConfig(paymentMultiStepRequest.getPayment())
+                        .executePayment(
+                                paymentMultiStepRequest,
+                                endToEndIdentification,
+                                instructionIdentification);
 
         return new PaymentMultiStepResponse(
-                responsePayment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
+                paymentResponse, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 
     @Override
