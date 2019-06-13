@@ -19,6 +19,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "//third_party:com_google_inject_guice",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_core",

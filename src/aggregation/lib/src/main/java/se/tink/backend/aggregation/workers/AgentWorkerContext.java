@@ -597,6 +597,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData();
         simplifiedIdentityData.setName(identityData.getFullName());
         simplifiedIdentityData.setSsn(identityData.getSsn());
+        simplifiedIdentityData.setDateOfBirth(identityData.getDateOfBirth());
 
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
         updateIdentityDataRequest.setIdentityData(simplifiedIdentityData);
