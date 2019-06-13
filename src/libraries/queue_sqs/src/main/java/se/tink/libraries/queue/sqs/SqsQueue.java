@@ -28,42 +28,15 @@ public class SqsQueue {
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
     private static final String LOCAL_REGION = "local";
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
-    private final AmazonSQS sqs;
     private final SqsQueueConfiguration configuration;
     private final MetricRegistry metricRegistry;
-    private final AWSStaticCredentialsProvider credentialsProvider;
+    private AWSStaticCredentialsProvider credentialsProvider;
+    private AmazonSQS sqs;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
-
-        // Enable long polling when creating a queue
-        CreateQueueRequest createRequest =
-                new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
-
-        AmazonSQSClientBuilder amazonSQSClientBuilder =
-                AmazonSQSClientBuilder.standard()
-                        .withEndpointConfiguration(
-                                new AwsClientBuilder.EndpointConfiguration(
-                                        configuration.getUrl(), configuration.getRegion()));
-
-        if (validLocalConfiguration(configuration)) {
-            createRequest.withQueueName(configuration.getQueueName());
-
-            this.credentialsProvider =
-                    new AWSStaticCredentialsProvider(
-                            new BasicAWSCredentials(
-                                    configuration.getAwsAccessKeyId(),
-                                    configuration.getAwsSecretKey()));
-
-            this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
-            isQueueCreated(createRequest);
-        } else {
-            this.credentialsProvider = null;
-            this.sqs = amazonSQSClientBuilder.build();
-            isQueueCreated(createRequest);
-        }
     }
 
     private String getQueueUrl(String name) {
@@ -135,6 +108,35 @@ public class SqsQueue {
     }
 
     public AmazonSQS getSqs() {
+        if (Objects.isNull(sqs)) {
+            // Enable long polling when creating a queue
+            CreateQueueRequest createRequest =
+                    new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+
+            AmazonSQSClientBuilder amazonSQSClientBuilder =
+                    AmazonSQSClientBuilder.standard()
+                            .withEndpointConfiguration(
+                                    new AwsClientBuilder.EndpointConfiguration(
+                                            configuration.getUrl(), configuration.getRegion()));
+
+            if (validLocalConfiguration(configuration)) {
+                createRequest.withQueueName(configuration.getQueueName());
+
+                credentialsProvider =
+                        new AWSStaticCredentialsProvider(
+                                new BasicAWSCredentials(
+                                        configuration.getAwsAccessKeyId(),
+                                        configuration.getAwsSecretKey()));
+
+                sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
+                isQueueCreated(createRequest);
+            } else {
+                credentialsProvider = null;
+                sqs = amazonSQSClientBuilder.build();
+                isQueueCreated(createRequest);
+            }
+        }
+
         return sqs;
     }
 
