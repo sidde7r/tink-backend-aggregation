@@ -1702,3 +1702,11 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
     ],
 )
+
+java_library(
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_fasterxml_jackson_datatype_jackson_datatype_jsr310//jar",
+    ],
+)

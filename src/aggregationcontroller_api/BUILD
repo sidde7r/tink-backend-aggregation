@@ -16,6 +16,7 @@ java_library(
         "//src/libraries/signableoperation:rpc",
         "//src/libraries/transfer:rpc",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",
+        "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

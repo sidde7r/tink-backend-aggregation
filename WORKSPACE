@@ -2183,6 +2183,12 @@ maven_jar(
     sha1 = "c4ffe88bfe1f20ff9a88e7ba5771a7faab802703",
 )
 
+maven_jar(
+    name = "com_fasterxml_jackson_datatype_jackson_datatype_jsr310",
+    artifact = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.8",
+    sha1 = "c84e77d8e21625efa6129b8116bf0b0b3aae7d9b",
+)
+
 ### === START === Java Spark dependencies
 maven_jar(
     artifact = "com.sparkjava:spark-core:2.8.0",
