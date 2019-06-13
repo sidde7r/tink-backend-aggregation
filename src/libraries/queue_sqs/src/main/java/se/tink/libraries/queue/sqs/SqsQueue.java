@@ -29,7 +29,6 @@ public class SqsQueue {
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final SqsQueueConfiguration configuration;
     private final MetricRegistry metricRegistry;
-    private AWSStaticCredentialsProvider credentialsProvider;
     private AmazonSQS sqs;
 
     @Inject
@@ -51,7 +50,8 @@ public class SqsQueue {
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private void retryUntilCreated(CreateQueueRequest createRequest) {
+    private void retryUntilCreated(CreateQueueRequest createRequest,
+            AWSStaticCredentialsProvider credentialsProvider) {
         do {
             try {
                 sqs.createQueue(createRequest);
@@ -121,18 +121,17 @@ public class SqsQueue {
             if (validLocalConfiguration(configuration)) {
                 createRequest.withQueueName(configuration.getQueueName());
 
-                credentialsProvider =
+                AWSStaticCredentialsProvider credentialsProvider =
                         new AWSStaticCredentialsProvider(
                                 new BasicAWSCredentials(
                                         configuration.getAwsAccessKeyId(),
                                         configuration.getAwsSecretKey()));
 
                 sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
-                retryUntilCreated(createRequest);
+                retryUntilCreated(createRequest, credentialsProvider);
             } else {
-                credentialsProvider = null;
                 sqs = amazonSQSClientBuilder.build();
-                retryUntilCreated(createRequest);
+                retryUntilCreated(createRequest, null);
             }
         }
 
