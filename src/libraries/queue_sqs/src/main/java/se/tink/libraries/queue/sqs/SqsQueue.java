@@ -50,8 +50,8 @@ public class SqsQueue {
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private void retryUntilCreated(CreateQueueRequest createRequest,
-            AWSStaticCredentialsProvider credentialsProvider) {
+    private void retryUntilCreated(
+            CreateQueueRequest createRequest, AWSStaticCredentialsProvider credentialsProvider) {
         do {
             try {
                 sqs.createQueue(createRequest);
@@ -110,7 +110,8 @@ public class SqsQueue {
         if (Objects.isNull(sqs)) {
             // Enable long polling when creating a queue
             CreateQueueRequest createRequest =
-                    new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+                    new CreateQueueRequest()
+                            .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
             AmazonSQSClientBuilder amazonSQSClientBuilder =
                     AmazonSQSClientBuilder.standard()
