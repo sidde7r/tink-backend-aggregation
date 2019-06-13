@@ -50,7 +50,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     @JsonIgnore
     public String getQsealcSerial() {
         Preconditions.checkNotNull(qsealcPem);
-        return RabobankUtils.getQsealcSerialNumber(qsealcPem);
+        return RabobankUtils.getX509SerialNumber(qsealcPem);
     }
 
     @JsonIgnore
