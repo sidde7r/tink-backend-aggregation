@@ -23,14 +23,14 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
+    private static final Logger LOG = LoggerFactory.getLogger(SqsQueue.class);
     private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
+    private static final String LOCAL_REGION = "local";
+    private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
-    private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
-    private static final String LOCAL_REGION = "local";
-    private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
     private final Counter produced;
     private final Counter consumed;
     private final Counter rejected;
@@ -89,7 +89,7 @@ public class SqsQueue {
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
             return getQueueUrlResult.getQueueUrl();
         } catch (AmazonSQSException e) {
-            logger.warn("Queue configurations invalid", e);
+            LOG.warn("Queue configurations invalid", e);
             return "";
         }
     }
@@ -103,13 +103,13 @@ public class SqsQueue {
                 return true;
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                    logger.warn("Queue already exists.", e);
+                    LOG.warn("Queue already exists.", e);
                 }
                 return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 long backoffTime = calculateBackoffTime();
-                logger.warn(
+                LOG.warn(
                         "No SQS with the current configurations is available, sleeping {} ms and then retrying.",
                         backoffTime,
                         e);
