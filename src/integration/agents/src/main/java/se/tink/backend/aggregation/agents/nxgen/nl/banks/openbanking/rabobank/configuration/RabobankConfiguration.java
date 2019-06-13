@@ -61,7 +61,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     }
 
     @JsonIgnore
-    public String getQSealCertificate() {
+    public String getQsealCert() {
         return qsealcPem;
     }
 

@@ -74,7 +74,7 @@ public class RabobankApiClient {
             final String signatureHeader,
             final String date) {
         final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getQSealCertificate();
+        final String clientCert = rabobankConfiguration.getQsealCert();
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
         return client.request(url)
