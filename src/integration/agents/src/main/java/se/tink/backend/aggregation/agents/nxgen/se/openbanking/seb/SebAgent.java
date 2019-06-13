@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.SebPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.session.SebSessionHandler;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -122,5 +124,10 @@ public final class SebAgent extends NextGenerationAgent {
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SebSessionHandler(apiClient, sessionStorage);
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new SebPaymentExecutor(apiClient)));
     }
 }

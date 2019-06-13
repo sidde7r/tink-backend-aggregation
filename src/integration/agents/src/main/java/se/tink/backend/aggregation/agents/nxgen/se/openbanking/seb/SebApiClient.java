@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -10,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Urls;
@@ -17,6 +19,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.rpc.FetchPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.rpc.PaymentSigningRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -183,8 +190,52 @@ public final class SebApiClient {
         sessionStorage.put(SebConstants.StorageKeys.TOKEN, token);
     }
 
+    public CreatePaymentResponse createPaymentInitiation(
+            CreatePaymentRequest createPaymentRequest, String paymentProduct) {
+        return createPaymentRequestInSession(
+                        new URL(Urls.CREATE_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct))
+                .post(CreatePaymentResponse.class, createPaymentRequest);
+    }
+
+    public FetchPaymentResponse getPayment(String paymentId, String paymentProduct) {
+        return createPaymentRequestInSession(
+                        new URL(Urls.GET_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(FetchPaymentResponse.class);
+    }
+
+    public PaymentStatusResponse getPaymentStatus(String paymentId, String paymentProduct) {
+        return createPaymentRequestInSession(
+                        new URL(Urls.GET_PAYMENT_STATUS)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .get(PaymentStatusResponse.class);
+    }
+
+    public PaymentStatusResponse signPayment(
+            String paymentId, String paymentProduct, PaymentSigningRequest body) {
+        return createPaymentRequestInSession(
+                        new URL(Urls.SIGN_PAYMENT)
+                                .parameter(IdTags.PAYMENT_PRODUCT, paymentProduct)
+                                .parameter(IdTags.PAYMENT_ID, paymentId))
+                .post(PaymentStatusResponse.class, body);
+    }
+
     private RequestBuilder createRequest(URL url) {
         return client.request(url).accept(MediaType.TEXT_HTML);
+    }
+
+    private RequestBuilder createPaymentRequestInSession(URL url) {
+        final String psuIpAddress = getConfiguration().getPsuIpAddress();
+
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.PSU_IP_ADDRESS, psuIpAddress);
     }
 
     private RequestBuilder createRequestInSession(URL url) {

@@ -13,6 +13,7 @@ public class SebConfiguration implements ClientConfiguration {
     private String clientSecret;
     private String redirectUrl;
     private String baseUrl;
+    private String psuIpAddress;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -44,5 +45,13 @@ public class SebConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
+    }
+
+    public String getPsuIpAddress() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(psuIpAddress),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Psu ip address"));
+
+        return psuIpAddress;
     }
 }
