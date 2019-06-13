@@ -108,6 +108,42 @@ data:
             redirectUrl: "{{ $agentsConfig.bunq.abn.redirectUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.rabobank }}
+        rabobank:
+          tink-sandbox:
+            clientId: "RABOBANK_CLIENT_ID_ABN_SANDBOX_TAG"
+            clientSecret: "RABOBANK_CLIENT_SECRET_ABN_SANDBOX_TAG"
+            redirectUrl: "{{ $agentsConfig.rabobank.tink_sandbox.redirectUrl }}"
+            baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
+            clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
+            clientSSLKeyPassword: "RABOBANK_CERTIFICATE_PASSWORD_ABN_SANDBOX_TAG"
+            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+          tink:
+            clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
+            clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
+            redirectUrl: "{{ $agentsConfig.rabobank.tink.redirectUrl }}"
+            baseUrl: "https://api.rabobank.nl/openapi"
+            clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
+            clientSSLKeyPassword: "RABOBANK_CERTIFICATE_PASSWORD_ABN_TAG"
+            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+          abn-sandbox:
+            clientId: "RABOBANK_CLIENT_ID_ABN_SANDBOX_TAG"
+            clientSecret: "RABOBANK_CLIENT_SECRET_ABN_SANDBOX_TAG"
+            redirectUrl: "{{ $agentsConfig.rabobank.abn_sandbox.redirectUrl }}"
+            baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
+            clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
+            clientSSLKeyPassword: "RABOBANK_CERTIFICATE_PASSWORD_ABN_SANDBOX_TAG"
+            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+          abn:
+            clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
+            clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
+            redirectUrl: "{{ $agentsConfig.rabobank.abn.redirectUrl }}"
+            baseUrl: "https://api.rabobank.nl/openapi"
+            clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
+            clientSSLKeyPassword: "RABOBANK_CERTIFICATE_PASSWORD_ABN_TAG"
+            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+        {{- end }}
+
         {{- if $agentsConfig.abnamro }}
         abnamro:
           tink:

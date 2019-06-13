@@ -28,6 +28,15 @@ agents:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+  rabobank:
+    tink_sandbox:
+      redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+    tink:
+      redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+    abn_sandbox:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+    abn:
+      redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
   volksbank:
     enabled: "true"
 
