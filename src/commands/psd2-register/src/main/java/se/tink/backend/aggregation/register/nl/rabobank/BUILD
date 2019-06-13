@@ -7,8 +7,8 @@ java_binary(
     main_class = "se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterCommand",
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/serviceproviders/banks/rabobank",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/libraries/cryptography",
         "//src/libraries/serialization",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

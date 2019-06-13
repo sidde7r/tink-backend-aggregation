@@ -1,5 +1,5 @@
 java_library(
-    name = "rabobank",
+    name = "eidas",
     srcs = glob(["**/*.java"]),
     data = [
         "//data:aggregation_test",

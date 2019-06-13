@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank;
+package se.tink.backend.aggregation.eidas;
 
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.RabobankConstants.Eidas;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank.RabobankConstants.Url;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
+import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 /**

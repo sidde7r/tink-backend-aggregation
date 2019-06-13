@@ -1,6 +1,6 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.rabobank;
+package se.tink.backend.aggregation.eidas;
 
-public final class RabobankConstants {
+public final class EidasProxyConstants {
 
     public static class Url {
         public static final String EIDAS_SIGN =
