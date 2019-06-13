@@ -13,14 +13,10 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -75,37 +71,17 @@ public class DnbAgent extends NextGenerationAgent {
                         creditTransactionFetcher));
     }
 
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-
-        // Disabling investments as our current code doesn't work as expected.
-
-        // DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient,
-        // credentials);
-        // return Optional.of(new InvestmentRefreshController(metricRefreshController,
-        // updateController, investementFetcher));
-
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.empty();
-    }
+    // Disabling investments as our current code doesn't work as expected.
+    // @Override
+    // protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+    //    DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient,
+    //    credentials);
+    //    return Optional.of(new InvestmentRefreshController(metricRefreshController,
+    //    updateController, investementFetcher));
+    // }
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return new DnbSessionHandler();
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 }
