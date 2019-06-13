@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Base64;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ingbase.IngBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
@@ -42,7 +45,11 @@ public class IngBaseConfiguration implements ClientConfiguration {
     }
 
     public String getRedirectUrl() {
-        return "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback";
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
+
+        return redirectUrl;
     }
 
     public String getClientKeyStorePassword() {
