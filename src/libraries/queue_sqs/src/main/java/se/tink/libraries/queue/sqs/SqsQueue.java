@@ -63,7 +63,7 @@ public class SqsQueue {
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
-            sqs =
+            this.sqs =
                     amazonSQSClientBuilder
                             .withCredentials(
                                     new AWSStaticCredentialsProvider(
@@ -75,7 +75,7 @@ public class SqsQueue {
             this.isAvailable = isQueueCreated(createRequest);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
-            sqs = amazonSQSClientBuilder.build();
+            this.sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
             this.isAvailable = isQueueCreated(createRequest);
         }
