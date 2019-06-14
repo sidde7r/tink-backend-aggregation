@@ -56,7 +56,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
 
         // Connect to the queue is available
         SqsQueue sqsQueue = injector.getInstance(SqsQueue.class);
-        sqsQueue.isAvailable();
+        sqsQueue.createQueue();
 
         // Validate the configurations on start up
         ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);

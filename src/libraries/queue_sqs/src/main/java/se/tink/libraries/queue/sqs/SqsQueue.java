@@ -30,11 +30,13 @@ public class SqsQueue {
     private final SqsQueueConfiguration configuration;
     private final MetricRegistry metricRegistry;
     private AmazonSQS sqs;
+    private boolean available;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
         this.configuration = configuration;
         this.metricRegistry = metricRegistry;
+        this.available = false;
     }
 
     private String getQueueUrl(String name) {
@@ -106,36 +108,38 @@ public class SqsQueue {
         metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected")).inc();
     }
 
-    public AmazonSQS getSqs() {
-        if (Objects.isNull(sqs)) {
-            // Enable long polling when creating a queue
-            CreateQueueRequest createRequest =
-                    new CreateQueueRequest()
-                            .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+    public void createQueue() {
+        // Enable long polling when creating a queue
+        CreateQueueRequest createRequest =
+                new CreateQueueRequest()
+                        .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
-            AmazonSQSClientBuilder amazonSQSClientBuilder =
-                    AmazonSQSClientBuilder.standard()
-                            .withEndpointConfiguration(
-                                    new AwsClientBuilder.EndpointConfiguration(
-                                            configuration.getUrl(), configuration.getRegion()));
+        AmazonSQSClientBuilder amazonSQSClientBuilder =
+                AmazonSQSClientBuilder.standard()
+                        .withEndpointConfiguration(
+                                new AwsClientBuilder.EndpointConfiguration(
+                                        configuration.getUrl(), configuration.getRegion()));
 
-            if (validLocalConfiguration(configuration)) {
-                createRequest.withQueueName(configuration.getQueueName());
+        if (validLocalConfiguration(configuration)) {
+            createRequest.withQueueName(configuration.getQueueName());
 
-                AWSStaticCredentialsProvider credentialsProvider =
-                        new AWSStaticCredentialsProvider(
-                                new BasicAWSCredentials(
-                                        configuration.getAwsAccessKeyId(),
-                                        configuration.getAwsSecretKey()));
+            AWSStaticCredentialsProvider credentialsProvider =
+                    new AWSStaticCredentialsProvider(
+                            new BasicAWSCredentials(
+                                    configuration.getAwsAccessKeyId(),
+                                    configuration.getAwsSecretKey()));
 
-                sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
-                retryUntilCreated(createRequest, credentialsProvider);
-            } else {
-                sqs = amazonSQSClientBuilder.build();
-                retryUntilCreated(createRequest, null);
-            }
+            this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
+            retryUntilCreated(createRequest, credentialsProvider);
+        } else {
+            this.sqs = amazonSQSClientBuilder.build();
+            retryUntilCreated(createRequest, null);
         }
 
+        this.available = true;
+    }
+
+    public AmazonSQS getSqs() {
         return sqs;
     }
 
@@ -152,20 +156,6 @@ public class SqsQueue {
     }
 
     public boolean isAvailable() {
-        if (!configuration.isEnabled()) {
-            return false;
-        }
-
-        if (Objects.isNull(configuration.getUrl())) {
-            return false;
-        }
-
-        if (Objects.isNull(configuration.getRegion())) {
-            return false;
-        }
-
-        getSqs();
-
-        return true;
+        return available;
     }
 }
