@@ -116,7 +116,7 @@ public abstract class BankiaConstants {
                         .put("11660", AccountTypes.CHECKING)
                         .put("10450", AccountTypes.SAVINGS)
                         .put("11590", AccountTypes.CHECKING)
-                        .put("10600", AccountTypes.OTHER)
+                        .put("10600", AccountTypes.CHECKING)
                         .put("11403", AccountTypes.OTHER)
                         .put("11658", AccountTypes.OTHER)
                         .put("11359", AccountTypes.CHECKING) // Under aged account
