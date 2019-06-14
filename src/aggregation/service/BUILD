@@ -13,7 +13,6 @@ java_library(
         "//src/aggregation/lib",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils",
-        "//src/libraries/queue_sqs",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:com_netflix_governator",
