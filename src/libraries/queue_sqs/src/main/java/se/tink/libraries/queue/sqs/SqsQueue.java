@@ -127,14 +127,14 @@ public class SqsQueue {
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
 
-            AWSStaticCredentialsProvider credentialsProvider =
+            AWSStaticCredentialsProvider awsCredentialsProvider =
                     new AWSStaticCredentialsProvider(
                             new BasicAWSCredentials(
                                     configuration.getAwsAccessKeyId(),
                                     configuration.getAwsSecretKey()));
 
-            this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
-            retryUntilCreated(createRequest, credentialsProvider);
+            this.sqs = amazonSQSClientBuilder.withCredentials(awsCredentialsProvider).build();
+            retryUntilCreated(createRequest, awsCredentialsProvider);
         } else {
             this.sqs = amazonSQSClientBuilder.build();
             retryUntilCreated(createRequest, null);
