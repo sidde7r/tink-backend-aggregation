@@ -287,12 +287,11 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                         paymentController.create(new PaymentRequest(payment));
 
                 PaymentResponse fetchPaymentResponse =
-                        paymentController.fetch(
-                                new PaymentRequest(createPaymentResponse.getPayment()));
+                        paymentController.fetch(PaymentRequest.of(createPaymentResponse));
 
                 assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
 
-                paymentRequests.add(new PaymentRequest(fetchPaymentResponse.getPayment()));
+                paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
             }
 
             PaymentListResponse paymentListResponse =
