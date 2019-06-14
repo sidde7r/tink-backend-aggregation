@@ -71,15 +71,6 @@ public class DnbAgent extends NextGenerationAgent {
                         creditTransactionFetcher));
     }
 
-    // Disabling investments as our current code doesn't work as expected.
-    // @Override
-    // protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-    //    DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient,
-    //    credentials);
-    //    return Optional.of(new InvestmentRefreshController(metricRefreshController,
-    //    updateController, investementFetcher));
-    // }
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return new DnbSessionHandler();
