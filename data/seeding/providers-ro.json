@@ -1,39 +1,16 @@
 {
-    "market": "RO",
     "currency": "RON",
+    "market": "RO",
     "providers": [
         {
-            "name": "ro-raiffeisen-oauth2",
-            "displayName": "Raiffeisen Bank International (Sandbox)",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
-            "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
-            "passwordHelpText": null,
-            "transactional": "true",
-            "payload": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
-            "tutorialUrl": null,
-            "fields": []
-        },
-        {
-            "name": "ro-n26-password",
-            "displayName": "N26",
-            "groupDisplayName": "N26",
-            "popular": false,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
             "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-            "transactional": true,
+            "credentialsType": "PASSWORD",
+            "displayName": "N26",
             "fields": [
                 {
                     "description": "Username",
-                    "name": "username",
-                    "immutable": true
+                    "immutable": true,
+                    "name": "username"
                 },
                 {
                     "description": "Password",
@@ -41,46 +18,88 @@
                     "name": "password",
                     "sensitive": true
                 }
-            ]
+            ],
+            "groupDisplayName": "N26",
+            "multiFactor": false,
+            "name": "ro-n26-password",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-            "name": "ro-revolut-password",
-            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-            "displayName": "Revolut",
+            "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
             "credentialsType": "PASSWORD",
-            "multiFactor": true,
+            "displayName": "Raiffeisen Bank International (Sandbox)",
+            "fields": [],
+            "multiFactor": false,
+            "name": "ro-raiffeisen-oauth2",
+            "passwordHelpText": null,
+            "payload": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Revolut",
             "fields": [
                 {
                     "description": "Phone number",
+                    "maxLength": 16,
+                    "minLength": 5,
                     "name": "username",
                     "pattern": "\\+[1-9][0-9]+",
-                    "minLength": 5,
-                    "maxLength": 16,
                     "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +49 NNN NNN NNNN"
                 },
                 {
                     "description": "Passcode",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
                     "name": "password",
                     "pattern": "[0-9]{4}",
-                    "sensitive": true,
-                    "masked": true,
-                    "minLength": 4,
-                    "maxLength": 4,
-                    "patternError": "Please enter your four digit passcode."
+                    "patternError": "Please enter your four digit passcode.",
+                    "sensitive": true
                 }
             ],
+            "multiFactor": true,
+            "name": "ro-revolut-password",
             "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
         {
-            "name": "ro-test-password",
-            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-            "displayDescription": "Password",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
+            "displayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "groupDisplayName": "Test Multi-Supplemental",
+            "multiFactor": true,
+            "name": "ro-test-multi-supplemental",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
             "displayName": "Test Password",
-            "groupDisplayName": "Test Password",
             "fields": [
                 {
                     "description": "Username",
@@ -90,32 +109,13 @@
                 {
                     "description": "Password",
                     "masked": true,
-                    "sensitive": true,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
+            "groupDisplayName": "Test Password",
             "multiFactor": true,
-            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-            "popular": true,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "TEST"
-        },
-        {
-            "name": "ro-test-multi-supplemental",
-            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-            "displayDescription": "Password",
-            "credentialsType": "PASSWORD",
-            "displayName": "Test Multi-Supplemental",
-            "groupDisplayName": "Test Multi-Supplemental",
-            "fields": [
-                {
-                    "description": "Username",
-                    "immutable": true,
-                    "name": "username"
-                }
-            ],
-            "multiFactor": true,
+            "name": "ro-test-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "status": "ENABLED",

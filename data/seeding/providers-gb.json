@@ -1,54 +1,54 @@
 {
-  "market": "GB",
-  "currency": "GBP",
-  "providers": [
-      {
-        "name": "gb-test-password",
-        "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-        "displayDescription": "Password",
-        "credentialsType": "PASSWORD",
-        "displayName": "Test Password",
-        "groupDisplayName": "Test Password",
-        "fields": [
-            {
-                "description": "Username",
-                "immutable": true,
-                "name": "username"
-            },
-            {
-                "description": "Password",
-                "masked": true,
-                "sensitive": true,
-                "name": "password"
-            }
-        ],
-        "multiFactor": true,
-        "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-        "popular": true,
-        "status": "ENABLED",
-        "transactional": true,
-        "type": "TEST"
-    },
-    {
-        "name": "gb-test-multi-supplemental",
-        "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-        "displayDescription": "Password",
-        "credentialsType": "PASSWORD",
-        "displayName": "Test Multi-Supplemental",
-        "groupDisplayName": "Test Multi-Supplemental",
-        "fields": [
-            {
-                "description": "Username",
-                "immutable": true,
-                "name": "username"
-            }
-        ],
-        "multiFactor": true,
-        "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-        "popular": true,
-        "status": "ENABLED",
-        "transactional": true,
-        "type": "TEST"
-    }
-  ]
+    "currency": "GBP",
+    "market": "GB",
+    "providers": [
+        {
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
+            "displayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "groupDisplayName": "Test Multi-Supplemental",
+            "multiFactor": true,
+            "name": "gb-test-multi-supplemental",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
+            "displayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "groupDisplayName": "Test Password",
+            "multiFactor": true,
+            "name": "gb-test-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        }
+    ]
 }
