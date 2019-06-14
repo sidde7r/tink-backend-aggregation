@@ -253,6 +253,16 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "BNKI"
+    big:
+      tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
+        clientId: ""
+        clientSecret: ""
+        clientSigningKeyPath: ""
+        clientSigningCertificatePath: ""
+        clientSigningCertificateSerialNumber: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aspspCode: "BIG"
     bpg:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
@@ -273,6 +283,26 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "CGDPT"
+    caixacrl-pt:
+      tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
+        clientId: ""
+        clientSecret: ""
+        clientSigningKeyPath: ""
+        clientSigningCertificatePath: ""
+        clientSigningCertificateSerialNumber: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aspspCode: "CCAML"
+    caixa-fr:
+      tink:
+        baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
+        clientId: ""
+        clientSecret: ""
+        clientSigningKeyPath: ""
+        clientSigningCertificatePath: ""
+        clientSigningCertificateSerialNumber: ""
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aspspCode: "CGDFR"
     cemah:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
