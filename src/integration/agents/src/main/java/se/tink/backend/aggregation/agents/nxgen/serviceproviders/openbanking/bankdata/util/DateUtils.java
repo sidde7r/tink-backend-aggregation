@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
