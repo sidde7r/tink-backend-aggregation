@@ -17,26 +17,68 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
-    private static final Logger LOG = LoggerFactory.getLogger(SqsQueue.class);
     private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
+    private final AmazonSQS sqs;
+    private final boolean isAvailable;
+    private final String url;
+    private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
     private static final String LOCAL_REGION = "local";
     private static final MetricId METRIC_ID_BASE = MetricId.newId("aggregation_queues");
-    private final SqsQueueConfiguration configuration;
-    private final MetricRegistry metricRegistry;
-    private AmazonSQS sqs;
-    private boolean available;
+    private final Counter produced;
+    private final Counter consumed;
+    private final Counter rejected;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
-        this.configuration = configuration;
-        this.metricRegistry = metricRegistry;
-        this.available = false;
+        this.consumed = metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed"));
+        this.produced = metricRegistry.meter(METRIC_ID_BASE.label("event", "produced"));
+        this.rejected = metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected"));
+
+        if (!configuration.isEnabled()
+                || Objects.isNull(configuration.getUrl())
+                || Objects.isNull(configuration.getRegion())) {
+            this.isAvailable = false;
+            this.url = "";
+            this.sqs = null;
+            return;
+        }
+
+        // Enable long polling when creating a queue
+        CreateQueueRequest createRequest =
+                new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+
+        AmazonSQSClientBuilder amazonSQSClientBuilder =
+                AmazonSQSClientBuilder.standard()
+                        .withEndpointConfiguration(
+                                new AwsClientBuilder.EndpointConfiguration(
+                                        configuration.getUrl(), configuration.getRegion()));
+
+        if (validLocalConfiguration(configuration)) {
+            createRequest.withQueueName(configuration.getQueueName());
+
+            sqs =
+                    amazonSQSClientBuilder
+                            .withCredentials(
+                                    new AWSStaticCredentialsProvider(
+                                            new BasicAWSCredentials(
+                                                    configuration.getAwsAccessKeyId(),
+                                                    configuration.getAwsSecretKey())))
+                            .build();
+
+            this.isAvailable = isQueueCreated(createRequest);
+            this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
+        } else {
+            sqs = amazonSQSClientBuilder.build();
+            this.url = configuration.getUrl();
+            this.isAvailable = isQueueCreated(createRequest);
+        }
     }
 
     private String getQueueUrl(String name) {
@@ -45,40 +87,32 @@ public class SqsQueue {
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
             return getQueueUrlResult.getQueueUrl();
         } catch (AmazonSQSException e) {
-            LOG.warn("Queue configurations invalid", e);
+            logger.warn("Queue configurations invalid", e);
             return "";
         }
     }
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private void retryUntilCreated(
-            CreateQueueRequest createRequest, AWSStaticCredentialsProvider credentialsProvider) {
+    private boolean isQueueCreated(CreateQueueRequest createRequest) {
         do {
             try {
                 sqs.createQueue(createRequest);
-                break;
+                return true;
             } catch (AmazonSQSException e) {
                 if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                    LOG.warn("Queue already exists.", e);
+                    logger.warn("Queue already exists.", e);
                 }
-                break;
+                return true;
                 // Reach this if the configurations are invalid
             } catch (SdkClientException e) {
                 long backoffTime = calculateBackoffTime();
-                LOG.warn(
+                logger.warn(
                         "No SQS with the current configurations is available, sleeping {} ms and then retrying.",
                         backoffTime,
                         e);
 
                 Uninterruptibles.sleepUninterruptibly(backoffTime, TimeUnit.MILLISECONDS);
-
-                // Try to refresh the credentials
-                if (Objects.isNull(credentialsProvider)) {
-                    continue;
-                }
-
-                credentialsProvider.refresh();
             }
         } while (true);
     }
@@ -97,49 +131,15 @@ public class SqsQueue {
     }
 
     public void consumed() {
-        registerEvent("consumed");
+        this.consumed.inc();
     }
 
     public void produced() {
-        registerEvent("produced");
+        this.produced.inc();
     }
 
     public void rejected() {
-        registerEvent("rejected");
-    }
-
-    private void registerEvent(String label) {
-        metricRegistry.meter(METRIC_ID_BASE.label("event", label)).inc();
-    }
-
-    public void createQueue() {
-        // Enable long polling when creating a queue
-        CreateQueueRequest createRequest =
-                new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
-
-        AmazonSQSClientBuilder amazonSQSClientBuilder =
-                AmazonSQSClientBuilder.standard()
-                        .withEndpointConfiguration(
-                                new AwsClientBuilder.EndpointConfiguration(
-                                        configuration.getUrl(), configuration.getRegion()));
-
-        if (validLocalConfiguration(configuration)) {
-            createRequest.withQueueName(configuration.getQueueName());
-
-            AWSStaticCredentialsProvider awsCredentialsProvider =
-                    new AWSStaticCredentialsProvider(
-                            new BasicAWSCredentials(
-                                    configuration.getAwsAccessKeyId(),
-                                    configuration.getAwsSecretKey()));
-
-            this.sqs = amazonSQSClientBuilder.withCredentials(awsCredentialsProvider).build();
-            retryUntilCreated(createRequest, awsCredentialsProvider);
-        } else {
-            this.sqs = amazonSQSClientBuilder.build();
-            retryUntilCreated(createRequest, null);
-        }
-
-        this.available = true;
+        this.rejected.inc();
     }
 
     public AmazonSQS getSqs() {
@@ -147,18 +147,10 @@ public class SqsQueue {
     }
 
     public String getUrl() {
-        if (!isAvailable()) {
-            return "";
-        }
-
-        if (!validLocalConfiguration(configuration)) {
-            return configuration.getUrl();
-        }
-
-        return getQueueUrl(configuration.getQueueName());
+        return url;
     }
 
     public boolean isAvailable() {
-        return available;
+        return isAvailable;
     }
 }

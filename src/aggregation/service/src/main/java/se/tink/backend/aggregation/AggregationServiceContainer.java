@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
 import se.tink.libraries.dropwizard.DropwizardObjectMapperConfigurator;
-import se.tink.libraries.queue.sqs.SqsQueue;
 
 public class AggregationServiceContainer extends Application<AggregationServiceConfiguration> {
 
@@ -53,10 +52,6 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                                 aggregationServiceConfiguration, environment));
 
         setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
-
-        // Create sqs queue
-        SqsQueue sqsQueue = injector.getInstance(SqsQueue.class);
-        sqsQueue.createQueue();
 
         // Validate the configurations on start up
         ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
