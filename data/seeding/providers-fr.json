@@ -2478,6 +2478,22 @@
             "payload": "tink",
             "tutorialUrl": null,
             "fields": []
+        },
+        {
+            "name": "fr-caixa-oauth2",
+            "displayName": "Caixa Geral de Depositos (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.openbanking.caixa.CaixaAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
+            "fields": []
         }
     ]
 }

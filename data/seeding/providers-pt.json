@@ -165,6 +165,22 @@
             "fields": []
         },
       {
+            "name": "pt-big-oauth2",
+            "displayName": "Banco de Investimento Global (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.pt.openbanking.big.BigAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
+            "fields": []
+      },
+      {
             "name": "pt-caixa-oauth2",
             "displayName": "Caixa (Test)",
             "popular": true,
@@ -180,6 +196,22 @@
             "accessType": "OPEN_BANKING",
             "fields": []
         },
+      {
+            "name": "pt-caixacrl-oauth2",
+            "displayName": "Caixa de Credito Agricola Mutuo (Test)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.pt.openbanking.caixacrl.CaixaCrlAgent",
+            "passwordHelpText": "In order to use this bank, please authenticate yourself.",
+            "transactional": true,
+            "payload": "tink",
+            "tutorialUrl": null,
+            "accessType": "OPEN_BANKING",
+            "fields": []
+      },
       {
             "name": "pt-cemah-oauth2",
             "displayName": "CAIXA ECONOMICA DA MISERICORDIA DE ANGRA DO HEROISMO (Test)",
