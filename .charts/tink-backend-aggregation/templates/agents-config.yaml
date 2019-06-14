@@ -118,6 +118,7 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.tink_sandbox.eidasProxyBaseUrl }}"
           tink:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
@@ -126,6 +127,7 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.tink.eidasProxyBaseUrl }}"
           abn-sandbox:
             clientId: "RABOBANK_CLIENT_ID_ABN_SANDBOX_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_SANDBOX_TAG"
@@ -134,6 +136,7 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.abn_sandbox.eidasProxyBaseUrl }}"
           abn:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
@@ -142,6 +145,7 @@ data:
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.abn.eidasProxyBaseUrl }}"
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}

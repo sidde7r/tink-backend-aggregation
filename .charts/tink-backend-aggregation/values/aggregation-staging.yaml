@@ -36,12 +36,16 @@ agents:
   rabobank:
     tink_sandbox:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://eidas-proxy.eidas-proxy.svc.cluster.local
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://eidas-proxy.eidas-proxy.svc.cluster.local
     abn_sandbox:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://eidas-proxy.eidas-proxy.svc.cluster.local
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://eidas-proxy.eidas-proxy.svc.cluster.local
   volksbank:
     enabled: "true"
 

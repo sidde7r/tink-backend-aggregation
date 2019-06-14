@@ -7,6 +7,7 @@ import java.util.Base64;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 /**
  * Requests the eIDAS proxy to sign a string using its eIDAS private key (RSA with SHA256).
@@ -16,9 +17,11 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 public final class QsealcEidasProxySigner implements Signer {
 
     private final TinkHttpClient httpClient;
+    private final URL eidasProxyBaseUrl;
 
-    public QsealcEidasProxySigner(final TinkHttpClient httpClient) {
+    public QsealcEidasProxySigner(final TinkHttpClient httpClient, final URL eidasProxyBaseUrl) {
         this.httpClient = httpClient;
+        this.eidasProxyBaseUrl = eidasProxyBaseUrl;
     }
 
     @Override
@@ -35,7 +38,7 @@ public final class QsealcEidasProxySigner implements Signer {
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
         final String signatureString =
                 httpClient
-                        .request(Url.EIDAS_SIGN)
+                        .request(eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN))
                         .header("X-Tink-Eidas-Sign-Certificate-Id", "Tink-qsealc")
                         .type("application/octet-stream")
                         .body(signingString)

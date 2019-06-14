@@ -136,10 +136,12 @@ agentsServiceConfiguration:
       tink:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
+        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: "dummyPassword"
+        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     abnamro:
       tink:
         clientId: "dummyId"

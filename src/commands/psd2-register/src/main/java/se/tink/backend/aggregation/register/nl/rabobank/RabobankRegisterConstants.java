@@ -6,6 +6,8 @@ public final class RabobankRegisterConstants {
     public static class Url {
         public static final URL REGISTER =
                 new URL("https://api.rabobank.nl/openapi/open-banking/third-party-providers");
+        public static final URL EIDAS_PROXY_BASE_URL =
+                new URL("https://eidas-proxy.staging.aggregation.tink.network");
     }
 
     public static class Jwt {
