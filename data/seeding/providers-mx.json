@@ -1,14 +1,12 @@
 {
-    "market": "MX",
     "currency": "MXN",
+    "market": "MX",
     "providers": [
         {
-            "name": "mx-bbva-password",
             "className": "nxgen.mx.banks.bbva.BbvaMxAgent",
             "credentialsType": "PASSWORD",
             "currency": "MXN",
             "displayName": "BBVA Bancomer",
-            "popular": true,
             "fields": [
                 {
                     "description": "Phone number",
@@ -19,23 +17,25 @@
                 {
                     "description": "Password",
                     "masked": true,
-                    "sensitive": true,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 },
                 {
                     "description": "Card Number",
                     "masked": true,
-                    "sensitive": true,
-                    "name": "cardNumber"
+                    "name": "cardNumber",
+                    "sensitive": true
                 }
             ],
-            "supplementalFields": [],
             "market": "MX",
             "multiFactor": false,
+            "name": "mx-bbva-password",
             "passwordHelpText": "Use the same credentials as when you log in to BBVA",
+            "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 0,
             "status": "DISABLED",
+            "supplementalFields": [],
             "transactional": true,
             "type": "BANK"
         }

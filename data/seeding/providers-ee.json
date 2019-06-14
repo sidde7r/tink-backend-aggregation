@@ -1,56 +1,50 @@
 {
-    "market": "EE",
     "currency": "EUR",
+    "market": "EE",
     "providers": [
         {
-            "name": "ee-aslhv-password",
-            "displayName": "AS LHV Pank",
-            "popular": true,
-            "type": "BANK",
-            "status": "ENABLED",
-            "credentialsType": "PASSWORD",
-            "multiFactor": false,
             "className": "nxgen.ee.banks.aslhv.AsLhvAgent",
-            "passwordHelpText": null,
-            "transactional": "true",
-            "payload": null,
-            "tutorialUrl": null,
-            "fields": [
-                {
-                    "name": "username",
-                    "description": "User name",
-                    "immutable": true
-                },
-                {
-                    "name": "password",
-                    "description": "Password",
-                    "masked": true,
-                    "numeric": false,
-                    "sensitive": true
-                }
-            ]
-        },
-        {
-            "name": "ee-test-password",
-            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-            "displayDescription": "Password",
             "credentialsType": "PASSWORD",
-            "displayName": "Test Password",
-            "groupDisplayName": "Test Password",
+            "displayName": "AS LHV Pank",
             "fields": [
                 {
-                    "description": "Username",
+                    "description": "User name",
                     "immutable": true,
                     "name": "username"
                 },
                 {
                     "description": "Password",
                     "masked": true,
-                    "sensitive": true,
-                    "name": "password"
+                    "name": "password",
+                    "numeric": false,
+                    "sensitive": true
                 }
             ],
+            "multiFactor": false,
+            "name": "ee-aslhv-password",
+            "passwordHelpText": null,
+            "payload": null,
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "Password",
+            "displayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "groupDisplayName": "Test Multi-Supplemental",
             "multiFactor": true,
+            "name": "ee-test-multi-supplemental",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "status": "ENABLED",
@@ -58,20 +52,26 @@
             "type": "TEST"
         },
         {
-            "name": "ee-test-multi-supplemental",
-            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-            "displayDescription": "Password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "Test Multi-Supplemental",
-            "groupDisplayName": "Test Multi-Supplemental",
+            "displayDescription": "Password",
+            "displayName": "Test Password",
             "fields": [
                 {
                     "description": "Username",
                     "immutable": true,
                     "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
+            "groupDisplayName": "Test Password",
             "multiFactor": true,
+            "name": "ee-test-password",
             "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
             "popular": true,
             "status": "ENABLED",

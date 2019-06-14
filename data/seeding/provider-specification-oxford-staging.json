@@ -2,7 +2,6 @@
     "clusterid": "oxford-staging",
     "provider-configuration": [
         {
-            "name": "americanexpress",
             "className": "creditcards.americanexpress.v3.AmericanExpressV3Agent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -16,21 +15,22 @@
                 {
                     "description": "Password",
                     "masked": true,
-                    "sensitive": true,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
             "groupDisplayName": "American Express",
             "market": "SE",
             "multiFactor": false,
+            "name": "americanexpress",
             "passwordHelpText": "Use the same username and password as you would in the card issuer's mobile app.",
-            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE",
             "payload": "SE",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
+            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=sv_SE",
             "type": "CREDIT_CARD"
         }
     ]
