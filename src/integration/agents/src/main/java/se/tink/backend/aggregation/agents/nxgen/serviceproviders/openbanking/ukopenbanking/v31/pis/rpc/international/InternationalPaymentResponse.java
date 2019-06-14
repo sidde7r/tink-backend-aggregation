@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.international.MetaExtended;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.entity.international.PaymentDataExtended;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.payment.rpc.Payment;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
@@ -15,7 +15,7 @@ public class InternationalPaymentResponse {
     private LinksExtended links;
     private PaymentDataExtended data;
 
-    public Payment toTinkPayment() {
-        return data.toTinkPayment();
+    public PaymentResponse toTinkPaymentResponse() {
+        return data.toTinkPaymentResponse();
     }
 }

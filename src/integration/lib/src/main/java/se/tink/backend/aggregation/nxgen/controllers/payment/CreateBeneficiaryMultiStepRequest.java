@@ -22,7 +22,7 @@ public class CreateBeneficiaryMultiStepRequest {
     public static PaymentMultiStepRequest of(PaymentResponse paymentResponse) {
         return new PaymentMultiStepRequest(
                 paymentResponse.getPayment(),
-                Storage.copyOf(paymentResponse.getPaymentStorage()),
+                Storage.copyOf(paymentResponse.getStorage()),
                 AuthenticationStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());

@@ -1,22 +1,21 @@
 package se.tink.backend.aggregation.nxgen.controllers.payment;
 
-import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.nxgen.storage.Storage;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class PaymentResponse {
     private Payment payment;
-    private Storage paymentStorage;
+    private Storage storage;
 
     public PaymentResponse(Payment payment) {
         this.payment = payment;
-        this.paymentStorage = new Storage();
+        this.storage = new Storage();
     }
 
-    public PaymentResponse(Payment payment, Storage paymentStorage) {
+    public PaymentResponse(Payment payment, Storage storage) {
         this.payment = payment;
-        this.paymentStorage = Storage.copyOf(paymentStorage);
+        this.storage = Storage.copyOf(storage);
     }
 
     public Payment getPayment() {
@@ -27,7 +26,7 @@ public class PaymentResponse {
         return payment.getStatus().equals(status);
     }
 
-    public ImmutableMap getPaymentStorage() {
-        return paymentStorage.getImmutableCopy();
+    public Storage getStorage() {
+        return Storage.copyOf(storage);
     }
 }

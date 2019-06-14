@@ -69,26 +69,19 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final Provider provider;
     private final User user;
-    private Credentials credential;
-
     private final boolean loadCredentialsBefore;
     private final boolean saveCredentialsAfter;
-
+    private final boolean requestFlagManual;
+    private final boolean doLogout;
+    private final boolean expectLoggedIn;
+    private final Set<RefreshableItem> refreshableItems;
+    private final AisValidator validator;
+    private final NewAgentTestContext context;
+    private final SupplementalInformationController supplementalInformationController;
+    private Credentials credential;
     // if it should override standard logic (Todo: find a better way to implement this!)
     private Boolean requestFlagCreate;
     private Boolean requestFlagUpdate;
-    private final boolean requestFlagManual;
-
-    private final boolean doLogout;
-    private final boolean expectLoggedIn;
-
-    private final Set<RefreshableItem> refreshableItems;
-
-    private final AisValidator validator;
-
-    private final NewAgentTestContext context;
-
-    private final SupplementalInformationController supplementalInformationController;
 
     private AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
@@ -294,12 +287,11 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                         paymentController.create(new PaymentRequest(payment));
 
                 PaymentResponse fetchPaymentResponse =
-                        paymentController.fetch(
-                                new PaymentRequest(createPaymentResponse.getPayment()));
+                        paymentController.fetch(PaymentRequest.of(createPaymentResponse));
 
                 assertEquals(PaymentStatus.PENDING, fetchPaymentResponse.getPayment().getStatus());
 
-                paymentRequests.add(new PaymentRequest(fetchPaymentResponse.getPayment()));
+                paymentRequests.add(PaymentRequest.of(fetchPaymentResponse));
             }
 
             PaymentListResponse paymentListResponse =
@@ -307,12 +299,12 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
             for (PaymentResponse paymentResponse : paymentListResponse.getPaymentResponseList()) {
                 Payment retrievedPayment = paymentResponse.getPayment();
-                Storage paymentStorage = Storage.copyOf(paymentResponse.getPaymentStorage());
+                Storage storage = Storage.copyOf(paymentResponse.getStorage());
 
                 PaymentMultiStepRequest paymentMultiStepRequest =
                         new PaymentMultiStepRequest(
                                 retrievedPayment,
-                                paymentStorage,
+                                storage,
                                 AuthenticationStepConstants.STEP_INIT,
                                 Collections.emptyList(),
                                 Collections.emptyList());
@@ -342,7 +334,7 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                             paymentController.sign(
                                     new PaymentMultiStepRequest(
                                             retrievedPayment,
-                                            paymentStorage,
+                                            storage,
                                             nextStep,
                                             fields,
                                             new ArrayList<>(map.values())));
@@ -559,6 +551,11 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             return user;
         }
 
+        public Builder setUser(User user) {
+            this.user = user;
+            return this;
+        }
+
         public Credentials getCredential() {
             return credential;
         }
@@ -579,12 +576,27 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             return requestFlagCreate;
         }
 
+        public Builder setRequestFlagCreate(boolean requestFlagCreate) {
+            this.requestFlagCreate = requestFlagCreate;
+            return this;
+        }
+
         public Boolean getRequestFlagUpdate() {
             return requestFlagUpdate;
         }
 
+        public Builder setRequestFlagUpdate(boolean requestFlagUpdate) {
+            this.requestFlagUpdate = requestFlagUpdate;
+            return this;
+        }
+
         public boolean isRequestFlagManual() {
             return requestFlagManual;
+        }
+
+        public Builder setRequestFlagManual(boolean requestFlagManual) {
+            this.requestFlagManual = requestFlagManual;
+            return this;
         }
 
         public boolean isDoLogout() {
@@ -597,6 +609,11 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Set<RefreshableItem> getRefreshableItems() {
             return refreshableItems;
+        }
+
+        public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
+            this.refreshableItems = refreshableItems;
+            return this;
         }
 
         public Builder setUserLocale(String locale) {
@@ -621,21 +638,6 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Builder setRequestFlagCreate(boolean requestFlagCreate) {
-            this.requestFlagCreate = requestFlagCreate;
-            return this;
-        }
-
-        public Builder setRequestFlagUpdate(boolean requestFlagUpdate) {
-            this.requestFlagUpdate = requestFlagUpdate;
-            return this;
-        }
-
-        public Builder setRequestFlagManual(boolean requestFlagManual) {
-            this.requestFlagManual = requestFlagManual;
-            return this;
-        }
-
         public Builder doLogout(boolean doLogout) {
             this.doLogout = doLogout;
             return this;
@@ -648,16 +650,6 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public Builder addRefreshableItems(RefreshableItem... items) {
             this.refreshableItems.addAll(Arrays.asList(items));
-            return this;
-        }
-
-        public Builder setRefreshableItems(Set<RefreshableItem> refreshableItems) {
-            this.refreshableItems = refreshableItems;
-            return this;
-        }
-
-        public Builder setUser(User user) {
-            this.user = user;
             return this;
         }
 

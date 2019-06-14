@@ -220,7 +220,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
         List<Field> fields;
         String nextStep = signPaymentMultiStepResponse.getStep();
         Payment payment = signPaymentMultiStepResponse.getPayment();
-        Storage paymentStorage = Storage.copyOf(signPaymentMultiStepResponse.getPaymentStorage());
+        Storage storage = signPaymentMultiStepResponse.getStorage();
 
         while (!AuthenticationStepConstants.STEP_FINALIZE.equals(nextStep)) {
             fields = signPaymentMultiStepResponse.getFields();
@@ -230,12 +230,13 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                     nextGenerationAgent.signPayment(
                             new PaymentMultiStepRequest(
                                     payment,
-                                    paymentStorage,
+                                    storage,
                                     nextStep,
                                     fields,
                                     new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             payment = signPaymentMultiStepResponse.getPayment();
+            storage = signPaymentMultiStepResponse.getStorage();
         }
     }
 

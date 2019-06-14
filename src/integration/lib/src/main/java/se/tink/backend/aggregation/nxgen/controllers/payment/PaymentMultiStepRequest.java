@@ -14,11 +14,11 @@ public class PaymentMultiStepRequest extends PaymentRequest {
 
     public PaymentMultiStepRequest(
             Payment payment,
-            Storage paymentStorage,
+            Storage storage,
             String step,
             List<Field> fields,
             List<String> userInputs) {
-        super(payment, paymentStorage);
+        super(payment, storage);
         this.step = step;
         this.fields = fields;
         this.userInputs = userInputs;
@@ -27,7 +27,7 @@ public class PaymentMultiStepRequest extends PaymentRequest {
     public static PaymentMultiStepRequest of(PaymentResponse paymentResponse) {
         return new PaymentMultiStepRequest(
                 paymentResponse.getPayment(),
-                Storage.copyOf(paymentResponse.getPaymentStorage()),
+                Storage.copyOf(paymentResponse.getStorage()),
                 AuthenticationStepConstants.STEP_INIT,
                 Collections.emptyList(),
                 Collections.emptyList());
