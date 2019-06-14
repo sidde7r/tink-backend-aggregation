@@ -356,12 +356,6 @@ spec:
               name: aggregation-secrets
               key: rabobank-certificate-p12-abn-sandbox
               optional: true
-        - name: RABOBANK_CERTIFICATE_PASSWORD_ABN_SANDBOX
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: rabobank-certificate-password-abn-sandbox
-              optional: true
         - name: RABOBANK_CLIENT_ID_ABN
           valueFrom:
             secretKeyRef:
@@ -379,12 +373,6 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: rabobank-certificate-p12-abn
-              optional: true
-        - name: RABOBANK_CERTIFICATE_PASSWORD_ABN
-          valueFrom:
-            secretKeyRef:
-              name: aggregation-secrets
-              key: rabobank-certificate-password-abn
               optional: true
         - name: RABOBANK_QSEALC_ABN
           valueFrom:
