@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
@@ -28,8 +31,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.identitydata.IdentityData;
 
-public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
+public abstract class NextGenerationDemoAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor {
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
@@ -117,6 +122,15 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         return Optional.empty();
+    }
+
+    @Override
+    public FetchIdentityDataResponse fetchIdentityData() {
+        return new FetchIdentityDataResponse(
+                IdentityData.builder()
+                        .setFullName("Jane Doe")
+                        .setDateOfBirth(LocalDate.now())
+                        .build());
     }
 
     public abstract DemoInvestmentAccount getInvestmentAccounts();
