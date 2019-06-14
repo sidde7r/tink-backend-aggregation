@@ -97,15 +97,19 @@ public class SqsQueue {
     }
 
     public void consumed() {
-        metricRegistry.meter(METRIC_ID_BASE.label("event", "consumed")).inc();
+        registerEvent("consumed");
     }
 
     public void produced() {
-        metricRegistry.meter(METRIC_ID_BASE.label("event", "produced")).inc();
+        registerEvent("produced");
     }
 
     public void rejected() {
-        metricRegistry.meter(METRIC_ID_BASE.label("event", "rejected")).inc();
+        registerEvent("rejected");
+    }
+
+    private void registerEvent(String label) {
+        metricRegistry.meter(METRIC_ID_BASE.label("event", label)).inc();
     }
 
     public void createQueue() {
