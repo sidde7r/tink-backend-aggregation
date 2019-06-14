@@ -76,7 +76,7 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
                 SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        supplementalRequester.requestSupplementalInformation(credentials, true);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     public void poll() throws AuthenticationException, AuthorizationException {
