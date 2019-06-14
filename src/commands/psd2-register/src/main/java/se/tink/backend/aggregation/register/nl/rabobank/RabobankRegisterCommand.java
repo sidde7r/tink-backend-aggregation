@@ -158,7 +158,7 @@ public final class RabobankRegisterCommand {
         // Expire after 6 hours
         final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
-        final Signer jwsSigner = new QsealcEidasProxySigner(client);
+        final Signer jwsSigner = new QsealcEidasProxySigner(client, Url.EIDAS_PROXY_BASE_URL);
 
         final JwsRequest body =
                 JwsRequest.create(qsealcB64, jwsSigner, exp, email, Jwt.ORGANIZATION);

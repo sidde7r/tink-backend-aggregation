@@ -19,6 +19,7 @@ public final class RabobankConfiguration implements ClientConfiguration {
     private String clientSSLP12;
     private String redirectUrl;
     private String qsealcPem;
+    private String eidasProxyBaseUrl;
 
     public String getClientId() {
         return clientId;
@@ -67,5 +68,9 @@ public final class RabobankConfiguration implements ClientConfiguration {
 
     public RabobankUrlFactory getUrls() {
         return new RabobankUrlFactory(new URL(baseUrl));
+    }
+
+    public URL getEidasProxyBaseUrl() {
+        return new URL(eidasProxyBaseUrl);
     }
 }

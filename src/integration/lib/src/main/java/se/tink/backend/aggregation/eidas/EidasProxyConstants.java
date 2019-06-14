@@ -3,8 +3,7 @@ package se.tink.backend.aggregation.eidas;
 public final class EidasProxyConstants {
 
     public static class Url {
-        public static final String EIDAS_SIGN =
-                "https://eidas-proxy.staging.aggregation.tink.network/sign-rsa-sha256/";
+        public static final String EIDAS_SIGN = "sign-rsa-sha256/";
     }
 
     public static class Eidas {

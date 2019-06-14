@@ -162,8 +162,10 @@ public class RabobankApiClient {
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
 
+        final URL eidasProxyBaseUrl = rabobankConfiguration.getEidasProxyBaseUrl();
+
         final byte[] signatureBytes =
-                new QsealcEidasProxySigner(new TinkHttpClient())
+                new QsealcEidasProxySigner(new TinkHttpClient(), eidasProxyBaseUrl)
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
