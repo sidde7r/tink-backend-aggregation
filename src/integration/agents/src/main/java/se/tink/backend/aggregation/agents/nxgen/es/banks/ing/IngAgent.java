@@ -50,20 +50,6 @@ public class IngAgent extends NextGenerationAgent {
         return Optional.of(refreshController);
     }
 
-    // @Override
-    // protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-    //            IngCreditCardFetcher fetcher = new IngCreditCardFetcher(apiClient);
-    //            TransactionMonthPaginationController<CreditCardAccount> paginationController = new
-    //     TransactionMonthPaginationController<>(
-    //                    fetcher, IngConstants.ZONE_ID);
-    //            TransactionFetcherController<CreditCardAccount> fetcherController = new
-    //     TransactionFetcherController<>(
-    //                    transactionPaginationHelper, paginationController);
-    //            CreditCardRefreshController refreshController = new CreditCardRefreshController(
-    //                    metricRefreshController, updateController, fetcher, fetcherController);
-    //            return Optional.of(refreshController);
-    // }
-
     @Override
     protected SessionHandler constructSessionHandler() {
         return new IngSessionHandler(apiClient, sessionStorage);
