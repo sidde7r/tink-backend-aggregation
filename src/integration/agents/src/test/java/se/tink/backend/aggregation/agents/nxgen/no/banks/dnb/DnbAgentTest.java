@@ -1,39 +1,42 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.utils.CurrencyConstants;
-import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgentTest;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class DnbAgentTest extends NextGenerationAgentTest<DnbAgent> {
-    private final Credentials credentials = new Credentials();
+@Ignore
+public class DnbAgentTest {
 
-    public DnbAgentTest() {
-        super(DnbAgent.class);
+    private enum Arg {
+        USERNAME,
+        MOBILENUMBER
     }
+
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
     @Before
-    public void setup() {
-        credentials.setField(Field.Key.USERNAME, "ddmmyynnnnn");
-        credentials.setField(Field.Key.MOBILENUMBER, "nnnnnnnn");
-        credentials.setType(CredentialsTypes.MOBILE_BANKID);
+    public void setUp() throws Exception {
+        manager.before();
     }
 
     @Test
-    public void testBankIdLogin() throws Exception {
-        testLogin(credentials);
+    public void testLogin() throws Exception {
+        new AgentIntegrationTest.Builder("no", "no-dnb")
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.MOBILENUMBER, manager.get(Arg.MOBILENUMBER))
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(true)
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
     }
 
-    @Test
-    public void testRefresh() throws Exception {
-        testRefresh(credentials);
-    }
-
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.SE.getCode();
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
     }
 }
