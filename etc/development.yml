@@ -431,6 +431,11 @@ agentsServiceConfiguration:
         apiBaseUrl: "https://sandbox.api.bnpparibasfortis.com"
         organisationId: ""
         openbankStetVersion: "1.4.0.47.develop"
+    entercard:
+      tink:
+        clientId: "f21cc629-e07e-4e75-874a-8182d5737758"
+        clientSecret: "testSecret"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     spankki:
       tink:
         clientId: ""
