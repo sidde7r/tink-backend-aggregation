@@ -132,7 +132,7 @@ agentsServiceConfiguration:
         redirectUrl: "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
         clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: "dummyPassword"
+        clientSSLKeyPassword: ""
       tink:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
@@ -140,7 +140,7 @@ agentsServiceConfiguration:
         redirectUrl: "https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback"
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
-        clientSSLKeyPassword: "dummyPassword"
+        clientSSLKeyPassword: ""
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     abnamro:
       tink:
