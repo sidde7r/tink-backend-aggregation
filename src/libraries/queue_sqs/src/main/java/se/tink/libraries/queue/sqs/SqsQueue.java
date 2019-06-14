@@ -115,8 +115,7 @@ public class SqsQueue {
     public void createQueue() {
         // Enable long polling when creating a queue
         CreateQueueRequest createRequest =
-                new CreateQueueRequest()
-                        .addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
+                new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
         AmazonSQSClientBuilder amazonSQSClientBuilder =
                 AmazonSQSClientBuilder.standard()
