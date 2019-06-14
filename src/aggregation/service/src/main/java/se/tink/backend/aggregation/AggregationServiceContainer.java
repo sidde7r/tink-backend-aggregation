@@ -7,8 +7,10 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AddClientConfigurationsCommand;
 import se.tink.backend.aggregation.configuration.ConfigurationValidator;
+import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.storage.database.daos.CryptoConfigurationDao;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.libraries.draining.DrainModeTask;
 import se.tink.libraries.dropwizard.DropwizardLifecycleInjectorFactory;
@@ -49,11 +51,27 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
                         AggregationModuleFactory.build(
                                 aggregationServiceConfiguration, environment));
 
+        setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
+
         // Validate the configurations on start up
         ConfigurationValidator validator = injector.getInstance(ConfigurationValidator.class);
         validator.validate();
 
         environment.admin().addTask(injector.getInstance(DrainModeTask.class));
         environment.lifecycle().manage(injector.getInstance(AgentWorker.class));
+    }
+
+    /**
+     * Ensures the setup is done in the correct order.
+     *
+     * <p>In development mode, we have to seed the database before {@link CryptoConfigurationDao}
+     * creates a mapping of them.
+     */
+    private void setupCryptoConfiguration(Injector injector, boolean isDevelopmentMode) {
+        if (isDevelopmentMode) {
+            injector.getInstance(DevelopmentConfigurationSeeder.class).seedCryptoConfiguration();
+        }
+
+        injector.getInstance(CryptoConfigurationDao.class).populateCryptoConfiguration();
     }
 }

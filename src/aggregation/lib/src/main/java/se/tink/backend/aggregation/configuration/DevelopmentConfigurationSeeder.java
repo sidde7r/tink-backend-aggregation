@@ -19,10 +19,14 @@ public class DevelopmentConfigurationSeeder {
             AggregationDevelopmentConfiguration developmentConfiguration) {
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
         this.developmentConfiguration = developmentConfiguration;
-        seedCryptoConfiguration();
     }
 
-    private void seedCryptoConfiguration() {
+    /**
+     * Seeds crypto configuration into the database.
+     *
+     * @implSpec It does nothing if there is already a crypto configuration in database.
+     */
+    public void seedCryptoConfiguration() {
         CryptoConfiguration cryptoConfiguration = developmentConfiguration.getCryptoConfiguration();
 
         // TODO maybe we should add isValid methods in the new methods to check if data is in valid

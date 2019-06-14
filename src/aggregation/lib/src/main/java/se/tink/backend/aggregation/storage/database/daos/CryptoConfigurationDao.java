@@ -8,15 +8,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
 
 public class CryptoConfigurationDao {
+    private final Logger log = LoggerFactory.getLogger(CryptoConfigurationDao.class);
+    private final CryptoConfigurationsRepository cryptoConfigurationsRepository;
     private Map<String, List<CryptoConfiguration>> cryptoConfigurationsByClientName;
 
     @Inject
     CryptoConfigurationDao(CryptoConfigurationsRepository cryptoConfigurationsRepository) {
+        this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
+    }
+
+    /** Reads configuration from repository and creates mappings for further use. */
+    public void populateCryptoConfiguration() {
         List<CryptoConfiguration> allCryptoConfigurations =
                 cryptoConfigurationsRepository.findAll();
 
@@ -24,6 +33,7 @@ public class CryptoConfigurationDao {
             throw new IllegalStateException();
         }
 
+        log.info("Populating the map of client names to crypto configurations.");
         this.cryptoConfigurationsByClientName =
                 allCryptoConfigurations.stream()
                         .collect(
