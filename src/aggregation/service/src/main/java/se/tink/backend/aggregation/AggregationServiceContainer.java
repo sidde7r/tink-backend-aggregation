@@ -54,7 +54,7 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
 
         setupCryptoConfiguration(injector, aggregationServiceConfiguration.isDevelopmentMode());
 
-        // Connect to the queue is available
+        // Create sqs queue
         SqsQueue sqsQueue = injector.getInstance(SqsQueue.class);
         sqsQueue.createQueue();
 
