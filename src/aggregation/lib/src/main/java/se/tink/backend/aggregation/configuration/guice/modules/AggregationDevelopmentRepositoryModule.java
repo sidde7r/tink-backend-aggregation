@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.configuration.guice.modules;
 
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.configuration.DevelopmentConfigurationSeeder;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
@@ -27,12 +25,6 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
             AggregationDevelopmentConfiguration developmentConfiguration) {
         super(databaseConfiguration);
         this.developmentConfiguration = developmentConfiguration;
-    }
-
-    @Override
-    protected void configure() {
-        super.configure();
-        bind(DevelopmentConfigurationSeeder.class).in(Scopes.SINGLETON);
     }
 
     @Override
