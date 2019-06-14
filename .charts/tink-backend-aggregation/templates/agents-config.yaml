@@ -117,7 +117,7 @@ data:
             baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
             clientSSLKeyPassword: ""
-            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
           tink:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
@@ -125,7 +125,7 @@ data:
             baseUrl: "https://api.rabobank.nl/openapi"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
-            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
           abn-sandbox:
             clientId: "RABOBANK_CLIENT_ID_ABN_SANDBOX_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_SANDBOX_TAG"
@@ -133,7 +133,7 @@ data:
             baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_SANDBOX_TAG"
             clientSSLKeyPassword: ""
-            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
           abn:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
@@ -141,7 +141,7 @@ data:
             baseUrl: "https://api.rabobank.nl/openapi"
             clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
             clientSSLKeyPassword: ""
-            qsealc: "RABOBANK_QSEALC_ABN_TAG"
+            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}
