@@ -236,6 +236,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                                     new ArrayList<>(map.values())));
             nextStep = signPaymentMultiStepResponse.getStep();
             payment = signPaymentMultiStepResponse.getPayment();
+            storage = signPaymentMultiStepResponse.getStorage();
         }
     }
 
