@@ -128,7 +128,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     public FetchIdentityDataResponse fetchIdentityData() {
         return new FetchIdentityDataResponse(
                 IdentityData.builder()
-                        .setFullName("Jane Doe")
+                        .addFirstNameElement("Jane")
+                        .addSurnameElement("Doe")
                         .setDateOfBirth(LocalDate.now())
                         .build());
     }
