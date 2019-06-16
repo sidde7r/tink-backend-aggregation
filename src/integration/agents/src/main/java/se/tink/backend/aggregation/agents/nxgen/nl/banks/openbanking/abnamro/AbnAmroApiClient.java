@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.aut
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.configuration.AbnAmroConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountHolderResponse;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.abnamro.utils.AbnAmroUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -35,7 +34,7 @@ public class AbnAmroApiClient {
     }
 
     public AbnAmroConfiguration getConfiguration() {
-        return new AbnAmroConfiguration();
+        return configuration;
     }
 
     public void setConfiguration(AbnAmroConfiguration configuration) {
@@ -77,18 +76,14 @@ public class AbnAmroApiClient {
                 .get(ConsentResponse.class);
     }
 
-    public AccountsResponse fetchAccounts() {
+    public AccountHolderResponse fetchAccountHolder() {
         String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
-        return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
-                .get(AccountsResponse.class);
-    }
-
-    public AccountHolderResponse fetchAccountHolder(final String accountId) {
         return buildRequest(AbnAmroConstants.URLs.buildAccountHolderUrl(accountId))
                 .get(AccountHolderResponse.class);
     }
 
-    public AccountBalanceResponse fetchAccountBalance(final String accountId) {
+    public AccountBalanceResponse fetchAccountBalance() {
+        String accountId = persistentStorage.get(StorageKey.ACCOUNT_CONSENT_ID);
         return buildRequest(AbnAmroConstants.URLs.buildBalanceUrl(accountId))
                 .get(AccountBalanceResponse.class);
     }

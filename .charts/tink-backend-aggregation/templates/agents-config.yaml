@@ -155,11 +155,11 @@ data:
         {{- if $agentsConfig.abnamro }}
         abnamro:
           tink:
-            clientId: "ABN_AMRO_CLIENT_ID"
-            clientSecret: "ABN_AMRO_CLIENT_SECRET"
-            redirectUrl: "{{ $agentsConfig.abnamro.redirectUrl }}"
-            clientSSLP12: "ABN_AMRO_CLIENT_SSL_P12"
-            clientSSLKeyPassword: "ABN_AMRO_CLIENT_SSL_KEY_PASSWORD"
+            clientId: "ABN_AMRO_CLIENT_ID_TINK"
+            apiKey: "ABN_AMRO_API_KEY_TINK"
+            redirectUrl: "{{ $agentsConfig.abnamro.tink.redirectUrl }}"
+            clientSSLP12: "ABN_AMRO_CLIENT_SSL_P12_TINK"
+            clientSSLKeyPassword: "ABN_AMRO_CLIENT_SSL_KEY_PASSWORD_TINK"
         {{- end }}
 
         {{- if $agentsConfig.icsConfiguration }}

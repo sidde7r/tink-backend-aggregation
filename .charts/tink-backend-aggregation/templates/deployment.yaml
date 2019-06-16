@@ -417,6 +417,32 @@ spec:
               key: rabobank-qsealc-abn
               optional: true
         {{- end }}
+        {{- if $agentsConfig.abnamro }}
+        - name: ABN_AMRO_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-id-tink
+              optional: true
+        - name: ABN_AMRO_API_KEY_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-api-key-tink
+              optional: true
+        - name: ABN_AMRO_CLIENT_SSL_P12_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-ssl-p12-tink
+              optional: true
+        - name: ABN_AMRO_CLIENT_SSL_KEY_PASSWORD_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-ssl-key-password-tink
+              optional: true
+        {{- end }}
       containers:
       - name: tink-backend-aggregation
         {{- if eq "local" .Values.Cluster }}

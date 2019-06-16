@@ -142,15 +142,14 @@ agentsServiceConfiguration:
         baseUrl: "https://api.rabobank.nl/openapi"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: "Tink-qsealc"
     abnamro:
       tink:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        clientSSLP12: "dummyP12"
-        clientSSLKeyPassword: "dummyPassword"
+        clientId: "dummyClientId"
+        apiKey: "dummyApiKey"
+        redirectUrl: "https://localhost/auth"
+        clientSSLP12: "dummyCertificateBase64"
+        clientSSLKeyPassword: ""
     sebopenbanking:
       tink:
         baseUrl: "https://api-sandbox.sebgroup.com"

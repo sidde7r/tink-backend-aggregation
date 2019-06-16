@@ -24,6 +24,7 @@ public class AbnAmroAgent extends NextGenerationAgent {
 
     private final AbnAmroApiClient apiClient;
     private final String clientName;
+    private AbnAmroConfiguration configuration;
 
     public AbnAmroAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,15 +38,27 @@ public class AbnAmroAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final AbnAmroConfiguration abnAmroConfiguration = getClientConfiguration();
+        final AbnAmroConfiguration abnAmroConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                AbnAmroConstants.INTEGRATION_NAME,
+                                clientName,
+                                AbnAmroConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "No abnamro client configured for name: %s",
+                                                        clientName)));
+
+        this.configuration = abnAmroConfiguration;
+        apiClient.setConfiguration(abnAmroConfiguration);
+
         final String password = abnAmroConfiguration.getClientSSLKeyPassword();
 
-        final byte[] p12 = abnAmroConfiguration.getClientSSLP12bytes();
+        final byte[] p12 = abnAmroConfiguration.getClientSSLP12Bytes();
         client.setSslClientCertificate(p12, password);
-    }
-
-    public AbnAmroConfiguration getClientConfiguration() {
-        return new AbnAmroConfiguration();
     }
 
     @Override
@@ -54,8 +67,7 @@ public class AbnAmroAgent extends NextGenerationAgent {
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new AbnAmroAuthenticator(
-                                apiClient, persistentStorage, getClientConfiguration()));
+                        new AbnAmroAuthenticator(apiClient, persistentStorage, configuration));
 
         return new AutoAuthenticationController(
                 request,
