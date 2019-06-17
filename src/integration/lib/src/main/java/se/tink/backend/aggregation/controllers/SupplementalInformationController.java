@@ -10,7 +10,7 @@ import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 
 public class SupplementalInformationController {
-    private static final Logger LOG =
+    private static final Logger logger =
             LoggerFactory.getLogger(SupplementalInformationController.class);
     private final CacheClient cacheClient;
     private final CuratorFramework coordinationClient;
@@ -23,7 +23,7 @@ public class SupplementalInformationController {
     }
 
     public void setSupplementalInformation(String credentialsId, String fields) {
-        LOG.info("Received supplemental information for credentialsId: {}", credentialsId);
+        logger.info("Received supplemental information for credentialsId: {}", credentialsId);
 
         cacheClient.set(
                 CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId, 60 * 10, fields);
@@ -37,7 +37,7 @@ public class SupplementalInformationController {
         try {
             lock.removeBarrier();
         } catch (Exception e) {
-            LOG.error("Could not remove barrier while supplementing credentials", e);
+            logger.error("Could not remove barrier while supplementing credentials", e);
         }
     }
 
