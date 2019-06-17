@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
@@ -37,13 +35,13 @@ public class BecAgentPaymentTest {
 
         for (int i = 0; i < numberOfMockedPayments; ++i) {
             Creditor creditor = mock(Creditor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(creditor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DK).toString()).when(creditor).getAccountNumber();
+            doReturn(AccountIdentifier.Type.DK).when(creditor).getAccountIdentifierType();
+            doReturn("59936533150894").when(creditor).getAccountNumber();
             doReturn("Mocked creditor").when(creditor).getName();
 
             Debtor debtor = mock(Debtor.class);
-            doReturn(AccountIdentifier.Type.IBAN).when(debtor).getAccountIdentifierType();
-            doReturn(Iban.random(CountryCode.DK).toString()).when(debtor).getAccountNumber();
+            doReturn(AccountIdentifier.Type.DK).when(debtor).getAccountIdentifierType();
+            doReturn("99524167166569").when(debtor).getAccountNumber();
 
             Amount amount = Amount.inDKK(new Random().nextInt(50000));
             LocalDate executionDate = LocalDate.now();

@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.paym
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -31,12 +32,12 @@ public class BecPaymentExecutor implements PaymentExecutor {
         AccountEntity creditor =
                 new AccountEntity(
                         paymentRequest.getPayment().getCreditor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber().substring(4));
+                        paymentRequest.getPayment().getCreditor().getAccountNumber());
 
         AccountEntity debtor =
                 new AccountEntity(
                         paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getDebtor().getAccountNumber().substring(4));
+                        paymentRequest.getPayment().getDebtor().getAccountNumber());
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(
@@ -92,7 +93,7 @@ public class BecPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
             throws PaymentException {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());

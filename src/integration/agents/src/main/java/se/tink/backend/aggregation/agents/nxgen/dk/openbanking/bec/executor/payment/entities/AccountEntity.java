@@ -20,10 +20,10 @@ public class AccountEntity {
     }
 
     public Creditor toTinkCreditor() {
-        return new Creditor(AccountIdentifier.create(Type.IBAN, bban));
+        return new Creditor(AccountIdentifier.create(Type.DK, bban));
     }
 
     public Debtor toTinkDebtor() {
-        return new Debtor(AccountIdentifier.create(Type.IBAN, bban));
+        return new Debtor(AccountIdentifier.create(Type.DK, bban));
     }
 }
