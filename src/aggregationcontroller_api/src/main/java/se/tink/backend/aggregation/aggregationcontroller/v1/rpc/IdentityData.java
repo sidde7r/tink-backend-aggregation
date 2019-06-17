@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-
 public class IdentityData {
     private String name;
     private String ssn;
