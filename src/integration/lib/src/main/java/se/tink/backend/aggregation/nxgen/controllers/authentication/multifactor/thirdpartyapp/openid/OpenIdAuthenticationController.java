@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
@@ -255,12 +254,13 @@ public class OpenIdAuthenticationController
             jwtBuilder.withClaim("redirectId", callbackRedirectId);
         }
 
-        String signedState = jwtBuilder.sign(
-                Algorithm.ECDSA256(
-                        ECDSAUtils.getPublicKeyByPath(
-                                callbackJWTSignatureKeyPair.getPublicKeyPath()),
-                        ECDSAUtils.getPrivateKeyByPath(
-                                callbackJWTSignatureKeyPair.getPrivateKeyPath())));
+        String signedState =
+                jwtBuilder.sign(
+                        Algorithm.ECDSA256(
+                                ECDSAUtils.getPublicKeyByPath(
+                                        callbackJWTSignatureKeyPair.getPublicKeyPath()),
+                                ECDSAUtils.getPrivateKeyByPath(
+                                        callbackJWTSignatureKeyPair.getPrivateKeyPath())));
 
         LOG.info("JWT state: {}");
 
