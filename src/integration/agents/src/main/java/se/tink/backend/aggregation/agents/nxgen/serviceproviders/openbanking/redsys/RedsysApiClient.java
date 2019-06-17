@@ -120,8 +120,11 @@ public final class RedsysApiClient {
                 getConfiguration().getBaseAuthUrl(), getConfiguration().getAspsp(), path);
     }
 
-    private String makeApiUrl(String path) {
+    private String makeApiUrl(String path, Object... args) {
         assert path.startsWith("/");
+        if (args.length > 0) {
+            path = String.format(path, args);
+        }
         return String.format(
                 "%s/%s%s", getConfiguration().getBaseAPIUrl(), getConfiguration().getAspsp(), path);
     }
@@ -191,7 +194,7 @@ public final class RedsysApiClient {
     }
 
     public String fetchConsentStatus(String consentId) {
-        final String url = makeApiUrl(String.format(Urls.CONSENT_STATUS, consentId));
+        final String url = makeApiUrl(Urls.CONSENT_STATUS, consentId);
         final ConsentStatusResponse consentStatusResponse =
                 createSignedRequest(url).get(ConsentStatusResponse.class);
         return consentStatusResponse.getConsentStatus();
