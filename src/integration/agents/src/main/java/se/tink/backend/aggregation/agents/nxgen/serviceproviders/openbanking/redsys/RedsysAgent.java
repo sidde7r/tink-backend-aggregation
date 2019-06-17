@@ -16,15 +16,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class RedsysAgent extends NextGenerationAgent {
@@ -89,34 +84,8 @@ public final class RedsysAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
     protected SessionHandler constructSessionHandler() {
         return new RedsysSessionHandler(apiClient, sessionStorage);
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 
     @Override
