@@ -4,6 +4,8 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -16,12 +18,16 @@ import se.tink.backend.aggregation.nxgen.http.URL;
  */
 public final class QsealcEidasProxySigner implements Signer {
 
+    private static Logger logger = LoggerFactory.getLogger(QsealcEidasProxySigner.class);
+    private static int TIMEOUT_MS = 5000;
+
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
 
     public QsealcEidasProxySigner(final TinkHttpClient httpClient, final URL eidasProxyBaseUrl) {
         this.httpClient = httpClient;
         this.eidasProxyBaseUrl = eidasProxyBaseUrl;
+        httpClient.setTimeout(TIMEOUT_MS);
     }
 
     @Override
@@ -36,9 +42,12 @@ public final class QsealcEidasProxySigner implements Signer {
         }
 
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
+        final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN);
+
+        logger.info("Requesting QSealC signature from {}", url);
         final String signatureString =
                 httpClient
-                        .request(eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN))
+                        .request(url)
                         .header("X-Tink-Eidas-Sign-Certificate-Id", "Tink-qsealc")
                         .type("application/octet-stream")
                         .body(signingString)
