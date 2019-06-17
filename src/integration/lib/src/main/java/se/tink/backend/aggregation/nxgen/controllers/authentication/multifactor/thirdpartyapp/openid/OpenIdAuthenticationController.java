@@ -255,12 +255,16 @@ public class OpenIdAuthenticationController
             jwtBuilder.withClaim("redirectId", callbackRedirectId);
         }
 
-        return jwtBuilder.sign(
+        String signedState = jwtBuilder.sign(
                 Algorithm.ECDSA256(
                         ECDSAUtils.getPublicKeyByPath(
                                 callbackJWTSignatureKeyPair.getPublicKeyPath()),
                         ECDSAUtils.getPrivateKeyByPath(
                                 callbackJWTSignatureKeyPair.getPrivateKeyPath())));
+
+        LOG.info("JWT state: {}");
+
+        return signedState;
     }
 
     @Override
