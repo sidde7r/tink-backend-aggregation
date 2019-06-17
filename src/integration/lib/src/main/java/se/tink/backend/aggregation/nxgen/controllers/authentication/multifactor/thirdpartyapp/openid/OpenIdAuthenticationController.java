@@ -244,7 +244,7 @@ public class OpenIdAuthenticationController
     private String getJwtState(String pseudoId) {
 
         if (!callbackJWTSignatureKeyPair.isEnabled()) {
-            logger.info("Callback JWT not enabled, using pseudoId as state. State: {}");
+            logger.info("Callback JWT not enabled, using pseudoId as state. State: {}", pseudoId);
             return pseudoId;
         }
         JWTCreator.Builder jwtBuilder =
