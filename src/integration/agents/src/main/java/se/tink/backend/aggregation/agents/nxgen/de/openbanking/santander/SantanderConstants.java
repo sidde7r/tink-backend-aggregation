@@ -36,6 +36,8 @@ public final class SantanderConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consentId";
+        public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
     public static class QueryKeys {

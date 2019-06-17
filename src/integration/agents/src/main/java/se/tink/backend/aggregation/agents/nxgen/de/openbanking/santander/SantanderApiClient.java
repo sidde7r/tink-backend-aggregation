@@ -8,7 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.Santand
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.entities.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.ConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.configuration.SantanderConfiguration;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.fetcher
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -80,7 +80,7 @@ public final class SantanderApiClient {
                 .header(HeaderKeys.X_IBM_CLIENT_ID, getConfiguration().getClientId())
                 .header(HeaderKeys.X_REQUEST_ID, HeaderValues.X_REQUEST_ID)
                 .body(consentsRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .post(ConsentBaseResponse.class)
+                .post(ConsentResponse.class)
                 .getConsentId();
     }
 

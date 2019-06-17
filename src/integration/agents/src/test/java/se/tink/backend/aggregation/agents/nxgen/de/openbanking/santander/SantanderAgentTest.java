@@ -2,15 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander.SantanderConstants.CredentialKeys;
 
-@Ignore
 public class SantanderAgentTest {
 
+    // --jvmopt=-Dtink.IBAN=DE74310108330000009001 configuration
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
