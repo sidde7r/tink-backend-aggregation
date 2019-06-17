@@ -263,7 +263,7 @@ public class OpenIdAuthenticationController
                                 ECDSAUtils.getPrivateKeyByPath(
                                         callbackJWTSignatureKeyPair.getPrivateKeyPath())));
 
-        logger.info("JWT state: {}");
+        logger.info("JWT state: {}", signedState);
 
         return signedState;
     }
