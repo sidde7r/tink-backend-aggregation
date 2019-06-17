@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -35,8 +37,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpenIdAuthenticationController
         implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final AggregationLogger log =
-            new AggregationLogger(OpenIdAuthenticationController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OpenIdAuthenticationController.class);
 
     // This wait time is for the whole user authentication. Different banks have different
     // cumbersome
@@ -85,17 +86,17 @@ public class OpenIdAuthenticationController
                         .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                         .orElseThrow(
                                 () -> {
-                                    log.warn("Failed to retrieve access token.");
+                                    LOG.warn("Failed to retrieve access token.");
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 
         if (accessToken.hasAccessExpired()) {
             if (!accessToken.canRefresh()) {
-                log.info("Access and refresh token expired.");
+                LOG.info("Access and refresh token expired.");
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(
+            LOG.info(
                     String.format(
                             "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
                             new Date(accessToken.getIssuedAt() * 1000),
@@ -117,7 +118,7 @@ public class OpenIdAuthenticationController
                 accessToken = apiClient.refreshAccessToken(refreshToken);
             } catch (HttpResponseException e) {
 
-                log.info(
+                LOG.info(
                         String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
                 // This will "fix" the invalid_grant error temporarily while waiting for more log
                 // data. It might also filter some other errors.
@@ -128,7 +129,7 @@ public class OpenIdAuthenticationController
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(
+            LOG.info(
                     String.format(
                             "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
                             new Date(accessToken.getAccessExpireEpoch() * 1000),
@@ -243,7 +244,7 @@ public class OpenIdAuthenticationController
     private String getJwtState(String pseudoId) {
 
         if (!callbackJWTSignatureKeyPair.isEnabled()) {
-            log.info("Callback JWT not enabled, using pseudoId as state.");
+            LOG.info("Callback JWT not enabled, using pseudoId as state. State: {}");
             return pseudoId;
         }
         JWTCreator.Builder jwtBuilder =
@@ -284,13 +285,13 @@ public class OpenIdAuthenticationController
                 getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
-            log.info("OpenId callback success.");
+            LOG.info("OpenId callback success.");
             return;
         }
 
         String errorType = error.get();
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
-            log.info(
+            LOG.info(
                     String.format(
                             "OpenId ACCESS_DENIED callback: %s",
                             SerializationUtils.serializeToString(callbackData)));
