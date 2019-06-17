@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent;
 
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.pair.Pair;
@@ -12,9 +12,11 @@ public interface ConsentController {
 
     boolean storedConsentIsValid();
 
-    Pair<String, URL> requestConsent();
+    Pair<String, URL> requestConsent(String stateToken);
 
     ConsentStatus getConsentStatus(String consentId);
 
     void useConsentId(String consentId);
+
+    void askForConsentIfNeeded();
 }

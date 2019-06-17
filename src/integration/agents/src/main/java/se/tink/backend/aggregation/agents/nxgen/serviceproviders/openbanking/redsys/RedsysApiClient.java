@@ -38,17 +38,19 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.entities.AccessEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.ConsentStatusResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.GetConsentRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.configuration.RedsysConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.RedsysConsentController;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities.AccessEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.ConsentStatusResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -63,10 +65,16 @@ public final class RedsysApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private RedsysConfiguration configuration;
+    private RedsysConsentController consentController;
 
-    public RedsysApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public RedsysApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.consentController =
+                new RedsysConsentController(this, sessionStorage, supplementalInformationHelper);
     }
 
     private RedsysConfiguration getConfiguration() {
@@ -155,7 +163,7 @@ public final class RedsysApiClient {
         return token;
     }
 
-    public Pair<String, URL> requestConsent() {
+    public Pair<String, URL> requestConsent(String scaState) {
         final String url = makeApiUrl(Urls.CONSENTS);
         final GetConsentRequest getConsentRequest =
                 new GetConsentRequest(
@@ -167,7 +175,7 @@ public final class RedsysApiClient {
 
         final GetConsentResponse getConsentResponse =
                 createSignedRequest(url, getConsentRequest)
-                        .headers(getConsentTppRedirectHeaders())
+                        .headers(getTppRedirectHeaders(scaState))
                         .post(GetConsentResponse.class);
         final String consentId = getConsentResponse.getConsentId();
         final String consentRedirectUrl =
@@ -185,9 +193,7 @@ public final class RedsysApiClient {
     public String fetchConsentStatus(String consentId) {
         final String url = makeApiUrl(String.format(Urls.CONSENT_STATUS, consentId));
         final ConsentStatusResponse consentStatusResponse =
-                createSignedRequest(url)
-                        .headers(getConsentTppRedirectHeaders())
-                        .get(ConsentStatusResponse.class);
+                createSignedRequest(url).get(ConsentStatusResponse.class);
         return consentStatusResponse.getConsentStatus();
     }
 
@@ -303,11 +309,17 @@ public final class RedsysApiClient {
         return createSignedRequest(url, null, getTokenFromStorage());
     }
 
-    private Map<String, Object> getConsentTppRedirectHeaders() {
+    private Map<String, Object> getTppRedirectHeaders(String state) {
+        final URL redirectUrl =
+                new URL(getConfiguration().getRedirectUrl()).queryParam(QueryKeys.STATE, state);
         Map<String, Object> headers = Maps.newHashMap();
         headers.put(HeaderKeys.TPP_REDIRECT_PREFERRED, HeaderValues.TRUE);
-        headers.put(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getConsentRedirectUrl());
-        headers.put(HeaderKeys.TPP_NOK_REDIRECT_URI, getConfiguration().getConsentRedirectUrl());
+        headers.put(
+                HeaderKeys.TPP_REDIRECT_URI,
+                redirectUrl.queryParam(QueryKeys.OK, QueryValues.TRUE));
+        headers.put(
+                HeaderKeys.TPP_NOK_REDIRECT_URI,
+                redirectUrl.queryParam(QueryKeys.OK, QueryValues.FALSE));
         return headers;
     }
 
@@ -345,6 +357,7 @@ public final class RedsysApiClient {
     }
 
     public ListAccountsResponse fetchAccounts() {
+        consentController.askForConsentIfNeeded();
         final String consentId = getConsentId();
         return createSignedRequest(makeApiUrl(Urls.ACCOUNTS))
                 .header(HeaderKeys.CONSENT_ID, consentId)
@@ -353,6 +366,7 @@ public final class RedsysApiClient {
     }
 
     public TransactionsResponse fetchTransactions(String accountId, @Nullable String link) {
+        consentController.askForConsentIfNeeded();
         final String consentId = getConsentId();
         final String path =
                 Optional.ofNullable(link).orElse(String.format(Urls.TRANSACTIONS, accountId));

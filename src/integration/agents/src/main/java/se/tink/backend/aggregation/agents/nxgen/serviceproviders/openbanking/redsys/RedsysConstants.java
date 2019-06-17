@@ -52,6 +52,7 @@ public final class RedsysConstants {
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String OK = "ok";
     }
 
     public static class QueryValues {
