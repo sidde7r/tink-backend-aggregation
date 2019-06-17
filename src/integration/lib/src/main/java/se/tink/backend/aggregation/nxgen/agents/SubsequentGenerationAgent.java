@@ -273,22 +273,34 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     protected abstract Authenticator constructAuthenticator();
 
-    protected abstract Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController();
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.empty();
+    }
 
-    protected abstract Optional<CreditCardRefreshController> constructCreditCardRefreshController();
+    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+        return Optional.empty();
+    }
 
-    protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController();
+    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+        return Optional.empty();
+    }
 
-    protected abstract Optional<LoanRefreshController> constructLoanRefreshController();
+    protected Optional<LoanRefreshController> constructLoanRefreshController() {
+        return Optional.empty();
+    }
 
-    protected abstract Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController();
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
+        return Optional.empty();
+    }
 
     protected abstract SessionHandler constructSessionHandler();
 
     // transfer and payment executors
-    protected abstract Optional<TransferController> constructTransferController();
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
+    }
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
