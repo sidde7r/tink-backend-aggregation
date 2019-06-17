@@ -443,6 +443,17 @@ agentsServiceConfiguration:
         clientKeyStorePath: "data/test/cryptography/crosskey/client.p12"
         clientKeyStorePassword: "123456"
         xFapiFinancialId: "s-pankki"
+    redsys:
+      tink:
+        baseAuthUrl: "https://hub-i.redsys.es:16443/api-oauth-xs2a-sb/services/rest"
+        baseAPIUrl: "https://apis-i.redsys.es:20443/psd2/xs2a/api-entrada-xs2a/services"
+        authClientId: "PSDSE-FINA-44059"
+        clientId: "e1c3619e-6e74-4d5e-b141-cc3917ff50e2"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aspsp: "redsys"
+        consentRedirectUrl: "tink://open"
+        clientSigningKeyPath: "data/secret/sandbox/es/redsys/signing.key"
+        clientSigningCertificatePath: "data/secret/sandbox/es/redsys/signing.cer"
     resursbank:
       tink:
         clientId: ""

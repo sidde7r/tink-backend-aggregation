@@ -371,6 +371,21 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.serviceproviders.openbanking.redsys.RedsysAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Redsys (Sandbox)",
+            "fields": [],
+            "multiFactor": true,
+            "name": "es-redsys-oauth2",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Revolut",
