@@ -3,14 +3,15 @@ package se.tink.backend.aggregation.controllers;
 import com.google.inject.Inject;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.locks.BarrierName;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheScope;
 
 public class SupplementalInformationController {
-    private static final AggregationLogger log =
-            new AggregationLogger(SupplementalInformationController.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(SupplementalInformationController.class);
     private final CacheClient cacheClient;
     private final CuratorFramework coordinationClient;
 
@@ -22,6 +23,8 @@ public class SupplementalInformationController {
     }
 
     public void setSupplementalInformation(String credentialsId, String fields) {
+        logger.info("Received supplemental information for credentialsId: {}", credentialsId);
+
         cacheClient.set(
                 CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId, 60 * 10, fields);
 
@@ -34,7 +37,7 @@ public class SupplementalInformationController {
         try {
             lock.removeBarrier();
         } catch (Exception e) {
-            log.error("Could not remove barrier while supplementing credentials", e);
+            logger.error("Could not remove barrier while supplementing credentials", e);
         }
     }
 
