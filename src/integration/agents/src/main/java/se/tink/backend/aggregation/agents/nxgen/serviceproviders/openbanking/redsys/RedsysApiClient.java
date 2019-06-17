@@ -46,6 +46,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.red
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.rpc.GetConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.entities.LinkEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.enums.PaymentProduct;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.GetPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.executor.payment.rpc.PaymentStatusResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -380,5 +385,40 @@ public final class RedsysApiClient {
                         .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BookingStatus.BOTH);
 
         return request.get(TransactionsResponse.class);
+    }
+
+    private String getPsuIpAddress() {
+        return "127.0.0.1";
+    }
+
+    public CreatePaymentResponse createPayment(
+            CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
+        final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
+        return createSignedRequest(url, request)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .headers(getTppRedirectHeaders(scaToken))
+                .post(CreatePaymentResponse.class);
+    }
+
+    public GetPaymentResponse fetchPayment(String paymentId, PaymentProduct paymentProduct) {
+        final String url = makeApiUrl(Urls.GET_PAYMENT, paymentProduct.getProductName(), paymentId);
+        return createSignedRequest(url)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .get(GetPaymentResponse.class);
+    }
+
+    public PaymentStatusResponse fetchPaymentStatus(
+            String paymentId, PaymentProduct paymentProduct) {
+        final String url =
+                makeApiUrl(Urls.PAYMENT_STATUS, paymentProduct.getProductName(), paymentId);
+        return createSignedRequest(url)
+                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .get(PaymentStatusResponse.class);
+    }
+
+    public void cancelPayment(String paymentId, PaymentProduct paymentProduct) {
+        final String url =
+                makeApiUrl(Urls.PAYMENT_CANCEL, paymentProduct.getProductName(), paymentId);
+        createSignedRequest(url).delete();
     }
 }
