@@ -18,7 +18,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
 
     protected final URL apiBaseUrl;
     protected final UkOpenBankingConfig aisConfig;
-    private final UkOpenBankingConfig pisConfig;
+    protected final UkOpenBankingConfig pisConfig;
 
     public UkOpenBankingApiClient(
             TinkHttpClient httpClient,
@@ -55,6 +55,7 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
     }
 
     public <T extends AccountPermissionResponse> T createAccountIntentId(Class<T> responseType) {
+
         return createRequest(
                         aisConfig.createConsentRequestURL(providerConfiguration.getAuthBaseURL()))
                 .type(MediaType.APPLICATION_JSON_TYPE)

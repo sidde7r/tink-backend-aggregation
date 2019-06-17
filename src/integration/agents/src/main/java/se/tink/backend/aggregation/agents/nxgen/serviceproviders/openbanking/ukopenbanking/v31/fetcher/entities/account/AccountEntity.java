@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -31,7 +33,7 @@ public class AccountEntity implements IdentifiableAccount {
     private String description;
 
     @JsonProperty("Account")
-    private AccountIdentifierEntity identifierEntity;
+    private List<AccountIdentifierEntity> identifierEntity;
 
     public static TransactionalAccount toTransactionalAccount(
             AccountEntity account, AccountBalanceEntity balance) {
@@ -71,13 +73,28 @@ public class AccountEntity implements IdentifiableAccount {
         return accountId;
     }
 
+    private AccountIdentifierEntity getDefaultIdentifier() {
+        return identifierEntity.stream()
+                .filter(
+                        e ->
+                                e.getIdentifierType()
+                                        .equals(
+                                                ExternalAccountIdentification4Code
+                                                        .SORT_CODE_ACCOUNT_NUMBER))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER identifier."));
+    }
+
     public String getUniqueIdentifier() {
 
-        if (identifierEntity == null) {
-            throw new IllegalStateException("Account details did not specify an identifier.");
+        if (identifierEntity == null || identifierEntity.size() == 0) {
+            throw new IllegalStateException("Account details did not specify any identifier.");
         }
 
-        return identifierEntity.getIdentification();
+        return getDefaultIdentifier().getIdentification();
     }
 
     public AccountTypes getAccountType() {
@@ -90,7 +107,7 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public String getDisplayName() {
-        return nickname != null ? nickname : identifierEntity.getName();
+        return nickname != null ? nickname : getDefaultIdentifier().getName();
     }
 
     public String getRawAccountSubType() {
@@ -98,7 +115,7 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     private Optional<AccountIdentifier> toAccountIdentifier(String accountName) {
-        return identifierEntity.toAccountIdentifier(accountName);
+        return getDefaultIdentifier().toAccountIdentifier(accountName);
     }
 
     @Override

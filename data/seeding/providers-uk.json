@@ -168,25 +168,25 @@
             "type": "BANK"
         },
         {
+            "name": "uk-danskebank-oauth2",
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.danskebank.DanskeBankAgent",
+            "className": "nxgen.uk.openbanking.danskebank.DanskeBankV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Danske Bank",
             "fields": [
                 {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
                     "name": "info",
-                    "value": "Connecting your bank"
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true
                 }
             ],
+            "payload": "tink:danskebank",
             "groupDisplayName": "",
             "multiFactor": false,
-            "name": "uk-danskebank-oauth2",
             "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink2:danskebank",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,

@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -20,6 +21,15 @@ public class UkOpenBankingV31Agent extends UkOpenBankingBaseAgent {
                 signatureKeyPair,
                 new UkOpenBankingV31Configuration(),
                 new UkOpenBankingV31Configuration());
+    }
+
+    public UkOpenBankingV31Agent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            UkOpenBankingConfig aisConfig,
+            UkOpenBankingConfig pisConfig) {
+        super(request, context, signatureKeyPair, aisConfig, pisConfig);
     }
 
     @Override
