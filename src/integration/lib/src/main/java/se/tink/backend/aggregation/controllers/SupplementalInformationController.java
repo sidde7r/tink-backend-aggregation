@@ -23,6 +23,8 @@ public class SupplementalInformationController {
     }
 
     public void setSupplementalInformation(String credentialsId, String fields) {
+        LOG.info("Received supplemental information for credentialsId: {}", credentialsId);
+
         cacheClient.set(
                 CacheScope.SUPPLEMENT_CREDENTIALS_BY_CREDENTIALSID, credentialsId, 60 * 10, fields);
 
