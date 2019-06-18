@@ -4,6 +4,7 @@ import com.google.common.collect.EnumHashBiMap;
 import java.util.Arrays;
 import java.util.Optional;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 
 public enum EnterCardAccountType {
     BANK_ACCOUNT,
@@ -22,6 +23,7 @@ public enum EnterCardAccountType {
     static {
         tinkToEnterCardAccountTypeBiMapper.put(AccountIdentifier.Type.SE_BG, BANK_GIRO);
         tinkToEnterCardAccountTypeBiMapper.put(AccountIdentifier.Type.SE_PG, PLUS_GIRO);
+        tinkToEnterCardAccountTypeBiMapper.put(Type.SE, BANK_ACCOUNT);
     }
 
     public String toString() {
