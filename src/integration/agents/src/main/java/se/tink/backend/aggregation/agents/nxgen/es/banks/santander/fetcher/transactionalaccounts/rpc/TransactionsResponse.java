@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -95,6 +96,11 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Rep
 
     @Override
     public Collection<Transaction> getTinkTransactions() {
+
+        if (transactionList == null || transactionList.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+
         return transactionList.stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
