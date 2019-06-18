@@ -35,6 +35,10 @@ public class EncodingUtils {
         return encodeAsBase64String(stringData.getBytes());
     }
 
+    public static String encodeAsBase64UrlSafe(byte[] binaryData) {
+        return Base64.encodeBase64URLSafeString(binaryData);
+    }
+
     public static String encodeHexAsString(byte[] binaryData) {
         return Hex.encodeHexString(binaryData);
     }
