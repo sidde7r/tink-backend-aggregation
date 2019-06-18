@@ -1,18 +1,9 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import java.time.LocalDate;
-
 public class IdentityData {
     private String name;
     private String ssn;
-
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate dateOfBirth;
+    private String dateOfBirth;
 
     public String getName() {
         return name;
@@ -30,11 +21,11 @@ public class IdentityData {
         this.ssn = ssn;
     }
 
-    public LocalDate getDateOfBirth() {
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 }

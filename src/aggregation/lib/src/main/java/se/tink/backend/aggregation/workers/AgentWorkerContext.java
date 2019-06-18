@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -595,9 +596,14 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData
                 simplifiedIdentityData =
                         new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.IdentityData();
+
+        LocalDate dateOfBirth = identityData.getDateOfBirth();
+        if (Objects.nonNull(dateOfBirth)) {
+            simplifiedIdentityData.setDateOfBirth(dateOfBirth.toString());
+        }
+
         simplifiedIdentityData.setName(identityData.getFullName());
         simplifiedIdentityData.setSsn(identityData.getSsn());
-        simplifiedIdentityData.setDateOfBirth(identityData.getDateOfBirth());
 
         UpdateIdentityDataRequest updateIdentityDataRequest = new UpdateIdentityDataRequest();
         updateIdentityDataRequest.setIdentityData(simplifiedIdentityData);
