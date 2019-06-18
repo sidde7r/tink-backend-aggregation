@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
@@ -36,8 +37,7 @@ public final class LaBanquePostaleApiClient
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
         AccountResponse accountResponse =
-                buildRequestWithSignature(
-                                String.format(Urls.FETCH_ACCOUNTS, clientId, clientSecret), "")
+                buildRequestWithSignature(Urls.FETCH_ACCOUNTS, "")
                         .get(AccountResponse.class);
 
         accountResponse.getAccounts().forEach(this::populateBalanceForAccount);
@@ -60,10 +60,7 @@ public final class LaBanquePostaleApiClient
         final String clientSecret = getConfiguration().getClientSecret();
 
         return buildRequestWithSignature(
-                        String.format(
-                                Urls.BASE_URL_WITH_SLASH + url + QueryValues.QUERY,
-                                clientId,
-                                clientSecret),
+                                Urls.BASE_URL_WITH_SLASH + url ,
                         "")
                 .get(TransactionResponse.class);
     }
@@ -81,9 +78,13 @@ public final class LaBanquePostaleApiClient
         final String reqId = BerlinGroupUtils.getRequestId();
         final String date = getFormattedDate();
         final String digest = generateDigest(payload);
+        final String clientId = getConfiguration().getClientId();
+        final String clientSecret = getConfiguration().getClientSecret();
 
         return client.request(url)
                 .header(HeaderKeys.SIGNATURE, getAuthorization(digest, reqId))
+                .queryParam(QueryKeys.CLIENT_ID, clientId)
+                .queryParam(QueryKeys.CLIENT_SECRET, clientSecret)
                 .header(BerlinGroupConstants.HeaderKeys.X_REQUEST_ID, getX_Request_Id());
     }
 
@@ -142,9 +143,7 @@ public final class LaBanquePostaleApiClient
                 buildRequestWithSignature(
                                 String.format(
                                         Urls.FETCH_BALANCES,
-                                        accountBaseEntityWithHref.getResourceId(),
-                                        clientId,
-                                        clientSecret),
+                                        accountBaseEntityWithHref.getResourceId()),
                                 "")
                         .get(BalanceResponse.class);
         accountBaseEntityWithHref.setBalances(balanceResponse.getBalances());
