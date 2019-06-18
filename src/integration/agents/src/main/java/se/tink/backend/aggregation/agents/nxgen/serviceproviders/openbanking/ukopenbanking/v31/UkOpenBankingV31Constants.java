@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
 
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions.ExternalAccountIdentification4Code;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -32,6 +33,18 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
                             .put("UK.OBIE.PAN", AccountIdentifier.Type.PAYMENT_CARD_NUMBER)
                             .put("UK.OBIE.SortCodeAccountNumber", AccountIdentifier.Type.SORT_CODE)
                             .put("UK.OBIE.IBAN", AccountIdentifier.Type.IBAN)
+                            .build();
+
+    public static final GenericTypeMapper<ExternalAccountIdentification4Code, String>
+            ACCOUNT_IDENTIFIER_TYPE_MAPPER =
+                    GenericTypeMapper.<ExternalAccountIdentification4Code, String>genericBuilder()
+                            .put(ExternalAccountIdentification4Code.BBAN, "UK.OBIE.BBAN")
+                            .put(ExternalAccountIdentification4Code.IBAN, "UK.OBIE.IBAN")
+                            .put(ExternalAccountIdentification4Code.PAYM, "UK.OBIE.Paym")
+                            .put(
+                                    ExternalAccountIdentification4Code.SORT_CODE_ACCOUNT_NUMBER,
+                                    "UK.OBIE.SortCodeAccountNumber")
+                            .put(ExternalAccountIdentification4Code.PAN, "UK.OBIE.PAN")
                             .build();
 
     private static final TypeMapper<PaymentStatus> paymentStatusMapper =

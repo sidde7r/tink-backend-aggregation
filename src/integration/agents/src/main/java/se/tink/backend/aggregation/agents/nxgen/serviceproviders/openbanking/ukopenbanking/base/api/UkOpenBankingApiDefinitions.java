@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.libraries.strings.StringUtils;
 
 public class UkOpenBankingApiDefinitions {
@@ -182,10 +183,17 @@ public class UkOpenBankingApiDefinitions {
         PAN;
 
         @JsonCreator
-        private static ExternalAccountIdentification3Code fromString(String key) {
+        private static ExternalAccountIdentification4Code fromString(String key) {
+
             return (key != null)
-                    ? ExternalAccountIdentification3Code.valueOf(
-                            CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, key))
+                    ? UkOpenBankingV31Constants.ACCOUNT_IDENTIFIER_TYPE_MAPPER
+                            .translate(key)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalStateException(
+                                                    String.format(
+                                                            "%s unknown ExternalAccountIdentification4Code!",
+                                                            key)))
                     : null;
         }
 
