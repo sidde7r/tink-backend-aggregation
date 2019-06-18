@@ -1,34 +1,27 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31;
+package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.UKOpenbankingV31Executor;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Agent;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.authenticator.DanskeBankAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class UkOpenBankingV31Agent extends UkOpenBankingBaseAgent {
-    public UkOpenBankingV31Agent(
+public class LloydsV31Agent extends UkOpenBankingV31Agent {
+
+    public LloydsV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(
                 request,
                 context,
                 signatureKeyPair,
-                new UkOpenBankingV31Configuration(),
-                new UkOpenBankingV31Configuration());
-    }
-
-    public UkOpenBankingV31Agent(
-            CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair,
-            UkOpenBankingV31Configuration aisConfig,
-            UkOpenBankingV31Configuration pisConfig) {
-        super(request, context, signatureKeyPair, aisConfig, pisConfig);
+                new LloydsV31Configuration(),
+                new LloydsV31Configuration());
     }
 
     @Override
@@ -48,7 +41,8 @@ public class UkOpenBankingV31Agent extends UkOpenBankingBaseAgent {
     protected void configurePisHttpClient(TinkHttpClient httpClient) {}
 
     @Override
-    public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new UKOpenbankingV31Executor(apiClient)));
+    protected Authenticator constructAuthenticator() {
+        DanskeBankAuthenticator authenticator = new DanskeBankAuthenticator(apiClient);
+        return createOpenIdFlowWithAuthenticator(authenticator, false);
     }
 }

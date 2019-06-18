@@ -270,26 +270,26 @@
             "type": "BANK"
         },
         {
+            "name": "uk-lloyds-oauth2",
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
+            "className": "nxgen.uk.openbanking.lloyds.LloydsV31Agent",
             "credentialsType": "PASSWORD",
-            "displayName": "Lloyds",
+            "displayName": "Lloyds Bank",
             "fields": [
                 {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
                     "name": "info",
-                    "value": "Connecting your bank"
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
+                    "immutable": true
                 }
             ],
+            "payload": "tink:lloyds",
             "groupDisplayName": "",
             "multiFactor": false,
-            "name": "uk-lloyds-oauth2",
             "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink:lloyds",
-            "popular": true,
+            "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
