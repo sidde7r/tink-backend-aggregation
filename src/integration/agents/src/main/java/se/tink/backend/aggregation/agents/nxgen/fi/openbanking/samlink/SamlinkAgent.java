@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.fetcher.t
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, SamlinkConfiguration> {
@@ -15,6 +17,16 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SamlinkApiClient(client, sessionStorage);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return OAuth2AuthenticationFlow.create(
+                request,
+                systemUpdater,
+                persistentStorage,
+                supplementalInformationHelper,
+                new SamlinkAuthenticator(apiClient));
     }
 
     @Override
@@ -30,11 +42,6 @@ public final class SamlinkAgent extends BerlinGroupAgent<SamlinkApiClient, Samli
     @Override
     protected Class<SamlinkConfiguration> getConfigurationClassDescription() {
         return SamlinkConfiguration.class;
-    }
-
-    @Override
-    public SamlinkAuthenticator getAgentAuthenticator() {
-        return new SamlinkAuthenticator(getApiClient());
     }
 
     @Override

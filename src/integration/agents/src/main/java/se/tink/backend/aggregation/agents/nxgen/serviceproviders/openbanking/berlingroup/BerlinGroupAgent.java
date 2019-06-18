@@ -3,17 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.BerlinGroupAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.configuration.BerlinGroupConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -67,22 +62,6 @@ public abstract class BerlinGroupAgent<
     protected abstract String getIntegrationName();
 
     protected abstract Class<TConfiguration> getConfigurationClassDescription();
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, getAgentAuthenticator());
-
-        return new AutoAuthenticationController(
-                request,
-                systemUpdater,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
-    }
-
-    protected abstract <T extends BerlinGroupAuthenticator> T getAgentAuthenticator();
 
     protected BerlinGroupAccountFetcher getAccountFetcher() {
         return new BerlinGroupAccountFetcher(getApiClient());

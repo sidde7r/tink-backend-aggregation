@@ -8,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationFlow;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -20,6 +22,16 @@ public final class ErstebankAgent
         super(request, context, signatureKeyPair);
 
         apiClient = new ErstebankApiClient(client, sessionStorage);
+    }
+
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return OAuth2AuthenticationFlow.create(
+                request,
+                systemUpdater,
+                persistentStorage,
+                supplementalInformationHelper,
+                new ErstebankAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
@@ -47,10 +59,5 @@ public final class ErstebankAgent
     @Override
     protected BerlinGroupTransactionFetcher getTransactionFetcher() {
         return new ErstebankTransactionFetcher(apiClient);
-    }
-
-    @Override
-    protected ErstebankAuthenticator getAgentAuthenticator() {
-        return new ErstebankAuthenticator(getApiClient(), sessionStorage);
     }
 }
