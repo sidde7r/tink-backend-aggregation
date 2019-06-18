@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Agent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Ais;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.authenticator.DanskeBankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.lloyds.authenticator.LloydsAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -42,7 +42,7 @@ public class LloydsV31Agent extends UkOpenBankingV31Agent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        DanskeBankAuthenticator authenticator = new DanskeBankAuthenticator(apiClient);
+        LloydsAuthenticator authenticator = new LloydsAuthenticator(apiClient);
         return createOpenIdFlowWithAuthenticator(authenticator, false);
     }
 }
