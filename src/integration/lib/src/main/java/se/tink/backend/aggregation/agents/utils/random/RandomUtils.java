@@ -24,4 +24,8 @@ public class RandomUtils {
         byte[] randomData = secureRandom(size);
         return Hex.encodeHexString(randomData);
     }
+
+    public static int randomInt(int bound) {
+        return random.nextInt(bound);
+    }
 }
