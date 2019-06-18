@@ -20,8 +20,8 @@ public class DanskeBankV31Agent extends UkOpenBankingV31Agent {
                 request,
                 context,
                 signatureKeyPair,
-                new DanskeBankOpenBankingV31Configuration(),
-                new DanskeBankOpenBankingV31Configuration());
+                new DanskeBankV31Configuration(),
+                new DanskeBankV31Configuration());
     }
 
     @Override
