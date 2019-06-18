@@ -25,6 +25,7 @@ public final class NordeaSeConstants {
     public static class StorageKeys {
         public static final String TPP_TOKEN = "tpp-token";
         public static final String ORDER_REF = "orderRef";
+        public static final String SSN = "ssn";
     }
 
     public static class FormValues {
@@ -34,9 +35,8 @@ public final class NordeaSeConstants {
         public static final String ACCOUNTS_TRANSACTIONS = "ACCOUNTS_TRANSACTIONS";
         public static final String PAYMENTS_MULTIPLE = "PAYMENTS_MULTIPLE";
         public static final String RESPONSE_TYPE = "nordea_token";
-        public static final String PSU_ID = "193805010844";
         public static final long DURATION = 12345;
-        public static final String STATE = "fake_state";
+        public static final String STATE = "production_state";
     }
 
     public class HeaderValues {

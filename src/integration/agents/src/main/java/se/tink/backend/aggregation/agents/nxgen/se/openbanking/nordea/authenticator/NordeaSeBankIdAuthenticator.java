@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator;
 
 import java.util.Arrays;
-import se.tink.backend.agents.rpc.Credentials;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.NordeaSeConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
@@ -11,22 +14,25 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authentica
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class NordeaSeAuthenticator implements Authenticator {
+public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
     private final NordeaSeApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public NordeaSeAuthenticator(NordeaSeApiClient apiClient, SessionStorage sessionStorage) {
+    public NordeaSeBankIdAuthenticator(NordeaSeApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {
+    public Object init(String ssn)
+            throws BankIdException, BankServiceException, AuthorizationException {
+        sessionStorage.put(NordeaSeConstants.StorageKeys.SSN, ssn);
         AuthorizeRequest authorizeRequest = getAuthorizeRequest();
 
         AuthorizeResponse authorizeResponse = apiClient.authorize(authorizeRequest);
@@ -34,12 +40,44 @@ public class NordeaSeAuthenticator implements Authenticator {
         saveTppToken(authorizeResponse);
         saveOrderRef(authorizeResponse);
 
-        GetCodeResponse getCodeResponse = apiClient.getCode();
+        return null;
+    }
+
+    @Override
+    public BankIdStatus collect(Object reference)
+            throws AuthenticationException, AuthorizationException {
+
+        try {
+            HttpResponse response = apiClient.getCode();
+            if (response.getStatus() == 304) {
+                return BankIdStatus.WAITING;
+            } else {
+                return handleBankIdDone(response);
+            }
+        } catch (HttpResponseException e) {
+            if (e.getResponse()
+                    .getBody(String.class)
+                    .contains("nsp.returncode.cava.user_cancel_error")) {
+                return BankIdStatus.CANCELLED;
+            }
+        }
+        throw new IllegalStateException();
+    }
+
+    private BankIdStatus handleBankIdDone(HttpResponse response) {
+        GetCodeResponse getCodeResponse = response.getBody(GetCodeResponse.class);
 
         GetTokenForm form = getGetTokenForm(getCodeResponse);
 
         OAuth2Token accessToken = apiClient.getToken(form);
         apiClient.setTokenToSession(accessToken);
+
+        return BankIdStatus.DONE;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 
     private GetTokenForm getGetTokenForm(GetCodeResponse getCodeResponse) {
@@ -53,7 +91,7 @@ public class NordeaSeAuthenticator implements Authenticator {
     private AuthorizeRequest getAuthorizeRequest() {
         return new AuthorizeRequest(
                 NordeaSeConstants.FormValues.DURATION,
-                NordeaSeConstants.FormValues.PSU_ID,
+                sessionStorage.get(NordeaSeConstants.StorageKeys.SSN),
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
                 Arrays.asList(
