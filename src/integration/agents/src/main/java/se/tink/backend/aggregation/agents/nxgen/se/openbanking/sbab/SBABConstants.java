@@ -38,16 +38,16 @@ public final class SBABConstants {
 
     public static class Endpoints {
         public static final String BASE_URL = "https://developer.sbab.se";
-        public static final String OAUTH = "/sandbox/auth/1.0/authorize";
+        public static final String OAUTH = "/sandbox/psd2/auth/1.0/authenticate";
         public static final String TRANSFERS =
-                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String CUSTOMERS = "/sandbox/savings/1.0/customers";
-        public static final String ACCOUNTS = "/sandbox/savings/2.0/accounts";
-        public static final String TOKEN = "/sandbox/auth/1.0/token";
+                "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers";
+        public static final String CUSTOMERS = "/sandbox/api/savings/1.0/customers";
+        public static final String ACCOUNTS = "/sandbox/psd2/savings/2.0/accounts";
+        public static final String TOKEN = "/sandbox/psd2/auth/1.0/token";
         public static final String INITIATE_PAYMENT =
-                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers";
+                "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers";
         public static final String GET_PAYMENT =
-                "/sandbox/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
+                "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
     }
 
     public static class StorageKeys {
@@ -65,17 +65,21 @@ public final class SBABConstants {
         public static final String CODE = "pending_code";
         public static final String START_DATE = "startDate";
         public static final String END_DATE = "endDate";
+        public static final String USER_ID = "user_id";
+        public static final String REFRESH_TOKEN = "refreshToken";
     }
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "pending_code";
-        public static final String SCOPE = "account.read";
+        public static final String SCOPE = "AIS,PIS";
         public static final String GRANT_TYPE = "pending_authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String TEST_USER = "testUser";
     }
 
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
+        public static final String CLIENT_CERTIFICATE = "X-PSD2-CLIENT-TEST-CERT";
     }
 
     public static class Format {
@@ -91,5 +95,12 @@ public final class SBABConstants {
     public static class CredentialKeys {
         public static final String USERNAME = "USERNAME";
         public static final String PASSWORD = "PASSWORD";
+    }
+
+    public class FormKeys {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String REDIRECT_URI = "redirect_uri";
+        public static final String CODE = "pending_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 }

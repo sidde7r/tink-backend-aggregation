@@ -6,7 +6,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderKeys;
@@ -15,7 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstant
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.Utils.DateUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.Utils.Utils;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.AuthorizationCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenResponse;
@@ -67,8 +67,6 @@ public final class SBABApiClient {
     }
 
     private OAuth2Token getTokenFromStorage() {
-        persistentStorage.put(
-                SBABConstants.StorageKeys.OAUTH_TOKEN, configuration.getBearerToken());
         return persistentStorage
                 .get(StorageKeys.OAUTH_TOKEN, OAuth2Token.class)
                 .orElseThrow(
@@ -80,14 +78,23 @@ public final class SBABApiClient {
         final String redirectUri = getConfiguration().getRedirectUrl();
 
         return createRequest(Urls.AUTHORIZATION)
-                .addBasicAuth(
-                        persistentStorage.get(CredentialKeys.USERNAME),
-                        persistentStorage.get(CredentialKeys.PASSWORD))
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
                 .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .getUrl();
+    }
+
+    public String getPendingAuthorizationCode() {
+        return client.request(Urls.AUTHORIZATION)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
+                .queryParam(QueryKeys.USER_ID, QueryValues.TEST_USER)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderKeys.CLIENT_CERTIFICATE,
+                        Utils.readFile(configuration.getClientCertificatePath()))
+                .get(AuthorizationCodeResponse.class)
+                .getPendingAuthorizationCode();
     }
 
     public OAuth2Token getToken(String code) {
@@ -98,6 +105,9 @@ public final class SBABApiClient {
         return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(
+                        HeaderKeys.CLIENT_CERTIFICATE,
+                        Utils.readFile(configuration.getClientCertificatePath()))
                 .post(TokenResponse.class, request.toData())
                 .toTinkToken();
     }
@@ -107,7 +117,7 @@ public final class SBABApiClient {
 
         try {
             RefreshTokenRequest request =
-                    new RefreshTokenRequest(QueryValues.REFRESH_TOKEN, redirectUri, refreshToken);
+                    new RefreshTokenRequest(redirectUri, QueryValues.REFRESH_TOKEN, refreshToken);
 
             return client.request(Urls.TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
@@ -126,14 +136,14 @@ public final class SBABApiClient {
     public FetchAccountResponse fetchAccounts() {
         return client.request(Urls.ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .addBearerToken(getTokenFromStorage())
                 .get(FetchAccountResponse.class);
     }
 
     public FetchCustomerResponse fetchCustomer() {
         return client.request(Urls.CUSTOMERS)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .addBearerToken(getTokenFromStorage())
                 .get(FetchCustomerResponse.class);
     }
 
@@ -145,12 +155,12 @@ public final class SBABApiClient {
                                 account.getFromTemporaryStorage(StorageKeys.ACCOUNT_NUMBER)))
                 .queryParam(
                         QueryKeys.END_DATE,
-                        DateUtils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        Utils.formatDateTime(endDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(
                         QueryKeys.START_DATE,
-                        DateUtils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
+                        Utils.formatDateTime(startDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .addBearerToken(getTokenFromStorage())
                 .get(FetchTransactionsResponse.class);
     }
 
@@ -159,7 +169,7 @@ public final class SBABApiClient {
         return createRequest(
                         SBABConstants.Urls.INITIATE_PAYMENT.parameter(
                                 IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
-                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .addBearerToken(getTokenFromStorage())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
     }
 
@@ -168,11 +178,11 @@ public final class SBABApiClient {
                         SBABConstants.Urls.GET_PAYMENT
                                 .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
                                 .parameter(IdTags.PAYMENT_ID, transferId))
-                .header(HeaderKeys.AUTHORIZATION, configuration.getBearerToken())
+                .addBearerToken(getTokenFromStorage())
                 .get(GetPaymentResponse.class);
     }
 
     public void setTokenToSession(OAuth2Token token) {
-        persistentStorage.put(SBABConstants.StorageKeys.TOKEN, token);
+        persistentStorage.put(SBABConstants.StorageKeys.OAUTH_TOKEN, token);
     }
 }

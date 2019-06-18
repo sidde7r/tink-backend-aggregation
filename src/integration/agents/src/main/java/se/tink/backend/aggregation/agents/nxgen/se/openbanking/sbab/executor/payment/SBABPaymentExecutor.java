@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pay
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
@@ -45,7 +46,7 @@ public class SBABPaymentExecutor implements PaymentExecutor {
         this.apiClient = apiClient;
     }
 
-    protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
+    private PaymentType getPaymentType(PaymentRequest paymentRequest) {
         Pair<Type, Type> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
@@ -123,7 +124,7 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentRequest paymentRequest)
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentRequest)
             throws PaymentException {
         throw new NotImplementedException(
                 "fetchMultiple not yet implemented for " + this.getClass().getName());

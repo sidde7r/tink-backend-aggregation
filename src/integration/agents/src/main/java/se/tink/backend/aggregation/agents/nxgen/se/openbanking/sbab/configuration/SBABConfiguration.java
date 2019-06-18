@@ -11,9 +11,16 @@ public class SBABConfiguration implements ClientConfiguration {
 
     private String baseUrl;
     private String clientId;
-    private String clientSecret;
     private String redirectUrl;
-    private String bearerToken;
+    private String clientCertificatePath;
+
+    public String getClientCertificatePath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientCertificatePath),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client certificate path"));
+
+        return clientCertificatePath;
+    }
 
     public String getBaseUrl() {
         Preconditions.checkNotNull(
@@ -31,27 +38,11 @@ public class SBABConfiguration implements ClientConfiguration {
         return clientId;
     }
 
-    public String getClientSecret() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSecret),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
-
-        return clientSecret;
-    }
-
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
-    }
-
-    public String getBearerToken() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(bearerToken),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Bearer token"));
-
-        return bearerToken;
     }
 }

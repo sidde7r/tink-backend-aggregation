@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.FormKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
@@ -18,9 +18,9 @@ public class TokenRequest {
 
     public String toData() {
         return Form.builder()
-                .put(SBABConstants.QueryKeys.GRANT_TYPE, grantType)
-                .put(SBABConstants.QueryKeys.REDIRECT_URI, redirectUri)
-                .put(SBABConstants.QueryKeys.CODE, code)
+                .put(FormKeys.GRANT_TYPE, grantType)
+                .put(FormKeys.REDIRECT_URI, redirectUri)
+                .put(FormKeys.CODE, code)
                 .build()
                 .serialize();
     }
