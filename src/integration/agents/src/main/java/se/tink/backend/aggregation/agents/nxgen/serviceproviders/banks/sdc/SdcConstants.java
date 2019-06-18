@@ -19,6 +19,8 @@ public class SdcConstants {
     public static final int HTTP_TIMEOUT = 1000 * 60 * 5;
     public static final String BANK_CODE_SPARBANKEN_SYD = "9570";
 
+    public static final LogTag HTTP_RESPONSE_LOGGER = LogTag.from("http_logging_filter");
+
     // after more tests we may find more errors during logon
     public enum ErrorMessage {
         LOGIN_DENIED("login denied", false),
