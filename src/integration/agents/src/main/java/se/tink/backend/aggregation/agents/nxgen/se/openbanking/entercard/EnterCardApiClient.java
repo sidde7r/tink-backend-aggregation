@@ -6,6 +6,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.EnterCardConstants.HeaderKeys;
@@ -20,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.authent
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.configuration.EnterCardConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetcher.rpc.CreditCardAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.fetcher.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.payment.rpc.EnterCardPaymentInitiationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.payment.rpc.PaymentInitiationRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.utils.DateUtils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.entercard.utils.EnterCardUtils;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -40,6 +43,7 @@ public final class EnterCardApiClient {
     public EnterCardApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     private EnterCardConfiguration getConfiguration() {
@@ -173,5 +177,13 @@ public final class EnterCardApiClient {
 
     public void setTokenToStorage(OAuth2Token token) {
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
+    }
+
+    public EnterCardPaymentInitiationResponse createPayment(
+            PaymentInitiationRequest paymentInitiationRequest) throws PaymentException {
+        return client.request(Urls.PAYMENT_ENDPOINT)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(EnterCardPaymentInitiationResponse.class, paymentInitiationRequest);
     }
 }
