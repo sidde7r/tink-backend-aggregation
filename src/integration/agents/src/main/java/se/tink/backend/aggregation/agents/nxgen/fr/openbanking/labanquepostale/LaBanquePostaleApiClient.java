@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.LaBanquePostaleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.entities.AccountEntity;
@@ -37,8 +36,7 @@ public final class LaBanquePostaleApiClient
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
         AccountResponse accountResponse =
-                buildRequestWithSignature(Urls.FETCH_ACCOUNTS, "")
-                        .get(AccountResponse.class);
+                buildRequestWithSignature(Urls.FETCH_ACCOUNTS, "").get(AccountResponse.class);
 
         accountResponse.getAccounts().forEach(this::populateBalanceForAccount);
         return accountResponse;
@@ -59,9 +57,7 @@ public final class LaBanquePostaleApiClient
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
 
-        return buildRequestWithSignature(
-                                Urls.BASE_URL_WITH_SLASH + url ,
-                        "")
+        return buildRequestWithSignature(Urls.BASE_URL_WITH_SLASH + url, "")
                 .get(TransactionResponse.class);
     }
 
