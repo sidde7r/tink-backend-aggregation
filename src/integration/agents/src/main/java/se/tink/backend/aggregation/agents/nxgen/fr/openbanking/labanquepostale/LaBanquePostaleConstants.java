@@ -20,8 +20,4 @@ public final class LaBanquePostaleConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String CLIENT_SECRET = "client_secret";
     }
-
-    public static class QueryValues {
-        public static final String QUERY = "?client_id=%s&client_secret=%s";
-    }
 }
