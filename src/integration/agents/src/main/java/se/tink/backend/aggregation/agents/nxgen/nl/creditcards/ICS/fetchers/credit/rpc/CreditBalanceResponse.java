@@ -25,12 +25,16 @@ public class CreditBalanceResponse {
 
     // TODO: verify if there can be more than 1 accountId
 
+    private double getTinkBalance(BalanceEntity balance) {
+        double availableLimit = Double.parseDouble(balance.getBalanceEntity().getAvailableLimit());
+        double creditLimit = Double.parseDouble(balance.getBalanceEntity().getCreditLimit());
+        return availableLimit - creditLimit;
+    }
+
     public Amount toTinkBalanceAmount(String accountId) {
         final BalanceEntity balance = getBalance(accountId);
 
-        return new Amount(
-                balance.getBalanceEntity().getCurrency(),
-                Double.parseDouble(balance.getBalanceEntity().getCreditLimit()));
+        return new Amount(balance.getBalanceEntity().getCurrency(), getTinkBalance(balance));
     }
 
     public Amount toTinkAvailableCreditAmount(String accountId) {
