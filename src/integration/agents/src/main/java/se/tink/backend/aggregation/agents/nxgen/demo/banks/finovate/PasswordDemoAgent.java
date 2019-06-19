@@ -170,7 +170,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                             this.username, this.provider));
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     // Override to new transaction fetcher
