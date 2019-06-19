@@ -148,7 +148,7 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public List<DemoTransactionAccount> getTransactionAccounts() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

@@ -167,7 +167,7 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
 
                     @Override
                     public List<AccountIdentifier> getIdentifiers() {
-                        return null;
+                        return Collections.emptyList();
                     }
                 });
     }
