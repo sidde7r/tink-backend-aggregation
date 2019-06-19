@@ -80,39 +80,44 @@ public class SdcSmsOtpAuthenticator
 
             return new InitValues(device, challenge, transId);
         } catch (HttpResponseException e) {
-            // sdc responds with internal server error when bad credentials
-
-            Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
-            if (invalidPin.isPresent()) {
-                throw invalidPin.get().exception();
-            }
-            if (SdcConstants.Authentication.isInternalError(e)) {
-                // errorMessage is null safe
-                String errorMessage =
-                        Optional.ofNullable(
-                                        e.getResponse()
-                                                .getHeaders()
-                                                .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
-                                .orElse("");
-                if (this.agentConfiguration.isNotCustomer(errorMessage)) {
-                    throw LoginError.NOT_CUSTOMER.exception();
-                }
-                if (this.agentConfiguration.isDeviceRegistrationNotAllowed(errorMessage)) {
-                    throw new IllegalStateException(
-                            "This bank does not support device registration! Configure this provider to use PIN instead of SMS");
-                } else if (this.agentConfiguration.isLoginError(errorMessage)) {
-                    LOGGER.info(errorMessage);
-
-                    // if user is blocked throw more specific exception
-                    if (this.agentConfiguration.isUserBlocked(errorMessage)) {
-                        throw AuthorizationError.ACCOUNT_BLOCKED.exception();
-                    }
-
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-            }
-
+            LOGGER.infoExtraLong(e.toString(), SdcConstants.HTTP_RESPONSE_LOGGER);
+            handleErrors(e);
             throw e;
+        }
+    }
+
+    public void handleErrors(HttpResponseException e)
+            throws AuthenticationException, AuthorizationException {
+        // sdc responds with internal server error when bad credentials
+
+        Optional<InvalidPinResponse> invalidPin = InvalidPinResponse.from(e);
+        if (invalidPin.isPresent()) {
+            throw invalidPin.get().exception();
+        }
+        if (SdcConstants.Authentication.isInternalError(e)) {
+            // errorMessage is null safe
+            String errorMessage =
+                    Optional.ofNullable(
+                                    e.getResponse()
+                                            .getHeaders()
+                                            .getFirst(SdcConstants.Headers.X_SDC_ERROR_MESSAGE))
+                            .orElse("");
+            if (this.agentConfiguration.isNotCustomer(errorMessage)) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+            if (this.agentConfiguration.isDeviceRegistrationNotAllowed(errorMessage)) {
+                throw new IllegalStateException(
+                        "This bank does not support device registration! Configure this provider to use PIN instead of SMS");
+            } else if (this.agentConfiguration.isLoginError(errorMessage)) {
+                LOGGER.info(errorMessage);
+
+                // if user is blocked throw more specific exception
+                if (this.agentConfiguration.isUserBlocked(errorMessage)) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+                }
+
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
         }
     }
 
