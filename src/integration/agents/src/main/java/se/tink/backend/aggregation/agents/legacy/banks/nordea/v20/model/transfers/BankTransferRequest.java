@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.banks.nordea.v20.model.transfers;
 import com.google.common.base.Strings;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Date;
 import java.util.Locale;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
@@ -29,7 +30,6 @@ public class BankTransferRequest {
         in.setToAccountBranchId("");
         in.setFromAccountBranchId("");
         in.setDueDateType("ExpressPayment");
-        in.setDueDate(DateTime.now().toString("yyyy-MM-dd"));
         in.setToAccountIdNickname("");
         in.setRecurringNumberOfPayments("0");
         in.setRecurringFrequency("Once");
@@ -64,5 +64,13 @@ public class BankTransferRequest {
 
     public void setMessage(String message) {
         createTransferIn.setMessage(Strings.nullToEmpty(message));
+    }
+
+    public void setDueDate(Date dueDate) {
+        if (dueDate == null) {
+            createTransferIn.setDueDate(DateTime.now().toString("yyyy-MM-dd"));
+        } else {
+            createTransferIn.setDueDate(new DateTime(dueDate).toString("yyyy-MM-dd"));
+        }
     }
 }

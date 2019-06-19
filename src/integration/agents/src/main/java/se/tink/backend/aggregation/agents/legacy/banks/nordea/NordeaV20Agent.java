@@ -1482,11 +1482,13 @@ public class NordeaV20Agent extends AbstractAgent
 
     private void makeInternalBankTransfer(
             Transfer transfer, ProductEntity source, ProductEntity destination) throws IOException {
+
         BankTransferRequest transferRequest = BankTransferRequest.createNonRecurringBankTransfer();
         transferRequest.setAmount(transfer.getAmount().getValue());
         transferRequest.setMessage(getInternalTransferMessage(transfer));
         transferRequest.setSource(source);
         transferRequest.setDestination(destination);
+        transferRequest.setDueDate(transfer.getDueDate());
 
         String url = this.market.getBankingEndpoint() + "/Transfers";
 
