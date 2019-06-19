@@ -20,7 +20,7 @@ public class BookedTransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setPending(true)
+                .setPending(false)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
                 .setDescription(remittanceInformationUnstructured)
