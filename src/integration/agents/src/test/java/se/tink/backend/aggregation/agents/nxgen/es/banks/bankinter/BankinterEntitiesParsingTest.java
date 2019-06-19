@@ -10,11 +10,15 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.GlobalPositionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.amount.Amount;
 
@@ -67,5 +71,32 @@ public class BankinterEntitiesParsingTest {
         assertEquals("Cuenta nómina", account.getIdModule().getAccountName());
         // FIXME: account only holds the first holder name
         assertEquals(Amount.inEUR(31337.42), account.getBalance());
+    }
+
+    @Test
+    public void testTransactionsResponse() {
+        final TransactionsResponse transactionsResponse =
+                loadTestResponse("4.transactions.xhtml", TransactionsResponse.class);
+
+        Collection<Transaction> transactions = transactionsResponse.toTinkTransactions();
+
+        assertEquals(13, transactions.size());
+
+        final PaginationKey nextKey = transactionsResponse.getNextKey(0);
+        assertEquals("j_id374401928_5f006346:j_id374401928_5f006392", nextKey.getSource());
+    }
+
+    @Test
+    public void testNoTransactionsResponse() {
+        final TransactionsResponse transactionsResponse =
+                loadTestResponse("5.transactions_none.xhtml", TransactionsResponse.class);
+
+        Collection<Transaction> transactions = transactionsResponse.toTinkTransactions();
+
+        assertEquals(0, transactions.size());
+
+        final PaginationKey nextKey = transactionsResponse.getNextKey(0);
+        assertEquals(1, nextKey.getConsecutiveEmptyReplies());
+        assertEquals("j_id374401928_5f006346:j_id374401928_5f006392", nextKey.getSource());
     }
 }

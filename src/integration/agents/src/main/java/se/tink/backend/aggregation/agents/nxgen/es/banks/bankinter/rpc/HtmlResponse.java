@@ -3,6 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -25,11 +29,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterCons
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.libraries.amount.Amount;
 
 public class HtmlResponse {
     protected final String body;
     protected final Document document;
     private static final XPathFactory xpathFactory = XPathFactory.newInstance();
+    private static final NumberFormat amountFormat =
+            DecimalFormat.getInstance(Locale.forLanguageTag("es"));
 
     protected static Document parseHTML(String body) {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -59,6 +66,23 @@ public class HtmlResponse {
         this.document = parseHTML(this.body);
     }
 
+    protected Amount parseAmount(String amountString) {
+        // amount uses "." as thousands separator and "," as decimal separator
+        if (!amountString.endsWith("€")) {
+            throw new IllegalStateException("Unknown account currency for " + amountString);
+        }
+
+        try {
+            if (amountString.startsWith("+")) {
+                return Amount.inEUR(amountFormat.parse(amountString.substring(1)));
+            } else {
+                return Amount.inEUR(amountFormat.parse(amountString));
+            }
+        } catch (ParseException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static QName returnTypeForClass(Class cls) {
         if (cls == String.class) {
             return XPathConstants.STRING;
@@ -71,13 +95,12 @@ public class HtmlResponse {
         }
     }
 
-    protected static <T> T evaluateXPath(
-            Document document, String xPathExpression, Class<T> returnClass) {
+    protected static <T> T evaluateXPath(Node node, String xPathExpression, Class<T> returnClass) {
         final XPath xPath = xpathFactory.newXPath();
         final XPathExpression expr;
         try {
             expr = xPath.compile(xPathExpression);
-            return (T) expr.evaluate(document, returnTypeForClass(returnClass));
+            return (T) expr.evaluate(node, returnTypeForClass(returnClass));
         } catch (XPathExpressionException e) {
             throw new IllegalStateException(e);
         }

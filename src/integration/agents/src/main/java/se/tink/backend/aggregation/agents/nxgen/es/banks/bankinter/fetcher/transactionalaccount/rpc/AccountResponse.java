@@ -1,16 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc;
 
 import com.google.common.base.Strings;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.JsfPart;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.HtmlResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.rpc.JsfUpdateResponse;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
@@ -56,21 +53,13 @@ public class AccountResponse extends HtmlResponse {
                         .replaceAll("\\s", "");
         if (Strings.isNullOrEmpty(balanceString)) {
             LOG.warn("Did not find account balance.");
-        } else if (!balanceString.endsWith("€")) {
-            throw new IllegalStateException("Unknown account currency for " + balanceString);
         }
 
-        try {
-            // amount uses "." as thousands separator and "," as decimal separator
-            final NumberFormat numberFormat = NumberFormat.getInstance(Locale.forLanguageTag("es"));
-            return Amount.inEUR(numberFormat.parse(balanceString));
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
+        return parseAmount(balanceString);
     }
 
     protected List<String> getHolderNames(JsfUpdateResponse accountInfo) {
-        final Document accountDetails = accountInfo.getUpdateDocument(FormValues.ACCOUNT_DETAILS);
+        final Document accountDetails = accountInfo.getUpdateDocument(JsfPart.ACCOUNT_DETAILS);
         final NodeList holderNames =
                 evaluateXPath(
                         accountDetails,

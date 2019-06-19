@@ -37,7 +37,7 @@ public final class BankinterConstants {
 
     public static class FormValues {
         public static final String ACCOUNT_HEADER = "movimientos-cabecera";
-        public static final String ACCOUNT_DETAILS = "movimientos-cabecera:head-datos-detalle";
+        public static final String TRANSACTIONS = "j_id591600677_4_3cc72c6c";
         public static final String TRUE = "true";
         public static final String JSF_EXECUTE_ALL = "@all";
     }
@@ -45,6 +45,13 @@ public final class BankinterConstants {
     public static class JsfSource {
         public static final String ACCOUNT_INFO = "movimientos-cabecera:j_id1163893164_56ce7f85";
         public static final String TRANSACTIONS = "j_id591600677_4_3cc72c6c:cargaRemotaMovimientos";
+    }
+
+    public static class JsfPart {
+        public static final String ACCOUNT_DETAILS = "movimientos-cabecera:head-datos-detalle";
+        public static final String TRANSACTIONS_WAIT = "movimientos_espera";
+        public static final String TRANSACTIONS_NAVIGATION = "movimientos-nav";
+        public static final String TRANSACTIONS = "listado-movimientos";
     }
 
     public static class QueryKeys {

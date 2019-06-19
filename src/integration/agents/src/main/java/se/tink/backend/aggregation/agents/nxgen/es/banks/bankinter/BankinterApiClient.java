@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter;
 
 import com.google.api.client.http.HttpStatusCodes;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.cookie.Cookie;
@@ -30,6 +32,7 @@ public final class BankinterApiClient {
 
     public BankinterApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
+        client.setUserAgent(HeaderValues.USER_AGENT);
         this.persistentStorage = persistentStorage;
     }
 
@@ -76,8 +79,8 @@ public final class BankinterApiClient {
                         .get(HttpResponse.class));
     }
 
-    public JsfUpdateResponse fetchJsfUpdate(
-            String url, String source, String viewState, String render) {
+    public <T extends JsfUpdateResponse> T fetchJsfUpdate(
+            String url, String source, String viewState, Class<T> responseClass, String... render) {
         final Form.Builder formBuilder = Form.builder();
         final String submitKey = (source.split(":")[0]) + "_SUBMIT";
         formBuilder.put(submitKey, "1");
@@ -85,15 +88,30 @@ public final class BankinterApiClient {
         formBuilder.put(FormKeys.JSF_PARTIAL_AJAX, FormValues.TRUE);
         formBuilder.put(FormKeys.JSF_SOURCE, source);
         formBuilder.put(FormKeys.JSF_PARTIAL_EXECUTE, FormValues.JSF_EXECUTE_ALL);
-        formBuilder.put(FormKeys.JSF_PARTIAL_RENDER, render);
+        formBuilder.put(FormKeys.JSF_PARTIAL_RENDER, String.join(" ", render));
         formBuilder.put(source, source);
 
-        return new JsfUpdateResponse(
+        final HttpResponse response =
                 client.request(url)
                         .header(HeaderKeys.JSF_REQUEST, HeaderValues.JSF_PARTIAL)
                         .body(
                                 formBuilder.build().serialize(),
                                 MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(HttpResponse.class));
+                        .post(HttpResponse.class);
+        try {
+            final Constructor<T> constructor = responseClass.getConstructor(HttpResponse.class);
+            return constructor.newInstance(response);
+        } catch (InstantiationException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchMethodException e) {
+            throw new IllegalStateException(
+                    "Could not instantiate " + responseClass.getCanonicalName(), e);
+        }
+    }
+
+    public JsfUpdateResponse fetchJsfUpdate(
+            String url, String source, String viewState, String... render) {
+        return fetchJsfUpdate(url, source, viewState, JsfUpdateResponse.class, render);
     }
 }
