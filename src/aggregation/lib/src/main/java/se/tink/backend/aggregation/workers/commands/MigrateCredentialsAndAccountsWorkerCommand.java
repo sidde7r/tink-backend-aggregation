@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.icabanken.IcaBankenSanitizingMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.banks.skandiabanken.SkandiaBankenSanitizingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.brokers.avanza.AvanzaStripClearingMigration;
 import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort.SebKortSanitizeUniqueIdentifierMgration;
 import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
@@ -45,6 +46,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                             new SebKortSanitizeUniqueIdentifierMgration())
                     .put("sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
                     .put("statoilmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                    .put("skandiabanken-bankid", new SkandiaBankenSanitizingMigration())
                     .put("avanza-bankid", new AvanzaStripClearingMigration())
                     .put("icabanken-bankid", new IcaBankenSanitizingMigration())
                     .build();
