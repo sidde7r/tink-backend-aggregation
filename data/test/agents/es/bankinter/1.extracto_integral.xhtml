@@ -1,0 +1,1683 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg" xmlns:template="http://java.sun.com/jsf/composite/header" lang="es"><head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--BK_HEAD--><script type="text/javascript" src="dtagent_ICA23STVjpqrx_7000100201011.js" data-dtconfig="agentUri=dtagent_ICA23STVjpqrx_7000100201011.js|rid=RID_1835230997|rpid=-1951407712|lastModification=1549444859425|tp=500,50,0,1|reportUrl=dynaTraceMonitor|app=Nueva Banca Online|domain=bankinter.com"></script><script type="text/javascript" src="/extracto/javax.faces.resource/jquery/jquery.js.xhtml?ln=primefaces&amp;v=3.2"><!--
+
+//--></script><script type="text/javascript" src="/extracto/javax.faces.resource/primefaces.js.xhtml?ln=primefaces&amp;v=3.2"><!--
+
+//--></script><script type="text/javascript" src="/extracto/javax.faces.resource/jsf.js.xhtml?ln=javax.faces"><!--
+
+//--></script>
+		<link href="/res/css/bancaParticulares-bootstrap-datepicker.css" rel="stylesheet" />
+
+		<script type="text/javascript" src="/res/js/bancaParticulares/opina/opina-min.js"><!--
+
+//--></script>
+		<script src="../resources/js/pglobal_gtm_ppv1.0.0.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="/res/nbl/js/build/bk_crm.0.0.1.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="/res/js/bancaParticulares/componente-menu.js"><!--
+
+//--></script>
+		<script type="text/javascript"><!--
+
+			jsf.ajax.addOnEvent(_dragdrop);
+			jsf.ajax.addOnEvent(_onAjaxResize);
+			
+		    function iniciarFlechasExtracto(){
+				$('.boxSortables').each(function(){
+		    		if($(this).outerWidth(true) > $(window).width()){
+		    			$(this).closest('.panelSortable').find('.panel-body > .boxAfter').animate({opacity: 1},750);
+		    			$(this).closest('.panelSubsection').find('> .boxAfter').animate({opacity: 1},750);
+		    		}else{
+		    			$(this).closest('.panelSortable').find('.panel-body > .boxAfter').animate({opacity: 0},1);
+		    			$(this).closest('.panelSubsection').find('> .boxAfter').animate({opacity: 0},1);
+		    		}
+		    	});
+			}
+			
+			function _onAjaxResize() {
+				
+				 if($(window).width() < 768){
+				    	iniciarFlechasExtracto();
+				    	$(window).resize(function(){
+				    		iniciarFlechasExtracto();
+				    	});
+					    $('.panelSortable .maskBoxes').on('scroll',function(){
+					    	var anchoBoxSortables, posLeftMask, posRightMask
+					    	anchoBoxSortables = $(this).find('.boxSortables').outerWidth(true);
+						    posLeftMask = $(this).find('.boxSortables').offset().left;
+						    posRightMask = $(window).width() - anchoBoxSortables;
+						    if(posLeftMask <= posRightMask){
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxBefore').animate({opacity: 1},750);
+						    	$(this).closest('.panelSubsection').find('> .boxBefore').animate({opacity: 1},750);
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxAfter').animate({opacity: 0},1);
+						    	$(this).closest('.panelSubsection').find('> .boxAfter').animate({opacity: 0},1);
+						    }else if(posLeftMask >= 0){
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxBefore').animate({opacity: 0},1);
+						    	$(this).closest('.panelSubsection').find('> .boxBefore').animate({opacity: 0},1);
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxAfter').animate({opacity: 1},750);
+						    	$(this).closest('.panelSubsection').find('> .boxAfter').animate({opacity: 1},750);
+						    }else{
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxBefore').animate({opacity: 0},1);
+						    	$(this).closest('.panelSubsection').find('> .boxBefore').animate({opacity: 0},1);
+						    	$(this).closest('.panelSortable').find('.panel-body > .boxAfter').animate({opacity: 0},1);
+						    	$(this).closest('.panelSubsection').find('> .boxAfter').animate({opacity: 0},1);
+						    }
+				    	});
+				    	
+				    }
+				
+				
+				
+		   	}
+
+			function _dragdrop() {
+				if ($(window).width() >= 977) {
+					if($(".boxSortables").length){
+				  		$('.boxSortables')
+						.sortable(
+								{
+									placeholder : "ui-state-highlight boxSortableDefault",
+									items : "> li:not(.ui-state-disabled)",
+									handle : ".zoneSortableBox",
+									helper: "clone",
+									update : function(event, ui) {
+										var index = ui.item
+												.index();
+										$(
+												'boxSortables li:nth-child('
+														+ (index)
+														+ ')')
+												.html(index);
+										$(
+												"input[id$='bIndiceProducto']")
+												.val(
+														ui.item
+																.index()+1);
+										$(
+												"input[id$='bIdProducto']")
+												.val(
+														ui.item
+																.attr("sec"));
+										$(
+												"input[id$='bIdCuentaProducto']")
+												.val(
+														ui.item
+																.attr("id"));
+										$(
+												"input[id$='bOrdenaProductos']")
+												.trigger(
+														"click");
+									},
+									});
+					}
+				  if($(".panelsSortables").length){
+                  	$(".panelsSortables").sortable({
+                    	placeholder : "ui-state-highlight panelSortable",
+                        handle : ".zoneSortablePanel",
+                        items : "> .panelSortable",
+                        update : function(event, ui) {
+	                        var primeros = $(".panelsSortables").children(":lt("+ui.item.index()+")");
+                            var contadorPaneles = 0;
+                            $(primeros).each(function(){
+	                            if(!$(this).hasClass("panelSortable")){
+    		                        contadorPaneles++;
+                                }
+                            })
+                        var indexReal = ui.item.index() - contadorPaneles;            		   
+                        $(".panelsSortables").children(":not(.panelSortable :lt("+indexReal+")")
+                        $("input[id$='bIndiceSeccion']").val(indexReal + 1);
+                    	$("input[id$='bIdSeccion']").val(ui.item.attr("id"));
+                        $("input[id$='bOrdenaSecciones']").trigger("click");
+                    },
+                  });
+                 }
+			}
+		}
+			
+			// Muestra pantalla modal
+			function _showModal(modal){
+			    $(modal).modal('show');
+			}; 
+
+			 function isM(){
+					var isMobile = false; //initiate as false
+					// device detection
+					if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+			    	|| /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))){
+
+					     isMobile = true;
+					}
+					return isMobile;
+				};
+				
+				
+		
+//--></script>
+    <!--BK_HEAD-->
+    <!-- HEAD INIT-->
+    <meta name="google-site-verification" content="jVWlHx7nq6IOdR94aewm0QdacgcKQm-_KOh9Gi9oXkA" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="google-site-verification" content="wkPpOJApLqZDLyUY9bhxcyBzw91JvYt2eBT752tJcY8" />
+    <meta name="description" content="" />
+    <meta name="keywords" />
+      <title>Bancaonline &gt; Posición global</title>
+      <meta name="robots" content="noindex,follow" />
+
+    <link href="/res/img/bancaParticulares/favicon.ico" type="text/css" rel="shortcut icon" />
+    <link href="/res/img/bancaParticulares/apple-touch-icon-precomposed.png" type="text/css" rel="apple-touch-icon-precomposed" />
+      <!--HEAD TEMPLATE V1-->
+        <link href="/res/nbl/css/base-private-transac.css?v=1" type="text/css" rel="stylesheet" />
+      <link href="/res/css/bancaParticulares-bootstrap.css?v=1" type="text/css" rel="stylesheet" title="maincss" />
+        <link href="/res/css/posicionGlobal_tam4.css" type="text/css" rel="stylesheet" />
+      <script src="/res/js/jquery.js" type="text/javascript"><!--
+
+//--></script><script type="text/javascript"><!--
+
+        function contentSize() {
+        }
+
+        function sdir() {
+        }
+//--></script>
+
+      <script src="/res/js/jquery-ui.min.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/js/jquery.mobile.custom.min.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/js/jquery.lazyload.min.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/nbl/js/build/optimize_images.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/js/methods.primefaces.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/js/bootstrap.min.js" type="text/javascript"><!--
+
+//--></script>
+
+    <script src="/res/nbl/cabecera/js/header_privado.0.0.1.js" type="text/javascript"><!--
+
+//--></script>
+    <!--HEAD END-->
+
+    <!--HEAD-GOOGLE-TAG-MANAGER-INIT--><script type="text/javascript"><!--
+
+      headerbk.headGoogleTagManager();
+//--></script>
+      <script type="text/javascript"><!--
+
+        var opinaid = 'cafebabecafebabecafebabecafebabecafebabe';
+        dataLayer.push({'userId': opinaid});
+      
+//--></script>
+    <style type="text/css">.async-hide {
+      opacity: 0 !important
+    } </style>
+
+
+    <script src="/res/nbl/cabecera/js/head_google_tag_manager_2.js" type="text/javascript"><!--
+
+//--></script>
+
+    <!--HEAD-GOOGLE-TAG-MANAGER-END--></head><body class="bk ">
+    <!--CABECERA COMPONENTE INIT--><script type="text/javascript"><!--
+
+          var body = document.body;
+          body.classList.add("logged");
+//--></script><script type="text/javascript"><!--
+
+          var body = document.body;
+          body.classList.add("private");
+//--></script>
+
+      <div class="sr-only"><a href="#zonaContenidos">Saltar a zona de contenidos</a></div>
+
+    <!--GTM INIT-->
+      <!-- Google Tag Manager (noscript) -->
+      <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PFT5L5" height="0" width="0" style="display:none;visibility:hidden">
+        </iframe>
+      </noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    <!--GTM END-->
+    <!--AVISO COOKIE-->
+    <div id="divCookie" role="contentinfo" aria-label="aviso de cookies">
+      <div class="container">
+        <p>Utilizamos cookies propias y de terceros para proporcionar la mejor experiencia posible, analizar la navegación de los usuarios y poder ofrecer contenidos de tu interés. Si continuas navegando, entenderemos que lo aceptas. Es posible cambiar la configuración u obtener más información haciendo click en nuestra <a href="javascript:abreVentana();" class="link">Política de cookies</a></p>
+        <button type="button" id="cerrarCookie" class="close ">
+          <span class="icon-fallback-text">
+              <span class="pictoDSL pictoDSL-32 pictoDSL-close-16" aria-hidden="true"></span>
+              <span class="text">Cerrar aviso de cookies</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <script src="/res/js/cookielegal.js" type="text/javascript"><!--
+
+//--></script>
+    <!--AVISO COOKIE END-->
+      <div class="menu_responsive_overlay_NW visible-xs visible-sm hidden-launcher"></div>
+      <nav aria-label="menú dispositivos móviles" class="menu_responsive_NW privada_NW visible-xs visible-sm hidden-launcher">
+    <span role="button" class="closeMenu icon-fallback-text pull-right">
+      <span class="pictoDSL pictoDSL-close-16 pictoDSL-32" aria-hidden="true" tabindex="0"></span>
+      <span class="text">Cerrar</span>
+    </span>
+
+        <div class="menu_responsive_categories">
+          <div class="gradientMenu"></div>
+          <div class="scroll">
+
+            <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Posicion global" id="ad34439907214410VgnVCM1000007844000aRCRD_mobile" class="menu_option " href="/extracto/secure/extracto_integral.xhtml">Posición global</a>
+
+            <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Ahorro e Inversion" id="e970081eabc83410VgnVCM1000007844000aRCRD_mobile" class="menu_option hidden" href="/productos/secure/extracto_inversion.xhtml ">Ahorro e Inversión</a>
+
+            <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Contratar" id="b65f575d7af88510VgnVCM1000004954000aRCRD_mobile" class="menu_option " href="/banca/contratar">Contratar</a>
+
+            <a class="menu_option" href="/publico/buscador_oficinas_cajeros.xhtml">Oficinas y cajeros</a>
+            <a class="menu_option gestor" href="/conversaciones/secure/conversacion_detalle.xhtml">
+                      <span data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Icono - Comunicaciones" class="pictoDSL pictoDSL-comment-16 pictoDSL-24" aria-hidden="true"></span>
+              Comunicaciones (<span data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Icono - Comunicaciones" class="cantidad numeroAvisos">0</span>)
+            </a>
+            <a class="menu_option telefono" href="tel:902 365 563">
+              <span class="pictoDSL pictoDSL-handset-16 pictoDSL-24" aria-hidden="true"></span>
+              902 365 563
+            </a>
+          </div>
+          <div class="option_selected children userName">
+
+            <span class="pictoDSL pictoDSL-arrow-down-16 pictoDSL-24"></span>
+            FULANO PEREZ DE TAL
+            <div class="menu_responsive_options">
+              <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Cliente&gt;Mis datos" href="/infocliente/secure/mis_datos.xhtml" tabindex="0">Mis datos</a>
+              <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Cliente&gt;Documentos" href="https://www.bankinter.com/banca/areaPrivada/documentos" tabindex="0">Documentos</a>
+              <a data-track="true" data-type="enlace" data-position="Cabecera Movil" data-element="Cliente&gt;Avisos" href="/avisos/secure/notificaciones.xhtml" tabindex="0">Gestión de avisos</a>
+            </div>
+          </div>
+            <a class="desconectar" href="/gestion/secure/prelogout.xhtml?logout_back=https%3A%2F%2Fwww.bankinter.com%2Fbanca%2Fnav%2Fdesconexion%2F%3Foid%3Dcafebabecafebabecafebabecafebabecafebabe%26origen%3Dlogout">Desconectar</a>
+
+        </div>
+      </nav>
+
+      <header class="header_NW privada_NW hidden-launcher">
+
+        <div class="header_tablet_mobile hidden-launcher visible-xs visible-sm">
+          <a href="https://www.bankinter.com" tabindex="0" class="logo_NW">Bankinter</a>
+          <span class="icon-fallback-text pull-right hamburger">
+            <span class="pictoDSL pictoDSL-hamburger-16" aria-hidden="true" tabindex="0"></span>
+            <span class="text">Menú</span>
+          </span>
+          <div class="title">
+            Posición global
+          </div>
+        </div>
+        <div class="container visible-md visible-lg">
+          <div class="header_logo" role="banner">
+            <div id="logo_IE_min" class="logo_NW pull-left hidden">
+              <a href="https://www.bankinter.com" tabindex="0">
+                <img src="/res/nbl/images/svg/logo_bk.svg" class="logo_IE_private" alt="logo Bankinter" />
+              </a>
+            </div>
+            <!--LOGO_NW-->
+            <div id="logo_NW" class="logo_NW pull-left">
+              <a href="https://www.bankinter.com" tabindex="0"><svg xmlns:svg="http://www.w3.org/2000/svg" id="logoSVG" data-name="logo_SVG" viewBox="0 0 215 32">
+      <path id="logo_b" d="M12.5 32c8.2 0 12.4-2.4 12.4-11.2 0-8-3-11.6-11.2-11.6-3.6 0-6 0.4-7.9 1.9v-11.1h-5.8v21.1c0 8.1 3.6 10.9 12.5 10.9v0zM12.4 27.7c-6 0-6.9-0.9-6.9-7.7 0-5.8 1.9-6.6 6.6-6.6s6.7 0.7 6.7 6.6c0.1 6.6-1 7.7-6.4 7.7z"></path>
+      <path id="logo_k" d="M91.1 22.6v9h-5.8v-31.6h5.8v17.6h1.1c0.1 0 0.2 0 0.2 0 1.3 0 2.5-0.6 3.3-1.5l6.7-6.7h6.7l-10.1 10.4 11 11.6h-7.5l-7.1-7.7c-0.6-0.8-1.6-1.4-2.7-1.4-0.2 0-0.5 0-0.7 0.1h-0.9v0.2z"></path>
+      <path id="logo_rest" d="M209.6 26h5.8v5.6h-5.8v-5.6zM62.1 31.6v-13.8c0-3.4 1.1-4.3 6.2-4.3s6.2 0.9 6.2 4.3v13.8h5.8v-14.2c0-6.4-4.5-8.4-10.9-8.4h-1.9c-6.4 0-11 2.1-11 8.4v14.2h5.6zM129.1 31.6v-13.8c0-3.4 1.1-4.3 6-4.3s6.2 0.9 6.2 4.3v13.8h5.8v-14.2c0-6.4-4.7-8.4-10.9-8.4h-2.1c-6.4 0-10.9 2.1-10.9 8.4v14.2h5.9zM167.5 13.8h-9.7v10.9c0 2.1 1.5 2.8 3.9 2.8 0.2 0 0.4 0 0.7 0 1.9 0 3.7-0.2 5.5-0.6l-0.2 4c-2 0.5-4.3 0.9-6.7 0.9-6.4 0-8.8-2.6-8.8-6.7v-22.7h5.6v7.1h9.7c0 0 0 4.3 0 4.3zM199.5 16.7c0-6 4.3-7.7 8.2-7.7 1.9 0 6.7 0.2 7.7 0.4v4.3h-6.2c-3.2 0-3.9 0.4-3.9 3.4v14.6h-5.8v-15zM112.3 9.5h5.8v22.1h-5.8c0 0 0-22.1 0-22.1zM45.8 17.6v-1.1c0-2.6-1.7-3-6.2-3-0.1 0-0.3 0-0.5 0-3.3 0-6.5 0.5-9.5 1.6l0.2-4.2c3.1-1.2 6.5-1.9 10-1.9 6.4 0 11.8 0.9 11.8 8.2v6.8c0 7.9-6.4 8-11.8 8-7.9 0-11.8-2.2-11.8-6.7 0.3-6.2 4-7.3 17.8-7.7v0 0zM40.2 27.7c4.3 0 5.6-0.6 5.6-2.8v-3.6l-5.2 0.2c-5.2 0.4-6.5 1.1-6.5 2.8 0 2.8 0.9 3.4 6.1 3.4v0 0zM112.3 0h5.8v5.6h-5.8v-5.6zM180 19.1c7.7-0.4 8.8-0.9 8.8-2.8s-1.3-3-5.6-3c-5.6 0-6.2 1.1-6.2 6l3-0.2zM177 23.4c0.4 2.8 1.7 4.3 6.2 4.3 0.2 0 0.4 0 0.6 0 3.7 0 7.2-0.6 10.5-1.8l-0.2 4c-3.2 1.3-6.8 2-10.7 2.1-9.4 0-12.5-2.4-12.5-11.8 0-8.2 2.6-11.2 12.4-11.2 8 0 11.6 2.6 11.8 7.3-0.1 5.6-4 6.9-18.1 7.1v0 0z"></path>
+    </svg>
+                <span id="logo_punto"></span>
+              </a>
+            </div>
+            <!--END LOGO_NW-->
+            <!--HEADER DATA--><div class="header_data private">
+                <a class="exit pull-right" tabindex="0" href="/gestion/secure/prelogout.xhtml?logout_back=https%3A%2F%2Fwww.bankinter.com%2Fbanca%2Fnav%2Fdesconexion%2F%3Foid%3Dcafebabecafebabecafebabecafebabecafebabe%26origen%3Dlogout">
+                                   <span class="desconectar">
+                            <span class="text">Desconectar</span>
+                            <span class="pictoDSL pictoDSL-logout-16 pictoDSL-24" aria-hidden="true"></span>
+                          </span>
+                </a>
+
+              <div class="comentarios pull-right" data-toggle="tooltip" data-placement="bottom" data-original-title="Comunicaciones">
+                <a data-type="enlace" href="/conversaciones/secure/conversacion_detalle.xhtml" tabindex="0">
+                              <span data-track="true" data-type="enlace" data-position="Cabecera" data-element="Icono - Comunicaciones" class="cantidad numeroAvisos">0</span>
+              <span class="icon-fallback-text">
+                <span class="pictoDSL pictoDSL-comment-16 pictoDSL-24" data-track="true" data-type="enlace" data-position="Cabecera" data-element="Icono - Comunicaciones" aria-hidden="true"></span>
+                <span class="text">Comentarios</span>
+              </span>
+                </a>
+              </div>
+              <div class="dropdown pull-right">
+                <button class="btn btn-link dropdown-toggle" type="button" id="desplegable-portal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">RODRIGO FERNANDEZ DE LA MORA
+                  <span class="pictoDSL pictoDSL-arrow-down-16 pictoDSL-24" aria-hidden="true"></span>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="desplegable-portal" style="display: none;">
+                  <li><a data-track="true" data-type="enlace" data-position="Cabecera" data-element="Cliente&gt;Mis datos" href="/infocliente/secure/mis_datos.xhtml">Mis datos</a>
+                  </li>
+                  <li><a data-track="true" data-type="enlace" data-position="Cabecera" data-element="Cliente&gt;Documentos" href="https://www.bankinter.com/banca/areaPrivada/documentos">Documentos</a>
+                  </li>
+                  <li><a data-track="true" data-type="enlace" data-position="Cabecera" data-element="Cliente&gt;Avisos" href="/avisos/secure/notificaciones.xhtml">Gestión de avisos</a>
+                  </li>
+                </ul>
+
+              </div>
+
+              <a data-toggle="tooltip" data-placement="bottom" data-original-title="Dinos qué necesitas" href="/clientes/solicitar_ayuda.xhtml" class="opinator pull-right" tabindex="6">
+                <span class="icon-fallback-text">
+                  <span data-track="true" data-type="enlace" data-position="Cabecera" data-element="Icono - Dinos que necesitas" class="pictoDSL pictoDSL-opinator-16 pictoDSL-24" aria-hidden="true"></span>
+                  <span class="text">Opinator</span>
+                </span>
+              </a></div>
+            <!--END HEADER DATA-->
+            <div class="clearfix"></div>
+          </div>
+
+
+          <div class="header_menu visible-md visible-lg">
+            <div class="pull-right">
+              <a data-track="true" data-type="enlace" data-position="Cabecera" data-element="Broker" target="_blank" href="https://broker.bankinter.com/www/es-es/cgi/broker+escuadromandos" class="btn_new btn_new_light btn_new_small">Broker</a>
+            </div>
+            <nav aria-label="menú dispositivos sobremesa">
+              <ul id="menuCabecera"></ul><script type="text/javascript"><!--
+
+                headerbk.menuCabecera.obtenerMenuCabecera(3,'es');
+//--></script>
+            </nav>
+            <!-- create cookie--><script type="text/javascript"><!--
+
+
+              headerbk.obtenerNumAvisosCookie();
+//--></script>
+
+          </div>
+        </div>
+
+      </header>
+
+
+    <!--CABECERA COMPONENTE FIN-->
+    <div class="hidden">
+      <!--BK_TITULO_MOVIL-->Posición global<!--BK_TITULO_MOVIL-->
+    </div>
+    <main class="content_all_NW" id="zonaContenidos">
+      <!--BK_INICIO--><!--BK_INICIO-->
+
+      <!--BK_BARRITA--><!--BK_BARRITA-->
+      <nav role="navigation" class="hidden-xs hidden-sm container">
+        <!--BK_BREADCRUMB-->
+		<br /><!--BK_BREADCRUMB-->
+      </nav>
+      <article class="container article" id="article" role="main">
+        <h2 class="sr-only">Contenido Principal</h2>
+        <header class="row">
+          <h1 class="col-md-12 hidden-xs hidden-sm">
+            <!--BK_TITULO--><span class="appTitle">
+	            Posición global</span><!--BK_TITULO-->
+          </h1>
+          <!--BK_HEADER-->
+		<div class="col-xs-12">
+			<a href="#" title="Imprimir" class="textLink_new btn-print hidden-xs hidden-sm" onclick="window.print();return false;">Imprimir <span class=" pictoDSL-print-16 pictoDSL-24" aria-hidden="true"></span>
+			</a> 
+			<span id="fechaYHoraImpr" class="hidden"></span><form novalidate="novalidate" id="j_id357844242_5_7b2aa1f3" name="j_id357844242_5_7b2aa1f3" method="post" action="/extracto/secure/extracto_integral.xhtml" enctype="application/x-www-form-urlencoded"><input type="hidden" name="j_id357844242_5_7b2aa1f3_SUBMIT" value="1" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="W+HZ3kkX2Yc2Sq0GtzOh61EhTXWJhyi7YrorbDWwkvqQREhZ56Z/iJI+0m837tvxwI7e9AGEuKpDziXDsxgQkkyCIWutkox3qFb2kdfLwWTEGnCu5kHZhMfktX/h1PxtU+yC3P6OGBNfa9nIhWKML+AiO4xZEGX2JqYMnA==" /></form>
+		</div><!--BK_HEADER-->
+        </header>
+        <div class="row">
+          <section role="region" class="col-md-12">
+            <!--BK_CONTENIDO-->
+		<!--Start of DoubleClick Floodlight Tag: Please do not remove
+			Activity name of this tag: AOD_Bankinter_Negativizar
+			URL of the webpage where the tag is expected to be placed: http://bankinter.es
+			This tag must be placed between the < body> and </ body> tags, as close as possible to the opening tag.
+			Creation Date: 02/13/2017-->
+		<script type="text/javascript"><!--
+
+			var axel = Math.random() + "";
+			var a = axel * 10000000000000;
+			document.write('<img src="https://ad.doubleclick.net/ddm/activity/src=4646185;type=invmedia;cat=o8zci96v;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord=' + a + '?" width="1" height="1" />');
+		
+//--></script>
+		<noscript>
+			<img src="https://ad.doubleclick.net/ddm/activity/src=4646185;type=invmedia;cat=o8zci96v;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;ord=1?" width="1" height="1" />
+		</noscript>
+		<!--End of DoubleClick Floodlight Tag>--><input type="hidden" id="impPreautorizado" name="impPreautorizado" value="49600" /><input type="hidden" id="mejorCuotaPreautorizado" name="mejorCuotaPreautorizado" value="651.57" />
+
+		<article id="article" role="main"><form novalidate="novalidate" id="productos" name="productos" method="post" action="/extracto/secure/extracto_integral.xhtml" enctype="application/x-www-form-urlencoded" class="panelsSortables ui-sortable">
+
+				<!-- Banner operaciones pendientes de firma -->
+				<div id="bloqueOperPendientes" class="alert alert-warning iconAdmiration alertOrange Icon_Font hidden">
+					<div class="panel-body">
+
+						<div class="iconfont">
+							<span class="icon icon_info" aria-hidden="true"></span>
+						</div>
+						<div class="col-lg-8 col-md-8 col-sm-7">
+							<p class="mt10">
+								Tienes 
+								<strong><span id="productos:unaOperacion" class="hidden">operación pendiente</span><span id="productos:variasOperaciones" class="hidden">operaciones pendientes</span>
+								</strong>
+								de firmar
+							</p>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-5">
+							<a class="btn_new btn_new_primary  btn_new_small" href="/conversaciones/secure/firma_digital/listado_operaciones.xhtml?BTN_EXTRACTO=S">Ver detalles</a>
+						</div>
+					</div>
+				</div>
+				<!-- Fin banner operaciones pendientes de firma -->
+
+				<!-- 				Resumen todos los productos --><div class="row visible-lg visible-md">
+    <section role="region" class="col-md-12">
+        <div class="panel panel-default resumen">
+            <div class="panel-body">
+                <div class="boxResumen ">
+                    <div>
+                        <h2>Cuentas</h2>
+											<span class="number">31.337,
+												<span class="small">42 €
+												</span>
+											</span>
+											<span class="products">1 producto
+											</span>
+
+                    </div>
+                </div>
+                <div class="boxResumen ">
+                    <div>
+                        <h2>Tarjetas</h2>
+											<span class="number">-123,
+												<span class="small">45 €
+												</span>
+											</span>
+											<span class="products">1 producto
+											</span>
+                    </div>
+                </div>
+                <div class="boxResumen ">
+                    <div>
+                        <h2>Financiación</h2>
+											<span class="number">-133.713,
+												<span class="small">37 €
+												</span>
+											</span>
+											<span class="products">1 producto
+											</span>
+                    </div>
+                </div>
+                <div class="boxResumen contratar">
+                    <div>
+                        <h2>Ahorro e Inversión</h2>
+                            <div class="contratar_dropdown">
+                                <button type="button" title="Contratar Ahorro e Inversión" class="btn_new btn_new_small btn_new_light_secondary withIcon">
+                                    Contratar
+                                    <span class="pictoDSL-arrow-down-16 pictoDSL-24" aria-hidden="true"></span>
+                                    <span class="sr-only">Contratar Ahorro e Inversión</span>
+                                </button>
+                                <ul class="dropdown-btn" style="display: none;">
+                                    <li><a href="https://bancaonline.bankinter.com/fondos/buscador_fondos.xhtml?nombre" title="Buscador de fondos" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Resumen&gt;Ahorro e Inversión&gt;Contratar&gt;Fondos">Fondos</a></li>
+                                    <li><a href="https://bancaonline.bankinter.com/fondos/buscador_planes.xhtml" title="Buscador planes" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Resumen&gt;Ahorro e Inversión&gt;Contratar&gt;Pensiones">Pensiones</a></li>
+                                    <li><a href="https://bancaonline.bankinter.com/depositos/depositos_simulador.xhtml" title="Simulador de Depósitos" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Resumen&gt;Ahorro e Inversión&gt;Contratar&gt;Depósitos">Depósitos</a></li>
+                                </ul>
+                            </div>
+                    </div>
+                </div>
+                <div class="boxResumen ">
+                    <div>
+                        <h2>Seguros </h2>
+                            <span class="number"></span>
+											<span class="products">1 producto
+											</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--INIT-OFERTA RESUMEN-->
+        <div id="resumenConsejo"></div>
+
+    </section></div>
+
+		<div id="1" class="panel panel-real-time panelSortable accounts idCuentasRTIA">
+			<div class="panel-heading">
+				<div class="zoneSortablePanel hidden-xs"></div>
+				<h3 class="panel-title">
+					<strong>Cuentas</strong> <span class="pull-right-xs">31.337,<span class="small">42 €</span>
+					</span>
+				</h3>
+				<ul class="btnsHeadtable btnsCapa pull-right hidden-xs">
+					
+					<!-- Boton Funcionalidad Bizum-->
+					<li class="itemNoSmall" id="bizum"><a href="/bizum/secure/pagos.xhtml" class="textLink_new textLink_new_priv">Bizum</a></li>
+
+					<li class="itemNoSmall transferencia"><a href="/transferencias/secure/transferencias.xhtml" onclick="clickGtmPosGlobal(this.href,'Cuentas&gt;','Transferencias');" title="Transferencias" class="btn_new btn_new_secondary btn_new_small btn_new_light_secondary linkTransferencias">Transferencias</a></li>
+					<li>
+						<div class="contratar_dropdown contratar_cuentas">
+							<button type="button" class="btn_new btn_new_secondary btn_new_small withIcon">
+								Contratar
+								<span class="pictoDSL-arrow-down-16 pictoDSL-24" aria-hidden="true"></span>
+								<span class="sr-only">Contratar</span>
+							</button>
+							<ul class="dropdown-btn" style="display: none;">
+								<li>
+									<a onclick="clickGtmPosGlobal(this.href,'Cuentas&gt;Contratar&gt;','Cuenta Nómina');" href="/banca/cuentas-tarjetas/cuentas/cuenta-nomina-clientes" title="Cuentas">Cuenta Nómina</a>
+								</li>
+								<li>
+									<a onclick="clickGtmPosGlobal(this.href,'Cuentas&gt;Contratar&gt;','Cuenta Corriente');" href="/banca/cuentas-tarjetas/cuentas/cuenta-corriente?cliente=si" title="Cuentas">Cuenta Corriente</a>
+								</li>
+								<li>
+									<a onclick="clickGtmPosGlobal(this.href,'Cuentas&gt;Contratar&gt;','Cuenta en divisa');" href="/banca/cuentas-tarjetas/cuentas/cuenta-divisa?cliente=si" title="Cuentas">Cuenta en divisa</a>
+								</li>
+								<li>
+									<a onclick="clickGtmPosGlobal(this.href,'Cuentas&gt;Contratar&gt;','Cuenta profesional');" href="/cuentas/secure/altaprofesional/importe_nomina.xhtml" title="Cuentas">Cuenta profesional</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+
+			</div>
+			<div class="panel-body" style="overflow: visible;">
+				<div class="boxBefore"></div>
+				<div class="boxAfter"></div>
+				<div class="maskBoxes newMenuOperar">
+					<ul class="boxSortables row ui-sortable" style="width: auto;">
+	<li class="boxSortableDefault boxSortablePrimary goAccounts card-ops__container" style="overflow:visible;" id="1" sec="1" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Cuentas&gt;BoxCuenta">
+		<h4 class="nameCCC">Cuenta Nómina</h4>
+		<span class="numCCC">.... .... .... .... 9388</span>
+				<span class="amount">31.337,<small>42 €</small>
+				</span>
+		
+		<!--INICIO boton operar cuentas-->
+
+    <!--INICIO boton operar cuentas-->
+        <div class="contenedorOperar visible-lg visible-md hidden-xs hidden-sm">
+
+            <a href="#" type="button" class="btn_new btn_new_tiny btn_new_secondary withIcon btnOperaciones btnShowOperarTarjeta">
+                Operar <span class="pictoDSL-24 pictoDSL-arrow-down-16" aria-hidden="true"></span>
+
+            </a>
+
+            <nav aria-label="Menú de operaciones" class="card-ops-container" operar="si">
+
+                <ul role="menu" class="menu card-ops-menu hidden">
+                    <!--CONFIGUARAR MIS CUENTAS INIT-->
+                    <li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="true" class="menu__item has-submenu menu__item--active first">
+                        <div class="menu__item__header ">
+                            <div class="header__icon pull-left" aria-hidden="true">
+                                <span class=" pictoDSL pictoDSL-check-162 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+                            </div>
+                            <a role="menuitem" aria-label="Configurar mi cuenta" class="header__text">Configurar mi cuenta</a>
+                        </div>
+                        <ul role="menu" class="sub-menu" aria-label="submenu">
+
+                            <!--MODIFICAR TRANSF PERIODICA-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Modificar transferencia periódica" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Configurar mi cuenta&gt;','Modificar transferencia periódica');" href="/transferencias/secure/transferencias_periodicas.xhtml?INDEX_CTA=0">Modificar transferencia periódica</a>
+                            </li>
+                            <!--CAMBIAR NOMBRE CUENTA-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Cambiar nombre cuenta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Configurar mi cuenta&gt;','Cambiar nombre cuenta');" href="/extracto/secure/modificar_alias.xhtml?BTN_OPE=true&amp;INDEX_CTA=0">Cambiar nombre cuenta</a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                    <!--CONFIGURAR MIS CUENTAS END-->
+
+
+                    <li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="true" class="menu__item has-submenu menu__item--active first">
+                        <div class="menu__item__header ">
+                            <div class="header__icon pull-left" aria-hidden="true">
+                                <span class=" pictoDSL pictoDSL-loan-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+                            </div>
+                            <a role="menuitem" aria-label="Operar con mi cuenta" class="header__text">Operar con mi cuenta</a>
+                        </div>
+                        <ul role="menu" class="sub-menu" aria-label="submenu">
+                            <!--REALIZAR TRANSFERENCIA-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Realizar transferencia" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Realizar transferencia');" href="/transferencias/secure/transferencias.xhtml?INDEX_CTA=0">Realizar transferencia</a>
+                            </li>
+                            <!--REALIZAR BIZUM-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Realizar Bizum" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Realizar Bizum');" href="/bizum/secure/pagos.xhtml">Realizar Bizum</a>
+                            </li>
+                            <!--REPETIR TRANSF-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Repetir transferencia" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Repetir transferencia');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&amp;B_AVANZ=1">Repetir transferencia</a>
+                            </li>
+                            <!--ANULAR TRANSF -->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Anular transferencia/envío a cajero" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Anular transferencia/envío a cajero');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0">Anular transferencia/envío a cajero</a>
+                            </li>
+
+                            <!--ENVIAR DINERO CAJERO-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Enviar dinero cajero" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Enviar dinero cajero');" href="/transferencias/secure/transferencias.xhtml?INDEX_CTA=0">Enviar dinero cajero</a>
+                            </li>
+
+
+                            <!--SOLICITAR MONEDA EXT-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Solicitar moneda extranjera" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Operar con mi cuenta&gt;','Solicitar moneda extranjera');" href="/productos/secure/monedaExtranjera/solicitud_formulario.xhtml?INDEX_CTA=0">Solicitar moneda extranjera</a>
+                            </li>
+
+                             <!-- DOMICILIAR RECIBOS-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Domiciliar recibos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Domiciliar recibos&gt;','Domiciliar recibos');" href="/pagos/secure/estado_domiciliaciones/listado_domiciliaciones.xhtml?INDEX_CTA=0">Domiciliar recibos</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="false" class="menu__item has-submenu">
+                        <div class="menu__item__header ">
+                            <div class="header__icon pull-left" aria-hidden="true">
+                                <span class=" pictoDSL pictoDSL-settings-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+                            </div>
+                            <a role="menuitem" aria-label="Gestionar mi cuenta" class="header__text">Gestionar mi cuenta</a>
+                        </div>
+                        <ul role="menu" class="sub-menu" aria-label="submenu">
+                            <!--GESTIONAR DOMICILIACIONES-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Gestionar domiciliaciones" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Gestionar domiciliaciones');" href="/pagos/secure/estado_domiciliaciones/listado_domiciliaciones.xhtml?INDEX_CTA=0">Gestionar domiciliaciones</a>
+                            </li>
+                            <!--CONSULTAR TRANSF PERIODICA-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Consultar transferencia periódica" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Consultar transferencia periódica');" href="/transferencias/secure/transferencias_periodicas.xhtml?INDEX_CTA=0">Consultar transferencia periódica</a>
+                            </li>
+                            <!--CONSULTAR RECIBOS-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Consultar recibos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Consultar recibos');" href="/pagos/secure/consulta_recibos.xhtml">Consultar recibos</a>
+                            </li>
+
+                            <!--CONSULTAR CAMBIO MONEDA-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Consultar cambio moneda" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Consultar cambio moneda');" href="/extracto/secure/consultacambiobilletes.xhtml">Consultar cambio moneda</a>
+                            </li>
+
+
+                            <!--CONSULTAR CERTIFICADO-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Consultar certificado" class="sub-menu__item__link" target="_blank" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Consultar certificado');" href="	https://www.bankinter.com/www/es-es/cgi/ebk+opr+hermes+consultar_certificado">Consultar certificado</a>
+                            </li>
+                            <!--DEVOLVER RECIBO-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Devolver recibo" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Devolver recibo');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&amp;B_AVANZ=1">Devolver recibo</a>
+                            </li>
+                            <!--APLAZAR RECIBO-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Aplazar recibo" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Gestionar mi cuenta&gt;','Aplazar recibo');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&amp;B_AVANZ=1">Aplazar recibo</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="false" class="menu__item has-submenu">
+                        <div class="menu__item__header ">
+                            <div class="header__icon pull-left" aria-hidden="true">
+                                <span class=" pictoDSL pictoDSL-datatable-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+                            </div>
+                            <a role="menuitem" aria-label="Movimientos" class="header__text">Movimientos</a>
+                        </div>
+                        <ul role="menu" class="sub-menu sub-menu--is-tall" aria-label="submenu">
+                            <!--VER MOVIM-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Ver movimientos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Movimientos&gt;','Ver movimientos');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0">Ver movimientos</a>
+                            </li>
+
+                            <!--BUSCAR MOVIM-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Buscar movimientos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Movimientos','Buscar movimientos');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&amp;B_AVANZ=1">Buscar movimientos</a>
+                            </li>
+                            <!--BUSCAR MOV ANTERIORES 18 MESES-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Buscar movimientos anteriores a 18 meses" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Movimientos&gt;','Buscar movimientos anteriores a 18 meses');" href="/infocliente/secure/correo_web.xhtml">Buscar movimientos anteriores a 18 meses</a>
+                            </li>
+                            <!--DESCARGAR JUSTIF. OPERACION-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="&gt;Descargar justificante operación" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Movimientos&gt;','Descargar justificante operación');" href="/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&amp;EXP=1">Descargar justificante operación</a>
+                            </li>
+
+                            <!--GESTIONAR INGRESOS Y GASTOS-->
+                            <li role="menuitem" class="sub-menu__item">
+                                <a aria-label="Gestionar ingresos y gastos" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'cuentas&gt;cuenta&gt;operar&gt;Movimientos&gt;','Gestionar ingresos y gastos');" target="_blank" href="https://www.bankinter.com/www/es-es/cgi/ebk+opr+mis_cuentas">Gestionar ingresos y gastos</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    <!--FIN boton operar cuentas-->
+
+		<!--FIN boton operar cuentas-->
+			<div class="zoneSortableBox hidden-xs hidden-sm"></div><script type="text/javascript"><!--
+
+
+			$("li[id='1']").on("click", function (e) {
+				if (e.target.id =='1' ||
+					e.target.className=='nameCCC' ||
+					e.target.className=='numCCC' ||
+					e.target.className=='amount'){
+						location.href = '/extracto/secure/movimientos_cuenta.xhtml?INDEX_CTA=0&IND=N';
+				}
+				llamadaStop(e);
+			});
+//--></script>
+	</li>
+						<!-- ini rt offert box -->
+						<li id="cuentasCaja"></li>
+						<!-- fin rt offert box -->
+					</ul>
+
+
+
+				</div>
+			</div>
+			<!-- ini consejo -->
+			<div id="cuentasConsejo"></div>
+			<!-- fin consejo -->
+			</div>
+		<div class="btn-movil hidden-lg hidden-md">
+			<ul>
+				<li><a class="btn_new btn_new_secondary btn_new_small linkTransferencias visible-xs" title="Transferencias" href="/transferencias/secure/transferencias.xhtml">
+						Transferencias </a></li>
+				<li>
+					<!-- Inicio funcionalidad Bizum para Bizum - pagosInmediatios --><a href="/bizum/secure/pagos.xhtml" id="productos:j_id357844242_6_7b2aa4f6:0:bizumMobile" name="productos:j_id357844242_6_7b2aa4f6:0:bizumMobile" class="btn_new btn_new_small btn_new_light_secondary visible-xs">Bizum</a>
+				</li>
+			</ul>
+		</div>
+
+		<hr class="sortableSeparator visible-xs" />
+
+					<!-- Consejo principal de RTIA -->
+					<div id="principalConsejo"></div>
+					<!--FIN consejo principal RTIA-->
+
+					<!-- Consejo principal de RTIA -->
+					<div id="principalConsejo"></div>
+					<!--FIN consejo principal RTIA-->
+		<div id="2" class="panel panel-real-time panelSortable cards idTarjetasRTIA">
+			<div class="panel-heading">
+				<div class="zoneSortablePanel hidden-xs"></div>
+				<h3 class="panel-title">
+					<strong>Tarjetas</strong> <span class="pull-right-xs">-123,<span class="small">45 €</span>
+					</span>
+				</h3>
+
+				<ul class="btnsHeadtable btnsHeadtable-new pull-right hidden-xs">
+					<li>
+						<!--BOTON PAGOS MOVILES-->
+							<button type="button" class="textLink_new textLink_new_priv" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Tarjetas&gt;Pagos moviles" title="Ver pagos móviles" onclick="location.href='/tarjetas/secure/wallet/consulta-sin-servicio.xhtml'">
+								Pagos móviles</button>
+					</li>
+
+					<li>
+						<button type="button" class="btn_new btn_new_secondary btn_new_small withIcon" title="Contratar" onclick="clickGtmPosGlobal('https://bancaonline.bankinter.com/tarjetas/secure/contratar/solicitud_contratar_tarjeta.xhtml', 'Tarjetas&gt;Contratar' , '');location.href='/tarjetas/secure/contratar/solicitud_contratar_tarjeta.xhtml'">
+							Contratar
+							<span class="pictoDSL-plus-16 pictoDSL-24" aria-hidden="true"></span>
+							<span class="sr-only">Contratar Tarjetas</span>
+						</button>
+					</li>
+				</ul>
+
+			</div>
+			<div class="panel-body">
+				<div class="boxBefore"></div>
+				<div class="boxAfter"></div>
+				<div class="maskBoxes newMenuOperar">
+					<ul class="boxSortables row ui-sortable" style="width: auto;">
+
+	<li class="boxSortableDefault boxSortableRounded card-ops__container " style="overflow:visible;" sec="2" id="5" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Tarjetas&gt;BoxTarjeta">
+			<h4 class="nameCCC visa">Visa Clasica                 </h4>
+			<span class="numCCC">.... .... .... 1145</span>
+		<span class="amount">-123,<small>45 €</small>
+
+		</span>
+		
+		<!--INICIO boton operar tarjetas-->
+
+		<!--INICIO boton operar TARJETAS-->
+			<div class="contenedorOperar visible-lg visible-md hidden-xs hidden-sm">
+
+				<a href="#" type="button" class="btn_new btn_new_secondary btn_new_tiny withIcon btnOperaciones btnShowOperarTarjeta">
+					Operar <span class="pictoDSL-24 pictoDSL-arrow-down-16" aria-hidden="true"></span>
+
+				</a>
+
+				<nav aria-label="Menú de operaciones" class="card-ops-container">
+					<ul role="menu" class="menu card-ops-menu hidden">
+							<li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="true" class="menu__item has-submenu menu__item--active first">
+								<div class="menu__item__header ">
+									<div class="header__icon pull-left" aria-hidden="true">
+										<span class=" pictoDSL pictoDSL-check-162 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+									</div>
+									<a role="menuitem" aria-label="Configurar mi tarjeta" class="header__text">Configurar mi tarjeta</a>
+								</div>
+								<ul role="menu" class="sub-menu" aria-label="submenu">
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Compra Smart Automática" class=" sub-menu__item__link first" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Configurar mi tarjeta&gt;','Compra Smart Automática');" href="/tarjetas/secure/gran-compra-automatica-principal.xhtml">Compra Smart Automática</a>
+										</li>
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Modificar límites de mi tarjeta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Configurar mi tarjeta&gt;','Modificar límites de mi tarjeta');" href="/tarjetas/secure/limites/modificacion_limites_seleccion.xhtml">Modificar límites de mi tarjeta</a>
+										</li>
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Recargar mis tarjetas" class=" sub-menu__item__link last" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Configurar mi tarjeta&gt;','Recargar mis tarjetas');" href="/tarjetas/secure/recarga/recarga_limites_seleccion.xhtml">Recargar mis tarjetas</a>
+										</li>
+								</ul>
+							</li>
+							
+							<li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="false" class="menu__item has-submenu">
+								<div class="menu__item__header ">
+									<div class="header__icon pull-left" aria-hidden="true">
+										<span class=" pictoDSL pictoDSL-payment-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+									</div>
+									<a role="menuitem" aria-label="Operar con mi tarjeta" class="header__text">Operar con mi tarjeta</a>
+								</div>
+								<ul role="menu" class="sub-menu" aria-label="submenu">
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Solicitar Compra Smart" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Operar con mi tarjeta&gt;','Solicitar Compra Smart');" href="/tarjetas/secure/tarjetas_financiar_paso_uno.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Solicitar Compra Smart</a>
+										</li>
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Modificar Compra Smart" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Operar con mi tarjeta&gt;','Modificar Compra Smart');" href="/tarjetas/secure/tarjetas_financiar_paso_uno.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Modificar Compra Smart</a>
+										</li>
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Consultar Compra Smart" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Operar con mi tarjeta&gt;','Consultar Compra Smart');" href="/tarjetas/secure/tarjetas_financiar_paso_uno.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Consultar Compra Smart</a>
+										</li>
+										
+										<li role="menuitem" class="sub-menu__item">
+											<a aria-label="Solicitar Smart Cash" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Operar con mi tarjeta&gt;','Solicitar Smart Cash');" href="/transferencias/secure/transferencias.xhtml?INDEX_CTA=4">Solicitar Smart Cash</a>
+										</li>
+									<li role="menuitem" class="sub-menu__item">
+										<a aria-label="Privilegios" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'tarjetas&gt;tarjeta&gt;operar&gt;Operar con mi tarjeta&gt;','Privilegios');" target="_blank" href="http://www.euro6000.com/landings/bankinter">Privilegios</a>
+									</li>
+								</ul>
+							</li>
+						
+						<li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="false" class="menu__item has-submenu">
+							<div class="menu__item__header ">
+								<div class="header__icon pull-left" aria-hidden="true">
+									<span class=" pictoDSL pictoDSL-settings-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+								</div>
+								<a role="menuitem" aria-label="Gestionar mi tarjeta" class="header__text">Gestionar mi tarjeta</a>
+							</div>
+							<ul role="menu" class="sub-menu sub-menu--is-tall" aria-label="submenu">
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Activar tarjeta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Activar tarjeta');" href="/tarjetas/secure/tarjetas_activar.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Activar tarjeta</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Condiciones de la tarjeta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Condiciones de la tarjeta');" href="/tarjetas/secure/tarjetas_modificar_condiciones_datos.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Condiciones de la tarjeta</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Avisos al móvil" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Avisos al móvil');" href="/avisos/secure/notificaciones_nueva.xhtml?POS_REL=0&amp;BTN_OPE=true&amp;INDEX_CTA=4">Avisos al móvil</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Duplicado de tarjeta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Duplicado de tarjeta');" href="/tarjetas/secure/duplicados/solicitar_duplicado.xhtml?INDEX_CTA=4">Duplicado de tarjeta</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="&gt;Bloquear tarjeta" class=" sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Bloquear tarjeta');" href="/tarjetas/secure/tarjetas_realizar_bloqueo.xhtml?INDEX_CTA=4&amp;BTN_OPE=true">Bloquear tarjeta</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Recuperar PIN" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Gestionar mi tarjeta&gt;','Recuperar PIN');" href="/tarjetas/secure/mostrar_pin_coordenada.xhtml?INDEX_CTA=4">Recuperar PIN</a>
+								</li>
+								
+							</ul>
+						</li>
+						<li tabindex="0" role="none presentation" aria-haspopup="true" aria-expanded="false" class="menu__item has-submenu last">
+							<div class="menu__item__header ">
+								<div class="header__icon pull-left" aria-hidden="true">
+									<span class="pictoDSL pictoDSL-datatable-16 pictoDSL-32" aria-hidden="true" tabindex="-1"></span>
+								</div>
+								<a role="menuitem" aria-label="Movimientos" class="header__text">Movimientos</a>
+							</div>
+							<ul role="menu" class="sub-menu" aria-label="submenu">
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Ver movimientos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Movimientos&gt;','Ver movimientos');" href="/tarjetas/secure/tarjetas_ficha.xhtml?INDEX_CTA=4&amp;M_POS=1">Ver movimientos</a>
+								</li>
+								<li role="menuitem" class="sub-menu__item">
+									<a aria-label="Descargar movimientos" class="sub-menu__item__link" onclick="clickGtmPosGlobal(this.href,'Tarjetas&gt;Tarjeta&gt;Operar&gt;Movimientos&gt;','Descargar movimientos');" href="/tarjetas/secure/tarjetas_ficha.xhtml?INDEX_CTA=4&amp;EXP=1">Descargar movimientos</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		<!--FIN boton operar TARJETAS-->
+
+		<!--FIN boton operar tarjetas-->
+		
+		<div class="zoneSortableBox hidden-xs hidden-sm"></div><script type="text/javascript"><!--
+
+			$("li[id='5']").on("click", function (e) {
+				if (e.target.id =='5' ||
+					e.target.classList.contains('nameCCC') ||
+					e.target.className=='numCCC'||
+					e.target.className=='description' ||
+					e.target.className=='amount'){
+						location.href = '/tarjetas/secure/tarjetas_ficha.xhtml?INDEX_CTA=4';
+				}
+				llamadaStop(e);
+			});
+//--></script>
+	</li>
+							<li class="boxAddModule ui-state-disabled Icon_Font"><a href="/tarjetas/secure/contratar/solicitud_contratar_tarjeta.xhtml" class="text-hide" title="Contratar">
+								<span class="iconfont">
+									<span class="icon-fallback-text">
+										<span class="icon icon_plus" aria-hidden="true"></span>
+										<span class="text">Contratar</span>
+									</span>
+								</span>
+							</a>
+							</li>
+						<!-- ini rt offert box -->
+						<li id="tarjetasCaja"></li>
+						<!-- fin rt offert box -->
+
+					</ul>
+				</div>
+			</div>
+			<div id="tarjetasConsejo"></div>
+
+
+		</div>
+
+		<div class="btn-movil hidden-lg hidden-md">
+			<ul>
+				<li>
+		<!--BOTON PAGOS MOVILES RESPONSIVE-->
+						<a class="btn_new btn_new_small btn_new_light_secondary visible-xs" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Tarjetas&gt;Pagos moviles" title="Ver pagos móviles" href="/tarjetas/secure/wallet/consulta-sin-servicio.xhtml">
+				Pagos móviles </a>
+				</li>
+			</ul>
+		</div>
+
+		<hr class="sortableSeparator visible-xs" />
+
+					<!-- Consejo principal de RTIA -->
+					<div id="principalConsejo"></div>
+					<!--FIN consejo principal RTIA-->
+
+		<div id="3" class="panel panel-real-time panelSortable loans idPrestamosYCreditosRTIA">
+			<div class="panel-heading">
+				<div class="zoneSortablePanel hidden-xs"></div>
+				<h3 class="panel-title">
+
+					<strong>Financiación</strong>
+					<!--IMPORTE TOTAL FINANCIACION-->
+					<span class="pull-right-xs">-133.713,<span class="small">37 €</span>
+					</span>
+					<!--IMPORTE TOTAL FINANCIACION FIN-->
+				</h3>
+				<ul class="btnsHeadtable btnsHeadtable-new pull-right hidden-xs">
+						<!--BOTON MAS OPERACIONES-->
+						<li>
+			<button type="button" class="textLink_new withIcon textLink_new_priv btnOperaciones btnShowOperaciones hidden-xs hidden-sm hidden-md" title="Más operaciones">
+				Operaciones <span class="pictoDSL-arrow-down-16 pictoDSL-24" aria-hidden="true"></span>
+			</button>
+			<!--ENLACES CUENTAS-->
+			<!--ENLACES FINANCIACION-->
+				<div class="panelOperaciones right hidden">
+					<div class="bloque_principales">
+						<ul>
+							<li class="active">Operar</li>
+							<li>Consultar</li>
+						</ul>
+					</div>
+					<div class="bloque_interior">
+
+
+						<div class="acciones" id="OperarFinanciacion">
+							<div class="bloque" style="width: 260px !important;">
+								<ul>
+									<li><a class="launch_modal" onclick="clickGtmPosGlobal(this.href,'Financiacion&gt;Operaciones&gt;Operar&gt;','Amortizar hipoteca o préstamo');" style="cursor: pointer;" data-tutorial="amortizacion_prestamo">Amortizar hipoteca o préstamo</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="acciones hidden" id="ConsultarFinanciacion">
+							<div class="bloque" style="width: 260px !important;">
+								<ul>
+									<li><a target="_blank" onclick="clickGtmPosGlobal(this.href,'Financiacion&gt;Operaciones&gt;Consultar&gt;','Consulta histórico tipos de interés');" href="https://www.bankinter.com/www/es-es/cgi/ebk+hip+menu_consulta?accion=HISTORICO&amp;ext-solapa=operar&amp;ext-subsolapa=mis_prestamos">Consulta histórico tipos de interés</a>
+									</li>
+									<li><a target="_blank" onclick="clickGtmPosGlobal(this.href,'Financiacion&gt;Operaciones&gt;Consultar&gt;','Tipos de cambio Multidivisa');" href="https://www.bankinter.com/www/es-es/cgi/ebk+hip+consulta_movimientos_cambio">Tipos de cambio Multidivisa</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+						</li>
+						<li>
+							<button type="button" class="btn_new btn_new_secondary btn_new_small withIcon" title="Contratar" onclick="location.href='/banca/hipotecas-prestamos/prestamos'">
+								Contratar
+								<span class="pictoDSL-plus-16 pictoDSL-24" aria-hidden="true"></span>
+								<span class="sr-only">Contratar Financiación</span>
+
+							</button>
+						</li>
+
+
+
+				</ul>
+
+			</div>
+			<div class="panel-body">
+					<h4 class="panel-title idPrestamosRTIA">
+						<strong>Préstamos y Créditos</strong> <span class="pull-right-xs">-133.713,<span class="small">37 €</span>
+						</span>
+					</h4>
+					<div class="panelSubsection loansSortables">
+						<div class="boxBefore"></div>
+                		<div class="boxAfter"></div>	
+						<div class="maskBoxes" id="31">
+							<ul class="boxSortables row ui-sortable" style="width: auto;">
+	<li class="boxSortableDefault boxSortablePrimary" id="4" sec="31" data-track="true" data-type="enlace" data-position="Posicion global" data-element="PrestamosCreditos&gt;BoxPrestamosCreditos">
+		<h5 class="nameCCC">Prestamo</h5>
+			<span class="amount">-133.713<small class="small">,37 €</small>
+			</span>
+
+
+		<div class="boxDetails">
+			<div class="pull-left">
+						<span>Próxima cuota</span>
+						<span>666,66€</span>
+
+
+			</div>
+
+			<div class="pull-right text-right">
+					<span>Tipo de Interés</span>
+					<span>1,23%</span>
+
+			</div>
+		</div>
+		<div class="zoneSortableBox hidden-xs hidden-sm"></div><script type="text/javascript"><!--
+
+				$("li[id='4']").on("click", function () {
+					location.href = '/prestamos/secure/prestamos.xhtml?INDEX_CTA=3';
+				});
+//--></script>
+		
+	</li>
+								<!-- ini rt offert box -->
+								<li id="prestamosCreditosPrestamosCaja"></li>
+								<!-- fin rt offert box -->
+							</ul>
+						</div>
+					</div>
+			</div>
+			<!-- ini consejo -->
+			<div id="prestamosCreditosConsejo"></div>
+			<!-- fin consejo -->
+			<hr class="sortableSeparator visible-xs" />
+		</div>
+
+					<!-- Consejo principal de RTIA -->
+					<div id="principalConsejo"></div>
+					<!--FIN consejo principal RTIA-->
+		<div id="5" class="panel panel-real-time panelSortable insurances idSegurosRiesgoRTIA">
+			<div class="panel-heading">
+                                <div class="zoneSortablePanel hidden-xs"></div>
+				<h3 class="panel-title">
+					<strong>Seguros </strong>
+				</h3>
+				<ul class="btnsHeadtable btnsHeadtable-new pull-right hidden-xs">
+
+
+
+						<!-- ini rt offert box -->
+						<li id="segurosCaja"></li>
+						<!-- fin rt offert box -->
+					<li>
+						<button type="button" class="btn_new btn_new_secondary btn_new_small withIcon" title="Contratar" onclick="location.href='/banca/seguros/seguros-para-ti'">
+							Contratar
+							<span class="pictoDSL-plus-16 pictoDSL-24" aria-hidden="true"></span>
+							<span class="sr-only">Contratar Seguros </span>
+						</button>
+					</li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<div class="boxBefore"></div>
+             	<div class="boxAfter"></div>
+			
+				<div class="maskBoxes">
+					<ul class="boxSortables row ui-sortable" style="width: auto;">
+		<li class="boxSortableDefault boxSortablePrimary noLine" id="2" sec="5" data-track="true" data-type="enlace" data-position="Posicion global" data-element="Seguros&gt;BoxSeguro">	
+				<h4 class="nameCCC">Accidentes Visa Clasica</h4>
+		
+			<div class="zoneSortableBox"></div><script type="text/javascript"><!--
+																							
+						$("li[id='2']").on("click", function () {
+							var uri = '/seguros/secure/seguros_detalle.xhtml?INDEX_CTA=1&NOMBRE=Accidentes Visa Clasica&TIPOSEGURO=T';
+							location.href = encodeURI(uri);
+						});
+//--></script>
+		</li>
+							<li class="boxAddModule ui-state-disabled Icon_Font"><a href="/banca/seguros/seguros-para-ti" class="text-hide" title="Añadir seguro">
+									Añadir seguro
+								<span class="iconfont">
+									<span class="icon-fallback-text">
+										<span class="icon icon_plus" aria-hidden="true"></span>
+										<span class="text">Añadir seguro</span>
+									</span>
+								</span>
+							</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- ini consejo seguros -->
+			<div id="segurosConsejo"></div>
+			<!-- fin consejo seguros-->
+			<hr class="sortableSeparator visible-xs" />
+		</div><input type="hidden" name="productos_SUBMIT" value="1" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="W+HZ3kkX2Yc2Sq0GtzOh61EhTXWJhyi7YrorbDWwkvqQREhZ56Z/iJI+0m837tvxwI7e9AGEuKpDziXDsxgQkkyCIWutkox3qFb2kdfLwWTEGnCu5kHZhMfktX/h1PxtU+yC3P6OGBNfa9nIhWKML+AiO4xZEGX2JqYMnA==" /></form><form novalidate="novalidate" id="ordenacion" name="ordenacion" method="post" action="/extracto/secure/extracto_integral.xhtml" enctype="application/x-www-form-urlencoded" class="panelsSortables ui-sortable"><input id="ordenacion:bOrdenaSecciones" name="ordenacion:bOrdenaSecciones" type="submit" onclick="jsf.util.chain(document.getElementById('ordenacion:bOrdenaSecciones'), event,'jsf.ajax.request(\'ordenacion:bOrdenaSecciones\',event,{execute:\'ordenacion:bIndiceSeccion ordenacion:bIdSeccion\',\'javax.faces.behavior.event\':\'click\'})'); return false;" style="display:none" /><input type="hidden" id="ordenacion:bIndiceSeccion" name="ordenacion:bIndiceSeccion" value="" /><input type="hidden" id="ordenacion:bIdSeccion" name="ordenacion:bIdSeccion" value="" /><input id="ordenacion:bOrdenaProductos" name="ordenacion:bOrdenaProductos" type="submit" onclick="jsf.util.chain(document.getElementById('ordenacion:bOrdenaProductos'), event,'jsf.ajax.request(\'ordenacion:bOrdenaProductos\',event,{execute:\'ordenacion:bIdProducto ordenacion:bIdCuentaProducto ordenacion:bIndiceProducto\',\'javax.faces.behavior.event\':\'click\'})'); return false;" style="display:none" /><input type="hidden" id="ordenacion:bIdProducto" name="ordenacion:bIdProducto" value="" /><input type="hidden" id="ordenacion:bIdCuentaProducto" name="ordenacion:bIdCuentaProducto" value="" /><input type="hidden" id="ordenacion:bIndiceProducto" name="ordenacion:bIndiceProducto" value="" /><input type="hidden" name="ordenacion_SUBMIT" value="1" /><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="W+HZ3kkX2Yc2Sq0GtzOh61EhTXWJhyi7YrorbDWwkvqQREhZ56Z/iJI+0m837tvxwI7e9AGEuKpDziXDsxgQkkyCIWutkox3qFb2kdfLwWTEGnCu5kHZhMfktX/h1PxtU+yC3P6OGBNfa9nIhWKML+AiO4xZEGX2JqYMnA==" /></form>
+
+		</article>
+ 
+ 
+ <div class="modal fade myModalConfirm" tabindex="-1" role="dialog" aria-labelledby="mylabelModalConfirm" aria-hidden="true" id="modalAviso">
+        <div class="modal-dialog modalConfirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close Icon_Font" data-dismiss="modal" aria-hidden="true" tabindex="45">
+                        <span class="iconfont">
+                            <span class="icon-fallback-text">
+                                <span class="icon icon_close" aria-hidden="true"></span>
+                                <span class="text">X</span>
+                            </span>
+                        </span>
+                    </button>
+                    <h4 class="modal-title" id="mylabelModalConfirm">Aviso</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Detalle de producto no disponible</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="button" class="btnBasic btnCloseModal" data-dismiss="modal" tabindex="46">
+                            CERRAR VENTANA
+                            <span class="iconfont">
+                                <span class="icon icon_close" aria-hidden="true"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+		<script src="/res/js/jquery.bancaParticulares-spin.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="../resources/js/posicionglobal_gtm_v1.0.0.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="../resources/js/posicionglobal_rt.1.0.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="../resources/js/posicionglobal_imprimir.1.0.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="../resources/js/opinator_extracto_v1.js" type="text/javascript"><!--
+
+//--></script>
+		<script src="../resources/js/posicionglobal_avisos_v1.js" type="text/javascript"><!--
+
+//--></script>
+		<script type="text/javascript"><!--
+
+			$(document)
+					.ready(							
+							function() {
+								/* ++++++START++++ SELECT TITULARIDADES +++++++ */
+								$('.bk_select_NW').bkSelect();
+								$('.selectContainer').find('select').change(function(){
+									this.form.submit();
+								});
+								/* ++++++END++++++ SELECT TITULARIDADES +++++++ */
+								if ($(window).width() >= 977) {
+									if($(".boxSortables").length){
+								  		$('.boxSortables')
+										.sortable(
+												{
+													placeholder : "ui-state-highlight boxSortableDefault",
+													items : "> li:not(.ui-state-disabled)",
+													handle : ".zoneSortableBox",
+													helper: "clone",
+													update : function(event, ui) {
+														var index = ui.item
+																.index();
+														$(
+																'boxSortables li:nth-child('
+																		+ (index)
+																		+ ')')
+																.html(index);
+														$(
+																"input[id$='bIndiceProducto']")
+																.val(
+																		ui.item
+																				.index() + 1);
+														$(
+																"input[id$='bIdProducto']")
+																.val(
+																		ui.item
+																				.attr("sec"));
+														$(
+																"input[id$='bIdCuentaProducto']")
+																.val(
+																		ui.item
+																				.attr("id"));
+														$(
+																"input[id$='bOrdenaProductos']")
+																.trigger(
+																		"click");
+													},
+												});
+									}
+								  if($(".panelsSortables").length){
+									  $(".panelsSortables").sortable({
+					                    	placeholder : "ui-state-highlight panelSortable",
+					                        handle : ".zoneSortablePanel",
+					                        items : "> .panelSortable",
+					                        update : function(event, ui) {
+						                        var primeros = $(".panelsSortables").children(":lt("+ui.item.index()+")");
+					                            var contadorPaneles = 0;
+					                            $(primeros).each(function(){
+						                            if(!$(this).hasClass("panelSortable")){
+					    		                        contadorPaneles++;
+					                                }
+					                            })
+					                        var indexReal = ui.item.index() - contadorPaneles;            		   
+					                        $(".panelsSortables").children(":not(.panelSortable :lt("+indexReal+")")
+					                        $("input[id$='bIndiceSeccion']").val(indexReal + 1);
+					                    	$("input[id$='bIdSeccion']").val(ui.item.attr("id"));
+					                        $("input[id$='bOrdenaSecciones']").trigger("click");
+					                    },
+					                  });
+								  }
+								}
+
+							});
+		
+//--></script><!--BK_CONTENIDO-->
+          </section>
+        </div>
+      </article>
+      <!--BK_FOOTER--><!--BK_FOOTER-->
+      <!--footer distinto v4 init-->
+      <!--CAMBIOS -->
+      <div class="clearfix"></div>
+      <div class="container-fluid">
+        <footer class="bk_footer_NW hidden-launcher" aria-label="información corporativa">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12">
+                <a href="https://www.bankinter.com" tabindex="0" class="logo">
+                  <span aria-hidden="true" class="icon icon-bankinter-logo hidden-xs"></span>
+                  <span class="sr-only">Inicio - Bankinter.</span>
+                  <img class="visible-xs" src="/res/nbl/images/svg/logo_BK_NW_min_white.svg" alt="Bankinter" />
+                </a>
+              </div>
+            </div><div class="row">
+              <div class="col-xs-12 col-sm-7 col-md-9 col-lg-9" role="region" aria-label="enlaces corporativos Bankinter">
+                <div class="row">
+                  <div class="col-xs-12 col-sm-6 col-md-8">
+                    <div class="row">
+                      <ul class="corp_links col-md-6">
+                        <li>
+                          <a data-track="true" data-type="enlace" data-position="Footer" data-element="Web corporativa" href="https://webcorporativa.bankinter.com/www/es-es/cgi/ebk+gwc+home" target="_blank" tabindex="0">
+                            Web corporativa<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                          </a>
+                        </li>
+                        <li class="hidden-xs">
+                          <a data-track="true" data-type="enlace" data-position="Footer" data-element="Portal Inmobiliario" href="https://www.bankinter.com/www/es-es/cgi/ebk+inm+home" target="_blank" tabindex="0">
+                            Portal inmobiliario<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                          </a>
+                        </li>
+                      </ul>
+                      <ul class="corp_links col-md-6">
+                        <li>
+                          <a data-track="true" data-type="enlace" data-position="Footer" data-element="No residentes" href="https://www.bankinter.com/banca/nav/products-for-non-residents" tabindex="0">
+                            No residentes<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                          </a>
+                        </li>
+                        <li class="hidden-sm hidden-xs">
+                          <a data-track="true" data-type="enlace" data-position="Footer" data-element="Particulares" href="https://www.bankinter.com/banca/nav/banca-particulares" tabindex="0">
+                            Banca particulares<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 col-md-4 hidden-xs">
+                    <ul class="corp_links row">
+                      <li class="col-xs-12 visible-sm">
+                        <a data-track="true" data-type="enlace" data-position="Footer" data-element="Particulares" href="https://www.bankinter.com/banca/nav/banca-particulares" tabindex="0">
+                          Banca particulares<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                        </a>
+                      </li>
+                      <li class="col-xs-12">
+                        <a data-track="true" data-type="enlace" data-position="Footer" data-element="Banca Personal" href="https://www.bankinter.com/banca/nav/banca-personal" tabindex="0">
+                          Banca personal<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                        </a>
+                      </li>
+                      <li class="col-xs-12">
+                        <a data-track="true" data-type="enlace" data-position="Footer" data-element="Banca Privada" href="https://www.bankinter.com/banca/nav/banca-privada" tabindex="0">
+                          Banca privada<span class="pictoDSL pictoDSL-arrow-right-2-16 pictoDSL-24" aria-hidden="true"></span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+              <div class="col-sm-12" role="region" aria-label="Menú Pie de Página">
+                <ul class="legal_links">
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Atencion al cliente" href="https://www.bankinter.com/banca/nav/atencion-cliente" tabindex="0">Contáctanos</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Cajeros y oficinas" href="/publico/buscador_oficinas_cajeros.xhtml" tabindex="0">Oficinas y cajeros</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Fundacion innovacion" href="https://www.fundacionbankinter.org/" tabindex="0">Fundación Innovación</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Anuncios y tarifas" href="https://www.bankinter.com/banca/nav/anuncios-tarifas" tabindex="0">Anuncios y tarifas</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Seguridad" href="https://www.bankinter.com/banca/nav/seguridad" tabindex="0">Seguridad y Privacidad</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Aviso legal" href="https://www.bankinter.com/banca/nav/aviso-legal" tabindex="0">Aviso legal</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Accesibilidad" href="https://www.bankinter.com/banca/nav/accesibilidad" tabindex="0">Accesibilidad</a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="Mapa web" href="https://www.bankinter.com/banca/nav/sitemap" tabindex="0">Mapa Web</a>
+                  </li>
+                  <li class="hidden-xs">
+                    <a rel="nofollow" data-track="true" data-type="enlace" data-position="Footer" data-element="English version" target="_blank" href="https://www.bankinter.com/www/en-es/cgi/ebk+opr+extractointegral" tabindex="0">English version</a>
+                  </li>
+                </ul>
+              </div></div>
+
+            <hr class="separator hidden-xs" />
+
+            <div class="footer_bottom" role="region" aria-label="redes sociales">
+              <div class="pull-right">
+                <ul class="social_menu" style="margin-top: 10px ">
+                  <li>
+                    <a rel="nofollow" href="https://www.facebook.com/bankinter?sk=info" target="_blank" tabindex="0">
+                                          <span aria-hidden="true" class="pictoDSL pictoDSL-facebook_32 pictoDSL-24"></span>
+                      <span class="sr-only">Facebook</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="https://twitter.com/Bankinter" target="_blank" tabindex="0">
+                                          <span aria-hidden="true" class="pictoDSL pictoDSL-twitter_32 pictoDSL-24"></span>
+                      <span class="sr-only">Twitter</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="https://www.youtube.com/user/bankinter" target="_blank" tabindex="0">
+                                          <span aria-hidden="true" class="pictoDSL pictoDSL-youtube_32 pictoDSL-24"></span>
+                      <span class="sr-only">Youtube</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="https://es.linkedin.com/company/bankinter" target="_blank" tabindex="0">
+                                          <span aria-hidden="true" class="pictoDSL pictoDSL-linkedin_32 pictoDSL-24"></span>
+                      <span class="sr-only">Linkedin</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a rel="nofollow" href="https://blog.bankinter.com/" target="_blank" tabindex="0">
+                      <span aria-hidden="true" class="pictoDSL pictoDSL-blog_32 pictoDSL-24"></span>
+                      <span class="sr-only">Blog de Bankinter</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <hr class="separator visible-xs" />
+              <div class="copyright">
+                © Bankinter S.A. todos los derechos reservados
+              </div>
+            </div>
+          </div>
+
+        </footer>
+      </div>
+      <!--BK_MODAL--><!--BK_MODAL-->
+    </main>
+      <script src="/res/nbl/js/build/base_header_footer_new.js" type="text/javascript"><!--
+
+//--></script>
+        <script type="text/javascript" src="/res/js/bancaParticulares/opina/opina-min.js"><!--
+
+//--></script>
+      <script src="/res/js/bancaParticulares/general_nbl.js" type="text/javascript"><!--
+
+//--></script>
+      <script src="/res/nbl/cabecera/js/fin.js" type="text/javascript"><!--
+
+//--></script>
+      <div id="fte2" class="hidden-xs hidden-sm">
+        <div class="container inherit">
+          <div class="row inherit">
+            <div>
+              <div id="carousel_fte" class="carousel_fte" data-interval="false" data-wrap="false">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                  <div class="item active contenedor_info primer_slide" data-num="1">
+                    <a href="#" class="exit" tabindex="6">
+                      <span class="icon-fallback-text">
+                        <span class="icon icon-cross-icon" aria-hidden="true"></span>
+                        <span class="text">cerrar modal</span>
+                      </span>
+                    </a>
+
+                    <h3>Podrás encontrar toda la operativa que necesitas.</h3>
+
+                    <p>¿Quieres saber las claves básicas para navegar?</p>
+
+                    <div class="contenedor_btn">
+                      <a class="btnAccion siguiente right pull-left carousel-control" href="#carousel_fte" role="button" data-slide="next">Cuéntame más</a>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="item posicion_global" data-num="2">
+                    <div class="item_title-description">
+
+                      <h3><img src="/res/nbl/images/svg/titulo_pos_global.svg" width="213" height="412" alt="Posición global" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Aquí, podrás ver un resumen de tus posiciones en todos los productos que tienes contratados.</p>
+                        <ul class="options">
+                          <li><p>Cuentas</p></li>
+                          <li><p>Tarjetas</p></li>
+                          <li><p>Ahorro e inversion</p></li>
+                          <li><p>Financiacion</p></li>
+                          <li><p>Seguros</p></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item tu_cuenta" data-num="3">
+                    <img width="157" src="/res/nbl/images/svg/tarjeta.png" alt="Opera facilmente" />
+
+                    <div class="item_title-description">
+                      <h3><img src="/res/nbl/images/svg/titulo_cuenta.svg" /></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Haciendo clic a cualquiera de tus productos podrás acceder a la página de movimientos y a todas las operaciones que estén disponibles para cada producto.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item ahorro_inversion" data-num="4">
+                    <div class="item_title-description">
+                      <h3><img width="157" src="/res/nbl/images/svg/titulo_ahorro_inv.svg" alt="Ahorro e Inversión" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Dispondrás de una vista global de tu cartera y podrás realizar el seguimiento de tus productos de inversión</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item contratar" data-num="5">
+                    <div class="item_title-description">
+                      <h3><img width="157" src="/res/nbl/images/svg/titulo_contratar.svg" alt="Contratar" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Encuentra toda la información y condiciones &lt;br /&gt;para la contratación de un nuevo producto</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item operar" data-num="6">
+                    <div class="item_title-description">
+                      <h3><img width="112" src="/res/nbl/images/svg/titulo_operar.svg" alt="Operar" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>En esta opción encontrarás un listado de todas las operativas disponibles.</p>
+
+                        <p>Para ayudarte en tus primeros pasos, hemos incluido tutoriales de modo que te sirvan de guía al operar.</p>
+
+                        <p>Pero puedes acceder a cada operativa desde Posición global seleccionando el producto correspondiente.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item perfil" data-num="7">
+                    <div class="item_title-description">
+                      <h3><img width="82" src="/res/nbl/images/svg/titulo_perfil.svg" alt="Perfil" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Al hacer clic sobre tu nombre, encontrarás las siguientes opciones:</p>
+                        <ul class="options">
+                          <li><p>Mis datos:
+                            <span>datos personales, configuración de claves, fecha de última conexión...</span></p></li>
+                          <li><p>Documentos:
+                            <span>correo web, información fiscal, contratos, archivo confidencial, incidencias y tu resumen anual.</span></p></li>
+                          <li><p>Gestión de avisos</p></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item conversacion" data-num="8">
+                    <div class="item_title-description">
+                      <h3><img width="180" src="/res/nbl/images/svg/titulo_conversacion.svg" alt="Conversación" /><span class="arrow"></span></h3>
+
+                      <div class="contenedor_intro">
+                        <p>Comunícate con tu gestor por mail o consulta si tienes un aviso importante sobre tus posiciones.</p>
+                        <ul class="options">
+                          <li><p><span>Revisiones de préstamos</span></p></li>
+                          <li><p><span>Próximos vencimientos de productos</span></p></li>
+                          <li><p><span>Envios de tarjetas...</span></p></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item contenedor_info" data-num="9">
+                    <a href="#" class="exit" tabindex="6">
+                            <span class="icon-fallback-text">
+                              <span class="icon icon-cross-icon" aria-hidden="true"></span>
+                              <span class="text">cerrar modal</span>
+                            </span>
+                    </a>
+
+                    <h3>¿Quieres saber más sobre...?</h3>
+                    <ul>
+                      <li data-target="#carousel_fte" data-slide-to="1" id="navegacion"><a class="#">Navegación</a></li>
+                      <li><a class="launch_modal" data-tutorial="consulta_transferenciasenviadas">Consultar transferencias enviadas</a>
+                      </li>
+                      <li><a class="launch_modal" data-tutorial="informacion_fiscal">Información fiscal</a>
+                      </li>
+                      <li><a class="launch_modal" data-tutorial="correo_web">Correo Web</a></li>
+                      <li><a class="launch_modal" data-tutorial="solicitar_grancompra">Solicitar Gran Compra</a></li>
+                      <li><a class="launch_modal" data-tutorial="traspaso_fondonuevo">Contratar fondo</a></li>
+                      <li><a class="launch_modal" data-tutorial="traspasoplan_otraentidad">Traspasar plan desde otra entidad</a>
+                      </li>
+                      <li><a class="launch_modal" data-tutorial="aportacion_plan">Aportar a plan de pensiones</a></li>
+                    </ul>
+
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+                <div class="control-bottom">
+                  <button class="left carousel-control" href="#carousel_fte" role="button" data-slide="prev" disabled="true">
+                    <span class="icon-flecha" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </button>
+                  <div class="contador"></div>
+                  <button class="right carousel-control" href="#carousel_fte" role="button" data-slide="next">
+                    <span class="icon-flecha" aria-hidden="true"></span>
+                    <span class="sr-only">NextAhorro e Inversion</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="btn_omitir">
+              <a href="#" class="btnSimple saltar_tutorial">Saltar tutorial</a>
+              <a href="#" class="btnNegativo" data-target="#carousel_fte" data-num="2">Saber más</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade tutorial_operar" tabindex="-1" role="dialog" aria-labelledby="tutorial" aria-hidden="true">
+        <div class="modal-dialog modal-lg modalInfo">
+          <div class="modal-content">
+            <div class="loading">
+              <p>
+                <img src="/res/nbl/images/svg/spinner.svg" alt="Cargando..." />
+              </p>
+            </div>
+            <div class="modal-header">
+              <h4 class="modal-title" id="tutorial"></h4>
+            </div>
+            <div class="modal-body">
+              <a href="#" class="exit close" tabindex="6" data-placement="bottom" data-dismiss="modal">
+                        <span class="icon-fallback-text">
+                          <span style="vertical-align: middle;" class="pictoDSL pictoDSL-24 pictoDSL-close-16" aria-hidden="true"></span>
+                          <span class="text">Cerrar tutoriales</span>
+                        </span>
+              </a>
+
+              <div id="myCarousel" class="carousel slide carousel-fade" data-interval="false" data-wrap="false">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <!-- Left and right controls -->
+              <div class="control-bottom">
+                <button class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" disabled="disabled">
+                                    <span style="text-shadow: none; display: block;" class="pictoDSL pictoDSL-24 pictoDSL-arrow-left-2-16" aria-hidden="true"></span>
+                  <span class="sr-only">Anterior</span>
+                </button>
+                <div class="contador"></div>
+                <button class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                                    <span style="text-shadow: none; display: block;" class="pictoDSL pictoDSL-24 pictoDSL-arrow-right-2-16" aria-hidden="true"></span>
+                  <span class="sr-only">Siguiente</span>
+                </button>
+              </div>
+              <a href="#" class="btnBasic" tabindex="53">Más información</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!--BK_FIN-->
+		<script src="../resources/js/onoff/onoff_eintegral_1.0.0.js" type="text/javascript"><!--
+
+//--></script>
+		<script type="text/javascript" src="/res/nbl/js/build/bk_select.js"><!--
+
+//--></script>
+		<script type="text/javascript" src="/res/nbl/js/build/simple-scrollbar.js"><!--
+
+//--></script><!--BK_FIN--></body>
+</html>

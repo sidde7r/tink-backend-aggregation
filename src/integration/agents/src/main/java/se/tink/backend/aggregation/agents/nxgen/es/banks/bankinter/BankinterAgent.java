@@ -12,14 +12,12 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BankinterAgent extends NextGenerationAgent
@@ -30,7 +28,6 @@ public final class BankinterAgent extends NextGenerationAgent
     public BankinterAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-
         apiClient = new BankinterApiClient(client, persistentStorage);
     }
 
@@ -46,30 +43,14 @@ public final class BankinterAgent extends NextGenerationAgent
         final BankinterTransactionalAccountFetcher accountFetcher =
                 new BankinterTransactionalAccountFetcher(apiClient);
 
-        return Optional.empty();
-        /*return Optional.of(
-        new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(accountFetcher))));*/
-    }
-
-    @Override
-    public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(accountFetcher))));
     }
 
     @Override
@@ -81,11 +62,6 @@ public final class BankinterAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BankinterSessionHandler(apiClient);
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 
     @Override
