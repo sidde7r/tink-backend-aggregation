@@ -80,7 +80,7 @@ public class AccountEntity {
     }
 
     private String getTransactionLink() {
-        return Optional.ofNullable(links).map(AccountLinksEntity::getTransactions).orElse("");
+        return Optional.ofNullable(links).map(AccountLinksEntity::getTransactionLink).orElse("");
     }
 
     public boolean isCheckingOrSavingsType() {

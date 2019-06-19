@@ -3,11 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.be
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountLinksEntity implements BerlinGroupAccountLinks {
+public class AccountLinksEntity {
     private String balances;
     private String transactions;
 
-    @Override
     public String getTransactionLink() {
         return transactions;
     }
@@ -19,7 +18,6 @@ public class AccountLinksEntity implements BerlinGroupAccountLinks {
         this.transactions = transactions;
     }
 
-    @Override
     public String getBalanceLink() {
         return balances;
     }
