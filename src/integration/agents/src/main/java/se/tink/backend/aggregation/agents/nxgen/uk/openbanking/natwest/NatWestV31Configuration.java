@@ -5,20 +5,26 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NatWestV31Configuration extends UkOpenBankingV31Configuration {
 
-    private static final String ACCOUNT_BULK_REQUEST = "/aisp/accounts";
+    private static final URL BASE_URL = new URL("https://api.natwest.com/open-banking/v3.1");
+    private static final URL ACCOUNT_BULK_REQUEST = BASE_URL.concat("/aisp/accounts");
     private static final String ACCOUNT_BALANCE_REQUEST = "/aisp/accounts/%s/balances";
     private static final String ACCOUNT_TRANSACTIONS_REQUEST = "/aisp/accounts/%s/transactions";
     private static final String ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST =
             "/aisp/accounts/%s/scheduled-payments";
 
+    /**
+     * @param apiBaseUrl is ignored till the time we refactor the whole code and migrate the base
+     *     url configurations for other agents too. (same is true for other methods too in this
+     *     class.)
+     */
     @Override
     public URL getBulkAccountRequestURL(URL apiBaseUrl) {
-        return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
+        return ACCOUNT_BULK_REQUEST;
     }
 
     @Override
     public URL getAccountBalanceRequestURL(URL apiBaseUrl, String accountId) {
-        return apiBaseUrl.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
+        return BASE_URL.concat(String.format(ACCOUNT_BALANCE_REQUEST, accountId));
     }
 
     @Override
@@ -28,6 +34,6 @@ public class NatWestV31Configuration extends UkOpenBankingV31Configuration {
 
     @Override
     public URL getUpcomingTransactionRequestURL(URL apiBaseUrl, String accountId) {
-        return apiBaseUrl.concat(String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
+        return BASE_URL.concat(String.format(ACCOUNT_UPCOMING_TRANSACTIONS_REQUEST, accountId));
     }
 }
