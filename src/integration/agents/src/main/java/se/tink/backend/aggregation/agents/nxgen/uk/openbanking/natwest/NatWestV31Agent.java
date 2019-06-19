@@ -14,7 +14,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class NatWestV31Agent extends UkOpenBankingV31Agent {
     public NatWestV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                new NatWestV31Configuration(),
+                new NatWestV31Configuration());
     }
 
     @Override
