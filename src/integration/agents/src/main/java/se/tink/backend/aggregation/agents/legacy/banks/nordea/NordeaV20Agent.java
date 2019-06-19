@@ -1482,11 +1482,13 @@ public class NordeaV20Agent extends AbstractAgent
 
     private void makeInternalBankTransfer(
             Transfer transfer, ProductEntity source, ProductEntity destination) throws IOException {
+
         BankTransferRequest transferRequest = BankTransferRequest.createNonRecurringBankTransfer();
         transferRequest.setAmount(transfer.getAmount().getValue());
         transferRequest.setMessage(getInternalTransferMessage(transfer));
         transferRequest.setSource(source);
         transferRequest.setDestination(destination);
+        transferRequest.setDueDate(transfer.getDueDate());
 
         String url = this.market.getBankingEndpoint() + "/Transfers";
 
@@ -1552,6 +1554,14 @@ public class NordeaV20Agent extends AbstractAgent
         transferRequest.setMessage(formattedTransferMessage);
         transferRequest.setSource(source);
         transferRequest.setDestination(destination);
+
+        // The dueDate setter sets the due date to next or current business day if dueDate is null.
+        // Since we couldn't properly test this I don't want to make any changes to that setter, as
+        // it's also used when making a payment request. Therefore checking for null here, if it's
+        // null we keep the exact same logic as before.
+        if (transfer.getDueDate() != null) {
+            transferRequest.setDueDate(transfer.getDueDate());
+        }
 
         TransferResponse transferResponse =
                 createJsonRequest(url, transferRequest, TransferResponse.class);
