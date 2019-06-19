@@ -31,7 +31,7 @@ public final class BelfiusAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BelfiusApiClient(client, persistentStorage);
+        apiClient = new BelfiusApiClient(client);
         clientName = request.getProvider().getPayload();
     }
 

@@ -49,4 +49,9 @@ public final class BelfiusConstants {
         public static final String AUTHORIZATION = "Bearer 1";
         public static final String ACCEPT_LANGUAGE = "en";
     }
+
+    public static class CredentialKeys {
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+    }
 }

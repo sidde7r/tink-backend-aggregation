@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius;
 
-import java.util.Optional;
 import java.util.UUID;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.belfius.BelfiusConstants.Urls;
@@ -13,22 +11,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public final class BelfiusApiClient {
 
     private final TinkHttpClient client;
-    private final PersistentStorage persistentStorage;
     private BelfiusConfiguration configuration;
 
-    public BelfiusApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public BelfiusApiClient(TinkHttpClient client) {
         this.client = client;
-        this.persistentStorage = persistentStorage;
-    }
-
-    private BelfiusConfiguration getConfiguration() {
-        return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     protected void setConfiguration(BelfiusConfiguration configuration) {
