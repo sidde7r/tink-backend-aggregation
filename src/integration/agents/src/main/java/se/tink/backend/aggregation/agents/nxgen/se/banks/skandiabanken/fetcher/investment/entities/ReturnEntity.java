@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class ReturnEntity {
     @JsonProperty("FromDate")
     private String fromDate;
