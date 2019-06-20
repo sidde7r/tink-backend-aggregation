@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.authenticator.LaBanquePostaleAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.configuration.LaBanquePostaleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.executor.payment.LaBanquePostalPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.openbanking.labanquepostale.fetcher.transactionalaccount.LaBanquePostaleTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.BerlinGroupTransactionFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LaBanquePostaleAgent
@@ -61,5 +64,10 @@ public final class LaBanquePostaleAgent
     @Override
     public String getClientName() {
         return clientName;
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new LaBanquePostalPaymentExecutor(apiClient)));
     }
 }
