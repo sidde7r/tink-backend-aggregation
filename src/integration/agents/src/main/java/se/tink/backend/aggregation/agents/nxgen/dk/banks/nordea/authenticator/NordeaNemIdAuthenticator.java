@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementListEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AuthenticatedUserEntity;
@@ -66,6 +68,9 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
         Optional<String> errorCode = authenticateUserResponse.getErrorCode();
 
         if (errorCode.isPresent()) {
+            if (errorCode.get().equals(ErrorCode.NO_ACCESS_TO_MOBILBANK)) {
+                throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
+            }
             throw new IllegalStateException(
                     NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
                             errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
