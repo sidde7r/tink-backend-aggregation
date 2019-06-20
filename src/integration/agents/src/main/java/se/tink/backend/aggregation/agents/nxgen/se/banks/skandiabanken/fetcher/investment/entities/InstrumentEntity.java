@@ -130,25 +130,25 @@ public class InstrumentEntity {
     private int orderBookStatus;
 
     @JsonProperty("ReturnOneDay")
-    private BigDecimal returnOneDay;
+    private ReturnEntity returnOneDay;
 
     @JsonProperty("ReturnOneMonth")
-    private BigDecimal returnOneMonth;
+    private ReturnEntity returnOneMonth;
 
     @JsonProperty("ReturnOneWeek")
-    private BigDecimal returnOneWeek;
+    private ReturnEntity returnOneWeek;
 
     @JsonProperty("ReturnOneYear")
-    private BigDecimal returnOneYear;
+    private ReturnEntity returnOneYear;
 
     @JsonProperty("ReturnSixMonths")
-    private BigDecimal returnSixMonths;
+    private ReturnEntity returnSixMonths;
 
     @JsonProperty("ReturnThreeMonths")
-    private BigDecimal returnThreeMonths;
+    private ReturnEntity returnThreeMonths;
 
     @JsonProperty("ReturnYearEnd")
-    private BigDecimal returnYearEnd;
+    private ReturnEntity returnYearEnd;
 
     @JsonProperty("Time")
     private String time = "";
