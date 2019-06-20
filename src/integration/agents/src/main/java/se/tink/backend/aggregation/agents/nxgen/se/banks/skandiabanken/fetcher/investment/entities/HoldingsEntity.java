@@ -68,7 +68,8 @@ public class HoldingsEntity {
     @JsonIgnore
     public Instrument toTinkInstrument() {
         Instrument tinkInstrument = getInstrument().toTinkInstrument();
-        tinkInstrument.setAverageAcquisitionPrice(acquisitionValue.divide(shares, BigDecimal.ROUND_HALF_UP).doubleValue());
+        tinkInstrument.setAverageAcquisitionPrice(
+                acquisitionValue.divide(shares, BigDecimal.ROUND_HALF_UP).doubleValue());
         tinkInstrument.setQuantity(shares.doubleValue());
         tinkInstrument.setProfit(currentValue.doubleValue() - acquisitionValue.doubleValue());
         tinkInstrument.setMarketValue(todaysRate.doubleValue());
