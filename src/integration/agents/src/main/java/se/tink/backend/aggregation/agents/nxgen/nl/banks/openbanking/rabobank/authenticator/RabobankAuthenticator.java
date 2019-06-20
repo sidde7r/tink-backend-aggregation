@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.au
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -43,14 +44,17 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final String clientId = getConfiguration().getClientId();
 
-        return configuration
-                .getUrls()
-                .getAuthorizeUrl()
-                .queryParam(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
-                .queryParam(QueryParams.REDIRECT_URI, redirectUri)
-                .queryParam(QueryParams.CLIENT_ID, clientId)
-                .queryParam(QueryParams.SCOPE, QueryValues.SCOPES)
-                .queryParam(QueryParams.STATE, state);
+        final Form params =
+                Form.builder()
+                        .encodeSpacesWithPercent()
+                        .put(QueryParams.RESPONSE_TYPE, QueryValues.CODE)
+                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .put(QueryParams.CLIENT_ID, clientId)
+                        .put(QueryParams.SCOPE, QueryValues.SCOPES)
+                        .put(QueryParams.STATE, state)
+                        .build();
+
+        return configuration.getUrls().getAuthorizeUrl().concat("?" + params.serialize());
     }
 
     @Override
