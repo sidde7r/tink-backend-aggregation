@@ -4,7 +4,7 @@ public final class IcaBankenConstants {
 
     public static final String INTEGRATION_NAME = "icabanken";
 
-    public static class Urls {
+    public static class ProductionUrls {
         private static String BASE =
                 "https://mtls-apimgw-icabanken.ica.se/t/icabanken.tenant/ica/bank/psd2/accounts/1.0.0";
 
@@ -15,7 +15,25 @@ public final class IcaBankenConstants {
         public static final String TRANSACTIONS_PATH = BASE + "/Accounts/{accountId}/transactions";
     }
 
+    public static class SandboxUrls {
+
+        private static String BASE_URL = "accounts/1.0.0";
+        public static final String ACCOUNTS_PATH = BASE_URL + "/Accounts";
+        public static final String TRANSACTIONS_PATH =
+                BASE_URL + "/Accounts/{accountId}/transactions";
+        // Base url is not the same for this request
+        public static final String FETCH_TOKEN = "https://ims.icagruppen.se/oauth/v2/token";
+
+        private static String BASE_URL_PIS =
+                "https://apimgw.ica.se/t/icabanken.tenant/ica/bank/services/psd2";
+        public static final String GET_PAYMENT =
+                BASE_URL_PIS + "/payments/sandbox/1.0.0/Payments/{paymentProduct}/{paymentId}";
+        public static final String INITIATE_PAYMENT =
+                BASE_URL_PIS + "/payments/sandbox/1.0.0/Payments/{paymentProduct}";
+    }
+
     public static class StorageKeys {
+        public static final String BASE_URL = "BASE_URL";
         public static final String TOKEN = "OAUTH_TOKEN";
     }
 
@@ -34,6 +52,8 @@ public final class IcaBankenConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
         public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class QueryValues {
@@ -44,6 +64,11 @@ public final class IcaBankenConstants {
         public static final String WITH_BALANCE = "true";
         public static final String ACCOUNT = "account";
         public static final String REFRESH_TOKEN = "refresh_token";
+
+        public static class PaymentProduct {
+            public static final String SEPA = "CrossBorderCreditTransfers"; // SepaCreditTransfer";
+            public static final String INTERNATIONAL = "CrossBorderCreditTransfers";
+        }
     }
 
     public static class HeaderKeys {
@@ -66,7 +91,20 @@ public final class IcaBankenConstants {
         public static final String ACCOUNT_ID = "accountId";
     }
 
-    public class ErrorMessages {
+    public static class ErrorMessages {
         public static final String MISSING_CONFIGURATION = "ICA Banken configuration missing.";
+        public static final String MAPPING =
+                "Cannot map Ica payment status: %s to Tink payment status.";
+        public static final String MISSING_TOKEN = "Cannot find Token!";
+    }
+
+    public static class FormKeys {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String CLIENT_ID = "client_id";
+        public static final String CLIENT_SECRET = "client_secret";
+    }
+
+    public static class FormValues {
+        public static final String GRANT_TYPE = "client_credentials";
     }
 }

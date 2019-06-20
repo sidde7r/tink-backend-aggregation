@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -8,7 +9,10 @@ import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.IcaBankenConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authenticator.IcaBankenSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration.Environment;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.executor.payment.IcaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -18,10 +22,12 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class IcaBankenAgent extends NextGenerationAgent
@@ -34,7 +40,10 @@ public final class IcaBankenAgent extends NextGenerationAgent
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public IcaBankenAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair
+            ) {
         super(request, context, signatureKeyPair);
 
         apiClient = new IcaBankenApiClient(client, sessionStorage);
@@ -45,23 +54,25 @@ public final class IcaBankenAgent extends NextGenerationAgent
 
     @Override
     protected Authenticator constructAuthenticator() {
-        final OAuth2AuthenticationController controller =
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        new IcaBankenAuthenticator(
-                                apiClient,
-                                sessionStorage,
-                                icaBankenConfiguration,
-                                credentialsRequest),
-                        credentials);
+        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
+            final OAuth2AuthenticationController controller =
+                    new OAuth2AuthenticationController(
+                            persistentStorage,
+                            supplementalInformationHelper,
+                            new IcaBankenAuthenticator(
+                                    apiClient,
+                                    sessionStorage,
+                                    icaBankenConfiguration,
+                                    credentialsRequest),
+                            credentials);
 
-        return new AutoAuthenticationController(
-                request,
-                context,
-                new ThirdPartyAppAuthenticationController<>(
-                        controller, supplementalInformationHelper),
-                controller);
+            return new AutoAuthenticationController(
+                    request,
+                    context,
+                    new ThirdPartyAppAuthenticationController<>(
+                            controller, supplementalInformationHelper),
+                    controller);
+        } else return new IcaBankenSandboxAuthenticator(apiClient, sessionStorage);
     }
 
     @Override
@@ -81,8 +92,10 @@ public final class IcaBankenAgent extends NextGenerationAgent
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
         apiClient.setConfiguration(icaBankenConfiguration);
-        client.setEidasProxy(
-                configuration.getEidasProxy(), icaBankenConfiguration.getCertificateId());
+        if (icaBankenConfiguration.getEnvironment() == Environment.PRODUCTION) {
+            client.setEidasProxy(
+                    configuration.getEidasProxy(), icaBankenConfiguration.getCertificateId());
+        }
     }
 
     @Override
@@ -123,5 +136,13 @@ public final class IcaBankenAgent extends NextGenerationAgent
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+
+        final IcaPaymentExecutor icaPaymentExecutor = new IcaPaymentExecutor(apiClient);
+
+        return Optional.of(new PaymentController(icaPaymentExecutor, icaPaymentExecutor));
     }
 }

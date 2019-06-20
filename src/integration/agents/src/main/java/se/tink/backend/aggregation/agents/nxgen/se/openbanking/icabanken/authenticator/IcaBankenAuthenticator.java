@@ -56,7 +56,7 @@ public class IcaBankenAuthenticator implements OAuth2Authenticator {
                                 credentials.getField(Field.Key.USERNAME))
                         .build();
 
-        return new URL(IcaBankenConstants.Urls.AUTH_PATH + "?" + params.toString());
+        return new URL(IcaBankenConstants.ProductionUrls.AUTH_PATH + "?" + params.toString());
     }
 
     @Override

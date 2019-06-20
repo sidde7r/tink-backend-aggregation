@@ -43,4 +43,12 @@ public class TokenResponse {
                 getRefreshToken(),
                 getExpiresIn());
     }
+
+    // Used only for sandbox
+    @JsonProperty("token_type")
+    private String tokenType;
+
+    public OAuth2Token toTinkToken() {
+        return OAuth2Token.create(tokenType, accessToken, "", Long.parseLong(expiresIn));
+    }
 }

@@ -7,13 +7,20 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class IcaBankenConfiguration implements ClientConfiguration {
 
+    @JsonProperty private String baseUrl;
     @JsonProperty private String clientId;
+    @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUri;
     @JsonProperty private String eidasUrl;
     @JsonProperty private String certificateId;
+    @JsonProperty private String environment;
 
     public String getClientId() {
         return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
     }
 
     public String getRedirectUri() {
@@ -26,5 +33,29 @@ public class IcaBankenConfiguration implements ClientConfiguration {
 
     public String getCertificateId() {
         return certificateId;
+    }
+
+    public Environment getEnvironment() {
+        return Environment.fromString(environment);
+    }
+
+    public enum Environment {
+        SANDBOX("sandbox"),
+        PRODUCTION("production");
+
+        private final String value;
+
+        Environment(String value) {
+            this.value = value;
+        }
+
+        public static Environment fromString(String value) {
+            return Environment.valueOf(value.toUpperCase());
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 }
