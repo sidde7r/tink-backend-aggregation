@@ -107,6 +107,16 @@ public class Credentials implements Cloneable {
         return fields.get(key);
     }
 
+    public boolean hasField(Field.Key field) {
+        Map<String, String> fields = getFields();
+
+        if (fields == null) {
+            return false;
+        }
+
+        return fields.containsKey(field.getFieldKey());
+    }
+
     public String getField(Field.Key field) {
         return getField(field.getFieldKey());
     }
