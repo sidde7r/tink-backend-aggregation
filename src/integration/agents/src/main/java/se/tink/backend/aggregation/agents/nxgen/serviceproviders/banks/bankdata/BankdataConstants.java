@@ -68,4 +68,10 @@ public class BankdataConstants {
                     .put("pension", Portfolio.Type.PENSION)
                     .put("childsaving", Portfolio.Type.OTHER)
                     .build();
+
+    public static class ErrorCodes {
+        public static final int ACCOUNT_NOT_ACTIVATED_IN_ONLINE_BANK = 109;
+        public static final int INCORRECT_CREDENTIALS = 112;
+        public static final int ACCOUNT_BLOCKED = 110;
+    }
 }
