@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Field.Key;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -66,7 +67,14 @@ public class BankIdAuthenticationControllerTest {
     }
 
     @Test(expected = LoginException.class)
-    public void ensureExceptionIsThrown_whenSsn_isNull()
+    public void ensureExceptionIsThrown_whenFieldPresentButSsn_isEmpty()
+            throws AuthenticationException, AuthorizationException {
+        credentials.setField(Key.USERNAME, "");
+        authenticationController.authenticate(credentials);
+    }
+
+    @Test
+    public void ensureBankId_withNoUsernameField_doesNotThrow()
             throws AuthenticationException, AuthorizationException {
         authenticationController.authenticate(credentials);
     }
