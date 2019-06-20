@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "agent-data-availability-tracker-client-test",
+    name = "client-test",
     srcs = glob(
         ["**/*.java"],
     ),

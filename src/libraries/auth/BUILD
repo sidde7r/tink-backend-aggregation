@@ -8,7 +8,7 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/http:http_annotations",
-        "//third_party:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
         "@maven//:com_google_guava_guava",
         "@maven//:com_lambdaworks_scrypt",
         "@maven//:com_sun_jersey_jersey_core",

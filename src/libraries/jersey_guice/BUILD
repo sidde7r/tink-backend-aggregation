@@ -7,12 +7,13 @@ java_library_maven(
     groupId = "se.tink.libraries.jersey.guice",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:io_dropwizard_dropwizard_jersey",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_jersey",
         "@maven//:com_google_code_findbugs_jsr305",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_inject_extensions_guice_multibindings",
         "@maven//:com_google_inject_guice",
+        "@maven//:com_sun_jersey_jersey_server",
         "@maven//:javax_inject_javax_inject",
         "@maven//:org_apache_httpcomponents_httpclient",
         "@maven//:org_apache_httpcomponents_httpcore",
@@ -29,9 +30,10 @@ junit_test(
     ],
     deps = [
         ":jersey_guice",
-        "//third_party:io_dropwizard_dropwizard_jersey",
+        "@dropwizard//:com_netflix_governator_governator",
+        "@dropwizard//:io_dropwizard_dropwizard_jersey",
         "@maven//:com_google_inject_guice",
-        "@maven//:com_netflix_governator_governator",
+        "@maven//:com_sun_jersey_jersey_server",
         "@maven//:org_mockito_mockito_core",
     ],
 )

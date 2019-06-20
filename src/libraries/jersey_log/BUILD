@@ -12,7 +12,7 @@ java_library_maven(
         "//src/libraries/api_headers",
         "//src/libraries/auth",
         "//src/libraries/metrics",
-        "//third_party:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:com_google_guava_guava",

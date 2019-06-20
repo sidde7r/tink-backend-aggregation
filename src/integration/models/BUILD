@@ -12,6 +12,8 @@ java_library_maven(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:com_fasterxml_uuid_java_uuid_generator",
         "@maven//:com_google_guava_guava",

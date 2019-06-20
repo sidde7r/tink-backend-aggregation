@@ -6,7 +6,8 @@ java_library_maven(
     groupId = "se.tink.libraries.draining",
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_servlets",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_inject_guice",
     ],

@@ -17,7 +17,7 @@ java_library_maven(
         "//src/libraries/signableoperation:rpc",
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
-        "//third_party:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_google_guava_guava",

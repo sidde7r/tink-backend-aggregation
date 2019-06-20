@@ -1,5 +1,5 @@
 java_library(
-    name = "agent-data-availability-tracker-client",
+    name = "client",
     srcs = glob(
         ["**/*.java"],
     ),
@@ -10,12 +10,11 @@ java_library(
         "//src/integration/agent_data_availability_tracker/client:serialization",
         "//src/integration/agent_data_availability_tracker/lib:client-lib",
         "//src/integration/api",
-        "//src/integration/lib:annotations",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/models",
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
-        "//third_party:netty",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

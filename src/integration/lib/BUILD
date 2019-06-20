@@ -1,12 +1,6 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-alias(
-    name = "annotations",
-    actual = "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
-    visibility = ["//visibility:public"],
-)
-
 java_library_maven(
     name = "lib",
     srcs = glob(
@@ -26,6 +20,7 @@ java_library_maven(
         "//src/aggregation/api",
         "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/api",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account:enums",
@@ -57,9 +52,8 @@ java_library_maven(
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
-        "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_vavr",
-        "//third_party:net_sourceforge_tess4j_tess4j",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
         "@maven//:com_amazonaws_aws_java_sdk_core",
         "@maven//:com_amazonaws_aws_java_sdk_s3",
         "@maven//:com_auth0_java_jwt",
@@ -80,12 +74,14 @@ java_library_maven(
         "@maven//:commons_codec_commons_codec",
         "@maven//:commons_io_commons_io",
         "@maven//:joda_time_joda_time",
+        "@maven//:org_apache_commons_commons_collections4",
         "@maven//:org_apache_commons_commons_lang3",
         "@maven//:org_apache_curator_curator_framework",
         "@maven//:org_apache_curator_curator_recipes",
         "@maven//:org_apache_httpcomponents_httpclient",
         "@maven//:org_apache_httpcomponents_httpcore",
         "@maven//:org_assertj_assertj_core",
+        "@maven//:org_bouncycastle_bcpkix_jdk15on",
         "@maven//:org_bouncycastle_bcprov_jdk15on",
         "@maven//:org_hibernate_hibernate_validator",
         "@maven//:org_jsoup_jsoup",
@@ -93,6 +89,7 @@ java_library_maven(
         "@maven//:org_mozilla_rhino",
         "@maven//:org_seleniumhq_selenium_selenium_api",
         "@maven//:org_slf4j_slf4j_api",
+        "@other//:net_sourceforge_tess4j_tess4j",
     ],
 )
 
@@ -119,6 +116,7 @@ junit_test(
         "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/annotations",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account:enums",
@@ -142,10 +140,11 @@ junit_test(
         "//src/libraries/transfer:mocks",
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
-        "//third_party:io_dropwizard_dropwizard_configuration",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:io_dropwizard_dropwizard_logging",
         "//third_party:io_vavr",
+        "@dropwizard//:io_dropwizard_dropwizard_configuration",
+        "@dropwizard//:io_dropwizard_dropwizard_core",
+        "@dropwizard//:io_dropwizard_dropwizard_jackson",
+        "@dropwizard//:io_dropwizard_dropwizard_logging",
         "@maven//:com_auth0_java_jwt",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",

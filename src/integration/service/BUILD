@@ -27,7 +27,7 @@ java_binary(
         "//third_party:log",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_inject_guice",
-        "@maven//:io_grpc_grpc_core",
+        "@grpc//:io_grpc_grpc_core",
         "@maven//:io_prometheus_simpleclient_hotspot",
         "@maven//:org_yaml_snakeyaml",
         "@tink_backend_shared_libraries//libraries/health-check-handler",

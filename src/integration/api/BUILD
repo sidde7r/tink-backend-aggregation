@@ -30,7 +30,7 @@ junit_test(
     deps = [
         "//src/integration/api",
         "//src/libraries/serialization",
-        "//third_party:io_dropwizard_dropwizard_configuration",
+        "@dropwizard//:io_dropwizard_dropwizard_configuration",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:com_google_guava_guava",

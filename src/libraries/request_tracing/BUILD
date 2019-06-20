@@ -22,5 +22,6 @@ junit_test(
         "@maven//:com_google_guava_guava",
         "@maven//:junit_junit",
         "@maven//:org_assertj_assertj_core",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

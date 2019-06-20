@@ -8,7 +8,7 @@ java_library_maven(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/uuid",
-        "//third_party:io_dropwizard_dropwizard_lifecycle",
+        "@dropwizard//:io_dropwizard_dropwizard_lifecycle",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
