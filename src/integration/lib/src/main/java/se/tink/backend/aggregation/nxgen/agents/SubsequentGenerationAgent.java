@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
@@ -305,12 +304,12 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     @Override
     public FetchAccountsResponse fetchCheckingAccounts() {
-        return fetchTransactionalAccounts(AccountTypes.CHECKING);
+        return this.fetchTransactionalAccounts();
     }
 
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        return fetchTransactionalAccounts(AccountTypes.SAVINGS);
+        return this.fetchTransactionalAccounts();
     }
 
     @Override
@@ -347,16 +346,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         hasRefreshedCheckingAccounts = true;
 
         return fetchTransactionalAccountsPerType(TransactionalAccountRefreshController.class);
-    }
-
-    private FetchAccountsResponse fetchTransactionalAccounts(AccountTypes accountType) {
-        FetchAccountsResponse allTransactionalAccounts = this.fetchTransactionalAccounts();
-        List<Account> accountsOfSelectedType =
-                allTransactionalAccounts.getAccounts().stream()
-                        .filter(account -> account.getType() == accountType)
-                        .collect(Collectors.toList());
-
-        return new FetchAccountsResponse(accountsOfSelectedType);
     }
 
     private <T extends AccountRefresher> FetchAccountsResponse fetchTransactionalAccountsPerType(
