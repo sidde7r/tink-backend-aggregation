@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
@@ -181,8 +180,7 @@ public final class RefreshExecutorUtils {
 
     private static void logIfFetchedExtraAccounts(Agent agent, List<Account> accounts) {
         boolean hasFetchedMoreThanCheckingAccounts =
-                accounts.stream()
-                        .anyMatch(account -> account.getType() != AccountTypes.CHECKING);
+                accounts.stream().anyMatch(account -> account.getType() != AccountTypes.CHECKING);
 
         if (hasFetchedMoreThanCheckingAccounts) {
             List<AccountTypes> accountTypesExceptCheckingAccounts =
