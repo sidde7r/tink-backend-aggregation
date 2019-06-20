@@ -10,7 +10,10 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.entities.PaginationKey;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -25,6 +28,8 @@ import se.tink.libraries.amount.Amount;
 public class BankinterEntitiesParsingTest {
     final String TEST_DATA_PATH = "data/test/agents/es/bankinter/";
     final String TEST_DATA_IBAN = "ES2201281337857486299388";
+    private static final SimpleDateFormat TRANSACTION_DATE_FORMATTER =
+            new SimpleDateFormat("dd/MM/yyyy");
 
     private <C> C loadTestResponse(String path, Class<C> responseClass) {
         try {
@@ -73,14 +78,42 @@ public class BankinterEntitiesParsingTest {
         assertEquals(Amount.inEUR(31337.42), account.getBalance());
     }
 
+    private void assertTransaction(
+            String date, String description, double eur, Transaction transaction) {
+        assertEquals(date, TRANSACTION_DATE_FORMATTER.format(transaction.getDate()));
+        assertEquals(description, transaction.getDescription());
+        assertEquals(Amount.inEUR(eur), transaction.getAmount());
+    }
+
     @Test
     public void testTransactionsResponse() {
         final TransactionsResponse transactionsResponse =
                 loadTestResponse("4.transactions.xhtml", TransactionsResponse.class);
 
-        Collection<Transaction> transactions = transactionsResponse.toTinkTransactions();
+        List<Transaction> transactions =
+                transactionsResponse.toTinkTransactions().stream().collect(Collectors.toList());
 
         assertEquals(13, transactions.size());
+        assertTransaction(
+                "10/06/2019", "Pago Bizum De Mengano;ramirez;tal", 3.5, transactions.get(0));
+        assertTransaction(
+                "10/06/2019", "Pago Bizum De Maria Luisa;garcia", 3.5, transactions.get(1));
+        assertTransaction(
+                "07/06/2019", "Pago Bizum De Hermangarda;perez De", 3.5, transactions.get(2));
+        assertTransaction(
+                "07/06/2019", "Pago Bizum De Manuel Francisco;gon", 3.5, transactions.get(3));
+        assertTransaction("07/06/2019", "Pago Bizum De David;marin", 3.5, transactions.get(4));
+        assertTransaction("07/06/2019", "Pago Bizum De Samuel;delgad", 3.5, transactions.get(5));
+        assertTransaction("07/06/2019", "Pago Bizum De Marina;soler;v", 3.5, transactions.get(6));
+        assertTransaction(
+                "05/06/2019", "Trans /ministerio de Educacion", 3019.21, transactions.get(7));
+        assertTransaction("04/06/2019", "Recibo Visa Clasica", -238.12, transactions.get(8));
+        assertTransaction("04/06/2019", "Trans /perez De tal Z", 500, transactions.get(9));
+        assertTransaction(
+                "04/06/2019", "Trans /ministerio de Educacion", 1337.42, transactions.get(10));
+        assertTransaction(
+                "03/06/2019", "Recib /c.p. Rufino Blanco 42", -312.25, transactions.get(11));
+        assertTransaction("03/06/2019", "Recibo /qualitas", -115.12, transactions.get(12));
 
         final PaginationKey nextKey = transactionsResponse.getNextKey(0);
         assertEquals("j_id374401928_5f006346:j_id374401928_5f006392", nextKey.getSource());

@@ -24,6 +24,8 @@ public class TransactionsResponse extends JsfUpdateResponse {
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern JSF_SOURCE_PATTERN = Pattern.compile(".*source:'([^']+)'.*");
     private static final Logger LOG = LoggerFactory.getLogger(TransactionsResponse.class);
+    private static final Pattern TRANSACTION_DATE_PATTERN =
+            Pattern.compile("(?:\\w+) (\\d{2}/\\d{2}/\\d{4})");
 
     public TransactionsResponse(HttpResponse response) {
         super(response);
@@ -66,12 +68,23 @@ public class TransactionsResponse extends JsfUpdateResponse {
             throw new IllegalStateException(
                     "Transaction row should have 4 columns, but has " + numberOfColumns);
         }
-        final String date = evaluateXPath(row, "td[1]", String.class);
+
+        Transaction.Builder builder = Transaction.builder();
+
+        final String date =
+                evaluateXPath(
+                        row,
+                        "../../preceding::td[text() != '' and ./following-sibling::td[@colspan='4']][1]",
+                        String.class);
+        final Matcher dateMatcher = TRANSACTION_DATE_PATTERN.matcher(date);
+        if (!dateMatcher.find()) {
+            throw new IllegalStateException("Could not parse transaction date: " + date);
+        }
+
         final String description = evaluateXPath(row, "td[2]", String.class).trim();
         final String amount = evaluateXPath(row, "td[3]", String.class).replaceAll("\\s", "");
 
-        return Transaction.builder()
-                .setDate(date, TRANSACTION_DATE_FORMATTER)
+        return builder.setDate(dateMatcher.group(1), TRANSACTION_DATE_FORMATTER)
                 .setDescription(description)
                 .setAmount(parseAmount(amount))
                 .build();
