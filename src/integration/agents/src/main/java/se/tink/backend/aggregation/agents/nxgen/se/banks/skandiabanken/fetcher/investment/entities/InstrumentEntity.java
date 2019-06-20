@@ -129,26 +129,28 @@ public class InstrumentEntity {
     @JsonProperty("OrderBookStatus")
     private int orderBookStatus;
 
-    @JsonProperty("ReturnOneDay")
-    private ReturnEntity returnOneDay;
-
-    @JsonProperty("ReturnOneMonth")
-    private ReturnEntity returnOneMonth;
-
-    @JsonProperty("ReturnOneWeek")
-    private ReturnEntity returnOneWeek;
-
-    @JsonProperty("ReturnOneYear")
-    private ReturnEntity returnOneYear;
-
-    @JsonProperty("ReturnSixMonths")
-    private ReturnEntity returnSixMonths;
-
-    @JsonProperty("ReturnThreeMonths")
-    private ReturnEntity returnThreeMonths;
-
-    @JsonProperty("ReturnYearEnd")
-    private ReturnEntity returnYearEnd;
+    // These values are sometimes doubles and sometimes `ReturnEntity`,
+    // since we are not using them I will disable all of it for now.
+    //    @JsonProperty("ReturnOneDay")
+    //    private ReturnEntity returnOneDay;
+    //
+    //    @JsonProperty("ReturnOneMonth")
+    //    private ReturnEntity returnOneMonth;
+    //
+    //    @JsonProperty("ReturnOneWeek")
+    //    private ReturnEntity returnOneWeek;
+    //
+    //    @JsonProperty("ReturnOneYear")
+    //    private ReturnEntity returnOneYear;
+    //
+    //    @JsonProperty("ReturnSixMonths")
+    //    private ReturnEntity returnSixMonths;
+    //
+    //    @JsonProperty("ReturnThreeMonths")
+    //    private ReturnEntity returnThreeMonths;
+    //
+    //    @JsonProperty("ReturnYearEnd")
+    //    private ReturnEntity returnYearEnd;
 
     @JsonProperty("Time")
     private String time = "";
