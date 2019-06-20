@@ -2007,6 +2007,23 @@
             "type": "BANK"
         },
         {
+            "name": "se-skandiabanken-bankid",
+            "className": "nxgen.se.banks.skandiabanken.SkandiaBankenAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Skandiabanken",
+            "fields": [],
+            "market": "SE",
+            "multiFactor": false,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "className": "banks.SkandiabankenAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
