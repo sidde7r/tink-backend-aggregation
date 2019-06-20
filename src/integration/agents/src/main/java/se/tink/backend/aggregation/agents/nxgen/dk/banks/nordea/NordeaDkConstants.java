@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
@@ -577,5 +578,10 @@ public class NordeaDkConstants {
     public static class Authentication {
         public static final String DEFAULT_AUTH_LEVEL = "1";
         public static final String LOGIN_TYPE_NEMID = "MNEMID-LOGON";
+    }
+
+    public static class Tag {
+        public static final LogTag LOANS_POSITIVE_ERROR =
+                LogTag.from("NORDEA_DK_LOANS_POSITIVE_ERROR");
     }
 }
