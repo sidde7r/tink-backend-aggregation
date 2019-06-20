@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -35,6 +37,7 @@ public class NordeaDkParser extends NordeaV20Parser {
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");
 
     private final Credentials credentials;
+    private static final Logger LOGGER = LoggerFactory.getLogger(NordeaDkParser.class);
 
     public NordeaDkParser(TransactionParser parser, Credentials credentials) {
         super(parser, credentials, NordeaDkConstants.CURRENCY);
@@ -104,8 +107,18 @@ public class NordeaDkParser extends NordeaV20Parser {
     }
 
     public LoanAccount parseBlancoLoan(ProductEntity pe) {
-        return LoanAccount.builder(
-                        pe.getAccountNumber(false), new Amount(pe.getCurrency(), pe.getBalance()))
+
+        Amount amount = new Amount(pe.getCurrency(), pe.getBalance());
+
+        // We have had some issues with positive loans, which causes an exception to be thrown.
+        if (amount.isPositive()) {
+            LOGGER.error(
+                    "{} Loan is positive. Negating loan amount, to make it negative",
+                    NordeaDkConstants.Tag.LOANS_POSITIVE_ERROR);
+            amount = amount.negate();
+        }
+
+        return LoanAccount.builder(pe.getAccountNumber(false), amount)
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
