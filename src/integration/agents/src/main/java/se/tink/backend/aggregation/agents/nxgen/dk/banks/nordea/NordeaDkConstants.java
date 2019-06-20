@@ -580,6 +580,10 @@ public class NordeaDkConstants {
         public static final String LOGIN_TYPE_NEMID = "MNEMID-LOGON";
     }
 
+    public static class ErrorCode {
+        public static final String NO_ACCESS_TO_MOBILBANK = "MAS0019";
+    }
+
     public static class Tag {
         public static final LogTag LOANS_POSITIVE_ERROR =
                 LogTag.from("NORDEA_DK_LOANS_POSITIVE_ERROR");
