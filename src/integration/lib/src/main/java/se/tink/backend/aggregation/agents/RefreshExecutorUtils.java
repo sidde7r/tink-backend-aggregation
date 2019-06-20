@@ -3,13 +3,20 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
 public final class RefreshExecutorUtils {
+    private static Logger log = LoggerFactory.getLogger(RefreshExecutorUtils.class);
+
     private RefreshExecutorUtils() {
         throw new AssertionError();
     }
@@ -68,10 +75,7 @@ public final class RefreshExecutorUtils {
                                     .getTransferDestinations());
                     break;
                 case CHECKING_ACCOUNTS:
-                    context.cacheAccounts(
-                            ((RefreshCheckingAccountsExecutor) agent)
-                                    .fetchCheckingAccounts()
-                                    .getAccounts());
+                    cacheCheckingAccounts(agent, context);
                     break;
                 case CHECKING_TRANSACTIONS:
                     for (Map.Entry<Account, List<Transaction>> accountTransactions :
@@ -163,6 +167,35 @@ public final class RefreshExecutorUtils {
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));
             }
+        }
+    }
+
+    private static void cacheCheckingAccounts(Agent agent, AgentContext context) {
+        List<Account> checkingAccounts =
+                ((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts();
+
+        logIfFetchedExtraAccounts(agent, checkingAccounts);
+
+        context.cacheAccounts(checkingAccounts);
+    }
+
+    private static void logIfFetchedExtraAccounts(Agent agent, List<Account> accounts) {
+        boolean hasFetchedMoreThanCheckingAccounts =
+                accounts.stream()
+                        .anyMatch(account -> account.getType() != AccountTypes.CHECKING);
+
+        if (hasFetchedMoreThanCheckingAccounts) {
+            List<AccountTypes> accountTypesExceptCheckingAccounts =
+                    accounts.stream()
+                            .filter(account -> account.getType() != AccountTypes.CHECKING)
+                            .map(account -> account.getType())
+                            .distinct()
+                            .collect(Collectors.toList());
+            log.warn(
+                    "Agent {} is asked to fetch checking accounts,"
+                            + " But the agent also fetched {} types of accounts",
+                    agent.getAgentClass().getName(),
+                    accountTypesExceptCheckingAccounts);
         }
     }
 }
