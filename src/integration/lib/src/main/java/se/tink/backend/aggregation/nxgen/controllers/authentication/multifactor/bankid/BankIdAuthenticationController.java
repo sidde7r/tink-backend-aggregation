@@ -54,10 +54,15 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
                 String.format(
                         "Authentication method not implemented for CredentialsType: %s",
                         credentials.getType()));
-        String ssn = credentials.getField(Field.Key.USERNAME);
 
-        if (Strings.isNullOrEmpty(ssn)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        String ssn = "";
+
+        if (credentials.hasField(Field.Key.USERNAME)) {
+            ssn = credentials.getField(Field.Key.USERNAME);
+
+            if (Strings.isNullOrEmpty(ssn)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
         }
 
         T reference = authenticator.init(ssn);
