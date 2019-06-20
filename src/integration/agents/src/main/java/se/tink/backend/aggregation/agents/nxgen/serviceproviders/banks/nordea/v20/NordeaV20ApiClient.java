@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants.Payment;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.authenticator.rpc.lightLogin.LightLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.authenticator.rpc.lightLogin.PasswordLoginRequest;
@@ -138,6 +140,10 @@ public class NordeaV20ApiClient {
             } else if (NordeaV20Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(
                     errorCode.get())) {
                 throw NordeaV20Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
+            }
+
+            if (errorCode.get().equals(ErrorCode.TEMPORARY_TECHNICAL_ERROR)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
 
             return validate(response);

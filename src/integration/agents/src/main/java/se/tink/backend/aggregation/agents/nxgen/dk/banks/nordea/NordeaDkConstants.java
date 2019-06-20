@@ -582,6 +582,7 @@ public class NordeaDkConstants {
 
     public static class ErrorCode {
         public static final String NO_ACCESS_TO_MOBILBANK = "MAS0019";
+        public static final String TEMPORARY_TECHNICAL_ERROR = "MAS9001";
     }
 
     public static class Tag {
