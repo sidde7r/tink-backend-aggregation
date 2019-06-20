@@ -1,8 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
+load("//tools/bzl:maven_artifact.bzl", "java_library_maven")
 
-java_library(
+java_library_maven(
     name = "api_annotations",
     srcs = glob(["src/main/**/*.java"]),
+    artifactId = "apiannotations",
+    groupId = "se.tink.libraries.api",
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
 )
@@ -13,11 +16,12 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/api_annotations",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:junit_junit",
-        "//third_party:org_javassist_javassist",
-        "//third_party:org_reflections_reflections",
-        "//third_party:org_slf4j_slf4j_api",
+        "@maven//:com_google_guava_guava",
+        "@maven//:com_sun_jersey_jersey_client",
+        "@maven//:com_sun_jersey_jersey_core",
+        "@maven//:junit_junit",
+        "@maven//:org_javassist_javassist",
+        "@maven//:org_reflections_reflections",
+        "@maven//:org_slf4j_slf4j_api",
     ],
 )

@@ -1,0 +1,9 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>GROUP_ID</groupId>
+  <artifactId>ARTIFACT_ID</artifactId>
+  <version>VERSION</version>
+  <dependencies>
+    {generated_bzl_deps}
+  </dependencies>
+</project>
