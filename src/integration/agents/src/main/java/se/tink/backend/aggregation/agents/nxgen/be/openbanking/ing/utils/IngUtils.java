@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.utils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
@@ -10,7 +12,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 import org.assertj.core.util.Strings;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
@@ -30,18 +31,19 @@ public final class IngUtils {
         return formatDate(Calendar.getInstance().getTime(), format, timeZone);
     }
 
-    public static String generateSignature(String input, String signingKeyPath, String algorithm) {
+    public static String generateSignature(String input, String signingKey, String algorithm) {
         return Base64.getEncoder()
                 .encodeToString(
                         RSA.signSha256(
-                                JWTUtils.readSigningKey(signingKeyPath, algorithm),
-                                input.getBytes()));
+                                IngUtils.readSigningKey(signingKey, algorithm), input.getBytes()));
     }
 
-    public static byte[] readFile(String path) {
+    public static PrivateKey readSigningKey(String keyString, String algorithm) {
         try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
+            return KeyFactory.getInstance(algorithm)
+                    .generatePrivate(
+                            new PKCS8EncodedKeySpec(Base64.getDecoder().decode(keyString)));
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
