@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,6 +23,7 @@ public class TransactionsResponse extends JsfUpdateResponse {
     private static final DateTimeFormatter TRANSACTION_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final Pattern JSF_SOURCE_PATTERN = Pattern.compile(".*source:'([^']+)'.*");
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionsResponse.class);
 
     public TransactionsResponse(HttpResponse response) {
         super(response);
@@ -30,28 +33,39 @@ public class TransactionsResponse extends JsfUpdateResponse {
 
     private String getPreviousMonthJsfSource() {
         // first script contains link to previous month
+        // there's always a link, even if there are no more transactions
         final String script = evaluateXPath(navigation, "//script[1]/comment()", String.class);
         final Matcher matcher = JSF_SOURCE_PATTERN.matcher(script);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            return null;
+            throw new IllegalStateException("Did not find link for previous transactions page.");
         }
     }
 
     public PaginationKey getNextKey(long consecutiveEmptyReplies) {
+        final String source = getPreviousMonthJsfSource();
+        if (source == null) {
+            return null;
+        }
+
         final long newConsecutiveEmptyReplies;
         if (getTransactionRows().getLength() == 0) {
             newConsecutiveEmptyReplies = consecutiveEmptyReplies + 1;
         } else {
             newConsecutiveEmptyReplies = 0;
         }
-        return new PaginationKey(
-                getPreviousMonthJsfSource(), getViewState(), newConsecutiveEmptyReplies);
+
+        return new PaginationKey(source, getViewState(), newConsecutiveEmptyReplies);
     }
 
     private Transaction rowToTransaction(Node row) {
         // transaction rows have 4 cells: date (fecha valor), description, amount, account balance
+        final Double numberOfColumns = evaluateXPath(row, "count(td)", Double.class);
+        if (null == numberOfColumns || numberOfColumns.intValue() != 4) {
+            throw new IllegalStateException(
+                    "Transaction row should have 4 columns, but has " + numberOfColumns);
+        }
         final String date = evaluateXPath(row, "td[1]", String.class);
         final String description = evaluateXPath(row, "td[2]", String.class).trim();
         final String amount = evaluateXPath(row, "td[3]", String.class).replaceAll("\\s", "");

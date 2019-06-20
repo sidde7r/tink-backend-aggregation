@@ -90,6 +90,10 @@ public class HtmlResponse {
             return XPathConstants.NODE;
         } else if (cls == NodeList.class) {
             return XPathConstants.NODESET;
+        } else if (cls == Double.class) {
+            return XPathConstants.NUMBER;
+        } else if (cls == Boolean.class) {
+            return XPathConstants.BOOLEAN;
         } else {
             throw new NotImplementedException("No return type for " + cls.getCanonicalName());
         }

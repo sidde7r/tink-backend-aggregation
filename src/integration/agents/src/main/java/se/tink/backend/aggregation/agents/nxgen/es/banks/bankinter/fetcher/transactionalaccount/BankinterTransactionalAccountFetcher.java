@@ -75,13 +75,14 @@ public class BankinterTransactionalAccountFetcher
 
     private PaginationKey getSubsequentKey(TransactionsResponse response, PaginationKey nextKey) {
         // pagination is done by month, with a key
-        // responses always have keys, even if there's no more transactions in the past
+        // the link is always present, even if there are no more transactions
         if (null == nextKey) {
             return response.getNextKey(0);
         }
         final PaginationKey subsequentKey =
                 response.getNextKey(nextKey.getConsecutiveEmptyReplies());
-        if (subsequentKey.getConsecutiveEmptyReplies() < MAX_EMPTY_REPLIES) {
+        if (subsequentKey != null
+                && subsequentKey.getConsecutiveEmptyReplies() < MAX_EMPTY_REPLIES) {
             return subsequentKey;
         } else {
             return null;

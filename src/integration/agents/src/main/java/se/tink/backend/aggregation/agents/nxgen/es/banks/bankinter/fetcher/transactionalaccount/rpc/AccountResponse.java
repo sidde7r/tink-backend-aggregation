@@ -52,7 +52,7 @@ public class AccountResponse extends HtmlResponse {
                 evaluateXPath("//div[@class='saldoMov']//p[contains(@class,'cifra')]", String.class)
                         .replaceAll("\\s", "");
         if (Strings.isNullOrEmpty(balanceString)) {
-            LOG.warn("Did not find account balance.");
+            throw new IllegalStateException("Did not find account balance.");
         }
 
         return parseAmount(balanceString);
