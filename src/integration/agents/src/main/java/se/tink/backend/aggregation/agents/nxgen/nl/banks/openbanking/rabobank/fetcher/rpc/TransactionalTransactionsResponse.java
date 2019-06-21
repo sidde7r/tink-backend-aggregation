@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -58,14 +59,28 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     }
 
     @JsonIgnore
-    private Transaction toTinkTransaction(
+    private static Transaction toTinkTransaction(
             final TransactionItem transaction, final boolean isPending) {
+
+        final String description = createDescription(transaction);
+
         return Transaction.builder()
                 .setAmount(transaction.getTransactionAmount())
                 .setDate(transaction.getBookedDate())
-                .setDescription(transaction.getRemittanceInformationUnstructured())
+                .setDescription(description)
                 .setPending(isPending)
                 .build();
+    }
+
+    private static String createDescription(final TransactionItem transaction) {
+        final String description =
+                Optional.ofNullable(transaction.getRemittanceInformationUnstructured())
+                        .filter(s -> !s.isEmpty())
+                        .map(s -> s.split("\\s+"))
+                        .map(ss -> StringUtils.join(ss, " "))
+                        .orElseGet(transaction::getDebtorName);
+
+        return Optional.ofNullable(description).orElseGet(transaction::getCreditorName);
     }
 
     @JsonIgnore

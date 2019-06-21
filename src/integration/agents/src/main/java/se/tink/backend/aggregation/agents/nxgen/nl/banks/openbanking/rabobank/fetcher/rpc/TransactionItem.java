@@ -19,8 +19,14 @@ public class TransactionItem {
     @JsonProperty("creditorAgent")
     private String creditorAgent;
 
+    @JsonProperty("creditorName")
+    private String creditorName;
+
     @JsonProperty("debtorAgent")
     private String debtorAgent;
+
+    @JsonProperty("debtorName")
+    private String debtorName;
 
     @JsonProperty("remittanceInformationStructured")
     private String remittanceInformationStructured;
@@ -88,6 +94,10 @@ public class TransactionItem {
         return creditorAgent;
     }
 
+    public String getCreditorName() {
+        return creditorName;
+    }
+
     public void setCreditorAgent(String creditorAgent) {
         this.creditorAgent = creditorAgent;
     }
@@ -98,6 +108,10 @@ public class TransactionItem {
 
     public void setDebtorAgent(String debtorAgent) {
         this.debtorAgent = debtorAgent;
+    }
+
+    public String getDebtorName() {
+        return debtorName;
     }
 
     public String getRemittanceInformationStructured() {
