@@ -4,6 +4,7 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
@@ -126,7 +127,7 @@ public class RabobankApiClient {
     }
 
     public TransactionalTransactionsResponse getTransactions(
-            final TransactionalAccount account, final int page) {
+            final TransactionalAccount account, final Date fromDate, final Date toDate) {
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
         final String uuid = RabobankUtils.getRequestId();
         final String date = RabobankUtils.getDate();
@@ -143,7 +144,8 @@ public class RabobankApiClient {
             try {
                 return buildRequest(url, uuid, digest, signatureHeader, date)
                         .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
-                        .queryParam(QueryParams.PAGE, Integer.toString(page))
+                        .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
+                        .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
                         .queryParam(QueryParams.SIZE, QueryValues.TRANSACTIONS_SIZE)
                         .get(TransactionalTransactionsResponse.class);
             } catch (HttpResponseException e) {
