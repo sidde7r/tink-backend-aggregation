@@ -40,6 +40,7 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",
         "//src/libraries/account:enums",
@@ -72,7 +73,6 @@ java_library(
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
-        "//src/integration/lib/src/main/java/se/tink/backend/aggregation/eidas",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
