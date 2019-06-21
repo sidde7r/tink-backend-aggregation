@@ -209,19 +209,15 @@ public class InstrumentEntity {
     }
 
     @JsonIgnore
-    private double getPrice() {
-        return askPrice.doubleValue();
-    }
-
-    @JsonIgnore
-    public Instrument toTinkInstrument() {
+    public Instrument toTinkInstrument(BigDecimal todaysRate) {
         Instrument tinkInstrument = new Instrument();
         tinkInstrument.setUniqueIdentifier(createUniqueId());
         tinkInstrument.setIsin(isin);
         tinkInstrument.setMarketPlace(mic);
         tinkInstrument.setCurrency(currency);
         tinkInstrument.setName(name);
-        tinkInstrument.setPrice(getPrice());
+        tinkInstrument.setPrice(
+                askPrice != null ? askPrice.doubleValue() : todaysRate.doubleValue());
         tinkInstrument.setTicker(tickSize.toString());
         tinkInstrument.setType(
                 SkandiaBankenConstants.INSTRUMENT_TYPE_MAP
