@@ -22,6 +22,9 @@ public class TransactionItem {
     @JsonProperty("debtorAgent")
     private String debtorAgent;
 
+    @JsonProperty("debtorName")
+    private String debtorName;
+
     @JsonProperty("remittanceInformationStructured")
     private String remittanceInformationStructured;
 
@@ -98,6 +101,10 @@ public class TransactionItem {
 
     public void setDebtorAgent(String debtorAgent) {
         this.debtorAgent = debtorAgent;
+    }
+
+    public String getDebtorName() {
+        return debtorName;
     }
 
     public String getRemittanceInformationStructured() {
