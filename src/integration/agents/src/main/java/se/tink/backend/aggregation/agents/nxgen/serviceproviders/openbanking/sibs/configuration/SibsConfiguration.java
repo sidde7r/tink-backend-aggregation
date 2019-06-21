@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class SibsConfiguration implements ClientConfiguration {
 
     private String baseUrl;
+    private String eidasProxyBaseUrl;
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
@@ -25,6 +26,14 @@ public class SibsConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
+    }
+
+    public String getEidasProxyBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasProxyBaseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS Proxy Base URL"));
+
+        return eidasProxyBaseUrl;
     }
 
     public String getClientId() {
