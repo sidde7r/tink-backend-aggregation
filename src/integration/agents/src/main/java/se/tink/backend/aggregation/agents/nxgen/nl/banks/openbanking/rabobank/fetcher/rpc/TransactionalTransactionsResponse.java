@@ -62,12 +62,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     private static Transaction toTinkTransaction(
             final TransactionItem transaction, final boolean isPending) {
 
-        final String description =
-                Optional.ofNullable(transaction.getRemittanceInformationUnstructured())
-                        .filter(s -> !s.isEmpty())
-                        .map(s -> s.split("\\s+"))
-                        .map(ss -> StringUtils.join(ss, " "))
-                        .orElseGet(transaction::getDebtorName);
+        final String description = createDescription(transaction);
 
         return Transaction.builder()
                 .setAmount(transaction.getTransactionAmount())
@@ -75,6 +70,17 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
                 .setDescription(description)
                 .setPending(isPending)
                 .build();
+    }
+
+    private static String createDescription(final TransactionItem transaction) {
+        final String description =
+                Optional.ofNullable(transaction.getRemittanceInformationUnstructured())
+                        .filter(s -> !s.isEmpty())
+                        .map(s -> s.split("\\s+"))
+                        .map(ss -> StringUtils.join(ss, " "))
+                        .orElseGet(transaction::getDebtorName);
+
+        return Optional.ofNullable(description).orElseGet(transaction::getCreditorName);
     }
 
     @JsonIgnore

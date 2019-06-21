@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -87,8 +86,7 @@ public class RabobankAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
-                                        new TransactionFetcher(apiClient),
-                                        RabobankConstants.START_PAGE))));
+                                        new TransactionFetcher(apiClient)))));
     }
 
     @Override

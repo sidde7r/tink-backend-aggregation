@@ -19,6 +19,9 @@ public class TransactionItem {
     @JsonProperty("creditorAgent")
     private String creditorAgent;
 
+    @JsonProperty("creditorName")
+    private String creditorName;
+
     @JsonProperty("debtorAgent")
     private String debtorAgent;
 
@@ -89,6 +92,10 @@ public class TransactionItem {
 
     public String getCreditorAgent() {
         return creditorAgent;
+    }
+
+    public String getCreditorName() {
+        return creditorName;
     }
 
     public void setCreditorAgent(String creditorAgent) {
