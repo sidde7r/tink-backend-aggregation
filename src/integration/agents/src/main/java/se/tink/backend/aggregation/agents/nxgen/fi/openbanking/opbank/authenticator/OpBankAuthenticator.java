@@ -58,11 +58,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                                 null),
                         new ClaimEntity(
                                 new AuthorizationIdEntity(authorization.getAuthorizationId(), true),
-                                new AcrEntity(
-                                        true,
-                                        ImmutableList.of(
-                                                "urn:openbanking:psd2:sca",
-                                                "urn:openbanking:psd2:ca"))));
+                                new AcrEntity(true, ImmutableList.of("urn:openbanking:psd2:sca"))));
 
         TokenBodyEntity tokenBody = new TokenBodyEntity();
         tokenBody.setAud("https://mtls.apis.op.fi");
