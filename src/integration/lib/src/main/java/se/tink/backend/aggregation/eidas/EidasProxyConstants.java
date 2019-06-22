@@ -4,6 +4,7 @@ public final class EidasProxyConstants {
 
     public static class Url {
         public static final String EIDAS_SIGN = "sign-rsa-sha256/";
+        public static final String JWS_EC256_SIGN = "sign-jws-ec256/";
     }
 
     public static class Eidas {
