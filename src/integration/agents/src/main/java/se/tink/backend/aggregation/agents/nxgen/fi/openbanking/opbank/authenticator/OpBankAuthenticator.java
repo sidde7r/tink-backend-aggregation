@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 
 import com.google.common.collect.ImmutableList;
 import java.time.OffsetDateTime;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
@@ -78,9 +78,9 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         String tokenHeadJson = SerializationUtils.serializeToString(new TokenHeaderEntity());
 
         String baseTokenString =
-                Base64.encodeBase64URLSafeString(tokenHeadJson.getBytes())
+                Base64.getUrlEncoder().encodeToString(tokenHeadJson.getBytes())
                         + "."
-                        + Base64.encodeBase64URLSafeString(tokenBodyJson.getBytes());
+                        + Base64.getUrlEncoder().encodeToString(tokenBodyJson.getBytes());
 
         String signature = apiClient.fetchSignature(baseTokenString);
 
