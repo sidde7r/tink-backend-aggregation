@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-
 public class EcJwsProxySigner implements Signer {
 
     private static Logger logger = LoggerFactory.getLogger(EcJwsProxySigner.class);
