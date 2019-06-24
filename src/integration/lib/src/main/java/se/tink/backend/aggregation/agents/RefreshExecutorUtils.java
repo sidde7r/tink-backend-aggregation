@@ -179,16 +179,14 @@ public final class RefreshExecutorUtils {
     }
 
     private static void logIfFetchedExtraAccounts(Agent agent, List<Account> accounts) {
-        boolean hasFetchedMoreThanCheckingAccounts =
-                accounts.stream().anyMatch(account -> account.getType() != AccountTypes.CHECKING);
+        List<AccountTypes> accountTypesExceptCheckingAccounts =
+                accounts.stream()
+                        .filter(account -> account.getType() != AccountTypes.CHECKING)
+                        .map(account -> account.getType())
+                        .distinct()
+                        .collect(Collectors.toList());
 
-        if (hasFetchedMoreThanCheckingAccounts) {
-            List<AccountTypes> accountTypesExceptCheckingAccounts =
-                    accounts.stream()
-                            .filter(account -> account.getType() != AccountTypes.CHECKING)
-                            .map(account -> account.getType())
-                            .distinct()
-                            .collect(Collectors.toList());
+        if (!accountTypesExceptCheckingAccounts.isEmpty()) {
             log.warn(
                     "Agent {} is asked to fetch checking accounts,"
                             + " But the agent also fetched {} types of accounts",
