@@ -91,7 +91,7 @@ public class InstrumentEntity {
     private String shortName = "";
 
     @JsonProperty("TickSize")
-    private BigDecimal tickSize;
+    private double tickSize;
 
     @JsonProperty("TickerVIPUrl")
     private String tickerVIPUrl = "";
@@ -218,13 +218,18 @@ public class InstrumentEntity {
         tinkInstrument.setName(name);
         tinkInstrument.setPrice(
                 askPrice != null ? askPrice.doubleValue() : todaysRate.doubleValue());
-        tinkInstrument.setTicker(tickSize.toString());
+        tinkInstrument.setTicker(getTickSize());
         tinkInstrument.setType(
                 SkandiaBankenConstants.INSTRUMENT_TYPE_MAP
                         .translate(getInstrumentType())
                         .orElse(Instrument.Type.OTHER));
         tinkInstrument.setRawType(getInstrumentType());
         return tinkInstrument;
+    }
+
+    @JsonIgnore
+    private String getTickSize() {
+        return Double.toString(tickSize);
     }
 
     @JsonIgnore
