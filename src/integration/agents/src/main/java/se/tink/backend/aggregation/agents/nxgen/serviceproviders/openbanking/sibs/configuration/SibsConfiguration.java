@@ -15,8 +15,7 @@ public class SibsConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
-    private String clientSigningKeyPath;
-    private String clientSigningCertificatePath;
+    private String clientSigningCertificate;
     private String clientSigningCertificateSerialNumber;
     private String aspspCode;
 
@@ -60,24 +59,14 @@ public class SibsConfiguration implements ClientConfiguration {
         return redirectUrl;
     }
 
-    public String getClientSigningKeyPath() {
+    public String getClientSigningCertificate() {
         Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningKeyPath),
+                Strings.emptyToNull(clientSigningCertificate),
                 String.format(
                         SibsConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Signing Key Path"));
+                        "Client Signing Certificate"));
 
-        return clientSigningKeyPath;
-    }
-
-    public String getClientSigningCertificatePath() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(clientSigningCertificatePath),
-                String.format(
-                        SibsConstants.ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Signing Certificate Path"));
-
-        return clientSigningCertificatePath;
+        return clientSigningCertificate;
     }
 
     public String getClientSigningCertificateSerialNumber() {

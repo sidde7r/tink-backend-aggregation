@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
@@ -66,10 +67,11 @@ public final class SibsRequest {
 
             if (isSigned) {
 
+
                 String transactionId = SibsUtils.getRequestId();
                 String requestId = SibsUtils.getRequestId();
                 String requestTimestamp =
-                        new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT)
+                        new SimpleDateFormat(Formats.CONSENT_REQUEST_DATE_FORMAT, Locale.ENGLISH)
                                 .format(new Date());
 
                 String signature =
@@ -78,15 +80,14 @@ public final class SibsRequest {
                                 transactionId,
                                 requestId,
                                 requestTimestamp,
-                                configuration.getClientSigningKeyPath(),
+                                configuration.getEidasProxyBaseUrl(),
                                 configuration.getClientSigningCertificateSerialNumber());
 
                 request =
                         request.header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
                                 .header(
                                         HeaderKeys.TPP_CERTIFICATE,
-                                        SibsUtils.readSigningCertificate(
-                                                configuration.getClientSigningCertificatePath()))
+                                        configuration.getClientSigningCertificate())
                                 .header(HeaderKeys.SIGNATURE, signature)
                                 .header(HeaderKeys.TPP_TRANSACTION_ID, transactionId)
                                 .header(HeaderKeys.TPP_REQUEST_ID, requestId)
