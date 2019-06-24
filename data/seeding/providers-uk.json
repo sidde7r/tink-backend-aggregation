@@ -600,33 +600,6 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.ulster.UlsterAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Ulster Bank",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-ulster-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink2:ulster",
-            "popular": false,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "capabilities": [
-                "TRANSFERS"
-            ],
             "className": "nxgen.uk.openbanking.ulster.UlsterV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Ulster Bank",
@@ -640,7 +613,7 @@
             ],
             "groupDisplayName": "",
             "multiFactor": false,
-            "name": "uk-ulsterv31-oauth2",
+            "name": "uk-ulster-oauth2",
             "passwordhelptext": "Authentication is done on external page",
             "payload": "tink2:ulster",
             "popular": false,
