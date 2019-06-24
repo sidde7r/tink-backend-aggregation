@@ -1,25 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
 import com.google.common.base.Strings;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
+import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class SibsUtils {
@@ -30,13 +20,8 @@ public final class SibsUtils {
 
     private SibsUtils() {}
 
-    public static String getSignature(
-            String digest,
-            String transactionId,
-            String requestId,
-            String signatureStringDate,
-            String clientSigningKeyPath,
-            String clientSigningCertificateSerialNumber) {
+    public static String getSigningString(
+            String digest, String transactionId, String requestId, String signatureStringDate) {
 
         StringBuilder signingString = new StringBuilder();
 
@@ -62,37 +47,34 @@ public final class SibsUtils {
                 .append(COLON_SPACE)
                 .append(signatureStringDate);
 
-        byte[] signatureSha;
-        try {
-            PrivateKey privateKey = SibsUtils.readSigningKey(clientSigningKeyPath);
-            signatureSha = SibsUtils.toSHA256withRSA(privateKey, signingString.toString());
-        } catch (SignatureException | InvalidKeyException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Cannot sign SIBS request.", e);
-        }
+        return signingString.toString();
+    }
 
-        String signatureBase64Sha =
-                org.apache.commons.codec.binary.Base64.encodeBase64String(signatureSha);
+    public static String getSignature(
+            String digest,
+            String transactionId,
+            String requestId,
+            String signatureStringDate,
+            String eidasProxyBaseUrl,
+            String clientSigningCertificateSerialNumber) {
+
+        String toSignString =
+                getSigningString(digest, transactionId, requestId, signatureStringDate);
+
+        final QsealcEidasProxySigner proxySigner = new QsealcEidasProxySigner(eidasProxyBaseUrl);
+        String signatureBase64Sha = proxySigner.getSignatureBase64(toSignString.getBytes());
 
         return formSignature(digest, clientSigningCertificateSerialNumber, signatureBase64Sha);
     }
 
     public static String getDigest(Object body) {
-
         byte[] bytes =
                 SerializationUtils.serializeToString(body).getBytes(StandardCharsets.US_ASCII);
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance(Formats.SHA_256);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Cannot calculate SHA256.", e);
-        }
-        md.update(bytes, 0, bytes.length);
-        byte[] sha = md.digest();
-        return org.apache.commons.codec.binary.Base64.encodeBase64String(sha);
+        return Hash.sha256Base64(bytes);
     }
 
     public static String getRequestId() {
-        return java.util.UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY);
+        return UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY);
     }
 
     private static String formSignature(
@@ -105,38 +87,5 @@ public final class SibsUtils {
                         ? SignatureValues.HEADERS_NO_DIGEST
                         : SignatureValues.HEADERS,
                 signatureBase64Sha);
-    }
-
-    private static PrivateKey readSigningKey(String path) {
-        try {
-            return KeyFactory.getInstance(Formats.RSA)
-                    .generatePrivate(
-                            new PKCS8EncodedKeySpec(
-                                    Base64.getDecoder().decode(new String(readFile(path)))));
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    public static String readSigningCertificate(final String certPath) {
-        return new String(readFile(certPath));
-    }
-
-    private static byte[] readFile(String path) {
-        try {
-            return Files.readAllBytes(Paths.get(path));
-        } catch (IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    }
-
-    private static byte[] toSHA256withRSA(PrivateKey privateKey, String input)
-            throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
-
-        Signature signer = Signature.getInstance("SHA256withRSA");
-        signer.initSign(privateKey);
-
-        signer.update(input.getBytes());
-        return signer.sign();
     }
 }
