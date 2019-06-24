@@ -3,11 +3,17 @@ package se.tink.backend.aggregation.agents.utils.crypto;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 
 public class Hash {
+
+    private static final Base64.Encoder BASE64 = Base64.getEncoder();
+
+    private Hash() {}
+
     public static String hmacSha1AsHex(byte[] key, byte[] data) {
         byte[] digest = hmacSha1(key, data);
         return Hex.encodeHexString(digest);
@@ -48,6 +54,10 @@ public class Hash {
 
     public static byte[] sha256(final byte[]... datas) {
         return sha("SHA-256", datas);
+    }
+
+    public static String sha256Base64(final byte[]... datas) {
+        return BASE64.encodeToString(sha256(datas));
     }
 
     public static byte[] hmacSha1(String key, String data) {
