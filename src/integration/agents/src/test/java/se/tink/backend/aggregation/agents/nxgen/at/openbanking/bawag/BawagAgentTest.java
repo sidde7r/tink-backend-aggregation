@@ -2,12 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagConstants.CredentialKeys;
 
-// @Ignore
+@Ignore
 public class BawagAgentTest {
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
