@@ -74,7 +74,7 @@ public class KbcConstants {
         }
 
         public static final String HOST = "https://mobile.kbc-group.com";
-        public static final String VERSION = "1930";
+        public static final String VERSION = "1905";
 
         private static String createUrlWithHost(String uri) {
             return HOST + uri;
@@ -92,7 +92,7 @@ public class KbcConstants {
 
     public static class RequestInput {
         public static final String APP_FAMILY = "PHNIOSV1";
-        public static final String VERSION_NUMBER = "19.3.0";
+        public static final String VERSION_NUMBER = "19.5.0";
         public static final String APPLICATION_ID = "A031";
         public static final String COMPANY_ID = "0001";
 
@@ -114,7 +114,7 @@ public class KbcConstants {
         public static final boolean DOCCLE_CHECKED = false;
         // == End Enroll device ==
 
-        public static final String OS_VERSION_NO = "10.1.1";
+        public static final String OS_VERSION_NO = "11.2.1";
         public static final String OS_TYPE = "IOS";
 
         public static final String DEVICE_NAME = "iPhone9,3";
