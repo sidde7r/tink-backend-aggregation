@@ -86,8 +86,7 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @JsonIgnore
     @Override
     public Optional<Boolean> canFetchMore() {
-        final int lastPage = getLastPage();
-        return Optional.of(lastPage == getCurrentPage());
+        return Optional.empty();
     }
 
     private int getLastPage() {
