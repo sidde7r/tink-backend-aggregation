@@ -86,7 +86,8 @@ public class OpenIdAuthenticationController
                         .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                         .orElseThrow(
                                 () -> {
-                                    logger.warn("Failed to retrieve access token.");
+                                    logger.warn(
+                                            "Failed to retrieve access token from persistent storage.");
                                     return SessionError.SESSION_EXPIRED.exception();
                                 });
 

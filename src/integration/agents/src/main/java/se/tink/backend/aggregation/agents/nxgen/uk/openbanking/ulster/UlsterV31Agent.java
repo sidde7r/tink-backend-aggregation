@@ -14,7 +14,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class UlsterV31Agent extends UkOpenBankingV31Agent {
     public UlsterV31Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context, signatureKeyPair);
+        super(
+                request,
+                context,
+                signatureKeyPair,
+                new UlsterV31Configuration(),
+                new UlsterV31Configuration());
     }
 
     @Override
