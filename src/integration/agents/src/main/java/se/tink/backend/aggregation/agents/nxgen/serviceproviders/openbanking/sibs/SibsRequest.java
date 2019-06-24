@@ -67,7 +67,6 @@ public final class SibsRequest {
 
             if (isSigned) {
 
-
                 String transactionId = SibsUtils.getRequestId();
                 String requestId = SibsUtils.getRequestId();
                 String requestTimestamp =
