@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinanciali
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.util.DemoFinancialInstituteUtils;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.util.DemoFinancialInstituteUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -70,7 +70,7 @@ public class AccountEntity {
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
                 .withBalance(BalanceModule.of(new Amount(currency, balance)))
-                .addHolderName(name)
+                .addHolderName(username)
                 .setApiIdentifier(accountNumber)
                 .setBankIdentifier(accountNumber)
                 .build();
