@@ -85,6 +85,7 @@
             "fields": [
                 {
                     "description": "Card number (19 characters)",
+                    "immutable": true,
                     "maxLength": 19,
                     "minLength": 19,
                     "name": "username",
