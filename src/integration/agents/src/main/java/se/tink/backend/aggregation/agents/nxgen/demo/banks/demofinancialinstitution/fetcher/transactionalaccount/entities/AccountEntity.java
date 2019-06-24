@@ -70,7 +70,7 @@ public class AccountEntity {
                                 .addIdentifier(new SwedishIdentifier(accountNumber))
                                 .build())
                 .withBalance(BalanceModule.of(new Amount(currency, balance)))
-                .addHolderName(name)
+                .addHolderName(username)
                 .setApiIdentifier(accountNumber)
                 .setBankIdentifier(accountNumber)
                 .build();
