@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
-import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collections;
@@ -116,13 +115,6 @@ public class RabobankApiClient {
                         signatureHeader,
                         date)
                 .get(BalanceResponse.class);
-    }
-
-    private PrivateKey getPrivateKey() {
-        final byte[] pkcs12 = rabobankConfiguration.getClientSSLP12bytes();
-        final String clientSSLKeyPassword = rabobankConfiguration.getClientSSLKeyPassword();
-
-        return RabobankUtils.getPrivateKey(pkcs12, clientSSLKeyPassword);
     }
 
     public TransactionalTransactionsResponse getTransactions(
