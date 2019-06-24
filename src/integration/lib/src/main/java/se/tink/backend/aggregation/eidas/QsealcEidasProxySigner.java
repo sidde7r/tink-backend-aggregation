@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.eidas;
 
-import com.google.common.io.Files;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.http.URL;
  */
 public final class QsealcEidasProxySigner implements Signer {
 
-    private static Logger logger = LoggerFactory.getLogger(QsealcEidasProxySigner.class);
-    private static int TIMEOUT_MS = 5000;
+    private static final Logger logger = LoggerFactory.getLogger(QsealcEidasProxySigner.class);
+    private static final int TIMEOUT_MS = 5000;
 
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
@@ -30,29 +30,42 @@ public final class QsealcEidasProxySigner implements Signer {
         httpClient.setTimeout(TIMEOUT_MS);
     }
 
+    public QsealcEidasProxySigner(final String eidasProxyBaseUrl) {
+        this(new TinkHttpClient(), new URL(eidasProxyBaseUrl));
+        httpClient.setTimeout(TIMEOUT_MS);
+    }
+
     @Override
     public byte[] getSignature(final byte[] signingBytes) {
-        try {
-            httpClient.setSslClientCertificate(
-                    Files.toByteArray(new File(Eidas.CLIENT_P12)), Eidas.CLIENT_PASSWORD);
-            httpClient.trustRootCaCertificate(
-                    Files.toByteArray(new File(Eidas.DEV_CAS_JKS)), Eidas.DEV_CAS_PASSWORD);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        final String signatureString = getSignatureFromProxy(signingBytes);
+        return Base64.getDecoder().decode(signatureString);
+    }
+
+    public String getSignatureBase64(final byte[] signingBytes) {
+        return getSignatureFromProxy(signingBytes);
+    }
+
+    private String getSignatureFromProxy(final byte[] signingBytes) {
+        httpClient.setSslClientCertificate(readFile(Eidas.CLIENT_P12), Eidas.CLIENT_PASSWORD);
+        httpClient.trustRootCaCertificate(readFile(Eidas.DEV_CAS_JKS), Eidas.DEV_CAS_PASSWORD);
 
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
         final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN);
 
         logger.info("Requesting QSealC signature from {}", url);
-        final String signatureString =
-                httpClient
-                        .request(url)
-                        .header("X-Tink-Eidas-Sign-Certificate-Id", "Tink-qsealc")
-                        .type("application/octet-stream")
-                        .body(signingString)
-                        .post(String.class);
+        return httpClient
+                .request(url)
+                .header("X-Tink-Eidas-Sign-Certificate-Id", "Tink-qsealc")
+                .type("application/octet-stream")
+                .body(signingString)
+                .post(String.class);
+    }
 
-        return Base64.getDecoder().decode(signatureString);
+    private static byte[] readFile(String path) {
+        try {
+            return Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 }
