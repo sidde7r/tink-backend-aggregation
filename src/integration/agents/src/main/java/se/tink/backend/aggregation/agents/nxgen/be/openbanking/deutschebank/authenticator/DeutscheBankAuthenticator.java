@@ -1,40 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator;
 
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class DeutscheBankAuthenticator implements OAuth2Authenticator {
+public class DeutscheBankAuthenticator {
 
     private final DeutscheBankApiClient apiClient;
+    private final SessionStorage sessionStorage;
+    private DeutscheBankConfiguration configuration;
+    private String iban;
 
-    public DeutscheBankAuthenticator(DeutscheBankApiClient apiClient) {
+    public DeutscheBankAuthenticator(
+            DeutscheBankApiClient apiClient,
+            SessionStorage sessionStorage,
+            DeutscheBankConfiguration configuration,
+            String iban) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
+        this.configuration = configuration;
+        this.iban = iban;
     }
 
-    @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.getAuthorizeUrl(state);
-    }
+        ConsentBaseResponse consent = apiClient.getConsent(state, iban);
 
-    @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return apiClient.getToken(code);
-    }
-
-    @Override
-    public OAuth2Token refreshAccessToken(String refreshToken)
-            throws BankServiceException, SessionException {
-        OAuth2Token token = apiClient.refreshToken(refreshToken);
-        apiClient.setTokenToSession(token);
-        return token;
-    }
-
-    @Override
-    public void useAccessToken(OAuth2Token accessToken) {
-        apiClient.setTokenToSession(accessToken);
+        sessionStorage.put(StorageKeys.CONSENT_ID, consent.getConsentId());
+        return new URL(consent.getLinks().getScaRedirect().getHref());
     }
 }

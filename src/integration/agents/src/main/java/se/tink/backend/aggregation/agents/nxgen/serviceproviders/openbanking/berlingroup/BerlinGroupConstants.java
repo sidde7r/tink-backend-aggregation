@@ -91,6 +91,7 @@ public abstract class BerlinGroupConstants {
         public static final String TPP_SESSION_ID = "TPP-SESSION-ID";
         public static final String PSU_ID = "PSU-ID";
         public static final String PSU_ID_TYPE = "PSU-ID-Type";
+        public static final String PSY_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class FormKeys {
