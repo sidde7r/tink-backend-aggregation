@@ -7,8 +7,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
+import java.util.stream.Stream;
 import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -73,14 +74,10 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     }
 
     private static String createDescription(final TransactionItem transaction) {
-        final String description =
-                Optional.ofNullable(transaction.getRemittanceInformationUnstructured())
-                        .filter(s -> !s.isEmpty())
-                        .map(s -> s.split("\\s+"))
-                        .map(ss -> StringUtils.join(ss, " "))
-                        .orElseGet(transaction::getDebtorName);
-
-        return Optional.ofNullable(description).orElseGet(transaction::getCreditorName);
+        return Stream.of(transaction.getDebtorName(), transaction.getCreditorName())
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     @JsonIgnore
