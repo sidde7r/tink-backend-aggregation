@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
@@ -138,7 +138,9 @@ public class RabobankApiClient {
                 new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
-        final List<String> bookingStatuses = Arrays.asList(QueryValues.BOTH, QueryValues.BOOKED);
+        // Order of booking statuses to try fetching transactions with.
+        // If Rabobank ever supports booking status "both", we can prepend it to this list.
+        final List<String> bookingStatuses = Collections.singletonList(QueryValues.BOOKED);
 
         for (final String bookingStatus : bookingStatuses) {
             try {
