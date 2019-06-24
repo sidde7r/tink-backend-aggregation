@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -14,9 +13,6 @@ public class TransactionsEntity {
 
     protected List<BookedTransactionEntity> booked = Collections.emptyList();
     protected List<PendingTransactionEntity> pending = Collections.emptyList();
-
-    @JsonProperty("_links")
-    private TransactionLinksEntity links;
 
     public Collection<Transaction> toTinkTransactions() {
         final Stream<Transaction> bookedTransactionsStream =
