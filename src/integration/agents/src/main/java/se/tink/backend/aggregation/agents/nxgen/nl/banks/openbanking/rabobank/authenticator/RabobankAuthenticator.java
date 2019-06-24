@@ -75,7 +75,7 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
         final String redirectUri = getConfiguration().getRedirectUrl();
         final RefreshTokenRequest request = new RefreshTokenRequest();
 
-        request.put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
+        request.put(QueryParams.GRANT_TYPE, QueryValues.REFRESH_TOKEN);
         request.put(QueryParams.REDIRECT_URI, redirectUri);
         request.put(QueryParams.REFRESH_TOKEN, refreshToken);
 
