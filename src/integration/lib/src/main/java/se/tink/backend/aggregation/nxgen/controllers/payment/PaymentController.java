@@ -13,10 +13,6 @@ public class PaymentController {
         return paymentExecutor.create(paymentRequest);
     }
 
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
-        return paymentExecutor.fetch(paymentRequest);
-    }
-
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
             throws PaymentException {
         return paymentExecutor.sign(paymentMultiStepRequest);
@@ -29,10 +25,5 @@ public class PaymentController {
 
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
         return paymentExecutor.cancel(paymentRequest);
-    }
-
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest)
-            throws PaymentException {
-        return paymentExecutor.fetchMultiple(paymentListRequest);
     }
 }

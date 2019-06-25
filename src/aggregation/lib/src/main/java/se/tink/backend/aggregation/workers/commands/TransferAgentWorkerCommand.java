@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.agents.SubsequentGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.payment.FetchablePaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
@@ -111,8 +111,8 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
                 } else {
                     operationStatusMessage = transferExecutorNxgen.execute(transfer);
                 }
-            } else if (agent instanceof SubsequentGenerationAgent) {
-                handlePayment((SubsequentGenerationAgent) agent, transferRequest);
+            } else if (agent instanceof FetchablePaymentController) {
+                handlePayment((FetchablePaymentController) agent, transferRequest);
             }
 
             metricAction.completed();
@@ -209,12 +209,12 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
     }
 
     private void handlePayment(
-            SubsequentGenerationAgent nextGenerationAgent, TransferRequest transferRequest)
+            FetchablePaymentController fetchablePaymentController, TransferRequest transferRequest)
             throws PaymentException {
         PaymentResponse createPaymentResponse =
-                nextGenerationAgent.createPayment(PaymentRequest.of(transferRequest));
+                fetchablePaymentController.create(PaymentRequest.of(transferRequest));
         PaymentMultiStepResponse signPaymentMultiStepResponse =
-                nextGenerationAgent.signPayment(PaymentMultiStepRequest.of(createPaymentResponse));
+                fetchablePaymentController.sign(PaymentMultiStepRequest.of(createPaymentResponse));
 
         Map<String, String> map;
         List<Field> fields;
@@ -227,7 +227,7 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             map = Collections.emptyMap();
 
             signPaymentMultiStepResponse =
-                    nextGenerationAgent.signPayment(
+                    fetchablePaymentController.sign(
                             new PaymentMultiStepRequest(
                                     payment,
                                     storage,
