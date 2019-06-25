@@ -361,6 +361,15 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "NVB"
+    opbank:
+      tink:
+        eidasProxyBaseUrl: "https://localhost:9022"
+        eidasQwac: op-fi-sandbox-qwac
+        eidasQsealc: op-fi-sandbox-qsealc
+        clientId: ""
+        clientSecret: ""
+        apiKey: ""
+        redirectUrl: "https://localhost:7357/api/v1/thirdparty/callback"
     novobancoacores:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"

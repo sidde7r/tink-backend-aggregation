@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authenticator.OpBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.transactionalaccount.OpBankTransactionalAccountFetcher;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Transac
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class OpBankAgent extends NextGenerationAgent {
@@ -28,36 +28,27 @@ public final class OpBankAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        configureHttpClient(client);
         apiClient = new OpBankApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-    }
-
-    private void configureHttpClient(TinkHttpClient client) {
-        client.setEidasProxy("https://localhost:9022", "op-fi-sandbox-qwac");
-        // client.setEidasProxy("https://192.168.99.106:30922", "op-fi-sandbox-qwac");
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration());
+        OpBankConfiguration opBankConfiguration = getClientConfiguration();
+        apiClient.setConfiguration(opBankConfiguration);
+
+        this.client.setEidasProxy(
+                opBankConfiguration.getEidasProxyBaseUrl(), opBankConfiguration.getEidasQwac());
     }
 
     protected OpBankConfiguration getClientConfiguration() {
-        return new OpBankConfiguration(
-                "wBt4qeh628xkOXSw0HdQ",
-                "XjNz8DLZkeLinrUL4ZC7",
-                "https://localhost:7357/api/v1/thirdparty/callback",
-                "AGR0JMwdsJFhdiEM3xbF2wuXHqdWJG8A");
-        /*
         return configuration
-            .getIntegrations()
-            .getClientConfiguration(
-                OpBankConstants.INTEGRATION_NAME, clientName, OPBankConfiguration.class)
-            .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
-            */
+                .getIntegrations()
+                .getClientConfiguration(
+                        OpBankConstants.INTEGRATION_NAME, clientName, OpBankConfiguration.class)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override

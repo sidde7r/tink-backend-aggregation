@@ -9,18 +9,14 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class OpBankConfiguration implements ClientConfiguration {
 
-    public OpBankConfiguration(
-            String clientId, String clientSecret, String redirectUrl, String apiKey) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.redirectUrl = redirectUrl;
-        this.apiKey = apiKey;
-    }
-
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
     private String apiKey;
+
+    private String eidasProxyBaseUrl;
+    private String eidasQwac;
+    private String eidasQsealc;
 
     public String getClientId() {
         Preconditions.checkNotNull(
@@ -47,6 +43,34 @@ public class OpBankConfiguration implements ClientConfiguration {
     }
 
     public String getApiKey() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(apiKey),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "API key"));
+
         return apiKey;
+    }
+
+    public String getEidasProxyBaseUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasProxyBaseUrl),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS Proxy base URL"));
+
+        return eidasProxyBaseUrl;
+    }
+
+    public String getEidasQwac() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasQwac),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QWAC"));
+
+        return eidasQwac;
+    }
+
+    public String getEidasQsealc() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(eidasQsealc),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "eIDAS QSealC"));
+
+        return eidasQsealc;
     }
 }

@@ -17,11 +17,13 @@ public class EcJwsProxySigner implements Signer {
     private static int TIMEOUT_MS = 5000;
 
     private final TinkHttpClient httpClient;
+    private final String certificateId;
     private final URL eidasProxyBaseUrl;
 
-    public EcJwsProxySigner(TinkHttpClient httpClient, URL eidasProxyBaseUrl) {
-        this.httpClient = httpClient;
+    public EcJwsProxySigner(final URL eidasProxyBaseUrl, final String certificateId) {
+        this.httpClient = new TinkHttpClient();
         this.eidasProxyBaseUrl = eidasProxyBaseUrl;
+        this.certificateId = certificateId;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class EcJwsProxySigner implements Signer {
         final String signatureString =
                 httpClient
                         .request(url)
-                        .header("X-Tink-Eidas-Sign-Certificate-Id", "op-fi-sandbox")
+                        .header("X-Tink-Eidas-Sign-Certificate-Id", certificateId)
                         .type("application/octet-stream")
                         .body(signingString)
                         .post(String.class);

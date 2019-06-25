@@ -91,7 +91,9 @@ public final class OpBankApiClient {
 
     public String fetchSignature(String jwt) {
         Signer ecJwsSigner =
-                new EcJwsProxySigner(new TinkHttpClient(), new URL("https://localhost:9022"));
+                new EcJwsProxySigner(
+                        new URL(configuration.getEidasProxyBaseUrl()),
+                        configuration.getEidasQsealc());
         byte[] signatureBytes = ecJwsSigner.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
         return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }
