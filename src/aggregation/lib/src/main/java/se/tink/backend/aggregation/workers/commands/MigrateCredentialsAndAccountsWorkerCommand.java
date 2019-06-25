@@ -47,6 +47,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                     .put("sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
                     .put("statoilmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
                     .put("skandiabanken-bankid", new SkandiaBankenSanitizingMigration())
+                    .put("skandiabanken-ssn-bankid", new SkandiaBankenSanitizingMigration())
                     .put("avanza-bankid", new AvanzaStripClearingMigration())
                     .put("icabanken-bankid", new IcaBankenSanitizingMigration())
                     .build();
