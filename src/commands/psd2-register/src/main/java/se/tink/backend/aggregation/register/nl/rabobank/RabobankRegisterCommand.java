@@ -101,7 +101,7 @@ public final class RabobankRegisterCommand {
     private static Options createOptions() {
 
         final Option qsealcPathOption =
-                Option.builder("c")
+                Option.builder(Cli.CERTIFICATE_PATH)
                         .longOpt("qsealc-pem-path")
                         .required()
                         .hasArg()
@@ -110,7 +110,7 @@ public final class RabobankRegisterCommand {
                         .build();
 
         final Option emailOption =
-                Option.builder("e")
+                Option.builder(Cli.EMAIL)
                         .longOpt("email")
                         .required()
                         .hasArg()
