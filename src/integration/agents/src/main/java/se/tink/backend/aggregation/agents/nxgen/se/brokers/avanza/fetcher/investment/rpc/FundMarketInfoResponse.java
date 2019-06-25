@@ -226,4 +226,12 @@ public class FundMarketInfoResponse extends MarketInfoResponse {
     public String getOtherFees() {
         return otherFees;
     }
+
+    @Override
+    public String getMarketPlace() {
+        if (fundCompany != null) {
+            return fundCompany.getName();
+        }
+        return super.getMarketPlace();
+    }
 }

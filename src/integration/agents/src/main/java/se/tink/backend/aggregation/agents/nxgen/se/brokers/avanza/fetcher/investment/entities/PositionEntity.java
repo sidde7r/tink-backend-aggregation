@@ -171,13 +171,13 @@ public class PositionEntity {
     }
 
     @JsonIgnore
-    public Instrument toTinkInstrument(InstrumentEntity parent, String market, IsinMap isinMap) {
+    public Instrument toTinkInstrument(InstrumentEntity parent, String marketPlace, String isin) {
         Instrument instrument = new Instrument();
 
         instrument.setAverageAcquisitionPrice(averageAcquiredPrice);
         instrument.setCurrency(currency);
-        instrument.setIsin(isinMap.get(name));
-        instrument.setMarketPlace(market);
+        instrument.setIsin(isin);
+        instrument.setMarketPlace(marketPlace);
         instrument.setMarketValue(value);
         instrument.setName(name);
         instrument.setPrice(lastPrice);
