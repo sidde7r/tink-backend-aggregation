@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentic
 
 import com.google.common.collect.ImmutableList;
 import java.time.OffsetDateTime;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.OpBankConstants.ErrorMessages;
@@ -58,11 +58,7 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
                                 null),
                         new ClaimEntity(
                                 new AuthorizationIdEntity(authorization.getAuthorizationId(), true),
-                                new AcrEntity(
-                                        true,
-                                        ImmutableList.of(
-                                                "urn:openbanking:psd2:sca",
-                                                "urn:openbanking:psd2:ca"))));
+                                new AcrEntity(true, ImmutableList.of("urn:openbanking:psd2:sca"))));
 
         TokenBodyEntity tokenBody = new TokenBodyEntity();
         tokenBody.setAud("https://mtls.apis.op.fi");
@@ -82,9 +78,9 @@ public class OpBankAuthenticator implements OAuth2Authenticator {
         String tokenHeadJson = SerializationUtils.serializeToString(new TokenHeaderEntity());
 
         String baseTokenString =
-                Base64.encodeBase64URLSafeString(tokenHeadJson.getBytes())
+                Base64.getUrlEncoder().encodeToString(tokenHeadJson.getBytes())
                         + "."
-                        + Base64.encodeBase64URLSafeString(tokenBodyJson.getBytes());
+                        + Base64.getUrlEncoder().encodeToString(tokenBodyJson.getBytes());
 
         String signature = apiClient.fetchSignature(baseTokenString);
 

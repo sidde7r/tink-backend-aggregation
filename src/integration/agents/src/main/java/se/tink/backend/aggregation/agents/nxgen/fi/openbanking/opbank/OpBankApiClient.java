@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.configuration.OpBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.opbank.fetcher.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.eidas.EcJwsProxySigner;
+import se.tink.backend.aggregation.eidas.Signer;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -86,8 +90,10 @@ public final class OpBankApiClient {
     }
 
     public String fetchSignature(String jwt) {
-        // return client.request("https://localhost:8080/sign")
-        return client.request("https://localhost:8080/sign").header("Token", jwt).get(String.class);
+        Signer ecJwsSigner =
+                new EcJwsProxySigner(new TinkHttpClient(), new URL("https://localhost:9022"));
+        byte[] signatureBytes = ecJwsSigner.getSignature(jwt.getBytes(StandardCharsets.UTF_8));
+        return Base64.getUrlEncoder().encodeToString(signatureBytes);
     }
 
     public ExchangeTokenResponse exchangeToken(String code) {
