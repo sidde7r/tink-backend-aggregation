@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.google.common.base.Preconditions;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
@@ -28,6 +29,8 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class SibsBaseApiClient {
 
+    private static final DateTimeFormatter CONSENT_BODY_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern(Formats.CONSENT_BODY_DATE_FORMAT);
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
@@ -169,18 +172,19 @@ public class SibsBaseApiClient {
     }
 
     private ConsentRequest getConsentRequest() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, 1); // Consent valid for 1 day
-
-        SimpleDateFormat formatter = new SimpleDateFormat(Formats.CONSENT_BODY_DATE_FORMAT);
-
+        String validOneDay = getOneDayValidConsentStringDate();
         return new ConsentRequest(
                 new ConsentAccessEntity(SibsConstants.FormValues.ALL_ACCOUNTS),
-                false,
-                formatter.format(c.getTime()),
+                true,
+                validOneDay,
                 SibsConstants.FormValues.FREQUENCY_PER_DAY,
                 false);
+    }
+
+    private String getOneDayValidConsentStringDate() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneDayLater = now.plusDays(1);
+        return CONSENT_BODY_DATE_FORMATTER.format(oneDayLater);
     }
 
     private URL createUrl(String path) {
