@@ -62,12 +62,11 @@ public class SqsQueue {
 
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
-            amazonSQSClientBuilder
-                            .withCredentials(
-                                    new AWSStaticCredentialsProvider(
-                                            new BasicAWSCredentials(
-                                                    configuration.getAwsAccessKeyId(),
-                                                    configuration.getAwsSecretKey())));
+            amazonSQSClientBuilder.withCredentials(
+                    new AWSStaticCredentialsProvider(
+                            new BasicAWSCredentials(
+                                    configuration.getAwsAccessKeyId(),
+                                    configuration.getAwsSecretKey())));
 
             this.isAvailable = isQueueCreated(createRequest, amazonSQSClientBuilder);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
@@ -90,11 +89,12 @@ public class SqsQueue {
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private boolean isQueueCreated(CreateQueueRequest createRequest,
-            AmazonSQSClientBuilder amazonSQSClientBuilder) {
+    private boolean isQueueCreated(
+            CreateQueueRequest createRequest, AmazonSQSClientBuilder amazonSQSClientBuilder) {
         do {
             try {
-                // Not 100% sure that IAM is set up completely before this request is done. Hence retry this on
+                // Not 100% sure that IAM is set up completely before this request is done. Hence
+                // retry this on
                 // every iteration to make sure credentials become available.
                 this.sqs = amazonSQSClientBuilder.build();
 
