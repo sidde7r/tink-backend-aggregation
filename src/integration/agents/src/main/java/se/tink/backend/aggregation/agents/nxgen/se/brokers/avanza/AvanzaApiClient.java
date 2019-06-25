@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.StockMarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.WarrantMarketInfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountsOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -32,10 +38,12 @@ public class AvanzaApiClient {
 
     private final TinkHttpClient client;
     private final AvanzaAuthSessionStorage authSessionStorage;
+    private Map<String, Set<String>> authSessionAccountCache;
 
     public AvanzaApiClient(TinkHttpClient client, AvanzaAuthSessionStorage authSessionStorage) {
         this.client = client;
         this.authSessionStorage = authSessionStorage;
+        this.authSessionAccountCache = new HashMap<>();
     }
 
     private RequestBuilder createRequest(String url) {
@@ -74,8 +82,11 @@ public class AvanzaApiClient {
     }
 
     public AccountsOverviewResponse fetchAccounts(String authSession) {
-        return createRequestInSession(Urls.ACCOUNTS_OVERVIEW(), authSession)
-                .get(AccountsOverviewResponse.class);
+        final AccountsOverviewResponse response =
+                createRequestInSession(Urls.ACCOUNTS_OVERVIEW(), authSession)
+                        .get(AccountsOverviewResponse.class);
+        cacheAuthSessionAccounts(authSession, response.getAccounts());
+        return response;
     }
 
     public AccountDetailsResponse fetchAccountDetails(String accountId, String authSession) {
@@ -188,9 +199,25 @@ public class AvanzaApiClient {
         return createRequestInSession(logoutUrl, authSession).delete(String.class);
     }
 
-    public boolean authSessionHasAccountId(String authSession, String accountId) {
+    private void cacheAuthSessionAccounts(String authSession, List<AccountEntity> accounts) {
+        final Set<String> accountIds =
+                accounts.stream()
+                        .map(accountEntity -> accountEntity.getAccountId())
+                        .collect(Collectors.toSet());
+        authSessionAccountCache.put(authSession, accountIds);
+    }
+
+    private boolean fetchAuthSessionHasAccountId(String authSession, String accountId) {
         final AccountsOverviewResponse overview = fetchAccounts(authSession);
-        return overview.getAccounts().stream()
-                .anyMatch(accountEntity -> accountEntity.getAccountId().equals(accountId));
+        cacheAuthSessionAccounts(authSession, overview.getAccounts());
+        return authSessionAccountCache.get(authSession).contains(accountId);
+    }
+
+    public boolean authSessionHasAccountId(String authSession, String accountId) {
+        if (authSessionAccountCache.containsKey(authSession)) {
+            return authSessionAccountCache.get(authSession).contains(accountId);
+        } else {
+            return fetchAuthSessionHasAccountId(authSession, accountId);
+        }
     }
 }
