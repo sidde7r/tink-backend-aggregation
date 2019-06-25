@@ -25,7 +25,6 @@ import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 public class SqsQueue {
     private static final int[] BASE_2_ARRAY = {1, 2, 4, 8, 16, 32, 64};
     private static final int MINIMUM_SLEEP_TIME_IN_MILLISECONDS = 500;
-    private final AmazonSQS sqs;
     private final boolean isAvailable;
     private final String url;
     private Logger logger = LoggerFactory.getLogger(SqsQueue.class);
@@ -34,6 +33,7 @@ public class SqsQueue {
     private final Counter produced;
     private final Counter consumed;
     private final Counter rejected;
+    private AmazonSQS sqs;
 
     @Inject
     public SqsQueue(SqsQueueConfiguration configuration, MetricRegistry metricRegistry) {
@@ -62,22 +62,17 @@ public class SqsQueue {
 
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
+            amazonSQSClientBuilder.withCredentials(
+                    new AWSStaticCredentialsProvider(
+                            new BasicAWSCredentials(
+                                    configuration.getAwsAccessKeyId(),
+                                    configuration.getAwsSecretKey())));
 
-            sqs =
-                    amazonSQSClientBuilder
-                            .withCredentials(
-                                    new AWSStaticCredentialsProvider(
-                                            new BasicAWSCredentials(
-                                                    configuration.getAwsAccessKeyId(),
-                                                    configuration.getAwsSecretKey())))
-                            .build();
-
-            this.isAvailable = isQueueCreated(createRequest);
+            this.isAvailable = isQueueCreated(createRequest, amazonSQSClientBuilder);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
-            sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
-            this.isAvailable = isQueueCreated(createRequest);
+            this.isAvailable = isQueueCreated(createRequest, amazonSQSClientBuilder);
         }
     }
 
@@ -94,9 +89,15 @@ public class SqsQueue {
 
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
-    private boolean isQueueCreated(CreateQueueRequest createRequest) {
+    private boolean isQueueCreated(
+            CreateQueueRequest createRequest, AmazonSQSClientBuilder amazonSQSClientBuilder) {
         do {
             try {
+                // Not 100% sure that IAM is set up completely before this request is done. Hence
+                // retry this on
+                // every iteration to make sure credentials become available.
+                this.sqs = amazonSQSClientBuilder.build();
+
                 sqs.createQueue(createRequest);
                 return true;
             } catch (AmazonSQSException e) {
