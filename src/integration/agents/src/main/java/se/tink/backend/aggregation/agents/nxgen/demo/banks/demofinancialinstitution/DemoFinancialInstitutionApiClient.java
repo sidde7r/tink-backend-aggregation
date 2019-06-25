@@ -42,9 +42,9 @@ public class DemoFinancialInstitutionApiClient {
                 createRequest(createBaseUrl().concat(Urls.LOGIN))
                         .post(HttpResponse.class, loginRequest);
 
-        LOGGER.debug("DFI_request: %s", httpResponse.getRequest().toString());
-        LOGGER.debug("DFI_headers: %s", httpResponse.getHeaders().toString());
-        LOGGER.debug("DFI_cookies: %s", httpResponse.getCookies().toString());
+        LOGGER.debug(String.format("DFI_request: %s", httpResponse.getRequest().toString()));
+        LOGGER.debug(String.format("DFI_headers: %s", httpResponse.getHeaders().toString()));
+        LOGGER.debug(String.format("DFI_cookies: %s", httpResponse.getCookies().toString()));
 
         return httpResponse.getBody(LoginResponse.class);
     }
