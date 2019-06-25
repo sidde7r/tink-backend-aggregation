@@ -7,14 +7,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EquityLinkedBondMarketInfoResponse {
+public class EquityLinkedBondMarketInfoResponse extends MarketInfoResponse {
     private double loanFactor;
-    private String marketPlace;
     private int numberOfPriceAlerts;
     private boolean pushPermitted;
     private String currency;
-    private String name;
-    private String id;
     private boolean tradable;
     private double lastPrice;
     private String lastPriceUpdated;
@@ -35,15 +32,10 @@ public class EquityLinkedBondMarketInfoResponse {
     private double priceThreeMonthsAgo;
     private List<PositionEntity> positions;
     private double positionsTotalValue;
-    private String isin;
     private long tradingUnit;
 
     public double getLoanFactor() {
         return loanFactor;
-    }
-
-    public String getMarketPlace() {
-        return marketPlace;
     }
 
     public int getNumberOfPriceAlerts() {
@@ -56,14 +48,6 @@ public class EquityLinkedBondMarketInfoResponse {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public boolean isTradable() {
@@ -144,10 +128,6 @@ public class EquityLinkedBondMarketInfoResponse {
 
     public double getPositionsTotalValue() {
         return positionsTotalValue;
-    }
-
-    public String getIsin() {
-        return isin;
     }
 
     public long getTradingUnit() {

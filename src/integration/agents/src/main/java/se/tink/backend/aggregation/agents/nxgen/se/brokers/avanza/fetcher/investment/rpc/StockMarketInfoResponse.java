@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class StockMarketInfoResponse {
+public class StockMarketInfoResponse extends MarketInfoResponse {
     private double priceOneWeekAgo;
     private double priceOneMonthAgo;
     private double priceSixMonthsAgo;
@@ -22,12 +22,9 @@ public class StockMarketInfoResponse {
     private double priceThreeYearsAgo;
     private double priceFiveYearsAgo;
     private double priceThreeMonthsAgo;
-    private String marketPlace;
     private String marketList;
     private String currency;
     private String morningStarFactSheetUrl;
-    private String name;
-    private String id;
     private String country;
     private boolean tradable;
     private double buyPrice;
@@ -93,10 +90,6 @@ public class StockMarketInfoResponse {
         return priceThreeMonthsAgo;
     }
 
-    public String getMarketPlace() {
-        return marketPlace;
-    }
-
     public String getMarketList() {
         return marketList;
     }
@@ -107,14 +100,6 @@ public class StockMarketInfoResponse {
 
     public String getMorningStarFactSheetUrl() {
         return morningStarFactSheetUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getCountry() {

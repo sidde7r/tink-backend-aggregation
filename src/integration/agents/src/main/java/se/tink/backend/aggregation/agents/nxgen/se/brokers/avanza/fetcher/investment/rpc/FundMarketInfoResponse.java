@@ -10,10 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FundMarketInfoResponse {
+public class FundMarketInfoResponse extends MarketInfoResponse {
     private String description;
-    private String name;
-    private String id;
     private String domicile;
     private Integer risk;
     private Double sharpeRatio;
@@ -63,14 +61,6 @@ public class FundMarketInfoResponse {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getDomicile() {
