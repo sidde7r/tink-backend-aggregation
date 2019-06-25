@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -60,11 +58,13 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token exchangeAuthorizationCode(final String code) {
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final ExchangeAuthorizationCodeRequest request = new ExchangeAuthorizationCodeRequest();
 
-        request.put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
-        request.put(QueryParams.CODE, code);
-        request.put(QueryParams.REDIRECT_URI, redirectUri);
+        final Form request =
+                Form.builder()
+                        .put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
+                        .put(QueryParams.CODE, code)
+                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .build();
 
         return apiClient.exchangeAuthorizationCode(request).toOauthToken();
     }
@@ -73,11 +73,13 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(final String refreshToken)
             throws SessionException, BankServiceException {
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final RefreshTokenRequest request = new RefreshTokenRequest();
 
-        request.put(QueryParams.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE);
-        request.put(QueryParams.REDIRECT_URI, redirectUri);
-        request.put(QueryParams.REFRESH_TOKEN, refreshToken);
+        final Form request =
+                Form.builder()
+                        .put(QueryParams.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
+                        .put(QueryParams.REDIRECT_URI, redirectUri)
+                        .put(QueryParams.REFRESH_TOKEN, refreshToken)
+                        .build();
 
         try {
             return apiClient.refreshAccessToken(request).toOauthToken();

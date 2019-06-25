@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
-import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collections;
@@ -14,8 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.Ra
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.Signature;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants.StorageKey;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.BalanceResponse;
@@ -25,7 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.ut
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
+import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -49,20 +46,21 @@ public class RabobankApiClient {
         this.rabobankConfiguration = configuration;
     }
 
-    public TokenResponse exchangeAuthorizationCode(final ExchangeAuthorizationCodeRequest request) {
+    public TokenResponse exchangeAuthorizationCode(final Form request) {
         return post(request);
     }
 
-    public TokenResponse refreshAccessToken(final RefreshTokenRequest request) {
+    public TokenResponse refreshAccessToken(final Form request) {
         return post(request);
     }
 
-    private TokenResponse post(final AbstractForm request) {
+    private TokenResponse post(final Form request) {
         final String clientId = rabobankConfiguration.getClientId();
         final String clientSecret = rabobankConfiguration.getClientSecret();
 
         return client.request(rabobankConfiguration.getUrls().getOauth2TokenUrl())
-                .body(request, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(request.serialize())
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .addBasicAuth(clientId, clientSecret)
                 .post(TokenResponse.class);
@@ -117,13 +115,6 @@ public class RabobankApiClient {
                         signatureHeader,
                         date)
                 .get(BalanceResponse.class);
-    }
-
-    private PrivateKey getPrivateKey() {
-        final byte[] pkcs12 = rabobankConfiguration.getClientSSLP12bytes();
-        final String clientSSLKeyPassword = rabobankConfiguration.getClientSSLKeyPassword();
-
-        return RabobankUtils.getPrivateKey(pkcs12, clientSSLKeyPassword);
     }
 
     public TransactionalTransactionsResponse getTransactions(

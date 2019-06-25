@@ -66,16 +66,6 @@ public class OAuth2Token {
         return create(BEARER, accessToken, refreshToken, accessExpiresInSeconds);
     }
 
-    @JsonIgnore
-    public static OAuth2Token createBearer(
-            String accessToken,
-            String refreshToken,
-            long accessExpiresInSeconds,
-            long refreshExpiresInSeconds) {
-        return create(
-                BEARER, accessToken, refreshToken, accessExpiresInSeconds, refreshExpiresInSeconds);
-    }
-
     public String getTokenType() {
         return tokenType;
     }

@@ -62,6 +62,7 @@ public class RabobankConstants {
 
     public static class QueryValues {
         public static final String AUTHORIZATION_CODE = "authorization_code";
+        public static final String REFRESH_TOKEN = "refresh_token";
         public static final String CODE = "code";
         public static final String BOOKED = "booked";
         public static final String BOTH = "both";
