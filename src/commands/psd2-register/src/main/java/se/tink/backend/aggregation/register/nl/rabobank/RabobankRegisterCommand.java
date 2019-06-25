@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.eidas.Signer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Cli;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Header;
-import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Jwt;
 import se.tink.backend.aggregation.register.nl.rabobank.RabobankRegisterConstants.Url;
 import se.tink.backend.aggregation.register.nl.rabobank.rpc.JwsRequest;
 
@@ -118,10 +117,35 @@ public final class RabobankRegisterCommand {
                         .desc("Email address and username of the production account to be created.")
                         .build();
 
+        final Option organizationOption =
+                Option.builder(Cli.ORGANIZATION)
+                        .longOpt("organization")
+                        .required()
+                        .hasArg()
+                        .argName("Organization")
+                        .desc(
+                                "Name of the organization to which the production account belongs."
+                                        + " Should match the organization stated in the QSeal"
+                                        + " certificate.")
+                        .build();
+
+        final Option certificateIdOption =
+                Option.builder(Cli.CERTIFICATE_ID)
+                        .longOpt("certificate_id")
+                        .required()
+                        .hasArg()
+                        .argName("Certificate ID")
+                        .desc(
+                                "An identifier for the QSealC key which the eIDAS proxy uses to"
+                                        + " generate a signature.")
+                        .build();
+
         final Options options = new Options();
 
         options.addOption(qsealcPathOption);
         options.addOption(emailOption);
+        options.addOption(organizationOption);
+        options.addOption(certificateIdOption);
 
         return options;
     }
@@ -146,6 +170,8 @@ public final class RabobankRegisterCommand {
 
         final String qsealcCertificatePath = cmd.getOptionValue(Cli.CERTIFICATE_PATH);
         final String email = cmd.getOptionValue(Cli.EMAIL);
+        final String organization = cmd.getOptionValue(Cli.ORGANIZATION);
+        final String certificateId = cmd.getOptionValue(Cli.CERTIFICATE_ID);
 
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
@@ -159,10 +185,9 @@ public final class RabobankRegisterCommand {
         final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
         final Signer jwsSigner =
-                new QsealcEidasProxySigner(Url.EIDAS_PROXY_BASE_URL, "Tink-qsealc");
+                new QsealcEidasProxySigner(Url.EIDAS_PROXY_BASE_URL, certificateId);
 
-        final JwsRequest body =
-                JwsRequest.create(qsealcB64, jwsSigner, exp, email, Jwt.ORGANIZATION);
+        final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 
         client.request(Url.REGISTER)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_TYPE)
