@@ -11,11 +11,7 @@ import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-/**
- * Requests the eIDAS proxy to sign a string using its eIDAS private key (RSA with SHA256).
- *
- * @return The signature
- */
+/** Requests the eIDAS proxy to sign a string using its eIDAS private key (RSA with SHA256). */
 public final class QsealcEidasProxySigner implements Signer {
 
     private static final Logger logger = LoggerFactory.getLogger(QsealcEidasProxySigner.class);
@@ -23,16 +19,14 @@ public final class QsealcEidasProxySigner implements Signer {
 
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
+    private final String certificateId;
 
-    public QsealcEidasProxySigner(final TinkHttpClient httpClient, final URL eidasProxyBaseUrl) {
-        this.httpClient = httpClient;
+    public QsealcEidasProxySigner(final URL eidasProxyBaseUrl, final String certificateId) {
         this.eidasProxyBaseUrl = eidasProxyBaseUrl;
+        this.certificateId = certificateId;
+        this.httpClient = new TinkHttpClient();
         httpClient.setTimeout(TIMEOUT_MS);
-    }
-
-    public QsealcEidasProxySigner(final String eidasProxyBaseUrl) {
-        this(new TinkHttpClient(), new URL(eidasProxyBaseUrl));
-        httpClient.setTimeout(TIMEOUT_MS);
+        httpClient.setDebugOutput(true);
     }
 
     @Override
@@ -55,7 +49,7 @@ public final class QsealcEidasProxySigner implements Signer {
         logger.info("Requesting QSealC signature from {}", url);
         return httpClient
                 .request(url)
-                .header("X-Tink-Eidas-Sign-Certificate-Id", "Tink-qsealc")
+                .header("X-Tink-Eidas-Sign-Certificate-Id", this.certificateId)
                 .type("application/octet-stream")
                 .body(signingString)
                 .post(String.class);

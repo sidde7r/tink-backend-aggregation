@@ -12,4 +12,20 @@ public final class EidasProxyConstants {
         public static final String DEV_CAS_JKS = "data/eidas_dev_certificates/eidas_dev_ca.jks";
         public static final String DEV_CAS_PASSWORD = "changeme";
     }
+
+    public enum CertificateId {
+        ABN_AMRO("abnamro-QSEALC"),
+        TINK("Tink-qsealc");
+
+        private final String id;
+
+        CertificateId(final String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return id;
+        }
+    }
 }

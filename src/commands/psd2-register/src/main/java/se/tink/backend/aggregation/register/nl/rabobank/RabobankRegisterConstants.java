@@ -10,13 +10,11 @@ public final class RabobankRegisterConstants {
                 new URL("https://eidas-proxy.staging.aggregation.tink.network");
     }
 
-    public static class Jwt {
-        public static final String ORGANIZATION = "Tink AB";
-    }
-
     public static class Cli {
         public static final String CERTIFICATE_PATH = "c";
         public static final String EMAIL = "e";
+        public static final String ORGANIZATION = "o";
+        public static final String CERTIFICATE_ID = "i";
     }
 
     public static class Header {

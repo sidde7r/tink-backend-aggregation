@@ -42,12 +42,14 @@ agents:
     tink:
       redirectUrl: https://api.tink.com/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+      certificateId: Tink-qsealc
     abn_sandbox:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
     abn:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+      certificateId: abnamro-QSEALC
 
   proxyUri: http://10.88.12.185:8080
 
