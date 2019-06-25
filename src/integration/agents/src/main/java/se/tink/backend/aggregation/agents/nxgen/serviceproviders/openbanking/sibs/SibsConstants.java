@@ -63,14 +63,13 @@ public final class SibsConstants {
     public static class FormValues {
 
         public static final String ALL_ACCOUNTS = "all-accounts";
-        public static final Integer FREQUENCY_PER_DAY = 100;
+        public static final Integer FREQUENCY_PER_DAY = 4;
     }
 
     public static class Formats {
 
         public static final String CONSENT_BODY_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
         public static final String CONSENT_REQUEST_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
-        public static final String SHA_256 = "SHA-256";
         public static final String RSA = "RSA";
         public static final String PAGINATION_DATE_FORMAT = "yyyy-MM-dd";
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd";
@@ -88,14 +87,6 @@ public final class SibsConstants {
         public static final String ASPSP_CDE = "aspsp-cde";
         public static final String ACCOUNT_ID = "account-id";
         public static final String CONSENT_ID = "consent-id";
-    }
-
-    public static class SignatureKeys {
-
-        public static final String KEY_ID = "keyId=";
-        public static final String ALGORITHM = "algorithm=";
-        public static final String HEADERS = "headers=";
-        public static final String SIGNATURE = "signature=";
     }
 
     public static class SignatureValues {
