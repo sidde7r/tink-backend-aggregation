@@ -134,6 +134,7 @@ agentsServiceConfiguration:
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: "Tink-qsealc"
       tink:
         clientId: "dummyClientId"
         clientSecret: "dummyClientSecret"
@@ -142,6 +143,7 @@ agentsServiceConfiguration:
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: "Tink-qsealc"
     abnamro:
       tink:
         clientId: "dummyId"
