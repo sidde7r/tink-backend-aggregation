@@ -269,6 +269,7 @@
                 }
             ],
             "name": "fi-opbank-openbanking",
+            "payload": "tink",
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,

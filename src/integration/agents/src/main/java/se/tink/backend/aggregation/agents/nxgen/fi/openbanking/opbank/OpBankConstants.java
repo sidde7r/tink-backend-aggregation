@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class OpBankConstants {
 
-    public static final String INTEGRATION_NAME = "fi-opbank-openbanking";
+    public static final String INTEGRATION_NAME = "opbank";
 
     private OpBankConstants() {
         throw new AssertionError();
