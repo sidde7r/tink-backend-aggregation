@@ -110,8 +110,7 @@ public class HandelsbankenBaseApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .post(SessionResponse.class);
     }
-
-<<<<<<< HEAD
+    
     public HttpResponse cancelDecoupled (URL href) {
         return client.request(href)
             .type(MediaType.APPLICATION_JSON_TYPE)
@@ -119,8 +118,6 @@ public class HandelsbankenBaseApiClient {
             .post(HttpResponse.class);
     }
 
-=======
->>>>>>> dc24c64ce... final v1
 
   public SessionResponse buildAuthorizeUrl(String ssn) {
 
