@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.HeaderValue;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.QueryKey;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.QueryValue;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.TimeoutFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.EnterCardConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdCollectRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdCollectResponse;
@@ -29,6 +30,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 
 public class EnterCardApiClient {
 
@@ -106,6 +108,10 @@ public class EnterCardApiClient {
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .header(HeaderKey.REFERER, getInitRequest().toString())
                         .header(HeaderKey.ORIGIN, HeaderValue.ORIGIN)
+                        .addFilter(
+                                new TimeoutRetryFilter(
+                                        TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                                        TimeoutFilter.TIMEOUT_RETRY_SLEEP_MILLISECONDS))
                         .post(HttpResponse.class, ElementUtils.parseFormParameters(formElement));
 
         URI redirect = response.getRedirects().get(0);
