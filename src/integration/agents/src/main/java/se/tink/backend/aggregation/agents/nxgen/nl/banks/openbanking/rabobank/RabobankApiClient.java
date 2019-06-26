@@ -21,6 +21,8 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -125,7 +127,7 @@ public class RabobankApiClient {
                 .get(BalanceResponse.class);
     }
 
-    public TransactionalTransactionsResponse getTransactions(
+    public PaginatorResponse getTransactions(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
         final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
         final String uuid = RabobankUtils.getRequestId();
@@ -154,7 +156,11 @@ public class RabobankApiClient {
                 if (message.toLowerCase().contains(ErrorMessages.BOOKING_STATUS_INVALID)) {
                     logger.warn("Could not request with booking status \"{}\"", bookingStatus);
                     continue; // Try with some other booking status
+                } else if (message.toLowerCase().contains(ErrorMessages.UNAVAILABLE_TRX_HISTORY)) {
+                    logger.warn(message);
+                    return new EmptyFinalPaginatorResponse();
                 }
+
                 throw new IllegalStateException(String.format("Unexpected error: %s", message));
             }
         }
