@@ -23,18 +23,21 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
     private final SessionStorage sessionStorage;
 
     private String autoStartToken;
-    public HandelsbankenBaseAuthenticator(HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
+
+    public HandelsbankenBaseAuthenticator(
+            HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }
 
     public void authenticate(Credentials credentials) {
-        sessionStorage.put(StorageKeys.ACCESS_TOKEN, credentials.getField(StorageKeys.ACCESS_TOKEN));
+        sessionStorage.put(
+                StorageKeys.ACCESS_TOKEN, credentials.getField(StorageKeys.ACCESS_TOKEN));
     }
 
     @Override
     public SessionResponse init(String ssn)
-        throws BankIdException, BankServiceException, AuthorizationException {
+            throws BankIdException, BankServiceException, AuthorizationException {
         SessionResponse response = apiClient.buildAuthorizeUrl(ssn);
         this.autoStartToken = response.getAutoStartToken();
         return response;
@@ -42,7 +45,7 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
 
     @Override
     public BankIdStatus collect(SessionResponse reference)
-        throws AuthenticationException, AuthorizationException {
+            throws AuthenticationException, AuthorizationException {
 
         try {
             Thread.sleep(reference.getSleepTime() + 1);
@@ -50,13 +53,16 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
             e.printStackTrace();
         }
 
-        DecoupledResponse decoupledResponse = apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));
+        DecoupledResponse decoupledResponse =
+                apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));
 
         if (decoupledResponse.getError() != null) {
             String error = decoupledResponse.getError();
-            if (error.equals(Errors.INTENT_EXPIRED) || error.equals(Errors.MBID_ERROR)){
+            if (error.equals(Errors.INTENT_EXPIRED) || error.equals(Errors.MBID_ERROR)) {
                 return BankIdStatus.TIMEOUT;
-            } else if (error.equals(Errors.INVALID_REQUEST) || error.equals(Errors.NOT_SHB_APPROVED) || error.equals(Errors.UNAUTHORIZED_CLIENT)) {
+            } else if (error.equals(Errors.INVALID_REQUEST)
+                    || error.equals(Errors.NOT_SHB_APPROVED)
+                    || error.equals(Errors.UNAUTHORIZED_CLIENT)) {
                 return BankIdStatus.NO_CLIENT;
             } else if (error.equals(Errors.MBID_MAX_POLLING)) {
                 return BankIdStatus.INTERRUPTED;

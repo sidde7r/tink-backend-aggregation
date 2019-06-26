@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.HandelsbankenBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
@@ -23,8 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
     private final HandelsbankenBaseApiClient apiClient;
@@ -42,7 +41,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
 
-    private void configureHttpClient(TinkHttpClient client){
+    private void configureHttpClient(TinkHttpClient client) {
         client.setEidasProxy("https://eidas-proxy.staging.aggregation.tink.network", "Tink");
         client.setDebugOutput(true);
     }

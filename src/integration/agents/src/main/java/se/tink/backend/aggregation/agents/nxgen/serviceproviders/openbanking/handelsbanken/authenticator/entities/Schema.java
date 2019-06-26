@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Schema{
+public class Schema {
 
-	@JsonProperty("type")
-	private String type;
+    @JsonProperty("type")
+    private String type;
 
-	@JsonProperty("properties")
-	private Properties properties;
+    @JsonProperty("properties")
+    private Properties properties;
 
-	public Schema(String type, Properties properties){
-		this.type = type;
-		this.properties = properties;
-	}
+    public Schema(String type, Properties properties) {
+        this.type = type;
+        this.properties = properties;
+    }
 
-	public String getType(){
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public Properties getProperties(){
-		return properties;
-	}
+    public Properties getProperties() {
+        return properties;
+    }
 }

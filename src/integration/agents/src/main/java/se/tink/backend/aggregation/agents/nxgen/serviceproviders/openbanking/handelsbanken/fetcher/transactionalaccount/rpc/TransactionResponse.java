@@ -13,23 +13,22 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @Generated("com.robohorse.robopojogenerator")
 public class TransactionResponse implements PaginatorResponse {
 
-	@JsonProperty("transactions")
-	private List<TransactionsItem> transactions;
+    @JsonProperty("transactions")
+    private List<TransactionsItem> transactions;
 
-	public List<TransactionsItem> getTransactions(){
-		return transactions;
-	}
+    public List<TransactionsItem> getTransactions() {
+        return transactions;
+    }
 
-	@Override
-	public Collection<? extends Transaction> getTinkTransactions() {
-		return transactions.stream()
-				.map(TransactionsItem::toTinkTransaction)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return transactions.stream()
+                .map(TransactionsItem::toTinkTransaction)
+                .collect(Collectors.toList());
+    }
 
-
-	@Override
-	public Optional<Boolean> canFetchMore() {
-		return Optional.empty();
-	}
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.empty();
+    }
 }

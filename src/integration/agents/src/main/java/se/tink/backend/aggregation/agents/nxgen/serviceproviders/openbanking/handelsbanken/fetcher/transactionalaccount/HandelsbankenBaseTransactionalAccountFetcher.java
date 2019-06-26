@@ -34,8 +34,7 @@ public class HandelsbankenBaseTransactionalAccountFetcher
         this.converter = converter;
     }
 
-    private Optional<TransactionalAccount> mapToTransactionalAccount(
-            AccountsItem accountEntity) {
+    private Optional<TransactionalAccount> mapToTransactionalAccount(AccountsItem accountEntity) {
         BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
         BalancesItem availableBalance =
                 balances.getBalances().stream()
@@ -64,9 +63,9 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         try {
-        return apiClient.getTransactions(
-                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID), fromDate, toDate);}
-        catch (HttpResponseException h) {
+            return apiClient.getTransactions(
+                    account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID), fromDate, toDate);
+        } catch (HttpResponseException h) {
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class App{
+public class App {
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("oauthRedirectURI")
-	private String oauthRedirectURI;
+    @JsonProperty("oauthRedirectURI")
+    private String oauthRedirectURI;
 
-	public App (String name, String description, String oauthRedirectURI) {
-		this.name = name;
-		this.description = description;
-		this.oauthRedirectURI = oauthRedirectURI;
-	}
+    public App(String name, String description, String oauthRedirectURI) {
+        this.name = name;
+        this.description = description;
+        this.oauthRedirectURI = oauthRedirectURI;
+    }
 
-	public String getName(){
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription(){
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getOauthRedirectURI(){
-		return oauthRedirectURI;
-	}
+    public String getOauthRedirectURI() {
+        return oauthRedirectURI;
+    }
 }

@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class ScaMethodsItem{
+public class ScaMethodsItem {
 
-	@JsonProperty("_links")
-	private Links links;
+    @JsonProperty("_links")
+    private Links links;
 
-	@JsonProperty("scaMethodType")
-	private String scaMethodType;
+    @JsonProperty("scaMethodType")
+    private String scaMethodType;
 
-	public Links getLinks(){
-		return links;
-	}
+    public Links getLinks() {
+        return links;
+    }
 
-	public String getScaMethodType(){
-		return scaMethodType;
-	}
+    public String getScaMethodType() {
+        return scaMethodType;
+    }
 }

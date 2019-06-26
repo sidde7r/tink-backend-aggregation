@@ -8,12 +8,12 @@ public final class HandelsbankenBaseConstants {
         public static final String BASE_URL = "https://api.handelsbanken.com/openbanking";
         public static final String BASE_URL2 = "https://api.handelsbanken.com/bb/gls5";
 
-        private static final String SUFFIX_V1= "/psd2/v1";
+        private static final String SUFFIX_V1 = "/psd2/v1";
         private static final String SUFFIX_V2 = "/psd2/v2";
 
         public static final String ACCOUNTS = SUFFIX_V2 + "/accounts";
         public static final String ACCOUNT_DETAILS = SUFFIX_V2 + "/accounts/%s";
-        public static final String ACCOUNT_TRANSACTIONS = SUFFIX_V2 +"/accounts/%s/transactions";
+        public static final String ACCOUNT_TRANSACTIONS = SUFFIX_V2 + "/accounts/%s/transactions";
         public static final String TOKEN = BASE_URL2 + "/oauth2/token/1.0";
         public static final String AUTHORIZATION = BASE_URL + SUFFIX_V1 + "/consents";
         public static final String THIRD_PARTIES = BASE_URL + SUFFIX_V1 + "/third-parties";
@@ -42,30 +42,29 @@ public final class HandelsbankenBaseConstants {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
         public static final String AUTHORIZATION = "Authorization";
         public static final String COUNTRY = "country";
-        public static final String CONSENT_ID =  "consentId";
+        public static final String CONSENT_ID = "consentId";
         public static final String SCOPE = "scope";
         public static final String SESSION_ID = "sessionId";
     }
 
-    public static class BodyKeys{
+    public static class BodyKeys {
         public static final String GRANT_TYPE = "grant_type";
         public static final String CLIENT_ID = "client_id";
         public static final String SCOPE = "scope";
         public static final String BEARER = "Bearer ";
-        public static final String RESPONSE_TYPE ="response_type";
+        public static final String RESPONSE_TYPE = "response_type";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
         public static final String CODE = "code";
     }
 
-    public static class Market{
+    public static class Market {
         public static final String COUNTRY = "SE";
-
     }
 
-    public static class BodyValues{
+    public static class BodyValues {
         public static final String CLIENT_CREDENTIALS = "client_credentials";
-        public static final String AIS_SCOPE ="AIS";
+        public static final String AIS_SCOPE = "AIS";
         public static final String ALL_ACCOUNTS = "ALL_ACCOUNTS";
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
         public static final String CONSENTS = "consents";
@@ -100,5 +99,4 @@ public final class HandelsbankenBaseConstants {
         public static final String USER_CANCEL = "USER_CANCEL";
         public static final String COMPLETE = "COMPLETE";
     }
-
 }

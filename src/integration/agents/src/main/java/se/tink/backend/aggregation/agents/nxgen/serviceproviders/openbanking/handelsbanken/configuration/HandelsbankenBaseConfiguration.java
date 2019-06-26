@@ -14,7 +14,6 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
     @JsonProperty private String appName;
     @JsonProperty private String appDesc;
 
-
     public String getClientId() {
         return clientId;
     }
@@ -23,7 +22,9 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
         return appId;
     }
 
-    public String getRedirectUrl() { return redirectUrl; }
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
 
     public String getPsuIpAddress() {
         return psuIpAddress;
@@ -36,5 +37,4 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
     public String getAppDesc() {
         return appDesc;
     }
-
 }

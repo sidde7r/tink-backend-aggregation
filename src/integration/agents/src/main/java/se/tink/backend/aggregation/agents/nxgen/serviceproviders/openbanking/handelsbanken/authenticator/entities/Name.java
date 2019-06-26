@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Name{
+public class Name {
 
-	@JsonProperty("description")
-	private String description;
+    @JsonProperty("description")
+    private String description;
 
-	@JsonProperty("type")
-	private String type;
+    @JsonProperty("type")
+    private String type;
 
-	@JsonProperty("example")
-	private String example;
+    @JsonProperty("example")
+    private String example;
 
-	public Name(String description, String type, String example){
-		this.description = description;
-		this.type = type;
-		this.example = example;
-	}
+    public Name(String description, String type, String example) {
+        this.description = description;
+        this.type = type;
+        this.example = example;
+    }
 
-	public String getDescription(){
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getType(){
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public String getExample(){
-		return example;
-	}
+    public String getExample() {
+        return example;
+    }
 }

@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class ClientId{
+public class ClientId {
 
-	@JsonProperty("$ref")
-	private String ref;
+    @JsonProperty("$ref")
+    private String ref;
 
-	public ClientId(String ref){
-		this.ref = ref;
-	}
+    public ClientId(String ref) {
+        this.ref = ref;
+    }
 
-	public String getRef(){
-		return ref;
-	}
+    public String getRef() {
+        return ref;
+    }
 }

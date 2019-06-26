@@ -5,10 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AuthorizationRequest {
 
-  private String access;
+    private String access;
 
-
-  public AuthorizationRequest(String access) {
-    this.access = access;
-  }
+    public AuthorizationRequest(String access) {
+        this.access = access;
+    }
 }

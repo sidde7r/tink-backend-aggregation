@@ -4,27 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Product{
+public class Product {
 
-	@JsonProperty("scope")
-	private String scope;
+    @JsonProperty("scope")
+    private String scope;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("version")
-	private String version;
+    @JsonProperty("version")
+    private String version;
 
-	public String getScope(){
-		return scope;
-	}
+    public String getScope() {
+        return scope;
+    }
 
-	public String getName(){
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getVersion(){
-		return version;
-	}
-
+    public String getVersion() {
+        return version;
+    }
 }

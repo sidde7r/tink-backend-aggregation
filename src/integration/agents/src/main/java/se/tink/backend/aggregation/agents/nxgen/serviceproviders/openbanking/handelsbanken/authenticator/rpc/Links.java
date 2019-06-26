@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Links{
+public class Links {
 
-	@JsonProperty("cancel")
-	private Cancel cancel;
+    @JsonProperty("cancel")
+    private Cancel cancel;
 
-	@JsonProperty("token")
-	private Token token;
+    @JsonProperty("token")
+    private Token token;
 
-	public Cancel getCancel(){
-		return cancel;
-	}
+    public Cancel getCancel() {
+        return cancel;
+    }
 
-	public Token getToken(){
-		return token;
-	}
+    public Token getToken() {
+        return token;
+    }
 }

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Transactions{
+public class Transactions {
 
-	@JsonProperty("href")
-	private String href;
+    @JsonProperty("href")
+    private String href;
 
-	public String getHref(){
-		return href;
-	}
+    public String getHref() {
+        return href;
+    }
 }

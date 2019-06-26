@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Links{
+public class Links {
 
-	@JsonProperty("transactions")
-	private Transactions transactions;
+    @JsonProperty("transactions")
+    private Transactions transactions;
 
-	public Transactions getTransactions(){
-		return transactions;
-	}
+    public Transactions getTransactions() {
+        return transactions;
+    }
 }

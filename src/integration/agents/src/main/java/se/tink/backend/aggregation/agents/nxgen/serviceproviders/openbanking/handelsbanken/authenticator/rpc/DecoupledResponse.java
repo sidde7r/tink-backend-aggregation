@@ -4,44 +4,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class DecoupledResponse{
+public class DecoupledResponse {
 
-	@JsonProperty("result")
-	private String result;
+    @JsonProperty("result")
+    private String result;
 
-	@JsonProperty("access_token")
-	private String accessToken;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-	@JsonProperty("token_type")
-	private String tokenType;
+    @JsonProperty("token_type")
+    private String tokenType;
 
-	@JsonProperty("expires_in")
-	private int expiresIn;
+    @JsonProperty("expires_in")
+    private int expiresIn;
 
-	@JsonProperty("refresh_token")
-	private String refreshToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
-	@JsonProperty("error")
-	private String error;
+    @JsonProperty("error")
+    private String error;
 
-	public String getResult(){
-		return result;
-	}
+    public String getResult() {
+        return result;
+    }
 
-	public String getAccessToken(){
-		return accessToken;
-	}
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-	public String getTokenType(){
-		return tokenType;
-	}
+    public String getTokenType() {
+        return tokenType;
+    }
 
-	public int getExpiresIn(){
-		return expiresIn;
-	}
+    public int getExpiresIn() {
+        return expiresIn;
+    }
 
-	public String getRefreshToken() { return refreshToken;}
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-	public String getError() { return error;}
-
+    public String getError() {
+        return error;
+    }
 }

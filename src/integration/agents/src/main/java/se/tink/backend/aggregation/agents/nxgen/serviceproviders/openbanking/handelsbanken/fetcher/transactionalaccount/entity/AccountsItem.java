@@ -11,102 +11,102 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @Generated("com.robohorse.robopojogenerator")
-public class AccountsItem{
+public class AccountsItem {
 
-	@JsonProperty("accountId")
-	private String accountId;
+    @JsonProperty("accountId")
+    private String accountId;
 
-	@JsonProperty("bban")
-	private String bban;
+    @JsonProperty("bban")
+    private String bban;
 
-	@JsonProperty("ownerName")
-	private String ownerName;
+    @JsonProperty("ownerName")
+    private String ownerName;
 
-	@JsonProperty("_links")
-	private Links links;
+    @JsonProperty("_links")
+    private Links links;
 
-	@JsonProperty("iban")
-	private String iban;
+    @JsonProperty("iban")
+    private String iban;
 
-	@JsonProperty("accountType")
-	private String accountType;
+    @JsonProperty("accountType")
+    private String accountType;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("currency")
-	private String currency;
+    @JsonProperty("currency")
+    private String currency;
 
-	@JsonProperty("bic")
-	private String bic;
+    @JsonProperty("bic")
+    private String bic;
 
-	@JsonProperty("clearingNumber")
-	private String clearingNumber;
+    @JsonProperty("clearingNumber")
+    private String clearingNumber;
 
-	public String getAccountId(){
-		return accountId;
-	}
+    public String getAccountId() {
+        return accountId;
+    }
 
-	public String getBban(){
-		return bban;
-	}
+    public String getBban() {
+        return bban;
+    }
 
-	public String getOwnerName(){
-		return ownerName;
-	}
+    public String getOwnerName() {
+        return ownerName;
+    }
 
-	public Links getLinks(){
-		return links;
-	}
+    public Links getLinks() {
+        return links;
+    }
 
-	public String getIban(){
-		return iban;
-	}
+    public String getIban() {
+        return iban;
+    }
 
-	public String getAccountType(){
-		return accountType;
-	}
+    public String getAccountType() {
+        return accountType;
+    }
 
-	public String getName(){
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getCurrency(){
-		return currency;
-	}
+    public String getCurrency() {
+        return currency;
+    }
 
-	public String getBic(){
-		return bic;
-	}
+    public String getBic() {
+        return bic;
+    }
 
-	public String getClearingNumber(){
-		return clearingNumber;
-	}
+    public String getClearingNumber() {
+        return clearingNumber;
+    }
 
-	public TransactionalAccount createCheckingAccount(BalancesItem balance) {
-		return TransactionalAccount.nxBuilder()
-				.withType(TransactionalAccountType.CHECKING)
-				.withId(
-						IdModule.builder()
-								.withUniqueIdentifier(getAccountNumber())
-								.withAccountNumber(getAccountNumber())
-								.withAccountName(name)
-								.addIdentifier(
-										AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-								.build())
-				.withBalance(BalanceModule.of(getAmount(balance)))
-				.addHolderName(ownerName)
-				.setApiIdentifier(accountId)
-				.setBankIdentifier(getAccountNumber())
-				.putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-				.build();
-	}
+    public TransactionalAccount createCheckingAccount(BalancesItem balance) {
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.CHECKING)
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(getAccountNumber())
+                                .withAccountNumber(getAccountNumber())
+                                .withAccountName(name)
+                                .addIdentifier(
+                                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                                .build())
+                .withBalance(BalanceModule.of(getAmount(balance)))
+                .addHolderName(ownerName)
+                .setApiIdentifier(accountId)
+                .setBankIdentifier(getAccountNumber())
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+                .build();
+    }
 
-	private String getAccountNumber() {
-		return iban.substring(iban.length() - 9);
-	}
+    private String getAccountNumber() {
+        return iban.substring(iban.length() - 9);
+    }
 
-	private Amount getAmount(BalancesItem balance) {
-		return new Amount(balance.getAmount().getCurrency(), balance.getAmount().getContent());
-	}
+    private Amount getAmount(BalancesItem balance) {
+        return new Amount(balance.getAmount().getCurrency(), balance.getAmount().getContent());
+    }
 }

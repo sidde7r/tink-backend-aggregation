@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.annotation.Generated;
 
 @Generated("com.robohorse.robopojogenerator")
-public class Balance{
+public class Balance {
 
-	@JsonProperty("amount")
-	private TransactionAmount transactionAmount;
+    @JsonProperty("amount")
+    private TransactionAmount transactionAmount;
 
-	@JsonProperty("balanceType")
-	private String balanceType;
+    @JsonProperty("balanceType")
+    private String balanceType;
 
-	public TransactionAmount getTransactionAmount(){
-		return transactionAmount;
-	}
+    public TransactionAmount getTransactionAmount() {
+        return transactionAmount;
+    }
 
-	public String getBalanceType(){
-		return balanceType;
-	}
+    public String getBalanceType() {
+        return balanceType;
+    }
 }
