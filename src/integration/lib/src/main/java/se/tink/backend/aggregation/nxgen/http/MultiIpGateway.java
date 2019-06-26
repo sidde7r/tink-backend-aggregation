@@ -6,17 +6,19 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 
 public final class MultiIpGateway {
     private final Logger logger = LoggerFactory.getLogger(MultiIpGateway.class);
     private final TinkHttpClient client;
-    private final Credentials credentials;
+    private final String userId;
+    private final String credentialsId;
 
-    public MultiIpGateway(final TinkHttpClient client, final Credentials credentials) {
+    public MultiIpGateway(
+            final TinkHttpClient client, final String userId, final String credentialsId) {
         this.client = client;
-        this.credentials = credentials;
+        this.userId = userId;
+        this.credentialsId = credentialsId;
     }
 
     private static String toProxy(final List<String> proxyUris, final String userId) {
@@ -38,7 +40,7 @@ public final class MultiIpGateway {
 
         final String proxyUri =
                 Optional.ofNullable(proxyUris)
-                        .map(uris -> toProxy(uris, credentials.getUserId()))
+                        .map(uris -> toProxy(uris, userId))
                         .orElseGet(
                                 () -> {
                                     logger.warn("proxyUris is null -- falling back to proxyUri");
@@ -54,7 +56,7 @@ public final class MultiIpGateway {
         // to select the public IP address in the proxy.
         // The values themselves does not matter, as long as the same credentialsId always
         // is routed from the same public IP.
-        client.setProductionProxy(proxyUri, credentials.getUserId(), credentials.getId());
+        client.setProductionProxy(proxyUri, userId, credentialsId);
         logger.info("Proxy-setup: successfully attached to {}", proxyUri);
     }
 }

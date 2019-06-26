@@ -37,7 +37,7 @@ public class AmericanExpressAgent extends NextGenerationAgent
         generateDeviceId();
         this.apiClient = new AmericanExpressApiClient(client, sessionStorage, config);
         this.config = config;
-        this.gateway = new MultiIpGateway(client, credentials);
+        this.gateway = new MultiIpGateway(client, credentials.getUserId(), credentials.getId());
 
         this.creditCardRefreshController = constructCreditCardRefreshController();
     }
