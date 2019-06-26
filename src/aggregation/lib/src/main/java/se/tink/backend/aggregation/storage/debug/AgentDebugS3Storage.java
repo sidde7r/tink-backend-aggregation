@@ -16,26 +16,11 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
     private static final Logger log = LoggerFactory.getLogger(AgentDebugS3Storage.class);
     private final S3StorageConfiguration configuration;
-    private final AmazonS3 awsStorageClient;
-    private final String bucketName;
+    private AmazonS3 awsStorageClient;
 
     @Inject
     public AgentDebugS3Storage(S3StorageConfiguration configuration) {
-        if (isValidConfiguration(configuration)) {
-            this.configuration = configuration;
-            this.bucketName = configuration.getAgentDebugBucketName();
-            this.awsStorageClient =
-                    AmazonS3ClientBuilder.standard()
-                            .withEndpointConfiguration(
-                                    new AwsClientBuilder.EndpointConfiguration(
-                                            configuration.getUrl(), configuration.getRegion()))
-                            .build();
-        } else {
-            log.error("S3 debug storage enabled, but configuration is not valid");
-            this.configuration = null;
-            this.awsStorageClient = null;
-            this.bucketName = "";
-        }
+        this.configuration = configuration;
     }
 
     @Override
@@ -53,20 +38,45 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         return false;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return configuration.isEnabled();
+    }
+
     private static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration)
-                && configuration.isEnabled()
                 && Objects.nonNull(configuration.getUrl())
                 && Objects.nonNull(configuration.getAgentDebugBucketName())
                 && Objects.nonNull(configuration.getRegion());
     }
 
     private String putObject(String content, String fileName) throws AmazonServiceException {
-        awsStorageClient.putObject(bucketName, fileName, content);
+        if (!isValidConfiguration(configuration)) {
+            log.warn("S3 debug storage enabled, but configuration is not valid");
+            return "";
+        }
+
+        // Instantiate the client lazily
+        if (Objects.isNull(awsStorageClient)) {
+            instantiateClient();
+        }
+
+        awsStorageClient.putObject(configuration.getAgentDebugBucketName(), fileName, content);
         return String.format(
                 "AWS CLI: s3://%s/%s \n " + "AWS HTTP: %s",
                 configuration.getAgentDebugBucketName(),
                 fileName,
-                awsStorageClient.getUrl(bucketName, fileName).toExternalForm());
+                awsStorageClient
+                        .getUrl(configuration.getAgentDebugBucketName(), fileName)
+                        .toExternalForm());
+    }
+
+    private void instantiateClient() {
+        this.awsStorageClient =
+                AmazonS3ClientBuilder.standard()
+                        .withEndpointConfiguration(
+                                new AwsClientBuilder.EndpointConfiguration(
+                                        configuration.getUrl(), configuration.getRegion()))
+                        .build();
     }
 }

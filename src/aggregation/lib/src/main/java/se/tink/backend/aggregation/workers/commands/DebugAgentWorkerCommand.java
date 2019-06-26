@@ -49,6 +49,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     @Override
     public void postProcess() {
+        if (!agentDebugStorage.isEnabled()) {
+            return;
+        }
+
         String clusterId = context.getClusterId();
         List<String> excludedDebugClusters =
                 context.getAgentsServiceConfiguration()
