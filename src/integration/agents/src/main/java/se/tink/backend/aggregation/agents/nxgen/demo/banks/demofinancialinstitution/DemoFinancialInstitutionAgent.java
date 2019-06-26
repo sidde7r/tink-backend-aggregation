@@ -37,8 +37,8 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
 
         clientName = request.getProvider().getPayload();
-        apiClient = new DemoFinancialInstitutionApiClient(client);
         sessionStorage = new SessionStorage();
+        apiClient = new DemoFinancialInstitutionApiClient(client, sessionStorage);
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DemoFinancialInstitutionAuthenticator(apiClient, sessionStorage));
+                new DemoFinancialInstitutionAuthenticator(sessionStorage));
     }
 
     @Override

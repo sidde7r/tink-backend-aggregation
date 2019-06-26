@@ -10,8 +10,8 @@ public class DemoFinancialInstitutionConstants {
     }
 
     public static class Storage {
-        public static final String AUTH_TOKEN = "auth_token";
-        public static final String USERNAME = "username";
+        public static final String BASIC_AUTH_USERNAME = "basic_auth_username";
+        public static final String BASIC_AUTH_PASSWORD = "basic_auth_password";
     }
 
     public static class Responses {
