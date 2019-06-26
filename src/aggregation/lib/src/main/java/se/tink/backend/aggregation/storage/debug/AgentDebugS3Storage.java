@@ -48,7 +48,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
     private String putObject(String content, String fileName) throws AmazonServiceException {
         if (!isValidConfiguration(configuration)) {
-            log.error("S3 debug storage enabled, but configuration is not valid");
+            log.warn("S3 debug storage enabled, but configuration is not valid");
             return "";
         }
 
