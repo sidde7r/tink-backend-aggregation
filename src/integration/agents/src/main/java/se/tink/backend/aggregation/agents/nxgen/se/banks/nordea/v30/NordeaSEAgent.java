@@ -61,6 +61,7 @@ public class NordeaSEAgent extends NextGenerationAgent
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
+        NordeaTransactionFetcher transactionFetcher = new NordeaTransactionFetcher(apiClient);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -68,8 +69,8 @@ public class NordeaSEAgent extends NextGenerationAgent
                         new NordeaTransactionalAccountFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionIndexPaginationController<>(
-                                        new NordeaTransactionFetcher(apiClient)))));
+                                new TransactionIndexPaginationController<>(transactionFetcher),
+                                transactionFetcher)));
     }
 
     @Override

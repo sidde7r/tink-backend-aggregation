@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount;
 
+import com.google.common.base.Predicates;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
@@ -40,8 +41,7 @@ public class NordeaTransactionFetcher
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
             TransactionalAccount account) {
         return apiClient.fetchPayments().getPayments().stream()
-                .filter(PaymentEntity::isUnconfirmed)
-                .filter(PaymentEntity::isPayment)
+                .filter(Predicates.or(PaymentEntity::isConfirmed, PaymentEntity::isInProgress))
                 .filter(paymentEntity -> paymentEntity.getFrom().equals(account.getAccountNumber()))
                 .map(PaymentEntity::toUpcomingTransaction)
                 .collect(Collectors.toList());

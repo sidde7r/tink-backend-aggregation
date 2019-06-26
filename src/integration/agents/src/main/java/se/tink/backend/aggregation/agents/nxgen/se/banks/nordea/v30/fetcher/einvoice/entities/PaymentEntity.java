@@ -185,6 +185,10 @@ public class PaymentEntity {
         return status.equalsIgnoreCase(PaymentStatus.UNCONFIRMED);
     }
 
+    public boolean isInProgress() {
+        return status.equalsIgnoreCase(PaymentStatus.INPROGRESS);
+    }
+
     @JsonIgnore
     public Date getDue() {
         return due;
