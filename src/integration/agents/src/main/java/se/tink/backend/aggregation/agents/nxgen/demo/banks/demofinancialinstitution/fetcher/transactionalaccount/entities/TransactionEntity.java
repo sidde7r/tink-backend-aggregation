@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.util.Date;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 
+@JsonObject
 public class TransactionEntity {
 
     private long id;
@@ -16,7 +18,7 @@ public class TransactionEntity {
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date date;
+    private Date transactionDate;
 
     public long getId() {
         return id;
@@ -38,15 +40,15 @@ public class TransactionEntity {
         return description;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getTransactionDate() {
+        return transactionDate;
     }
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(new Amount(currency, amount))
-                .setDate(date)
+                .setDate(transactionDate)
                 .setDescription(description)
                 .build();
     }
