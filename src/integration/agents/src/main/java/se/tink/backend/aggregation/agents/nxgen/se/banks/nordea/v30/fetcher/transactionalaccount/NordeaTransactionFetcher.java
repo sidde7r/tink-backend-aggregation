@@ -1,16 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class NordeaTransactionFetcher implements TransactionIndexPaginator<TransactionalAccount> {
+public class NordeaTransactionFetcher
+        implements TransactionIndexPaginator<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
     private static final Logger LOG = LoggerFactory.getLogger(NordeaTransactionFetcher.class);
 
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
@@ -27,6 +34,17 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, int numberOfTransactions, int startIndex) {
         return fetchTransactions(account, numberOfTransactions, startIndex, 1);
+    }
+
+    @Override
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
+        return apiClient.fetchPayments().getPayments().stream()
+                .filter(PaymentEntity::isUnconfirmed)
+                .filter(PaymentEntity::isPayment)
+                .filter(paymentEntity -> paymentEntity.getFrom().equals(account.getAccountNumber()))
+                .map(PaymentEntity::toUpcomingTransaction)
+                .collect(Collectors.toList());
     }
 
     private PaginatorResponse fetchTransactions(
