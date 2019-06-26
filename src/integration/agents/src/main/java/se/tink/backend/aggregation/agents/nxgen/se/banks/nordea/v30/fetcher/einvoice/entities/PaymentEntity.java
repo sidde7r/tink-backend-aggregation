@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.ein
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.PaymentStatus;
@@ -52,6 +54,9 @@ public class PaymentEntity {
 
     @JsonProperty private String currency;
 
+    @JsonProperty("e_invoice")
+    private EInvoiceEntity eInvoice;
+
     @JsonIgnore
     public String getId() {
         return Optional.ofNullable(id).get();
@@ -71,7 +76,7 @@ public class PaymentEntity {
         transfer.setDueDate(due);
         transfer.setDestinationMessage(getDestinationMessage());
         transfer.setSourceMessage(recipientName);
-        transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, getPayload());
+        transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, getApiIdentifier());
 
         return transfer;
     }
@@ -114,8 +119,8 @@ public class PaymentEntity {
 
     // plusgiro does not seem to have an id but it has a reference field instead.
     @JsonIgnore
-    private String getPayload() {
-        return Optional.ofNullable(id).orElse(reference);
+    public String getApiIdentifier() {
+        return Strings.isNullOrEmpty(id) ? reference : id;
     }
 
     @JsonIgnore
@@ -181,6 +186,13 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
+    public boolean isTransfer() {
+        return (type.equalsIgnoreCase(NordeaSEConstants.PaymentTypes.LBAN)
+                || type.equalsIgnoreCase(NordeaSEConstants.PaymentTypes.IBAN)
+                || type.equalsIgnoreCase(NordeaSEConstants.PaymentTypes.NORMAL));
+    }
+
+    @JsonIgnore
     public boolean isUnconfirmed() {
         return status.equalsIgnoreCase(PaymentStatus.UNCONFIRMED);
     }
@@ -211,6 +223,11 @@ public class PaymentEntity {
                 && transfer.getDestination().toString().equals(getRecipientAccountNumber())
                 && transfer.getSource().toString().equals(getFrom())
                 && transfer.getDueDate().equals(getDue());
+    }
+
+    @JsonIgnore
+    public boolean hasEIvoiceDetails() {
+        return Objects.nonNull(eInvoice);
     }
 
     @JsonIgnore
