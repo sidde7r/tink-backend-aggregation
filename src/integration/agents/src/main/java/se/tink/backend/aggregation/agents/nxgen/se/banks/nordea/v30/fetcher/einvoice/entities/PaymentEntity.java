@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -79,14 +80,13 @@ public class PaymentEntity {
     public TransferType getTinkType() {
         switch (type.toLowerCase()) {
             case NordeaSEConstants.PaymentTypes.BANKGIRO:
-                return TransferType.PAYMENT;
             case NordeaSEConstants.PaymentTypes.PLUSGIRO:
                 return TransferType.PAYMENT;
             case NordeaSEConstants.PaymentTypes.EINVOICE:
                 return TransferType.EINVOICE;
             case NordeaSEConstants.PaymentTypes.IBAN:
-                return TransferType.BANK_TRANSFER;
             case NordeaSEConstants.PaymentTypes.LBAN:
+            case NordeaSEConstants.PaymentTypes.NORMAL:
                 return TransferType.BANK_TRANSFER;
             default:
                 throw new IllegalArgumentException(
@@ -97,7 +97,19 @@ public class PaymentEntity {
     @JsonIgnore
     public AccountIdentifier getDestination() {
         return AccountIdentifier.create(
-                getTinkPaymentType(), recipientAccountNumber, getRecipientName());
+                getTinkPaymentType(), getRecipientTransferAccountNumber(), getRecipientName());
+    }
+
+    public String getRecipientTransferAccountNumber() {
+        if (NordeaSEConstants.PaymentAccountTypes.NDASE.equalsIgnoreCase(toAccountNumberType)) {
+            SocialSecurityNumber.Sweden pnr =
+                    new SocialSecurityNumber.Sweden(recipientAccountNumber);
+            if (pnr.isValid()) {
+                return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER
+                        + recipientAccountNumber;
+            }
+        }
+        return recipientAccountNumber;
     }
 
     // plusgiro does not seem to have an id but it has a reference field instead.
@@ -108,7 +120,7 @@ public class PaymentEntity {
 
     @JsonIgnore
     private String getRecipientName() {
-        return toAccountNumberType.equalsIgnoreCase(NordeaSEConstants.PaymentAccountTypes.IBAN)
+        return toAccountNumberType.equalsIgnoreCase(NordeaSEConstants.PaymentAccountTypes.LBAN)
                 ? bankName
                 : recipientName;
     }
@@ -120,8 +132,9 @@ public class PaymentEntity {
                 return AccountIdentifier.Type.SE_BG;
             case NordeaSEConstants.PaymentAccountTypes.PLUSGIRO:
                 return AccountIdentifier.Type.SE_PG;
-            case NordeaSEConstants.PaymentAccountTypes.IBAN:
-                return AccountIdentifier.Type.IBAN;
+            case NordeaSEConstants.PaymentAccountTypes.LBAN:
+            case NordeaSEConstants.PaymentAccountTypes.NDASE:
+                return AccountIdentifier.Type.SE;
             default:
                 throw new IllegalArgumentException(
                         NordeaSEConstants.PaymentAccountTypes.UNKNOWN_ACCOUNT_TYPE

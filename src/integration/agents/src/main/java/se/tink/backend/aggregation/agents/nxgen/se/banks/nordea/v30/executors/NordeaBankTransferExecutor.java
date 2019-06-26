@@ -154,7 +154,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         transferRequest.setMessage(transfer, transferMessageFormatter);
         transferRequest.setDue(transfer);
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
-        transferRequest.setToAccountNumberType(NordeaSEConstants.PaymentAccountTypes.IBAN);
+        transferRequest.setToAccountNumberType(NordeaSEConstants.PaymentAccountTypes.LBAN);
 
         return transferRequest;
     }

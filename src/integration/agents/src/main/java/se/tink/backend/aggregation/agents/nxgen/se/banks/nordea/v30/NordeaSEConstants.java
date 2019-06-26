@@ -164,13 +164,15 @@ public class NordeaSEConstants {
         public static final String EINVOICE = "einvoice";
         public static final String IBAN = "iban";
         public static final String LBAN = "lban";
+        public static final String NORMAL = "normal";
         public static final String UNKNOWN_TYPE = "UNKNOWN TYPE";
     }
 
     public static final class PaymentAccountTypes {
         public static final String BANKGIRO = "BG";
         public static final String PLUSGIRO = "PG";
-        public static final String IBAN = "LBAN-SE";
+        public static final String LBAN = "LBAN-SE";
+        public static final String NDASE = "NDA-SE";
         public static final String UNKNOWN_ACCOUNT_TYPE = "UNKNOWN ACCOUNT TYPE";
     }
 
