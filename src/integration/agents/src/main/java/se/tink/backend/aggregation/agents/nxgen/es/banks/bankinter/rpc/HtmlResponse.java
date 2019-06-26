@@ -57,7 +57,7 @@ public class HtmlResponse {
             final InputStream inputStream = IOUtils.toInputStream(body, StandardCharsets.UTF_8);
             return factory.newDocumentBuilder().parse(inputStream);
         } catch (SAXException | IOException | ParserConfigurationException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Could not parse HTML response", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class HtmlResponse {
                 return Amount.inEUR(amountFormat.parse(amountString));
             }
         } catch (ParseException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Could not parse amount " + amountString, e);
         }
     }
 
@@ -106,7 +106,8 @@ public class HtmlResponse {
             expr = xPath.compile(xPathExpression);
             return (T) expr.evaluate(node, returnTypeForClass(returnClass));
         } catch (XPathExpressionException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(
+                    "Error evaluating XPath expression: " + xPathExpression, e);
         }
     }
 
