@@ -640,6 +640,21 @@
             "type": "BANK"
         },
         {
+            "name": "se-handelsbanken-bankid",
+            "displayName": "Handelsbanken",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "MOBILE_BANKID",
+            "multiFactor": false,
+            "className": "nxgen.se.openbanking.handelsbanken.HandelsbankenAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": "tink",
+            "tutorialUrl": null,
+            "fields": []
+        },
+        {
             "capabilities": [
                 "TRANSFERS",
                 "MORTGAGE_AGGREGATION"

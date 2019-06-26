@@ -120,6 +120,14 @@ agentsServiceConfiguration:
         basicAuthPassword: "dummyPass"
         accessToken: "sandboxToken"
         redirectUri: "https://api.tink.se/api/v1/credentials/third-party/callback"
+    handelsbanken:
+      tink:
+        appId: "a9b0d2fc-37c7-492d-a82c-d9b17d8091e2"
+        clientId: "SE-FINA-44059"
+        psuIpAddress: "158.174.56.4"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        appName: "Tink"
+        appDesc: "Tink app"
     monzo:
       tink:
         clientId: "dummyId"
