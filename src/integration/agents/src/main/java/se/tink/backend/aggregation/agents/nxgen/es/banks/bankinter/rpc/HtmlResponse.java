@@ -20,14 +20,10 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormKeys;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankinter.BankinterConstants.FormValues;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.amount.Amount;
 
@@ -124,41 +120,5 @@ public class HtmlResponse {
         final String expr =
                 String.format("//form[@id='%s']//input[@name='javax.faces.ViewState']", formId);
         return evaluateXPath(expr, Node.class).getAttributes().getNamedItem("value").getNodeValue();
-    }
-
-    // find the javascript for calling JSF to update
-    public Form getJsfUpdateForm(String formId, String update) {
-        // find submit link
-        final String xPathExpression =
-                String.format(
-                        "//a[contains(@onclick,\"formId:'%1$s'\") and contains(@onclick,\"update:'%2$s'\")]",
-                        formId, update);
-        final NodeList links = evaluateXPath(xPathExpression, NodeList.class);
-        if (links.getLength() != 1) {
-            throw new IllegalStateException("Found too many forms");
-        }
-        final Node linkNode = links.item(0);
-        final String jsfSource = linkNode.getAttributes().getNamedItem("id").getNodeValue();
-
-        // build form
-        final Element formElement = getElementById(formId);
-        final NodeList formInputs = formElement.getElementsByTagName("input");
-        final Form.Builder formBuilder = Form.builder();
-
-        // add viewState and SUBMIT elements
-        for (int i = 0; i < formInputs.getLength(); i++) {
-            final NamedNodeMap inputAttributes = formInputs.item(i).getAttributes();
-            final String key = inputAttributes.getNamedItem("name").getNodeValue();
-            final String value = inputAttributes.getNamedItem("value").getNodeValue();
-            formBuilder.put(key, value);
-        }
-
-        formBuilder.put(FormKeys.JSF_PARTIAL_AJAX, FormValues.TRUE);
-        formBuilder.put(FormKeys.JSF_SOURCE, jsfSource);
-        formBuilder.put(FormKeys.JSF_PARTIAL_EXECUTE, FormValues.JSF_EXECUTE_ALL);
-        formBuilder.put(FormKeys.JSF_PARTIAL_RENDER, update);
-        formBuilder.put(jsfSource, jsfSource);
-
-        return formBuilder.build();
     }
 }
