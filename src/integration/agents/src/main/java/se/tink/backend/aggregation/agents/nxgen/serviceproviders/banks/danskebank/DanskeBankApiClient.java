@@ -35,6 +35,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.filter.TimeoutRetryFilter;
 
 public class DanskeBankApiClient {
     private static final AggregationLogger log = new AggregationLogger(DanskeBankApiClient.class);
@@ -187,6 +188,11 @@ public class DanskeBankApiClient {
             return client.request(url)
                     .accept(MediaType.APPLICATION_JSON_TYPE)
                     .type(MediaType.APPLICATION_JSON_TYPE)
+                    .addFilter(
+                            new TimeoutRetryFilter(
+                                    DanskeBankConstants.TimeoutFilter.NUM_TIMEOUT_RETRIES,
+                                    DanskeBankConstants.TimeoutFilter
+                                            .TIMEOUT_RETRY_SLEEP_MILLISECONDS))
                     .post(PollCodeAppResponse.class, request);
         } catch (HttpClientException e) {
             if (DanskeBankConstants.Errors.READ_TIMEOUT_ERROR.equals(e.getCause().getMessage())) {
