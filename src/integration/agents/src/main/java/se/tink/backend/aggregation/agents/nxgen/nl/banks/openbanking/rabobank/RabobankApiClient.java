@@ -107,13 +107,21 @@ public class RabobankApiClient {
         final String uuid = RabobankUtils.getRequestId();
         final String date = RabobankUtils.getDate();
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+        final URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
+        final String clientId = rabobankConfiguration.getClientId();
+        final String clientCert = rabobankConfiguration.getQsealCert();
+        final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        return buildRequest(
-                        rabobankConfiguration.getUrls().buildBalanceUrl(accountId),
-                        uuid,
-                        digest,
-                        signatureHeader,
-                        date)
+        return client.request(url)
+                .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
+                .header(QueryParams.IBM_CLIENT_ID, clientId)
+                .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                .header(QueryParams.REQUEST_ID, uuid)
+                .header(QueryParams.DIGEST, digestHeader)
+                .header(QueryParams.SIGNATURE, signatureHeader)
+                .header(QueryParams.DATE, date)
+                .header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
                 .get(BalanceResponse.class);
     }
 
