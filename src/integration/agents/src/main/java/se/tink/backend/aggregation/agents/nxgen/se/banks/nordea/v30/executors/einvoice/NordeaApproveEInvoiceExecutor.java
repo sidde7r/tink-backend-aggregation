@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -32,7 +32,7 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     @Override
     public void approveEInvoice(Transfer transfer) throws TransferExecutionException {
         // fetch einvoice to approve
-        EInvoiceEntity eInvoice = getEInvoice(transfer);
+        PaymentEntity eInvoice = getEInvoice(transfer);
         // approve einvoice
         executeApproveEInvoice(eInvoice.getId());
     }
@@ -44,17 +44,17 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     }
 
     // find the EInvoice that matches with transfer to approve
-    private EInvoiceEntity getEInvoice(Transfer transfer) {
-        return apiClient.fetchEInvoice().getEInvoices().stream()
-                .filter(EInvoiceEntity::isEInvoice)
-                .filter(EInvoiceEntity::isUnconfirmed)
+    private PaymentEntity getEInvoice(Transfer transfer) {
+        return apiClient.fetchPayments().getPayments().stream()
+                .filter(PaymentEntity::isEInvoice)
+                .filter(PaymentEntity::isUnconfirmed)
                 .filter(eInvoiceEntity -> isEInvoiceEqualsTransfer(transfer, eInvoiceEntity))
                 .findFirst()
                 .orElseThrow(() -> executorHelper.eInvoiceFailedError());
     }
 
-    private boolean isEInvoiceEqualsTransfer(Transfer transfer, EInvoiceEntity eInvoiceEntity) {
-        return eInvoiceEntity
+    private boolean isEInvoiceEqualsTransfer(Transfer transfer, PaymentEntity paymentEntity) {
+        return paymentEntity
                 .getId()
                 .equals(transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID));
     }

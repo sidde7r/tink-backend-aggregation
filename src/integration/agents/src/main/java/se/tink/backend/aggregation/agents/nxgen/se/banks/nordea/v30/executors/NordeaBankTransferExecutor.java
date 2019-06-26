@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
@@ -161,14 +161,14 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     private void removeIfAlreadyExist(PaymentRequest transferRequest) {
         // find first transfer in outbox that is a copy of the transferRequest object
-        apiClient.fetchEInvoice().getEInvoices().stream()
+        apiClient.fetchPayments().getPayments().stream()
                 .filter(
                         entity ->
                                 entity.getRecipientAccountNumber().equals(transferRequest.getTo()))
                 .filter(entity -> entity.getType().equals(transferRequest.getType()))
                 .filter(entity -> !entity.isConfirmed())
                 .findFirst()
-                .map(EInvoiceEntity::getId)
+                .map(PaymentEntity::getId)
                 .ifPresent(this::deleteTransfer); // delete transfer if it already exists in outbox
     }
 

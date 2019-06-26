@@ -23,8 +23,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchEInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
@@ -266,12 +266,12 @@ public class NordeaExecutorHelper {
 
     /** Check the transfer did not receive status rejected in the outbox */
     private void assertSuccessfulSign(String transferId) {
-        FetchEInvoiceResponse fetchOutbox = apiClient.fetchEInvoice();
+        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
 
-        Optional<EInvoiceEntity> rejectedTransfer =
-                fetchOutbox.getEInvoices().stream()
+        Optional<PaymentEntity> rejectedTransfer =
+                fetchOutbox.getPayments().stream()
                         .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
-                        .filter(EInvoiceEntity::isRejected)
+                        .filter(PaymentEntity::isRejected)
                         .findFirst();
 
         if (rejectedTransfer.isPresent()) {
@@ -284,14 +284,12 @@ public class NordeaExecutorHelper {
      * the outbox.
      */
     private boolean isTransferFailedButWasSuccessful(String transferId) {
-        FetchEInvoiceResponse fetchOutbox = apiClient.fetchEInvoice();
+        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
 
-        Optional<EInvoiceEntity> failedTransfer =
-                fetchOutbox.getEInvoices().stream()
-                        .filter(not(EInvoiceEntity::isConfirmed))
-                        .filter(
-                                EInvoiceEntity
-                                        ::isNotPlusgiro) // plusgiro does not have any id-field
+        Optional<PaymentEntity> failedTransfer =
+                fetchOutbox.getPayments().stream()
+                        .filter(not(PaymentEntity::isConfirmed))
+                        .filter(PaymentEntity::isNotPlusgiro) // plusgiro does not have any id-field
                         .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
                         .findFirst();
 

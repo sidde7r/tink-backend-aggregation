@@ -22,8 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchEInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.rpc.FetchLoanResponse;
@@ -149,27 +149,27 @@ public class NordeaSEApiClient {
         return requestRefreshableGet(request, FetchLoanDetailsResponse.class);
     }
 
-    public FetchEInvoiceResponse fetchEInvoice() {
+    public FetchPaymentsResponse fetchPayments() {
         final URL url =
-                NordeaSEConstants.Urls.FETCH_EINVOICES.queryParam(
+                NordeaSEConstants.Urls.FETCH_PAYMENTS.queryParam(
                         NordeaSEConstants.QueryParams.STATUS,
                         NordeaSEConstants.QueryParams.STATUS_VALUES);
 
         final RequestBuilder request =
                 httpClient.request(url).accept(MediaType.APPLICATION_JSON_TYPE);
 
-        return requestRefreshableGet(request, FetchEInvoiceResponse.class);
+        return requestRefreshableGet(request, FetchPaymentsResponse.class);
     }
 
-    public EInvoiceEntity fetchEInvoiceDetails(String eInvoiceId) {
+    public PaymentEntity fetchPaymentDetails(String paymentId) {
         final RequestBuilder request =
                 httpClient
                         .request(
-                                NordeaSEConstants.Urls.FETCH_EINVOICES_DETAILS.parameter(
-                                        NordeaSEConstants.IdTags.EINVOICE_ID, eInvoiceId))
+                                NordeaSEConstants.Urls.FETCH_PAYMENT_DETAILS.parameter(
+                                        NordeaSEConstants.IdTags.PAYMENT_ID, paymentId))
                         .accept(MediaType.APPLICATION_JSON_TYPE);
 
-        return requestRefreshableGet(request, EInvoiceEntity.class);
+        return requestRefreshableGet(request, PaymentEntity.class);
     }
 
     public FetchBeneficiariesResponse fetchBeneficiaries() {
@@ -262,8 +262,8 @@ public class NordeaSEApiClient {
         try {
             httpClient
                     .request(
-                            NordeaSEConstants.Urls.FETCH_EINVOICES_DETAILS.parameter(
-                                    NordeaSEConstants.IdTags.EINVOICE_ID, transferId))
+                            NordeaSEConstants.Urls.FETCH_PAYMENT_DETAILS.parameter(
+                                    NordeaSEConstants.IdTags.PAYMENT_ID, transferId))
                     .header(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
                     .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaSEConstants.HeaderParams.LANGUAGE)
                     .delete();

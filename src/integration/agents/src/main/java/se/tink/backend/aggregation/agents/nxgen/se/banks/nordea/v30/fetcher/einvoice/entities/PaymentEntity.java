@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.PaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
@@ -15,7 +16,7 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
-public class EInvoiceEntity {
+public class PaymentEntity {
     @JsonProperty private String id;
     @JsonProperty private String from;
 
@@ -146,12 +147,12 @@ public class EInvoiceEntity {
 
     @JsonIgnore
     public boolean isRejected() {
-        return status.equalsIgnoreCase(NordeaSEConstants.EInvoiceStatus.REJECTED);
+        return status.equalsIgnoreCase(PaymentStatus.REJECTED);
     }
 
     @JsonIgnore
     public boolean isConfirmed() {
-        return status.equalsIgnoreCase(NordeaSEConstants.EInvoiceStatus.CONFIRMED);
+        return status.equalsIgnoreCase(PaymentStatus.CONFIRMED);
     }
 
     @JsonIgnore
@@ -168,7 +169,7 @@ public class EInvoiceEntity {
 
     @JsonIgnore
     public boolean isUnconfirmed() {
-        return status.equalsIgnoreCase(NordeaSEConstants.EInvoiceStatus.UNCONFIRMED);
+        return status.equalsIgnoreCase(PaymentStatus.UNCONFIRMED);
     }
 
     @JsonIgnore

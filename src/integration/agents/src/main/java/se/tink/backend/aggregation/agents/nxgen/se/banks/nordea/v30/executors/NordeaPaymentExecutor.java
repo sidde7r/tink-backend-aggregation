@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiC
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
@@ -43,11 +43,11 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
      * that id instead. Otherwise, proceeds to create a new payment
      */
     private void isInOutbox(Transfer transfer) {
-        final Optional<EInvoiceEntity> payment =
-                apiClient.fetchEInvoice().getEInvoices().stream()
-                        .filter(EInvoiceEntity::isPayment)
-                        .filter(EInvoiceEntity::isUnconfirmed)
-                        .filter(eInvoiceEntity -> eInvoiceEntity.isEqualToTransfer(transfer))
+        final Optional<PaymentEntity> payment =
+                apiClient.fetchPayments().getPayments().stream()
+                        .filter(PaymentEntity::isPayment)
+                        .filter(PaymentEntity::isUnconfirmed)
+                        .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
                         .findFirst();
 
         if (payment.isPresent()) {
