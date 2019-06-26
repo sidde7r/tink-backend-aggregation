@@ -16,7 +16,7 @@ public class AccountEntity {
 
     private long id;
     private String username;
-    private String name;
+    private String accountName;
     private double balance;
     private String currency;
     private String accountType;
@@ -30,8 +30,8 @@ public class AccountEntity {
         return username;
     }
 
-    public String getName() {
-        return name;
+    public String getAccountName() {
+        return accountName;
     }
 
     public double getBalance() {
