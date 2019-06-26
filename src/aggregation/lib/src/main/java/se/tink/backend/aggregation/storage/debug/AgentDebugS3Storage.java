@@ -38,6 +38,11 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
         return false;
     }
 
+    @Override
+    public boolean isEnabled() {
+        return configuration.isEnabled();
+    }
+
     private static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration)
                 && configuration.isEnabled()

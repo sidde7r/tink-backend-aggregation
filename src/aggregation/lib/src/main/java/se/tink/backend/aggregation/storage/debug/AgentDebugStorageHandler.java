@@ -8,4 +8,6 @@ public interface AgentDebugStorageHandler {
     String store(String content, File file) throws IOException;
 
     boolean isLocalStorage();
+
+    boolean isEnabled();
 }

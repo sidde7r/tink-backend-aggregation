@@ -17,4 +17,9 @@ public class AgentDebugLocalStorage implements AgentDebugStorageHandler {
     public boolean isLocalStorage() {
         return true;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
