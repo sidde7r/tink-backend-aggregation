@@ -58,6 +58,7 @@ public class RabobankConstants {
         public static final String DATE_TO = "dateTo";
         public static final String SIZE = "size";
         public static final String PAGE = "page";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class QueryValues {
@@ -69,6 +70,7 @@ public class RabobankConstants {
         public static final String TRANSACTIONS_SIZE = "100";
         public static final String SCOPES =
                 "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
+        public static final String PSU_IP_ADDRESS = "0.0.0.0";
     }
 
     public static class Market {
