@@ -45,7 +45,6 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
     private static boolean isValidConfiguration(S3StorageConfiguration configuration) {
         return Objects.nonNull(configuration)
-                && configuration.isEnabled()
                 && Objects.nonNull(configuration.getUrl())
                 && Objects.nonNull(configuration.getAgentDebugBucketName())
                 && Objects.nonNull(configuration.getRegion());
