@@ -54,12 +54,7 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
 
         // Instantiate the client lazily
         if (Objects.isNull(awsStorageClient)) {
-            awsStorageClient =
-                    AmazonS3ClientBuilder.standard()
-                            .withEndpointConfiguration(
-                                    new AwsClientBuilder.EndpointConfiguration(
-                                            configuration.getUrl(), configuration.getRegion()))
-                            .build();
+            instantiateClient();
         }
 
         awsStorageClient.putObject(configuration.getAgentDebugBucketName(), fileName, content);
@@ -70,5 +65,14 @@ public class AgentDebugS3Storage implements AgentDebugStorageHandler {
                 awsStorageClient
                         .getUrl(configuration.getAgentDebugBucketName(), fileName)
                         .toExternalForm());
+    }
+
+    private void instantiateClient() {
+        this.awsStorageClient =
+                AmazonS3ClientBuilder.standard()
+                        .withEndpointConfiguration(
+                                new AwsClientBuilder.EndpointConfiguration(
+                                        configuration.getUrl(), configuration.getRegion()))
+                        .build();
     }
 }
