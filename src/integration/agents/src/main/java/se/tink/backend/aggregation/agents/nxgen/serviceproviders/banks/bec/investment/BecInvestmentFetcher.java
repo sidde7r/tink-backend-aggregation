@@ -109,7 +109,9 @@ public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
                                                                     apiClient
                                                                             .fetchInstrumentDetails(
                                                                                     instrumentEntity
-                                                                                            .getUrlDetail());
+                                                                                            .getUrlDetail(),
+                                                                                    depositAccount
+                                                                                            .getAccountNo());
 
                                                     instruments.add(
                                                             buildInstrument(

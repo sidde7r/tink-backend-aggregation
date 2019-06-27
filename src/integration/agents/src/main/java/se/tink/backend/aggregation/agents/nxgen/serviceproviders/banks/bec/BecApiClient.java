@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class BecApiClient {
+
     private static final ObjectMapper mapper = new ObjectMapper();
     private final TinkHttpClient apiClient;
     private final BecUrlConfiguration agentUrl;
@@ -194,12 +195,16 @@ public class BecApiClient {
                 .get(DepositDetailsResponse.class);
     }
 
-    public InstrumentDetailsEntity fetchInstrumentDetails(String urlDetails) {
-        return createRequest(this.agentUrl.getBaseUrl() + urlDetails)
-                .queryParam(
-                        BecConstants.Header.QUERY_PARAM_VERSION_KEY,
-                        BecConstants.Header.QUERY_PARAM_VERSION_VALUE)
-                .get(InstrumentDetailsEntity.class);
+    public InstrumentDetailsEntity fetchInstrumentDetails(String urlDetails, String accountId) {
+
+        InstrumentDetailsEntity response =
+                createRequest(this.agentUrl.getBaseUrl() + urlDetails)
+                        .queryParam(
+                                BecConstants.Header.QUERY_PARAM_VERSION_KEY,
+                                BecConstants.Header.QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE)
+                        .queryParam(BecConstants.Header.QUERY_PARAM_ACCOUNT_ID_KEY, accountId)
+                        .get(InstrumentDetailsEntity.class);
+        return response;
     }
 
     public void logout() {
