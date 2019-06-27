@@ -4,16 +4,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class InitBankIdRequest {
-    private boolean authOtherDevice;
-    private String personalNumber;
+    private String bidDevice;
 
-    public InitBankIdRequest setAuthOtherDevice(boolean authOtherDevice) {
-        this.authOtherDevice = authOtherDevice;
-        return this;
-    }
-
-    public InitBankIdRequest setPersonalNumber(String personalNumber) {
-        this.personalNumber = personalNumber;
+    public InitBankIdRequest setBidDevice(String bidDevice) {
+        this.bidDevice = bidDevice;
         return this;
     }
 }

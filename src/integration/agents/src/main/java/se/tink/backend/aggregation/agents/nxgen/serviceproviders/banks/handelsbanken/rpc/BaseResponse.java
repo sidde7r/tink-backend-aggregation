@@ -39,6 +39,9 @@ public abstract class BaseResponse {
     private String result;
     private String desc;
 
+    private String autoStartToken;
+    private int initialSleepTime;
+
     @JsonProperty("_links")
     public Map<String, Link> getLinks() {
         return (links != null ? links : getLinksListAsMap());
@@ -140,5 +143,9 @@ public abstract class BaseResponse {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public String getAutoStartToken() {
+        return autoStartToken;
     }
 }
