@@ -91,7 +91,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
      *     for the new `bankId` format as well as the validation if a migration should be executed.
      */
     private void migrate(AgentVersionMigration migration) {
-        log.debug(String.format("Migrating request for %s", request.getProvider()));
+        log.debug(String.format("Migrating request for %s", request.getProvider().getName()));
 
         // Change the Request
         migration.changeRequest(request);
