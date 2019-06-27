@@ -24,17 +24,26 @@ public class SEBKortTransactionFetcher implements TransactionDatePaginator<Credi
             CreditCardAccount account, Date fromDate, Date toDate) {
         List<Transaction> tinkTransactions = new ArrayList<>();
 
-        List<Transaction> reservations =
-                apiClient.fetchReservations(account.getApiIdentifier()).getTinkTransactions();
-
-        tinkTransactions.addAll(handleReservations(fromDate, toDate, reservations));
-
-        tinkTransactions.addAll(
-                apiClient
-                        .fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
-                        .getTinkTranscations());
+        tinkTransactions.addAll(fetchReservedTransactions(account, fromDate, toDate));
+        tinkTransactions.addAll(fetchBookedTinkTransactions(account, fromDate, toDate));
 
         return PaginatorResponseImpl.create(tinkTransactions);
+    }
+
+    private List<Transaction> fetchReservedTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+
+        List<Transaction> reservations =
+                apiClient.fetchReservations(account.getApiIdentifier()).getTinkTransactions();
+        return handleReservations(fromDate, toDate, reservations);
+    }
+
+    private List<Transaction> fetchBookedTinkTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+
+        return apiClient
+                .fetchTransactions(account.getApiIdentifier(), fromDate, toDate)
+                .getTinkTranscations();
     }
 
     private static List<Transaction> handleReservations(
