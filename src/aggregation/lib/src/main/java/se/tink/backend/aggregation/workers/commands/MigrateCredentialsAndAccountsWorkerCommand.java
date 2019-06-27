@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.ImmutableMap;
 import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
@@ -14,6 +15,8 @@ import se.tink.backend.aggregation.workers.commands.migrations.implemntations.ot
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {
+    private final AggregationLogger log =
+            new AggregationLogger(MigrateCredentialsAndAccountsWorkerCommand.class);
 
     private final ControllerWrapper controllerWrapper;
     private final CredentialsRequest request;
@@ -88,6 +91,8 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
      *     for the new `bankId` format as well as the validation if a migration should be executed.
      */
     private void migrate(AgentVersionMigration migration) {
+        log.debug(String.format("Migrating request for %s", request.getProvider()));
+
         // Change the Request
         migration.changeRequest(request);
 

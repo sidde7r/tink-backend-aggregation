@@ -9,9 +9,11 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
+    private final AggregationLogger log = new AggregationLogger(AgentVersionMigration.class);
 
     public static final String DUPLICATE = "-duplicate";
     private ControllerWrapper wrapper;
@@ -150,6 +152,8 @@ public abstract class AgentVersionMigration {
                                             .filter(a -> !a.isClosed())
                                             .findAny()
                                             .orElse(l.get(0));
+
+                            log.warn("Tagging duplicate account with '-duplicate'");
                             account.setBankId(account.getBankId() + DUPLICATE);
                             deduplicatedList.addAll(l);
                         });
