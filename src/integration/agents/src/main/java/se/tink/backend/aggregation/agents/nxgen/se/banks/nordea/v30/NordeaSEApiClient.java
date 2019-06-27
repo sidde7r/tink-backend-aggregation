@@ -253,7 +253,8 @@ public class NordeaSEApiClient {
                         .request(
                                 NordeaSEConstants.Urls.COMPLETE_TRANSFER.parameter(
                                         NordeaSEConstants.IdTags.ORDER_REF, orderRef))
-                        .accept(MediaType.APPLICATION_JSON_TYPE);
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .type(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshablePost(request, CompleteTransferResponse.class);
     }
