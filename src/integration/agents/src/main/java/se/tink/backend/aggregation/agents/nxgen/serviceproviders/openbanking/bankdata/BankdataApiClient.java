@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +57,7 @@ public final class BankdataApiClient {
 
     protected void setConfiguration(BankdataConfiguration configuration) {
         this.configuration = configuration;
+        this.client.setEidasProxy(this.configuration.getEidasProxyBaseUrl(), "Tink");
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -135,9 +134,7 @@ public final class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
-                .queryParam(
-                        QueryKeys.BOOKING_STATUS,
-                        QueryValues.BOOKED)
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionResponse.class);
     }
 
@@ -155,7 +152,7 @@ public final class BankdataApiClient {
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.SCOPE, "ais:"+consentId)
+                .queryParam(QueryKeys.SCOPE, "ais:" + consentId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
@@ -172,19 +169,12 @@ public final class BankdataApiClient {
                         getConfiguration().getClientId());
         URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.TOKEN);
 
-        TokenResponse initialToken = null;
-        HttpResponse response =
+        TokenResponse response =
                 client.request(url)
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                        .post(HttpResponse.class, request.toData());
-        try {
-            initialToken = new ObjectMapper().readValue(response.getBodyInputStream(), TokenResponse.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                        .post(TokenResponse.class, request.toData());
 
-        }
-
-        sessionStorage.put(StorageKeys.OAUTH_TOKEN, initialToken.toTinkToken());
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, response.toTinkToken());
     }
 
     public String getConsentId() {
@@ -193,19 +183,15 @@ public final class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
 
-        HttpResponse response = client.request(url)
-                .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .post(HttpResponse.class);
-        try {
-            return new ObjectMapper().readValue(response.getBodyInputStream(), ConsentResponse.class).getConsentId();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        ConsentResponse response =
+                client.request(url)
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
+                        .post(ConsentResponse.class);
 
-
+        return response.getConsentId();
     }
 
     private void authorizeConsent(String consentId) {
@@ -213,12 +199,13 @@ public final class BankdataApiClient {
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
 
-        HttpResponse response = client.request(url.parameter(IdTags.CONSENT_ID, consentId))
-                .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
-                .post(HttpResponse.class);
+        HttpResponse response =
+                client.request(url.parameter(IdTags.CONSENT_ID, consentId))
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
+                        .post(HttpResponse.class);
     }
 
     public OAuth2Token getToken(String code) {

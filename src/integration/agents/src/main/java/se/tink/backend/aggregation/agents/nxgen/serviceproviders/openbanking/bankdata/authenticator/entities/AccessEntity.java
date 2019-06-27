@@ -7,10 +7,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AccessEntity {
 
-    @JsonProperty
-    private String allPsd2;
-    @JsonProperty
-    private String allAvailableAccounts;
+    @JsonProperty private String allPsd2;
+    @JsonProperty private String allAvailableAccounts;
 
     public AccessEntity(String allPsd2, String allAvailableAccounts) {
         this.allPsd2 = allPsd2;

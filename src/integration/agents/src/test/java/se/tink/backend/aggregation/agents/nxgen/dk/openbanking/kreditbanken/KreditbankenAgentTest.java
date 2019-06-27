@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 @Ignore
 public class KreditbankenAgentTest {
 
-
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 

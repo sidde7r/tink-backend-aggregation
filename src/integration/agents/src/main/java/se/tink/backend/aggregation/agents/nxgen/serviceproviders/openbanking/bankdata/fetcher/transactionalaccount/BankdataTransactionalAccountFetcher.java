@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class BankdataTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-        TransactionDatePaginator<TransactionalAccount> {
+                TransactionDatePaginator<TransactionalAccount> {
 
     private final BankdataApiClient apiClient;
 

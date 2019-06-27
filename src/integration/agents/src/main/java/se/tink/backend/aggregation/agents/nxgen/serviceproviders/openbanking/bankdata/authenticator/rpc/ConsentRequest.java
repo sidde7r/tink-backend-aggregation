@@ -11,19 +11,15 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 public class ConsentRequest {
-    @JsonProperty
-    protected boolean recurringIndicator;
-    @JsonProperty
-    private AccessEntity access;
+    @JsonProperty protected boolean recurringIndicator;
+    @JsonProperty private AccessEntity access;
 
     @JsonProperty
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date validUntil;
 
-    @JsonProperty
-    private int frequencyPerDay;
-    @JsonProperty
-    private boolean combinedServiceIndicator;
+    @JsonProperty private int frequencyPerDay;
+    @JsonProperty private boolean combinedServiceIndicator;
 
     public ConsentRequest() {
         final Calendar now = Calendar.getInstance();

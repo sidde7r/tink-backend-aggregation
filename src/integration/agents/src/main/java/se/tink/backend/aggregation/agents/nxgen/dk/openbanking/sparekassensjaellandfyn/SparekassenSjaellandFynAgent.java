@@ -13,7 +13,12 @@ public final class SparekassenSjaellandFynAgent extends BankdataAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return SparekassenSjaellandFynConstants.INTEGRATION_NAME;
+    protected String getBaseUrl() {
+        return SparekassenSjaellandFynConstants.BASE_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return SparekassenSjaellandFynConstants.BASE_AUTH_URL;
     }
 }

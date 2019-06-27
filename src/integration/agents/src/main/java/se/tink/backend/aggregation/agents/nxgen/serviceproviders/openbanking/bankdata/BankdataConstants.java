@@ -32,7 +32,6 @@ public final class BankdataConstants {
                 "/openbanking-consent/v1/consents/{consentId}/authorisations";
         public static final String ACCOUNTS = "/openbanking-account/v1/accounts";
         public static final String AIS_PRODUCT = "/openbanking-account";
-        public static final String TRANSACTIONS = "";
     }
 
     public static class StorageKeys {

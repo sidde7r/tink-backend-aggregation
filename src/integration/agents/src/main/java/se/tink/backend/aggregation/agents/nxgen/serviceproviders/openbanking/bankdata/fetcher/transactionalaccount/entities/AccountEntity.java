@@ -62,7 +62,7 @@ public class AccountEntity {
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(getDefaultAmount());
+                .orElseThrow(() -> new RuntimeException("Unable to fetch balance."));
     }
 
     public List<BalanceEntity> getBalances() {
@@ -71,10 +71,6 @@ public class AccountEntity {
 
     public void setBalances(final List<BalanceEntity> balances) {
         this.balances = balances;
-    }
-
-    private Amount getDefaultAmount() {
-        return new Amount(currency, 0);
     }
 
     private boolean doesMatchWithAccountCurrency(final BalanceEntity balance) {

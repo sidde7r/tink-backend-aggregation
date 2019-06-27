@@ -13,7 +13,12 @@ public final class SparekassenVendsysselAgent extends BankdataAgent {
     }
 
     @Override
-    protected String getIntegrationName() {
-        return SparekassenVendsysselConstants.INTEGRATION_NAME;
+    protected String getBaseUrl() {
+        return SparekassenVendsysselConstants.BASE_URL;
+    }
+
+    @Override
+    protected String getBaseAuthUrl() {
+        return SparekassenVendsysselConstants.BASE_AUTH_URL;
     }
 }

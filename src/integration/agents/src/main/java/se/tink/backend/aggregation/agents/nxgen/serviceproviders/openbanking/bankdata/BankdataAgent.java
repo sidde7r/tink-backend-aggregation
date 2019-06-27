@@ -37,17 +37,20 @@ public abstract class BankdataAgent extends NextGenerationAgent {
         clientName = request.getProvider().getPayload();
     }
 
+    protected abstract String getBaseUrl();
+    protected abstract String getBaseAuthUrl();
+
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        client.setEidasProxy("https://eidas-proxy.staging.aggregation.tink.network", "Tink");
         apiClient.setConfiguration(getClientConfiguration());
     }
 
-    protected abstract String getIntegrationName();
-
     private BankdataConfiguration getClientConfiguration() {
-        return getClientConfiguration(getIntegrationName());
+        BankdataConfiguration bankdataConfiguration = getClientConfiguration("bankdata");
+        bankdataConfiguration.setBaseUrl(getBaseUrl());
+        bankdataConfiguration.setBaseAuthUrl(getBaseAuthUrl());
+        return bankdataConfiguration;
     }
 
     protected BankdataConfiguration getClientConfiguration(String integrationName) {
