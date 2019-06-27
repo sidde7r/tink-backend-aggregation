@@ -19,7 +19,7 @@ public class ReservationsResponse {
         }
 
         return reservations.stream()
-                .map(TransactionEntity::toTinkTransaction)
+                .map(TransactionEntity::toPendingTinkTransaction)
                 .collect(Collectors.toList());
     }
 }
