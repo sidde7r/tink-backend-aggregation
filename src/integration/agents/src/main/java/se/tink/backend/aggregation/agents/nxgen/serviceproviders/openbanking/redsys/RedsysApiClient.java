@@ -387,15 +387,11 @@ public final class RedsysApiClient {
         return request.get(TransactionsResponse.class);
     }
 
-    private String getPsuIpAddress() {
-        return "127.0.0.1";
-    }
-
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest request, PaymentProduct paymentProduct, String scaToken) {
         final String url = makeApiUrl(Urls.CREATE_PAYMENT, paymentProduct.getProductName());
         return createSignedRequest(url, request)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .headers(getTppRedirectHeaders(scaToken))
                 .post(CreatePaymentResponse.class);
     }
@@ -403,7 +399,7 @@ public final class RedsysApiClient {
     public GetPaymentResponse fetchPayment(String paymentId, PaymentProduct paymentProduct) {
         final String url = makeApiUrl(Urls.GET_PAYMENT, paymentProduct.getProductName(), paymentId);
         return createSignedRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(GetPaymentResponse.class);
     }
 
@@ -412,7 +408,7 @@ public final class RedsysApiClient {
         final String url =
                 makeApiUrl(Urls.PAYMENT_STATUS, paymentProduct.getProductName(), paymentId);
         return createSignedRequest(url)
-                .header(HeaderKeys.PSU_IP_ADDRESS, getPsuIpAddress())
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(PaymentStatusResponse.class);
     }
 
