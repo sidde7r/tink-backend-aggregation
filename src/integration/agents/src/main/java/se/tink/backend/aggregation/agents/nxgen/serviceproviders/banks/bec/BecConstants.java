@@ -84,6 +84,7 @@ public final class BecConstants {
         static final String PRAGMA_VALUE = "BECJson/1.0";
 
         static final String QUERY_PARAM_VERSION_KEY = "version";
+        static final String QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE = "v4";
         static final String QUERY_PARAM_VERSION_VALUE = "v5";
         static final String QUERY_PARAM_ICONTYPE_KEY = "iconType";
         static final String QUERY_PARAM_ICONTYPE_VALUE = "4";
