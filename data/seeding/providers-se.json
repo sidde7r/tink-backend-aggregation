@@ -2323,6 +2323,21 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
+        },
+        {
+            "className": "nxgen.se.openbanking.entercard.EnterCardAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "EnterCard (Sandbox)",
+            "fields": [],
+            "multiFactor": false,
+            "name": "se-entercard-oauth2",
+            "passwordHelpText": null,
+            "payload": "tink",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "tutorialUrl": null,
+            "type": "BANK"
         }
     ]
 }
