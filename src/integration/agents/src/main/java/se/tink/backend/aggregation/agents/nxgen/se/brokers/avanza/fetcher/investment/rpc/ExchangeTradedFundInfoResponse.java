@@ -8,9 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ExchangeTradedFundInfoResponse {
+public class ExchangeTradedFundInfoResponse extends MarketInfoResponse {
     private double loanFactor;
-    private String marketPlace;
     private int numberOfPriceAlerts;
     private boolean pushPermitted;
     private String currency;
@@ -27,8 +26,6 @@ public class ExchangeTradedFundInfoResponse {
     private double totalValueTraded;
     private String preliminaryFeesType;
     private String tickerSymbol;
-    private String name;
-    private String id;
     private double priceOneWeekAgo;
     private double priceOneMonthAgo;
     private double priceSixMonthsAgo;
@@ -52,10 +49,6 @@ public class ExchangeTradedFundInfoResponse {
 
     public double getLoanFactor() {
         return loanFactor;
-    }
-
-    public String getMarketPlace() {
-        return marketPlace;
     }
 
     public int getNumberOfPriceAlerts() {
@@ -120,14 +113,6 @@ public class ExchangeTradedFundInfoResponse {
 
     public String getTickerSymbol() {
         return tickerSymbol;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public double getPriceOneWeekAgo() {

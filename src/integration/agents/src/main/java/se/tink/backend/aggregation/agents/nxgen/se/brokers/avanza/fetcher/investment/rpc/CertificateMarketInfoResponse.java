@@ -8,13 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CertificateMarketInfoResponse {
-    private String marketPlace;
+public class CertificateMarketInfoResponse extends MarketInfoResponse {
     private int numberOfPriceAlerts;
     private boolean pushPermitted;
     private String currency;
-    private String name;
-    private String id;
     private boolean tradable;
     private double buyPrice;
     private double lastPrice;
@@ -49,10 +46,6 @@ public class CertificateMarketInfoResponse {
     private String assetSubCategory;
     private String assetSubSubCategory;
 
-    public String getMarketPlace() {
-        return marketPlace;
-    }
-
     public int getNumberOfPriceAlerts() {
         return numberOfPriceAlerts;
     }
@@ -63,14 +56,6 @@ public class CertificateMarketInfoResponse {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public boolean isTradable() {

@@ -8,13 +8,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FutureForwardMarketInfoResponse {
-    private String marketPlace;
+public class FutureForwardMarketInfoResponse extends MarketInfoResponse {
     private int numberOfPriceAlerts;
     private boolean pushPermitted;
     private String currency;
-    private String name;
-    private String id;
     private boolean tradable;
     private double buyPrice;
     private double sellPrice;
@@ -38,10 +35,6 @@ public class FutureForwardMarketInfoResponse {
     private String underlyingCurrency;
     private String endDate;
 
-    public String getMarketPlace() {
-        return marketPlace;
-    }
-
     public int getNumberOfPriceAlerts() {
         return numberOfPriceAlerts;
     }
@@ -52,14 +45,6 @@ public class FutureForwardMarketInfoResponse {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public boolean isTradable() {
