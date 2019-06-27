@@ -182,6 +182,10 @@ public final class BecConstants {
                     .put("Budget", AccountTypes.OTHER)
                     .put("Billån", AccountTypes.LOAN)
                     .put("Money Bunny", AccountTypes.OTHER)
+                    .put("Coop Budget", AccountTypes.SAVINGS)
+                    .put("Superlån", AccountTypes.LOAN)
+                    .put("Udlån", AccountTypes.LOAN)
+                    .put("Anfordring med AL-MC Cash", AccountTypes.CHECKING)
                     .build();
 
     public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =
