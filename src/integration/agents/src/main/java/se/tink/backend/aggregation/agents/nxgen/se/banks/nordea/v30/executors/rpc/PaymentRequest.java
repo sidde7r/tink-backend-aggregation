@@ -26,6 +26,9 @@ public class PaymentRequest {
 
     @JsonProperty private String to;
 
+    @JsonProperty("recipient_name")
+    private String recipientName;
+
     @JsonProperty("to_account_number_type")
     private String toAccountNumberType;
 
@@ -69,6 +72,7 @@ public class PaymentRequest {
     @JsonIgnore
     public void setTo(BeneficiariesEntity destinationAccount) {
         this.to = destinationAccount.getAccountNumber();
+        this.recipientName = destinationAccount.getName();
     }
 
     // sets message for payment

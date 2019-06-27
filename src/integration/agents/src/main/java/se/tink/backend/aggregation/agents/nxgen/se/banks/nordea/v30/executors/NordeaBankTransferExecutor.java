@@ -117,6 +117,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             return Optional.empty();
         }
         destinationAccount.setAccountNumber(accountIdentifier.getIdentifier(identifierFormatter));
+        accountIdentifier.getName().ifPresent(destinationAccount::setName);
 
         return Optional.of(destinationAccount);
     }
