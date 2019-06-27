@@ -18,7 +18,6 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     public NordeaBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        client.setDebugOutput(true);
     }
 
     @Override

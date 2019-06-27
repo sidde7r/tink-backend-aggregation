@@ -61,7 +61,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
                 return BankIdStatus.CANCELLED;
             }
         }
-        throw new IllegalStateException();
+        return BankIdStatus.FAILED_UNKNOWN;
     }
 
     private BankIdStatus handleBankIdDone(HttpResponse response) {
