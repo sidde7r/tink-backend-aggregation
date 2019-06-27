@@ -43,7 +43,6 @@ public final class EnterCardApiClient {
     public EnterCardApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     private EnterCardConfiguration getConfiguration() {
