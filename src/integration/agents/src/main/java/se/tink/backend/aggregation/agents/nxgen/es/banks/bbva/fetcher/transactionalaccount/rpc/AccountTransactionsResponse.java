@@ -10,11 +10,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.PaginationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class AccountTransactionsResponse implements PaginatorResponse {
+public class AccountTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
     private List<AccountTransactionEntity> accountTransactions;
     private PaginationEntity pagination;
     private Integer totalResults;
@@ -51,5 +51,13 @@ public class AccountTransactionsResponse implements PaginatorResponse {
 
     public Boolean getHostResult() {
         return hostResult;
+    }
+
+    @Override
+    public String nextKey() {
+        if (pagination == null) {
+            return null;
+        }
+        return pagination.getNextPage();
     }
 }
