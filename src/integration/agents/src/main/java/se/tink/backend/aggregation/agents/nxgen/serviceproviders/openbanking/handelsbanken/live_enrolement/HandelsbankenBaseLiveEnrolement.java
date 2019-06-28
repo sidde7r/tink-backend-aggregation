@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement;
 
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
@@ -9,9 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-
-import javax.ws.rs.core.MediaType;
-import java.util.UUID;
 
 public class HandelsbankenBaseLiveEnrolement {
 
@@ -41,9 +40,12 @@ public class HandelsbankenBaseLiveEnrolement {
 
     public TokenResponse getBearerToken(String clientId) {
 
-        final Form params = Form.builder().put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
-            .put(BodyKeys.SCOPE, BodyValues.PSD2_ADMIN)
-            .put(BodyKeys.CLIENT_ID, clientId).build();
+        final Form params =
+                Form.builder()
+                        .put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
+                        .put(BodyKeys.SCOPE, BodyValues.PSD2_ADMIN)
+                        .put(BodyKeys.CLIENT_ID, clientId)
+                        .build();
 
         return client.request(new URL(HandelsbankenBaseConstants.Urls.TOKEN))
                 .body(params.toString())

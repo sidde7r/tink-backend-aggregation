@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-//@Ignore
+@Ignore
 public class HandelsbankenAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -14,7 +15,7 @@ public class HandelsbankenAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, "199704071886")
+                        .addCredentialField(Field.Key.USERNAME, "")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

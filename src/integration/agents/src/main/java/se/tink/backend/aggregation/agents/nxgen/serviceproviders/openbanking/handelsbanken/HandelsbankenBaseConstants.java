@@ -68,7 +68,11 @@ public final class HandelsbankenBaseConstants {
         public static final String ALL_ACCOUNTS = "ALL_ACCOUNTS";
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
         public static final String SUBSCRIPTION_CONSENTS = "consents";
+
+        // "Resource owner Personal Id type, currently only domain value '1' exist. Optional, must
+        // exist if personalId is given."
         public static final String PERSONAL_ID_TP = "1";
+
         public static final String PRODUCT_ACCOUNTS = "accounts";
     }
 

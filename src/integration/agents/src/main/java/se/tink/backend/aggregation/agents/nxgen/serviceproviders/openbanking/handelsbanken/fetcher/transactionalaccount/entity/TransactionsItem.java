@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @JsonObject
 public class TransactionsItem {
@@ -95,7 +94,9 @@ public class TransactionsItem {
         if (valueDate != null) {
             Date vDate = null;
             try {
-                vDate = new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT).parse(valueDate);
+                vDate =
+                        new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT)
+                                .parse(valueDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -103,7 +104,9 @@ public class TransactionsItem {
         }
         Date tDate = null;
         try {
-            tDate = new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT).parse(transactionDate);
+            tDate =
+                    new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT)
+                            .parse(transactionDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }

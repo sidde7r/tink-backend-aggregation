@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import java.util.Date;
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.*;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.*;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
@@ -9,10 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.nxgen.http.*;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.UUID;
 
 public class HandelsbankenBaseApiClient {
 
@@ -40,7 +39,7 @@ public class HandelsbankenBaseApiClient {
                         HeaderKeys.AUTHORIZATION,
                         BodyKeys.BEARER
                                 + sessionStorage.get(
-                                HandelsbankenBaseConstants.StorageKeys.ACCESS_TOKEN))
+                                        HandelsbankenBaseConstants.StorageKeys.ACCESS_TOKEN))
                 .header(HeaderKeys.TPP_TRANSACTION_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.TPP_REQUEST_ID, UUID.randomUUID().toString())
                 .header(HeaderKeys.PSU_IP_ADDRESS, configuration.getPsuIpAddress())
@@ -54,16 +53,16 @@ public class HandelsbankenBaseApiClient {
 
     public BalanceAccountResponse getAccountDetails(String accountId) {
         return createRequest(
-                new URL(Urls.BASE_URL + String.format(Urls.ACCOUNT_DETAILS, accountId)))
+                        new URL(Urls.BASE_URL + String.format(Urls.ACCOUNT_DETAILS, accountId)))
                 .queryParam(QueryKeys.WITH_BALANCE, Boolean.TRUE.toString())
                 .get(BalanceAccountResponse.class);
     }
 
     public TransactionResponse getTransactions(String accountId, Date dateFrom, Date dateTo) {
         return createRequest(
-                new URL(
-                        Urls.BASE_URL
-                                + String.format(Urls.ACCOUNT_TRANSACTIONS, accountId)))
+                        new URL(
+                                Urls.BASE_URL
+                                        + String.format(Urls.ACCOUNT_TRANSACTIONS, accountId)))
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo))
@@ -79,16 +78,18 @@ public class HandelsbankenBaseApiClient {
 
     public TokResponse getBearerTok(String clientId) {
 
-        final Form params = Form.builder().put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
-            .put(BodyKeys.SCOPE, BodyValues.AIS_SCOPE)
-            .put(BodyKeys.CLIENT_ID, clientId).build();
+        final Form params =
+                Form.builder()
+                        .put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
+                        .put(BodyKeys.SCOPE, BodyValues.AIS_SCOPE)
+                        .put(BodyKeys.CLIENT_ID, clientId)
+                        .build();
 
         return client.request(new URL(Urls.TOKEN))
                 .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokResponse.class);
-
     }
 
     public AuthorizationResponse getAuthorizationToken(String code, String clientId) {

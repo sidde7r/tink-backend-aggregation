@@ -7,20 +7,13 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty
-    private String clientId;
-    @JsonProperty
-    private String appId;
-    @JsonProperty
-    private String psuIpAddress;
-    @JsonProperty
-    private String redirectUrl;
-    @JsonProperty
-    private String appName;
-    @JsonProperty
-    private String appDesc;
-    @JsonProperty
-    private String eidasUrl;
+    @JsonProperty private String clientId;
+    @JsonProperty private String appId;
+    @JsonProperty private String psuIpAddress;
+    @JsonProperty private String redirectUrl;
+    @JsonProperty private String appName;
+    @JsonProperty private String appDesc;
+    @JsonProperty private String eidasUrl;
 
     public String getClientId() {
         return clientId;
