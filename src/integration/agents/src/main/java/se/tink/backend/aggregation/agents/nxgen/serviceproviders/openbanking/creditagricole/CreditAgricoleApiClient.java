@@ -10,7 +10,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.utils.CreditAgricoleUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
@@ -139,5 +142,26 @@ public final class CreditAgricoleApiClient {
                 .queryParam(CreditAgricoleConstants.QueryKeys.TINK_STATE, state)
                 .build()
                 .toString();
+    }
+
+    public void getUserIdIntoSession() throws SessionException {
+        OAuth1Token temporaryToken = fetchTokenFromSession();
+        String consumerKey = configuration.getClientId();
+
+        List<NameValuePair> params =
+                CreditAgricoleUtils.getUserIdRequestParams(
+                        temporaryToken.getOauthToken(), consumerKey);
+
+        String requestUserIdUrl = getUserIdUrl();
+        String authorizationHeader =
+                getOauthAuthorizationHeader(
+                        requestUserIdUrl,
+                        params,
+                        temporaryToken.getOauthTokenSecret(),
+                        HttpMethod.GET.name());
+    }
+
+    private String getUserIdUrl() {
+        return configuration.getBaseUrl() + Urls.REST_BASE_PATH + QueryKeys.USER_ID;
     }
 }
