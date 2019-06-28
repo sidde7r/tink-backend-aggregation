@@ -55,6 +55,7 @@ public final class BunqBaseConstants {
     public static class UrlParameterKeys {
         public static final String USER_ID = "userId";
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class PredicatesKeys {
@@ -63,7 +64,6 @@ public final class BunqBaseConstants {
 
     public static class StorageKeys {
         public static final String USER_DEVICE_RSA_SIGNING_KEY_PAIR = "deviceRsaSigningKeyPair";
-        public static final String DEVICE_SERVER_ID = "deviceServerId";
         public static final String CLIENT_AUTH_TOKEN = "clientAuthToken";
         public static final String USER_CLIENT_AUTH_TOKEN = "userClientAuthToken";
         public static final String USER_ID = "userId";

@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator.rpc.CreateSessionUserResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.entities.ErrorResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -68,13 +67,7 @@ public class BunqRegistrationAuthenticator implements Authenticator {
 
             // This is just to make it obvious that it's a api key we're using
             String apiKey = credentials.getField(Field.Key.PASSWORD);
-            RegisterDeviceResponse registerDeviceResponse =
-                    apiClient.registerDevice(apiKey, aggregatorIdentifier);
-
-            // Persist everything we need need to save
-            persistentStorage.put(
-                    BunqBaseConstants.StorageKeys.DEVICE_SERVER_ID,
-                    registerDeviceResponse.getId().getId());
+            apiClient.registerDevice(apiKey, aggregatorIdentifier);
 
             // Create the session and save session values
             CreateSessionUserResponse createSessionUserResponse =

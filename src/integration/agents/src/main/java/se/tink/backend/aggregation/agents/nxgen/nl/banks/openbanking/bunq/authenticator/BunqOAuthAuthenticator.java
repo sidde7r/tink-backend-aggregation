@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.Bunq
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.entities.TokenEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.CreateSessionPSD2ProviderResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.InstallResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.authenticator.rpc.RegisterDeviceResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -160,12 +159,7 @@ public class BunqOAuthAuthenticator implements OAuth2Authenticator {
 
             // This is just to make it obvious that it's a api key we're using
             String userApiKey = sessionStorage.get(BunqBaseConstants.StorageKeys.USER_API_KEY);
-            RegisterDeviceResponse registerDeviceResponse =
-                    apiClient.registerDevice(userApiKey, aggregatorIdentifier);
-
-            persistentStorage.put(
-                    BunqBaseConstants.StorageKeys.DEVICE_SERVER_ID,
-                    registerDeviceResponse.getId().getId());
+            apiClient.registerDevice(userApiKey, aggregatorIdentifier);
 
             // Create the session and save session values
             CreateSessionUserAsPSD2ProviderResponse createSessionUserAsPSD2ProviderResponse =

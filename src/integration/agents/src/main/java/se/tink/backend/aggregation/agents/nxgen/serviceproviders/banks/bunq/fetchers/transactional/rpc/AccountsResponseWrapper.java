@@ -22,9 +22,8 @@ public class AccountsResponseWrapper {
                         .orElseThrow(() -> new IllegalStateException("Response was null"));
 
         return accountWrappers.stream()
-                .map(AccountWrapper::toTinkAccount)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .map(AccountWrapper::toTinkAccounts)
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 }

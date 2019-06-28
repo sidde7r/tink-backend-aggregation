@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.authenticator.BunqOAuthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.configuration.BunqConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.executor.payment.BunqPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.bunq.session.BunqSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bunq.BunqBaseAgent;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -77,5 +79,13 @@ public class BunqAgent extends BunqBaseAgent {
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BunqSessionHandler();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(
+                new PaymentController(
+                        new BunqPaymentExecutor(
+                                sessionStorage, apiClient, supplementalInformationHelper)));
     }
 }
