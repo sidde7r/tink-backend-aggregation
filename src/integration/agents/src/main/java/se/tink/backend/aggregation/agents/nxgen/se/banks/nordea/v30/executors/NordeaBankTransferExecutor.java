@@ -18,7 +18,9 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
@@ -107,7 +109,13 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         NordeaAccountIdentifierFormatter identifierFormatter =
                 new NordeaAccountIdentifierFormatter();
 
-        destinationAccount.setBankName(((SwedishIdentifier) accountIdentifier).getBankName());
+        if (accountIdentifier instanceof SwedishIdentifier) {
+            destinationAccount.setBankName(((SwedishIdentifier) accountIdentifier).getBankName());
+        } else if (accountIdentifier instanceof NDAPersonalNumberIdentifier) {
+            destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
+        } else {
+            return Optional.empty();
+        }
         destinationAccount.setAccountNumber(accountIdentifier.getIdentifier(identifierFormatter));
 
         return Optional.of(destinationAccount);
@@ -154,9 +162,15 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         transferRequest.setMessage(transfer, transferMessageFormatter);
         transferRequest.setDue(transfer);
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
-        transferRequest.setToAccountNumberType(NordeaSEConstants.PaymentAccountTypes.LBAN);
+        transferRequest.setToAccountNumberType(getToAccountType(transfer));
 
         return transferRequest;
+    }
+
+    private String getToAccountType(Transfer transfer) {
+        return transfer.getDestination() instanceof NDAPersonalNumberIdentifier
+                ? NordeaSEConstants.PaymentAccountTypes.NDASE
+                : NordeaSEConstants.PaymentAccountTypes.LBAN;
     }
 
     private void removeIfAlreadyExist(PaymentRequest transferRequest) {
