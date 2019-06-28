@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.libraries.i18n.Catalog;
@@ -38,9 +37,8 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     }
 
     private void executeApproveEInvoice(String eInvoiceId) {
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(eInvoiceId);
         // confirm einvoice
-        executorHelper.confirm(confirmTransferRequest, eInvoiceId);
+        executorHelper.confirm(eInvoiceId);
     }
 
     // find the EInvoice that matches with transfer to approve

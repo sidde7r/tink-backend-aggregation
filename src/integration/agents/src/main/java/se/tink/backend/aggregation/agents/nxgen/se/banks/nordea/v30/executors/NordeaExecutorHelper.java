@@ -191,8 +191,9 @@ public class NordeaExecutorHelper {
         return nameField;
     }
 
-    public void confirm(ConfirmTransferRequest confirmTransferRequest, String id) {
+    public void confirm(String id) {
         try {
+            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
             ConfirmTransferResponse confirmTransferResponse =
                     apiClient.confirmBankTransfer(confirmTransferRequest);
 
@@ -294,6 +295,17 @@ public class NordeaExecutorHelper {
                         .findFirst();
 
         return !failedTransfer.isPresent();
+    }
+
+    /**
+     * Check if payment already exist in outbox as unconfirmed if it does then return the existing
+     * payment entity
+     */
+    protected Optional<PaymentEntity> findInOutbox(Transfer transfer) {
+        return apiClient.fetchPayments().getPayments().stream()
+                .filter(PaymentEntity::isUnconfirmed)
+                .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
+                .findFirst();
     }
 
     protected TransferExecutionException invalidDestError() {

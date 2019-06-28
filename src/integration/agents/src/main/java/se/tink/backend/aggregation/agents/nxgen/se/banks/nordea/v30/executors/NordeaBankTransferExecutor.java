@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
@@ -144,9 +143,8 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
 
         String transferId = transferResponse.getId();
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(transferId);
         // confirm external transfer
-        executorHelper.confirm(confirmTransferRequest, transferId);
+        executorHelper.confirm(transferId);
     }
 
     private PaymentRequest createPaymentRequest(

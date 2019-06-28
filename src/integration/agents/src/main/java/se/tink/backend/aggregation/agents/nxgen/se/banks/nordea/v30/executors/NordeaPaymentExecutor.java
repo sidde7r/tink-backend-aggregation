@@ -5,7 +5,6 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
@@ -35,28 +34,21 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
         // check if transfer already exist in outbox, if it does then user can confirm that one
-        isInOutbox(transfer);
+        createNewOrConfirmExisting(transfer);
     }
 
     /**
      * Check if payment already exist in outbox as unconfirmed if it does then execute a payment on
      * that id instead. Otherwise, proceeds to create a new payment
      */
-    private void isInOutbox(Transfer transfer) {
-        final Optional<PaymentEntity> payment =
-                apiClient.fetchPayments().getPayments().stream()
-                        .filter(PaymentEntity::isPayment)
-                        .filter(PaymentEntity::isUnconfirmed)
-                        .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
-                        .findFirst();
+    private void createNewOrConfirmExisting(Transfer transfer) {
+        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
         if (payment.isPresent()) {
-            String paymentId = payment.get().getId();
-            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(paymentId);
-            executorHelper.confirm(confirmTransferRequest, paymentId);
-            return;
+            executorHelper.confirm(payment.get().getApiIdentifier());
+        } else {
+            createNewPayment(transfer);
         }
-        createNewPayment(transfer);
     }
 
     private BeneficiariesEntity createDestination(Transfer transfer) {
@@ -120,9 +112,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     private void executeBankPayment(PaymentRequest paymentRequest) {
         try {
             BankPaymentResponse paymentResponse = apiClient.executeBankPayment(paymentRequest);
-            String paymentId = paymentResponse.getId();
-            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(paymentId);
-            executorHelper.confirm(confirmTransferRequest, paymentId);
+            executorHelper.confirm(paymentResponse.getId());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 throw executorHelper.paymentFailedError();
