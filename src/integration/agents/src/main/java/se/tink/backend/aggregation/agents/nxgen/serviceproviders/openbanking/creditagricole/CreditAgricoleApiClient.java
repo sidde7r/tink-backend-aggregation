@@ -61,7 +61,9 @@ public final class CreditAgricoleApiClient {
         String response = oauthSignedRequest(accessTokenUrl, authorizationHeader);
 
         Map<String, String> responsePairs = OAuthUtils.parseFormResponse(response);
-        return createToken(oauthVerifier, responsePairs);
+        OAuth1Token oAuth1Token = createToken(oauthVerifier, responsePairs);
+        setTokenToSession(oAuth1Token);
+        return oAuth1Token;
     }
 
     public void setConfiguration(CreditAgricoleConfiguration configuration) {
