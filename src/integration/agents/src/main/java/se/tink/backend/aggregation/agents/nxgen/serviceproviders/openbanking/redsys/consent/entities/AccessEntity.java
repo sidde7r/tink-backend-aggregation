@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.consent.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

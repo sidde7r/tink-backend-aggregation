@@ -35,11 +35,18 @@ public final class RedsysConstants {
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String TRANSACTIONS = "/v1/accounts/%s/transactions";
         public static final String BALANCES = "/v1/accounts/%s/balances";
+        public static final String CREATE_PAYMENT = "/v1/payments/%s";
+        public static final String SVA_CREATE_PAYMENT = "/v1/sva/payments/%s";
+        public static final String GET_PAYMENT = "/v1/payments/%s/%s";
+        public static final String PAYMENT_STATUS = "/v1/payments/%s/%s/status";
+        public static final String PAYMENT_CANCEL = "/v1/payments/%s/%s";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consentId";
+        public static final String SCA_REDIRECT = "scaRedirect";
+        public static final String SCA_STATE = "scaState";
     }
 
     public static class QueryKeys {
@@ -52,11 +59,12 @@ public final class RedsysConstants {
         public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
         public static final String WITH_BALANCE = "withBalance";
         public static final String BOOKING_STATUS = "bookingStatus";
+        public static final String OK = "ok";
     }
 
     public static class QueryValues {
         public static final String RESPONSE_TYPE = "code";
-        public static final String SCOPE = "AIS";
+        public static final String SCOPE = "AIS PIS";
         public static final String CODE_CHALLENGE_METHOD = "plain";
         public static final String TRUE = "true";
         public static final String FALSE = "false";
@@ -78,10 +86,13 @@ public final class RedsysConstants {
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
         public static final String TPP_NOK_REDIRECT_URI = "TPP-Nok-Redirect-URI";
         public static final String TPP_SIGNATURE_CERTIFICATE = "TPP-Signature-Certificate";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
         public static final String TRUE = "true";
+        // FIXME: use actual PSU or TPP address instead of constant
+        public static final String PSU_IP_ADDRESS = "127.0.0.1";
     }
 
     public static class FormKeys {
