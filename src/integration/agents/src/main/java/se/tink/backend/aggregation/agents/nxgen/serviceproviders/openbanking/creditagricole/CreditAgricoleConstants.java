@@ -35,5 +35,10 @@ public abstract class CreditAgricoleConstants {
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
         public static final String TEMPORARY_TOKEN = "TEMPORARY_TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
+        public static final String USER_ID = "USER_ID";
+    }
+
+    public static class XMLtags {
+        public static final String ID = "id";
     }
 }

@@ -11,7 +11,9 @@ import org.apache.http.message.BasicNameValuePair;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.XMLtags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.utils.CreditAgricoleUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
@@ -159,6 +161,14 @@ public final class CreditAgricoleApiClient {
                         params,
                         temporaryToken.getOauthTokenSecret(),
                         HttpMethod.GET.name());
+        String userXML =
+                client.request(new URL(requestUserIdUrl))
+                        .accept(MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+                        .get(String.class);
+
+        String userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
+        sessionStorage.put(StorageKeys.USER_ID, userId);
     }
 
     private String getUserIdUrl() {
