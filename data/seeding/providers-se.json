@@ -640,7 +640,7 @@
             "type": "BANK"
         },
         {
-            "name": "se-handelsbanken-bankid",
+            "name": "se-handelsbanken-oauth2",
             "displayName": "Handelsbanken",
             "popular": true,
             "type": "BANK",

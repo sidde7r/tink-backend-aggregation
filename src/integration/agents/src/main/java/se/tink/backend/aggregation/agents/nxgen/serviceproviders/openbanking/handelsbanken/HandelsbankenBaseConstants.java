@@ -67,9 +67,7 @@ public final class HandelsbankenBaseConstants {
         public static final String AIS_SCOPE = "AIS";
         public static final String ALL_ACCOUNTS = "ALL_ACCOUNTS";
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
-        public static final String CONSENTS = "consents";
-        public static final String AUTH = "oauth 2.0";
-        public static final String CODE = "authorization_code";
+        public static final String SUBSCRIPTION_CONSENTS = "consents";
         public static final String PERSONAL_ID_TP = "1";
     }
 
@@ -83,6 +81,7 @@ public final class HandelsbankenBaseConstants {
 
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
+        public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
     }
 
     public static class Errors {

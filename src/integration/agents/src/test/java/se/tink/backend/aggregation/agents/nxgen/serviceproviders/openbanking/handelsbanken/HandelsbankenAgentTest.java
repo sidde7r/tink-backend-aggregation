@@ -13,7 +13,7 @@ public class HandelsbankenAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "se-handelsbanken-bankid")
+                new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
                         .addCredentialField(Field.Key.USERNAME, "")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)

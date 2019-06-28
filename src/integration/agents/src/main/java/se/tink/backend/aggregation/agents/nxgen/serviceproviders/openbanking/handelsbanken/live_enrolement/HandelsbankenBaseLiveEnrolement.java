@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement;
 
-import java.util.UUID;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.entity.App;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.rpc.*;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.rpc.Product;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+
+import javax.ws.rs.core.MediaType;
+import java.util.UUID;
 
 public class HandelsbankenBaseLiveEnrolement {
 
@@ -115,6 +115,6 @@ public class HandelsbankenBaseLiveEnrolement {
                         thirdPartiesResponse.getClientId(),
                         subscriptionResponse.getClientId(),
                         tokenResponse.getAccessToken(),
-                        HandelsbankenBaseConstants.BodyValues.CONSENTS);
+                        HandelsbankenBaseConstants.BodyValues.SUBSCRIPTION_CONSENTS);
     }
 }
