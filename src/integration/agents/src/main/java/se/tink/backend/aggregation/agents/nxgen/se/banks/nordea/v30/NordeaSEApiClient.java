@@ -270,8 +270,8 @@ public class NordeaSEApiClient {
                     .delete();
         } catch (HttpResponseException hre) {
             tryRefreshAccessToken(hre);
+            deleteTransfer(transferId);
         }
-        deleteTransfer(transferId);
     }
 
     public void keepAlive() throws SessionException {
