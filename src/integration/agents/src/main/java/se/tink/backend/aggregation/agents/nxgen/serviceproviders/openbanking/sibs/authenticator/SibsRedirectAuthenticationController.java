@@ -2,14 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
-import com.github.rholder.retry.RetryerBuilder;
-import com.github.rholder.retry.StopStrategies;
-import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
@@ -48,7 +44,7 @@ public class SibsRedirectAuthenticationController
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException, BankServiceException {
+    public void autoAuthenticate() throws SessionException {
         throw SessionError.SESSION_EXPIRED.exception();
     }
 
@@ -58,7 +54,8 @@ public class SibsRedirectAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        Retryer<ConsentStatus> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<ConsentStatus> consentStatusRetryer =
+                SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
         try {
             ConsentStatus status =
@@ -66,12 +63,17 @@ public class SibsRedirectAuthenticationController
                             consentStatusRetryer.call(authenticator::getConsentStatus));
 
             if (!status.isAcceptedStatus()) {
-                throw new IllegalStateException("Authorization failed!");
+                throw new IllegalStateException(
+                        String.format(
+                                "Authorization failed, consents status is not accepted. Current: %s Expected: %s!",
+                                status.name(), ConsentStatus.ACTC.name()));
             }
         } catch (RetryException e) {
-            throw new IllegalStateException("Authorization status error!");
+            throw new IllegalStateException(
+                    String.format("Not able to fetch consents after %s attempts!", RETRY_ATTEMPTS),
+                    e);
         } catch (ExecutionException e) {
-            throw new IllegalStateException("Authorization api error!");
+            throw new IllegalStateException("Authorization API error!", e);
         }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
@@ -93,14 +95,6 @@ public class SibsRedirectAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private Retryer<ConsentStatus> getConsentStatusRetryer() {
-        return RetryerBuilder.<ConsentStatus>newBuilder()
-                .retryIfResult(status -> status != null && status.isWaitingStatus())
-                .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
-                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
-                .build();
     }
 
     private String formatSupplementalKey(String key) {
