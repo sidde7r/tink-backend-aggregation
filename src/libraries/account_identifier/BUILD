@@ -9,6 +9,7 @@ java_library(
         "//src/libraries/uuid",
         "//src/libraries/giro_validation",
         "//src/libraries/strings",
+        "//src/libraries/social_security_number",
 
         # Guava
         "//third_party:com_google_guava_guava",
