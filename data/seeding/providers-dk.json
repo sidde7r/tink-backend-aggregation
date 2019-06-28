@@ -2338,6 +2338,21 @@
             "payload": "tink"
         },
         {
+            "name": "dk-jyske-oauth2",
+            "displayName": "jyske",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.dk.openbanking.jyske.JyskeAgent",
+            "passwordHelpText": "Please authenticate yourself.",
+            "transactional": true,
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
+        },
+        {
             "name": "dk-almbrand-oauth2",
             "displayName": "Alm. Brand",
             "popular": true,
