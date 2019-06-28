@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.LogTags;
 
 public abstract class NemidAuthenticationController {
 
@@ -144,6 +145,7 @@ public abstract class NemidAuthenticationController {
     private String collectToken() throws AuthenticationException, AuthorizationException {
         // Try to get the token/errors multiple times. It (both token or error) might not have
         // loaded yet.
+
         driver.switchTo().defaultContent();
         for (int i = 0; i < 15; i++) {
             Optional<String> nemIdToken = getNemIdToken();
@@ -152,6 +154,10 @@ public abstract class NemidAuthenticationController {
                 return nemIdToken.get();
             }
         }
+
+        LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_MAINPAGE_ERROR_CASE);
+        switchToIframe();
+        LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_IFRAME_ERROR_CASE);
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the authentication.
         throw new IllegalStateException("[nemid] Could not find nemId token.");
