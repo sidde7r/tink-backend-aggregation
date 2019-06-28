@@ -2,9 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
-import com.github.rholder.retry.RetryerBuilder;
-import com.github.rholder.retry.StopStrategies;
-import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -57,7 +54,8 @@ public class SibsRedirectAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        Retryer<ConsentStatus> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<ConsentStatus> consentStatusRetryer =
+                SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
         try {
             ConsentStatus status =
@@ -97,14 +95,6 @@ public class SibsRedirectAuthenticationController
     @Override
     public Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status) {
         return Optional.empty();
-    }
-
-    private Retryer<ConsentStatus> getConsentStatusRetryer() {
-        return RetryerBuilder.<ConsentStatus>newBuilder()
-                .retryIfResult(status -> status != null && status.isWaitingStatus())
-                .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
-                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
-                .build();
     }
 
     private String formatSupplementalKey(String key) {

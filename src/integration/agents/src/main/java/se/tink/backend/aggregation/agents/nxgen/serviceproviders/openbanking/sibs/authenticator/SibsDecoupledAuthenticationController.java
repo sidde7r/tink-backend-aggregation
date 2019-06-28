@@ -2,17 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.si
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
-import com.github.rholder.retry.RetryerBuilder;
-import com.github.rholder.retry.StopStrategies;
-import com.github.rholder.retry.WaitStrategies;
+import java.util.concurrent.ExecutionException;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class SibsDecoupledAuthenticationController implements Authenticator {
 
@@ -34,7 +29,8 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
                 credentials.getField(CredentialKeys.PSU_ID_TYPE),
                 credentials.getField(CredentialKeys.PSU_ID));
 
-        Retryer<ConsentStatus> consentStatusRetryer = getConsentStatusRetryer();
+        Retryer<ConsentStatus> consentStatusRetryer =
+                SibsUtils.getConsentStatusRetryer(SLEEP_TIME, RETRY_ATTEMPTS);
 
         try {
             ConsentStatus status = consentStatusRetryer.call(authenticator::getConsentStatus);
@@ -52,13 +48,5 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
         } catch (ExecutionException e) {
             throw new IllegalStateException("Authorization API error!", e);
         }
-    }
-
-    private Retryer<ConsentStatus> getConsentStatusRetryer() {
-        return RetryerBuilder.<ConsentStatus>newBuilder()
-                .retryIfResult(status -> status != null && status.isWaitingStatus())
-                .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
-                .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
-                .build();
     }
 }
