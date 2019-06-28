@@ -44,12 +44,17 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
             ConsentStatus status = consentStatusRetryer.call(authenticator::getConsentStatus);
 
             if (!status.isAcceptedStatus()) {
-                throw new IllegalStateException("Authorization failed!");
+                throw new IllegalStateException(
+                        String.format(
+                                "Authorization failed, consents status is not accepted. Current: %s Expected: %s!",
+                                status.name(), ConsentStatus.ACTC.name()));
             }
         } catch (RetryException e) {
-            throw new IllegalStateException("Authorization status error!");
+            throw new IllegalStateException(
+                    String.format("Not able to fetch consents after %s attempts!", RETRY_ATTEMPTS),
+                    e);
         } catch (ExecutionException e) {
-            throw new IllegalStateException("Authorization api error!");
+            throw new IllegalStateException("Authorization API error!", e);
         }
     }
 
