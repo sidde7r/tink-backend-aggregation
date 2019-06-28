@@ -142,7 +142,7 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         // execute external transfer
         BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
 
-        String transferId = transferResponse.getId();
+        String transferId = transferResponse.getApiIdentifier();
         // confirm external transfer
         executorHelper.confirm(transferId);
     }

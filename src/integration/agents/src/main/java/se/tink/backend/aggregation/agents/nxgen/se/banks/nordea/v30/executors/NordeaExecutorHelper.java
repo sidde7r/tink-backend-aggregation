@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
-import static com.google.common.base.Predicates.not;
-
-import com.google.common.base.Strings;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
 import java.util.Map;
@@ -271,7 +269,7 @@ public class NordeaExecutorHelper {
 
         Optional<PaymentEntity> rejectedTransfer =
                 fetchOutbox.getPayments().stream()
-                        .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
+                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
                         .filter(PaymentEntity::isRejected)
                         .findFirst();
 
@@ -289,9 +287,8 @@ public class NordeaExecutorHelper {
 
         Optional<PaymentEntity> failedTransfer =
                 fetchOutbox.getPayments().stream()
-                        .filter(not(PaymentEntity::isConfirmed))
-                        .filter(PaymentEntity::isNotPlusgiro) // plusgiro does not have any id-field
-                        .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
+                        .filter(PaymentEntity::isUnconfirmed)
+                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
                         .findFirst();
 
         return !failedTransfer.isPresent();
@@ -304,6 +301,9 @@ public class NordeaExecutorHelper {
     protected Optional<PaymentEntity> findInOutbox(Transfer transfer) {
         return apiClient.fetchPayments().getPayments().stream()
                 .filter(PaymentEntity::isUnconfirmed)
+                .map(
+                        paymentEntity ->
+                                apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
                 .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
                 .findFirst();
     }

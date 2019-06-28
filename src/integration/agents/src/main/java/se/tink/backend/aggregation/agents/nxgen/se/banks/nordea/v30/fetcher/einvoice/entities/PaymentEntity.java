@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
@@ -107,14 +108,17 @@ public class PaymentEntity {
 
     public String getRecipientTransferAccountNumber() {
         if (NordeaSEConstants.PaymentAccountTypes.NDASE.equalsIgnoreCase(toAccountNumberType)) {
-            SocialSecurityNumber.Sweden pnr =
-                    new SocialSecurityNumber.Sweden(recipientAccountNumber);
-            if (pnr.isValid()) {
-                return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER
-                        + recipientAccountNumber;
-            }
+            return getTransferAccountNumber(recipientAccountNumber);
         }
         return recipientAccountNumber;
+    }
+
+    private static String getTransferAccountNumber(String accountNumber) {
+        SocialSecurityNumber.Sweden pnr = new SocialSecurityNumber.Sweden(accountNumber);
+        if (pnr.isValid()) {
+            return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER + accountNumber;
+        }
+        return accountNumber;
     }
 
     // plusgiro does not seem to have an id but it has a reference field instead.
@@ -220,9 +224,11 @@ public class PaymentEntity {
     @JsonIgnore
     public boolean isEqualToTransfer(Transfer transfer) {
         return transfer.getAmount().equals(getAmount())
-                && transfer.getDestination().toString().equals(getRecipientAccountNumber())
-                && transfer.getSource().toString().equals(getFrom())
-                && transfer.getDueDate().equals(getDue());
+                && transfer.getDestination().getIdentifier().equals(getRecipientAccountNumber())
+                && transfer.getSource().getIdentifier().equals(getTransferAccountNumber(getFrom()))
+                && DateUtils.isSameDay(transfer.getDueDate(), getDue())
+                && Strings.nullToEmpty(transfer.getDestinationMessage())
+                        .equals(Strings.nullToEmpty(message));
     }
 
     @JsonIgnore
