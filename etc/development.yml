@@ -251,7 +251,7 @@ agentsServiceConfiguration:
       tink:
         clientId: "PSDSE-FINA-44059"
         redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        apiKey: ""
+        apiKey: "DummyKey"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     bankinter:
       tink:
