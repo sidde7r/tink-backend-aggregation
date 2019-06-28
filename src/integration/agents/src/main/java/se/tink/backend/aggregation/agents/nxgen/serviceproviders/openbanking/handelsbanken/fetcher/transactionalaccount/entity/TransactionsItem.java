@@ -1,18 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.annotation.Generated;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 
-@Generated("com.robohorse.robopojogenerator")
-public class TransactionsItem {
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    // Not getting: bookingDate, valueDate, debtorName, creditorName,
+@JsonObject
+public class TransactionsItem {
 
     @JsonProperty("amount")
     private TransactionAmount transactionAmount;
