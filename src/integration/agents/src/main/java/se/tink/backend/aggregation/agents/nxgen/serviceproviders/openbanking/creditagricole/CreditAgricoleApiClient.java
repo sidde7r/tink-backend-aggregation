@@ -57,7 +57,10 @@ public final class CreditAgricoleApiClient {
                 OAuthUtils.getAccessTokenParams(consumerKey, oauthToken, oauthVerifier);
         String authorizationHeader =
                 getOauthAuthorizationHeader(
-                        accessTokenUrl, params, temporaryToken.getOauthTokenSecret());
+                        accessTokenUrl,
+                        params,
+                        temporaryToken.getOauthTokenSecret(),
+                        HttpMethod.POST.name());
         String response = oauthSignedRequest(accessTokenUrl, authorizationHeader);
 
         Map<String, String> responsePairs = OAuthUtils.parseFormResponse(response);
@@ -117,15 +120,16 @@ public final class CreditAgricoleApiClient {
     }
 
     private String getOauthAuthorizationHeader(String baseUrl, List<NameValuePair> params) {
-        return getOauthAuthorizationHeader(baseUrl, params, StringUtils.EMPTY);
+        return getOauthAuthorizationHeader(
+                baseUrl, params, StringUtils.EMPTY, HttpMethod.POST.name());
     }
 
     private String getOauthAuthorizationHeader(
-            String url, List<NameValuePair> params, String oauthSecret) {
+            String url, List<NameValuePair> params, String oauthSecret, String httpRequestMethod) {
         String consumerSecret = configuration.getClientSecret();
         String signature =
                 OAuthUtils.getSignature(
-                        url, HttpMethod.POST.name(), params, consumerSecret, oauthSecret);
+                        url, httpRequestMethod, params, consumerSecret, oauthSecret);
         params.add(new BasicNameValuePair(OAuth1Constants.QueryParams.OAUTH_SIGNATURE, signature));
         return OAuthUtils.getAuthorizationHeaderValue(params);
     }
