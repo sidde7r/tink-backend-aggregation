@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -44,11 +46,7 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
         try {
             SessionResponse response = apiClient.buildAuthorizeUrl(ssn);
             this.autoStartToken = response.getAutoStartToken();
-            try {
-                Thread.sleep(response.getSleepTime());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
             return response;
         } catch (HttpClientException e) {
             throw new BankIdException(BankIdError.UNKNOWN);
