@@ -23,7 +23,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.Investme
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -53,8 +52,8 @@ public class BbvaAgent extends NextGenerationAgent implements RefreshIdentityDat
                         new BbvaAccountFetcher(apiClient, sessionStorage),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
-                                        new BbvaTransactionFetcher(apiClient), 0))));
+                                new TransactionKeyPaginationController<>(
+                                        new BbvaTransactionFetcher(apiClient)))));
     }
 
     @Override

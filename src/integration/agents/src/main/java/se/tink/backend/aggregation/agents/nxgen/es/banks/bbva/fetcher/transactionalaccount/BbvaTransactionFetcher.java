@@ -8,12 +8,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Erro
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetchers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
-public class BbvaTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
+public class BbvaTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaTransactionFetcher.class);
 
@@ -24,21 +25,20 @@ public class BbvaTransactionFetcher implements TransactionPagePaginator<Transact
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        return fetchWithBackoffAndRetry(account, page, 1);
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
+        return fetchWithBackoffAndRetry(account, key, 1);
     }
 
     private AccountTransactionsResponse fetchWithBackoffAndRetry(
-            TransactionalAccount account, int page, int attempt) {
-        final int keyIndex = page * Fetchers.PAGE_SIZE;
-
-        return Try.of(() -> apiClient.fetchAccountTransactions(account, keyIndex))
+            TransactionalAccount account, String key, int attempt) {
+        return Try.of(() -> apiClient.fetchAccountTransactions(account, key))
                 .recover(
                         HttpClientException.class,
                         e -> {
-                            logRetry(account, keyIndex, attempt);
+                            logRetry(account, key, attempt);
                             backoffAWhile();
-                            return fetchWithBackoffAndRetry(account, page, attempt + 1);
+                            return fetchWithBackoffAndRetry(account, key, attempt + 1);
                         })
                 .filterTry(
                         AccountTransactionsResponse.shouldRetryFetching(attempt),
@@ -54,14 +54,14 @@ public class BbvaTransactionFetcher implements TransactionPagePaginator<Transact
         }
     }
 
-    private void logRetry(TransactionalAccount account, int keyIndex, int attempt) {
+    private void logRetry(TransactionalAccount account, String key, int attempt) {
         final String accountNumber = account.getAccountNumber();
 
         LOGGER.warn(
-                "{}: Retrying attempt {} for account {} with keyIndex {}",
+                "{}: Retrying attempt {} for account {} with key {}",
                 LogTags.TRANSACTIONS_RETRYING,
                 attempt,
                 accountNumber,
-                keyIndex);
+                key);
     }
 }
