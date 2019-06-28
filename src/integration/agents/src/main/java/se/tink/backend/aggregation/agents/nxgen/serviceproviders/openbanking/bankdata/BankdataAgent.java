@@ -38,6 +38,7 @@ public abstract class BankdataAgent extends NextGenerationAgent {
     }
 
     protected abstract String getBaseUrl();
+
     protected abstract String getBaseAuthUrl();
 
     @Override
