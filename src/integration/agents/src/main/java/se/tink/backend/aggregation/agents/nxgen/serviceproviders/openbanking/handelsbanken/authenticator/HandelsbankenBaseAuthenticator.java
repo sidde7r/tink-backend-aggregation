@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Errors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.Status;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<SessionResponse> {
@@ -38,20 +40,24 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
     @Override
     public SessionResponse init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException {
-        SessionResponse response = apiClient.buildAuthorizeUrl(ssn);
-        this.autoStartToken = response.getAutoStartToken();
-        return response;
+
+        try {
+            SessionResponse response = apiClient.buildAuthorizeUrl(ssn);
+            this.autoStartToken = response.getAutoStartToken();
+            try {
+                Thread.sleep(response.getSleepTime());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return response;
+        } catch (HttpClientException e) {
+            throw new BankIdException(BankIdError.UNKNOWN);
+        }
     }
 
     @Override
     public BankIdStatus collect(SessionResponse reference)
             throws AuthenticationException, AuthorizationException {
-
-        try {
-            Thread.sleep(reference.getSleepTime() + 1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         DecoupledResponse decoupledResponse =
                 apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));

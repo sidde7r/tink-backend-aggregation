@@ -69,6 +69,7 @@ public final class HandelsbankenBaseConstants {
         public static final String PSD2_ADMIN = "PSD2-ADMIN";
         public static final String SUBSCRIPTION_CONSENTS = "consents";
         public static final String PERSONAL_ID_TP = "1";
+        public static final String PRODUCT_ACCOUNTS = "accounts";
     }
 
     public static class AccountBalance {
@@ -77,6 +78,7 @@ public final class HandelsbankenBaseConstants {
 
     public static class Transactions {
         public static final String PENDING_TYPE = "PENDING";
+        public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class ExceptionMessages {

@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.entity.App;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.rpc.*;
+import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -37,26 +40,20 @@ public class HandelsbankenBaseLiveEnrolement {
     }
 
     public TokenResponse getBearerToken(String clientId) {
+
+        final Form params = Form.builder().put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
+            .put(BodyKeys.SCOPE, BodyValues.PSD2_ADMIN)
+            .put(BodyKeys.CLIENT_ID, clientId).build();
+
         return client.request(new URL(HandelsbankenBaseConstants.Urls.TOKEN))
-                .body(
-                        HandelsbankenBaseConstants.BodyKeys.GRANT_TYPE
-                                + "="
-                                + HandelsbankenBaseConstants.BodyValues.CLIENT_CREDENTIALS
-                                + "&"
-                                + HandelsbankenBaseConstants.BodyKeys.SCOPE
-                                + "="
-                                + HandelsbankenBaseConstants.BodyValues.PSD2_ADMIN
-                                + "&"
-                                + HandelsbankenBaseConstants.BodyKeys.CLIENT_ID
-                                + "="
-                                + clientId)
+                .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class);
     }
 
     public SubscriptionRequest createSubscriptionBody(String oauthRedirectURI) {
-        Product product = new Product("accounts");
+        Product product = new Product(BodyValues.PRODUCT_ACCOUNTS);
         App app = new App(configuration.getAppName(), configuration.getAppDesc(), oauthRedirectURI);
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest(app, product);
         return subscriptionRequest;

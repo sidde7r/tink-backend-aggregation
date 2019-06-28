@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-// @Ignore
+//@Ignore
 public class HandelsbankenAgentTest {
 
     private AgentIntegrationTest.Builder builder;
@@ -14,7 +14,7 @@ public class HandelsbankenAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("se", "se-handelsbanken-oauth2")
-                        .addCredentialField(Field.Key.USERNAME, "")
+                        .addCredentialField(Field.Key.USERNAME, "199704071886")
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
                         .expectLoggedIn(false);

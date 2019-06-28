@@ -44,7 +44,9 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     protected abstract HandelsbankenBaseAccountConverter getAccountConverter();
 
     private void configureHttpClient(TinkHttpClient client) {
-        client.setEidasProxy(handelsbankenBaseConfiguration.getEidasUrl(), "Tink");
+        // handelsbankenBaseConfiguration.getEidasUrl()
+        client.setEidasProxy("https://eidas-proxy.staging.aggregation.tink.network", "Tink");
+        client.setDebugOutput(true);
     }
 
     @Override

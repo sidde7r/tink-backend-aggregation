@@ -96,7 +96,7 @@ public class TransactionsItem {
         if (valueDate != null) {
             Date vDate = null;
             try {
-                vDate = new SimpleDateFormat("yyyy-MM-dd").parse(valueDate);
+                vDate = new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT).parse(valueDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -104,7 +104,7 @@ public class TransactionsItem {
         }
         Date tDate = null;
         try {
-            tDate = new SimpleDateFormat("yyyy-MM-dd").parse(transactionDate);
+            tDate = new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT).parse(transactionDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }

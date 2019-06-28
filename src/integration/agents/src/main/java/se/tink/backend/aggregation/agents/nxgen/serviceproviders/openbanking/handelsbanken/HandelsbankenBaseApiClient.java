@@ -79,23 +79,15 @@ public class HandelsbankenBaseApiClient {
 
     public TokResponse getBearerTok(String clientId) {
 
+        final Form params = Form.builder().put(BodyKeys.GRANT_TYPE, BodyValues.CLIENT_CREDENTIALS)
+            .put(BodyKeys.SCOPE, BodyValues.AIS_SCOPE)
+            .put(BodyKeys.CLIENT_ID, clientId).build();
+
         return client.request(new URL(Urls.TOKEN))
-                .body(
-                        BodyKeys.GRANT_TYPE
-                                + "="
-                                + BodyValues.CLIENT_CREDENTIALS
-                                + "&"
-                                + BodyKeys.SCOPE
-                                + "="
-                                + BodyValues.AIS_SCOPE
-                                + "&"
-                                + BodyKeys.CLIENT_ID
-                                + "="
-                                + clientId)
+                .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokResponse.class);
-
 
     }
 
