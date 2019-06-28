@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator;
 
-import java.util.Arrays;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -19,6 +17,9 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
     private final NordeaSeApiClient apiClient;
@@ -57,7 +58,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
         } catch (HttpResponseException e) {
             if (e.getResponse()
                     .getBody(String.class)
-                    .contains("nsp.returncode.cava.user_cancel_error")) {
+                    .contains(NordeaSeConstants.ErrorMessage.CANCEL_ERROR)) {
                 return BankIdStatus.CANCELLED;
             }
         }

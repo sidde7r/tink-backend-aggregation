@@ -46,4 +46,8 @@ public final class NordeaSeConstants {
     public class NordeaSignSteps {
         public static final String SAMPLE_STEP = "SAMPLE_STEP";
     }
+
+    public class ErrorMessage {
+        public static final String CANCEL_ERROR = "nsp.returncode.cava.user_cancel_error";
+    }
 }
