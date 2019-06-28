@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import javax.annotation.Generated;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Generated("com.robohorse.robopojogenerator")
+import java.util.List;
+
+@JsonObject
 public class Links {
 
     @JsonProperty("authorization")

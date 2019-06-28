@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.annotation.Generated;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.entity.App;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.rpc.Product;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@Generated("com.robohorse.robopojogenerator")
+@JsonObject
 public class Properties {
 
     @JsonProperty("app")
