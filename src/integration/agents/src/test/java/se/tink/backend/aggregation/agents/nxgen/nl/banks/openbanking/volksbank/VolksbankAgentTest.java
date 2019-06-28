@@ -8,8 +8,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 public class VolksbankAgentTest {
 
     @Test
-    public void testLoginAndRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("nl", "nl-snsbank-oauth2")
+    public void testSandbox() throws Exception {
+        new AgentIntegrationTest.Builder("nl", "nl-snsbank-sandbox-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
