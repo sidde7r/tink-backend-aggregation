@@ -96,7 +96,7 @@ public class PortfolioEntity {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         return InvestmentAccount.builder(getAccountId())
                 .setAccountNumber(getAccountId())
-                .setName(getAccountType())
+                .setName(getAccountName())
                 .setHolderName(holderName)
                 .setCashBalance(Amount.inSEK(totalBalance + interestPayable))
                 .setBankIdentifier(getAccountId())

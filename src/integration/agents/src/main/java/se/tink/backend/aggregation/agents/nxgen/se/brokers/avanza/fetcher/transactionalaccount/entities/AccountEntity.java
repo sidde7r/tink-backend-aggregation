@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.MAPPERS;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -121,15 +120,10 @@ public class AccountEntity {
 
     @JsonIgnore
     public <T extends Account> T toTinkAccount(HolderName holderName, Class<T> type) {
-        final String accountName =
-                Strings.isNullOrEmpty(sparkontoPlusType)
-                        ? accountType
-                        : accountType + sparkontoPlusType;
-
         final Account account =
                 Account.builder(toTinkAccountType(), accountId)
                         .setAccountNumber(accountId)
-                        .setName(accountName)
+                        .setName(name)
                         .setHolderName(holderName)
                         .setBalance(Amount.inSEK(ownCapital))
                         .setBankIdentifier(accountId)
