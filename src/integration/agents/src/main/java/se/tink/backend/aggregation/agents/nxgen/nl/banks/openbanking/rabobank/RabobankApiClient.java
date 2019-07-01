@@ -37,11 +37,16 @@ public class RabobankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final boolean requestIsManual;
     private RabobankConfiguration rabobankConfiguration;
 
-    RabobankApiClient(final TinkHttpClient client, final PersistentStorage persistentStorage) {
+    RabobankApiClient(
+            final TinkHttpClient client,
+            final PersistentStorage persistentStorage,
+            final boolean requestIsManual) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.requestIsManual = requestIsManual;
     }
 
     public void setConfiguration(final RabobankConfiguration configuration) {
@@ -114,17 +119,22 @@ public class RabobankApiClient {
         final String clientCert = rabobankConfiguration.getQsealCert();
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        return client.request(url)
-                .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
-                .header(QueryParams.IBM_CLIENT_ID, clientId)
-                .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                .header(QueryParams.REQUEST_ID, uuid)
-                .header(QueryParams.DIGEST, digestHeader)
-                .header(QueryParams.SIGNATURE, signatureHeader)
-                .header(QueryParams.DATE, date)
-                .header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS)
-                .accept(MediaType.APPLICATION_JSON_TYPE)
-                .get(BalanceResponse.class);
+        final RequestBuilder builder =
+                client.request(url)
+                        .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
+                        .header(QueryParams.IBM_CLIENT_ID, clientId)
+                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                        .header(QueryParams.REQUEST_ID, uuid)
+                        .header(QueryParams.DIGEST, digestHeader)
+                        .header(QueryParams.SIGNATURE, signatureHeader)
+                        .header(QueryParams.DATE, date);
+
+        // This header must be present iff the request was initiated by the PSU
+        if (requestIsManual) {
+            builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
+        }
+
+        return builder.accept(MediaType.APPLICATION_JSON_TYPE).get(BalanceResponse.class);
     }
 
     public PaginatorResponse getTransactions(
