@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Name {
+public class NameEntity {
 
     @JsonProperty("description")
     private String description;
@@ -15,7 +15,7 @@ public class Name {
     @JsonProperty("example")
     private String example;
 
-    public Name(String description, String type, String example) {
+    public NameEntity(String description, String type, String example) {
         this.description = description;
         this.type = type;
         this.example = example;

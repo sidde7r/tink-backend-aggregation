@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ScaMethodsItem {
+public class ScaMethodsItemEntity {
 
     @JsonProperty("_links")
-    private Links links;
+    private LinksEntity linksEntity;
 
     @JsonProperty("scaMethodType")
     private String scaMethodType;
 
-    public Links getLinks() {
-        return links;
+    public LinksEntity getLinksEntity() {
+        return linksEntity;
     }
 
     public String getScaMethodType() {

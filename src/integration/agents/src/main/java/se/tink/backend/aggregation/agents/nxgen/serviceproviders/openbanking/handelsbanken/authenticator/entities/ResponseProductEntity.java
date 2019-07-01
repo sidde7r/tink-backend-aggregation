@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ResponseProduct {
+public class ResponseProductEntity {
 
     @JsonProperty("scope")
     private String scope;

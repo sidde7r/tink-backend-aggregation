@@ -3,17 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
+import java.util.List;
+
 @JsonObject
-public class ClientId {
+public class HintsEntity {
 
-    @JsonProperty("$ref")
-    private String ref;
+    @JsonProperty("allow")
+    private List<String> allow;
 
-    public ClientId(String ref) {
-        this.ref = ref;
-    }
-
-    public String getRef() {
-        return ref;
+    public List<String> getAllow() {
+        return allow;
     }
 }

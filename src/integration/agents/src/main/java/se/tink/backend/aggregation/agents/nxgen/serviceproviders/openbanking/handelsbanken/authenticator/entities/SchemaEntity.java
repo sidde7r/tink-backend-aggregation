@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Schema {
+public class SchemaEntity {
 
     @JsonProperty("type")
     private String type;
 
     @JsonProperty("properties")
-    private Properties properties;
+    private PropertiesEntity propertiesEntity;
 
-    public Schema(String type, Properties properties) {
+    public SchemaEntity(String type, PropertiesEntity properties) {
         this.type = type;
-        this.properties = properties;
+        this.propertiesEntity = properties;
     }
 
     public String getType() {
         return type;
     }
 
-    public Properties getProperties() {
-        return properties;
+    public PropertiesEntity getPropertiesEntity() {
+        return propertiesEntity;
     }
 }

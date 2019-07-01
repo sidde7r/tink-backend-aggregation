@@ -77,17 +77,18 @@ public final class HandelsbankenBaseConstants {
     }
 
     public static class AccountBalance {
-        public static final String TYPE = "AVAILABLE_AMOUNT";
+        public static final String AVAILABLE_BALANCE = "AVAILABLE_AMOUNT";
     }
 
     public static class Transactions {
-        public static final String PENDING_TYPE = "PENDING";
+        public static final String IS_PENDING = "PENDING";
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
         public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
+        public static final String VALUE_DATE_MISSING = "Valuedate not found, defaulting to transactiondate";
     }
 
     public static class Errors {

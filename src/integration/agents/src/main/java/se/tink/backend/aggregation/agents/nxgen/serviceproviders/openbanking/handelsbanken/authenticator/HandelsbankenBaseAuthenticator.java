@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator;
 
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -20,6 +18,9 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
@@ -58,7 +59,7 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
             throws AuthenticationException, AuthorizationException {
 
         DecoupledResponse decoupledResponse =
-                apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));
+                apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
 
         if (decoupledResponse.getError() != null) {
             String error = decoupledResponse.getError();

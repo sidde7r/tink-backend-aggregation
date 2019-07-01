@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.ThreadSafeDateFormat;
+
+import java.text.ParseException;
+import java.util.Date;
 
 @JsonObject
 public class TransactionsItem {
@@ -92,25 +94,19 @@ public class TransactionsItem {
     private Date getDate() {
 
         if (valueDate != null) {
-            Date vDate = null;
             try {
-                vDate =
-                        new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT)
-                                .parse(valueDate);
+                return ThreadSafeDateFormat.FORMATTER_DAILY.parse(valueDate);
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println(HandelsbankenBaseConstants.ExceptionMessages.VALUE_DATE_MISSING);
             }
-            return vDate;
         }
-        Date tDate = null;
+
         try {
-            tDate =
-                    new SimpleDateFormat(HandelsbankenBaseConstants.Transactions.DATE_FORMAT)
-                            .parse(transactionDate);
+            return ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new ElementNotFoundException("transactionDate", "transactionDate", "transactionDate");
         }
-        return tDate;
+
     }
 
     public Transaction toTinkTransaction() {
@@ -120,9 +116,7 @@ public class TransactionsItem {
                 .setAmount(
                         new Amount(transactionAmount.getCurrency(), transactionAmount.getContent()))
                 .setDescription(remittanceInformation)
-                .setPending(
-                        status.equalsIgnoreCase(
-                                HandelsbankenBaseConstants.Transactions.PENDING_TYPE))
+                .setPending(HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(status))
                 .build();
     }
 }
