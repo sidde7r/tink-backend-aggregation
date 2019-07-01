@@ -157,6 +157,7 @@ public class NordeaSEConstants {
         public static final String REJECTED = "rejected";
         public static final String UNCONFIRMED = "unconfirmed";
         public static final String INPROGRESS = "inprogress";
+        public static final String PAID = "paid";
     }
 
     public static final class PaymentTypes {
