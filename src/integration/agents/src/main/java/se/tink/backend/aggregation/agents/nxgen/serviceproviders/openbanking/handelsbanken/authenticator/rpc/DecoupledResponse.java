@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class DecoupledResponse {
 
-    @JsonProperty("result")
     private String result;
 
     @JsonProperty("access_token")
@@ -21,7 +20,6 @@ public class DecoupledResponse {
     @JsonProperty("refresh_token")
     private String refreshToken;
 
-    @JsonProperty("error")
     private String error;
 
     public String getResult() {

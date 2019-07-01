@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.rpc;
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;

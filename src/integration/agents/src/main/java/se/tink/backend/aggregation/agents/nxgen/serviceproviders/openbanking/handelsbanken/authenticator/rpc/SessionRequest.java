@@ -15,7 +15,6 @@ public class SessionRequest {
     @JsonProperty("psu_id_type")
     private String personalIdTp;
 
-    @JsonProperty("scope")
     private String scope;
 
     @JsonProperty("client_id")

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ClientId {
+public class ClientIdEntity {
 
     @JsonProperty("$ref")
     private String ref;
 
-    public ClientId(String ref) {
+    public ClientIdEntity(String ref) {
         this.ref = ref;
     }
 

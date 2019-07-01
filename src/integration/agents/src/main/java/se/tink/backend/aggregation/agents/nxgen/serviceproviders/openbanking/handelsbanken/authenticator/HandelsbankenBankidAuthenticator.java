@@ -52,7 +52,7 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
             throws AuthenticationException, AuthorizationException {
 
         DecoupledResponse decoupledResponse =
-                apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));
+                apiClient.getDecoupled(new URL(reference.getLinks().getTokenEntity().getHref()));
 
         if (decoupledResponse.getError() != null) {
             switch (decoupledResponse.getError()) {
