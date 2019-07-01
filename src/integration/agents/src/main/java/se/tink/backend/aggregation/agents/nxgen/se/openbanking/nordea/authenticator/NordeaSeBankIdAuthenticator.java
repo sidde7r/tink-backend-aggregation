@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator;
 
+import com.google.api.client.http.HttpStatusCodes;
+import java.util.Arrays;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -18,10 +21,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
+public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Object> {
     private final NordeaSeApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -33,8 +33,7 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
     @Override
     public Object init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException {
-        sessionStorage.put(NordeaSeConstants.StorageKeys.SSN, ssn);
-        AuthorizeRequest authorizeRequest = getAuthorizeRequest();
+        AuthorizeRequest authorizeRequest = getAuthorizeRequest(ssn);
 
         AuthorizeResponse authorizeResponse = apiClient.authorize(authorizeRequest);
 
@@ -50,19 +49,21 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
 
         try {
             HttpResponse response = apiClient.getCode();
-            if (response.getStatus() == 304) {
+            if (response.getStatus() == HttpStatusCodes.STATUS_CODE_NOT_MODIFIED) {
                 return BankIdStatus.WAITING;
             } else {
                 return handleBankIdDone(response);
             }
         } catch (HttpResponseException e) {
-            if (e.getResponse()
-                    .getBody(String.class)
-                    .contains(NordeaSeConstants.ErrorMessage.CANCEL_ERROR)) {
+            String exceptionBody = e.getResponse().getBody(String.class);
+            if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.CANCEL_ERROR)) {
                 return BankIdStatus.CANCELLED;
+            } else if (exceptionBody.contains(NordeaSeConstants.ErrorMessage.TIME_OUT_ERROR)) {
+                return BankIdStatus.TIMEOUT;
+            } else {
+                return BankIdStatus.FAILED_UNKNOWN;
             }
         }
-        return BankIdStatus.FAILED_UNKNOWN;
     }
 
     private BankIdStatus handleBankIdDone(HttpResponse response) {
@@ -89,10 +90,10 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
                 .build();
     }
 
-    private AuthorizeRequest getAuthorizeRequest() {
+    private AuthorizeRequest getAuthorizeRequest(String ssn) {
         return new AuthorizeRequest(
                 NordeaSeConstants.FormValues.DURATION,
-                sessionStorage.get(NordeaSeConstants.StorageKeys.SSN),
+                ssn,
                 apiClient.getConfiguration().getRedirectUrl(),
                 NordeaSeConstants.FormValues.RESPONSE_TYPE,
                 Arrays.asList(
@@ -105,14 +106,10 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator {
     }
 
     private void saveTppToken(AuthorizeResponse authorizeResponse) {
-        sessionStorage.put(
-                NordeaSeConstants.StorageKeys.TPP_TOKEN,
-                authorizeResponse.getResponse().getTppToken());
+        apiClient.setTppToken(authorizeResponse.getResponse().getTppToken());
     }
 
     private void saveOrderRef(AuthorizeResponse authorizeResponse) {
-        sessionStorage.put(
-                NordeaSeConstants.StorageKeys.ORDER_REF,
-                authorizeResponse.getResponse().getOrderRef());
+        apiClient.setOrderRef(authorizeResponse.getResponse().getOrderRef());
     }
 }

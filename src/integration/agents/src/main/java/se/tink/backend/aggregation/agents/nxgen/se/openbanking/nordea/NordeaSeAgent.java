@@ -29,7 +29,7 @@ public final class NordeaSeAgent extends NordeaBaseAgent {
     protected Authenticator constructAuthenticator() {
 
         return new BankIdAuthenticationController<>(
-                context,
+                supplementalRequester,
                 new NordeaSeBankIdAuthenticator((NordeaSeApiClient) apiClient, sessionStorage));
     }
 

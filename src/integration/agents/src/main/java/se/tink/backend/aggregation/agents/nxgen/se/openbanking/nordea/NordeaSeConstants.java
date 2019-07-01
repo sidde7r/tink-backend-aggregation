@@ -49,5 +49,6 @@ public final class NordeaSeConstants {
 
     public class ErrorMessage {
         public static final String CANCEL_ERROR = "nsp.returncode.cava.user_cancel_error";
+        public static final String TIME_OUT_ERROR = "nsp.returncode.cava.expired_transaction_error";
     }
 }

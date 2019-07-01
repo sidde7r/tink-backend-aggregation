@@ -16,6 +16,9 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
+    private String tppToken;
+    private String orderRef;
+
     public NordeaSeApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         super(client, sessionStorage);
     }
@@ -29,11 +32,8 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public AuthorizeResponse authorize(AuthorizeRequest authorizeRequest) {
-        AuthorizeResponse res =
-                createRequest(NordeaSeConstants.Urls.AUTHORIZE)
-                        .post(AuthorizeResponse.class, authorizeRequest);
-
-        return res;
+        return createRequest(NordeaSeConstants.Urls.AUTHORIZE)
+                .post(AuthorizeResponse.class, authorizeRequest);
     }
 
     public HttpResponse getCode() {
@@ -42,19 +42,25 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
-        OAuth2Token token =
-                createRequestWithTppToken(NordeaSeConstants.Urls.GET_TOKEN)
-                        .body(form, MediaType.APPLICATION_FORM_URLENCODED)
-                        .post(GetTokenResponse.class)
-                        .toTinkToken();
-        return token;
+        return createRequestWithTppToken(NordeaSeConstants.Urls.GET_TOKEN)
+                .body(form, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(GetTokenResponse.class)
+                .toTinkToken();
     }
 
     private String getTppToken() {
-        return sessionStorage.get(NordeaSeConstants.StorageKeys.TPP_TOKEN);
+        return tppToken;
     }
 
     private String getOrderRef() {
-        return sessionStorage.get(NordeaSeConstants.StorageKeys.ORDER_REF);
+        return orderRef;
+    }
+
+    public void setTppToken(String tppToken) {
+        this.tppToken = tppToken;
+    }
+
+    public void setOrderRef(String orderRef) {
+        this.orderRef = orderRef;
     }
 }
