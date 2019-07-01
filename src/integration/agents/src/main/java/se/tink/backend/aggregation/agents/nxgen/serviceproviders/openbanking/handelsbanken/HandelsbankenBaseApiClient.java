@@ -72,7 +72,7 @@ public class HandelsbankenBaseApiClient {
                 .post(DecoupledResponse.class);
     }
 
-    private TokResponse getBearerTok(String clientId) {
+    private TokenResponse getBearerToken(String clientId) {
 
         final Form params =
                 Form.builder()
@@ -85,7 +85,7 @@ public class HandelsbankenBaseApiClient {
                 .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(TokResponse.class);
+                .post(TokenResponse.class);
     }
 
     private AuthorizationResponse getAuthorizationToken(String code, String clientId) {
@@ -121,9 +121,9 @@ public class HandelsbankenBaseApiClient {
 
     public SessionResponse getSession(String ssn) {
 
-        TokResponse tokResponse = getBearerTok(configuration.getAppId());
+        TokenResponse tokenResponse = getBearerToken(configuration.getAppId());
         AuthorizationResponse authResponse =
-                getAuthorizationToken(tokResponse.getAccessToken(), configuration.getAppId());
+                getAuthorizationToken(tokenResponse.getAccessToken(), configuration.getAppId());
 
         return getSessionId(ssn, authResponse.getConsentId());
     }

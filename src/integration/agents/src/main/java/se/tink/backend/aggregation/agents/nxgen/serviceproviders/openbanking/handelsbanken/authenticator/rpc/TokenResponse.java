@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class TokResponse {
+public class TokenResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
