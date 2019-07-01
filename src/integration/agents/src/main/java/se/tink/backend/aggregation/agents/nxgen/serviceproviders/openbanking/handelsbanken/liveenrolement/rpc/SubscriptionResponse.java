@@ -1,25 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.Subscription;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.SubscriptionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SubscriptionResponse {
 
-    @JsonProperty("clientId")
     private String clientId;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("subscription")
-    private Subscription subscription;
+    private SubscriptionEntity subscriptionEntity;
 
-    @JsonProperty("oauthRedirectURI")
     private String oauthRedirectURI;
 
     public String getClientId() {
@@ -34,8 +28,8 @@ public class SubscriptionResponse {
         return description;
     }
 
-    public Subscription getSubscription() {
-        return subscription;
+    public SubscriptionEntity getSubscriptionEntity() {
+        return subscriptionEntity;
     }
 
     public String getOauthRedirectURI() {

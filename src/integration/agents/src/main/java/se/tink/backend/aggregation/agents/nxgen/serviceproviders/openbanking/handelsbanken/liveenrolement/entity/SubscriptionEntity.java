@@ -1,19 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Subscription {
+public class SubscriptionEntity {
 
-    @JsonProperty("product")
-    private Product product;
+    private ProductEntity productEntity;
 
-    @JsonProperty("subscriptionId")
     private String subscriptionId;
 
-    public Product getProduct() {
-        return product;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
     public String getSubscriptionId() {
