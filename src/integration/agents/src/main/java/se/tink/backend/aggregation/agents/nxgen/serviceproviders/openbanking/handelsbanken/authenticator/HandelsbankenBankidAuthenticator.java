@@ -20,15 +20,14 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-
-public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<SessionResponse> {
+public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<SessionResponse> {
 
     private final HandelsbankenBaseApiClient apiClient;
     private final SessionStorage sessionStorage;
 
     private String autoStartToken;
 
-    public HandelsbankenBaseAuthenticator(
+    public HandelsbankenBankidAuthenticator(
             HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
@@ -39,7 +38,7 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
             throws BankIdException, BankServiceException, AuthorizationException {
 
         try {
-            SessionResponse response = apiClient.buildAuthorizeUrl(ssn);
+            SessionResponse response = apiClient.getSession(ssn);
             this.autoStartToken = response.getAutoStartToken();
             Uninterruptibles.sleepUninterruptibly(response.getSleepTime(), TimeUnit.MILLISECONDS);
             return response;

@@ -119,7 +119,7 @@ public class HandelsbankenBaseApiClient {
                 .post(SessionResponse.class);
     }
 
-    public SessionResponse buildAuthorizeUrl(String ssn) {
+    public SessionResponse getSession(String ssn) {
 
         TokResponse tokResponse = getBearerTok(configuration.getAppId());
         AuthorizationResponse authResponse =
