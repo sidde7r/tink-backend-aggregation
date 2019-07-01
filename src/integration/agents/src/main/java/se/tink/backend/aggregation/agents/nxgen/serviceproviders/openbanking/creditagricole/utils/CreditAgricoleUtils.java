@@ -37,14 +37,18 @@ public class CreditAgricoleUtils {
         return params;
     }
 
-    public static String getXMLResponse(String tag, String xml) {
+    public static List<String> getXMLResponse(String tag, String xml) {
+        ArrayList<String> resultList = new ArrayList<>();
         Pattern pattern = TAG_STRING_GETTER.andThen(TAG_PATTERN_GETTER).apply(tag);
         Matcher matcher = pattern.matcher(xml);
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
+        while (matcher.find()) {
+            resultList.add(matcher.group(1));
+        }
+        if (resultList.isEmpty()) {
             throw new IllegalStateException(
                     String.format("No matching tag <%s> in xml response", tag));
+        } else {
+            return resultList;
         }
     }
 }

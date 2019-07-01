@@ -167,8 +167,12 @@ public final class CreditAgricoleApiClient {
                         .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                         .get(String.class);
 
-        String userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
-        sessionStorage.put(StorageKeys.USER_ID, userId);
+        List userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
+        if (userId.size() > 1) {
+            throw new IllegalStateException(
+                    String.format("More than one <%s> in xml response", XMLtags.ID));
+        }
+        sessionStorage.put(StorageKeys.USER_ID, userId.get(0));
     }
 
     private String getUserIdUrl() {
