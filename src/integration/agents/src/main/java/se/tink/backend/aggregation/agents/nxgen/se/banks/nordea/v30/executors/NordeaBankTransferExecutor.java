@@ -37,6 +37,17 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
+        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+
+        if (payment.isPresent()) {
+            executorHelper.confirm(payment.get().getApiIdentifier());
+        } else {
+            createNewTransfer(transfer);
+        }
+        return Optional.empty();
+    }
+
+    private void createNewTransfer(Transfer transfer) {
         final FetchAccountResponse accountResponse =
                 Optional.ofNullable(apiClient.fetchAccount())
                         .orElseThrow(executorHelper::failedFetchAccountsError);
@@ -77,8 +88,6 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     destinationExternalAccount.get(),
                     transferMessageFormatter);
         }
-
-        return Optional.empty();
     }
 
     private void executeInternalBankTransfer(
@@ -132,13 +141,6 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 createPaymentRequest(
                         transfer, sourceAccount, destinationAccount, transferMessageFormatter);
 
-        /*
-         * Nordea will return an error saying unconfirmed payment already exists in outbox if
-         * someone tries to create a payment to the same recipient. So we need to check if transfer
-         * already exists in outbox and remove it in that case to make room for a new one
-         */
-        removeIfAlreadyExist(transferRequest);
-
         // execute external transfer
         BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
 
@@ -170,22 +172,5 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         return transfer.getDestination() instanceof NDAPersonalNumberIdentifier
                 ? NordeaSEConstants.PaymentAccountTypes.NDASE
                 : NordeaSEConstants.PaymentAccountTypes.LBAN;
-    }
-
-    private void removeIfAlreadyExist(PaymentRequest transferRequest) {
-        // find first transfer in outbox that is a copy of the transferRequest object
-        apiClient.fetchPayments().getPayments().stream()
-                .filter(
-                        entity ->
-                                entity.getRecipientAccountNumber().equals(transferRequest.getTo()))
-                .filter(entity -> entity.getType().equals(transferRequest.getType()))
-                .filter(entity -> !entity.isConfirmed())
-                .findFirst()
-                .map(PaymentEntity::getId)
-                .ifPresent(this::deleteTransfer); // delete transfer if it already exists in outbox
-    }
-
-    private void deleteTransfer(String transferId) {
-        apiClient.deleteTransfer(transferId);
     }
 }
