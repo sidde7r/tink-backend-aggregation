@@ -17,7 +17,11 @@ public class CreditCardResponse {
     private Link disputeLink;
 
     public double getBalance() {
-        return amountAvaiable - limit;
+        return balance;
+    }
+
+    public double getAmountAvaiable() {
+        return amountAvaiable;
     }
 }
 

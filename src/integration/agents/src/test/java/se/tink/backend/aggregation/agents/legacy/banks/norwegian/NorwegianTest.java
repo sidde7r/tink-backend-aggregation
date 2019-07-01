@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.agents.banks.norwegian;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
-import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils.AccountNotFoundException;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.SavingsAccountParsingUtils;
-import se.tink.libraries.social.security.TestSSN;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
     private static final String savingsAccountPage =
@@ -48,24 +44,16 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
     }
 
     @Test
-    public void testMobilebankId() throws Exception {
-        Credentials credentials = new Credentials();
-        credentials.setUsername(TestSSN.EP);
-        credentials.setType(CredentialsTypes.MOBILE_BANKID);
-
-        testAgent(credentials);
-    }
-
-    @Test
     public void testBankIdValidFormats() {
         assertValidBankId("522767******6982");
         assertValidBankId("111111******1111");
+        assertValidBankId("1234567890");
     }
 
     @Test
     public void testBankIdInvalidFormats() {
         assertInvalidBankId("522767******698");
-        assertInvalidBankId("1111111111111111");
+        assertInvalidBankId("12345");
     }
 
     private void assertValidBankId(String accountNumber) {
@@ -113,24 +101,6 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
         Double balance = CreditCardParsingUtils.parseBalance(htmlContent);
 
         Assert.assertEquals(-150, balance, 0.0001);
-    }
-
-    @Test
-    public void testParseCardNumberFromHtmlContent() throws AccountNotFoundException {
-        String htmlContent =
-                "<div class=\"creditcard\">"
-                        + "     <div class=\"creditcard__body-container\" id=\"creditcard__body-container\">"
-                        + "         <div class=\"creditcard__body\" id=\"creditcard__body\">"
-                        + "             <div class=\"creditcard__number\">6543 21** **** 4321</div>"
-                        + "             <div class=\"creditcard__expire text-right\">01/21</div>"
-                        + "             <div class=\"creditcard__name\">TEST TESTSSON</div>"
-                        + "         </div>"
-                        + "     </div>"
-                        + "</div>";
-
-        String accountNumber = CreditCardParsingUtils.parseAccountNumber(htmlContent);
-
-        Assert.assertEquals("654321******4321", accountNumber);
     }
 
     @Test
@@ -190,41 +160,6 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
         Optional<String> stringOptional =
                 CreditCardParsingUtils.parseTransactionalAccountNumber(htmlContent);
         Assert.assertEquals("11111111111", stringOptional.get());
-    }
-
-    @Test(expected = AccountNotFoundException.class)
-    public void testMissingAccount() throws AccountNotFoundException {
-        String htmlContent =
-                "<div class=\"main-content\">"
-                        + "                    <div class=\"topnav visible-xs\">"
-                        + "                            <a href=\"/MinSida\" class=\"glyphicon glyphicons-home-image\"></a>"
-                        + "        <a href=\"/MinSida\" class=\"glyphicon glyphicons-circle-arrow-left-image\"></a>"
-                        + "                        <h1>Kreditkort</h1>"
-                        + "                    </div>"
-                        + "                        <h1 class=\"hidden-xs content-heading\">Kreditkort</h1>"
-                        + ""
-                        + "                    <div style=\"background-color:#C2C2C2; padding:30px\">"
-                        + "       <h1>Vi har inte registrerat att du har något kreditkort hos oss</h1>"
-                        + "    </div>"
-                        + "    <div style=\"color:#0b4d9c; height:300px\">"
-                        + "        <div style=\"float:left; width:500px; padding:30px\">"
-                        + "            <h1>Spara till semestern hela året!</h1>"
-                        + "            <p>"
-                        + "                <b>Några av våra fördelar:</b>"
-                        + "           <ul>"
-                        + "               <li>Tjäna 1 % CashPoints på alla varuköp - spara till resan varje dag!</li>"
-                        + "               <li>Tjäna upp till 20 % CashPoints hos Norwegian</li>"
-                        + "               <li>Reseförsäkring och avbeställningsskydd</li>"
-                        + "               <li>Lost connection-försäkring</li>"
-                        + "           </ul>"
-                        + "            </p>"
-                        + "            <p>"
-                        + "                Norwegian-kortet kostar ingenting att skaffa sig, och har ingen årsavgift!"
-                        + "            </p>"
-                        + "        </div>"
-                        + "    </div>"
-                        + "                </div>";
-        CreditCardParsingUtils.parseAccountNumber(htmlContent);
     }
 
     @Test

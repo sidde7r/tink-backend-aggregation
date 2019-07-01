@@ -45,25 +45,6 @@ public class CreditCardParsingUtils {
         }
     }
 
-    /**
-     * Parses the account number from Norwegian account details page
-     *
-     * @throws AccountNotFoundException if no account could be extracted
-     */
-    public static String parseAccountNumber(String htmlContent) throws AccountNotFoundException {
-        Elements elements = Jsoup.parse(htmlContent).select("div.creditcard");
-
-        if (elements.size() == 0) {
-            throw new AccountNotFoundException("Could not extract account number.");
-        }
-
-        return elements.get(0)
-                .select("div.creditcard__number")
-                .first()
-                .text()
-                .replaceAll("\\s", "");
-    }
-
     public static Optional<String> parseAccountName(String htmlContent) {
         Elements elements =
                 Jsoup.parse(htmlContent)

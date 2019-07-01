@@ -40,7 +40,9 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardOverviewResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.LoginRequest;
@@ -79,6 +81,8 @@ public class NorwegianAgent extends AbstractAgent
 
     private static final String BASE_URL = "https://www.banknorwegian.se/";
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
+    private static final String CREDIT_CARD_OVERVIEW_URL =
+            BASE_URL + "api/mypage/creditcard/overview";
     private static final String IDENTITY_URL = BASE_URL + "MinSida/Settings/ContactInfo";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
@@ -270,9 +274,24 @@ public class NorwegianAgent extends AbstractAgent
                 createClientRequest(CREDIT_CARD_URL).get(CreditCardResponse.class);
 
         // Parse account number and balance
-        String creditCardPage = createScrapeRequest(CREDIT_CARD_URL).get(String.class);
-        account.setAccountNumber(CreditCardParsingUtils.parseAccountNumber(creditCardPage));
+        String transactionsPage = createScrapeRequest(CARD_TRANSACTION_URL).get(String.class);
+        String accountNumber =
+                CreditCardParsingUtils.parseTransactionalAccountNumber(transactionsPage)
+                        .orElseThrow(
+                                () ->
+                                        new AccountNotFoundException(
+                                                "Could not find account number."));
+        account.setAccountNumber(accountNumber);
         account.setBalance(creditCardResponse.getBalance());
+        account.setAvailableCredit(creditCardResponse.getAmountAvaiable());
+
+        // overview doesn't always show the card
+        final CreditCardOverviewResponse creditCardOverview =
+                createClientRequest(CREDIT_CARD_OVERVIEW_URL).get(CreditCardOverviewResponse.class);
+        if (creditCardOverview.getCreditCardList().size() >= 1) {
+            final CreditCardEntity creditCard = creditCardOverview.getCreditCardList().get(0);
+            account.setCardNumber(creditCard.getCardNumberMasked());
+        }
 
         return account.toTinkAccount();
     }
