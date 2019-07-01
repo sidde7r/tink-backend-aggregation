@@ -1,26 +1,33 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken;
 
+import se.tink.backend.aggregation.nxgen.http.URL;
+
 public final class HandelsbankenBaseConstants {
     public static final String INTEGRATION_NAME = "handelsbanken";
 
     public static class Urls {
 
-        public static final String BASE_URL = "https://api.handelsbanken.com/openbanking";
-        public static final String BASE_URL2 = "https://api.handelsbanken.com/bb/gls5";
+        private static final String BASE_URL = "https://api.handelsbanken.com/openbanking";
+        private static final String BASE_URL2 = "https://api.handelsbanken.com/bb/gls5";
 
         private static final String SUFFIX_V1 = "/psd2/v1";
         private static final String SUFFIX_V2 = "/psd2/v2";
 
-        public static final String ACCOUNTS = SUFFIX_V2 + "/accounts";
-        public static final String ACCOUNT_DETAILS = SUFFIX_V2 + "/accounts/%s";
-        public static final String ACCOUNT_TRANSACTIONS = SUFFIX_V2 + "/accounts/%s/transactions";
+        public static final String ACCOUNTS = BASE_URL + SUFFIX_V2 + "/accounts";
+        //public static final String ACCOUNT_TRANSACTIONS = SUFFIX_V2 + "/accounts/%s/transactions";
         public static final String TOKEN = BASE_URL2 + "/oauth2/token/1.0";
         public static final String AUTHORIZATION = BASE_URL + SUFFIX_V1 + "/consents";
         public static final String THIRD_PARTIES = BASE_URL + SUFFIX_V1 + "/third-parties";
         public static final String SUBSCRIPTIONS = BASE_URL + SUFFIX_V1 + "/subscriptions";
-
         public static final String SESSION = BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0";
-        public static final String DECOUPLED = BASE_URL2 + "/decoupled/mbid/token/1.0";
+
+        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}");
+        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}" + "/transactions");
+
+    }
+
+    public static class UrlParams {
+        public static final String ACCOUNT_ID = "accountId";
     }
 
     public static class StorageKeys {
