@@ -9,7 +9,6 @@ public class ScaMethodsItemEntity {
     @JsonProperty("_links")
     private LinksEntity linksEntity;
 
-    @JsonProperty("scaMethodType")
     private String scaMethodType;
 
     public LinksEntity getLinksEntity() {

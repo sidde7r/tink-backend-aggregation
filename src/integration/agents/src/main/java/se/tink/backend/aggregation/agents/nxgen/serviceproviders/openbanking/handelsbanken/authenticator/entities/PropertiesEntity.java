@@ -8,10 +8,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class PropertiesEntity {
 
-    @JsonProperty("app")
     private App app;
 
-    @JsonProperty("product")
     private Product product;
 
     @JsonProperty("clientId")

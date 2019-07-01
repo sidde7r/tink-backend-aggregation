@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class RedirectResponse {
 
-    @JsonProperty("result")
     private String result;
 
     @JsonProperty("access_token")

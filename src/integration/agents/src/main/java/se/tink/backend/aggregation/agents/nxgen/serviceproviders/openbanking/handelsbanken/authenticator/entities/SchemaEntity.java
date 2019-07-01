@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SchemaEntity {
 
-    @JsonProperty("type")
     private String type;
 
     @JsonProperty("properties")

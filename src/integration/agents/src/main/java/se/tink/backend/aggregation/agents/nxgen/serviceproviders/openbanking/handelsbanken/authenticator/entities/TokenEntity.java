@@ -9,7 +9,6 @@ public class TokenEntity {
     @JsonProperty("hints")
     private HintsEntity hintsEntity;
 
-    @JsonProperty("href")
     private String href;
 
     public HintsEntity getHintsEntity() {
