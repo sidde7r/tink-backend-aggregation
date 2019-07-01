@@ -48,7 +48,7 @@ public class HandelsbankenBaseApiClient {
     }
 
     public AccountsResponse getAccountList() {
-        return createRequest(new URL(Urls.ACCOUNTS)).get(AccountsResponse.class);
+        return createRequest(Urls.ACCOUNTS).get(AccountsResponse.class);
     }
 
     public BalanceAccountResponse getAccountDetails(String accountId) {
@@ -81,7 +81,7 @@ public class HandelsbankenBaseApiClient {
                         .put(BodyKeys.CLIENT_ID, clientId)
                         .build();
 
-        return client.request(new URL(Urls.TOKEN))
+        return client.request(Urls.TOKEN)
                 .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -90,7 +90,7 @@ public class HandelsbankenBaseApiClient {
 
     private AuthorizationResponse getAuthorizationToken(String code, String clientId) {
 
-        return client.request(new URL(Urls.AUTHORIZATION))
+        return client.request(Urls.AUTHORIZATION)
                 .body(new AuthorizationRequest(HandelsbankenBaseConstants.BodyValues.ALL_ACCOUNTS))
                 .header(HeaderKeys.X_IBM_CLIENT_ID, clientId)
                 .header(HeaderKeys.COUNTRY, HandelsbankenBaseConstants.Market.COUNTRY)
@@ -105,7 +105,7 @@ public class HandelsbankenBaseApiClient {
 
     public SessionResponse getSessionId(String personalId, String consentId) {
 
-        return client.request(new URL(Urls.SESSION))
+        return client.request(Urls.SESSION)
                 .header(HeaderKeys.CONSENT_ID, consentId)
                 .body(
                         new SessionRequest(

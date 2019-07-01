@@ -7,10 +7,14 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.App;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.AdditionalRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.Product;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.SubscriptionRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.SubscriptionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.ThirdPartiesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.TokenResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class HandelsbankenBaseLiveEnrolement {
 
@@ -26,7 +30,7 @@ public class HandelsbankenBaseLiveEnrolement {
     }
 
     public ThirdPartiesResponse getThirdPartiesId() {
-        return client.request(new URL(HandelsbankenBaseConstants.Urls.THIRD_PARTIES))
+        return client.request(HandelsbankenBaseConstants.Urls.THIRD_PARTIES)
                 .header(
                         HandelsbankenBaseConstants.HeaderKeys.TPP_TRANSACTION_ID,
                         UUID.randomUUID().toString())
@@ -47,7 +51,7 @@ public class HandelsbankenBaseLiveEnrolement {
                         .put(BodyKeys.CLIENT_ID, clientId)
                         .build();
 
-        return client.request(new URL(HandelsbankenBaseConstants.Urls.TOKEN))
+        return client.request(HandelsbankenBaseConstants.Urls.TOKEN)
                 .body(params.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
@@ -68,7 +72,7 @@ public class HandelsbankenBaseLiveEnrolement {
 
     public SubscriptionResponse getAdditionalSubscription(
             String clientId, String appId, String code, String subscription) {
-        return client.request(new URL(HandelsbankenBaseConstants.Urls.SUBSCRIPTIONS))
+        return client.request(HandelsbankenBaseConstants.Urls.SUBSCRIPTIONS)
                 .header(HandelsbankenBaseConstants.HeaderKeys.AUTHORIZATION, code)
                 .header(
                         HandelsbankenBaseConstants.HeaderKeys.TPP_REQUEST_ID,
@@ -86,7 +90,7 @@ public class HandelsbankenBaseLiveEnrolement {
     public SubscriptionResponse getSubscription(
             String clientId, String code, String oauthRedirectURI) {
 
-        return client.request(new URL(HandelsbankenBaseConstants.Urls.SUBSCRIPTIONS))
+        return client.request(HandelsbankenBaseConstants.Urls.SUBSCRIPTIONS)
                 .header(HandelsbankenBaseConstants.HeaderKeys.AUTHORIZATION, code)
                 .header(
                         HandelsbankenBaseConstants.HeaderKeys.TPP_REQUEST_ID,

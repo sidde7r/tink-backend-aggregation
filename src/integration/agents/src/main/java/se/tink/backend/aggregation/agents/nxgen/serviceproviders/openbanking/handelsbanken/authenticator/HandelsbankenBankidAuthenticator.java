@@ -66,21 +66,6 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
             }
         }
 
-       /* if (decoupledResponse.getError() != null) {
-            String error = decoupledResponse.getError();
-            if (error.equals(Errors.INTENT_EXPIRED) || error.equals(Errors.MBID_ERROR)) {
-                return BankIdStatus.TIMEOUT;
-            } else if (error.equals(Errors.INVALID_REQUEST)
-                    || error.equals(Errors.NOT_SHB_APPROVED)
-                    || error.equals(Errors.UNAUTHORIZED_CLIENT)) {
-                return BankIdStatus.NO_CLIENT;
-            } else if (error.equals(Errors.MBID_MAX_POLLING)) {
-                return BankIdStatus.INTERRUPTED;
-            } else {
-                return BankIdStatus.FAILED_UNKNOWN;
-            }
-        } */
-
         if (decoupledResponse.getResult().equals(Status.IN_PROGRESS)) {
             return BankIdStatus.WAITING;
         } else if (decoupledResponse.getResult().equals(Status.USER_CANCEL)) {

@@ -13,14 +13,12 @@ public final class HandelsbankenBaseConstants {
         private static final String SUFFIX_V1 = "/psd2/v1";
         private static final String SUFFIX_V2 = "/psd2/v2";
 
-        public static final String ACCOUNTS = BASE_URL + SUFFIX_V2 + "/accounts";
-        //public static final String ACCOUNT_TRANSACTIONS = SUFFIX_V2 + "/accounts/%s/transactions";
-        public static final String TOKEN = BASE_URL2 + "/oauth2/token/1.0";
-        public static final String AUTHORIZATION = BASE_URL + SUFFIX_V1 + "/consents";
-        public static final String THIRD_PARTIES = BASE_URL + SUFFIX_V1 + "/third-parties";
-        public static final String SUBSCRIPTIONS = BASE_URL + SUFFIX_V1 + "/subscriptions";
-        public static final String SESSION = BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0";
-
+        public static final URL ACCOUNTS = new URL(BASE_URL + SUFFIX_V2 + "/accounts");
+        public static final URL TOKEN = new URL(BASE_URL2 + "/oauth2/token/1.0");
+        public static final URL AUTHORIZATION = new URL(BASE_URL + SUFFIX_V1 + "/consents");
+        public static final URL THIRD_PARTIES = new URL(BASE_URL + SUFFIX_V1 + "/third-parties");
+        public static final URL SUBSCRIPTIONS = new URL(BASE_URL + SUFFIX_V1 + "/subscriptions");
+        public static final URL SESSION = new URL(BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0");
         public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID );
         public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID + "/transactions");
 
@@ -89,13 +87,13 @@ public final class HandelsbankenBaseConstants {
 
     public static class Transactions {
         public static final String IS_PENDING = "PENDING";
-        public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
         public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
-        public static final String VALUE_DATE_MISSING = "Valuedate not found, defaulting to transactiondate";
+        public static final String VALUE_DATE_MISSING = "Valuedate not found, defaulting to transactiondate.";
+        public static final String NOT_PARSE_DATE = "Could not parse date.";
     }
 
     public static class Errors {

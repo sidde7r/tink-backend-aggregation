@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.gargoylesoftware.htmlunit.ElementNotFoundException;
+import java.text.ParseException;
+import java.time.DateTimeException;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import java.text.ParseException;
-import java.util.Date;
 
 @JsonObject
 public class TransactionsItem {
@@ -104,7 +104,7 @@ public class TransactionsItem {
         try {
             return ThreadSafeDateFormat.FORMATTER_DAILY.parse(transactionDate);
         } catch (ParseException e) {
-            throw new ElementNotFoundException("transactionDate", "transactionDate", "transactionDate");
+            throw new DateTimeException(ExceptionMessages.NOT_PARSE_DATE);
         }
 
     }

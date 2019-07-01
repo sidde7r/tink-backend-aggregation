@@ -647,7 +647,7 @@
             "status": "ENABLED",
             "credentialsType": "MOBILE_BANKID",
             "multiFactor": false,
-            "className": "nxgen.se.openbanking.handelsbanken.HandelsbankenAgent",
+            "className": "nxgen.se.openbanking.handelsbanken.HandelsbankenSEAgent",
             "passwordHelpText": null,
             "transactional": "true",
             "payload": "tink",
