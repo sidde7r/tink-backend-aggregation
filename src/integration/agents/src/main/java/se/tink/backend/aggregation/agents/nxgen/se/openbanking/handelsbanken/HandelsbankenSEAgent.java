@@ -58,6 +58,9 @@ public final class HandelsbankenSEAgent extends HandelsbankenBaseAgent {
 
     private void configureHttpClient(TinkHttpClient client) {
         client.setEidasProxy(handelsbankenBaseConfiguration.getEidasUrl(), "Tink");
+
+        ///HEEEEEEEEEEERE
+        client.setDebugOutput(true);
     }
 
     @Override

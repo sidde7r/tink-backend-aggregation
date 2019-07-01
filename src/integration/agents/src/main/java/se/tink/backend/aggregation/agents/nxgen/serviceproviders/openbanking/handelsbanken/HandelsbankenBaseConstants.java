@@ -19,8 +19,8 @@ public final class HandelsbankenBaseConstants {
         public static final URL THIRD_PARTIES = new URL(BASE_URL + SUFFIX_V1 + "/third-parties");
         public static final URL SUBSCRIPTIONS = new URL(BASE_URL + SUFFIX_V1 + "/subscriptions");
         public static final URL SESSION = new URL(BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0");
-        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID );
-        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID + "/transactions");
+        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}");
+        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}/transactions");
 
     }
 
