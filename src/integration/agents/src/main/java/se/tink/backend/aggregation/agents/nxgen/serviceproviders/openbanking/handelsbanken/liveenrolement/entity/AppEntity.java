@@ -1,21 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class App {
+public class AppEntity {
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("oauthRedirectURI")
     private String oauthRedirectURI;
 
-    public App(String name, String description, String oauthRedirectURI) {
+    public AppEntity(String name, String description, String oauthRedirectURI) {
         this.name = name;
         this.description = description;
         this.oauthRedirectURI = oauthRedirectURI;

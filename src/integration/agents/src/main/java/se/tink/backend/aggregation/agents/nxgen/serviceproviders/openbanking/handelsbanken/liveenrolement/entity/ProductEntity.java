@@ -1,18 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Product {
+public class ProductEntity {
 
-    @JsonProperty("scope")
     private String scope;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("version")
     private String version;
 
     public String getScope() {

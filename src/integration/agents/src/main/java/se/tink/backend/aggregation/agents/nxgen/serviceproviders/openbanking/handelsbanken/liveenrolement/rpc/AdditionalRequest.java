@@ -1,18 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.SubscriptionProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AdditionalRequest {
 
-    @JsonProperty("product")
-    private Product product;
+    private SubscriptionProductEntity product;
 
-    @JsonProperty("clientId")
     private String clientId;
 
-    public Product getProduct() {
+    public SubscriptionProductEntity getProduct() {
         return product;
     }
 
@@ -20,7 +18,7 @@ public class AdditionalRequest {
         return clientId;
     }
 
-    public AdditionalRequest(String clientId, Product product) {
+    public AdditionalRequest(String clientId, SubscriptionProductEntity product) {
         this.clientId = clientId;
         this.product = product;
     }

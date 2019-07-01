@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.App;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.Product;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.AppEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.entity.SubscriptionProductEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PropertiesEntity {
 
-    private App app;
+    private AppEntity app;
 
-    private Product product;
+    private SubscriptionProductEntity product;
 
     @JsonProperty("clientId")
     private ClientIdEntity clientIdEntity;
@@ -22,17 +22,17 @@ public class PropertiesEntity {
         this.nameEntity = name;
     }
 
-    public PropertiesEntity(App app, ClientIdEntity clientId, Product product) {
+    public PropertiesEntity(AppEntity app, ClientIdEntity clientId, SubscriptionProductEntity product) {
         this.app = app;
         this.clientIdEntity = clientId;
         this.product = product;
     }
 
-    public App getApp() {
+    public AppEntity getApp() {
         return app;
     }
 
-    public Product getProduct() {
+    public SubscriptionProductEntity getProduct() {
         return product;
     }
 
