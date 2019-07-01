@@ -374,6 +374,12 @@ spec:
               name: aggregation-secrets
               key: rabobank-certificate-p12-tink
               optional: true
+        - name: RABOBANK_QSEALC_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-qsealc-tink
+              optional: true
         - name: RABOBANK_CLIENT_ID_ABN_SANDBOX
           valueFrom:
             secretKeyRef:
