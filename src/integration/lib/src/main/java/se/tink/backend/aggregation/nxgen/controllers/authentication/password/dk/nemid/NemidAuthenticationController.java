@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.ErrorStrings;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdConstants.LogTags;
 
 public abstract class NemidAuthenticationController {
@@ -147,19 +148,28 @@ public abstract class NemidAuthenticationController {
         // loaded yet.
 
         driver.switchTo().defaultContent();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 7; i++) {
             Optional<String> nemIdToken = getNemIdToken();
 
             if (nemIdToken.isPresent()) {
                 return nemIdToken.get();
             }
+
+            switchToIframe();
+            if (driver.getPageSource().contains(ErrorStrings.INVALID_CREDENTIALS)) {
+                driver.switchTo().defaultContent();
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            driver.switchTo().defaultContent();
         }
 
         LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_MAINPAGE_ERROR_CASE);
         switchToIframe();
         LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_IFRAME_ERROR_CASE);
+
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the authentication.
+        driver.switchTo().defaultContent();
         throw new IllegalStateException("[nemid] Could not find nemId token.");
     }
 
