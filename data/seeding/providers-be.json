@@ -254,6 +254,21 @@
             "type": "BANK"
         },
         {
+            "name": "be-belfius-oauth2",
+            "className": "nxgen.be.openbanking.belfius.BelfiusAgent",
+            "displayName": "Belfius (Sandbox)",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
+        },
+        {
             "className": "nxgen.be.banks.beobank.BeobankAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Beobank",

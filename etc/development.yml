@@ -439,6 +439,11 @@ agentsServiceConfiguration:
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     lansforsakringar:
       tink:
+    belfius:
+      tink:
+        clientId: ""
+        baseUrl: "https://sandbox.api.belfius.be:8443"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     bnpparibasfortis:
       tink:
         clientId: ""
