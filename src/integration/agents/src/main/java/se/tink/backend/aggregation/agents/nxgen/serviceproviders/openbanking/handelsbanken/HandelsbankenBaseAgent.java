@@ -4,7 +4,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.live_enrolement.HandelsbankenBaseLiveEnrolement;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -18,7 +17,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
     private final HandelsbankenBaseApiClient apiClient;
-    private final HandelsbankenBaseLiveEnrolement enrolement;
     private final String clientName;
     private HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
 
@@ -26,7 +24,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenBaseApiClient(client, sessionStorage);
-        enrolement = new HandelsbankenBaseLiveEnrolement(client);
         clientName = request.getProvider().getPayload();
     }
 
@@ -49,7 +46,6 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
                                                         .CONFIG_MISSING));
 
         apiClient.setConfiguration(handelsbankenBaseConfiguration);
-        enrolement.setConfiguration(handelsbankenBaseConfiguration);
         configureHttpClient(client);
     }
 
