@@ -448,7 +448,15 @@
             "className": "nxgen.fr.openbanking.caixa.CaixaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Caixa Geral de Depositos (Test)",
-            "fields": [],
+            "fields": [
+                {
+                    "description": "Identifier",
+                    "maxLength": 30,
+                    "minLength": 4,
+                    "name": "username",
+                    "numeric": true
+                }
+            ],
             "multiFactor": true,
             "name": "fr-caixa-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",

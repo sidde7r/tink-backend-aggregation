@@ -135,7 +135,15 @@
             "className": "nxgen.pt.openbanking.caixa.CaixaAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Caixa (Test)",
-            "fields": [],
+            "fields": [
+                {
+                    "description": "Identifier",
+                    "maxLength": 30,
+                    "minLength": 4,
+                    "name": "username",
+                    "numeric": true
+                }
+            ],
             "multiFactor": false,
             "name": "pt-caixa-oauth2",
             "passwordHelpText": "In order to use this bank, please authenticate yourself.",
