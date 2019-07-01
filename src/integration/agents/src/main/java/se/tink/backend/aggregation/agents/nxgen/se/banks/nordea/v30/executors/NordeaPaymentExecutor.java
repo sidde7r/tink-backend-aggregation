@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
@@ -52,12 +53,12 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     }
 
     private BeneficiariesEntity createDestination(Transfer transfer) {
-        return executorHelper
-                // create plusgiro or bankgiro destination if it
-                // does not exist in beneficiaries
-                .createRecipient(transfer)
-                // throw exception if destination does not exist
-                .orElseThrow(() -> executorHelper.invalidDestError());
+        BeneficiariesEntity destination = new BeneficiariesEntity();
+        NordeaAccountIdentifierFormatter identifierFormatter =
+                new NordeaAccountIdentifierFormatter();
+        destination.setAccountNumber(transfer.getDestination().getIdentifier(identifierFormatter));
+        transfer.getDestination().getName().ifPresent(destination::setName);
+        return destination;
     }
 
     private void createNewPayment(Transfer transfer) {

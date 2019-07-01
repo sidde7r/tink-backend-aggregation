@@ -1,23 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.RecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
@@ -26,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einv
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
@@ -41,17 +35,12 @@ public class NordeaExecutorHelper {
             new DefaultAccountIdentifierFormatter();
     private final AgentContext context;
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final NordeaSEApiClient apiClient;
 
     public NordeaExecutorHelper(
-            AgentContext context,
-            Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            NordeaSEApiClient apiClient) {
+            AgentContext context, Catalog catalog, NordeaSEApiClient apiClient) {
         this.context = context;
         this.catalog = catalog;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
     }
 
@@ -114,21 +103,6 @@ public class NordeaExecutorHelper {
         return accountEntity.getPermissions().isCanPayPgbgFromAccount();
     }
 
-    protected Optional<BeneficiariesEntity> createRecipient(Transfer transfer) {
-        AccountIdentifier destination = transfer.getDestination();
-
-        RecipientRequest recipientRequest = new RecipientRequest();
-        recipientRequest.setPaymentType(getPaymentType(destination));
-        recipientRequest.setAccountNumber(
-                transfer.getDestination().getIdentifier(DEFAULT_FORMATTER));
-        recipientRequest.setName(findDestinationNameFor(destination));
-        recipientRequest.setAccountNumberType(getPaymentAccountType(destination));
-
-        apiClient.registerRecipient(recipientRequest);
-
-        return validateDestinationAccount(transfer);
-    }
-
     protected String getPaymentType(final AccountIdentifier destination) {
         if (!destination.is(AccountIdentifier.Type.SE_PG)
                 && !destination.is(AccountIdentifier.Type.SE_BG)) {
@@ -143,50 +117,6 @@ public class NordeaExecutorHelper {
         return destination.is(AccountIdentifier.Type.SE_PG)
                 ? NordeaSEConstants.PaymentAccountTypes.PLUSGIRO
                 : NordeaSEConstants.PaymentAccountTypes.BANKGIRO;
-    }
-
-    /**
-     * Try to get destination name from destination. Otherwise ask user for destination name via a
-     * supplemental information.
-     */
-    private String findDestinationNameFor(final AccountIdentifier destination) {
-        Optional<String> destinationName = destination.getName();
-
-        return destinationName.orElseGet(this::askUserForDestinationName);
-    }
-
-    private String askUserForDestinationName() {
-        try {
-            Map<String, String> nameResponse =
-                    supplementalInformationHelper.askSupplementalInformation(getNameInputField());
-            String destinationName =
-                    nameResponse.get(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_NAME);
-
-            if (!Strings.isNullOrEmpty(destinationName)) {
-                return destinationName;
-            }
-
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            context.getCatalog()
-                                    .getString(NordeaSEConstants.LogMessages.NO_RECIPIENT_NAME))
-                    .build();
-
-        } catch (SupplementalInfoException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            context.getCatalog()
-                                    .getString(NordeaSEConstants.LogMessages.NO_RECIPIENT_NAME))
-                    .build();
-        }
-    }
-
-    private Field getNameInputField() {
-        Field nameField = new Field();
-        nameField.setDescription(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_DESCRIPTION);
-        nameField.setName(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_NAME);
-
-        return nameField;
     }
 
     public void confirm(String id) {
