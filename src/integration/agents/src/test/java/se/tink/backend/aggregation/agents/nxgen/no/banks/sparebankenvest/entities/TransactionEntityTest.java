@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.entities;
 
 import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;

@@ -2,30 +2,66 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
 import java.util.Locale;
 import java.util.TimeZone;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class SparebankenVestConstants {
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "Brukskonto")
+                    .put(AccountTypes.OTHER, "Uspesifisert")
+                    .build();
+
     public static final class Urls {
-        static final String HOST = "https://m.spv.no";
+        static final String HOST = "https://www.spv.no";
+        static final String HOST_DBANK = "https://www2.spv.no";
+        static final String HOST_M_SPV = "https://m.spv.no";
         static final String HOST_SECURITY = "https://security.spv.no";
 
         static final String LOAN_TYPE_PARAM = "LOAN_TYPE_PARAM";
         static final String LOAN_NUMBER_GUID_PARAM = "LOAN_NUMBER_GUID_PARAM";
 
-        static final URL LOGIN = new URL(HOST + "/mobil/innlogget/");
+        static final URL INIT = new URL(HOST + "/");
+        static final URL DBANK = new URL(HOST_DBANK + "/dbank/oversikt/");
+        static final URL LOGIN_INLOGGET = new URL(HOST_M_SPV + "/mobil/innlogget/");
+        static final URL LOGIN_INLOGGET_KORT = new URL(HOST_M_SPV + "/mobil/innlogget/kort/");
         static final URL AUTHENTICATE =
                 new URL(
                         HOST_SECURITY
                                 + "/Innlogging/privat-mobil/LoginServiceSAMobile2/Lsam/Authenticated");
+        static final URL LOGIN_NEW =
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/NewActivation.aspx");
+        static final URL CUSTOMER_ID_ACT =
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/GetCustomerIdAct.aspx");
+        static final URL GET_ACTIVATION_CODE =
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/GetActivationCode.aspx");
+        static final URL GET_MOBILE_NAME =
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/GetMobileName.aspx");
+        static final URL CHOOSE_PIN =
+                new URL(
+                        HOST_SECURITY
+                                + "/Innlogging/privat-mobil/LoginServiceSAMobile2/ChoosePIN.aspx");
         static final URL STS_PRIVATE_WEB = new URL(HOST_SECURITY + "/STS/privat-web/Default.aspx");
-        static final URL ACCOUNTS = new URL(HOST + "/konto/api/konto/konti/");
-        static final URL TRANSACTIONS = new URL(HOST + "/konto/api/DepositMovement/find/");
+        static final URL STS_PRIVATE_WEB_LOGOUT =
+                new URL(HOST_SECURITY + "/STS/privat-web/RpLogout.aspx");
+        static final URL ACCOUNTS = new URL(HOST_DBANK + "/dbank/api/oversikt/konti");
+        static final URL TRANSACTIONS = new URL(HOST_DBANK + "/dbank/api/historikk/transaksjoner");
         static final URL CREDIT_CARD_TRANSACTIONS =
                 new URL(HOST + "/konto/api/transactionsearch/search/");
-        static final URL DUE_PAYMENTS = new URL(HOST + "/betaling/api/Payment/findDuePayments/");
-        static final URL LOANS = new URL(HOST + "/laan/api/LoanList");
+        static final URL DUE_PAYMENTS =
+                new URL(HOST_M_SPV + "/betaling/api/Payment/findDuePayments/");
+        static final URL LOANS = new URL(HOST_M_SPV + "/laan/api/LoanList");
         static final URL LOAN_DETAILS =
                 new URL(
                         HOST
@@ -37,8 +73,8 @@ public class SparebankenVestConstants {
         static final URL CURRENCY_LOAN_DETAILS =
                 new URL(HOST + "/laan/api/currencyloan/{" + LOAN_NUMBER_GUID_PARAM + "}");
 
-        static final URL CREDIT_CARD_ACCOUNTS = new URL(HOST + "/kort/api/kreditt/");
-        static final URL INVESTMENTS = new URL(HOST + "/verdipapir/api/FondPlasseringer");
+        static final URL CREDIT_CARD_ACCOUNTS = new URL(HOST_M_SPV + "/kort/api/kreditt/");
+        static final URL INVESTMENTS = new URL(HOST_M_SPV + "/verdipapir/api/FondPlasseringer");
         static final URL KEEP_ALIVE = new URL(HOST + "/kunde/api/loggedinstatus");
     }
 
@@ -50,6 +86,7 @@ public class SparebankenVestConstants {
         static final String IS_NEW_ACTIVATION_VALUE = "true";
         static final String HARDWARE_ID_KEY = "hwid";
         static final String ACCOUNT_NUMBER_KEY = "AccountNumber";
+        static final String ACCOUNT_NUMBER_KEY_NEW = "konto";
         static final String PREVENT_CACHE_KEY = "preventCache";
         static final String ACCOUNTS_KEY = "accounts";
         static final String STEP_KEY = "step";
@@ -64,6 +101,23 @@ public class SparebankenVestConstants {
                                 new Locale("sv", "SE"),
                                 TimeZone.getTimeZone("UTC"))
                         .build();
+
+        public static final String WA = "wa";
+        public static final String WA_VALUE = "wsignin1.0";
+        public static final String WTREALM = "wtrealm";
+        public static final String WTREALM_VALUE = "https://m.spv.no/mobil/innlogget/";
+        public static final String WCTX = "wctx";
+        public static final String WCTX_VALUE = "rm=0&id=passive&ru=%2fmobil%2finnlogget%2fkort%2f";
+        public static final String WCT = "wct";
+    }
+
+    public static final class InnloggetForm {
+        public static final String WA = "wa";
+        public static final String WA_VALUE = "wsignin1.0";
+        public static final String W_RESULT = "wresult";
+        public static final String W_CTX = "wctx";
+        public static final String W_CTX_VALUE =
+                "rm=0&id=passive&ru=%2fmobil%2finnlogget%2fkort%2f";
     }
 
     public static class Investments {
@@ -81,25 +135,27 @@ public class SparebankenVestConstants {
         static final String MOBILE_NAME_COOKIE_KEY = "mobileName";
         static final String MOBILE_NAME_COOKIE_VALUE = "Tink";
         static final String ORIGIN_KEY = "Origin";
+        static final String CONTENT_TYPE = "Content-Type";
         static final String RANGE_KEY = "Range";
         public static final String RANGE_ITEMS = "items=";
         public static final String RANGE_DASH = "-";
         static final String XCSRF_TOKEN = "X-CsrfToken";
+
+        public static final String TEXT_HTML_APPLICATION_XHTML_XML =
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        static final String ACCEPT = "Accept";
+
+        static final String APPLICATION_JSON = "application/json";
+        static final String APPLICATION_FORM_URL_ENCODED = "application/x-www-form-urlencoded";
     }
 
     public static final class Cookies {
         static final String CSRFTOKEN = "csrftoken";
     }
 
-    public static final class AccountTypes {
-        public static final String UNSPECIFIED = "uspesifisert";
-        public static final String TAX_DEDUCTION = "skattetrekkskonto";
-        public static final String DEPOSITUM = "depositum";
-    }
-
     public static final class PagePagination {
-        static final int START_INDEX = 0;
         public static final int MAX_TRANSACTIONS_IN_BATCH = 50;
+        public static final int CONSECUTIVE_EMPTY_PAGES_LIMIT = 3;
     }
 
     public static final class SecurityParameters {

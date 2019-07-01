@@ -1,21 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 
-@JsonObject
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreditCardAccountEntity {
     @JsonProperty(value = "navn")
     private String name;
 
     @JsonProperty(value = "kortnummer")
     private String cardNumber;
-    // kortnummerId is null - cannot define it!
+
     private String status;
-    private String kid;
-    private String kidGuid;
 
     @JsonProperty(value = "kortId")
     private String cardId;
@@ -29,33 +27,14 @@ public class CreditCardAccountEntity {
     @JsonProperty(value = "kredittgrense")
     private double creditLimit;
 
-    private String sisteFakturadato;
-    private double manedsbelop;
-    private int produktnummer;
-    private boolean isBedrift;
-    private boolean isBedriftPersonAnsvar;
-    // blokkertKode is null - cannot define it!
-    private String blokkertdato;
-    private String kortIdGuid;
-
     @JsonProperty(value = "kortnummerGuid")
     private String cardNumberGuid;
 
-    private String korttypeGuid;
-    private String nesteFakturadato;
-    private String nesteInnbetalingDato;
-    private double totaltForfall;
-    private double forfall;
-    private double reservertBelop;
-
-    @JsonProperty(value = "transaksjonskontonummer")
+    @JsonProperty(value = "kontonummer")
     private String transactionAccountNumber;
 
-    @JsonProperty(value = "transaksjonskontonummerGuid")
+    @JsonProperty(value = "kontonummerGuid")
     private String transactionAccountNumberGuid;
-
-    private String maskertKortnummer;
-    private String maskertKredittkort;
 
     public CreditCardAccount toTinkCreditCardAccount() {
         // spv uses positive amount for balance of a credit card
@@ -68,6 +47,6 @@ public class CreditCardAccountEntity {
     }
 
     private String createBankIdentifier() {
-        return new BankIdentifier(cardNumberGuid, kidGuid).getBankIdentifier();
+        return new BankIdentifier(cardNumberGuid, cardId).getBankIdentifier();
     }
 }

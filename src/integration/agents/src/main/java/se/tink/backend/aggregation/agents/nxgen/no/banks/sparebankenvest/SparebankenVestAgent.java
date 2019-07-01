@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.loan.SparebankenVestLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.session.SparebankenVestSessionHandler;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -30,7 +31,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshCon
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -125,9 +125,10 @@ public class SparebankenVestAgent extends NextGenerationAgent
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(
+                        new TransactionDatePaginationController<>(
                                 transactionFetcher,
-                                SparebankenVestConstants.PagePagination.START_INDEX),
+                                SparebankenVestConstants.PagePagination
+                                        .CONSECUTIVE_EMPTY_PAGES_LIMIT),
                         transactionFetcher);
 
         return new TransactionalAccountRefreshController(
@@ -152,7 +153,7 @@ public class SparebankenVestAgent extends NextGenerationAgent
         TransactionFetcher<CreditCardAccount> transactionFetcher =
                 new TransactionFetcherController<CreditCardAccount>(
                         transactionPaginationHelper,
-                        new TransactionDatePaginationController<CreditCardAccount>(
+                        new TransactionDatePaginationController<>(
                                 SparebankenVestCreditCardTransactionFetcher.create(apiClient)));
 
         return new CreditCardRefreshController(

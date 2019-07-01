@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities;
+package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.creditcard.entities;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.BankIdentifier;
 
 public class BankIdentifierTest {
     @Test

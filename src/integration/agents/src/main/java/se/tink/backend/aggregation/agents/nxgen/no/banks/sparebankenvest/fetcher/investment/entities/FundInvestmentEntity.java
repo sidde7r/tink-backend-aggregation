@@ -38,6 +38,8 @@ public class FundInvestmentEntity {
         instrument.setRawType(this.type);
         instrument.setType(getTinkInstrumentType());
         instrument.setProfit(this.gevinst);
+        instrument.setUniqueIdentifier(this.isinnr);
+        instrument.setPrice(this.kostpris);
 
         return instrument;
     }
