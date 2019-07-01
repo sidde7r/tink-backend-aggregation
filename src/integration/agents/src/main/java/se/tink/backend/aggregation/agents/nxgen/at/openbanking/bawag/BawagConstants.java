@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag;
 
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class BawagConstants {
 
     public static final String INTEGRATION_NAME = "bawag";
+    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "RCVD", "ACSC").build();
 
     private BawagConstants() {
         throw new AssertionError();
@@ -15,7 +18,6 @@ public final class BawagConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
-        public static final String MISSING_TOKEN = "Cannot find token.";
     }
 
     public static class Urls {
@@ -26,6 +28,10 @@ public final class BawagConstants {
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_BALANCES = new URL(BASE_URL + ApiService.GET_BALANCES);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+        public static final URL CREATE_SEPA_TRANSFER =
+                new URL(BASE_URL + ApiService.CREATE_SEPA_TRANSFER);
+        public static final URL GET_SEPA_TRANSFER =
+                new URL(BASE_URL + ApiService.GET_SEPA_TRANSFER);
     }
 
     public static class ApiService {
@@ -33,15 +39,18 @@ public final class BawagConstants {
         public static final String GET_ACCOUNTS = "/xs2a/v1/accounts";
         public static final String GET_BALANCES = "/xs2a/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS = "/xs2a/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_SEPA_TRANSFER = "/xs2a/v1/payments/sepa-credit-transfers";
+        public static final String GET_SEPA_TRANSFER =
+                "/xs2a/v1/payments/sepa-credit-transfers/{paymentId}";
     }
 
     public static class StorageKeys {
-        public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent-id";
     }
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class QueryKeys {
