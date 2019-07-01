@@ -19,6 +19,9 @@ agents:
       baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/mobilebanking
     openbanking:
       baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271/openbanking
+  abnamro:
+    tink:
+      redirectUrl: https://localhost/auth
   bunq:
     tink:
       redirectUrl: https://127.0.0.1:7357/api/v1/credentials/third-party/callback
