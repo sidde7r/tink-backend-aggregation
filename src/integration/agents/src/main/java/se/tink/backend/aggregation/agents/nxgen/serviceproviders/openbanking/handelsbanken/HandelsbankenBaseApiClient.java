@@ -48,21 +48,17 @@ public class HandelsbankenBaseApiClient {
     }
 
     public AccountsResponse getAccountList() {
-        return createRequest(new URL(Urls.BASE_URL + Urls.ACCOUNTS)).get(AccountsResponse.class);
+        return createRequest(new URL(Urls.ACCOUNTS)).get(AccountsResponse.class);
     }
 
     public BalanceAccountResponse getAccountDetails(String accountId) {
-        return createRequest(
-                        new URL(Urls.BASE_URL + String.format(Urls.ACCOUNT_DETAILS, accountId)))
+        return createRequest(Urls.ACCOUNT_DETAILS.parameter(UrlParams.ACCOUNT_ID, accountId))
                 .queryParam(QueryKeys.WITH_BALANCE, Boolean.TRUE.toString())
                 .get(BalanceAccountResponse.class);
     }
 
     public TransactionResponse getTransactions(String accountId, Date dateFrom, Date dateTo) {
-        return createRequest(
-                        new URL(
-                                Urls.BASE_URL
-                                        + String.format(Urls.ACCOUNT_TRANSACTIONS, accountId)))
+        return createRequest(Urls.ACCOUNT_TRANSACTIONS.parameter(UrlParams.ACCOUNT_ID, accountId))
                 .queryParam(
                         QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateFrom))
                 .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(dateTo))
@@ -76,7 +72,7 @@ public class HandelsbankenBaseApiClient {
                 .post(DecoupledResponse.class);
     }
 
-    public TokResponse getBearerTok(String clientId) {
+    private TokResponse getBearerTok(String clientId) {
 
         final Form params =
                 Form.builder()
@@ -92,7 +88,7 @@ public class HandelsbankenBaseApiClient {
                 .post(TokResponse.class);
     }
 
-    public AuthorizationResponse getAuthorizationToken(String code, String clientId) {
+    private AuthorizationResponse getAuthorizationToken(String code, String clientId) {
 
         return client.request(new URL(Urls.AUTHORIZATION))
                 .body(new AuthorizationRequest(HandelsbankenBaseConstants.BodyValues.ALL_ACCOUNTS))
@@ -123,21 +119,12 @@ public class HandelsbankenBaseApiClient {
                 .post(SessionResponse.class);
     }
 
-    public HttpResponse cancelDecoupled(URL href) {
-        return client.request(href)
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(HttpResponse.class);
-    }
-
     public SessionResponse buildAuthorizeUrl(String ssn) {
 
         TokResponse tokResponse = getBearerTok(configuration.getAppId());
         AuthorizationResponse authResponse =
                 getAuthorizationToken(tokResponse.getAccessToken(), configuration.getAppId());
 
-        SessionResponse sessionResponse = getSessionId(ssn, authResponse.getConsentId());
-
-        return sessionResponse;
+        return getSessionId(ssn, authResponse.getConsentId());
     }
 }

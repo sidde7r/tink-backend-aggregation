@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -34,11 +33,6 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
         this.apiClient = apiClient;
     }
 
-    public void authenticate(Credentials credentials) {
-        sessionStorage.put(
-                StorageKeys.ACCESS_TOKEN, credentials.getField(StorageKeys.ACCESS_TOKEN));
-    }
-
     @Override
     public SessionResponse init(String ssn)
             throws BankIdException, BankServiceException, AuthorizationException {
@@ -61,6 +55,18 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
                 apiClient.getDecoupled(new URL(reference.getLinks().getToken().getHref()));
 
         if (decoupledResponse.getError() != null) {
+            switch (decoupledResponse.getError()) {
+                case (Errors.INTENT_EXPIRED): return BankIdStatus.TIMEOUT;
+                case (Errors.MBID_ERROR): return BankIdStatus.TIMEOUT;
+                case (Errors.INVALID_REQUEST): return BankIdStatus.NO_CLIENT;
+                case (Errors.NOT_SHB_APPROVED): return BankIdStatus.NO_CLIENT;
+                case (Errors.UNAUTHORIZED_CLIENT): return BankIdStatus.NO_CLIENT;
+                case (Errors.MBID_MAX_POLLING): return BankIdStatus.INTERRUPTED;
+                default: return BankIdStatus.FAILED_UNKNOWN;
+            }
+        }
+
+       /* if (decoupledResponse.getError() != null) {
             String error = decoupledResponse.getError();
             if (error.equals(Errors.INTENT_EXPIRED) || error.equals(Errors.MBID_ERROR)) {
                 return BankIdStatus.TIMEOUT;
@@ -73,7 +79,7 @@ public class HandelsbankenBaseAuthenticator implements BankIdAuthenticator<Sessi
             } else {
                 return BankIdStatus.FAILED_UNKNOWN;
             }
-        }
+        } */
 
         if (decoupledResponse.getResult().equals(Status.IN_PROGRESS)) {
             return BankIdStatus.WAITING;
