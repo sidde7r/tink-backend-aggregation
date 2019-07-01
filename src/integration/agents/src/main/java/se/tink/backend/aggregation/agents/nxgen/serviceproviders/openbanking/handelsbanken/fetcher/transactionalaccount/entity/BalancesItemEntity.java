@@ -1,19 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalancesItem {
+public class BalancesItemEntity {
 
-    @JsonProperty("amount")
-    private Amount amount;
+    private AmountEntity amountEntity;
 
-    @JsonProperty("balanceType")
     private String balanceType;
 
-    public Amount getAmount() {
-        return amount;
+    public AmountEntity getAmountEntity() {
+        return amountEntity;
     }
 
     public String getBalanceType() {

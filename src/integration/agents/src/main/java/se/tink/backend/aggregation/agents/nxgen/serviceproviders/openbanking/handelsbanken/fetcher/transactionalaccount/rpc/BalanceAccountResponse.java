@@ -1,52 +1,43 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItem;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.Links;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItemEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+
+import java.util.List;
 
 @JsonObject
 public class BalanceAccountResponse {
 
-    @JsonProperty("accountId")
     private String accountId;
 
-    @JsonProperty("balances")
-    private List<BalancesItem> balances;
+    private List<BalancesItemEntity> balances;
 
-    @JsonProperty("bban")
     private String bban;
 
-    @JsonProperty("ownerName")
     private String ownerName;
 
     @JsonProperty("_links")
-    private Links links;
+    private LinksEntity linksEntity;
 
-    @JsonProperty("iban")
     private String iban;
 
-    @JsonProperty("accountType")
     private String accountType;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("currency")
     private String currency;
 
-    @JsonProperty("bic")
     private String bic;
 
-    @JsonProperty("clearingNumber")
     private String clearingNumber;
 
     public String getAccountId() {
         return accountId;
     }
 
-    public List<BalancesItem> getBalances() {
+    public List<BalancesItemEntity> getBalances() {
         return balances;
     }
 
@@ -58,8 +49,8 @@ public class BalanceAccountResponse {
         return ownerName;
     }
 
-    public Links getLinks() {
-        return links;
+    public LinksEntity getLinksEntity() {
+        return linksEntity;
     }
 
     public String getIban() {

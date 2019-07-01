@@ -10,36 +10,27 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class AccountsItem {
+public class AccountsItemEntity {
 
-    @JsonProperty("accountId")
     private String accountId;
 
-    @JsonProperty("bban")
     private String bban;
 
-    @JsonProperty("ownerName")
     private String ownerName;
 
     @JsonProperty("_links")
-    private Links links;
+    private LinksEntity linksEntity;
 
-    @JsonProperty("iban")
     private String iban;
 
-    @JsonProperty("accountType")
     private String accountType;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("currency")
     private String currency;
 
-    @JsonProperty("bic")
     private String bic;
 
-    @JsonProperty("clearingNumber")
     private String clearingNumber;
 
     public String getAccountId() {
@@ -54,8 +45,8 @@ public class AccountsItem {
         return ownerName;
     }
 
-    public Links getLinks() {
-        return links;
+    public LinksEntity getLinksEntity() {
+        return linksEntity;
     }
 
     public String getIban() {
@@ -82,7 +73,7 @@ public class AccountsItem {
         return clearingNumber;
     }
 
-    public TransactionalAccount createCheckingAccount(BalancesItem balance) {
+    public TransactionalAccount createCheckingAccount(BalancesItemEntity balance) {
         return TransactionalAccount.nxBuilder()
                 .withType(TransactionalAccountType.CHECKING)
                 .withId(
@@ -104,7 +95,7 @@ public class AccountsItem {
         return iban.substring(iban.length() - 9);
     }
 
-    private Amount getAmount(BalancesItem balance) {
-        return new Amount(balance.getAmount().getCurrency(), balance.getAmount().getContent());
+    private Amount getAmount(BalancesItemEntity balance) {
+        return new Amount(balance.getAmountEntity().getCurrency(), balance.getAmountEntity().getContent());
     }
 }

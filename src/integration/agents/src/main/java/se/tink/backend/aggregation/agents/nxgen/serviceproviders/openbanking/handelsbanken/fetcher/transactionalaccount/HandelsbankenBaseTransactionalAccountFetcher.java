@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.AccountBalance;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItem;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItem;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountsItemEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity.BalancesItemEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.BalanceAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -34,9 +34,9 @@ public class HandelsbankenBaseTransactionalAccountFetcher
         this.converter = converter;
     }
 
-    private Optional<TransactionalAccount> mapToTransactionalAccount(AccountsItem accountEntity) {
+    private Optional<TransactionalAccount> mapToTransactionalAccount(AccountsItemEntity accountEntity) {
         BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
-        BalancesItem availableBalance =
+        BalancesItemEntity availableBalance =
                 balances.getBalances().stream()
                         .filter(
                                 balance ->

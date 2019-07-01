@@ -1,9 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.ParseException;
-import java.time.DateTimeException;
-import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.ExceptionMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -11,44 +8,38 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+import java.text.ParseException;
+import java.time.DateTimeException;
+import java.util.Date;
+
 @JsonObject
-public class TransactionsItem {
+public class TransactionsItemEntity {
 
     @JsonProperty("amount")
-    private TransactionAmount transactionAmount;
+    private TransactionAmountEntity transactionAmountEntity;
 
-    @JsonProperty("ledgerDate")
     private String ledgerDate;
 
-    @JsonProperty("creditorName")
     private String creditorName;
 
-    @JsonProperty("balance")
-    private Balance balance;
+    private BalanceEntity balanceEntity;
 
-    @JsonProperty("remittanceInformation")
     private String remittanceInformation;
 
-    @JsonProperty("bookingDate")
     private String bookingDate;
 
-    @JsonProperty("debtorName")
     private String debtorName;
 
-    @JsonProperty("valueDate")
     private String valueDate;
 
-    @JsonProperty("creditDebit")
     private String creditDebit;
 
-    @JsonProperty("transactionDate")
     private String transactionDate;
 
-    @JsonProperty("status")
     private String status;
 
-    public TransactionAmount getTransactionAmount() {
-        return transactionAmount;
+    public TransactionAmountEntity getTransactionAmountEntity() {
+        return transactionAmountEntity;
     }
 
     public String getLedgerDate() {
@@ -59,8 +50,8 @@ public class TransactionsItem {
         return creditorName;
     }
 
-    public Balance getBalance() {
-        return balance;
+    public BalanceEntity getBalanceEntity() {
+        return balanceEntity;
     }
 
     public String getRemittanceInformation() {
@@ -114,7 +105,7 @@ public class TransactionsItem {
         return Transaction.builder()
                 .setDate(getDate())
                 .setAmount(
-                        new Amount(transactionAmount.getCurrency(), transactionAmount.getContent()))
+                        new Amount(transactionAmountEntity.getCurrency(), transactionAmountEntity.getContent()))
                 .setDescription(remittanceInformation)
                 .setPending(HandelsbankenBaseConstants.Transactions.IS_PENDING.equalsIgnoreCase(status))
                 .build();
