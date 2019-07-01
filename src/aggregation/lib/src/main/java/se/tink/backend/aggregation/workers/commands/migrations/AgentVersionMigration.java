@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.workers.commands.migrations;
 
 import com.google.api.client.util.Lists;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
@@ -15,7 +16,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public abstract class AgentVersionMigration {
     private final AggregationLogger log = new AggregationLogger(AgentVersionMigration.class);
 
-    public static final String DUPLICATE = "-duplicate";
+    public static final String DUPLICATE = "-duplicate-";
     private ControllerWrapper wrapper;
 
     /**
@@ -85,7 +86,7 @@ public abstract class AgentVersionMigration {
     protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
         List<Account> accountList =
                 deduplicateAccounts(accounts).stream()
-                        .map(a -> migrateAccount(a))
+                        .map(this::migrateAccount)
                         .collect(Collectors.toList());
 
         request.setAccounts(accountList);
@@ -118,44 +119,46 @@ public abstract class AgentVersionMigration {
      *
      * @param list that should be deduplicated
      * @return {@link List<Account>} that contains all the accounts with different bankId (add
-     *     suffix -duplicate)
+     *     suffix -duplicate-{n} where n is incremented for each duplicate, starting at 1)
      */
     private List<Account> deduplicateAccounts(List<Account> list) {
-        List<Account> deduplicatedList = new ArrayList<>();
         Map<String, List<Account>> duplicatesDetection = new HashMap<>();
         // Find duplicated accounts
-        list.stream()
-                .forEach(
-                        a -> {
-                            if (!duplicatesDetection.containsKey(a.getBankId())) {
-                                duplicatesDetection.put(a.getBankId(), Lists.newArrayList());
-                            }
-                            duplicatesDetection.get(a.getBankId()).add(a);
-                        });
-        // Add all not duplicted accounts
-        deduplicatedList.addAll(
+        list.forEach(
+                a -> {
+                    if (!duplicatesDetection.containsKey(a.getBankId())) {
+                        duplicatesDetection.put(a.getBankId(), Lists.newArrayList());
+                    }
+                    duplicatesDetection.get(a.getBankId()).add(a);
+                });
+        // Add all not duplicated accounts
+        List<Account> deduplicatedList =
                 duplicatesDetection.entrySet().stream()
                         .filter(e -> e.getValue().size() == 1)
                         .map(e -> e.getValue().get(0))
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
 
-        // Deduplicat Accounts by adding '-duplicate' at the end of bankid
+        // Deduplicate Accounts by adding '-duplicate-{n}' at the end of bankid
         duplicatesDetection.entrySet().stream()
-                .filter(e -> e.getValue().size() == 2)
-                .map(e -> e.getValue())
+                .filter(e -> e.getValue().size() >= 2)
+                .map(Entry::getValue)
                 .forEach(
-                        l -> {
-                            // Look for opened accounts and mark one of them as duplicate
-                            // if no open accounts - choose randomly
-                            Account account =
-                                    l.stream()
-                                            .filter(a -> !a.isClosed())
-                                            .findAny()
-                                            .orElse(l.get(0));
+                        duplicates -> {
 
-                            log.warn("Tagging duplicate account with '-duplicate'");
-                            account.setBankId(account.getBankId() + DUPLICATE);
-                            deduplicatedList.addAll(l);
+                            // Sort closed accounts first, assuming that these are older.
+                            duplicates.sort(
+                                    Comparator.comparing(
+                                            Account::isClosed, Comparator.reverseOrder()));
+
+                            // Tag all but the first account in the list with '-duplicate-{n}'.
+                            for (int i = 1; i < duplicates.size(); i++) {
+
+                                log.warn("Tagging duplicate account with -duplicate-" + i);
+                                Account duplicate = duplicates.get(i);
+                                duplicate.setBankId(duplicate.getBankId() + DUPLICATE + i);
+                            }
+
+                            deduplicatedList.addAll(duplicates);
                         });
 
         return deduplicatedList;
