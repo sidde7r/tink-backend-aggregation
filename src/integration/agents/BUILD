@@ -109,6 +109,7 @@ java_library(
         "//third_party:org_seleniumhq_selenium_selenium_firefox_driver",
         "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
+        "//third_party:org_seleniumhq_selenium_selenium_support",
         "//third_party:org_slf4j_slf4j_api",
     ],
 )

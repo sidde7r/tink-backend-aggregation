@@ -160,6 +160,32 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.es.banks.bankinter.BankinterAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bankinter",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "minLength": 6,
+                    "name": "password",
+                    "numeric": false,
+                    "sensitive": true
+                }
+            ],
+            "name": "es-bankinter-password",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.es.banks.evobanco.EvoBancoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "EvoBanco",
