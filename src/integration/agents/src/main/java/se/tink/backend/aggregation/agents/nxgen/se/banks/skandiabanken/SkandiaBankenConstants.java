@@ -37,6 +37,8 @@ public class SkandiaBankenConstants {
                 new URL(BASE + Endpoints.FETCH_INVESTMENT_ACCOUNT_DETAILS);
         public static final URL FETCH_INVESTMENT_HOLDINGS =
                 new URL(BASE + Endpoints.FETCH_INVESTMENT_HOLDINGS);
+        public static final URL FETCH_PENSIONS_HOLDINGS =
+                new URL(BASE + Endpoints.FETCH_PENSIONS_HOLDINGS);
         public static final URL FETCH_IDENTITY = new URL(BASE + Endpoints.FETCH_IDENTITY);
         public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
     }
@@ -62,6 +64,7 @@ public class SkandiaBankenConstants {
                 "/Securities/V2/Accounts/{accountId}";
         public static final String FETCH_INVESTMENT_HOLDINGS =
                 "/Securities/V2/Holdings/{accountId}";
+        public static final String FETCH_PENSIONS_HOLDINGS = "/Pensions/V2/Holdings/{partId}";
         public static final String FETCH_IDENTITY = "/Customers/V2/Customer";
         public static final String LOGOUT = "/mobile/v1/oauth2/token/revoke";
     }
@@ -69,6 +72,7 @@ public class SkandiaBankenConstants {
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
         public static final String PAGE = "page";
+        public static final String PART_ID = "partId";
     }
 
     public static class QueryParam {
@@ -87,6 +91,8 @@ public class SkandiaBankenConstants {
         public static final String SCOPES_READ =
                 "account_full account_quickbalance account_read app_offline bank_balance bank_full bank_microsavings bank_quicktransfer bank_roundup card_full card_read customer_full customer_read mobile_notify openid pension_full pension_read securities_full securities_read service_downgrade system_full system_read system_signcollect";
         public static final String STATE = "state";
+        public static final String ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER =
+                "encrypedNationalIdentificationNumber";
     }
 
     public static class HeaderKeys {
