@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.workers.commands.migrations;
 
 import com.google.api.client.util.Lists;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
@@ -85,7 +85,7 @@ public abstract class AgentVersionMigration {
     protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
         List<Account> accountList =
                 deduplicateAccounts(accounts).stream()
-                        .map(a -> migrateAccount(a))
+                        .map(this::migrateAccount)
                         .collect(Collectors.toList());
 
         request.setAccounts(accountList);
@@ -121,28 +121,26 @@ public abstract class AgentVersionMigration {
      *     suffix -duplicate)
      */
     private List<Account> deduplicateAccounts(List<Account> list) {
-        List<Account> deduplicatedList = new ArrayList<>();
         Map<String, List<Account>> duplicatesDetection = new HashMap<>();
         // Find duplicated accounts
-        list.stream()
-                .forEach(
-                        a -> {
-                            if (!duplicatesDetection.containsKey(a.getBankId())) {
-                                duplicatesDetection.put(a.getBankId(), Lists.newArrayList());
-                            }
-                            duplicatesDetection.get(a.getBankId()).add(a);
-                        });
+        list.forEach(
+                a -> {
+                    if (!duplicatesDetection.containsKey(a.getBankId())) {
+                        duplicatesDetection.put(a.getBankId(), Lists.newArrayList());
+                    }
+                    duplicatesDetection.get(a.getBankId()).add(a);
+                });
         // Add all not duplicted accounts
-        deduplicatedList.addAll(
+        List<Account> deduplicatedList =
                 duplicatesDetection.entrySet().stream()
                         .filter(e -> e.getValue().size() == 1)
                         .map(e -> e.getValue().get(0))
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
 
         // Deduplicat Accounts by adding '-duplicate' at the end of bankid
         duplicatesDetection.entrySet().stream()
                 .filter(e -> e.getValue().size() == 2)
-                .map(e -> e.getValue())
+                .map(Entry::getValue)
                 .forEach(
                         l -> {
                             // Look for opened accounts and mark one of them as duplicate
