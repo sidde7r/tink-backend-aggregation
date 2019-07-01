@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.einvoice;
 
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.NordeaExecutorHelper;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.NordeaEInvoiceFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
@@ -31,9 +32,12 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     @Override
     public void approveEInvoice(Transfer transfer) throws TransferExecutionException {
         // fetch einvoice to approve
-        PaymentEntity eInvoice = getEInvoice(transfer);
+        String transferId =
+                transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID)
+                        .orElseThrow(() -> executorHelper.eInvoiceFailedError());
+        validateEInvoice(transferId);
         // approve einvoice
-        executeApproveEInvoice(eInvoice.getId());
+        executeApproveEInvoice(transferId);
     }
 
     private void executeApproveEInvoice(String eInvoiceId) {
@@ -42,18 +46,20 @@ public class NordeaApproveEInvoiceExecutor implements ApproveEInvoiceExecutor {
     }
 
     // find the EInvoice that matches with transfer to approve
-    private PaymentEntity getEInvoice(Transfer transfer) {
-        return apiClient.fetchPayments().getPayments().stream()
-                .filter(PaymentEntity::isEInvoice)
-                .filter(PaymentEntity::isUnconfirmed)
-                .filter(eInvoiceEntity -> isEInvoiceEqualsTransfer(transfer, eInvoiceEntity))
-                .findFirst()
-                .orElseThrow(() -> executorHelper.eInvoiceFailedError());
+    private Transfer validateEInvoice(String transferId) {
+        return new NordeaEInvoiceFetcher(apiClient)
+                .fetchEInvoices().stream()
+                        .filter(
+                                eInvoiceEntity ->
+                                        isEInvoiceEqualsTransfer(transferId, eInvoiceEntity))
+                        .findFirst()
+                        .orElseThrow(() -> executorHelper.eInvoiceFailedError());
     }
 
-    private boolean isEInvoiceEqualsTransfer(Transfer transfer, PaymentEntity paymentEntity) {
-        return paymentEntity
-                .getId()
-                .equals(transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID));
+    private boolean isEInvoiceEqualsTransfer(String transferId, Transfer paymentEntity) {
+        Optional<String> eInvoiceId =
+                paymentEntity.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
+
+        return eInvoiceId.isPresent() && eInvoiceId.get().equals(transferId);
     }
 }
