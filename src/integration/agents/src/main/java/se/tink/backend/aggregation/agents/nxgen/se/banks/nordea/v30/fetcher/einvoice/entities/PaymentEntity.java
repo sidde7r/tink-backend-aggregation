@@ -129,9 +129,7 @@ public class PaymentEntity {
 
     @JsonIgnore
     private String getRecipientName() {
-        return toAccountNumberType.equalsIgnoreCase(NordeaSEConstants.PaymentAccountTypes.LBAN)
-                ? bankName
-                : recipientName;
+        return Strings.isNullOrEmpty(recipientName) ? bankName : recipientName;
     }
 
     @JsonIgnore
@@ -239,7 +237,7 @@ public class PaymentEntity {
     @JsonIgnore
     public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setDescription(recipientName)
+                .setDescription(getRecipientName())
                 .setDate(due)
                 .setAmount(Amount.inSEK(-1.0 * amount))
                 .build();
