@@ -14,6 +14,10 @@ public class NemIdConstants {
                 LogTag.from("#auth-error-mainpage-source");
     }
 
+    public static class ErrorStrings {
+        public static final String INVALID_CREDENTIALS = "Incorrect user ID or password";
+    }
+
     // This html is taken from Nordea DK iOS and android. It has been modified to only include
     // necessary parts.
     public static final String BASE_HTML =
