@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.loan.entities.AmountEntity;
@@ -111,8 +112,10 @@ public class FetchLoanDetailsResponse {
     }
 
     @JsonIgnore
-    public Amount getInitialBalance() {
-        return new Amount(NordeaSEConstants.CURRENCY, credit.getLimit());
+    private Amount getInitialBalance() {
+        double initialBalance =
+                Optional.ofNullable(credit).map(CreditEntity::getLimit).orElse(amount.getGranted());
+        return new Amount(NordeaSEConstants.CURRENCY, initialBalance);
     }
 
     @JsonIgnore
