@@ -21,8 +21,8 @@ public final class HandelsbankenBaseConstants {
         public static final String SUBSCRIPTIONS = BASE_URL + SUFFIX_V1 + "/subscriptions";
         public static final String SESSION = BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0";
 
-        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}");
-        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}" + "/transactions");
+        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID );
+        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/" + UrlParams.ACCOUNT_ID + "/transactions");
 
     }
 
