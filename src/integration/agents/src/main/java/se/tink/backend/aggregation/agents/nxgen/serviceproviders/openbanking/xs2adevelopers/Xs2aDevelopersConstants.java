@@ -3,15 +3,18 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.libraries.payment.enums.PaymentStatus;
 
 public final class Xs2aDevelopersConstants {
 
-    public static final String INTEGRATION_NAME = "crelan";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "SAC")
                     .put(AccountTypes.SAVINGS, "SAV")
                     .build();
+
+    public static final TypeMapper<PaymentStatus> PAYMENT_STATUS_MAPPER =
+            TypeMapper.<PaymentStatus>builder().put(PaymentStatus.PENDING, "RCVD", "ACSC").build();
 
     private Xs2aDevelopersConstants() {
         throw new AssertionError();
@@ -34,11 +37,17 @@ public final class Xs2aDevelopersConstants {
         public static final String GET_BALANCES = "/berlingroup/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS =
                 "/berlingroup/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_PAYMENT =
+                "/berlingroup/v1/payments/sepa-credit-transfers";
+        public static final String GET_PAYMENT =
+                "/berlingroup/v1/payments/sepa-credit-transfers/{paymentId}";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "consent_id";
+        public static final String PAYMENT_ID = "payment_id";
+        public static final String PIS_TOKEN = "pis_token";
     }
 
     public static class QueryKeys {
@@ -92,6 +101,7 @@ public final class Xs2aDevelopersConstants {
 
     public static class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String PAYMENT_ID = "paymentId";
     }
 
     public static class BalanceTypes {
