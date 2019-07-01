@@ -119,7 +119,7 @@ public abstract class AgentVersionMigration {
      *
      * @param list that should be deduplicated
      * @return {@link List<Account>} that contains all the accounts with different bankId (add
-     *     suffix -duplicate)
+     *     suffix -duplicate-{n} where n is incremented for each duplicate, starting at 1)
      */
     private List<Account> deduplicateAccounts(List<Account> list) {
         Map<String, List<Account>> duplicatesDetection = new HashMap<>();
@@ -138,7 +138,7 @@ public abstract class AgentVersionMigration {
                         .map(e -> e.getValue().get(0))
                         .collect(Collectors.toList());
 
-        // Deduplicate Accounts by adding '-duplicate' at the end of bankid
+        // Deduplicate Accounts by adding '-duplicate-{n}' at the end of bankid
         duplicatesDetection.entrySet().stream()
                 .filter(e -> e.getValue().size() >= 2)
                 .map(Entry::getValue)
@@ -150,7 +150,7 @@ public abstract class AgentVersionMigration {
                                     Comparator.comparing(
                                             Account::isClosed, Comparator.reverseOrder()));
 
-                            // Tag all but the first account in the list with 'duplicate'.
+                            // Tag all but the first account in the list with '-duplicate-{n}'.
                             for (int i = 1; i < duplicates.size(); i++) {
 
                                 log.warn("Tagging duplicate account with -duplicate-" + i);
