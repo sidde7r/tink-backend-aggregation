@@ -155,17 +155,28 @@ public abstract class NemidAuthenticationController {
                 return nemIdToken.get();
             }
 
-            switchToIframe();
-            if (driver.getPageSource().contains(ErrorStrings.INVALID_CREDENTIALS)) {
+            try {
+                switchToIframe();
+                if (driver.getPageSource().contains(ErrorStrings.INVALID_CREDENTIALS)) {
+                    driver.switchTo().defaultContent();
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
                 driver.switchTo().defaultContent();
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            } catch (IllegalStateException ex) {
+                // If we cannot find iframe, switchToIframe method throws IllegalStateException
+                // in this case we just want to try again so we do not throw exception
             }
-            driver.switchTo().defaultContent();
         }
 
         LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_MAINPAGE_ERROR_CASE);
-        switchToIframe();
-        LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_IFRAME_ERROR_CASE);
+        try {
+            switchToIframe();
+            LOGGER.infoExtraLong(driver.getPageSource(), LogTags.LOG_TAG_IFRAME_ERROR_CASE);
+        } catch (IllegalStateException ex) {
+            // If we cannot find iframe, switchToIframe method throws IllegalStateException
+            LOGGER.infoExtraLong("", LogTags.LOG_TAG_MAINPAGE_NO_IFRAME_ERROR_CASE);
+            throw ex;
+        }
 
         // We will only reach this state if we could not find the nemId token -> something went
         // wrong in the authentication.
