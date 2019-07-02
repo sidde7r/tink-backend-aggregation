@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.authenticator.DemoFinancialInstitutionAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.creditcard.DemoFinancialInstitutionCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.identity.DemoFinancialInstitutionIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.sessionhandler.DemoFinancialInstitutionSessionHandler;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.identitydata.IdentityDataFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -79,6 +81,21 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
                                         transactionalAccountsFetcher))));
+    }
+
+    @Override
+    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+        final DemoFinancialInstitutionCreditCardFetcher creditCardFetcher =
+                new DemoFinancialInstitutionCreditCardFetcher(apiClient, sessionStorage);
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(creditCardFetcher))));
     }
 
     @Override

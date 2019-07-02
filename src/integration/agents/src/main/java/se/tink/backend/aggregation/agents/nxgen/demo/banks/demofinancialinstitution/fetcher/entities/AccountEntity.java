@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -133,4 +135,29 @@ public class AccountEntity {
                 .setBankIdentifier(accountNumber)
                 .build();
     }
+
+    @JsonIgnore
+    private Predicate<AccountTypes> isTinkCreditCardAccount() {
+        return anyOf(AccountTypes.CREDIT_CARD::equals);
+    }
+
+    @JsonIgnore
+    public Option<CreditCardAccount> maybeToTinkCreditCardAccount() {
+        return accountType
+                .maybeToTinkAccountTypes()
+                .filter(isTinkCreditCardAccount())
+                .map(t -> toTinkCreditCardAccount());
+    }
+
+    @JsonIgnore
+    private CreditCardAccount toTinkCreditCardAccount() {
+        return CreditCardAccount.builder(accountNumber)
+                .setName(accountName)
+                .setBalance(new Amount(currency, balance))
+                .setHolderName(new HolderName(username))
+                .setBankIdentifier(accountNumber)
+                .setAccountNumber(accountNumber)
+                .build();
+    }
+
 }
