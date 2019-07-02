@@ -59,7 +59,7 @@ public class FetchTransactionsResponse implements TransactionKeyPaginatorRespons
                         () -> new IllegalStateException(ErrorMessages.MISSING_NEXT_PAGE_TOKEN));
     }
 
-    public String extractNextPageToken(LinkEntity link) {
+    private String extractNextPageToken(LinkEntity link) {
         try {
             return URLEncodedUtils.parse(new URI(link.getReference()), Charset.forName("UTF-8"))
                     .stream()
