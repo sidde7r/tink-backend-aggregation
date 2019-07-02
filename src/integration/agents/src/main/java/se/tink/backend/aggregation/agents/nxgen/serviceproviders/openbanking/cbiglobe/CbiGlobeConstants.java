@@ -24,6 +24,7 @@ public final class CbiGlobeConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
+        public static final String BALANCE_NOT_FOUND = "Balance cannot be found.";
     }
 
     public static class Urls {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -47,7 +48,7 @@ public class AccountEntity {
         return balances.stream()
                 .min(Comparator.comparing(BalanceEntity::getBalanceMappingPriority))
                 .map(BalanceEntity::toAmount)
-                .orElse(BalanceEntity.defaultAmount);
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.BALANCE_NOT_FOUND));
     }
 
     private String getName() {
