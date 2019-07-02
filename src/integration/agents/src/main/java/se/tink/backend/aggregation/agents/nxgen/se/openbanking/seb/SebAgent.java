@@ -35,8 +35,6 @@ public final class SebAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        client.setDebugOutput(true);
-
         apiClient = new SebApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
     }
