@@ -47,8 +47,7 @@ public class CreditAgricoleUtils {
         if (resultList.isEmpty()) {
             throw new IllegalStateException(
                     String.format("No matching tag <%s> in xml response", tag));
-        } else {
-            return resultList;
         }
+        return resultList;
     }
 }
