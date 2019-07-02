@@ -162,6 +162,29 @@ data:
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
         {{- end }}
 
+        {{- if $agentsConfig.sibs }}
+        caixa-pt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "{{ $agentsConfig.sibs.tink.eidasProxyBaseUrl }}"
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
+            aspspCode: "CGDPT"
+        santander-pt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "{{ $agentsConfig.sibs.tink.eidasProxyBaseUrl }}"
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "{{ $agentsConfig.sibs.redirectUrl }}"
+            aspspCode: "BST"
+        {{- end }}
+
         {{- if $agentsConfig.abnamro }}
         abnamro:
           tink:

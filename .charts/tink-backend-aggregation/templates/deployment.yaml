@@ -423,6 +423,32 @@ spec:
               key: rabobank-qsealc-abn
               optional: true
         {{- end }}
+        {{- if $agentsConfig.sibs }}
+        - name: SIBS_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-id-tink
+              optional: true
+        - name: SIBS_CLIENT_SECRET_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-secret-tink
+              optional: true
+        - name: SIBS_CERTIFICATE_P12_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-p12-tink
+              optional: true
+        - name: SIBS_CERTIFICATE_SERIAL_NUMBER_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-serial-number-tink
+              optional: true
+        {{- end }}
         {{- if $agentsConfig.abnamro }}
         - name: ABN_AMRO_CLIENT_ID_TINK
           valueFrom:

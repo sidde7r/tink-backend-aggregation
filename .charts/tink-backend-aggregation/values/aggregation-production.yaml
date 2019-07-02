@@ -52,6 +52,10 @@ agents:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
       certificateId: abnamro-QSEALC
+  sibs:
+    tink:
+      redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
 
   proxyUri: http://10.88.12.185:8080
 
