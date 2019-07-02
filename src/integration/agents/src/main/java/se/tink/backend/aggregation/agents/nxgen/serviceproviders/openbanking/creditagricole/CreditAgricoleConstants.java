@@ -10,6 +10,8 @@ public abstract class CreditAgricoleConstants {
         public static final String AUTHENTICATION = "/castore-data-provider/authentification/";
         public static final String GET_REQUEST_TOKEN = BASE_PATH + "get_request_token";
         public static final String GET_ACCESS_TOKEN = BASE_PATH + "get_access_token";
+
+        public static final String REST_BASE_PATH = "/castore-data-provider/rest/V1/";
     }
 
     public static class QueryKeys {
@@ -18,6 +20,7 @@ public abstract class CreditAgricoleConstants {
         public static final String GRANT_TYPE = "grant_type";
         public static final String OAUTH_TOKEN = "oauth_token";
         public static final String TINK_STATE = "tink_state";
+        public static final String USER_ID = "session";
     }
 
     public static class FormKeys {
@@ -32,5 +35,10 @@ public abstract class CreditAgricoleConstants {
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
         public static final String TEMPORARY_TOKEN = "TEMPORARY_TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
+        public static final String USER_ID = "USER_ID";
+    }
+
+    public static class XMLtags {
+        public static final String ID = "id";
     }
 }
