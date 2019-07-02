@@ -73,4 +73,8 @@ public class SebKortConstants {
         public static final String TYPE = "EID";
         public static final String SEB_AUTH_MECHANISM = "5";
     }
+
+    public static class ErrorCode {
+        public static final String ALREADY_IN_PROGRESS = "ALREADY_IN_PROGRESS";
+    }
 }
