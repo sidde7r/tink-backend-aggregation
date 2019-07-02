@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitut
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.creditcard.DemoFinancialInstitutionCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.identity.DemoFinancialInstitutionIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.loan.DemoFinancialInstitutionLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionTransactionalAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.DemoFinancialInstitutionTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.sessionhandler.DemoFinancialInstitutionSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -71,8 +71,8 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final DemoFinancialInstitutionTransactionalAccountsFetcher transactionalAccountsFetcher =
-                new DemoFinancialInstitutionTransactionalAccountsFetcher(apiClient, sessionStorage);
+        final DemoFinancialInstitutionTransactionalAccountFetcher transactionalAccountsFetcher =
+                new DemoFinancialInstitutionTransactionalAccountFetcher(apiClient, sessionStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

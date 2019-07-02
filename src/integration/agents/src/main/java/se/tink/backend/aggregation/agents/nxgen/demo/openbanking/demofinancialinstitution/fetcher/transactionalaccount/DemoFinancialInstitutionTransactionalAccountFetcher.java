@@ -1,12 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount;
-
-import static io.vavr.Predicates.not;
+package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.fetcher.transactionalaccount;
 
 import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.DemoFinancialInstitutionApiClient;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -14,14 +12,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class DemoFinancialInstitutionTransactionalAccountsFetcher
+public class DemoFinancialInstitutionTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final DemoFinancialInstitutionApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public DemoFinancialInstitutionTransactionalAccountsFetcher(
+    public DemoFinancialInstitutionTransactionalAccountFetcher(
             DemoFinancialInstitutionApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
@@ -30,7 +28,7 @@ public class DemoFinancialInstitutionTransactionalAccountsFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().stream()
-                .filter(not(AccountEntity::isPsd2Account))
+                .filter(AccountEntity::isPsd2Account)
                 .map(AccountEntity::maybeToTinkTransationalAccount)
                 .flatMap(Option::toJavaStream)
                 .collect(Collectors.toList());
