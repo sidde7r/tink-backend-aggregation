@@ -167,7 +167,7 @@ public final class CreditAgricoleApiClient {
                         .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
                         .get(String.class);
 
-        List userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
+        List<String> userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
         if (userId.size() > 1) {
             throw new IllegalStateException(
                     String.format("More than one <%s> in xml response", XMLtags.ID));
