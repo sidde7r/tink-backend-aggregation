@@ -50,6 +50,8 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            } else if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
 
             throw e;
