@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionsEntity {
 
-    List<CreditCardBookedEntity> booked;
-    List<CreditCardPendingEntity> pending;
+    private List<CreditCardBookedEntity> booked;
+    private List<CreditCardPendingEntity> pending;
 
     public Collection<? extends Transaction> getTransactions() {
         return Stream.concat(
