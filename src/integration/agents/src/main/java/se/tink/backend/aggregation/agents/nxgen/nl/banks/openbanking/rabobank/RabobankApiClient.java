@@ -131,7 +131,10 @@ public class RabobankApiClient {
 
         // This header must be present iff the request was initiated by the PSU
         if (requestIsManual) {
+            logger.info("Request for balance is attended -- adding PSU header");
             builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
+        } else {
+            logger.info("Request for balance is unattended -- omitting PSU header");
         }
 
         return builder.accept(MediaType.APPLICATION_JSON_TYPE).get(BalanceResponse.class);
