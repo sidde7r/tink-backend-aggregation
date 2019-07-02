@@ -12,6 +12,8 @@ public class NemIdConstants {
                 LogTag.from("#auth-error-iframe-source");
         public static final LogTag LOG_TAG_MAINPAGE_ERROR_CASE =
                 LogTag.from("#auth-error-mainpage-source");
+        public static final LogTag LOG_TAG_MAINPAGE_NO_IFRAME_ERROR_CASE =
+                LogTag.from("#auth-error-mainpage-no_iframe_source");
     }
 
     public static class ErrorStrings {
