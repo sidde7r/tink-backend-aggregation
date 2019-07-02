@@ -41,10 +41,9 @@ public class DemoFinancialInstitutionTransactionalAccountsFetcher
             TransactionalAccount account, URL nextUrl) {
         final String accountNumber = account.getAccountNumber();
 
-        if (nextUrl == null) {
-            return apiClient.fetchTransactions(accountNumber);
-        }
-
-        return apiClient.fetchTransactionsForNextUrl(nextUrl);
+        return Option.of(nextUrl)
+                .fold(
+                        () -> apiClient.fetchTransactions(accountNumber),
+                        s -> apiClient.fetchTransactionsForNextUrl(nextUrl));
     }
 }
