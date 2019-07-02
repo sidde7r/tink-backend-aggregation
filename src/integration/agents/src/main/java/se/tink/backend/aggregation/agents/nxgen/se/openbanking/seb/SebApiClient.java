@@ -130,6 +130,8 @@ public final class SebApiClient {
                 .queryParam(SebConstants.QueryKeys.SCOPE, SebConstants.QueryValues.SCOPE)
                 .queryParam(SebConstants.QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(SebConstants.QueryKeys.STATE, state)
+                .queryParam(
+                        SebConstants.QueryKeys.BRAND_ID, SebConstants.QueryValues.EUROCARD_BRAND_ID)
                 .getUrl();
     }
 

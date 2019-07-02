@@ -31,6 +31,7 @@ public abstract class SebConstants {
         public static final String TRANSACTION_SEQUENCE_NUMBER = "transactionSequenceNumber";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
+        public static final String BRAND_ID = "brandId";
     }
 
     public static class QueryValues {
@@ -39,6 +40,7 @@ public abstract class SebConstants {
         public static final String GRANT_TYPE = "authorization_code";
         public static final String BOOKED_TRANSACTIONS = "booked";
         public static final String WITH_BALANCE = "true";
+        public static final String EUROCARD_BRAND_ID = "ecse";
     }
 
     public static class HeaderKeys {
