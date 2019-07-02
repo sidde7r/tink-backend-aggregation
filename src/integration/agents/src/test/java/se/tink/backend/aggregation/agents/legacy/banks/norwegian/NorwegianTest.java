@@ -47,13 +47,12 @@ public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {
     public void testBankIdValidFormats() {
         assertValidBankId("522767******6982");
         assertValidBankId("111111******1111");
-        assertValidBankId("1234567890");
     }
 
     @Test
     public void testBankIdInvalidFormats() {
         assertInvalidBankId("522767******698");
-        assertInvalidBankId("12345");
+        assertInvalidBankId("111111111111111");
     }
 
     private void assertValidBankId(String accountNumber) {

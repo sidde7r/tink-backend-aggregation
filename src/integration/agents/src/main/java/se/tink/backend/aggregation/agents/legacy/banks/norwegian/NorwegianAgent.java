@@ -273,24 +273,22 @@ public class NorwegianAgent extends AbstractAgent
         CreditCardResponse creditCardResponse =
                 createClientRequest(CREDIT_CARD_URL).get(CreditCardResponse.class);
 
-        // Parse account number and balance
-        String transactionsPage = createScrapeRequest(CARD_TRANSACTION_URL).get(String.class);
-        String accountNumber =
-                CreditCardParsingUtils.parseTransactionalAccountNumber(transactionsPage)
-                        .orElseThrow(
-                                () ->
-                                        new AccountNotFoundException(
-                                                "Could not find account number."));
-        account.setAccountNumber(accountNumber);
+        // Get balance and credit
         account.setBalance(creditCardResponse.getBalance());
         account.setAvailableCredit(creditCardResponse.getAmountAvaiable());
 
-        // overview doesn't always show the card
+        // Get card number
         final CreditCardOverviewResponse creditCardOverview =
                 createClientRequest(CREDIT_CARD_OVERVIEW_URL).get(CreditCardOverviewResponse.class);
-        if (creditCardOverview.getCreditCardList().size() >= 1) {
-            final CreditCardEntity creditCard = creditCardOverview.getCreditCardList().get(0);
-            account.setCardNumber(creditCard.getCardNumberMasked());
+        if (creditCardOverview.getCreditCardList().size() == 0) {
+            // no cards
+            throw new AccountNotFoundException("No active cards found.");
+        }
+        final CreditCardEntity creditCard = creditCardOverview.getCreditCardList().get(0);
+        account.setAccountNumber(creditCard.getCardNumberMasked());
+
+        if (!account.hasValidBankId()) {
+            throw new AccountNotFoundException("Invalid card number.");
         }
 
         return account.toTinkAccount();
