@@ -10,6 +10,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -157,6 +158,31 @@ public class AccountEntity {
                 .setHolderName(new HolderName(username))
                 .setBankIdentifier(accountNumber)
                 .setAccountNumber(accountNumber)
+                .build();
+    }
+
+    @JsonIgnore
+    private Predicate<AccountTypes> isTinkLoanAccount() {
+        return anyOf(AccountTypes.LOAN::equals, AccountTypes.MORTGAGE::equals);
+    }
+
+    @JsonIgnore
+    public Option<LoanAccount> maybeToTinkLoanAccount() {
+        return accountType
+                .maybeToTinkAccountTypes()
+                .filter(isTinkLoanAccount())
+                .map(t -> toTinkLoanAccount());
+    }
+
+    @JsonIgnore
+    private LoanAccount toTinkLoanAccount() {
+        final Double interestRate = 0.05;
+
+        return LoanAccount.builder(accountNumber, Amount.inSEK(balance))
+                .setName(accountName)
+                .setAccountNumber(accountNumber)
+                .setBankIdentifier(accountNumber)
+                .setInterestRate(interestRate)
                 .build();
     }
 
