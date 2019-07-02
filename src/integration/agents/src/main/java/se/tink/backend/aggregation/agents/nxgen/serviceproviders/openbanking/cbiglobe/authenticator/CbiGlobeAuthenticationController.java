@@ -71,7 +71,7 @@ public class CbiGlobeAuthenticationController
         return getAppPayload(authorizeUrl);
     }
 
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());

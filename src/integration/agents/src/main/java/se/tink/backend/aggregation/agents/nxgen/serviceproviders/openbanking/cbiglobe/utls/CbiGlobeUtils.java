@@ -22,7 +22,7 @@ public class CbiGlobeUtils {
         }
     }
 
-    public static String formatDate(Date date) {
+    private static String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
         return sdf.format(date);
     }

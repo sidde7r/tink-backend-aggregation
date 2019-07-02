@@ -24,7 +24,7 @@ public class TransactionEntity {
         return toTinkTransaction(true);
     }
 
-    public Transaction toTinkTransaction(boolean pending) {
+    private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
                 .setDate(bookingDate)
                 .setPending(pending)

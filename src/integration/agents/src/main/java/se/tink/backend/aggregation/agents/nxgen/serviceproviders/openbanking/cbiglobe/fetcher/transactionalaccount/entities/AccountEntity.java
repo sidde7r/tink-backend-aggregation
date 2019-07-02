@@ -43,7 +43,7 @@ public class AccountEntity {
                 .build();
     }
 
-    public Amount getBalance(List<BalanceEntity> balances) {
+    private Amount getBalance(List<BalanceEntity> balances) {
         return balances.stream()
                 .min(Comparator.comparing(BalanceEntity::getBalanceMappingPriority))
                 .map(BalanceEntity::toAmount)
