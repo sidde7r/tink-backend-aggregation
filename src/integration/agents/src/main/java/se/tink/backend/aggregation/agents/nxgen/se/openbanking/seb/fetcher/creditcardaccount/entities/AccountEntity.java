@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.entities;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.entities.BalancesEntity;
@@ -35,12 +37,10 @@ public class AccountEntity {
     }
 
     private Amount getAvailableBalance() {
-        return balances != null
-                ? balances.stream()
-                        .filter(BalancesEntity::isAvailableBalance)
-                        .findFirst()
-                        .orElse(new BalancesEntity())
-                        .toAmount()
-                : BalancesEntity.Default;
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+                .filter(BalancesEntity::isAvailableBalance)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new)
+                .toAmount();
     }
 }
