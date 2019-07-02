@@ -11,7 +11,6 @@ public class CaixaAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
-    private final String TEST_PSU_ID_TYPE = "CP";
     private final String TEST_PSU_ID = "3072317";
 
     // private final String TEST_PSU_ID = "3870665";
@@ -24,7 +23,6 @@ public class CaixaAgentTest {
     public void setup() {
         builder =
                 new AgentIntegrationTest.Builder("pt", "pt-caixa-oauth2")
-                        .addCredentialField(CredentialKeys.PSU_ID_TYPE, TEST_PSU_ID_TYPE)
                         .addCredentialField(CredentialKeys.PSU_ID, TEST_PSU_ID)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
