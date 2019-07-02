@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class CreditAgricoleUtilsTest {
     private static final String RANDOM_XML_TAG =
-            "<?xml version=\"1.0\"?><tag>12345</tag><name>Tink</name><tag>67890</tag></utilisateurDTO>";
+            "<?xml version=\"1.0\"?><utilisateurDTO><tag>12345</tag><name>Tink</name><tag>67890</tag></utilisateurDTO>";
     private static final String EXPECTED_XML_VAL1 = "12345";
     private static final String EXPECTED_XML_VAL2 = "67890";
 
