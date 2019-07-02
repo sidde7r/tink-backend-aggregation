@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.authenticator;
 
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.CbiGlobeConstants.FormValues;
@@ -19,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbi
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cbiglobe.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CbiGlobeAuthenticator {
 
@@ -64,7 +67,7 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY_ONE,
                 FormValues.FALSE,
-                FormValues.VALID_UNTIL);
+                generateValidUntilDate());
     }
 
     public ConsentRequest createConsentRequestBalancesTransactions(
@@ -79,7 +82,12 @@ public class CbiGlobeAuthenticator {
                 FormValues.TRUE,
                 FormValues.FREQUENCY_PER_DAY,
                 FormValues.TRUE,
-                FormValues.VALID_UNTIL);
+                generateValidUntilDate());
+    }
+
+    private String generateValidUntilDate() {
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(
+                new DateTime(new Date()).plusDays(15).toDate());
     }
 
     protected String createRedirectUrl(String state) {

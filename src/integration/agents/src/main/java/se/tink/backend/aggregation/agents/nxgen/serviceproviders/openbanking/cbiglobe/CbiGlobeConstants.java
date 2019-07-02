@@ -92,7 +92,6 @@ public final class CbiGlobeConstants {
         public static final String TRUE = "true";
         public static final String FREQUENCY_PER_DAY_ONE = "1";
         public static final String FALSE = "false";
-        public static final String VALID_UNTIL = "2019-07-07";
         public static final String FREQUENCY_PER_DAY = "100";
     }
 
