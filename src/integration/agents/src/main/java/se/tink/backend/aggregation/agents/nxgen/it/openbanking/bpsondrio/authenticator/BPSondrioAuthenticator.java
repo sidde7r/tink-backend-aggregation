@@ -17,6 +17,7 @@ public class BPSondrioAuthenticator extends CbiGlobeAuthenticator {
 
     @Override
     protected String createRedirectUrl(String state) {
+        // '?' and '&' need to be encoded
         return getConfiguration().getRedirectUrl()
                 + CbiGlobeUtils.encodeValue("?state=" + state + "&code=code");
     }
