@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.commands.migrations;
 
 import com.google.api.client.util.Lists;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -84,10 +86,22 @@ public abstract class AgentVersionMigration {
      * @param accounts
      */
     protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
-        List<Account> accountList =
-                deduplicateAccounts(accounts).stream()
-                        .map(this::migrateAccount)
-                        .collect(Collectors.toList());
+
+        List<Account> accountList = deduplicateAccounts(accounts);
+        try {
+
+            accountList =
+                    accountList.stream().map(this::migrateAccount).collect(Collectors.toList());
+        } catch (UniformInterfaceException e) {
+
+            log.error(
+                    String.format(
+                            "Error updating migrated accounts. Pre: %s Post: %s",
+                            Arrays.toString(accounts.stream().map(Account::getBankId).toArray()),
+                            Arrays.toString(
+                                    accountList.stream().map(Account::getBankId).toArray())));
+            throw e;
+        }
 
         request.setAccounts(accountList);
     }
