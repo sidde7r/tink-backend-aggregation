@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConfiguration;
@@ -41,9 +42,20 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
     }
 
     @Override
-    public BankIdInitResponse init(String ssn) {
+    public BankIdInitResponse init(String ssn) throws BankIdException {
         final BankIdInitRequest request = new BankIdInitRequest(ssn, config.getApiKey());
         final BankIdInitResponse response = apiClient.initBankId(request);
+
+        if (response.isError()) {
+            BankIdInitResponse.Error error = response.getError();
+
+            if (error.isBankIdAlreadyInProgress()) {
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            }
+
+            throw new IllegalStateException(
+                    String.format("BankID init failed, cause: %s", error.getCode()));
+        }
 
         return response;
     }

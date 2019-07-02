@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import com.google.common.base.Strings;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -41,6 +42,10 @@ public class BankIdInitResponse {
 
         public String getMessage() {
             return message;
+        }
+
+        public boolean isBankIdAlreadyInProgress() {
+            return SebKortConstants.ErrorCode.ALREADY_IN_PROGRESS.equalsIgnoreCase(getCode());
         }
     }
 }
