@@ -7,9 +7,24 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class IcaBankenConfiguration implements ClientConfiguration {
 
-    @JsonProperty private String baseUrl;
+    @JsonProperty private String clientId;
+    @JsonProperty private String redirectUri;
+    @JsonProperty private String eidasUrl;
+    @JsonProperty private String certificateId;
 
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    public String getEidasUrl() {
+        return eidasUrl;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
     }
 }
