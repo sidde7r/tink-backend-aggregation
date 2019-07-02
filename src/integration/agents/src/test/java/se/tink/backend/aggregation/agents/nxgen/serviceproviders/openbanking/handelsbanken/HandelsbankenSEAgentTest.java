@@ -2,19 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-//@Ignore
+@Ignore
 public class HandelsbankenSEAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
     @AfterClass
-    public static void afterClass() { ArgumentManager.afterClass(); }
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
 
     @Before
     public void setup() {

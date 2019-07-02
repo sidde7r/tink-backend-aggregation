@@ -18,10 +18,17 @@ public final class HandelsbankenBaseConstants {
         public static final URL AUTHORIZATION = new URL(BASE_URL + SUFFIX_V1 + "/consents");
         public static final URL THIRD_PARTIES = new URL(BASE_URL + SUFFIX_V1 + "/third-parties");
         public static final URL SUBSCRIPTIONS = new URL(BASE_URL + SUFFIX_V1 + "/subscriptions");
-        public static final URL SESSION = new URL(BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0");
-        public static final URL ACCOUNT_DETAILS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}");
-        public static final URL ACCOUNT_TRANSACTIONS = new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}/transactions");
-
+        public static final URL SESSION =
+                new URL(BASE_URL2 + "/decoupled/mbid/initAuthorization/1.0");
+        public static final URL ACCOUNT_DETAILS =
+                new URL(BASE_URL + SUFFIX_V2 + "/accounts/{" + UrlParams.ACCOUNT_ID + "}");
+        public static final URL ACCOUNT_TRANSACTIONS =
+                new URL(
+                        BASE_URL
+                                + SUFFIX_V2
+                                + "/accounts/{"
+                                + UrlParams.ACCOUNT_ID
+                                + "}/transactions");
     }
 
     public static class UrlParams {
@@ -29,7 +36,6 @@ public final class HandelsbankenBaseConstants {
     }
 
     public static class StorageKeys {
-        public static final String ACCOUNT_ID = "accountId";
         public static final String ACCESS_TOKEN = "accessToken";
         public static final String REFRESH_TOKEN = "refreshToken";
     }
@@ -92,7 +98,8 @@ public final class HandelsbankenBaseConstants {
     public static class ExceptionMessages {
         public static final String BALANCE_NOT_FOUND = "Balance not found.";
         public static final String CONFIG_MISSING = "Handelsbanken configuration missing.";
-        public static final String VALUE_DATE_MISSING = "Valuedate not found, defaulting to transactiondate.";
+        public static final String VALUE_DATE_MISSING =
+                "Valuedate not found, defaulting to transactiondate.";
         public static final String NOT_PARSE_DATE = "Could not parse date.";
     }
 

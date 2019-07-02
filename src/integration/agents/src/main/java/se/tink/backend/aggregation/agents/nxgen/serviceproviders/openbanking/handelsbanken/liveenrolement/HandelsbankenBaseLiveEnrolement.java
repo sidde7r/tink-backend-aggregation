@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement;
 
+import java.util.UUID;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.BodyValues;
@@ -9,9 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.liveenrolement.rpc.*;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-
-import javax.ws.rs.core.MediaType;
-import java.util.UUID;
 
 public class HandelsbankenBaseLiveEnrolement {
 
@@ -56,8 +55,11 @@ public class HandelsbankenBaseLiveEnrolement {
     }
 
     public SubscriptionRequest createSubscriptionBody(String oauthRedirectURI) {
-        SubscriptionProductEntity product = new SubscriptionProductEntity(BodyValues.PRODUCT_ACCOUNTS);
-        AppEntity app = new AppEntity(configuration.getAppName(), configuration.getAppDesc(), oauthRedirectURI);
+        SubscriptionProductEntity product =
+                new SubscriptionProductEntity(BodyValues.PRODUCT_ACCOUNTS);
+        AppEntity app =
+                new AppEntity(
+                        configuration.getAppName(), configuration.getAppDesc(), oauthRedirectURI);
         SubscriptionRequest subscriptionRequest = new SubscriptionRequest(app, product);
         return subscriptionRequest;
     }

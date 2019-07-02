@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseAccountConverter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.HandelsbankenBaseConstants.AccountBalance;
@@ -13,11 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class HandelsbankenBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
@@ -34,7 +33,8 @@ public class HandelsbankenBaseTransactionalAccountFetcher
         this.converter = converter;
     }
 
-    private Optional<TransactionalAccount> mapToTransactionalAccount(AccountsItemEntity accountEntity) {
+    private Optional<TransactionalAccount> mapToTransactionalAccount(
+            AccountsItemEntity accountEntity) {
         BalanceAccountResponse balances = apiClient.getAccountDetails(accountEntity.getAccountId());
         BalancesItemEntity availableBalance =
                 balances.getBalances().stream()
@@ -63,8 +63,7 @@ public class HandelsbankenBaseTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         try {
-            return apiClient.getTransactions(
-                    account.getApiIdentifier(), fromDate, toDate);
+            return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
         } catch (HttpResponseException h) {
             return PaginatorResponseImpl.createEmpty(false);
         }

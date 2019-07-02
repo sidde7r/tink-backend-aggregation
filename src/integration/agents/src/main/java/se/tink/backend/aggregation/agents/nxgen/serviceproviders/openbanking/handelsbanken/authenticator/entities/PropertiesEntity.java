@@ -22,7 +22,8 @@ public class PropertiesEntity {
         this.nameEntity = name;
     }
 
-    public PropertiesEntity(AppEntity app, ClientIdEntity clientId, SubscriptionProductEntity product) {
+    public PropertiesEntity(
+            AppEntity app, ClientIdEntity clientId, SubscriptionProductEntity product) {
         this.app = app;
         this.clientIdEntity = clientId;
         this.product = product;

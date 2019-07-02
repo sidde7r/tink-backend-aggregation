@@ -56,13 +56,20 @@ public class HandelsbankenBankidAuthenticator implements BankIdAuthenticator<Ses
 
         if (decoupledResponse.getError() != null) {
             switch (decoupledResponse.getError()) {
-                case (Errors.INTENT_EXPIRED): return BankIdStatus.TIMEOUT;
-                case (Errors.MBID_ERROR): return BankIdStatus.TIMEOUT;
-                case (Errors.INVALID_REQUEST): return BankIdStatus.NO_CLIENT;
-                case (Errors.NOT_SHB_APPROVED): return BankIdStatus.NO_CLIENT;
-                case (Errors.UNAUTHORIZED_CLIENT): return BankIdStatus.NO_CLIENT;
-                case (Errors.MBID_MAX_POLLING): return BankIdStatus.INTERRUPTED;
-                default: return BankIdStatus.FAILED_UNKNOWN;
+                case (Errors.INTENT_EXPIRED):
+                    return BankIdStatus.TIMEOUT;
+                case (Errors.MBID_ERROR):
+                    return BankIdStatus.TIMEOUT;
+                case (Errors.INVALID_REQUEST):
+                    return BankIdStatus.NO_CLIENT;
+                case (Errors.NOT_SHB_APPROVED):
+                    return BankIdStatus.NO_CLIENT;
+                case (Errors.UNAUTHORIZED_CLIENT):
+                    return BankIdStatus.NO_CLIENT;
+                case (Errors.MBID_MAX_POLLING):
+                    return BankIdStatus.INTERRUPTED;
+                default:
+                    return BankIdStatus.FAILED_UNKNOWN;
             }
         }
 

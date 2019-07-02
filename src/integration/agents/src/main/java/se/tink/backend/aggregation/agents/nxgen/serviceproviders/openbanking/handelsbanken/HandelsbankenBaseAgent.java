@@ -16,7 +16,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
-    private final HandelsbankenBaseApiClient apiClient;
+    protected HandelsbankenBaseApiClient apiClient;
     private final String clientName;
     private HandelsbankenBaseConfiguration handelsbankenBaseConfiguration;
 
@@ -33,17 +33,17 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         handelsbankenBaseConfiguration =
-            configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                    HandelsbankenBaseConstants.INTEGRATION_NAME,
-                    clientName,
-                    HandelsbankenBaseConfiguration.class)
-                .orElseThrow(
-                    () ->
-                        new IllegalStateException(
-                            HandelsbankenBaseConstants.ExceptionMessages
-                                .CONFIG_MISSING));
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                HandelsbankenBaseConstants.INTEGRATION_NAME,
+                                clientName,
+                                HandelsbankenBaseConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                HandelsbankenBaseConstants.ExceptionMessages
+                                                        .CONFIG_MISSING));
 
         apiClient.setConfiguration(handelsbankenBaseConfiguration);
         configureHttpClient(client);
@@ -53,29 +53,26 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
         client.setEidasProxy(handelsbankenBaseConfiguration.getEidasUrl(), "Tink");
     }
 
-
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         final HandelsbankenBaseTransactionalAccountFetcher accountFetcher =
-            new HandelsbankenBaseTransactionalAccountFetcher(apiClient);
+                new HandelsbankenBaseTransactionalAccountFetcher(apiClient);
 
         accountFetcher.setConverter(getAccountConverter());
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(accountFetcher))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(accountFetcher))));
     }
-
 
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
-
 }

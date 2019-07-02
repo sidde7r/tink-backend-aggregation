@@ -6,5 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public interface HandelsbankenBaseAccountConverter {
-    Optional<TransactionalAccount> toTinkAccount(AccountsItemEntity accountEntity, BalancesItemEntity balance);
+    Optional<TransactionalAccount> toTinkAccount(
+            AccountsItemEntity accountEntity, BalancesItemEntity balance);
 }

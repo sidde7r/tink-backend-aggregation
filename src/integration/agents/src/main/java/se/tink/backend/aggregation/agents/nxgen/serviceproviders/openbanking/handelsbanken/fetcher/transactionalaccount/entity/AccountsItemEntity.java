@@ -96,6 +96,7 @@ public class AccountsItemEntity {
     }
 
     private Amount getAmount(BalancesItemEntity balance) {
-        return new Amount(balance.getAmountEntity().getCurrency(), balance.getAmountEntity().getContent());
+        return new Amount(
+                balance.getAmountEntity().getCurrency(), balance.getAmountEntity().getContent());
     }
 }
