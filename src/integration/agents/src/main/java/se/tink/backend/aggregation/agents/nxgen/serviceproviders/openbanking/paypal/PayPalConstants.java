@@ -82,7 +82,7 @@ public final class PayPalConstants {
     }
 
     public static class TransactionStatus {
-        public static String PENDING = "PENDING";
+        public static final String PENDING = "PENDING";
     }
 
     public static class LinkRelations {
