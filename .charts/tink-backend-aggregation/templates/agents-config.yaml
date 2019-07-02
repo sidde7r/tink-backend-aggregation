@@ -140,6 +140,16 @@ data:
             qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
             eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.abn_sandbox.eidasProxyBaseUrl }}"
             certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
+          abn-staging:
+            clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
+            clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
+            redirectUrl: "{{ $agentsConfig.rabobank.abn_staging.redirectUrl }}"
+            baseUrl: "https://api.rabobank.nl/openapi"
+            clientSSLP12: "RABOBANK_CERTIFICATE_P12_ABN_TAG"
+            clientSSLKeyPassword: ""
+            qsealcPem: "RABOBANK_QSEALC_ABN_TAG"
+            eidasProxyBaseUrl: "{{ $agentsConfig.rabobank.abn.eidasProxyBaseUrl }}"
+            certificateId: "{{ $agentsConfig.rabobank.abn.certificateId }}"
           abn:
             clientId: "RABOBANK_CLIENT_ID_ABN_TAG"
             clientSecret: "RABOBANK_CLIENT_SECRET_ABN_TAG"
