@@ -2,7 +2,10 @@ load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
     name = "agents",
-    srcs = glob(["src/main/**/*.java"]),
+    srcs = glob(
+        ["src/main/**/*.java"],
+        exclude = [":agents_duplicates"],
+    ) + ["@tink_backend_integration_openbanking//src/integration/agents:agents_srcs"],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/at/banks/easybank/bawagpsk",
