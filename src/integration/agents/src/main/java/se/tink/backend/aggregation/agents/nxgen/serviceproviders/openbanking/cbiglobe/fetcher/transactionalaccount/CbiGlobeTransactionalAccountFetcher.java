@@ -44,7 +44,11 @@ public class CbiGlobeTransactionalAccountFetcher
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         // Bank allows to fetch transactions for last 90 days
-        fromDate = new DateTime(toDate).minusDays(90).toDate();
+        fromDate = calculateFromDate(toDate);
         return apiClient.getTransactions(account.getApiIdentifier(), fromDate, toDate);
+    }
+
+    protected Date calculateFromDate(Date toDate) {
+        return new DateTime(toDate).minusDays(90).toDate();
     }
 }
