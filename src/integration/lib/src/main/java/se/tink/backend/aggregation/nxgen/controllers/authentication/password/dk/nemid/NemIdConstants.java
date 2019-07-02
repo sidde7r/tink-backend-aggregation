@@ -18,6 +18,7 @@ public class NemIdConstants {
 
     public static class ErrorStrings {
         public static final String INVALID_CREDENTIALS = "Incorrect user ID or password";
+        public static final String NEMID_NOT_ACTIVATED = "Enter activation password";
     }
 
     // This html is taken from Nordea DK iOS and android. It has been modified to only include

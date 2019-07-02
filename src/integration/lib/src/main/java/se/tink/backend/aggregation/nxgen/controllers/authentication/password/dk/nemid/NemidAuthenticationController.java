@@ -160,6 +160,9 @@ public abstract class NemidAuthenticationController {
                 if (driver.getPageSource().contains(ErrorStrings.INVALID_CREDENTIALS)) {
                     driver.switchTo().defaultContent();
                     throw LoginError.INCORRECT_CREDENTIALS.exception();
+                } else if (driver.getPageSource().contains(ErrorStrings.NEMID_NOT_ACTIVATED)) {
+                    driver.switchTo().defaultContent();
+                    throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
                 }
                 driver.switchTo().defaultContent();
             } catch (IllegalStateException ex) {
