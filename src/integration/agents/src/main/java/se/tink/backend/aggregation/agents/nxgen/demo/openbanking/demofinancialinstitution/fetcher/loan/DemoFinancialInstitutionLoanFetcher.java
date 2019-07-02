@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.fetcher.loan;
 
-import static io.vavr.Predicates.not;
-
 import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.stream.Collectors;
