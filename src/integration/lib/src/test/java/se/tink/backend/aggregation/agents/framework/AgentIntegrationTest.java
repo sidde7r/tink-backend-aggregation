@@ -365,13 +365,21 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         return false;
     }
 
-    private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
+    private void doBankTransfer(Agent agent, Transfer transfer, boolean isUpdate) throws Exception {
         log.info("Executing bank transfer.");
 
         if (agent instanceof TransferExecutorNxgen) {
-            ((TransferExecutorNxgen) agent).execute(transfer);
+            if (isUpdate) {
+                ((TransferExecutorNxgen) agent).update(transfer);
+            } else {
+                ((TransferExecutorNxgen) agent).execute(transfer);
+            }
         } else if (agent instanceof TransferExecutor) {
-            ((TransferExecutor) agent).execute(transfer);
+            if (isUpdate) {
+                ((TransferExecutor) agent).update(transfer);
+            } else {
+                ((TransferExecutor) agent).execute(transfer);
+            }
 
         } else {
             throw new AssertionError(
@@ -428,12 +436,12 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         context.printCollectedData();
     }
 
-    public void testBankTransfer(Transfer transfer) throws Exception {
+    private void testBankTransfer(Transfer transfer, boolean isUpdate) throws Exception {
         initiateCredentials();
         Agent agent = createAgent(createRefreshInformationRequest());
         try {
             login(agent);
-            doBankTransfer(agent, transfer);
+            doBankTransfer(agent, transfer, isUpdate);
             Assert.assertTrue("Expected to be logged in.", !expectLoggedIn || keepAlive(agent));
 
             if (doLogout) {
@@ -444,6 +452,14 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         context.printCollectedData();
+    }
+
+    public void testBankTransfer(Transfer transfer) throws Exception {
+        testBankTransfer(transfer, false);
+    }
+
+    public void testUpdateTransfer(Transfer transfer) throws Exception {
+        testBankTransfer(transfer, true);
     }
 
     public void testGenericPayment(List<Payment> paymentList) throws Exception {
