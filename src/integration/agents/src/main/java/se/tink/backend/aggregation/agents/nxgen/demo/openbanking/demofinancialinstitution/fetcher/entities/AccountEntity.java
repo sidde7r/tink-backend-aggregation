@@ -4,12 +4,15 @@ import static io.vavr.Predicates.anyOf;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.vavr.control.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
@@ -183,6 +186,32 @@ public class AccountEntity {
                 .setAccountNumber(accountNumber)
                 .setBankIdentifier(accountNumber)
                 .setInterestRate(interestRate)
+                .build();
+    }
+
+    @JsonIgnore
+    private Predicate<AccountTypes> isTinkInvestmentAccount() {
+        return anyOf(AccountTypes.INVESTMENT::equals, AccountTypes.PENSION::equals);
+    }
+
+    @JsonIgnore
+    public Option<InvestmentAccount> maybeToTinkInvestmentAccount() {
+        return accountType
+                .maybeToTinkAccountTypes()
+                .filter(isTinkInvestmentAccount())
+                .map(t -> toTinkInvestmentAccount());
+    }
+
+    @JsonIgnore
+    private InvestmentAccount toTinkInvestmentAccount() {
+        final List<Portfolio> portfolios = new ArrayList<>();
+
+        return InvestmentAccount.builder(accountNumber)
+                .setName(accountName)
+                .setAccountNumber(accountNumber)
+                .setHolderName(new HolderName(username))
+                .setCashBalance(new Amount(currency, balance))
+                .setPortfolios(portfolios)
                 .build();
     }
 }
