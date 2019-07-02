@@ -4,6 +4,7 @@ import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
 import java.util.concurrent.ExecutionException;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.CredentialKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
@@ -26,7 +27,7 @@ public class SibsDecoupledAuthenticationController implements Authenticator {
 
         authenticator.initializeConsent(
                 state,
-                credentials.getField(CredentialKeys.PSU_ID_TYPE),
+                SibsConstants.HeaderValues.CLIENTE_PARTICULAR,
                 credentials.getField(CredentialKeys.PSU_ID));
 
         Retryer<ConsentStatus> consentStatusRetryer =

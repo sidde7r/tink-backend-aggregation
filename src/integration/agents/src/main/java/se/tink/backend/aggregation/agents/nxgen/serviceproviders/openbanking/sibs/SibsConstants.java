@@ -80,6 +80,7 @@ public final class SibsConstants {
     public static class HeaderValues {
 
         public static final String DIGEST_PREFIX = "SHA-256=";
+        public static final String CLIENTE_PARTICULAR = "CP";
     }
 
     public static class PathParameterKeys {
