@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstant
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCompleteResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.BondMarketInfoResponse;
@@ -76,10 +77,15 @@ public class AvanzaApiClient {
         return createRequest(collectUrl).get(BankIdCollectResponse.class);
     }
 
-    public HttpResponse completeBankId(String transactionId, String customerId) {
+    public BankIdCompleteResponse completeBankId(String transactionId, String customerId) {
         final String completeUrl = Urls.BANK_ID_COMPLETE(transactionId, customerId);
 
-        return createRequest(completeUrl).get(HttpResponse.class);
+        final HttpResponse response = createRequest(completeUrl).get(HttpResponse.class);
+
+        // Get security token from header in response and inject it into the BankIdCompleteResponse
+        // that is returned.
+        final String securityToken = response.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
+        return response.getBody(BankIdCompleteResponse.class).withSecurityToken(securityToken);
     }
 
     public AccountsOverviewResponse fetchAccounts(String authSession) {

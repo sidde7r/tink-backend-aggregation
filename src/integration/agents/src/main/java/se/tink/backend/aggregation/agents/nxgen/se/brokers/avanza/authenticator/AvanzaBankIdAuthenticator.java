@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +12,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.entities.LoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCompleteResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
@@ -40,14 +38,6 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         this.apiClient = apiClient;
         this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
-    }
-
-    private BankIdCompleteResponse injectSecurityToken(HttpResponse r) {
-        final String token = r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
-        final BankIdCompleteResponse response =
-                r.getBody(BankIdCompleteResponse.class).withSecurityToken(token);
-
-        return response;
     }
 
     @Override
@@ -93,7 +83,11 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         final BankIdStatus status = bankIdResponse.getBankIdStatus();
 
         if (status == BankIdStatus.DONE) {
-            complete(bankIdResponse).forEach(this::putAuthCredentialsInAuthSessionStorage);
+            // Complete the authentication and store auth session + security token for all profiles
+            bankIdResponse
+                    .getLogins()
+                    .forEach(loginEntity -> completeAuthentication(loginEntity, transactionId));
+
             temporaryStorage.put(StorageKeys.HOLDER_NAME, bankIdResponse.getName());
         }
 
@@ -127,19 +121,15 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         return Optional.empty();
     }
 
-    public List<BankIdCompleteResponse> complete(BankIdCollectResponse reference)
-            throws AuthenticationException, AuthorizationException {
-        final String transactionId = reference.getTransactionId();
-        final List<BankIdCompleteResponse> collect =
-                reference.getLogins().stream()
-                        .map(l -> apiClient.completeBankId(transactionId, l.getCustomerId()))
-                        .map(this::injectSecurityToken)
-                        .collect(Collectors.toList());
+    private void completeAuthentication(LoginEntity loginEntity, String transactionId) {
 
-        return collect;
+        BankIdCompleteResponse bankIdCompleteResponse =
+                apiClient.completeBankId(transactionId, loginEntity.getCustomerId());
+
+        putAuthCredentialsInAuthSessionStorage(bankIdCompleteResponse);
     }
 
-    private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse r) {
-        authSessionStorage.put(r.getAuthenticationSession(), r.getSecurityToken());
+    private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse response) {
+        authSessionStorage.put(response.getAuthenticationSession(), response.getSecurityToken());
     }
 }
