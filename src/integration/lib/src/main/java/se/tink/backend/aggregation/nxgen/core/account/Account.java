@@ -119,7 +119,12 @@ public abstract class Account {
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
             implements BuildStep<A, B> {
@@ -211,50 +216,66 @@ public abstract class Account {
             return buildStep();
         }
 
+        @Deprecated
         protected abstract B buildStep();
 
+        @Deprecated
         String getUniqueIdentifier() {
             return uniqueIdentifier;
         }
 
+        @Deprecated
         String getAccountNumber() {
             return accountNumber;
         }
 
+        @Deprecated
         String getApiIdentifier() {
             return apiIdentifier;
         }
 
+        @Deprecated
         Amount getBalance() {
             return balance;
         }
 
+        @Deprecated
         String getAlias() {
             return alias;
         }
 
+        @Deprecated
         String getProductName() {
             return productName;
         }
 
+        @Deprecated
         Collection<String> getHolderNames() {
             return holderNames;
         }
 
+        @Deprecated
         Set<AccountIdentifier> getIdentifiers() {
             return identifiers;
         }
 
+        @Deprecated
         TemporaryStorage getTemporaryStorage() {
             return temporaryStorage;
         }
 
+        @Deprecated
         Set<AccountFlag> getAccountFlags() {
             return accountFlags;
         }
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
@@ -403,9 +424,12 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
-    /** @deprecated Use StepBuilder instead */
-    @Deprecated
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} or {@link
+     *     CreditCardAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();
@@ -418,6 +442,7 @@ public abstract class Account {
         protected HolderName holderName;
         private T thisObj;
 
+        @Deprecated
         protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
 
@@ -427,6 +452,7 @@ public abstract class Account {
             this.thisObj.uniqueIdentifier = uniqueIdentifier;
         }
 
+        @Deprecated
         protected abstract T self();
 
         public String getName() {
@@ -525,6 +551,7 @@ public abstract class Account {
             return temporaryStorage;
         }
 
+        @Deprecated
         public abstract A build();
     }
 }

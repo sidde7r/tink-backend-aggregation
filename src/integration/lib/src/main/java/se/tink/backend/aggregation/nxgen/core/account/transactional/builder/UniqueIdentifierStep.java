@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public interface UniqueIdentifierStep<S> {
 
     /**
@@ -23,5 +24,6 @@ public interface UniqueIdentifierStep<S> {
      * @param uniqueIdentifier The unique identifier
      * @return The next step of the builder
      */
+    @Deprecated
     AccountNumberStep<S> setUniqueIdentifier(@Nonnull String uniqueIdentifier);
 }
