@@ -56,6 +56,7 @@ filegroup(
     srcs = [
         "test/cryptography/private_rsa_key.pem",
         "test/cryptography/public_rsa_key.pub",
+        "test/cryptography/cbiglobe/cbiglobe.p12",
     ],
     visibility = ["//visibility:public"],
 )
