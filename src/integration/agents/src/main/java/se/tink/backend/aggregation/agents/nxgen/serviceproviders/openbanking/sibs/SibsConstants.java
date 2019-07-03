@@ -99,7 +99,6 @@ public final class SibsConstants {
 
     public static class CredentialKeys {
 
-        public static final String PSU_ID = "PSU_ID";
-        public static final String PSU_ID_TYPE = "PSU_ID_TYPE";
+        public static final String PSU_ID = "username";
     }
 }

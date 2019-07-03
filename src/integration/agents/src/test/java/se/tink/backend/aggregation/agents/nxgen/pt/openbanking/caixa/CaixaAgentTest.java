@@ -11,13 +11,15 @@ public class CaixaAgentTest {
 
     private AgentIntegrationTest.Builder builder;
 
-    private final String TEST_PSU_ID = "3072317";
-
+    // private final String TEST_PSU_ID = "2255163";
+    // private final String TEST_PSU_ID = "0611133";
     // private final String TEST_PSU_ID = "3870665";
     // private final String TEST_PSU_ID = "3870665";
     // private final String TEST_PSU_ID = "3273572";
     // private final String TEST_PSU_ID = "6362699";
     // private final String TEST_PSU_ID = "3140331";
+
+    private final String TEST_PSU_ID = "6362699";
 
     @Before
     public void setup() {
