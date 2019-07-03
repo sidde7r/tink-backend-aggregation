@@ -37,11 +37,15 @@ public class VolksbankAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        final String bankPath = request.getProvider().getPayload().split(" ")[1];
-        redirectUrl = request.getProvider().getPayload().split(" ")[2];
+        final String payload = request.getProvider().getPayload();
+
+        final String bankPath = payload.split(" ")[1];
+        redirectUrl = payload.split(" ")[2];
+
+        final boolean isSandbox = payload.split(" ")[0].toLowerCase().contains("sandbox");
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
-        this.urlFactory = new VolksbankUrlFactory(bankPath);
+        this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
 
         volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, urlFactory);
 
