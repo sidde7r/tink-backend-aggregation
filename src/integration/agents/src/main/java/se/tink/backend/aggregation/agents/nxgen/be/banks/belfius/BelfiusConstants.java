@@ -59,7 +59,7 @@ public class BelfiusConstants {
 
     public static final class Device {
         public static final String DEVICE_BRAND = "Apple iPhone 6S";
-        public static final String DEVICE_NAME = "Tink";
+        public static final String DEVICE_NAME = "iPhone6S";
     }
 
     public static final class Widget {
