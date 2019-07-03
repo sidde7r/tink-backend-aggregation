@@ -54,6 +54,7 @@ filegroup(
 filegroup(
     name = "cryptography_test",
     srcs = [
+        "test/cryptography/cbiglobe/cbiglobe.p12",
         "test/cryptography/private_rsa_key.pem",
         "test/cryptography/public_rsa_key.pub",
     ],
