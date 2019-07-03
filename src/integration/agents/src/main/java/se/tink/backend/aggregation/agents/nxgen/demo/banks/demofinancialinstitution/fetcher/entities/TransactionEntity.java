@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
