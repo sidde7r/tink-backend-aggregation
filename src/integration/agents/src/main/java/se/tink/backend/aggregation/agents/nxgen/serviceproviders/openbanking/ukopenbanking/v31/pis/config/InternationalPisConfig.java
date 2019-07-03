@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.FundsConfirmationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.international.InternationalPaymentConsentRequest;
@@ -14,14 +15,17 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 public class InternationalPisConfig implements UKPisConfig {
 
     private final UkOpenBankingApiClient client;
+    private final UkOpenBankingPisConfig pisConfig;
 
-    public InternationalPisConfig(UkOpenBankingApiClient client) {
+    public InternationalPisConfig(UkOpenBankingApiClient client, UkOpenBankingPisConfig pisConfig) {
         this.client = client;
+        this.pisConfig = pisConfig;
     }
 
     @Override
     public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
         return client.createInternationalPaymentConsent(
+                        pisConfig,
                         new InternationalPaymentConsentRequest(paymentRequest.getPayment()),
                         InternationalPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
@@ -35,14 +39,15 @@ public class InternationalPisConfig implements UKPisConfig {
                 paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
 
         if (!Strings.isNullOrEmpty(paymentId)) {
-            return client.getInternationalPayment(paymentId, InternationalPaymentResponse.class)
+            return client.getInternationalPayment(
+                            pisConfig, paymentId, InternationalPaymentResponse.class)
                     .toTinkPaymentResponse();
         }
 
         String consentId = getConsentId(paymentRequest);
 
         return client.getInternationalPaymentConsent(
-                        consentId, InternationalPaymentConsentResponse.class)
+                        pisConfig, consentId, InternationalPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
@@ -50,7 +55,8 @@ public class InternationalPisConfig implements UKPisConfig {
     public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest paymentRequest) {
         String consentId = getConsentId(paymentRequest);
 
-        return client.getInternationalFundsConfirmation(consentId, FundsConfirmationResponse.class);
+        return client.getInternationalFundsConfirmation(
+                pisConfig, consentId, FundsConfirmationResponse.class);
     }
 
     @Override
@@ -67,7 +73,8 @@ public class InternationalPisConfig implements UKPisConfig {
                         endToEndIdentification,
                         instructionIdentification);
 
-        return client.executeInternationalPayment(request, InternationalPaymentResponse.class)
+        return client.executeInternationalPayment(
+                        pisConfig, request, InternationalPaymentResponse.class)
                 .toTinkPaymentResponse();
     }
 

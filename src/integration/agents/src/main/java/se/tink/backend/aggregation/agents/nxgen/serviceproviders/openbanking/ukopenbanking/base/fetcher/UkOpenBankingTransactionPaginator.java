@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -27,6 +28,7 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
             new AggregationLogger(UkOpenBankingTransactionPaginator.class);
     private String lastAccount;
     private int paginationCount;
+    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
 
     /**
      * @param apiClient Ukob api client
@@ -37,12 +39,14 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
      *     Account)}
      */
     public UkOpenBankingTransactionPaginator(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
             UkOpenBankingApiClient apiClient,
             Class<ResponseType> responseType,
             TransactionConverter<ResponseType, AccountType> transactionConverter) {
         this.apiClient = apiClient;
         this.responseType = responseType;
         this.transactionConverter = transactionConverter;
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
     }
 
     @Override
@@ -57,14 +61,14 @@ public class UkOpenBankingTransactionPaginator<ResponseType, AccountType extends
 
         if (key == null) {
             key =
-                    apiClient
-                            .getAisConfig()
-                            .getInitialTransactionsPaginationKey(account.getBankIdentifier());
+                    ukOpenBankingAisConfig.getInitialTransactionsPaginationKey(
+                            account.getBankIdentifier());
         }
 
         try {
             return transactionConverter.toPaginatorResponse(
-                    apiClient.fetchAccountTransactions(key, responseType), account);
+                    apiClient.fetchAccountTransactions(ukOpenBankingAisConfig, key, responseType),
+                    account);
         } catch (HttpResponseException e) {
 
             // NatWest seems to have an bug where they will send us next links even though it goes

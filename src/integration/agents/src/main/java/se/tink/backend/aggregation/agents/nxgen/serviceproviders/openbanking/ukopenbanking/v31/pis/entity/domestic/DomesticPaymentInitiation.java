@@ -31,6 +31,7 @@ public class DomesticPaymentInitiation {
      */
     private String instructionIdentification;
 
+    private DebtorAccount debtorAccount;
     private CreditorAccount creditorAccount;
     private InstructedAmount instructedAmount;
 
@@ -40,10 +41,11 @@ public class DomesticPaymentInitiation {
     public DomesticPaymentInitiation(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.remittanceInformation =
-                new RemittanceInformation(payment.getId().toString(), payment.getReference());
+                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
         this.creditorAccount = new CreditorAccount(payment.getCreditor());
+        this.debtorAccount = new DebtorAccount(payment.getDebtor());
         this.instructedAmount = new InstructedAmount(payment.getAmount());
     }
 }

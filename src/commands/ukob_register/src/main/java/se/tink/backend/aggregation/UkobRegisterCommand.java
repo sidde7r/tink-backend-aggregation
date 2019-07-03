@@ -80,7 +80,8 @@ public class UkobRegisterCommand {
 
         TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
-        httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
+        httpClient.disableSslVerification();
+        // httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
 
         // Softw. Transp. key
         httpClient.setSslClientCertificate(

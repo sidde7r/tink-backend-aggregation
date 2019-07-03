@@ -96,6 +96,10 @@ public class UkOpenBankingV31Constants extends UkOpenBankingConstants {
         public static final String PISP_PREFIX = "/pisp";
     }
 
+    public static final class ResponseKeys {
+        public static final String CONSENT_ID_KEY = "consentId";
+    }
+
     public static class Links {
         public static final String NEXT = "Next";
     }

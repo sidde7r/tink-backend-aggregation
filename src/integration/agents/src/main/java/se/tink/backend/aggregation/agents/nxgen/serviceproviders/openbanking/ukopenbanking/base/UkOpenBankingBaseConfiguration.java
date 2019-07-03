@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class UkOpenBankingBaseConfiguration implements UkOpenBankingConfig {
+
     public URL getBulkAccountRequestURL(URL apiBaseUrl) {
         return apiBaseUrl.concat(ACCOUNT_BULK_REQUEST);
     }

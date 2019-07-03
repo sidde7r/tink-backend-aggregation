@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.entities.DebtorCreditorAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSetupV11Request;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSetupV11Response;
@@ -24,15 +25,19 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
 
     private final boolean mustNotHaveSourceAccountSpecified;
 
-    public UkOpenBankingV11Pis() {
-        this(false);
-    }
+    private final UkOpenBankingPisConfig ukOpenBankingPisConfig;
 
-    public UkOpenBankingV11Pis(boolean mustNotHaveSourceAccountSpecified) {
+    public UkOpenBankingV11Pis(
+            UkOpenBankingPisConfig ukOpenBankingPisConfig,
+            boolean mustNotHaveSourceAccountSpecified) {
+        this.ukOpenBankingPisConfig = ukOpenBankingPisConfig;
         this.mustNotHaveSourceAccountSpecified = mustNotHaveSourceAccountSpecified;
-
         this.internalTransferId = RandomUtils.generateRandomHexEncoded(8);
         this.externalTransferId = RandomUtils.generateRandomHexEncoded(8);
+    }
+
+    public UkOpenBankingV11Pis(UkOpenBankingPisConfig ukOpenBankingPisConfig) {
+        this(ukOpenBankingPisConfig, false);
     }
 
     private Optional<DebtorCreditorAccountEntity> convertAccountIdentifierToUkOpenBanking(
@@ -112,7 +117,8 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
                         referenceText);
 
         PaymentSetupV11Response paymentSetupResponse =
-                apiClient.createPaymentIntentId(request, PaymentSetupV11Response.class);
+                apiClient.createPaymentIntentId(
+                        ukOpenBankingPisConfig, request, PaymentSetupV11Response.class);
 
         UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code receivedStatus =
                 paymentSetupResponse
@@ -183,7 +189,9 @@ public class UkOpenBankingV11Pis implements UkOpenBankingPis {
 
         PaymentSubmissionV11Response paymentSubmissionResponse =
                 apiClient.submitPayment(
-                        paymentSubmissionRequest, PaymentSubmissionV11Response.class);
+                        ukOpenBankingPisConfig,
+                        paymentSubmissionRequest,
+                        PaymentSubmissionV11Response.class);
 
         UkOpenBankingApiDefinitions.TransactionIndividualStatus1Code receivedStatus =
                 paymentSubmissionResponse
