@@ -6,8 +6,10 @@ import se.tink.backend.agents.rpc.AccountTypes;
 
 public class AccountEntity {
 
-    private static Pattern ALLOWED_BANK_ID_PATTERN = Pattern.compile("[0-9]{6}[*]{6}[0-9]{4}");
+    private static Pattern MASKED_CREDIT_CARD_NUMBER_PATTERN =
+            Pattern.compile("[0-9]{6}[*]{6}[0-9]{4}");
 
+    private Double availableCredit;
     private Double balance;
     private String accountNumber;
 
@@ -19,21 +21,32 @@ public class AccountEntity {
         this.accountNumber = accountNumber;
     }
 
+    public Double getAvailableCredit() {
+        return availableCredit;
+    }
+
+    public void setAvailableCredit(Double available) {
+        this.availableCredit = available;
+    }
+
     public Account toTinkAccount() {
         Account tinkAccount = new Account();
         tinkAccount.setBalance(balance);
-        tinkAccount.setAccountNumber(accountNumber);
         tinkAccount.setBankId("NORWEGIAN_CARD");
 
         // Only support credit card right now
         tinkAccount.setType(AccountTypes.CREDIT_CARD);
         tinkAccount.setName("Norwegiankortet");
 
+        if (null != availableCredit) {
+            tinkAccount.setAvailableCredit(availableCredit.doubleValue());
+        }
+
         return tinkAccount;
     }
 
     public boolean hasValidBankId() {
-        return ALLOWED_BANK_ID_PATTERN.matcher(accountNumber).matches();
+        return MASKED_CREDIT_CARD_NUMBER_PATTERN.matcher(accountNumber).matches();
     }
 
     public Double getBalance() {
