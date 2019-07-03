@@ -18,6 +18,13 @@ public class UkobRegisterCommand {
     private static final String OUTFILE_NAME = "registration_response_%d";
     private static final String DEFAULT_SS = "tink";
 
+    /**
+     * Some banks are using self-signed certificates in their /register endpoints. To be able to
+     * work with such endpoints, currently we disabled SSL verification. After those banks will fix
+     * this problem, we will enable it again
+     */
+    private static final boolean DISABLE_SSL_VERIFICATION = true;
+
     public static void main(String args[]) throws Exception {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
@@ -80,8 +87,12 @@ public class UkobRegisterCommand {
 
         TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
-        httpClient.disableSslVerification();
-        // httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
+
+        if (DISABLE_SSL_VERIFICATION) {
+            httpClient.disableSslVerification();
+        } else {
+            httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
+        }
 
         // Softw. Transp. key
         httpClient.setSslClientCertificate(
