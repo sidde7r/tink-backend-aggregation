@@ -33,4 +33,14 @@ public final class VolksbankAgentTest {
                 .build()
                 .testRefresh();
     }
+
+    @Test
+    public void testProduction() throws Exception {
+        new AgentIntegrationTest.Builder("nl", "nl-snsbank-oauth2")
+                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
+                .expectLoggedIn(false)
+                .build()
+                .testRefresh();
+    }
 }
