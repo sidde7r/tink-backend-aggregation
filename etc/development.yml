@@ -120,6 +120,15 @@ agentsServiceConfiguration:
         basicAuthPassword: "dummyPass"
         accessToken: "sandboxToken"
         redirectUri: "https://api.tink.se/api/v1/credentials/third-party/callback"
+    handelsbanken:
+      tink:
+        appId: "dummyAppId"
+        clientId: "dummyClientId"
+        psuIpAddress: "dummyPsuIpAddress"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        appName: "Tink"
+        appDesc: "Tink app"
+        eidasUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     monzo:
       tink:
         clientId: "dummyId"
