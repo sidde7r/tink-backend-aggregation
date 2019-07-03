@@ -30,11 +30,15 @@ public final class CmcicConstants {
         public static final String TOKEN_PATH = "oauth2/token";
         public static final String FETCH_TRANSACTIONS_PATH =
                 "stet-psd2-api/v1/accounts/%s/transactions";
+        public static final String PAYMENT_REQUESTS = "stet-psd2-api/v1/payment-requests";
+        public static final String SUCCESS_REPORT_PATH = "?code=123&state=";
     }
 
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CODE_VERIFIER = "CODE_VERIFIER";
+        public static final String CLIENT_CREDENTIALS_TOKEN = "CLIENT_CREDENTIALS_TOKEN";
+        public static final String STATE = "STATE";
     }
 
     public static class QueryKeys {
@@ -64,12 +68,13 @@ public final class CmcicConstants {
         public static final String KEY_ID_NAME = "keyId=";
         public static final String SIGNING_ALGORITHM = "RSA";
         public static final String HEADERS =
-                "headers=\"(request-target) date digest x-request-id\"";
+                "headers=\"(request-target) date digest x-request-id content-type\"";
         public static final String SIGNATURE_NAME = "signature=";
         public static final String HTTP_METHOD_POST = "post";
         public static final String HTTP_METHOD_GET = "get";
         public static final String X_REQUEST_ID = "x-request-id: ";
         public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
+        public static final String CONTENT_TYPE = "content-type: ";
     }
 
     public static class HeaderKeys {
@@ -78,6 +83,7 @@ public final class CmcicConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String AUTHORIZATION = "Authorization";
         public static final String SIGNATURE = "Signature";
+        public static final String CONTENT_TYPE = "content-type";
     }
 
     public static class FormKeys {}
@@ -88,5 +94,13 @@ public final class CmcicConstants {
         public static final String CLIENT_ID = "client_id";
         public static final String CODE = "code";
         public static final String CODE_VERIFIER = "code_verifier";
+        public static final String BENEFICIARY_NAME = "myMerchant";
+        public static final String INSTRUCTION_ID = "MyInstrId";
+        public static final String PISP = "pisp";
+        public static final String CLIENT_CREDENTIALS = "client_credentials";
+    }
+
+    public class DateFormat {
+        public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     }
 }

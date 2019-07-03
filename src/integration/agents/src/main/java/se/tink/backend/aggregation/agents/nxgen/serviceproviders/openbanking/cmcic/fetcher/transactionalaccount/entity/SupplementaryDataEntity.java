@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cmcic.fetcher.transactionalaccount.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
+@JsonInclude(Include.NON_NULL)
 public class SupplementaryDataEntity {
     @JsonProperty("acceptedAuthenticationApproach")
     private List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach = null;
@@ -23,6 +26,25 @@ public class SupplementaryDataEntity {
 
     @JsonProperty("unsuccessfulReportUrl")
     private String unsuccessfulReportUrl = null;
+
+    public SupplementaryDataEntity() {}
+
+    private SupplementaryDataEntity(
+            List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach,
+            AppliedAuthenticationApproachEntity appliedAuthenticationApproach,
+            ScaHintEnum scaHint,
+            String successfulReportUrl,
+            String unsuccessfulReportUrl) {
+        this.acceptedAuthenticationApproach = acceptedAuthenticationApproach;
+        this.appliedAuthenticationApproach = appliedAuthenticationApproach;
+        this.scaHint = scaHint;
+        this.successfulReportUrl = successfulReportUrl;
+        this.unsuccessfulReportUrl = unsuccessfulReportUrl;
+    }
+
+    public static SupplementaryDataEntityBuilder builder() {
+        return new SupplementaryDataEntityBuilder();
+    }
 
     public SupplementaryDataEntity acceptedAuthenticationApproach(
             List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach) {
@@ -155,6 +177,67 @@ public class SupplementaryDataEntity {
         @JsonValue
         public String toString() {
             return String.valueOf(value);
+        }
+    }
+
+    public static class SupplementaryDataEntityBuilder {
+
+        private List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach;
+        private AppliedAuthenticationApproachEntity appliedAuthenticationApproach;
+        private ScaHintEnum scaHint;
+        private String successfulReportUrl;
+        private String unsuccessfulReportUrl;
+
+        SupplementaryDataEntityBuilder() {}
+
+        public SupplementaryDataEntityBuilder acceptedAuthenticationApproach(
+                List<AcceptedAuthenticationApproachEnum> acceptedAuthenticationApproach) {
+            this.acceptedAuthenticationApproach = acceptedAuthenticationApproach;
+            return this;
+        }
+
+        public SupplementaryDataEntityBuilder appliedAuthenticationApproach(
+                AppliedAuthenticationApproachEntity appliedAuthenticationApproach) {
+            this.appliedAuthenticationApproach = appliedAuthenticationApproach;
+            return this;
+        }
+
+        public SupplementaryDataEntityBuilder scaHint(ScaHintEnum scaHint) {
+            this.scaHint = scaHint;
+            return this;
+        }
+
+        public SupplementaryDataEntityBuilder successfulReportUrl(String successfulReportUrl) {
+            this.successfulReportUrl = successfulReportUrl;
+            return this;
+        }
+
+        public SupplementaryDataEntityBuilder unsuccessfulReportUrl(String unsuccessfulReportUrl) {
+            this.unsuccessfulReportUrl = unsuccessfulReportUrl;
+            return this;
+        }
+
+        public SupplementaryDataEntity build() {
+            return new SupplementaryDataEntity(
+                    acceptedAuthenticationApproach,
+                    appliedAuthenticationApproach,
+                    scaHint,
+                    successfulReportUrl,
+                    unsuccessfulReportUrl);
+        }
+
+        public String toString() {
+            return "SupplementaryDataEntity.SupplementaryDataEntityBuilder(acceptedAuthenticationApproach="
+                    + this.acceptedAuthenticationApproach
+                    + ", appliedAuthenticationApproach="
+                    + this.appliedAuthenticationApproach
+                    + ", scaHint="
+                    + this.scaHint
+                    + ", successfulReportUrl="
+                    + this.successfulReportUrl
+                    + ", unsuccessfulReportUrl="
+                    + this.unsuccessfulReportUrl
+                    + ")";
         }
     }
 }

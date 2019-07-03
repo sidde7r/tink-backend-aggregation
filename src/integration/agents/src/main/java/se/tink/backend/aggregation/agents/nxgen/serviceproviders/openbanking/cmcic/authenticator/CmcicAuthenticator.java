@@ -24,6 +24,8 @@ public class CmcicAuthenticator implements OAuth2Authenticator {
 
     @Override
     public OAuth2Token exchangeAuthorizationCode(String code) {
+        OAuth2Token clientCredentialsToken = apiClient.clientCredentialsAuthentication();
+        persistentStorage.put(StorageKeys.CLIENT_CREDENTIALS_TOKEN, clientCredentialsToken);
         return apiClient.getToken(code);
     }
 
