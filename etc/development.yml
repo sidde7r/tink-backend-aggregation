@@ -444,9 +444,9 @@ agentsServiceConfiguration:
       collectorSubscriptionKey: ASK_JOHANNES
     nordea:
       tink:
-        clientId: ""
-        clientSecret: ""
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        clientId: "dummyId"
+        clientSecret: "dummySecret"
+        redirectUrl: "https://api.tink.com/api/v1/credentials/third-party/callback"
     creditagricole:
       tink:
         baseUrl: "https://www.creditagricolestore.fr"

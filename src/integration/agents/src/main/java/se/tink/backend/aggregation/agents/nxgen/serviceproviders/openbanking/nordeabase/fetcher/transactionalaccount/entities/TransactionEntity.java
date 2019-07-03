@@ -52,12 +52,17 @@ public class TransactionEntity {
     private Date valueDate;
 
     public Transaction toTinkTransaction() {
+
         return Transaction.builder()
                 .setAmount(getAmount())
-                .setDate(transactionDate)
-                .setDescription(typeDescription)
+                .setDate(getRealTransactionDate())
+                .setDescription(narrative)
                 .setPending(false)
                 .build();
+    }
+
+    private Date getRealTransactionDate() {
+        return (transactionDate != null) ? transactionDate : valueDate;
     }
 
     private Amount getAmount() {

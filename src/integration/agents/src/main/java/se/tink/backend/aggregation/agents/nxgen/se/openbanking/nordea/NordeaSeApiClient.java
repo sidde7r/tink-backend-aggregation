@@ -3,18 +3,21 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.AuthorizeResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea.authenticator.rpc.GetTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.authenticator.rpc.GetTokenForm;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class NordeaSeApiClient extends NordeaBaseApiClient {
+
+    private String tppToken;
+    private String orderRef;
 
     public NordeaSeApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         super(client, sessionStorage);
@@ -29,23 +32,13 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public AuthorizeResponse authorize(AuthorizeRequest authorizeRequest) {
-        AuthorizeResponse res =
-                createRequest(NordeaSeConstants.Urls.AUTHORIZE)
-                        .post(AuthorizeResponse.class, authorizeRequest);
-
-        return res;
+        return createRequest(NordeaSeConstants.Urls.AUTHORIZE)
+                .post(AuthorizeResponse.class, authorizeRequest);
     }
 
-    public GetCodeResponse getCode() {
-        // Authentication for Sweden is still mocked. It differs of authentication for other
-        // countries.
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public HttpResponse getCode() {
         return createRequestWithTppToken(new URL(NordeaSeConstants.Urls.GET_CODE + getOrderRef()))
-                .get(GetCodeResponse.class);
+                .get(HttpResponse.class);
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
@@ -56,10 +49,18 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     private String getTppToken() {
-        return sessionStorage.get(NordeaSeConstants.StorageKeys.TPP_TOKEN);
+        return tppToken;
     }
 
     private String getOrderRef() {
-        return sessionStorage.get(NordeaSeConstants.StorageKeys.ORDER_REF);
+        return orderRef;
+    }
+
+    public void setTppToken(String tppToken) {
+        this.tppToken = tppToken;
+    }
+
+    public void setOrderRef(String orderRef) {
+        this.orderRef = orderRef;
     }
 }
