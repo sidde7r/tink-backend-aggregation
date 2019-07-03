@@ -29,7 +29,6 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
     private final VolksbankUrlFactory urlFactory;
-    private final String bankPath;
     private final String redirectUrl;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -38,7 +37,7 @@ public class VolksbankAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        bankPath = request.getProvider().getPayload().split(" ")[1];
+        final String bankPath = request.getProvider().getPayload().split(" ")[1];
         redirectUrl = request.getProvider().getPayload().split(" ")[2];
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
