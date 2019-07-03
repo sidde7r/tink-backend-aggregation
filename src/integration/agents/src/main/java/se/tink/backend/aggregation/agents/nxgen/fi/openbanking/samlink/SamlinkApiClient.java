@@ -2,8 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink;
 
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.SamlinkConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.SamlinkConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.configuration.SamlinkConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.samlink.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
@@ -16,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.TokenRequestPost;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -101,5 +106,38 @@ public final class SamlinkApiClient extends BerlinGroupApiClient<SamlinkConfigur
                         SamlinkConstants.HeaderKeys.SUBSCRIPTION_KEY,
                         getConfiguration().getSubscriptionKey())
                 .type(MediaType.APPLICATION_JSON);
+    }
+
+    public CreatePaymentResponse createSepaPayment(CreatePaymentRequest paymentRequest) {
+        String url = getConfiguration().getBaseUrl() + Urls.CREATE_SEPA_PAYMENT;
+        return createRequest(new URL(url)).body(paymentRequest).post(CreatePaymentResponse.class);
+    }
+
+    public CreatePaymentResponse createForeignPayment(CreatePaymentRequest paymentRequest) {
+        String url = getConfiguration().getBaseUrl() + Urls.CREATE_FOREIGN_PAYMENT;
+        return createRequest(new URL(url)).body(paymentRequest).post(CreatePaymentResponse.class);
+    }
+
+    public FetchPaymentResponse fetchSepaPayment(PaymentRequest paymentRequest) {
+        String url = getConfiguration().getBaseUrl() + Urls.GET_SEPA_PAYMENT;
+
+        return createRequest(
+                        new URL(url)
+                                .parameter(
+                                        IdTags.PAYMENT_ID,
+                                        paymentRequest.getPayment().getUniqueId()))
+                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+                .get(FetchPaymentResponse.class);
+    }
+
+    public FetchPaymentResponse fetchForeignPayment(PaymentRequest paymentRequest) {
+        String url = getConfiguration().getBaseUrl() + Urls.GET_FOREIGN_PAYMENT;
+        return createRequest(
+                        new URL(url)
+                                .parameter(
+                                        IdTags.PAYMENT_ID,
+                                        paymentRequest.getPayment().getUniqueId()))
+                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+                .get(FetchPaymentResponse.class);
     }
 }
