@@ -181,7 +181,7 @@ data:
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            redirectUrl: "{{ $agentsConfig.sibs.redirectUrl }}"
+            redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
             aspspCode: "BST"
         {{- end }}
 
