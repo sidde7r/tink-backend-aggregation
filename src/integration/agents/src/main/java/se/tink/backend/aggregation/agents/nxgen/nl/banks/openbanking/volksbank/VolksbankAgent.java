@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank;
 
-import java.util.Base64;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -29,7 +28,7 @@ public class VolksbankAgent extends NextGenerationAgent
 
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
-    private final VolksbankUtils utils;
+    private final VolksbankUrlFactory urlFactory;
     private final String bankPath;
     private final String redirectUrl;
 
@@ -43,9 +42,9 @@ public class VolksbankAgent extends NextGenerationAgent
         redirectUrl = request.getProvider().getPayload().split(" ")[2];
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
-        this.utils = new VolksbankUtils(bankPath);
+        this.urlFactory = new VolksbankUrlFactory(bankPath);
 
-        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, utils);
+        volksbankApiClient = new VolksbankApiClient(httpClient, sessionStorage, urlFactory);
 
         transactionalAccountRefreshController = constructTransactionalAccountRefreshController();
     }
@@ -68,19 +67,24 @@ public class VolksbankAgent extends NextGenerationAgent
 
         volksbankApiClient.setConfiguration(volksbankConfiguration);
 
-        httpClient.setSslClientCertificate(
-                Base64.getDecoder()
-                        .decode(
-                                volksbankConfiguration
-                                        .getAisConfiguration()
-                                        .getClientCertificateContent()),
-                volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
+        final String clientId = volksbankConfiguration.getAisConfiguration().getClientId();
+
+        client.setEidasProxy(configuration.getEidasProxy(), clientId);
+
+        // httpClient.setSslClientCertificate(
+        //        Base64.getDecoder()
+        //                .decode(
+        //                        volksbankConfiguration
+        //                                .getAisConfiguration()
+        //                                .getClientCertificateContent()),
+        //        volksbankConfiguration.getAisConfiguration().getClientCertificatePass());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
         VolksbankAuthenticator authenticator =
-                new VolksbankAuthenticator(volksbankApiClient, sessionStorage, redirectUrl, utils);
+                new VolksbankAuthenticator(
+                        volksbankApiClient, sessionStorage, redirectUrl, urlFactory);
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(

@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.V
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.QueryParams;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankConstants.TokenParams;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUtils;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.VolksbankUrlFactory;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -19,13 +19,13 @@ public class VolksbankAuthenticator implements OAuth2Authenticator {
     private final VolksbankApiClient client;
     private final SessionStorage sessionStorage;
     private final String redirectUri;
-    private final VolksbankUtils utils;
+    private final VolksbankUrlFactory utils;
 
     public VolksbankAuthenticator(
             VolksbankApiClient client,
             SessionStorage sessionStorage,
             String redirectUri,
-            VolksbankUtils utils) {
+            VolksbankUrlFactory utils) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.redirectUri = redirectUri;
