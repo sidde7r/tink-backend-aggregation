@@ -5,7 +5,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
+import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
@@ -58,6 +60,14 @@ public class AccountEntity {
 
             case SE_PG:
                 accountIdentifier = new PlusGiroIdentifier(value);
+                break;
+
+            case NO:
+                accountIdentifier = new NorwegianIdentifier(value);
+                break;
+
+            case DK:
+                accountIdentifier = new DanishIdentifier(value);
                 break;
 
             default:
