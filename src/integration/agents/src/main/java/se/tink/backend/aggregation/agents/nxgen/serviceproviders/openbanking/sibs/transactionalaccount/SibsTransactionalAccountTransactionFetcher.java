@@ -19,7 +19,7 @@ public class SibsTransactionalAccountTransactionFetcher
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(
             TransactionalAccount account, String key) {
-            key = StringUtils.deleteWhitespace(key);
+        key = StringUtils.deleteWhitespace(key);
         return Optional.ofNullable(key)
                 .map(apiClient::getTransactionsForKey)
                 .orElseGet(() -> apiClient.getAccountTransactions(account));
