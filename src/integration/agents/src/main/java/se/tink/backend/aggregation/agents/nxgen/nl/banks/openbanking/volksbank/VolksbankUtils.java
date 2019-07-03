@@ -26,8 +26,9 @@ public final class VolksbankUtils {
     }
 
     public static Map<String, String> splitURLQuery(String query) {
-
-        if (query == null) return null;
+        if (query == null) {
+            return null;
+        }
 
         Map<String, String> query_pairs = new HashMap<>();
         String[] pairs = query.split("&");
