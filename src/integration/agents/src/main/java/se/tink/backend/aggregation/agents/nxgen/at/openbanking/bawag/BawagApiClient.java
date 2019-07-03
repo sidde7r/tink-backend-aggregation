@@ -93,17 +93,23 @@ public final class BawagApiClient {
     }
 
     public CreatePaymentResponse createPayment(CreatePaymentRequest paymentRequest) {
-
-        return createRequest(Urls.CREATE_SEPA_TRANSFER)
+        URL url =
+                paymentRequest.isSepa()
+                        ? Urls.CREATE_SEPA_TRANSFER
+                        : Urls.CREATE_CROSS_BORDER_TRANSFER;
+        return createRequest(url)
                 .body(paymentRequest)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .post(CreatePaymentResponse.class);
     }
 
     public FetchPaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+        URL url =
+                paymentRequest.getPayment().isSepa()
+                        ? Urls.GET_SEPA_TRANSFER
+                        : Urls.GET_CROSS_BORDER_TRANSFER;
         return createRequest(
-                        Urls.GET_SEPA_TRANSFER.parameter(
-                                IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId()))
+                        url.parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId()))
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(FetchPaymentResponse.class);
     }

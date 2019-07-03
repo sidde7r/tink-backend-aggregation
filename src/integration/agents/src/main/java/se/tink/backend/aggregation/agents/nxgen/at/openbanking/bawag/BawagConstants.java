@@ -30,8 +30,12 @@ public final class BawagConstants {
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
         public static final URL CREATE_SEPA_TRANSFER =
                 new URL(BASE_URL + ApiService.CREATE_SEPA_TRANSFER);
+        public static final URL CREATE_CROSS_BORDER_TRANSFER =
+                new URL(BASE_URL + ApiService.CREATE_CROSS_BORDER_TRANSFER);
         public static final URL GET_SEPA_TRANSFER =
                 new URL(BASE_URL + ApiService.GET_SEPA_TRANSFER);
+        public static final URL GET_CROSS_BORDER_TRANSFER =
+                new URL(BASE_URL + ApiService.GET_CROSS_BORDER_TRANSFER);
     }
 
     public static class ApiService {
@@ -40,8 +44,12 @@ public final class BawagConstants {
         public static final String GET_BALANCES = "/xs2a/v1/accounts/{accountId}/balances";
         public static final String GET_TRANSACTIONS = "/xs2a/v1/accounts/{accountId}/transactions";
         public static final String CREATE_SEPA_TRANSFER = "/xs2a/v1/payments/sepa-credit-transfers";
+        public static final String CREATE_CROSS_BORDER_TRANSFER =
+                "/xs2a/v1/payments/cross-border-credit-transfers";
         public static final String GET_SEPA_TRANSFER =
                 "/xs2a/v1/payments/sepa-credit-transfers/{paymentId}";
+        public static final String GET_CROSS_BORDER_TRANSFER =
+                "/xs2a/v1/payments/cross-border-credit-transfers/{paymentId}";
     }
 
     public static class StorageKeys {

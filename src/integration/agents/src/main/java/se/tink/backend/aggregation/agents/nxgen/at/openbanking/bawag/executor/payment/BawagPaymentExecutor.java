@@ -1,13 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.BawagApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.CreditorAccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.DebtorAccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.InstructedAmountRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.rpc.CreatePaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -57,6 +55,7 @@ public class BawagPaymentExecutor implements PaymentExecutor {
                                         .getPayment()
                                         .getExecutionDate()
                                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .isSepa(paymentRequest.getPayment().isSepa())
                         .build();
 
         return apiClient
@@ -65,13 +64,15 @@ public class BawagPaymentExecutor implements PaymentExecutor {
                         creditorAccount,
                         debtorAccount,
                         paymentRequest.getPayment().getAmount(),
-                        LocalDate.now());
+                        paymentRequest.getPayment().getExecutionDate(),
+                        paymentRequest.getPayment().getType());
     }
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
-        FetchPaymentResponse paymentResponse = apiClient.fetchPayment(paymentRequest);
-        return paymentResponse.toTinkPayment();
+        return apiClient
+                .fetchPayment(paymentRequest)
+                .toTinkPayment(paymentRequest.getPayment().getType());
     }
 
     @Override

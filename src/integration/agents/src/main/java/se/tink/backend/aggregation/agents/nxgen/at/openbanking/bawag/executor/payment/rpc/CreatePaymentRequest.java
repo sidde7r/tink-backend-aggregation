@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.CreditorAccountRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.CreditorAddress;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.bawag.executor.payment.entity.DebtorAccountRequest;
@@ -18,6 +19,8 @@ public class CreatePaymentRequest {
     private final String remittanceInformationUnstructured;
     private final String requestedExecutionDate;
 
+    @JsonIgnore private boolean isSepa;
+
     private CreatePaymentRequest(
             CreditorAccountRequest creditorAccount,
             CreditorAddress creditorAddress,
@@ -27,7 +30,8 @@ public class CreatePaymentRequest {
             String endToEndIdentification,
             InstructedAmountRequest instructedAmount,
             String remittanceInformationUnstructured,
-            String requestedExecutionDate) {
+            String requestedExecutionDate,
+            boolean isSepa) {
         this.creditorAccount = creditorAccount;
         this.creditorAddress = creditorAddress;
         this.creditorAgent = creditorAgent;
@@ -37,6 +41,7 @@ public class CreatePaymentRequest {
         this.instructedAmount = instructedAmount;
         this.remittanceInformationUnstructured = remittanceInformationUnstructured;
         this.requestedExecutionDate = requestedExecutionDate;
+        this.isSepa = isSepa;
     }
 
     public static CreatePaymentRequestBuilder builder() {
@@ -54,6 +59,7 @@ public class CreatePaymentRequest {
         private InstructedAmountRequest instructedAmount;
         private String remittanceInformationUnstructured;
         private String requestedExecutionDate;
+        private boolean isSepa;
 
         CreatePaymentRequestBuilder() {}
 
@@ -104,6 +110,11 @@ public class CreatePaymentRequest {
             return this;
         }
 
+        public CreatePaymentRequestBuilder isSepa(boolean isSepa) {
+            this.isSepa = isSepa;
+            return this;
+        }
+
         public CreatePaymentRequest build() {
             return new CreatePaymentRequest(
                     creditorAccount,
@@ -114,7 +125,8 @@ public class CreatePaymentRequest {
                     endToEndIdentification,
                     instructedAmount,
                     remittanceInformationUnstructured,
-                    requestedExecutionDate);
+                    requestedExecutionDate,
+                    isSepa);
         }
 
         public String toString() {
@@ -136,7 +148,14 @@ public class CreatePaymentRequest {
                     + this.remittanceInformationUnstructured
                     + ", requestedExecutionDate="
                     + this.requestedExecutionDate
+                    + ", isSepa="
+                    + this.isSepa
                     + ")";
         }
+    }
+
+    @JsonIgnore
+    public boolean isSepa() {
+        return isSepa;
     }
 }

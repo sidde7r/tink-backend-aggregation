@@ -49,7 +49,8 @@ public class CreatePaymentResponse {
             CreditorAccountRequest creditor,
             DebtorAccountRequest debtor,
             Amount amount,
-            LocalDate executionDate) {
+            LocalDate executionDate,
+            PaymentType paymentType) {
         Payment payment =
                 new Payment.Builder()
                         .withCreditor(creditor.toTinkCreditor())
@@ -62,7 +63,7 @@ public class CreatePaymentResponse {
                                 BawagConstants.PAYMENT_STATUS_MAPPER
                                         .translate(transactionStatus)
                                         .orElse(PaymentStatus.UNDEFINED))
-                        .withType(PaymentType.UNDEFINED)
+                        .withType(paymentType)
                         .build();
 
         return new PaymentResponse(payment);

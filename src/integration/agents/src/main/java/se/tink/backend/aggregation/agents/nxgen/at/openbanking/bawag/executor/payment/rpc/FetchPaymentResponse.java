@@ -28,7 +28,7 @@ public class FetchPaymentResponse {
     private String remittanceInformationUnstructured;
     private String requestedExecutionDate;
 
-    public PaymentResponse toTinkPayment() {
+    public PaymentResponse toTinkPayment(PaymentType paymentType) {
         Payment payment =
                 new Payment.Builder()
                         .withCreditor(creditorAccount.toTinkCreditor())
@@ -41,7 +41,7 @@ public class FetchPaymentResponse {
                                 BawagConstants.PAYMENT_STATUS_MAPPER
                                         .translate(transactionStatus)
                                         .orElse(PaymentStatus.UNDEFINED))
-                        .withType(PaymentType.UNDEFINED)
+                        .withType(paymentType)
                         .build();
 
         return new PaymentResponse(payment);
