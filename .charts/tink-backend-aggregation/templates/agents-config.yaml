@@ -166,22 +166,22 @@ data:
         caixa-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "{{ $agentsConfig.sibs.tink.eidasProxyBaseUrl }}"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CGDPT"
         santander-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "{{ $agentsConfig.sibs.tink.eidasProxyBaseUrl }}"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
             clientId: "SIBS_CLIENT_ID_TINK_TAG"
             clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            redirectUrl: "{{ $agentsConfig.sibs.tink.redirectUrl }}"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "BST"
         {{- end }}
 
