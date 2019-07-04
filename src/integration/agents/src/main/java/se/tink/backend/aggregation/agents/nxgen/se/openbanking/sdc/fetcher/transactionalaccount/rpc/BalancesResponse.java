@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.balance.BalanceAccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.balance.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -15,7 +15,7 @@ public class BalancesResponse {
     private List<BalanceEntity> balances;
 
     public List<BalanceEntity> getBalances() {
-        return Optional.ofNullable(balances).orElse(Lists.emptyList());
+        return Optional.ofNullable(balances).orElse(Lists.newArrayList());
     }
 
     public Amount getBalance() {
