@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.Utils;
+package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util;
 
 import java.io.IOException;
 import java.nio.file.Files;

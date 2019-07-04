@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstant
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Urls;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.Utils.Utils;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.AuthorizationCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenRequest;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pay
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.Utils;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
