@@ -21,6 +21,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class SBABPaymentExecutor implements PaymentExecutor {
 
@@ -62,16 +63,17 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
 
+        Payment payment = paymentRequest.getPayment();
+
         CreditorEntity creditorEntity = CreditorEntity.of(paymentRequest);
         DebtorEntity debtorEntity = DebtorEntity.of(paymentRequest);
 
         TransferData transferData =
                 new TransferData.Builder()
-                        .withAmount(paymentRequest.getPayment().getAmount().doubleValue())
-                        .withCounterPartAccount(
-                                paymentRequest.getPayment().getCreditor().getAccountNumber())
-                        .withCurrency(paymentRequest.getPayment().getCurrency())
-                        .withTransferDate(paymentRequest.getPayment().getExecutionDate().toString())
+                        .withAmount(payment.getAmount().doubleValue())
+                        .withCounterPartAccount(payment.getCreditor().getAccountNumber())
+                        .withCurrency(payment.getCurrency())
+                        .withTransferDate(payment.getExecutionDate().toString())
                         .build();
 
         CreatePaymentRequest createPaymentRequest =
@@ -82,13 +84,11 @@ public class SBABPaymentExecutor implements PaymentExecutor {
                         .build();
 
         return apiClient
-                .createPayment(
-                        createPaymentRequest,
-                        paymentRequest.getPayment().getDebtor().getAccountNumber())
+                .createPayment(createPaymentRequest, payment.getDebtor().getAccountNumber())
                 .toTinkPaymentResponse(
                         getPaymentType(paymentRequest),
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber());
+                        payment.getDebtor().getAccountNumber(),
+                        payment.getCreditor().getAccountNumber());
     }
 
     @Override
