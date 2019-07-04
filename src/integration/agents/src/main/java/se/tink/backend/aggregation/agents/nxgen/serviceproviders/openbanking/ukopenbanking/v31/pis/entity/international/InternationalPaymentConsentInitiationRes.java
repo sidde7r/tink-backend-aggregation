@@ -26,7 +26,7 @@ public class InternationalPaymentConsentInitiationRes {
     public InternationalPaymentConsentInitiationRes(
             Payment payment, String endToEndIdentification, String instructionIdentification) {
         this.remittanceInformation =
-                new RemittanceInformation(payment.getId().toString(), payment.getReference());
+                new RemittanceInformation(payment.getUniqueId(), payment.getReference());
         this.currencyOfTransfer = payment.getCurrency();
         this.endToEndIdentification = endToEndIdentification;
         this.instructionIdentification = instructionIdentification;
@@ -39,7 +39,7 @@ public class InternationalPaymentConsentInitiationRes {
                 new Builder()
                         .withStatus(UkOpenBankingV31Constants.toPaymentStatus(status))
                         .withAmount(instructedAmount.toTinkAmount())
-                        .withReference(remittanceInformation.getReference())
+                        .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
                         .withCurrency(currencyOfTransfer)
                         .build();

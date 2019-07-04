@@ -2,12 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.danskebank.authe
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.authenticator.UkOpenBankingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class DanskeBankAuthenticator extends UkOpenBankingAuthenticator {
 
-    public DanskeBankAuthenticator(UkOpenBankingApiClient apiClient) {
-        super(apiClient);
+    public DanskeBankAuthenticator(
+            UkOpenBankingApiClient apiClient, UkOpenBankingAisConfig aisConfig) {
+        super(apiClient, aisConfig);
     }
 
     @Override

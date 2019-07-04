@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.payment.InsufficientFundsEx
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentAuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.DomesticPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.config.InternationalPisConfig;
@@ -33,9 +34,12 @@ import se.tink.libraries.payment.rpc.Payment;
 public class UKOpenbankingV31Executor implements PaymentExecutor {
 
     private final UkOpenBankingApiClient client;
+    private final UkOpenBankingPisConfig pisConfig;
 
-    public UKOpenbankingV31Executor(UkOpenBankingApiClient client) {
+    public UKOpenbankingV31Executor(
+            UkOpenBankingApiClient client, UkOpenBankingPisConfig pisConfig) {
         this.client = client;
+        this.pisConfig = pisConfig;
     }
 
     private UKPisConfig getConfig(Payment payment) {
@@ -77,10 +81,10 @@ public class UKOpenbankingV31Executor implements PaymentExecutor {
 
         switch (type) {
             case DOMESTIC:
-                return new DomesticPisConfig(client);
+                return new DomesticPisConfig(client, pisConfig);
             case SEPA:
             case INTERNATIONAL:
-                return new InternationalPisConfig(client);
+                return new InternationalPisConfig(client, pisConfig);
             default:
                 throw new IllegalStateException(String.format("Unknown type: %s", type));
         }

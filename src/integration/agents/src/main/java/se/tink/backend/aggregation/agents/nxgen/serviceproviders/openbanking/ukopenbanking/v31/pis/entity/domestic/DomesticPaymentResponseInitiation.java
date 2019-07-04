@@ -26,7 +26,7 @@ public class DomesticPaymentResponseInitiation {
     public PaymentResponse toTinkPaymentResponse(String consentId, String domesticPaymentId) {
         Payment payment =
                 new Builder()
-                        .withReference(remittanceInformation.getReference())
+                        .withReference(remittanceInformation.createTinkReference())
                         .withCreditor(creditorAccount.toCreditor())
                         .withAmount(instructedAmount.toTinkAmount())
                         .build();

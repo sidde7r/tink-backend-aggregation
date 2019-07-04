@@ -74,18 +74,30 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     private AccountIdentifierEntity getDefaultIdentifier() {
-        return identifierEntity.stream()
-                .filter(
-                        e ->
-                                e.getIdentifierType()
-                                        .equals(
-                                                ExternalAccountIdentification4Code
-                                                        .SORT_CODE_ACCOUNT_NUMBER))
-                .findFirst()
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER identifier."));
+        Optional<AccountIdentifierEntity> sortCodeIdentifier =
+                identifierEntity.stream()
+                        .filter(
+                                e ->
+                                        e.getIdentifierType()
+                                                .equals(
+                                                        ExternalAccountIdentification4Code
+                                                                .SORT_CODE_ACCOUNT_NUMBER))
+                        .findFirst();
+
+        return sortCodeIdentifier.orElseGet(
+                () ->
+                        identifierEntity.stream()
+                                .filter(
+                                        e ->
+                                                e.getIdentifierType()
+                                                        .equals(
+                                                                ExternalAccountIdentification4Code
+                                                                        .IBAN))
+                                .findFirst()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER or IBAN identifier.")));
     }
 
     public String getUniqueIdentifier() {

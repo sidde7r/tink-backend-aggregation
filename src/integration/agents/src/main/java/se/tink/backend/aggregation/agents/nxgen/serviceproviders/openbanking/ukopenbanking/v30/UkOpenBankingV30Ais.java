@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingTransactionPaginator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.UkOpenBankingUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAis;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.account.AccountBalanceV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.account.AccountsV30Response;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.fetcher.rpc.transaction.AccountTransactionsV30Response;
@@ -15,10 +16,18 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class UkOpenBankingV30Ais implements UkOpenBankingAis {
+
+    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
+
+    public UkOpenBankingV30Ais(UkOpenBankingAisConfig ukOpenBankingAisConfig) {
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
+    }
+
     @Override
     public UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> makeTransactionalAccountFetcher(
             UkOpenBankingApiClient apiClient) {
         return new UkOpenBankingAccountFetcher<>(
+                ukOpenBankingAisConfig,
                 apiClient,
                 AccountsV30Response.class,
                 AccountBalanceV30Response.class,
@@ -30,6 +39,7 @@ public class UkOpenBankingV30Ais implements UkOpenBankingAis {
             UkOpenBankingApiClient apiClient) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
+                        ukOpenBankingAisConfig,
                         apiClient,
                         AccountTransactionsV30Response.class,
                         AccountTransactionsV30Response::toAccountTransactionPaginationResponse));
@@ -49,6 +59,7 @@ public class UkOpenBankingV30Ais implements UkOpenBankingAis {
     public UkOpenBankingAccountFetcher<?, ?, CreditCardAccount> makeCreditCardAccountFetcher(
             UkOpenBankingApiClient apiClient) {
         return new UkOpenBankingAccountFetcher<>(
+                ukOpenBankingAisConfig,
                 apiClient,
                 AccountsV30Response.class,
                 AccountBalanceV30Response.class,
@@ -60,6 +71,7 @@ public class UkOpenBankingV30Ais implements UkOpenBankingAis {
             UkOpenBankingApiClient apiClient) {
         return new TransactionKeyPaginationController<>(
                 new UkOpenBankingTransactionPaginator<>(
+                        ukOpenBankingAisConfig,
                         apiClient,
                         AccountTransactionsV30Response.class,
                         AccountTransactionsV30Response::toCreditCardPaginationResponse));
