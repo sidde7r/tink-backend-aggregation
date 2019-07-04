@@ -32,9 +32,7 @@ public class CreatePaymentResponse {
                         .withUniqueId(referenceId)
                         .withCreditor(new Creditor(new SwedishIdentifier(creditorAccountNumber)))
                         .withDebtor(new Debtor(new SwedishIdentifier(debtorAccountNumber)))
-                        .withStatus(
-                                SBABPaymentStatus.mapToTinkPaymentStatus(
-                                        SBABPaymentStatus.fromString(status)))
+                        .withStatus(SBABPaymentStatus.fromString(status).getPaymentStatus())
                         .withType(paymentType);
 
         Payment tinkPayment = buildingPaymentResponse.build();
