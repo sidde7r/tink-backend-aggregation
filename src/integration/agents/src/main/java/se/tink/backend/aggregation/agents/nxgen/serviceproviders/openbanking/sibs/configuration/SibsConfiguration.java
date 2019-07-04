@@ -13,6 +13,7 @@ public class SibsConfiguration implements ClientConfiguration {
 
     private String baseUrl;
     private String eidasProxyBaseUrl;
+    private String certificateId;
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
@@ -34,6 +35,14 @@ public class SibsConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "EIDAS Proxy Base URL"));
 
         return new URL(eidasProxyBaseUrl);
+    }
+
+    public String getCertificateId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(certificateId),
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Certificate ID"));
+
+        return certificateId;
     }
 
     public String getClientId() {

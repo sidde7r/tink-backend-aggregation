@@ -80,7 +80,8 @@ public final class SibsRequest {
                                 requestId,
                                 requestTimestamp,
                                 configuration.getEidasProxyBaseUrl(),
-                                configuration.getClientSigningCertificateSerialNumber());
+                                configuration.getClientSigningCertificateSerialNumber(),
+                                configuration.getCertificateId());
 
                 request =
                         request.header(HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())

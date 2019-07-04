@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.CertificateId;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -64,13 +63,14 @@ public final class SibsUtils {
             String requestId,
             String signatureStringDate,
             URL eidasProxyBaseUrl,
-            String clientSigningCertificateSerialNumber) {
+            String clientSigningCertificateSerialNumber,
+            String certificateId) {
 
         String toSignString =
                 getSigningString(digest, transactionId, requestId, signatureStringDate);
 
         final QsealcEidasProxySigner proxySigner =
-                new QsealcEidasProxySigner(eidasProxyBaseUrl, CertificateId.TINK.toString());
+                new QsealcEidasProxySigner(eidasProxyBaseUrl, certificateId);
         String signatureBase64Sha = proxySigner.getSignatureBase64(toSignString.getBytes());
 
         return formSignature(digest, clientSigningCertificateSerialNumber, signatureBase64Sha);
