@@ -19,7 +19,8 @@ public abstract class BerlinGroupConstants {
                             "SLRY",
                             "TRAN",
                             "TRAS",
-                            "CurrentAccount")
+                            "CurrentAccount",
+                            "Current")
                     .put(AccountTypes.SAVINGS, "LLSV", "ONDP", "SVGS")
                     .build();
 
@@ -111,6 +112,7 @@ public abstract class BerlinGroupConstants {
 
     public static class Accounts {
         public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
+        public static final String CLBD = "CLBD";
     }
 
     public static class Certificate {

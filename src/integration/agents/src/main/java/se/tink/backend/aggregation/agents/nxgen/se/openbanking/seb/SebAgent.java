@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.SebCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.session.SebSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -18,11 +20,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class SebAgent extends NextGenerationAgent {
@@ -82,13 +83,24 @@ public final class SebAgent extends NextGenerationAgent {
                         accountFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(
+                                new TransactionDatePaginationController<>(
                                         accountFetcher, SebConstants.Fetcher.START_PAGE))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        final SebCreditCardAccountFetcher accountFetcher =
+                new SebCreditCardAccountFetcher(apiClient);
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        accountFetcher, Fetcher.START_PAGE))));
     }
 
     @Override
@@ -110,10 +122,5 @@ public final class SebAgent extends NextGenerationAgent {
     @Override
     protected SessionHandler constructSessionHandler() {
         return new SebSessionHandler(apiClient, sessionStorage);
-    }
-
-    @Override
-    protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
     }
 }

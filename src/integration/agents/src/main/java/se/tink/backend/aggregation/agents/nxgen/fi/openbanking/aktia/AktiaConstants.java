@@ -14,16 +14,18 @@ public final class AktiaConstants {
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://api.aktia.fi";
+        public static final String BASE_URL =
+                "https://api.aktia.fi/api/openbanking/sandbox/psd2/ais";
 
         public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
         public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+        public static final URL CREATE_CONSENT = new URL(BASE_URL + ApiService.CREATE_CONSENT);
     }
 
     public static class ApiService {
-        public static final String GET_ACCOUNTS = "/api/openbanking/sandbox/psd2/ais/v1/accounts";
-        public static final String GET_TRANSACTIONS =
-                "/api/openbanking/sandbox/psd2/ais/v1/accounts/{accountId}/transactions";
+        public static final String GET_ACCOUNTS = "/v1/accounts";
+        public static final String GET_TRANSACTIONS = "/v1/accounts/{accountId}/transactions";
+        public static final String CREATE_CONSENT = "/v1/consents";
     }
 
     public static class StorageKeys {
@@ -37,11 +39,14 @@ public final class AktiaConstants {
         public static final String DATE_TO = "dateTo";
         public static final String BOOKING_STATUS = "bookingStatus";
         public static final String WITH_BALANCE = "withBalance";
+        public static final String STATE = "state";
+        public static final String CODE = "code";
     }
 
     public static class QueryValues {
         public static final String BOTH = "both";
         public static final String TRUE = "true";
+        public static final String CODE = "code";
     }
 
     public static class HeaderKeys {
@@ -49,6 +54,7 @@ public final class AktiaConstants {
         public static final String CONSENT_ID = "consent-id";
         public static final String X_IBM_CLIENT_ID = "x-ibm-client-id";
         public static final String X_IBM_CLIENT_SECRET = "x-ibm-client-secret";
+        public static final String TPP_REDIRECT_URI = "TPP-Redirect-URI";
     }
 
     public static class ErrorMessages {
@@ -61,5 +67,9 @@ public final class AktiaConstants {
 
     public class IdTags {
         public static final String ACCOUNT_ID = "accountId";
+    }
+
+    public class CredentialKeys {
+        public static final String IBAN = "iban";
     }
 }
