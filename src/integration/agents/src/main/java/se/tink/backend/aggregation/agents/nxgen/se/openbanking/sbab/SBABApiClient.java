@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Format;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryValues;
@@ -93,6 +94,7 @@ public final class SBABApiClient {
                 .header(
                         HeaderKeys.CLIENT_CERTIFICATE,
                         Utils.readFile(configuration.getClientCertificatePath()))
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
                 .get(AuthorizationCodeResponse.class)
                 .getPendingAuthorizationCode();
     }

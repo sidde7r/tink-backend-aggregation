@@ -41,7 +41,7 @@ public final class SBABConstants {
         public static final String OAUTH = "/sandbox/psd2/auth/1.0/authenticate";
         public static final String TRANSFERS =
                 "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers";
-        public static final String CUSTOMERS = "/sandbox/api/savings/1.0/customers";
+        public static final String CUSTOMERS = "/sandbox/psd2/customer/1.0/customers";
         public static final String ACCOUNTS = "/sandbox/psd2/savings/2.0/accounts";
         public static final String TOKEN = "/sandbox/psd2/auth/1.0/token";
         public static final String INITIATE_PAYMENT =
@@ -80,6 +80,7 @@ public final class SBABConstants {
     public static class HeaderKeys {
         public static final String AUTHORIZATION = "Authorization";
         public static final String CLIENT_CERTIFICATE = "X-PSD2-CLIENT-TEST-CERT";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class Format {
@@ -102,5 +103,9 @@ public final class SBABConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String CODE = "pending_code";
         public static final String REFRESH_TOKEN = "refresh_token";
+    }
+
+    public static class HeaderValues {
+        public static final String PSU_IP_ADDRESS = "192.160.0.1";
     }
 }
