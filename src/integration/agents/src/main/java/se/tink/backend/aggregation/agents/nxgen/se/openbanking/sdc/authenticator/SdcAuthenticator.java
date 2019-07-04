@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.authenticator;
 
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
@@ -29,7 +28,7 @@ public class SdcAuthenticator implements OAuth2Authenticator {
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException {
+    public OAuth2Token refreshAccessToken(String refreshToken) {
         return null;
     }
 
