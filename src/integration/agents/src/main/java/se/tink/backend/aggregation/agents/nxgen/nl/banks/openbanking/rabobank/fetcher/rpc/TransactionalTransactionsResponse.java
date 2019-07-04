@@ -107,9 +107,4 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     public int getCurrentPage() {
         return currentPage;
     }
-
-    @JsonIgnore
-    public void setCurrentPage(final int currentPage) {
-        this.currentPage = currentPage;
-    }
 }
