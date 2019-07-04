@@ -89,7 +89,8 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
-    private int getLastPage() {
+    @JsonIgnore
+    public int getLastPage() {
         final URL last = new URL(transactions.getLinks().getLast());
         final String query = last.toUri().getQuery();
         final String[] pairs = query.split("&");
