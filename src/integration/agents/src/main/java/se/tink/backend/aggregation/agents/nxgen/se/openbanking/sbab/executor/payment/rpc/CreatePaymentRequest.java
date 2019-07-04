@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
@@ -25,11 +24,6 @@ public class CreatePaymentRequest {
         this.signOptionsData = builder.signOptionsData;
         this.creditor = builder.creditor;
         this.debtor = builder.debtor;
-    }
-
-    @JsonIgnore
-    public TransferData getTransferData() {
-        return transferData;
     }
 
     public static class Builder {

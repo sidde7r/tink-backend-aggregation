@@ -12,27 +12,10 @@ public class SignOptionsRequest {
     @JsonProperty("return_url")
     private String returnUrl;
 
-    private SignOptionsRequest(Builder builder) {
-        this.signMethod = builder.signMethod;
-        this.returnUrl = builder.returnUrl;
+    public SignOptionsRequest(String signMethod, String returnUrl) {
+        this.signMethod = signMethod;
+        this.returnUrl = returnUrl;
     }
 
-    public static class Builder {
-        private String signMethod;
-        private String returnUrl;
-
-        public Builder withSignMethod(String signMethod) {
-            this.signMethod = signMethod;
-            return this;
-        }
-
-        public Builder withReturnUrl(String returnUrl) {
-            this.returnUrl = returnUrl;
-            return this;
-        }
-
-        public SignOptionsRequest build() {
-            return new SignOptionsRequest(this);
-        }
-    }
+    public SignOptionsRequest() {}
 }
