@@ -97,8 +97,6 @@ public final class SdcConstants {
         public static final String SCOPE_AIS = "psd2.aisp";
     }
 
-    public static class LogTags {}
-
     public static class HeaderValues {
 
         public static final String SCOPE_AIS = "psd2.aisp";
