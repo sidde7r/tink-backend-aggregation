@@ -22,8 +22,7 @@ public class IngSandboxAuthenticator implements Authenticator {
             throws AuthenticationException, AuthorizationException {
         client.authenticate();
         client.setTokenToSession(
-                client.getToken(
-                        "76175013-94d0-411d-927c-0af6bb828c7c")); // Static token from
-                                                                  // https://developer.ing.com/static/AIS.pdf
+                client.getToken("76175013-94d0-411d-927c-0af6bb828c7c")); // Static token from
+        // https://developer.ing.com/static/AIS.pdf
     }
 }
