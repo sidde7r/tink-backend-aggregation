@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
+@Deprecated
 public interface AliasStep<S> {
 
     /**
@@ -9,5 +10,6 @@ public interface AliasStep<S> {
      * @param alias The name/alias of the account.
      * @return The next step of the builder.
      */
+    @Deprecated
     AccountIdentifierStep<S> setAlias(String alias);
 }

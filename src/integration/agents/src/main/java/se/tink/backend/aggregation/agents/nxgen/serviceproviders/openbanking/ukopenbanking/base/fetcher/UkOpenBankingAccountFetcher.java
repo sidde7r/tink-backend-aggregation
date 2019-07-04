@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingAisConfig;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 
@@ -20,6 +21,7 @@ public class UkOpenBankingAccountFetcher<
                 AccountType extends Account>
         implements AccountFetcher<AccountType> {
 
+    private final UkOpenBankingAisConfig ukOpenBankingAisConfig;
     private final UkOpenBankingApiClient apiClient;
     private final Class<AccountResponseType> accountEntityType;
     private final Class<BalanceResponseType> balanceEntityType;
@@ -36,12 +38,14 @@ public class UkOpenBankingAccountFetcher<
      *     Object)}
      */
     public UkOpenBankingAccountFetcher(
+            UkOpenBankingAisConfig ukOpenBankingAisConfig,
             UkOpenBankingApiClient apiClient,
             Class<AccountResponseType> accountsResponseType,
             Class<BalanceResponseType> balancesResponseType,
             AccountConverter<AccountResponseType, BalanceResponseType, AccountType>
                     accountConverter) {
 
+        this.ukOpenBankingAisConfig = ukOpenBankingAisConfig;
         this.apiClient = apiClient;
 
         this.accountEntityType = accountsResponseType;
@@ -53,7 +57,8 @@ public class UkOpenBankingAccountFetcher<
     @Override
     public List<AccountType> fetchAccounts() {
 
-        AccountResponseType accounts = apiClient.fetchAccounts(accountEntityType);
+        AccountResponseType accounts =
+                apiClient.fetchAccounts(ukOpenBankingAisConfig, accountEntityType);
 
         // In order to keep the model simple we accept that we are revisiting the accounts list
         // multiple time.
@@ -63,7 +68,9 @@ public class UkOpenBankingAccountFetcher<
                                 accountConverter.toTinkAccount(
                                         accounts,
                                         apiClient.fetchAccountBalance(
-                                                account.getBankIdentifier(), balanceEntityType)))
+                                                ukOpenBankingAisConfig,
+                                                account.getBankIdentifier(),
+                                                balanceEntityType)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

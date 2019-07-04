@@ -47,7 +47,9 @@ public class OpenIdApiClientTest {
                         httpClient,
                         softwareStatement,
                         providerConfiguration,
-                        OpenIdConstants.ClientMode.ACCOUNTS);
+                        OpenIdConstants.ClientMode.ACCOUNTS,
+                        new URL(
+                                "https://sandbox-obp-api.danskebank.com/sandbox-open-banking/private/.well-known/openid-configuration"));
     }
 
     @Test

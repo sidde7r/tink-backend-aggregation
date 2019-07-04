@@ -462,6 +462,74 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     }
 
     @Test
+    public void deduplicateAccounts_whenThreeDuplicates() throws Exception {
+        CredentialsRequest request = createRequest();
+        Account clone1 = request.getAccounts().get(0).clone();
+        Account clone2 = request.getAccounts().get(0).clone();
+
+        request.getAccounts().add(clone1);
+        request.getAccounts().add(clone2);
+
+        MigrateCredentialsAndAccountsWorkerCommand command =
+                createCommand(
+                        request,
+                        new HashMap<String, AgentVersionMigration>() {
+                            {
+                                put(
+                                        PROVIDER_NAME,
+                                        new AgentVersionMigration() {
+                                            @Override
+                                            public boolean shouldChangeRequest(
+                                                    CredentialsRequest request) {
+                                                return true;
+                                            }
+
+                                            @Override
+                                            public boolean shouldMigrateData(
+                                                    CredentialsRequest request) {
+                                                return true;
+                                            }
+
+                                            @Override
+                                            public void changeRequest(CredentialsRequest request) {}
+
+                                            @Override
+                                            public void migrateData(CredentialsRequest request) {}
+
+                                            @Override
+                                            protected Account migrateAccount(Account account) {
+                                                return account;
+                                            }
+                                        });
+                            }
+                        });
+
+        AgentWorkerCommandResult result = command.execute();
+
+        Assert.assertEquals(3, request.getAccounts().size());
+        Assert.assertEquals(
+                1,
+                request.getAccounts().stream()
+                        .filter(a -> !a.getBankId().contains("-duplicate"))
+                        .collect(Collectors.toList())
+                        .size());
+        Assert.assertEquals(
+                1,
+                request.getAccounts().stream()
+                        .filter(a -> a.getBankId().contains("-duplicate-1"))
+                        .collect(Collectors.toList())
+                        .size());
+        Assert.assertEquals(
+                1,
+                request.getAccounts().stream()
+                        .filter(a -> a.getBankId().contains("-duplicate-2"))
+                        .collect(Collectors.toList())
+                        .size());
+
+        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    }
+
+    @Test
     public void deduplicateAccounts_whenNoDuplicates() throws Exception {
         CredentialsRequest request = createRequest();
         Account e = request.getAccounts().get(0).clone();

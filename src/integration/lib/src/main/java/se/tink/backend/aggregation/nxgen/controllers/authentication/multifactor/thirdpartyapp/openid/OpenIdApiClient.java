@@ -25,6 +25,7 @@ public class OpenIdApiClient {
     protected final SoftwareStatement softwareStatement;
     protected final ProviderConfiguration providerConfiguration;
     private final OpenIdConstants.ClientMode clientMode;
+    private final URL wellKnownURL;
 
     // Internal caching. Do not use these fields directly, always use the getters!
     private WellKnownResponse cachedWellKnownResponse;
@@ -35,11 +36,13 @@ public class OpenIdApiClient {
             TinkHttpClient httpClient,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
-            OpenIdConstants.ClientMode clientMode) {
+            OpenIdConstants.ClientMode clientMode,
+            URL wellKnownURL) {
         this.httpClient = httpClient;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.clientMode = clientMode;
+        this.wellKnownURL = wellKnownURL;
 
         // Softw. Transp. key
         httpClient.setSslClientCertificate(
@@ -52,10 +55,7 @@ public class OpenIdApiClient {
             return cachedWellKnownResponse;
         }
 
-        cachedWellKnownResponse =
-                httpClient
-                        .request(providerConfiguration.getWellKnownURL())
-                        .get(WellKnownResponse.class);
+        cachedWellKnownResponse = httpClient.request(wellKnownURL).get(WellKnownResponse.class);
 
         return cachedWellKnownResponse;
     }

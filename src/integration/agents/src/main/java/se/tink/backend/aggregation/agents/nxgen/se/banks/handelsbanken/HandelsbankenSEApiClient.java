@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
@@ -276,7 +277,19 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public TransferSignatureResponse signTransfer(Signable signable) {
-        return createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
+        TransferSignatureResponse response = new TransferSignatureResponse();
+        try {
+            response =
+                    createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
+        } catch (HttpResponseException exception) {
+            if (exception.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                // done for COB-758.
+                response = exception.getResponse().getBody(TransferSignatureResponse.class);
+            } else {
+                throw exception;
+            }
+        }
+        return response;
     }
 
     public ValidateRecipientResponse validateRecipient(

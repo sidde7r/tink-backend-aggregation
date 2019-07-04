@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 
+@Deprecated
 public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 
     /**
@@ -15,6 +16,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param identifier The id of the account in the context of the banks API.
      * @return The next step of the builder.
      */
+    @Deprecated
     B setApiIdentifier(@Nonnull String identifier);
 
     /**
@@ -25,6 +27,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param productName The name of the product.
      * @return The next step of the builder.
      */
+    @Deprecated
     B setProductName(@Nonnull String productName);
 
     /**
@@ -34,6 +37,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param holderName Name of the account holder.
      * @return The next step of the builder.
      */
+    @Deprecated
     B addHolderName(@Nonnull String holderName);
 
     /**
@@ -48,8 +52,10 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param identifier Identifier to be added.
      * @return The final step of the builder.
      */
+    @Deprecated
     B addAccountIdentifier(@Nonnull AccountIdentifier identifier);
 
+    @Deprecated
     B addAccountFlags(@Nonnull AccountFlag... accountFlags);
 
     /**
@@ -59,6 +65,7 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      * @param value The value to be stored.
      * @return The final step of the builder.
      */
+    @Deprecated
     <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value);
 
     /**
@@ -66,5 +73,6 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
      *
      * @return An account with the data provided to this builder.
      */
+    @Deprecated
     A build();
 }

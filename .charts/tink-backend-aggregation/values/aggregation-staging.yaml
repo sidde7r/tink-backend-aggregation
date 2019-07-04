@@ -23,6 +23,9 @@ agents:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/mobilebanking
     openbanking:
       baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network/openbanking
+  abnamro:
+    tink:
+      redirectUrl: https://localhost/auth
   bunq:
     tink:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
@@ -44,10 +47,17 @@ agents:
     abn_sandbox:
       redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+    abn_staging:
+      redirectUrl: https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
     abn:
       redirectUrl: https://api.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback
       eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
       certificateId: abnamro-QSEALC
+  sibs:
+    tink:
+      redirectUrl: https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback
+      eidasProxyBaseUrl: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+      certificateId: Tink-qsealc
   volksbank:
     enabled: "true"
 

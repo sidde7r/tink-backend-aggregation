@@ -4,18 +4,48 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.creditcard.CreditCardDetailsStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.creditcard.CreditCardModule;
 import se.tink.libraries.amount.Amount;
 
 public class CreditCardAccount extends Account {
+
+    private CreditCardModule cardModule;
 
     private CreditCardAccount(Builder<CreditCardAccount, DefaultCreditCardBuilder> builder) {
         super(builder);
     }
 
+    CreditCardAccount(CreditCardAccountBuilder builder) {
+        super(builder);
+        this.cardModule = builder.getCardModule();
+    }
+
+    public static CreditCardDetailsStep<CreditCardBuildStep> nxBuilder() {
+        return new CreditCardAccountBuilder();
+    }
+
+    public CreditCardModule getCardModule() {
+        return cardModule;
+    }
+
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultCreditCardBuilder(uniqueIdentifier);
     }
 
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
+    @Deprecated
     public static Builder<?, ?> builder(
             String uniqueIdentifier, Amount balance, Amount availableCredit) {
         return builder(uniqueIdentifier).setBalance(balance).setAvailableCredit(availableCredit);

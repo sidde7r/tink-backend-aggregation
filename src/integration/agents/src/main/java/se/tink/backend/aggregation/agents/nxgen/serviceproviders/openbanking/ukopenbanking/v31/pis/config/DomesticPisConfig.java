@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.UkOpenBankingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.interfaces.UkOpenBankingPisConfig;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.UkOpenBankingV31Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.pis.rpc.domestic.DomesticPaymentConsentResponse;
@@ -14,14 +15,17 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 public class DomesticPisConfig implements UKPisConfig {
 
     private final UkOpenBankingApiClient client;
+    private final UkOpenBankingPisConfig pisConfig;
 
-    public DomesticPisConfig(UkOpenBankingApiClient client) {
+    public DomesticPisConfig(UkOpenBankingApiClient client, UkOpenBankingPisConfig pisConfig) {
         this.client = client;
+        this.pisConfig = pisConfig;
     }
 
     @Override
     public PaymentResponse createPaymentConsent(PaymentRequest paymentRequest) {
         return client.createDomesticPaymentConsent(
+                        pisConfig,
                         new DomesticPaymentConsentRequest(paymentRequest.getPayment()),
                         DomesticPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
@@ -34,13 +38,14 @@ public class DomesticPisConfig implements UKPisConfig {
                 paymentRequest.getStorage().get(UkOpenBankingV31Constants.Storage.PAYMENT_ID);
 
         if (!Strings.isNullOrEmpty(paymentId)) {
-            return client.getDomesticPayment(paymentId, DomesticPaymentResponse.class)
+            return client.getDomesticPayment(pisConfig, paymentId, DomesticPaymentResponse.class)
                     .toTinkPaymentResponse();
         }
 
         String consentId = getConsentId(paymentRequest);
 
-        return client.getDomesticPaymentConsent(consentId, DomesticPaymentConsentResponse.class)
+        return client.getDomesticPaymentConsent(
+                        pisConfig, consentId, DomesticPaymentConsentResponse.class)
                 .toTinkPaymentResponse();
     }
 
@@ -48,7 +53,8 @@ public class DomesticPisConfig implements UKPisConfig {
     public FundsConfirmationResponse fetchFundsConfirmation(PaymentRequest paymentRequest) {
         String consentId = getConsentId(paymentRequest);
 
-        return client.getDomesticFundsConfirmation(consentId, FundsConfirmationResponse.class);
+        return client.getDomesticFundsConfirmation(
+                pisConfig, consentId, FundsConfirmationResponse.class);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class DomesticPisConfig implements UKPisConfig {
                         endToEndIdentification,
                         instructionIdentification);
 
-        return client.executeDomesticPayment(request, DomesticPaymentResponse.class)
+        return client.executeDomesticPayment(pisConfig, request, DomesticPaymentResponse.class)
                 .toTinkPaymentResponse();
     }
 

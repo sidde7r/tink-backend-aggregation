@@ -374,6 +374,12 @@ spec:
               name: aggregation-secrets
               key: rabobank-certificate-p12-tink
               optional: true
+        - name: RABOBANK_QSEALC_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: rabobank-qsealc-tink
+              optional: true
         - name: RABOBANK_CLIENT_ID_ABN_SANDBOX
           valueFrom:
             secretKeyRef:
@@ -415,6 +421,58 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: rabobank-qsealc-abn
+              optional: true
+        {{- end }}
+        {{- if $agentsConfig.sibs }}
+        - name: SIBS_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-id-tink
+              optional: true
+        - name: SIBS_CLIENT_SECRET_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-client-secret-tink
+              optional: true
+        - name: SIBS_CERTIFICATE_P12_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-p12-tink
+              optional: true
+        - name: SIBS_CERTIFICATE_SERIAL_NUMBER_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: sibs-certificate-serial-number-tink
+              optional: true
+        {{- end }}
+        {{- if $agentsConfig.abnamro }}
+        - name: ABN_AMRO_CLIENT_ID_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-id-tink
+              optional: true
+        - name: ABN_AMRO_API_KEY_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-api-key-tink
+              optional: true
+        - name: ABN_AMRO_CLIENT_SSL_P12_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-ssl-p12-tink
+              optional: true
+        - name: ABN_AMRO_CLIENT_SSL_KEY_PASSWORD_TINK
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abnamro-client-ssl-key-password-tink
               optional: true
         {{- end }}
       containers:

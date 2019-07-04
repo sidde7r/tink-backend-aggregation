@@ -49,7 +49,7 @@
         {
             "className": "nxgen.nl.banks.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "bunq",
+            "displayName": "Bunq API Key",
             "fields": [
                 {
                     "description": "API Key",
@@ -86,7 +86,7 @@
         {
             "className": "nxgen.nl.banks.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "bunq - sandbox",
+            "displayName": "Bunq API Key Sandbox",
             "fields": [
                 {
                     "description": "API Key",
@@ -108,7 +108,7 @@
         {
             "className": "nxgen.nl.banks.openbanking.bunq.BunqAgent",
             "credentialsType": "PASSWORD",
-            "displayName": "Bunq",
+            "displayName": "Bunq Sandbox",
             "fields": [],
             "multiFactor": false,
             "name": "nl-bunq-sandbox-oauth2",

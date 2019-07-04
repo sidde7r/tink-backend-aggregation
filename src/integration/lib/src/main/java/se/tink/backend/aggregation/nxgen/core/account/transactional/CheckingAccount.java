@@ -11,9 +11,19 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Chec
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
 
+/**
+ * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+ *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+ *     project
+ */
 @Deprecated
 public class CheckingAccount extends TransactionalAccount {
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     private CheckingAccount(Builder<CheckingAccount, DefaultCheckingAccountBuilder> builder) {
         super(builder);
@@ -23,21 +33,41 @@ public class CheckingAccount extends TransactionalAccount {
         super(builder);
     }
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultCheckingAccountBuilder(uniqueIdentifier);
     }
 
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier).setBalance(balance);
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static UniqueIdentifierStep<CheckingBuildStep> builder() {
         return new CheckingAccountBuilder();
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     private static class CheckingAccountBuilder
             extends Account.StepBuilder<CheckingAccount, CheckingBuildStep>
@@ -89,7 +119,11 @@ public class CheckingAccount extends TransactionalAccount {
         return AccountTypes.CHECKING;
     }
 
-    /** @deprecated Use CheckingAccountBuilder instead */
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public abstract static class Builder<
                     A extends CheckingAccount, T extends CheckingAccount.Builder<A, T>>
@@ -100,7 +134,11 @@ public class CheckingAccount extends TransactionalAccount {
         }
     }
 
-    /** @deprecated Use CheckingAccountBuilder instead */
+    /**
+     * @deprecated Use {@link TransactionalAccount#nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static class DefaultCheckingAccountBuilder
             extends CheckingAccount.Builder<CheckingAccount, DefaultCheckingAccountBuilder> {
@@ -109,11 +147,13 @@ public class CheckingAccount extends TransactionalAccount {
             super(uniqueIdentifier);
         }
 
+        @Deprecated
         @Override
         protected Builder self() {
             return this;
         }
 
+        @Deprecated
         @Override
         public CheckingAccount build() {
             return new CheckingAccount(self());

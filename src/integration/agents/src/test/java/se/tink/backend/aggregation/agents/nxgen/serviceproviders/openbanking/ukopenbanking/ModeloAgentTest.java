@@ -14,13 +14,16 @@ import se.tink.libraries.transfer.rpc.Transfer;
 
 @Ignore
 public class ModeloAgentTest {
+
+    // Use "mits" for username and password
+
     private AccountIdentifier sourceAccount;
     private AccountIdentifier destinationAccount;
 
     private AgentIntegrationTest.Builder getAgentBuilder() {
         return new AgentIntegrationTest.Builder("uk", "uk-modelo-oauth2")
-                .loadCredentialsBefore(true)
-                .saveCredentialsAfter(true)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
                 .doLogout(false);
     }

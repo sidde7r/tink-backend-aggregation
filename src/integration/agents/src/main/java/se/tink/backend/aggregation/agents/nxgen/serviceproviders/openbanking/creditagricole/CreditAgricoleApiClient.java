@@ -10,7 +10,12 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.CreditAgricoleConstants.XMLtags;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.utils.CreditAgricoleUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth1Token;
@@ -57,11 +62,16 @@ public final class CreditAgricoleApiClient {
                 OAuthUtils.getAccessTokenParams(consumerKey, oauthToken, oauthVerifier);
         String authorizationHeader =
                 getOauthAuthorizationHeader(
-                        accessTokenUrl, params, temporaryToken.getOauthTokenSecret());
+                        accessTokenUrl,
+                        params,
+                        temporaryToken.getOauthTokenSecret(),
+                        HttpMethod.POST.name());
         String response = oauthSignedRequest(accessTokenUrl, authorizationHeader);
 
         Map<String, String> responsePairs = OAuthUtils.parseFormResponse(response);
-        return createToken(oauthVerifier, responsePairs);
+        OAuth1Token oAuth1Token = createToken(oauthVerifier, responsePairs);
+        setTokenToSession(oAuth1Token);
+        return oAuth1Token;
     }
 
     public void setConfiguration(CreditAgricoleConfiguration configuration) {
@@ -115,15 +125,16 @@ public final class CreditAgricoleApiClient {
     }
 
     private String getOauthAuthorizationHeader(String baseUrl, List<NameValuePair> params) {
-        return getOauthAuthorizationHeader(baseUrl, params, StringUtils.EMPTY);
+        return getOauthAuthorizationHeader(
+                baseUrl, params, StringUtils.EMPTY, HttpMethod.POST.name());
     }
 
     private String getOauthAuthorizationHeader(
-            String url, List<NameValuePair> params, String oauthSecret) {
+            String url, List<NameValuePair> params, String oauthSecret, String httpRequestMethod) {
         String consumerSecret = configuration.getClientSecret();
         String signature =
                 OAuthUtils.getSignature(
-                        url, HttpMethod.POST.name(), params, consumerSecret, oauthSecret);
+                        url, httpRequestMethod, params, consumerSecret, oauthSecret);
         params.add(new BasicNameValuePair(OAuth1Constants.QueryParams.OAUTH_SIGNATURE, signature));
         return OAuthUtils.getAuthorizationHeaderValue(params);
     }
@@ -133,5 +144,38 @@ public final class CreditAgricoleApiClient {
                 .queryParam(CreditAgricoleConstants.QueryKeys.TINK_STATE, state)
                 .build()
                 .toString();
+    }
+
+    public void getUserIdIntoSession() throws SessionException {
+        OAuth1Token temporaryToken = fetchTokenFromSession();
+        String consumerKey = configuration.getClientId();
+
+        List<NameValuePair> params =
+                CreditAgricoleUtils.getUserIdRequestParams(
+                        temporaryToken.getOauthToken(), consumerKey);
+
+        String requestUserIdUrl = getUserIdUrl();
+        String authorizationHeader =
+                getOauthAuthorizationHeader(
+                        requestUserIdUrl,
+                        params,
+                        temporaryToken.getOauthTokenSecret(),
+                        HttpMethod.GET.name());
+        String userXML =
+                client.request(new URL(requestUserIdUrl))
+                        .accept(MediaType.APPLICATION_XML)
+                        .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+                        .get(String.class);
+
+        List<String> userId = CreditAgricoleUtils.getXMLResponse(XMLtags.ID, userXML);
+        if (userId.size() > 1) {
+            throw new IllegalStateException(
+                    String.format("More than one <%s> in xml response", XMLtags.ID));
+        }
+        sessionStorage.put(StorageKeys.USER_ID, userId.get(0));
+    }
+
+    private String getUserIdUrl() {
+        return configuration.getBaseUrl() + Urls.REST_BASE_PATH + QueryKeys.USER_ID;
     }
 }

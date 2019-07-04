@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.pension.PensionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,6 +14,9 @@ public class FetchInvestmentsResponse {
 
     @JsonProperty("SecuritiesAccounts")
     private List<SecuritiesAccountsEntity> securitiesAccounts;
+
+    @JsonProperty("Pensions")
+    private List<PensionEntity> pensions;
 
     @JsonSetter(nulls = Nulls.AS_EMPTY)
     public void setAccounts(List<SecuritiesAccountsEntity> securitiesAccounts) {
@@ -22,5 +26,10 @@ public class FetchInvestmentsResponse {
     @JsonIgnore
     public List<SecuritiesAccountsEntity> getSecuritiesAccounts() {
         return securitiesAccounts;
+    }
+
+    @JsonIgnore
+    public List<PensionEntity> getPensions() {
+        return pensions;
     }
 }

@@ -5,6 +5,7 @@ import io.vavr.CheckedFunction1;
 import io.vavr.control.Try;
 import java.util.function.Supplier;
 import javax.ws.rs.core.MediaType;
+import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
@@ -13,6 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Fetc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Url;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
@@ -90,13 +93,21 @@ public class BbvaApiClient {
         return createRequestInSession(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
     }
 
-    public AccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
+    public AccountTransactionsResponse fetchAccountTransactions(Account account, String pageKey) {
         final TransactionsRequest request = createAccountTransactionsQuery(account);
 
-        return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
-                .queryParam(QueryKeys.PAGINATION_OFFSET, String.valueOf(keyIndex))
-                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE))
-                .post(AccountTransactionsResponse.class, request);
+        final RequestBuilder builder;
+        if (Strings.isNullOrEmpty(pageKey)) {
+            // First page
+            builder =
+                    createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+                            .queryParam(QueryKeys.PAGINATION_OFFSET, QueryValues.FIRST_PAGE_KEY)
+                            .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(Fetchers.PAGE_SIZE));
+        } else {
+            // Pagination key is complete URL from /ASO
+            builder = createRequestInSession(Url.ASO + pageKey);
+        }
+        return builder.post(AccountTransactionsResponse.class, request);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(

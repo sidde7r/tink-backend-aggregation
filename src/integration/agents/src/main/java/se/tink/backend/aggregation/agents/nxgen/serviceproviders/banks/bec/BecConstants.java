@@ -84,6 +84,7 @@ public final class BecConstants {
         static final String PRAGMA_VALUE = "BECJson/1.0";
 
         static final String QUERY_PARAM_VERSION_KEY = "version";
+        static final String QUERY_PARAM_FETCH_INSTRUMENTS_VERSION_VALUE = "v4";
         static final String QUERY_PARAM_VERSION_VALUE = "v5";
         static final String QUERY_PARAM_ICONTYPE_KEY = "iconType";
         static final String QUERY_PARAM_ICONTYPE_VALUE = "4";
@@ -182,6 +183,10 @@ public final class BecConstants {
                     .put("Budget", AccountTypes.OTHER)
                     .put("Billån", AccountTypes.LOAN)
                     .put("Money Bunny", AccountTypes.OTHER)
+                    .put("Coop Budget", AccountTypes.SAVINGS)
+                    .put("Superlån", AccountTypes.LOAN)
+                    .put("Udlån", AccountTypes.LOAN)
+                    .put("Anfordring med AL-MC Cash", AccountTypes.CHECKING)
                     .build();
 
     public static final ImmutableMap<String, Instrument.Type> INSTRUMENT_TYPES =

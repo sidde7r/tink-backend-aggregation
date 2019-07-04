@@ -9,7 +9,7 @@ public final class BbvaConstants {
     public static final class Fetchers {
         public static final long BACKOFF = 3000;
         public static final int MAX_TRY_ATTEMPTS = 5;
-        public static final int PAGE_SIZE = 20;
+        public static final int PAGE_SIZE = 40;
     }
 
     public enum Error {
@@ -59,6 +59,7 @@ public final class BbvaConstants {
 
     public static final class QueryValues {
         public static final String FALSE = "false";
+        public static final String FIRST_PAGE_KEY = "0";
     }
 
     public static final class LogTags {
@@ -93,6 +94,7 @@ public final class BbvaConstants {
         public static final String PRODUCTS =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
         public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03/";
+        public static final String ASO = BASE_URL + "/ASO";
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =

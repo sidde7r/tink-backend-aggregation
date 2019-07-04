@@ -71,6 +71,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private WebDriver driver;
     private String keyCardOtpChallenge;
     private String userId;
+    private LogTag login503Error = LogTag.from("#bind-error-503");
 
     public DanskeBankChallengeAuthenticator(
             Catalog catalog,
@@ -130,7 +131,9 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         DeviceEntity preferredDevice = getPreferredDevice();
         if (preferredDevice.isCodeApp()) {
             codeAppAuthentication(username, preferredDevice);
-        } else if (preferredDevice.isOtpCard() || preferredDevice.isSecCard()) {
+        } else if (preferredDevice.isOtpCard()
+                || preferredDevice.isSecCard()
+                || preferredDevice.isGemalto()) {
             this.keyCardOtpChallenge = getKeyCardOtpChallenge(bindDeviceResponse);
             KeyCardAuthenticationController keyCardAuthenticationController =
                     new KeyCardAuthenticationController(
@@ -236,6 +239,9 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                 if (response.getStatus() == 401) {
                     throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception(
                             UserMessage.CREDENTIALS_VERIFICATION_ERROR.getKey());
+                }
+                if (response.getStatus() == 503) {
+                    log.infoExtraLong(this.driver.getPageSource(), login503Error);
                 }
 
                 throw hre;

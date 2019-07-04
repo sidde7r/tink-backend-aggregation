@@ -3,13 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CreditAgricoleAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.authenticator.CredtiAgricoleOAuth1ControllerExtend;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.configuration.CreditAgricoleConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.creditagricole.session.CreditAgricoleSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1AuthenticationFlow;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth1.OAuth1Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -52,12 +54,19 @@ public final class CreditAgricoleAgent extends NextGenerationAgent {
         OAuth1Authenticator oauthAuthenticator =
                 new CreditAgricoleAuthenticator(apiClient, sessionStorage);
 
-        return OAuth1AuthenticationFlow.create(
+        CredtiAgricoleOAuth1ControllerExtend creditAgricoleOAuth1Controller =
+                new CredtiAgricoleOAuth1ControllerExtend(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        oauthAuthenticator,
+                        apiClient);
+
+        return new AutoAuthenticationController(
                 request,
                 systemUpdater,
-                persistentStorage,
-                supplementalInformationHelper,
-                oauthAuthenticator);
+                new ThirdPartyAppAuthenticationController<>(
+                        creditAgricoleOAuth1Controller, supplementalInformationHelper),
+                creditAgricoleOAuth1Controller);
     }
 
     @Override

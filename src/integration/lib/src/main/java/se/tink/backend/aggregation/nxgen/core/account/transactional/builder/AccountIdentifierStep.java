@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 import javax.annotation.Nonnull;
 import se.tink.libraries.account.AccountIdentifier;
 
+@Deprecated
 public interface AccountIdentifierStep<S> {
 
     /**
@@ -17,5 +18,6 @@ public interface AccountIdentifierStep<S> {
      * @param identifier Identifier to be added.
      * @return The final step of the builder.
      */
+    @Deprecated
     S addAccountIdentifier(@Nonnull AccountIdentifier identifier);
 }

@@ -318,6 +318,7 @@ public class SwedbankBaseConstants {
         public static final String EINVOICE_NO_MATCH = "Could not find a matching eInvoice.";
         public static final String NEEDS_EXTENDED_USE =
                 "Activation of extended use for BankId required";
+        public static final String CONNECT_TIMEOUT = "connect timed out";
     }
 
     public static class UserMessage {

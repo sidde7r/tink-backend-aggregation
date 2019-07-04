@@ -34,7 +34,6 @@ public class BankdataApiClient {
     private final String bankdataBankNumber;
 
     public BankdataApiClient(TinkHttpClient client, Provider provider) {
-
         this.client = client;
         this.bankdataBankNumber = provider.getPayload();
     }
@@ -76,7 +75,7 @@ public class BankdataApiClient {
 
         } else if (error.getErrorCode()
                 == BankdataConstants.ErrorCodes.ACCOUNT_NOT_ACTIVATED_IN_ONLINE_BANK) {
-            throw AuthorizationError.NO_VALID_PROFILE.exception();
+            throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
         }
     }
 

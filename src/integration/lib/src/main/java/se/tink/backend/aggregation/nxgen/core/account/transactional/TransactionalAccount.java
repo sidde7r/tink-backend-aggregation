@@ -26,7 +26,11 @@ public class TransactionalAccount extends Account {
         return new TransactionalAccountBuilder();
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     protected TransactionalAccount(Builder<?, ?> builder) {
         super(builder);
@@ -36,16 +40,22 @@ public class TransactionalAccount extends Account {
         super(builder);
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
-    /** @deprecated Use CheckingAccount.builder() or SavingsAccount.builder() instead */
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static Builder<?, ?> builder(
             AccountTypes type, String uniqueIdentifier, Amount balance) {
         return builder(type, uniqueIdentifier).setBalance(balance);
     }
 
-    // This will be removed as part of the improved step builder + agent builder refactoring project
-    /** @deprecated Use CheckingAccount.builder() or SavingsAccount.builder() instead */
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
@@ -67,7 +77,11 @@ public class TransactionalAccount extends Account {
         return accountType.toAccountType();
     }
 
-    /** @deprecated Use StepBuilder instead */
+    /**
+     * @deprecated Use {@link #nxBuilder()} instead.
+     *     <p>This will be removed as part of the improved step builder + agent builder refactoring
+     *     project
+     */
     @Deprecated
     public abstract static class Builder<A extends TransactionalAccount, T extends Builder<A, T>>
             extends Account.Builder<A, T> {

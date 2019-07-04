@@ -50,4 +50,8 @@ public class DeviceEntity {
     public boolean isSecCard() {
         return DanskeBankConstants.Device.DEVICE_TYPE_SEC_CARD.equalsIgnoreCase(deviceType);
     }
+
+    public boolean isGemalto() {
+        return DanskeBankConstants.Device.DEVICE_TYPE_GEMALTO.equalsIgnoreCase(deviceType);
+    }
 }

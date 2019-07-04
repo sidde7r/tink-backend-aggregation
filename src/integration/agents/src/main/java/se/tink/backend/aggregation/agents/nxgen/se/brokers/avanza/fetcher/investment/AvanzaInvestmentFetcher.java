@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.PortfolioIsinPair;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.SessionAccountPair;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.MarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -111,9 +113,21 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         return position -> {
             final String type = instrument.getInstrumentType();
             final String orderbookId = position.getOrderbookId();
-            final String market = apiClient.getInstrumentMarket(type, orderbookId, authSession);
+            final MarketInfoResponse marketInfo =
+                    apiClient.getInstrumentMarketInfo(type, orderbookId, authSession);
+            final String marketPlace;
+            final String isin;
+            if (marketInfo != null) {
+                marketPlace = marketInfo.getMarketPlace();
+                final String marketInfoIsin = marketInfo.getIsin();
+                final String mapIsin = isinMap.get(position.getName());
+                isin = Optional.ofNullable(marketInfoIsin).orElse(mapIsin);
+            } else {
+                marketPlace = null;
+                isin = isinMap.get(position.getName());
+            }
 
-            return position.toTinkInstrument(instrument, market, isinMap);
+            return position.toTinkInstrument(instrument, marketPlace, isin);
         };
     }
 }

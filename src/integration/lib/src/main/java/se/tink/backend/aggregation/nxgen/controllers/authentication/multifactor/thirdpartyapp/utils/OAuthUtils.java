@@ -156,7 +156,7 @@ public class OAuthUtils {
                 + StringUtils.defaultString(oauthSecret, StringUtils.EMPTY);
     }
 
-    private static BasicNameValuePair pair(String name, String value) {
+    public static BasicNameValuePair pair(String name, String value) {
         return new BasicNameValuePair(name, value);
     }
 }

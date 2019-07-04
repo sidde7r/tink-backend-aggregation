@@ -80,6 +80,7 @@ public final class SibsConstants {
     public static class HeaderValues {
 
         public static final String DIGEST_PREFIX = "SHA-256=";
+        public static final String CLIENTE_PARTICULAR = "CP";
     }
 
     public static class PathParameterKeys {
@@ -98,7 +99,6 @@ public final class SibsConstants {
 
     public static class CredentialKeys {
 
-        public static final String PSU_ID = "PSU_ID";
-        public static final String PSU_ID_TYPE = "PSU_ID_TYPE";
+        public static final String PSU_ID = "username";
     }
 }

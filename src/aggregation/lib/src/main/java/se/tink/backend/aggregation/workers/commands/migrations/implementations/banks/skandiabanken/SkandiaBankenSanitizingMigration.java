@@ -27,7 +27,18 @@ public class SkandiaBankenSanitizingMigration extends ClusterSafeAgentVersionMig
     @Override
     public boolean isDataMigrated(CredentialsRequest request) {
         return request.getAccounts().stream()
-                .noneMatch(acc -> acc.getBankId().contains("-") || acc.getBankId().contains("."));
+                .noneMatch(
+                        acc ->
+                                containsFormattingCharacters(acc.getBankId())
+                                        && !containsDuplicateSuffix(acc.getBankId()));
+    }
+
+    private boolean containsFormattingCharacters(final String bankId) {
+        return bankId.contains("-") || bankId.contains(".");
+    }
+
+    private boolean containsDuplicateSuffix(final String bankId) {
+        return bankId.contains("duplicate");
     }
 
     @Override
@@ -36,32 +47,23 @@ public class SkandiaBankenSanitizingMigration extends ClusterSafeAgentVersionMig
     }
 
     private void migrateUserAccount(Account acc) {
-        final String bankId = acc.getBankId();
+
+        final DuplicateSafeBankIdSanitizer bankId =
+                DuplicateSafeBankIdSanitizer.from(acc.getBankId());
         final String sanitizedBankId;
 
         switch (acc.getType()) {
             case CHECKING:
             case SAVINGS:
             case OTHER:
-                sanitizedBankId = sanitizeTransactional(bankId);
+                sanitizedBankId = bankId.getSanitizeTransactionalAccountBankId();
                 acc.setBankId(sanitizedBankId);
                 break;
             case INVESTMENT:
-                sanitizedBankId = sanitizeInvestment(bankId);
+                sanitizedBankId = bankId.getSanitizeInvestmentBankId();
                 acc.setBankId(sanitizedBankId);
                 break;
             default:
         }
-    }
-
-    // Is supposed to remove everything that is not a digit
-    private String sanitizeInvestment(String string) {
-        return string.replaceAll("[^\\d]", "");
-    }
-
-    // Old agent unique id: {accoundId}-{accoundId}
-    // New agent unique id: {accountId}
-    private String sanitizeTransactional(String string) {
-        return string.replaceAll("[^\\d]\\w+\\Z", "");
     }
 }

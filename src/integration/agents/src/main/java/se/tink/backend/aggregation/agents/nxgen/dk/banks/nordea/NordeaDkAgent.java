@@ -43,7 +43,6 @@ public class NordeaDkAgent extends NordeaV20Agent {
 
     protected void configureHttpClient(TinkHttpClient client) {
         client.addFilter(new NordeaDkFilter());
-        client.setDebugOutput(false);
     }
 
     @Override

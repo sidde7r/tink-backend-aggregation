@@ -1,0 +1,110 @@
+{
+    "currency": "DKK",
+    "market": "FO",
+    "providers": [
+        {
+            "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BankNordik",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "multiFactor": false,
+            "name": "fo-banknordik-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "6460",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Betri Banki",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "multiFactor": false,
+            "name": "fo-betribanki-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9181",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Norðoya Sparikassi",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "multiFactor": false,
+            "name": "fo-nordoyasparikassi-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9865",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.fo.banks.sdcfo.SdcFoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Suðuroyar Sparikassi",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ],
+            "multiFactor": false,
+            "name": "fo-suduroyarsparikassi-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9870",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        }
+    ]
+}

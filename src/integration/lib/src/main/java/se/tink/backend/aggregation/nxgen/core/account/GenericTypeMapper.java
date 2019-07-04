@@ -69,6 +69,7 @@ public class GenericTypeMapper<V, T> {
      */
     public Optional<V> translate(T typeKey) {
         if (Objects.isNull(typeKey)) {
+            logger.warn("Null typeKey: {}", typeKey);
             return defaultValue;
         }
 

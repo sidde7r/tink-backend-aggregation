@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClien
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants.ErrorCode;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementListEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AuthenticatedUserEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AuthorizeAgreementDetails;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.NemidAuthenticateUserEntity;
@@ -77,13 +77,13 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
         }
 
         sessionStorage.setToken(authenticateUserResponse.getAuthenticationToken().getToken());
-        List<AgreementListEntity> agreements = authenticateUserResponse.getAgreements();
+        List<AgreementEntity> agreements = authenticateUserResponse.getAgreements();
 
         if (agreements.size() < 1) {
             throw new IllegalStateException("No agreements found");
         }
         // is it possible to have multiple agreements?
-        String agreementId = agreements.get(0).getAgreement().getId();
+        String agreementId = agreements.get(0).getId();
 
         AuthorizeAgreementRequestBody authorizeAgreementRequest =
                 new AuthorizeAgreementRequestBody()

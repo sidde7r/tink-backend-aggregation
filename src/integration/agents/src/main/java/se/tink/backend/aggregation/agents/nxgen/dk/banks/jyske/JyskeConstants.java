@@ -103,6 +103,7 @@ public final class JyskeConstants {
 
     public static final class ErrorCode {
         public static final int INVALID_CREDENTIAL = 112;
+        public static final int NOT_SIGNED_UP_FOR_MOBILE_BANK = 109;
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =

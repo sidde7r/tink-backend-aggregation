@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,10 +19,7 @@ public class TransferSpecificationRequest {
     private String annotation;
     private TransferAmount fromAccount;
     private TransferAmount toAccount;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date transferDate;
-
+    private String transferDate;
     private String toClearingNo;
 
     private TransferSpecificationRequest() {}
@@ -31,7 +30,7 @@ public class TransferSpecificationRequest {
             AmountableDestination destination,
             TransferMessageFormatter.Messages messages) {
         TransferSpecificationRequest request = new TransferSpecificationRequest();
-        request.transferDate = new Date();
+        request.transferDate = getCurrentDateAsString();
         request.amount = toAmount(transfer);
         request.message = messages.getDestinationMessage();
         request.annotation = messages.getSourceMessage();
@@ -55,5 +54,15 @@ public class TransferSpecificationRequest {
 
     public interface AmountableDestination extends Amountable {
         boolean isKnownDestination();
+    }
+
+    /**
+     * This method returns the current date in correct time zone, as a string formatted as
+     * yyyy-MM-dd
+     */
+    public static String getCurrentDateAsString() {
+        Date date = new Date();
+        LocalDateTime localDate = date.toInstant().atZone(ZoneId.of("CET")).toLocalDateTime();
+        return localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

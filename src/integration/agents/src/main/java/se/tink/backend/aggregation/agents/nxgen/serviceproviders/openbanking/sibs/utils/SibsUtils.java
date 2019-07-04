@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils;
 
+import com.github.rholder.retry.Retryer;
+import com.github.rholder.retry.RetryerBuilder;
+import com.github.rholder.retry.StopStrategies;
+import com.github.rholder.retry.WaitStrategies;
 import com.google.common.base.Strings;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.Formats;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.SignatureValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.authenticator.entity.ConsentStatus;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.CertificateId;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -58,13 +63,14 @@ public final class SibsUtils {
             String requestId,
             String signatureStringDate,
             URL eidasProxyBaseUrl,
-            String clientSigningCertificateSerialNumber) {
+            String clientSigningCertificateSerialNumber,
+            String certificateId) {
 
         String toSignString =
                 getSigningString(digest, transactionId, requestId, signatureStringDate);
 
         final QsealcEidasProxySigner proxySigner =
-                new QsealcEidasProxySigner(eidasProxyBaseUrl, CertificateId.TINK.toString());
+                new QsealcEidasProxySigner(eidasProxyBaseUrl, certificateId);
         String signatureBase64Sha = proxySigner.getSignatureBase64(toSignString.getBytes());
 
         return formSignature(digest, clientSigningCertificateSerialNumber, signatureBase64Sha);
@@ -78,6 +84,15 @@ public final class SibsUtils {
 
     public static String getRequestId() {
         return UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY);
+    }
+
+    public static Retryer<ConsentStatus> getConsentStatusRetryer(
+            long sleepTime, int retryAttempts) {
+        return RetryerBuilder.<ConsentStatus>newBuilder()
+                .retryIfResult(status -> status != null && status.isWaitingStatus())
+                .withWaitStrategy(WaitStrategies.fixedWait(sleepTime, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(retryAttempts))
+                .build();
     }
 
     private static String formSignature(

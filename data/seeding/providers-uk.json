@@ -391,7 +391,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.natwest.NatWestV31Agent",
+            "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
             "credentialsType": "PASSWORD",
             "displayName": "NatWest",
             "fields": [
@@ -418,33 +418,6 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.rbs.RbsAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Royal Bank of Scotland",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-rbs-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink2:rbs",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "capabilities": [
-                "TRANSFERS"
-            ],
             "className": "nxgen.uk.openbanking.rbs.RbsV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Royal Bank of Scotland",
@@ -458,7 +431,7 @@
             ],
             "groupDisplayName": "",
             "multiFactor": false,
-            "name": "uk-rbsv31-oauth2",
+            "name": "uk-rbs-oauth2",
             "passwordhelptext": "Authentication is done on external page",
             "payload": "tink2:rbs",
             "popular": true,

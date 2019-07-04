@@ -8,14 +8,11 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class WarrantMarketInfoResponse {
+public class WarrantMarketInfoResponse extends MarketInfoResponse {
     private double leverage;
-    private String marketPlace;
     private int numberOfPriceAlerts;
     private boolean pushPermitted;
     private String currency;
-    private String name;
-    private String id;
     private boolean tradable;
     private double buyPrice;
     private double sellPrice;
@@ -53,10 +50,6 @@ public class WarrantMarketInfoResponse {
         return leverage;
     }
 
-    public String getMarketPlace() {
-        return marketPlace;
-    }
-
     public int getNumberOfPriceAlerts() {
         return numberOfPriceAlerts;
     }
@@ -67,14 +60,6 @@ public class WarrantMarketInfoResponse {
 
     public String getCurrency() {
         return currency;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public boolean isTradable() {

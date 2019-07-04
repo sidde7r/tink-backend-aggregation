@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementEntity;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementListEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.NemidAuthenticateUserEntity;
 
 public class AuthenticateUserRequestResponseTest {
@@ -31,11 +30,10 @@ public class AuthenticateUserRequestResponseTest {
     public void parseResponse() throws Exception {
         NemidAuthenticateUserResponse response = AuthenticateUserResponseTestData.getTestData();
         assertNotNull(response.getAuthenticateUserResponse());
-        List<AgreementListEntity> agreements =
-                response.getAuthenticateUserResponse().getAgreements();
+        List<AgreementEntity> agreements = response.getAuthenticateUserResponse().getAgreements();
         assertNotNull(agreements);
         assertEquals(1, agreements.size());
-        AgreementEntity agreement = agreements.get(0).getAgreement();
+        AgreementEntity agreement = agreements.get(0);
         assertEquals(
                 "p%2FTF6u5QtxYDS7cqKmGfgDh%2Bz9lbL1cxJ%2FVO55Tarau1ZqZQrvqbULlb8%3D",
                 agreement.getId());
