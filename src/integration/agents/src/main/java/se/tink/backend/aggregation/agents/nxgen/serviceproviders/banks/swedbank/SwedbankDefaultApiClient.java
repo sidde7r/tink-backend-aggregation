@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.authenticator.rpc.CollectBankIdResponse;
@@ -59,6 +61,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -177,10 +180,19 @@ public class SwedbankDefaultApiClient {
     }
 
     public InitBankIdResponse initBankId(String ssn) {
-        return makePostRequest(
-                SwedbankBaseConstants.Url.INIT_BANKID.get(),
-                InitBankIdRequest.createFromUserId(ssn),
-                InitBankIdResponse.class);
+        try {
+            return makePostRequest(
+                    SwedbankBaseConstants.Url.INIT_BANKID.get(),
+                    InitBankIdRequest.createFromUserId(ssn),
+                    InitBankIdResponse.class);
+        } catch (HttpClientException hce) {
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(SwedbankBaseConstants.ErrorMessage.CONNECT_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw hce;
+        }
     }
 
     public CollectBankIdResponse collectBankId(LinkEntity linkEntity) {
