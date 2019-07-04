@@ -12,9 +12,9 @@ public class UkOpenBankingV20PisConfiguration implements UkOpenBankingPisConfig 
     private final URL pisBaseURL;
     private final URL pisConsentURL;
 
-    public UkOpenBankingV20PisConfiguration(URL pisBaseURL, URL pisConsentURL) {
-        this.pisBaseURL = pisBaseURL;
-        this.pisConsentURL = pisConsentURL;
+    public UkOpenBankingV20PisConfiguration(String pisBaseURL, String pisConsentURL) {
+        this.pisBaseURL = new URL(pisBaseURL);
+        this.pisConsentURL = new URL(pisConsentURL);
     }
 
     @Override

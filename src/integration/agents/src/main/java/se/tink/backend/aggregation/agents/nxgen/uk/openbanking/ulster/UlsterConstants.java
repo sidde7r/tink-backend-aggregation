@@ -11,6 +11,17 @@ final class UlsterConstants {
                     "https://secure1.ulsterbank.co.uk/.well-known/openid-configuration";
         }
 
+        class V20 {
+            public static final String AIS_AUTH_URL =
+                    "https://api.ulsterbank.co.uk/open-banking/v2.0";
+            public static final String AIS_API_URL =
+                    "https://api.ulsterbank.co.uk/open-banking/v2.0";
+            public static final String PIS_AUTH_URL = "";
+            public static final String PIS_API_URL = "";
+            public static final String WELL_KNOWN_URL =
+                    "https://secure1.ulsterbank.co.uk/.well-known/openid-configuration";
+        }
+
         class V31 {
             public static final String AIS_AUTH_URL =
                     "https://api.ulsterbank.co.uk/open-banking/v3.1/aisp";
