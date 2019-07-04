@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.creditcard;
 
-import static io.vavr.Predicates.not;
-
 import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -30,7 +28,6 @@ public class DemoFinancialInstitutionCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient.fetchAccounts().stream()
-                .filter(not(AccountEntity::isPsd2Account))
                 .map(AccountEntity::maybeToTinkCreditCardAccount)
                 .flatMap(Option::toJavaStream)
                 .collect(Collectors.toList());

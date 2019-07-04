@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.loan;
 
-import static io.vavr.Predicates.not;
-
 import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -25,7 +23,6 @@ public class DemoFinancialInstitutionLoanFetcher implements AccountFetcher<LoanA
     @Override
     public Collection<LoanAccount> fetchAccounts() {
         return apiClient.fetchAccounts().stream()
-                .filter(not(AccountEntity::isPsd2Account))
                 .map(AccountEntity::maybeToTinkLoanAccount)
                 .flatMap(Option::toJavaStream)
                 .collect(Collectors.toList());
