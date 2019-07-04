@@ -25,6 +25,11 @@ s3StorageConfiguration:
   agentDebugBucketName: "aggregation-production-agent-debug-20180918120109492100000001"
 
 agents:
+  demoFinancialInstitution:
+    mobilebanking:
+      baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/mobilebanking
+    openbanking:
+      baseUrl: http://demo-financial-institute.internal.production.aggregation.tink.network/openbanking
   collectorSubscriptionKey: true
   monzo:
     redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
