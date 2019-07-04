@@ -14,13 +14,9 @@ public class FetchBalancesResponse {
 
     private List<BalancesEntity> balances;
 
-    public List<BalancesEntity> getBalances() {
-        return Optional.ofNullable(balances).orElse(Collections.emptyList());
-    }
-
     public Amount getBalance() {
 
-        return getBalances().stream()
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .min(Comparator.comparing(BalancesEntity::getBalanceMappingPriority))
                 .map(BalancesEntity::getAmount)
                 .orElseThrow(
