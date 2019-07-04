@@ -184,6 +184,12 @@ public final class SBABApiClient {
                 .get(GetPaymentResponse.class);
     }
 
+    public String signPayment(String paymentId) {
+        return createRequest(Urls.SIGN_PAYMENT.parameter(IdTags.PAYMENT_ID, paymentId))
+                .addBearerToken(getTokenFromStorage())
+                .put(String.class);
+    }
+
     public void setTokenToSession(OAuth2Token token) {
         persistentStorage.put(SBABConstants.StorageKeys.OAUTH_TOKEN, token);
     }

@@ -34,6 +34,7 @@ public final class SBABConstants {
         public static final URL INITIATE_PAYMENT =
                 new URL(Endpoints.BASE_URL + Endpoints.INITIATE_PAYMENT);
         public static final URL GET_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.GET_PAYMENT);
+        public static final URL SIGN_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.SIGN_PAYMENT);
     }
 
     public static class Endpoints {
@@ -48,6 +49,8 @@ public final class SBABConstants {
                 "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers";
         public static final String GET_PAYMENT =
                 "/sandbox/psd2/savings/2.0/accounts/{accountNumber}/transfers/status/{referenceId}";
+        public static final String SIGN_PAYMENT =
+                "/sandbox/psd2/savings/2.0/accounts/transfers/sign/{referenceId}";
     }
 
     public static class StorageKeys {

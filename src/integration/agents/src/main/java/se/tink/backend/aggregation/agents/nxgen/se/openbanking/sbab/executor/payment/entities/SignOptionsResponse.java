@@ -17,4 +17,9 @@ public class SignOptionsResponse {
     public String getAutostartToken() {
         return autostartToken;
     }
+
+    @JsonIgnore
+    public String getBankIdSignRedirectUrl() {
+        return bankIdSignRedirectUrl;
+    }
 }

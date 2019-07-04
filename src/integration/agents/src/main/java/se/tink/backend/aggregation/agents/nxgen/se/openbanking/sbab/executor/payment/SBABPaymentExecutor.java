@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import java.util.ArrayList;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentExecutor;
@@ -20,6 +21,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
@@ -105,8 +107,17 @@ public class SBABPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
-        throw new NotImplementedException(
-                "sign not yet implemented for " + this.getClass().getName());
+        Payment payment = paymentMultiStepRequest.getPayment();
+
+        String nextStep;
+        nextStep = AuthenticationStepConstants.STEP_FINALIZE;
+
+        apiClient.signPayment(payment.getUniqueId());
+        // For sandbox after making a request for signing it's instantly signed
+        // On production sign response will have redirect link
+        payment.setStatus(PaymentStatus.PAID);
+
+        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
     }
 
     @Override
@@ -123,9 +134,14 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentListResponse fetchMultiple(PaymentListRequest paymentRequest)
-            throws PaymentException {
-        throw new NotImplementedException(
-                "fetchMultiple not yet implemented for " + this.getClass().getName());
+    public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
+        // Workaround since they have no multiple fetching
+        ArrayList paymentResponses = new ArrayList();
+
+        for (PaymentRequest request : paymentListRequest.getPaymentRequestList()) {
+            paymentResponses.add(fetch(request));
+        }
+
+        return new PaymentListResponse(paymentResponses);
     }
 }
