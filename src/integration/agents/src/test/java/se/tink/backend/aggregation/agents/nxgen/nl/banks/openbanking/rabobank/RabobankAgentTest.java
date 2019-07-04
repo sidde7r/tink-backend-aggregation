@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-public class RabobankAgentTest {
+public final class RabobankAgentTest {
     private enum Arg {
         LOAD_BEFORE,
         SAVE_AFTER,
