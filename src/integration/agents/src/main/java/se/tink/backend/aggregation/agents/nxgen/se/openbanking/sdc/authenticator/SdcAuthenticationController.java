@@ -52,22 +52,22 @@ public class SdcAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) throws LoginException {
 
         Optional<Map<String, String>> stringStringMap =
-                this.supplementalInformationHelper.waitForSupplementalInformation(
-                        this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                supplementalInformationHelper.waitForSupplementalInformation(
+                        this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         Map<String, String> callbackData =
                 stringStringMap.orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
         String code = callbackData.getOrDefault("code", null);
         Preconditions.checkNotNull(code);
 
-        OAuth2Token accessToken = this.authenticator.exchangeAuthorizationCode(code);
+        OAuth2Token accessToken = authenticator.exchangeAuthorizationCode(code);
 
-        this.authenticator.useAccessToken(accessToken);
+        authenticator.useAccessToken(accessToken);
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = this.authenticator.buildAuthorizeUrl(this.state);
+        URL authorizeUrl = authenticator.buildAuthorizeUrl(state);
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
