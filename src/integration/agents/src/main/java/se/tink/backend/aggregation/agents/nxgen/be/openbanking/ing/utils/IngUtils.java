@@ -38,7 +38,7 @@ public final class IngUtils {
                                 IngUtils.readSigningKey(signingKey, algorithm), input.getBytes()));
     }
 
-    public static PrivateKey readSigningKey(String keyString, String algorithm) {
+    private static PrivateKey readSigningKey(String keyString, String algorithm) {
         try {
             return KeyFactory.getInstance(algorithm)
                     .generatePrivate(
