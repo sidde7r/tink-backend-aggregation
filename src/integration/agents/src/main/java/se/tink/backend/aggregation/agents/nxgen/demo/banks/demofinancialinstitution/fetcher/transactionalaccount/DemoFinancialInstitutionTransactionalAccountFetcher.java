@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofinancialinstitution.fetcher.transactionalaccount;
 
-
 import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.stream.Collectors;
