@@ -209,6 +209,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -219,6 +220,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -229,6 +231,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -239,6 +242,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -249,6 +253,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -259,6 +264,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -269,6 +275,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -289,6 +296,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -319,6 +327,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -329,6 +338,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -339,6 +349,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -349,6 +360,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningCertificate: ""
@@ -370,6 +382,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -381,6 +394,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -392,6 +406,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -403,6 +418,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -423,6 +439,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
@@ -434,6 +451,7 @@ agentsServiceConfiguration:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
         eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
+        certificateId: Tink-qsealc
         clientId: ""
         clientSecret: ""
         clientSigningKeyPath: ""
