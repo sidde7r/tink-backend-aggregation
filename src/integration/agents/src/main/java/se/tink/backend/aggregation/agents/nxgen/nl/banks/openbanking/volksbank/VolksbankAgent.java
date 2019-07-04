@@ -29,6 +29,7 @@ public class VolksbankAgent extends NextGenerationAgent
     private final VolksbankApiClient volksbankApiClient;
     private final VolksbankHttpClient httpClient;
     private final VolksbankUrlFactory urlFactory;
+    private final String clientName;
     private final String redirectUrl;
 
     private final TransactionalAccountRefreshController transactionalAccountRefreshController;
@@ -37,12 +38,13 @@ public class VolksbankAgent extends NextGenerationAgent
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        final String payload = request.getProvider().getPayload();
+        final String[] payload = request.getProvider().getPayload().split(" ");
 
-        final String bankPath = payload.split(" ")[1];
-        redirectUrl = payload.split(" ")[2];
+        clientName = payload[0];
+        final String bankPath = payload[1];
+        redirectUrl = payload[2];
 
-        final boolean isSandbox = payload.split(" ")[0].toLowerCase().contains("sandbox");
+        final boolean isSandbox = request.getProvider().getName().toLowerCase().contains("sandbox");
 
         this.httpClient = new VolksbankHttpClient(client, "certificate");
         this.urlFactory = new VolksbankUrlFactory(bankPath, isSandbox);
@@ -61,7 +63,7 @@ public class VolksbankAgent extends NextGenerationAgent
                         .getIntegrations()
                         .getClientConfiguration(
                                 VolksbankConstants.Market.INTEGRATION_NAME,
-                                VolksbankConstants.Market.CLIENT_NAME,
+                                clientName,
                                 VolksbankConfiguration.class)
                         .orElseThrow(
                                 () ->
