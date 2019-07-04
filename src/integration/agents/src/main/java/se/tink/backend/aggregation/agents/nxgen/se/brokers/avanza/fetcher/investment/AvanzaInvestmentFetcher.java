@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.SessionAccountPair;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.MarketInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -93,7 +94,11 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                             .flatMap(getInstruments(authSession, isinMap))
                             .collect(Collectors.toList());
 
-            return portfolio.toTinkInvestmentAccount(holder, instruments);
+            AccountDetailsResponse accountDetails =
+                    apiClient.fetchAccountDetails(sessionAccount.getAccountId(), authSession);
+
+            return portfolio.toTinkInvestmentAccount(
+                    holder, accountDetails.getClearingNumber(), instruments);
         };
     }
 

@@ -51,6 +51,8 @@ public class AvanzaTransactionalAccountFetcher
         return authSession ->
                 apiClient.fetchAccounts(authSession).getAccounts().stream()
                         .filter(AccountEntity::isTransactionalAccount)
+                        .map(AccountEntity::getAccountId)
+                        .map(accId -> apiClient.fetchAccountDetails(accId, authSession))
                         .map(account -> account.toTinkAccount(holderName));
     }
 

@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
@@ -78,7 +77,7 @@ public class PortfolioEntity {
         portfolio.setType(getPortfolioType());
         portfolio.setCashValue(totalBalance);
         final Double totalValue =
-                instruments.stream().collect(Collectors.summingDouble(Instrument::getMarketValue));
+                instruments.stream().mapToDouble(Instrument::getMarketValue).sum();
         portfolio.setTotalValue(totalValue);
         portfolio.setTotalProfit(totalProfit);
         portfolio.setUniqueIdentifier(accountId);
@@ -88,14 +87,20 @@ public class PortfolioEntity {
     }
 
     public InvestmentAccount toTinkInvestmentAccount(
-            HolderName holderName, List<Instrument> instruments) {
-        return toTinkInvestmentAccount(holderName, toTinkPortfolio(instruments));
+            HolderName holderName, String clearingNumber, List<Instrument> instruments) {
+        return toTinkInvestmentAccount(holderName, clearingNumber, toTinkPortfolio(instruments));
     }
 
-    public InvestmentAccount toTinkInvestmentAccount(HolderName holderName, Portfolio portfolio) {
+    public InvestmentAccount toTinkInvestmentAccount(
+            HolderName holderName, String clearingNumber, Portfolio portfolio) {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
+        final String accountNumber =
+                clearingNumber != null
+                        ? String.format("%s-%s", clearingNumber, accountId)
+                        : accountId;
+
         return InvestmentAccount.builder(getAccountId())
-                .setAccountNumber(getAccountId())
+                .setAccountNumber(accountNumber)
                 .setName(getAccountName())
                 .setHolderName(holderName)
                 .setCashBalance(Amount.inSEK(totalBalance + interestPayable))

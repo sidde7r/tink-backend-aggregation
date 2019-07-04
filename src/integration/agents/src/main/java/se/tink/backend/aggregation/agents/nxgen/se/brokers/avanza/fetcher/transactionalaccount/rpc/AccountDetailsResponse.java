@@ -269,10 +269,14 @@ public class AccountDetailsResponse {
     public <T extends Account> T toTinkAccount(HolderName holderName, Class<T> type) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;
+        final String accountNumber =
+                clearingNumber != null
+                        ? String.format("%s-%s", clearingNumber, accountId)
+                        : accountId;
 
         final Account account =
                 Account.builder(toTinkAccountType(), accountId)
-                        .setAccountNumber(accountId)
+                        .setAccountNumber(accountNumber)
                         .setName(accountName)
                         .setHolderName(holderName)
                         .setBalance(Amount.inSEK(ownCapital))
