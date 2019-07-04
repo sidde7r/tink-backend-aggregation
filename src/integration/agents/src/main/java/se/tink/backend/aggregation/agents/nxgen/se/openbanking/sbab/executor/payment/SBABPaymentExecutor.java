@@ -93,14 +93,14 @@ public class SBABPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse fetch(PaymentRequest paymentRequest) {
+        Payment payment = paymentRequest.getPayment();
+
         return apiClient
-                .getPayment(
-                        paymentRequest.getPayment().getUniqueId(),
-                        paymentRequest.getPayment().getDebtor().getAccountNumber())
+                .getPayment(payment.getUniqueId(), payment.getDebtor().getAccountNumber())
                 .toTinkPaymentResponse(
                         getPaymentType(paymentRequest),
-                        paymentRequest.getPayment().getDebtor().getAccountNumber(),
-                        paymentRequest.getPayment().getCreditor().getAccountNumber());
+                        payment.getDebtor().getAccountNumber(),
+                        payment.getCreditor().getAccountNumber());
     }
 
     @Override
