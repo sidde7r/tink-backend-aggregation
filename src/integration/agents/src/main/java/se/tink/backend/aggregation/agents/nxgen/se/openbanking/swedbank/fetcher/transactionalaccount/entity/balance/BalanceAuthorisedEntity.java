@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.balance;
 
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalanceAuthorisedEntity {
-    private AmountEntity amount;
+    private TransactionAmountEntity amount;
     private String date;
 }

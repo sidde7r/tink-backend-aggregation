@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 public class TokenResponse {
+
     @JsonProperty("token_type")
     private String tokenType;
 
@@ -18,7 +19,7 @@ public class TokenResponse {
     @JsonProperty("consented_on")
     private String consentedOn;
 
-    @JsonProperty private String scope;
+    private String scope;
 
     @JsonProperty("refresh_token")
     private String refreshToken;

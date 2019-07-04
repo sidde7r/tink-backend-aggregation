@@ -12,6 +12,7 @@ public class SwedbankConfiguration implements ClientConfiguration {
     private String clientId;
     private String clientSecret;
     private String redirectUrl;
+    private String eidasQwac;
     private String psuIpAddress;
 
     public String getClientId() {
@@ -36,6 +37,10 @@ public class SwedbankConfiguration implements ClientConfiguration {
                 String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
+    }
+
+    public String getEidasQwac() {
+        return eidasQwac;
     }
 
     public String getPsuIpAddress() {

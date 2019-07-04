@@ -4,15 +4,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalanceInterimAvailableEntity {
+public class BalanceAmountEntity {
     private TransactionAmountEntity amount;
-    private String date;
 
     public TransactionAmountEntity getAmount() {
         return amount;
-    }
-
-    public String getDate() {
-        return date;
     }
 }

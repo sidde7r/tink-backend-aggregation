@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
+@JsonObject
 public class TokenRequest {
     private final String clientId;
     private final String clientSecret;

@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankConstants;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.fetcher.transactionalaccount.entity.common.TransactionAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -12,12 +12,12 @@ import se.tink.libraries.amount.Amount;
 public class TransactionEntity {
     private String bookingDate;
     private String valueDate;
-    private AmountEntity amount;
+    private TransactionAmountEntity transactionAmount;
     private String remittanceInformationUnstructured;
     private TransactionBalanceEntity balance;
 
-    public Amount getAmount() {
-        return amount.toTinkAmount();
+    public Amount getTransactionAmount() {
+        return transactionAmount.toTinkAmount();
     }
 
     public String getRemittanceInformationUnstructured() {
