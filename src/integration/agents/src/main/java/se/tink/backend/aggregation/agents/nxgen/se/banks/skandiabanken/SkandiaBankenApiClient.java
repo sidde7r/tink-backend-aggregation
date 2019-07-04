@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.Sk
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE_METHOD;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE_METHOD_S256;
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.PFIDP_ADAPTER_ID;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.PFIDP_ADAPTER_ID_MOBILE;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.REDIRECT_URI_VALUE;
@@ -35,6 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.FetchInvestmentAccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.FetchInvestmentHoldingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.FetchInvestmentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -219,6 +221,20 @@ public class SkandiaBankenApiClient {
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchInvestmentHoldingsResponse.class);
+    }
+
+    public PensionFundsResponse fetchPensionHoldings(
+            String partNumber, String encrypedNationalIdentificationNumber) {
+        return httpClient
+                .request(
+                        Urls.FETCH_PENSIONS_HOLDINGS
+                                .parameter(IdTags.PART_ID, partNumber)
+                                .queryParam(
+                                        ENCRYPED_NATIONAL_IDENTIFICATION_NUMBER,
+                                        encrypedNationalIdentificationNumber))
+                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
+                .get(PensionFundsResponse.class);
     }
 
     public IdentityDataResponse fetchIdentityData() {
