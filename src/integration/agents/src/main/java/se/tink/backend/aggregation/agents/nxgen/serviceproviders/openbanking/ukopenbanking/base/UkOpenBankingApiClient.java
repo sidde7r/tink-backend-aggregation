@@ -24,7 +24,6 @@ public class UkOpenBankingApiClient extends OpenIdApiClient {
             OpenIdConstants.ClientMode clientMode,
             URL wellKnownURL) {
         super(httpClient, softwareStatement, providerConfiguration, clientMode, wellKnownURL);
-        this.httpClient.setDebugOutput(true);
     }
 
     public <T> T createPaymentIntentId(
