@@ -120,7 +120,7 @@ public class AccountDetailsResponse {
 
     public Optional<AccountTypes> getTinkAccountType() {
         for (Map.Entry<String, AccountTypes> entry : BecConstants.ACCOUNT_TYPES.entrySet()) {
-            if (this.accountType.toLowerCase().contains(entry.getKey())) {
+            if (this.accountType.toLowerCase().contains(entry.getKey().toLowerCase())) {
                 return Optional.of(entry.getValue());
             }
         }
