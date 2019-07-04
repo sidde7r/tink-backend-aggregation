@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Deliberately not failing if commit message linter fails. Simply informing the
+# developer.
+./.buildkite/check-commit-message.sh $(git show --format=format:%H HEAD)
