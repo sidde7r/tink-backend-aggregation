@@ -73,8 +73,7 @@ public final class SdcAgent extends NextGenerationAgent {
                         controller, supplementalInformationHelper),
                 controller);
 
-        //        TODO Currently state has to be a guid
-        //             extend framework to allow for that without a custom controller
+        //        TODO https://github.com/tink-ab/tink-backend-integration-thirdparties/issues/189
         //        final OAuth2AuthenticationController controller =
         //                new OAuth2AuthenticationController(
         //                        persistentStorage,
