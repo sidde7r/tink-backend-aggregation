@@ -61,7 +61,7 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
 
         Payment payment = paymentRequest.getPayment();
 
@@ -92,7 +92,7 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(
                         paymentRequest.getPayment().getUniqueId(),
@@ -104,8 +104,7 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         throw new NotImplementedException(
                 "sign not yet implemented for " + this.getClass().getName());
     }
