@@ -1,0 +1,202 @@
+[
+    {
+        "Amount": 3291.0,
+        "Date": "2019-07-31T00:00:00+02:00",
+        "EncryptedPaymentId": "PEq4WvisLrQLyaQkfreLkw8ShdhmoNJ4GG63r_7zD-_VOetmtLcD0a8Wpsy_vl-d2tu2PeHvdOhpTXA7p3HcmUPWER7dZ97JccCUoklAPDI",
+        "ErrorMessage": null,
+        "HasError": false,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Invoice": null,
+        "IsChangeable": true,
+        "IsDeletable": true,
+        "IsInvoice": false,
+        "PaymentType": 3,
+        "PaymentTypeDisplayName": "Bankgiro OCR",
+        "PaymentTypeName": "BankGiroOCR",
+        "Recipient": {
+            "Name": "White Tower Hamburgers AB",
+            "RecipientNumber": "111-1111",
+            "Reference": "1111111111"
+        },
+        "Sender": {
+            "Address": {
+                "CareOf": "",
+                "Country": null,
+                "PostalAddress": "27656 Hammenhög",
+                "StreetAddress": "Kvarnvägen 36 Lgh 2432"
+            },
+            "BankAccount": {
+                "BankAccountDisplayName": "1234-567.890-0",
+                "BankAccountNumber": "12345678900"
+            },
+            "BankAccountTransactionNote": "BG 111-1111 White Tower Hamburgers",
+            "Name": "Marwin Öberg"
+        },
+        "Status": 2,
+        "StatusDisplayName": "Godkänd",
+        "StatusName": "Approved",
+        "Type": 2,
+        "TypeDisplayName": "Räkningsbetalning",
+        "TypeName": "Payment"
+    },
+    {
+        "Amount": 1782.0,
+        "Date": "2019-08-30T00:00:00+02:00",
+        "EncryptedPaymentId": "xAP7orUwZl9zN1G53hpAy-ZiHkVZ9pNwQgF53cbMCEyIDT2pPNU6ireh0ipgFizL8qKjem8bPP5icTNRWJIQICOAOSdJdw4NL9gnqCNGTNm",
+        "ErrorMessage": null,
+        "HasError": false,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Invoice": null,
+        "IsChangeable": true,
+        "IsDeletable": true,
+        "IsInvoice": false,
+        "PaymentType": 3,
+        "PaymentTypeDisplayName": "Bankgiro OCR",
+        "PaymentTypeName": "BankGiroOCR",
+        "Recipient": {
+            "Name": "DELCHAMPS",
+            "RecipientNumber": "2222-2222",
+            "Reference": "2222222222"
+        },
+        "Sender": {
+            "Address": {
+                "CareOf": "",
+                "Country": null,
+                "PostalAddress": "27656 Hammenhög",
+                "StreetAddress": "Kvarnvägen 36 Lgh 2432"
+            },
+            "BankAccount": {
+                "BankAccountDisplayName": "1234-567.890-0",
+                "BankAccountNumber": "12345678900"
+            },
+            "BankAccountTransactionNote": "BG 2222-2222 DELCHAMPS",
+            "Name": "Marwin Öberg"
+        },
+        "Status": 2,
+        "StatusDisplayName": "Godkänd",
+        "StatusName": "Approved",
+        "Type": 2,
+        "TypeDisplayName": "Räkningsbetalning",
+        "TypeName": "Payment"
+    },
+    {
+        "Amount": 2903.0,
+        "Date": "2019-08-30T00:00:00+02:00",
+        "EncryptedPaymentId": "9hab1zahN5TJjx8Ma-saejbbJhWyH3nnJPpHe2N5ObyiJAgWvXeGlcgaXPDnXMVHW7op-pkVHxR0jEbIoGiLaQvJJRfe7tjw2aB6YCKTSA9",
+        "ErrorMessage": null,
+        "HasError": false,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Invoice": null,
+        "IsChangeable": true,
+        "IsDeletable": true,
+        "IsInvoice": false,
+        "PaymentType": 3,
+        "PaymentTypeDisplayName": "Bankgiro OCR",
+        "PaymentTypeName": "BankGiroOCR",
+        "Recipient": {
+            "Name": "Schweggmanns",
+            "RecipientNumber": "333-3333",
+            "Reference": "3333333333"
+        },
+        "Sender": {
+            "Address": {
+                "CareOf": "",
+                "Country": null,
+                "PostalAddress": "27656 Hammenhög",
+                "StreetAddress": "Kvarnvägen 36 Lgh 2432"
+            },
+            "BankAccount": {
+                "BankAccountDisplayName": "1234-567.890-0",
+                "BankAccountNumber": "12345678900"
+            },
+            "BankAccountTransactionNote": "BG 333-3333 Schweggmanns",
+            "Name": "Marwin Öberg"
+        },
+        "Status": 2,
+        "StatusDisplayName": "Godkänd",
+        "StatusName": "Approved",
+        "Type": 2,
+        "TypeDisplayName": "Räkningsbetalning",
+        "TypeName": "Payment"
+    },
+    {
+        "Amount": 1779.0,
+        "Date": "2019-11-29T00:00:00+01:00",
+        "EncryptedPaymentId": "nggLLcBJNKj4PDsXn7GX708-ZDDgi1yljIowKxJvJKZAqarkiE_0yc398gTvH-xmwpSptw_Q1nuY3fHlK_RZEVrX02YKL9IXeqC4hc6eQIw",
+        "ErrorMessage": null,
+        "HasError": false,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Invoice": null,
+        "IsChangeable": true,
+        "IsDeletable": true,
+        "IsInvoice": false,
+        "PaymentType": 3,
+        "PaymentTypeDisplayName": "Bankgiro OCR",
+        "PaymentTypeName": "BankGiroOCR",
+        "Recipient": {
+            "Name": "Coast to Coast Hardware",
+            "RecipientNumber": "4444-4444",
+            "Reference": "4444444444"
+        },
+        "Sender": {
+            "Address": {
+                "CareOf": "",
+                "Country": null,
+                "PostalAddress": "27656 Hammenhög",
+                "StreetAddress": "Kvarnvägen 36 Lgh 2432"
+            },
+            "BankAccount": {
+                "BankAccountDisplayName": "1234-567.890-0",
+                "BankAccountNumber": "12345678900"
+            },
+            "BankAccountTransactionNote": "BG 4444-4444 Coast to Coast Hw",
+            "Name": "Marwin Öberg"
+        },
+        "Status": 2,
+        "StatusDisplayName": "Godkänd",
+        "StatusName": "Approved",
+        "Type": 2,
+        "TypeDisplayName": "Räkningsbetalning",
+        "TypeName": "Payment"
+    },
+    {
+        "EncryptedPaymentId": "y9WPgiKxSFTuTZuAXf2Fc0Y7q4BvD8J7P63lHU2DBYXYZZNb0Sctdwk97bxmu9wxpjzGPHq3LAifIqaF3CRFFODvgxrDl6DZGv06hvOHKV7",
+        "Amount": 1.0,
+        "Date": "2019-07-31T00:00:00+02:00",
+        "Type": 1,
+        "TypeName": "SingleTransfer",
+        "TypeDisplayName": "Single transfer",
+        "PaymentType": 1,
+        "PaymentTypeName": "SingleTransfer",
+        "PaymentTypeDisplayName": "Single transfer",
+        "Status": 2,
+        "StatusName": "Approved",
+        "StatusDisplayName": "Approved",
+        "IsChangeable": false,
+        "IsDeletable": true,
+        "HasError": false,
+        "ErrorMessage": null,
+        "HasInformation": false,
+        "InformationMessage": null,
+        "Sender": {
+            "Name": null,
+            "BankAccountTransactionNote": "Överföring 1234 5678900",
+            "BankAccount": {
+                "BankAccountNumber": "23456789012",
+                "BankAccountDisplayName": "2345-678.901-2"
+            },
+            "Address": null
+        },
+        "Recipient": {
+            "Name": null,
+            "RecipientNumber": "12345678900",
+            "Reference": "Överf. M. Öberg"
+        },
+        "IsInvoice": false,
+        "Invoice": null
+    }
+]
