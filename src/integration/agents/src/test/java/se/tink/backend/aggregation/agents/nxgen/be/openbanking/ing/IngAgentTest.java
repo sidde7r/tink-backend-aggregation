@@ -15,7 +15,8 @@ public class IngAgentTest {
         builder =
                 new AgentIntegrationTest.Builder("be", "be-ing-oauth2")
                         .loadCredentialsBefore(false)
-                        .saveCredentialsAfter(false);
+                        .saveCredentialsAfter(false)
+                        .expectLoggedIn(false);
     }
 
     @Test

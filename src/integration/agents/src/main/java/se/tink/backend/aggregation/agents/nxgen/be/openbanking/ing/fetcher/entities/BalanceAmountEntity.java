@@ -2,18 +2,19 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.enti
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class BalanceAmountEntity {
 
     private String currency;
-    private Number amount;
+    private String amount;
 
     public String getCurrency() {
         return currency;
     }
 
     public Amount toAmount() {
-        return new Amount(currency, amount);
+        return new Amount(currency, StringUtils.parseAmount(amount));
     }
 }

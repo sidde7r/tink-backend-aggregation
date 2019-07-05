@@ -9,7 +9,9 @@ public final class IngConstants {
     }
 
     public static class Urls {
-        public static final String ACCOUNTS = "/v2/accounts";
+        public static final String BASE_URL = "https://api.sandbox.ing.com";
+
+        public static final String ACCOUNTS = "/v3/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
@@ -26,6 +28,7 @@ public final class IngConstants {
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
         public static final String APPLICATION_TOKEN = "APPLICATION_TOKEN";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
+        public static final String STATIC_TOKEN = "STATIC_TOKEN";
     }
 
     public static class QueryKeys {
@@ -34,10 +37,15 @@ public final class IngConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
+        public static final String CLIENT_ID = "client_id";
+        public static final String STATE = "state";
+        public static final String RESPONSE_TYPE = "response_type";
+        public static final String LIMIT = "limit";
     }
 
     public static class QueryValues {
         public static final String DATE_FORMAT = "yyyy-MM-dd";
+        public static final String CODE = "code";
     }
 
     public static class HeaderKeys {
@@ -91,5 +99,10 @@ public final class IngConstants {
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
+        public static final String MISSING_TOKEN = "Cannot find Token!";
+        public static final String MISSING_CLIENT_ID = "Cannot find client id!";
+        public static final String UNDEFINED_BALANCE_TYPE =
+                "There is no balanceType of value '%s' defined in Enum %s";
+        public static final String ACCOUNT_BALANCE_NOT_FOUND = "Account balance not found";
     }
 }
