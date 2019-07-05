@@ -12,13 +12,22 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.PersistentStorageKeys;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class BankIdAuthenticationController<T> implements MultiFactorAuthenticator {
+public class BankIdAuthenticationController<T>
+        implements AutoAuthenticator, MultiFactorAuthenticator {
     private static final int MAX_ATTEMPTS = 90;
 
     private static final AggregationLogger log =
@@ -27,18 +36,24 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
     private final SupplementalRequester supplementalRequester;
     private final boolean waitOnBankId;
 
+    private final PersistentStorage persistentStorage;
+
     public BankIdAuthenticationController(
-            SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator) {
-        this(supplementalRequester, authenticator, false);
+            SupplementalRequester supplementalRequester,
+            BankIdAuthenticator<T> authenticator,
+            PersistentStorage persistentStorage) {
+        this(supplementalRequester, authenticator, false, persistentStorage);
     }
 
     public BankIdAuthenticationController(
             SupplementalRequester supplementalRequester,
             BankIdAuthenticator<T> authenticator,
-            boolean waitOnBankId) {
+            boolean waitOnBankId,
+            PersistentStorage persistentStorage) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
         this.waitOnBankId = waitOnBankId;
+        this.persistentStorage = persistentStorage;
     }
 
     @Override
@@ -81,6 +96,8 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
             switch (status) {
                 case DONE:
+                    persistentStorage.put(
+                            PersistentStorageKeys.ACCESS_TOKEN, authenticator.getAcessToken());
                     return;
                 case WAITING:
                     log.info("Waiting for BankID");
@@ -103,5 +120,39 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
         log.info(String.format("BankID timed out internally, last status: %s", status));
         throw BankIdError.TIMEOUT.exception();
+    }
+
+    @Override
+    public void autoAuthenticate()
+            throws SessionException, BankServiceException, AuthorizationException {
+        OAuth2Token accessToken =
+                persistentStorage
+                        .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        if (accessToken.hasAccessExpired()) {
+            if (!accessToken.canRefresh()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            persistentStorage.remove(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN);
+
+            // Refresh token is not always present, if it's absent we fall back to the manual
+            // authentication.
+            String refreshToken =
+                    accessToken
+                            .getRefreshToken()
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            accessToken =
+                    authenticator
+                            .refreshAccessToken(refreshToken)
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            if (!accessToken.isValid()) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            // Store the new access token on the persistent storage again.
+            persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
+        }
     }
 }
