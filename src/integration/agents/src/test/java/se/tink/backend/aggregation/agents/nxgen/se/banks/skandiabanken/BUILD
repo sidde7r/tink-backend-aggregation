@@ -4,8 +4,8 @@ junit_test(
     name = "skandiabanken",
     srcs = glob(["**/*.java"]),
     data = [
-        "//data:aggregation_test",
         "//data:agent_unit_tests",
+        "//data:aggregation_test",
         "//etc:development",
     ],
     tags = [
@@ -24,6 +24,6 @@ junit_test(
         "//src/integration/lib:lib_test",
         "//src/libraries/credentials:service",
         "//src/libraries/serialization",
-        "//third_party:org_mockito_mockito_core"
+        "//third_party:org_mockito_mockito_core",
     ],
 )
