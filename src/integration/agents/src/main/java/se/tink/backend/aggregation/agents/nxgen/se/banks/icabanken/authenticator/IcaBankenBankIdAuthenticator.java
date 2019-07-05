@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.Resp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.uuid.UUIDUtils;
@@ -87,6 +88,16 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     @Override
     public Optional<String> getAutostartToken() {
         return Optional.ofNullable(autostarttoken);
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
+        return Optional.empty();
     }
 
     private BankIdResponse getPollResponse(String reference)

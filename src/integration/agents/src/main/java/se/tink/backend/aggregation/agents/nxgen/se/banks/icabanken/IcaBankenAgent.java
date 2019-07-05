@@ -67,7 +67,8 @@ public class IcaBankenAgent extends NextGenerationAgent
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new IcaBankenBankIdAuthenticator(
-                        apiClient, icaBankenSessionStorage, icaBankenPersistentStorage));
+                        apiClient, icaBankenSessionStorage, icaBankenPersistentStorage),
+                persistentStorage);
     }
 
     @Override
