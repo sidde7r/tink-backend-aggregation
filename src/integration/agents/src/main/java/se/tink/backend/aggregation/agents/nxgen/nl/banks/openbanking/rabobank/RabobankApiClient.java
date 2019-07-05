@@ -129,29 +129,8 @@ public class RabobankApiClient {
         final String date = RabobankUtils.getDate();
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
         final URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
-        final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getQsealCert();
-        final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        final RequestBuilder builder =
-                client.request(url)
-                        .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
-                        .header(QueryParams.IBM_CLIENT_ID, clientId)
-                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                        .header(QueryParams.REQUEST_ID, uuid)
-                        .header(QueryParams.DIGEST, digestHeader)
-                        .header(QueryParams.SIGNATURE, signatureHeader)
-                        .header(QueryParams.DATE, date);
-
-        // This header must be present iff the request was initiated by the PSU
-        if (requestIsManual) {
-            logger.info("Request for balance is attended -- adding PSU header");
-            builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
-        } else {
-            logger.info("Request for balance is unattended -- omitting PSU header");
-        }
-
-        return builder.accept(MediaType.APPLICATION_JSON_TYPE).get(BalanceResponse.class);
+        return buildRequest(url, uuid, digest, signatureHeader, date).get(BalanceResponse.class);
     }
 
     public PaginatorResponse getTransactions(
