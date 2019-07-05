@@ -67,12 +67,7 @@ public final class AvanzaAgent extends NextGenerationAgent implements RefreshIde
                 new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
         return Optional.of(
                 new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        investmentFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(investmentFetcher))));
+                        metricRefreshController, updateController, investmentFetcher));
     }
 
     @Override
