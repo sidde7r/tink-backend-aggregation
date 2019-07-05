@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
@@ -118,6 +119,16 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
 
     @Override
     public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
     }
 
