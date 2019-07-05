@@ -66,6 +66,7 @@ public class NordeaSEConstants {
         public static final URL POLL_SIGN_TRANSFER = new URL(BASE + ApiService.POLL_SIGN_TRANSFER);
         public static final URL COMPLETE_TRANSFER = new URL(BASE + ApiService.COMPLETE_TRANSFER);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT);
+        public static final URL UPDATE_PAYMENT = new URL(BASE + ApiService.FETCH_PAYMENTS_DETAILS);
     }
 
     public static class ApiService {
@@ -198,6 +199,11 @@ public class NordeaSEConstants {
         public static final String NO_CONFIRMED_INVESTMENTS =
                 "User has not confirmed classification for investments";
         public static final String NO_CUSTODY_ACCOUNT = "No account connected to custody account";
+        public static final String EINVOICE_MODIFY_AMOUNT = "Not allowed to update e-invoice amount";
+        public static final String EINVOICE_MODIFY_DESTINATION_MESSAGE = "Not allowed to update e-invoice message";
+        public static final String EINVOICE_MODIFY_DUEDATE = "Not allowed to update e-invoice due date";
+        public static final String EINVOICE_MODIFY_SOURCE = "Not allowed to update e-invoice source";
+        public static final String EINVOICE_MODIFY_DESTINATION = "Not allowed to update e-invoice destination";
     }
 
     public static class TransactionalAccounts {

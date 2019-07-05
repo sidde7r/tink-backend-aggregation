@@ -95,12 +95,12 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             AccountEntity sourceAccount,
             BeneficiariesEntity destinationAccount) {
         PaymentRequest paymentRequest = new PaymentRequest();
-        paymentRequest.setAmount(transfer);
+        paymentRequest.setAmount(transfer.getAmount());
         paymentRequest.setFrom(sourceAccount);
         paymentRequest.setBankName(destinationAccount);
         paymentRequest.setTo(destinationAccount);
         paymentRequest.setMessage(transfer.getDestinationMessage());
-        paymentRequest.setDue(transfer);
+        paymentRequest.setDue(transfer.getDueDate());
         paymentRequest.setType(executorHelper.getPaymentType(transfer.getDestination()));
         paymentRequest.setToAccountNumberType(
                 executorHelper.getPaymentAccountType(transfer.getDestination()));

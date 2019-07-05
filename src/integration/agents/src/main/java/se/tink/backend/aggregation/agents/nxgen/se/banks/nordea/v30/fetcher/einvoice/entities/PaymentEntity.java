@@ -59,6 +59,8 @@ public class PaymentEntity {
     @JsonProperty("e_invoice")
     private EInvoiceEntity eInvoice;
 
+    @JsonProperty private PermissionsEntity permissions;
+
     @JsonIgnore
     public String getId() {
         return Optional.ofNullable(id).get();
@@ -104,7 +106,7 @@ public class PaymentEntity {
     @JsonIgnore
     public AccountIdentifier getDestination() {
         return AccountIdentifier.create(
-                getTinkPaymentType(), recipientAccountNumber, getRecipientName());
+                getTinkPaymentType(), recipientAccountNumber, getDestinationName());
     }
 
     // plusgiro does not seem to have an id but it has a reference field instead.
@@ -114,7 +116,7 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    private String getRecipientName() {
+    private String getDestinationName() {
         return Strings.isNullOrEmpty(recipientName) ? bankName : recipientName;
     }
 
@@ -227,6 +229,16 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
+    public String getMessage() {
+        return message;
+    }
+
+    @JsonIgnore
+    public PermissionsEntity getPermissions() {
+        return Optional.ofNullable(permissions).orElse(new PermissionsEntity());
+    }
+
+    @JsonIgnore
     public boolean hasEIvoiceDetails() {
         return Objects.nonNull(eInvoice);
     }
@@ -234,9 +246,29 @@ public class PaymentEntity {
     @JsonIgnore
     public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
-                .setDescription(getRecipientName())
+                .setDescription(getDestinationName())
                 .setDate(due)
                 .setAmount(Amount.inSEK(-1.0 * amount))
                 .build();
+    }
+
+    @JsonIgnore
+    public String getReference() {
+        return reference;
+    }
+
+    @JsonIgnore
+    public String getOwnMessage() {
+        return ownMessage;
+    }
+
+    @JsonIgnore
+    public String getBankName() {
+        return bankName;
+    }
+
+    @JsonIgnore
+    public String getRecipientName() {
+        return recipientName;
     }
 }

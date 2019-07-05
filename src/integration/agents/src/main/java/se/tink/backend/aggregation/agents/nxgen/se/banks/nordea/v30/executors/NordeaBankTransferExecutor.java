@@ -159,12 +159,12 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             TransferMessageFormatter transferMessageFormatter) {
 
         PaymentRequest transferRequest = new PaymentRequest();
-        transferRequest.setAmount(transfer);
+        transferRequest.setAmount(transfer.getAmount());
         transferRequest.setFrom(sourceAccount);
         transferRequest.setBankName(destinationAccount);
         transferRequest.setTo(destinationAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        transferRequest.setDue(transfer);
+        transferRequest.setDue(transfer.getDueDate());
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
         transferRequest.setToAccountNumberType(getToAccountType(transfer));
 

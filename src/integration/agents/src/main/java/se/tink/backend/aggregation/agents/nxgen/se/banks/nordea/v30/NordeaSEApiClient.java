@@ -202,6 +202,18 @@ public class NordeaSEApiClient {
         return requestRefreshablePost(request, BankPaymentResponse.class);
     }
 
+    public PaymentEntity updatePayment(PaymentRequest updateRequest) {
+        final RequestBuilder request =
+                httpClient
+                        .request(
+                                NordeaSEConstants.Urls.UPDATE_PAYMENT.parameter(
+                                        NordeaSEConstants.IdTags.PAYMENT_ID,
+                                        updateRequest.getApiIdentifier()))
+                        .accept(MediaType.APPLICATION_JSON_TYPE)
+                        .body(updateRequest, MediaType.APPLICATION_JSON_TYPE);
+        return requestRefreshablePut(request, PaymentEntity.class);
+    }
+
     public ConfirmTransferResponse confirmBankTransfer(
             ConfirmTransferRequest confirmTransferRequest) {
         final RequestBuilder request =
@@ -289,9 +301,9 @@ public class NordeaSEApiClient {
             throw hre;
         }
     }
-
     // Nordeas short lived access tokens requires us to sometimes have to refresh the
     // access token during a request. This method should be used by all data fetching calls
+
     private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
             return request.header(
@@ -326,6 +338,24 @@ public class NordeaSEApiClient {
 
         // retry request with new access token
         return request.post(responseType);
+    }
+
+    private <T> T requestRefreshablePut(RequestBuilder request, Class<T> responseType) {
+        try {
+            return request.header(
+                            HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaSEConstants.HeaderParams.LANGUAGE)
+                    .put(responseType);
+
+        } catch (HttpResponseException hre) {
+            tryRefreshAccessToken(hre);
+            // use the new access token
+            request.overrideHeader(
+                    HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
+        }
+
+        // retry request with new access token
+        return request.put(responseType);
     }
 
     private void tryRefreshAccessToken(HttpResponseException hre) {

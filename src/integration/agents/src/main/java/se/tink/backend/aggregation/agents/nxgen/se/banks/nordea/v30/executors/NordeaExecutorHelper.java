@@ -8,6 +8,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.SignatureEntity;
@@ -107,7 +108,7 @@ public class NordeaExecutorHelper {
         return accountEntity.getPermissions().isCanPayPgbgFromAccount();
     }
 
-    protected String getPaymentType(final AccountIdentifier destination) {
+    public String getPaymentType(final AccountIdentifier destination) {
         if (!destination.is(AccountIdentifier.Type.SE_PG)
                 && !destination.is(AccountIdentifier.Type.SE_BG)) {
             throw invalidPaymentType();
@@ -117,7 +118,7 @@ public class NordeaExecutorHelper {
                 : NordeaSEConstants.PaymentTypes.BANKGIRO;
     }
 
-    protected String getPaymentAccountType(final AccountIdentifier destination) {
+    public String getPaymentAccountType(final AccountIdentifier destination) {
         return destination.is(AccountIdentifier.Type.SE_PG)
                 ? NordeaSEConstants.PaymentAccountTypes.PLUSGIRO
                 : NordeaSEConstants.PaymentAccountTypes.BANKGIRO;
@@ -335,6 +336,41 @@ public class NordeaExecutorHelper {
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                 .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_AMOUNT))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
+            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
+            .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateDueNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
+            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DUEDATE))
+            .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateFromNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
+            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_SOURCE))
+            .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateToNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
+            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
+            .build();
     }
 
     private TransferExecutionException transferError() {
