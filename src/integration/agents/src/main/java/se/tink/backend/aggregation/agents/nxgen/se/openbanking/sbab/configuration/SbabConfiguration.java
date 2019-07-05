@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configurati
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class SBABConfiguration implements ClientConfiguration {
+public class SbabConfiguration implements ClientConfiguration {
 
     private String baseUrl;
     private String clientId;

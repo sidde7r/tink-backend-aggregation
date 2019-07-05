@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pa
 import java.util.Arrays;
 import se.tink.libraries.payment.enums.PaymentStatus;
 
-public enum SBABPaymentStatus {
+public enum SbabPaymentStatus {
     PROCESSING("processing", PaymentStatus.PENDING),
     NEED_SIGNATURE("need_sign", PaymentStatus.PENDING),
     SIGNATURE_FAILED("signature_failed", PaymentStatus.REJECTED),
@@ -17,13 +17,13 @@ public enum SBABPaymentStatus {
     private String statusText;
     private PaymentStatus paymentStatus;
 
-    SBABPaymentStatus(String statusText, PaymentStatus paymentStatus) {
+    SbabPaymentStatus(String statusText, PaymentStatus paymentStatus) {
         this.statusText = statusText;
         this.paymentStatus = paymentStatus;
     }
 
-    public static SBABPaymentStatus fromString(String text) {
-        return Arrays.stream(SBABPaymentStatus.values())
+    public static SbabPaymentStatus fromString(String text) {
+        return Arrays.stream(SbabPaymentStatus.values())
                 .filter(s -> s.statusText.equalsIgnoreCase(text))
                 .findFirst()
                 .orElse(UNKNOWN);

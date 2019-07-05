@@ -6,20 +6,20 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Format;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.HeaderValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.IdTags;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.StorageKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Format;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.AuthorizationCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc.TokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SBABConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.GetPaymentResponse;
@@ -35,23 +35,23 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public final class SBABApiClient {
+public final class SbabApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-    private SBABConfiguration configuration;
+    private SbabConfiguration configuration;
 
-    public SBABApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public SbabApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
     }
 
-    private SBABConfiguration getConfiguration() {
+    private SbabConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
-    protected void setConfiguration(SBABConfiguration configuration) {
+    protected void setConfiguration(SbabConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -169,7 +169,7 @@ public final class SBABApiClient {
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest createPaymentRequest, String debtorAccountNumber) {
         return createRequest(
-                        SBABConstants.Urls.INITIATE_PAYMENT.parameter(
+                        SbabConstants.Urls.INITIATE_PAYMENT.parameter(
                                 IdTags.ACCOUNT_NUMBER, debtorAccountNumber))
                 .addBearerToken(getTokenFromStorage())
                 .post(CreatePaymentResponse.class, createPaymentRequest);
@@ -177,7 +177,7 @@ public final class SBABApiClient {
 
     public GetPaymentResponse getPayment(String transferId, String debtorId) {
         return createRequest(
-                        SBABConstants.Urls.GET_PAYMENT
+                        SbabConstants.Urls.GET_PAYMENT
                                 .parameter(IdTags.ACCOUNT_NUMBER, debtorId)
                                 .parameter(IdTags.PAYMENT_ID, transferId))
                 .addBearerToken(getTokenFromStorage())
@@ -191,6 +191,6 @@ public final class SBABApiClient {
     }
 
     public void setTokenToSession(OAuth2Token token) {
-        persistentStorage.put(SBABConstants.StorageKeys.OAUTH_TOKEN, token);
+        persistentStorage.put(SbabConstants.StorageKeys.OAUTH_TOKEN, token);
     }
 }

@@ -19,7 +19,7 @@ import se.tink.libraries.payment.rpc.Debtor;
 import se.tink.libraries.payment.rpc.Payment;
 
 @Ignore
-public class SBABAgentPaymentTest {
+public class SbabAgentPaymentTest {
 
     @Test
     public void testPayments() throws Exception {

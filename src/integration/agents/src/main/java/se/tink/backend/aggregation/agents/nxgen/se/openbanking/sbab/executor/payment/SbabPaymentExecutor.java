@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
@@ -29,7 +29,7 @@ import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
 
-public class SBABPaymentExecutor implements PaymentExecutor {
+public class SbabPaymentExecutor implements PaymentExecutor {
 
     private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
             accountIdentifiersToPaymentTypeMapper =
@@ -47,9 +47,9 @@ public class SBABPaymentExecutor implements PaymentExecutor {
                                             AccountIdentifier.Type.SE,
                                             AccountIdentifier.Type.SE_PG))
                             .build();
-    private SBABApiClient apiClient;
+    private SbabApiClient apiClient;
 
-    public SBABPaymentExecutor(SBABApiClient apiClient) {
+    public SbabPaymentExecutor(SbabApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

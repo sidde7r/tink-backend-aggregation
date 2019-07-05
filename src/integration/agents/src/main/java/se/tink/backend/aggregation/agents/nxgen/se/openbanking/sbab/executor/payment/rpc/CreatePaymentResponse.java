@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.SignOptionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.enums.SBABPaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.enums.SbabPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -32,7 +32,7 @@ public class CreatePaymentResponse {
                         .withUniqueId(referenceId)
                         .withCreditor(new Creditor(new SwedishIdentifier(creditorAccountNumber)))
                         .withDebtor(new Debtor(new SwedishIdentifier(debtorAccountNumber)))
-                        .withStatus(SBABPaymentStatus.fromString(status).getPaymentStatus())
+                        .withStatus(SbabPaymentStatus.fromString(status).getPaymentStatus())
                         .withType(paymentType);
 
         Payment tinkPayment = buildingPaymentResponse.build();

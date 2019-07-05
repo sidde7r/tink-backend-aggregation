@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.FormKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.FormKeys;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.Form;
 

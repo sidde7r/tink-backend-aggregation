@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SBABAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SBABConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SBABPaymentExecutor;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SBABTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SBABTransactionalAccountTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.authenticator.SbabAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.SbabPaymentExecutor;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount.SbabTransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -19,16 +19,16 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class SBABAgent extends NextGenerationAgent {
+public final class SbabAgent extends NextGenerationAgent {
 
     private final String clientName;
-    private final SBABApiClient apiClient;
+    private final SbabApiClient apiClient;
 
-    public SBABAgent(
+    public SbabAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new SBABApiClient(client, persistentStorage);
+        apiClient = new SbabApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
     }
 
@@ -41,30 +41,30 @@ public final class SBABAgent extends NextGenerationAgent {
 
     @Override
     public Optional<PaymentController> constructPaymentController() {
-        return Optional.of(new PaymentController(new SBABPaymentExecutor(apiClient)));
+        return Optional.of(new PaymentController(new SbabPaymentExecutor(apiClient)));
     }
 
-    protected SBABConfiguration getClientConfiguration() {
+    protected SbabConfiguration getClientConfiguration() {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        SBABConstants.INTEGRATION_NAME, clientName, SBABConfiguration.class)
+                        SbabConstants.INTEGRATION_NAME, clientName, SbabConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new SBABAuthenticator(apiClient, persistentStorage, getClientConfiguration());
+        return new SbabAuthenticator(apiClient, persistentStorage, getClientConfiguration());
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final SBABTransactionalAccountFetcher accountFetcher =
-                new SBABTransactionalAccountFetcher(apiClient);
+        final SbabTransactionalAccountFetcher accountFetcher =
+                new SbabTransactionalAccountFetcher(apiClient);
 
-        final SBABTransactionalAccountTransactionFetcher transactionFetcher =
-                new SBABTransactionalAccountTransactionFetcher(apiClient);
+        final SbabTransactionalAccountTransactionFetcher transactionFetcher =
+                new SbabTransactionalAccountTransactionFetcher(apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.fetcher.transactionalaccount;
 
 import java.util.Collection;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class SBABTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+public class SbabTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-    private final SBABApiClient apiClient;
+    private final SbabApiClient apiClient;
 
-    public SBABTransactionalAccountFetcher(SBABApiClient apiClient) {
+    public SbabTransactionalAccountFetcher(SbabApiClient apiClient) {
         this.apiClient = apiClient;
     }
 

@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-public final class SBABConstants {
+public final class SbabConstants {
 
     public static final String INTEGRATION_NAME = "sbab";
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -13,7 +13,7 @@ public final class SBABConstants {
                     .put(AccountTypes.SAVINGS, "savings", "minor_savings_account")
                     .build();
 
-    private SBABConstants() {
+    private SbabConstants() {
         throw new AssertionError();
     }
 
