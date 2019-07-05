@@ -6,6 +6,9 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.transfer.enums.TransferType;
 
 public class SkandiaBankenConstants {
     public static final String CURRENCY = "SEK";
@@ -40,6 +43,8 @@ public class SkandiaBankenConstants {
         public static final URL FETCH_PENSIONS_HOLDINGS =
                 new URL(BASE + Endpoints.FETCH_PENSIONS_HOLDINGS);
         public static final URL FETCH_IDENTITY = new URL(BASE + Endpoints.FETCH_IDENTITY);
+        public static final URL FETCH_APPROVED_PAYMENTS =
+                new URL(BASE + Endpoints.FETCH_APPROVED_PAYMENTS);
         public static final URL LOGOUT = new URL(BASE + Endpoints.LOGOUT);
     }
 
@@ -66,6 +71,7 @@ public class SkandiaBankenConstants {
                 "/Securities/V2/Holdings/{accountId}";
         public static final String FETCH_PENSIONS_HOLDINGS = "/Pensions/V2/Holdings/{partId}";
         public static final String FETCH_IDENTITY = "/Customers/V2/Customer";
+        public static final String FETCH_APPROVED_PAYMENTS = "/Banking/V2/Payments/Approved";
         public static final String LOGOUT = "/mobile/v1/oauth2/token/revoke";
     }
 
@@ -159,6 +165,10 @@ public class SkandiaBankenConstants {
         public static final LogTag CREDIT_CARDS = LogTag.from("se_skandia_credit_cards");
     }
 
+    public static class PaymentStatus {
+        public static final String APPROVED = "Approved";
+    }
+
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "AIE")
@@ -175,5 +185,17 @@ public class SkandiaBankenConstants {
             TypeMapper.<Portfolio.Type>builder()
                     .put(Portfolio.Type.DEPOT, "AIE DEPÅ/INTERNET")
                     .put(Portfolio.Type.ISK, "ISK")
+                    .build();
+
+    public static final TypeMapper<AccountIdentifier.Type> PAYMENT_RECIPIENT_TYPE_MAP =
+            TypeMapper.<AccountIdentifier.Type>builder()
+                    .put(Type.SE_BG, "BankGiroOCR")
+                    .put(Type.SE, "SingleTransfer")
+                    .build();
+
+    public static final TypeMapper<TransferType> PAYMENT_TRANSFER_TYPE_MAP =
+            TypeMapper.<TransferType>builder()
+                    .put(TransferType.EINVOICE, "BankGiroOCR")
+                    .put(TransferType.BANK_TRANSFER, "SingleTransfer")
                     .build();
 }

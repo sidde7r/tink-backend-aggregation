@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.rpc.FetchApprovedPaymentsResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -184,6 +185,14 @@ public class SkandiaBankenApiClient {
                 .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
                 .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
                 .get(FetchAccountTransactionsResponse.class);
+    }
+
+    public FetchApprovedPaymentsResponse fetchApprovedPayments() {
+        return httpClient
+                .request(Urls.FETCH_APPROVED_PAYMENTS)
+                .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.BEARER_TOKEN))
+                .header(HeaderKeys.SK_API_KEY, HeaderValues.SK_API_KEY)
+                .get(FetchApprovedPaymentsResponse.class);
     }
 
     public FetchCreditCardsResponse fetchCreditCards() {
