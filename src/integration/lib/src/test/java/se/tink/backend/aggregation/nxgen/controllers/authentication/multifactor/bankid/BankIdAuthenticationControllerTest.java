@@ -50,12 +50,12 @@ public class BankIdAuthenticationControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenContext_isNull() {
-        new BankIdAuthenticationController(null, authenticator,persistentStorage);
+        new BankIdAuthenticationController(null, authenticator, persistentStorage);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(null, null,persistentStorage);
+        new BankIdAuthenticationController(null, null, persistentStorage);
     }
 
     @Test
