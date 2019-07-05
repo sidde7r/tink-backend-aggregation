@@ -5,13 +5,26 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.loan.LoanBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.loan.LoanDetailsStep;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanAccount extends Account {
-    public static final int BIGGER_THAN = 1;
+    private static final int BIGGER_THAN = 1;
     private final Double interestRate;
     private final LoanDetails details;
+
+    public static LoanDetailsStep<LoanBuildStep> nxBuilder() {
+        return new LoanAccountBuilder();
+    }
+
+    LoanAccount(LoanAccountBuilder builder) {
+        super(builder, builder.loanModule.getBalance(), null);
+
+        this.interestRate = builder.loanModule.getInterestRate();
+        this.details = builder.loanModule.toLoanDetails();
+    }
 
     private LoanAccount(Builder<LoanAccount, DefaultLoanBuilder> builder) {
         super(builder);
@@ -19,10 +32,13 @@ public class LoanAccount extends Account {
         this.details = builder.getDetails();
     }
 
+    /** @deprecated Use {@link #nxBuilder()} instead. */
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultLoanBuilder(uniqueIdentifier);
     }
 
+    /** @deprecated Use {@link #nxBuilder()} instead. */
     @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
         return builder(uniqueIdentifier)
@@ -84,6 +100,8 @@ public class LoanAccount extends Account {
         }
     }
 
+    /** @deprecated Use {@link #nxBuilder()} instead. */
+    @Deprecated
     public abstract static class Builder<A extends LoanAccount, T extends LoanAccount.Builder<A, T>>
             extends Account.Builder<LoanAccount, T> {
         private Double interestRate;
@@ -97,6 +115,7 @@ public class LoanAccount extends Account {
             return this.interestRate;
         }
 
+        @Deprecated
         public Builder<A, T> setInterestRate(Double interestRate) {
             this.interestRate = interestRate;
             return this;
@@ -123,6 +142,7 @@ public class LoanAccount extends Account {
                             .build();
         }
 
+        @Deprecated
         public Builder<A, T> setDetails(LoanDetails details) {
             this.details = details;
             return this;

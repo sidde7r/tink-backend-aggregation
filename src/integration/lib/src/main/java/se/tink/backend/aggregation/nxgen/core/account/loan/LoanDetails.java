@@ -30,10 +30,6 @@ public class LoanDetails {
     private final List<String> applicants;
     private final boolean coApplicant;
 
-    private LoanDetails() {
-        this(null, null, null, null, null, 0, null, null, null, null, false);
-    }
-
     private LoanDetails(
             ExactCurrencyAmount amortized,
             ExactCurrencyAmount monthlyAmortization,
@@ -136,7 +132,9 @@ public class LoanDetails {
     }
 
     private Double getInitialBalanceValue() {
-        return Optional.ofNullable(initialBalance).map(i -> i.getDoubleValue()).orElse(null);
+        return Optional.ofNullable(initialBalance)
+                .map(ExactCurrencyAmount::getDoubleValue)
+                .orElse(null);
     }
 
     public Date getInitialDate() {
@@ -165,7 +163,7 @@ public class LoanDetails {
 
     public List<String> getApplicants() {
         return Optional.ofNullable(applicants)
-                .<List<String>>map(a -> ImmutableList.copyOf(a))
+                .<List<String>>map(ImmutableList::copyOf)
                 .orElseGet(Collections::emptyList);
     }
 
@@ -264,7 +262,7 @@ public class LoanDetails {
         }
 
         public Builder setAmortized(ExactCurrencyAmount amortized) {
-            this.amortized = ExactCurrencyAmount.of(amortized);
+            this.amortized = amortized;
             return this;
         }
 
@@ -292,7 +290,7 @@ public class LoanDetails {
         }
 
         public Builder setMonthlyAmortization(ExactCurrencyAmount monthlyAmortization) {
-            this.monthlyAmortization = ExactCurrencyAmount.of(monthlyAmortization);
+            this.monthlyAmortization = monthlyAmortization;
             return this;
         }
 
@@ -319,7 +317,7 @@ public class LoanDetails {
         }
 
         public Builder setInitialBalance(ExactCurrencyAmount initialBalance) {
-            this.initialBalance = ExactCurrencyAmount.of(initialBalance);
+            this.initialBalance = initialBalance;
             return this;
         }
 

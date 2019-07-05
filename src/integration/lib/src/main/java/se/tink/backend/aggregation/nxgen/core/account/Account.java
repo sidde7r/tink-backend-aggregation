@@ -49,8 +49,8 @@ public abstract class Account {
     protected HolderName holderName;
     protected TemporaryStorage temporaryStorage;
     protected Set<AccountFlag> accountFlags;
-    private ExactCurrencyAmount exactBalance;
-    private ExactCurrencyAmount exactAvailableCredit;
+    protected ExactCurrencyAmount exactBalance;
+    protected ExactCurrencyAmount exactAvailableCredit;
 
     // Exists for interoperability only, do not ever use
     protected Account(
@@ -185,12 +185,8 @@ public abstract class Account {
                 this.getExactAvailableCredit().getDoubleValue());
     }
 
-    public ExactCurrencyAmount getExactAccountBalance() {
-        return ExactCurrencyAmount.of(exactBalance);
-    }
-
     public ExactCurrencyAmount getExactAvailableCredit() {
-        return ExactCurrencyAmount.of(exactAvailableCredit);
+        return exactAvailableCredit;
     }
 
     public List<AccountIdentifier> getIdentifiers() {
@@ -583,7 +579,7 @@ public abstract class Account {
         }
 
         public T setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
-            this.exactAvailableCredit = ExactCurrencyAmount.of(exactAvailableCredit);
+            this.exactAvailableCredit = exactAvailableCredit;
             return self();
         }
     }
