@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.CreditorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
@@ -135,13 +139,12 @@ public class SBABPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
-        // Workaround since they have no multiple fetching
-        ArrayList paymentResponses = new ArrayList();
-
-        for (PaymentRequest request : paymentListRequest.getPaymentRequestList()) {
-            paymentResponses.add(fetch(request));
-        }
-
-        return new PaymentListResponse(paymentResponses);
+        return new PaymentListResponse(
+                Optional.ofNullable(paymentListRequest)
+                        .map(PaymentListRequest::getPaymentRequestList)
+                        .map(Collection::stream)
+                        .orElseGet(Stream::empty)
+                        .map(this::fetch)
+                        .collect(Collectors.toList()));
     }
 }
