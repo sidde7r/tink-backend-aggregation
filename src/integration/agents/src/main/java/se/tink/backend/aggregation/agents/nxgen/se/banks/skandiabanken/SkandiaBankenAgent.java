@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.SkandiaBankenInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.transactionalaccount.SkandiaBankenTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.upcomingtransaction.SkandiaBankenUpcomingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.session.SkandiaBankenSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -54,7 +55,8 @@ public class SkandiaBankenAgent extends NextGenerationAgent implements RefreshId
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
                                         new SkandiaBankenTransactionFetcher(apiClient),
-                                        Fetcher.START_PAGE))));
+                                        Fetcher.START_PAGE),
+                                new SkandiaBankenUpcomingTransactionFetcher(apiClient))));
     }
 
     @Override

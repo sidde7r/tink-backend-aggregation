@@ -11,6 +11,8 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/identity_data",
+        "//src/libraries/transfer:enums",
+        "//src/libraries/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_code_findbugs_jsr305",
@@ -20,5 +22,6 @@ java_library(
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_httpcomponents_httpcore",
         "//third_party:org_jsoup_jsoup",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
