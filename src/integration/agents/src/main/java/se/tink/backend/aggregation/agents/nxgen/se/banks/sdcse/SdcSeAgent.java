@@ -39,7 +39,8 @@ public class SdcSeAgent extends SdcAgent implements RefreshIdentityDataExecutor 
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials),
-                true);
+                true,
+                persistentStorage);
     }
 
     @Override
