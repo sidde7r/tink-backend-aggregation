@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.transaction;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v30.UkOpenBankingV30Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.transaction.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.BaseV31Response;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class AccountTransactionsV31Response extends BaseResponse<List<TransactionEntity>> {
+public class AccountTransactionsV31Response extends BaseV31Response<List<TransactionEntity>> {
 
     public static TransactionKeyPaginatorResponse<String> toAccountTransactionPaginationResponse(
             AccountTransactionsV31Response response, TransactionalAccount account) {
@@ -32,13 +33,13 @@ public class AccountTransactionsV31Response extends BaseResponse<List<Transactio
     }
 
     private List<? extends Transaction> toTinkTransactions() {
-        return getData().stream()
+        return getData().orElse(Collections.emptyList()).stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
 
     private List<? extends Transaction> toCreditCardTransactions(CreditCardAccount account) {
-        return getData().stream()
+        return getData().orElse(Collections.emptyList()).stream()
                 .map(e -> e.toCreditCardTransaction(account))
                 .collect(Collectors.toList());
     }
