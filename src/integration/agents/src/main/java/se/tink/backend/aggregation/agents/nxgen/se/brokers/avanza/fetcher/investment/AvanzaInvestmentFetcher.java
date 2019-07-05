@@ -131,6 +131,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         };
     }
 
+    // Temporarily disabled
     //    @Override
     //    public PaginatorResponse getTransactionsFor(
     //            InvestmentAccount account, Date fromDate, Date toDate) {
