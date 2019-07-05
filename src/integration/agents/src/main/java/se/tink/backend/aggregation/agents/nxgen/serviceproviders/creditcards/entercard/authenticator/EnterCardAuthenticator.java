@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ent
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.entercard.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
@@ -76,6 +77,16 @@ public class EnterCardAuthenticator implements BankIdAuthenticator<BankIdInitRes
 
     @Override
     public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
     }
 }
