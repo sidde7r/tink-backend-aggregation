@@ -141,9 +141,10 @@ public final class SdcApiClient {
                 .queryParam(
                         BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
                         SdcConstants.QueryValues.BOOKED) // TODO Verify pagination
-                .queryParam(SdcConstants.QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
                 .queryParam(
-                        QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                        SdcConstants.QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionsResponse.class);
     }
 }
