@@ -76,13 +76,22 @@ public class PensionEntity {
         return InvestmentAccount.builder(this.number.replaceAll("[^\\d]", ""))
                 .setAccountNumber(this.number)
                 .setName(this.displayName)
-                .setHolderName(new HolderName(parts.get(0).getHolder().getFullname()))
+                .setHolderName(getHolderName())
                 .setPortfolios(
                         this.parts.stream()
                                 .map(this::getTinkPortfolio)
                                 .collect(Collectors.toList()))
                 .setCashBalance(Amount.inSEK(0.0)) // Amount is set in framework from parts.
                 .build();
+    }
+
+    @JsonIgnore
+    private HolderName getHolderName() {
+        final String holderName =
+                Optional.ofNullable(parts.get(0).getHolder().getFullname())
+                        .orElse(holder.getFullname());
+
+        return new HolderName(holderName);
     }
 
     @JsonIgnore

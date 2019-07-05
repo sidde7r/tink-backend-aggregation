@@ -17,7 +17,8 @@ public class CreditCardResponse {
     private Link disputeLink;
 
     public double getBalance() {
-        return balance;
+        // include reserved transactions
+        return amountAvaiable - limit;
     }
 
     public double getAmountAvaiable() {
