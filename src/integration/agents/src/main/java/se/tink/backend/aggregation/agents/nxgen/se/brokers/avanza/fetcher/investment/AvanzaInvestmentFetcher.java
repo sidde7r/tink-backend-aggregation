@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.inves
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,12 +19,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.PositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.SessionAccountPair;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
+public class AvanzaInvestmentFetcher
+        implements AccountFetcher<InvestmentAccount>, TransactionDatePaginator<InvestmentAccount> {
     private final AvanzaApiClient apiClient;
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
@@ -115,5 +123,28 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
             return position.toTinkInstrument(instrument, market, isinMap);
         };
+    }
+
+    @Override
+    public PaginatorResponse getTransactionsFor(
+            InvestmentAccount account, Date fromDate, Date toDate) {
+        final String accId = account.getBankIdentifier();
+        final String fromDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate);
+        final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
+
+        Collection<? extends Transaction> transactions =
+                authSessionStorage.keySet().stream()
+                        .filter(
+                                authSession ->
+                                        apiClient.authSessionHasAccountId(authSession, accId))
+                        .map(
+                                authSession ->
+                                        apiClient.fetchTransactions(
+                                                accId, fromDateStr, toDateStr, authSession))
+                        .map(TransactionsResponse::getTransactions)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList());
+
+        return PaginatorResponseImpl.create(transactions);
     }
 }

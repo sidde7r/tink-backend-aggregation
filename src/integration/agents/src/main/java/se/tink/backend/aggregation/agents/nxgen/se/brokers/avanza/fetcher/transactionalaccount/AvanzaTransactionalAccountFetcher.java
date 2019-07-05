@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClien
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -72,8 +71,6 @@ public class AvanzaTransactionalAccountFetcher
                                                 accId, fromDateStr, toDateStr, authSession))
                         .map(TransactionsResponse::getTransactions)
                         .flatMap(Collection::stream)
-                        .filter(TransactionEntity::isDepositOrWithdraw)
-                        .map(TransactionEntity::toTinkTransaction)
                         .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
