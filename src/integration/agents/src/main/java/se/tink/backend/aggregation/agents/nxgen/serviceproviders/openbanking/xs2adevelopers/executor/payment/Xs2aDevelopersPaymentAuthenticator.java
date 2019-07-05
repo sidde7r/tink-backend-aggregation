@@ -28,7 +28,8 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return apiClient.buildAuthorizeUrl(state, "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID));
+        return apiClient.buildAuthorizeUrl(
+                state, "PIS:" + persistentStorage.get(StorageKeys.PAYMENT_ID));
     }
 
     @Override
@@ -50,11 +51,11 @@ public class Xs2aDevelopersPaymentAuthenticator implements OAuth2Authenticator {
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
         GetTokenForm refreshTokenForm =
-            GetTokenForm.builder()
-                .setClientId(configuration.getClientId())
-                .setGrantType(FormValues.REFRESH_TOKEN)
-                .setRefreshToken(refreshToken)
-                .build();
+                GetTokenForm.builder()
+                        .setClientId(configuration.getClientId())
+                        .setGrantType(FormValues.REFRESH_TOKEN)
+                        .setRefreshToken(refreshToken)
+                        .build();
 
         return apiClient.getToken(refreshTokenForm).toTinkToken();
     }

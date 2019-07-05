@@ -13,9 +13,11 @@ public class CreatePaymentRequest {
     private AmountEntity instructedAmount;
 
     public CreatePaymentRequest(
-        AccountEntity creditorAccount, String creditorName, String dayOfExecution,
-        AccountEntity debtorAccount,
-        AmountEntity instructedAmount) {
+            AccountEntity creditorAccount,
+            String creditorName,
+            String dayOfExecution,
+            AccountEntity debtorAccount,
+            AmountEntity instructedAmount) {
         this.creditorAccount = creditorAccount;
         this.creditorName = creditorName;
         this.dayOfExecution = dayOfExecution;
