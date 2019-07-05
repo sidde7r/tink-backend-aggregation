@@ -11,10 +11,12 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.CheckingBuildStep;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @JsonObject
 public class AccountEntity implements GeneralAccountEntity {
@@ -71,33 +73,58 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(maskAccountNumber())
-                .setAccountNumber(formatAccountNumber())
-                .setBalance(new Amount(currency, availableBalance))
-                .setAlias(nickname)
-                .addAccountIdentifier(
-                        AccountIdentifier.create(
-                                AccountIdentifier.Type.SE, getTransferAccountNumber()))
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(generalGetName())
-                .setApiIdentifier(accountNumber)
-                .build();
+        AccountIdentifier identifier = getAccountIdentifier();
+        CheckingBuildStep builder =
+                CheckingAccount.builder()
+                        .setUniqueIdentifier(maskAccountNumber())
+                        .setAccountNumber(formatAccountNumber())
+                        .setBalance(new Amount(currency, availableBalance))
+                        .setAlias(nickname)
+                        .addAccountIdentifier(identifier)
+                        .addAccountIdentifier(
+                                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                        .addHolderName(generalGetName())
+                        .setApiIdentifier(accountNumber);
+
+        if (identifier.is(Type.SE_NDA_SSN)) {
+            builder.addAccountIdentifier(
+                    identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier());
+        }
+        return builder.build();
     }
 
     @JsonIgnore
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return new SwedishIdentifier(getTransferAccountNumber());
+        AccountIdentifier identifier = getAccountIdentifier();
+        if (identifier.is(Type.SE_NDA_SSN)) {
+            return identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
+        } else {
+            return identifier;
+        }
+    }
+
+    @JsonIgnore
+    public AccountIdentifier getAccountIdentifier() {
+        if (NordeaSEConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(
+                productName)) {
+            AccountIdentifier ssnIdentifier =
+                    AccountIdentifier.create(Type.SE_NDA_SSN, formatAccountNumber());
+            if (ssnIdentifier.isValid()) {
+                return ssnIdentifier;
+            }
+        }
+        return AccountIdentifier.create(AccountIdentifier.Type.SE, formatAccountNumber());
     }
 
     @JsonIgnore
     @Override
     public String generalGetBank() {
         AccountIdentifier accountIdentifier = generalGetAccountIdentifier();
-        return accountIdentifier.isValid()
-                ? accountIdentifier.to(SwedishIdentifier.class).getBankName()
-                : null;
+        if (accountIdentifier.isValid()) {
+            return accountIdentifier.to(SwedishIdentifier.class).getBankName();
+        }
+        return null;
     }
 
     @JsonIgnore
@@ -111,20 +138,6 @@ public class AccountEntity implements GeneralAccountEntity {
                         () ->
                                 new NullPointerException(
                                         NordeaSEConstants.ErrorCodes.OWNER_NOT_FOUND));
-    }
-
-    // Legacy Nordea agent set accountnumber as unique id. If it is personal number then "3300"
-    // clearing number is added
-    @JsonIgnore
-    public String getTransferAccountNumber() {
-        SocialSecurityNumber.Sweden pnr = new SocialSecurityNumber.Sweden(formatAccountNumber());
-        if (NordeaSEConstants.TransactionalAccounts.PERSONAL_ACCOUNT.equalsIgnoreCase(productName)
-                && pnr.isValid()) {
-            return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER
-                    + formatAccountNumber();
-        } else {
-            return formatAccountNumber();
-        }
     }
 
     @JsonIgnore

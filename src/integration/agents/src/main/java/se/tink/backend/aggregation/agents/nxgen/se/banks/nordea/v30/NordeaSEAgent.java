@@ -132,7 +132,7 @@ public class NordeaSEAgent extends NextGenerationAgent
 
         return Optional.of(
                 new TransferController(
-                        new NordeaPaymentExecutor(apiClient, catalog, executorHelper),
+                        new NordeaPaymentExecutor(apiClient, executorHelper),
                         new NordeaBankTransferExecutor(apiClient, catalog, executorHelper),
                         new NordeaApproveEInvoiceExecutor(apiClient, catalog, executorHelper),
                         null));

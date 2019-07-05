@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
@@ -24,15 +25,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaExecutorHelper {
 
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
-            new DefaultAccountIdentifierFormatter();
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private final AgentContext context;
     private final Catalog catalog;
     private final NordeaSEApiClient apiClient;
@@ -52,13 +52,19 @@ public class NordeaExecutorHelper {
         if (isPayment) {
             return accounts.stream()
                     .filter(this::isCanPayPgbgFromAccount)
-                    .filter(account -> isSourceEqualsTransfer(transfer, account))
+                    .filter(
+                            account ->
+                                    isAccountIdentifierEquals(
+                                            transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
                     .orElseThrow(this::invalidSourceAccountError);
         } else {
             return accounts.stream()
                     .filter(this::isCanTransferFromAccount)
-                    .filter(account -> isSourceEqualsTransfer(transfer, account))
+                    .filter(
+                            account ->
+                                    isAccountIdentifierEquals(
+                                            transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
                     .orElseThrow(this::invalidSourceAccountError);
         }
@@ -70,7 +76,9 @@ public class NordeaExecutorHelper {
                 .filter(BeneficiariesEntity::isPgOrBg)
                 .filter(
                         beneficiary ->
-                                isDestEqualsTransfer(transfer, beneficiary.getAccountNumber()))
+                                isAccountIdentifierEquals(
+                                        transfer.getDestination(),
+                                        beneficiary.generalGetAccountIdentifier()))
                 .findFirst();
     }
 
@@ -81,18 +89,14 @@ public class NordeaExecutorHelper {
                 .filter(account -> account.getPermissions().isCanTransferToAccount())
                 .filter(
                         account ->
-                                isDestEqualsTransfer(transfer, account.getTransferAccountNumber()))
+                                isAccountIdentifierEquals(
+                                        transfer.getDestination(), account.getAccountIdentifier()))
                 .findFirst();
     }
 
-    private boolean isSourceEqualsTransfer(Transfer transfer, AccountEntity account) {
-        return transfer.getSource()
-                .getIdentifier(DEFAULT_FORMATTER)
-                .equals(account.getTransferAccountNumber());
-    }
-
-    private boolean isDestEqualsTransfer(Transfer transfer, String destination) {
-        return transfer.getDestination().getIdentifier(DEFAULT_FORMATTER).equals(destination);
+    private boolean isAccountIdentifierEquals(AccountIdentifier id1, AccountIdentifier id2) {
+        return id1.getIdentifier(NORDEA_ACCOUNT_FORMATTER)
+                .equals(id2.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
     }
 
     private boolean isCanTransferFromAccount(AccountEntity accountEntity) {

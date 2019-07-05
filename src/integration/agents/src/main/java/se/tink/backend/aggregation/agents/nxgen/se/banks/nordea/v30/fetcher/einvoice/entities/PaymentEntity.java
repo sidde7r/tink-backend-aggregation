@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.PaymentStatus;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
@@ -103,22 +104,7 @@ public class PaymentEntity {
     @JsonIgnore
     public AccountIdentifier getDestination() {
         return AccountIdentifier.create(
-                getTinkPaymentType(), getRecipientTransferAccountNumber(), getRecipientName());
-    }
-
-    public String getRecipientTransferAccountNumber() {
-        if (NordeaSEConstants.PaymentAccountTypes.NDASE.equalsIgnoreCase(toAccountNumberType)) {
-            return getTransferAccountNumber(recipientAccountNumber);
-        }
-        return recipientAccountNumber;
-    }
-
-    private static String getTransferAccountNumber(String accountNumber) {
-        SocialSecurityNumber.Sweden pnr = new SocialSecurityNumber.Sweden(accountNumber);
-        if (pnr.isValid()) {
-            return NordeaSEConstants.TransactionalAccounts.NORDEA_CLEARING_NUMBER + accountNumber;
-        }
-        return accountNumber;
+                getTinkPaymentType(), recipientAccountNumber, getRecipientName());
     }
 
     // plusgiro does not seem to have an id but it has a reference field instead.
@@ -140,8 +126,13 @@ public class PaymentEntity {
             case NordeaSEConstants.PaymentAccountTypes.PLUSGIRO:
                 return AccountIdentifier.Type.SE_PG;
             case NordeaSEConstants.PaymentAccountTypes.LBAN:
-            case NordeaSEConstants.PaymentAccountTypes.NDASE:
                 return AccountIdentifier.Type.SE;
+            case NordeaSEConstants.PaymentAccountTypes.NDASE:
+                if (new SocialSecurityNumber.Sweden(recipientAccountNumber).isValid()) {
+                    return AccountIdentifier.Type.SE_NDA_SSN;
+                } else {
+                    return AccountIdentifier.Type.SE;
+                }
             default:
                 throw new IllegalArgumentException(
                         NordeaSEConstants.PaymentAccountTypes.UNKNOWN_ACCOUNT_TYPE
@@ -222,11 +213,17 @@ public class PaymentEntity {
     @JsonIgnore
     public boolean isEqualToTransfer(Transfer transfer) {
         return transfer.getAmount().equals(getAmount())
-                && transfer.getDestination().getIdentifier().equals(getRecipientAccountNumber())
-                && transfer.getSource().getIdentifier().equals(getTransferAccountNumber(getFrom()))
+                && isIdentifierEquals(transfer.getDestination(), getRecipientAccountNumber())
+                && isIdentifierEquals(transfer.getSource(), getFrom())
                 && DateUtils.isSameDay(transfer.getDueDate(), getDue())
                 && Strings.nullToEmpty(transfer.getDestinationMessage())
                         .equals(Strings.nullToEmpty(message));
+    }
+
+    private static boolean isIdentifierEquals(AccountIdentifier identifier, String accountNumber) {
+        return identifier
+                .getIdentifier(new NordeaAccountIdentifierFormatter())
+                .equals(accountNumber);
     }
 
     @JsonIgnore

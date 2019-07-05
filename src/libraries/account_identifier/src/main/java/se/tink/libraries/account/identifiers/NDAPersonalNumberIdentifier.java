@@ -4,6 +4,8 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class NDAPersonalNumberIdentifier extends AccountIdentifier {
+
+    private static final String CLEARING_NUMBER = "3300";
     private String accountNumber;
     private final boolean isValid;
 
@@ -40,5 +42,9 @@ public class NDAPersonalNumberIdentifier extends AccountIdentifier {
     @Override
     public boolean isValid() {
         return isValid;
+    }
+
+    public SwedishIdentifier toSwedishIdentifier() {
+        return new SwedishIdentifier(CLEARING_NUMBER + accountNumber);
     }
 }

@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
@@ -24,6 +25,9 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaBankTransferExecutor implements BankTransferExecutor {
+
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private final Catalog catalog;
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
@@ -114,17 +118,16 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
     private Optional<BeneficiariesEntity> createDestinationAccount(
             AccountIdentifier accountIdentifier) {
         BeneficiariesEntity destinationAccount = new BeneficiariesEntity();
-        NordeaAccountIdentifierFormatter identifierFormatter =
-                new NordeaAccountIdentifierFormatter();
 
-        if (accountIdentifier instanceof SwedishIdentifier) {
+        if (accountIdentifier.is(Type.SE)) {
             destinationAccount.setBankName(((SwedishIdentifier) accountIdentifier).getBankName());
-        } else if (accountIdentifier instanceof NDAPersonalNumberIdentifier) {
+        } else if (accountIdentifier.is(Type.SE_NDA_SSN)) {
             destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
         } else {
             return Optional.empty();
         }
-        destinationAccount.setAccountNumber(accountIdentifier.getIdentifier(identifierFormatter));
+        destinationAccount.setAccountNumber(
+                accountIdentifier.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
         accountIdentifier.getName().ifPresent(destinationAccount::setName);
 
         return Optional.of(destinationAccount);

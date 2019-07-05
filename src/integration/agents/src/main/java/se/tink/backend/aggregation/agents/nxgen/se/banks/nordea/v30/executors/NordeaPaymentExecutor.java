@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
@@ -21,14 +20,14 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * outbox.
  */
 public class NordeaPaymentExecutor implements PaymentExecutor {
-    private final Catalog catalog;
+
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER = new NordeaAccountIdentifierFormatter();
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
 
     public NordeaPaymentExecutor(
-            NordeaSEApiClient apiClient, Catalog catalog, NordeaExecutorHelper executorHelper) {
+        NordeaSEApiClient apiClient, NordeaExecutorHelper executorHelper) {
         this.apiClient = apiClient;
-        this.catalog = catalog;
         this.executorHelper = executorHelper;
     }
 
@@ -54,9 +53,8 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
 
     private BeneficiariesEntity createDestination(Transfer transfer) {
         BeneficiariesEntity destination = new BeneficiariesEntity();
-        NordeaAccountIdentifierFormatter identifierFormatter =
-                new NordeaAccountIdentifierFormatter();
-        destination.setAccountNumber(transfer.getDestination().getIdentifier(identifierFormatter));
+        destination.setAccountNumber(
+                transfer.getDestination().getIdentifier(NORDEA_ACCOUNT_FORMATTER));
         transfer.getDestination().getName().ifPresent(destination::setName);
         return destination;
     }
