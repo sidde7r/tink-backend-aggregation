@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount;
 
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class SdcTransactionalAccountTransactionFetcher
-        implements TransactionKeyPaginator<TransactionalAccount, String> {
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final SdcApiClient apiClient;
 
@@ -17,12 +18,8 @@ public class SdcTransactionalAccountTransactionFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, String key) {
-        return apiClient.getTransactionsFor(account, key);
-
-        //        return Optional.ofNullable(key)
-        //            .map(apiClient::getTransactionsFor)
-        //            .orElseGet(() -> apiClient.getTransactionsForAccount(account));
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return apiClient.getTransactionsFor(account, fromDate, toDate);
     }
 }

@@ -106,4 +106,9 @@ public final class SdcConstants {
 
         public static final String AVAILABLE = "available";
     }
+
+  public static class Transactions {
+
+      public static final int MAX_TRANSACTIONS_PER_RESPONSE = 400;
+  }
 }

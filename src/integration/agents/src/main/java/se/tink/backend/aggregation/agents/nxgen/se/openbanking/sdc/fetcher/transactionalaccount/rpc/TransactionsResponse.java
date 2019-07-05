@@ -4,23 +4,19 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.SdcConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.TransactionAccountInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.transaction.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class TransactionsResponse implements TransactionKeyPaginatorResponse<String> {
+public class TransactionsResponse implements PaginatorResponse {
 
     private TransactionAccountInfoEntity account;
     private Transactions transactions;
-
-    @Override
-    public String nextKey() {
-        return null;
-    }
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
@@ -34,6 +30,14 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Str
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
+
+        int totalTransactionsReturned =
+                transactions.getBooked().size() + transactions.getPending().size();
+
+        return totalTransactionsReturned == 0
+                ? Optional.empty()
+                : Optional.of(
+                        totalTransactionsReturned
+                                > SdcConstants.Transactions.MAX_TRANSACTIONS_PER_RESPONSE);
     }
 }

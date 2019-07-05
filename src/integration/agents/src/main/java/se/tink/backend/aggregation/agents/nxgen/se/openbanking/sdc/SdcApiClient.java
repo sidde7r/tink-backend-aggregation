@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc;
 
+import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.agents.rpc.Credentials;
@@ -20,13 +21,14 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class SdcApiClient {
 
@@ -124,8 +126,8 @@ public final class SdcApiClient {
                 .get(BalancesResponse.class);
     }
 
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-            TransactionalAccount account, String key) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.TRANSACTIONS.parameter(
                                 PathParameters.ACCOUNT_ID, account.getApiIdentifier()))
@@ -139,10 +141,9 @@ public final class SdcApiClient {
                 .queryParam(
                         BerlinGroupConstants.QueryKeys.BOOKING_STATUS,
                         SdcConstants.QueryValues.BOOKED) // TODO Verify pagination
-                //                .queryParam(SdcConstants.QueryKeys.DATE_FROM, "1970-01-01")
-                //                .queryParam(
-                //                        QueryKeys.DATE_TO,
-                // ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
+                .queryParam(SdcConstants.QueryKeys.DATE_FROM, ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        QueryKeys.DATE_TO, ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
                 .get(TransactionsResponse.class);
     }
 }
