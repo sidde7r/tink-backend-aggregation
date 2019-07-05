@@ -72,7 +72,9 @@ public final class AvanzaAgent extends NextGenerationAgent implements RefreshIde
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AvanzaSessionHandler(apiClient, authSessionStorage);
+        AvanzaSessionHandler avanzaSessionHandler =
+                new AvanzaSessionHandler(apiClient, authSessionStorage);
+        return avanzaSessionHandler;
     }
 
     @Override
