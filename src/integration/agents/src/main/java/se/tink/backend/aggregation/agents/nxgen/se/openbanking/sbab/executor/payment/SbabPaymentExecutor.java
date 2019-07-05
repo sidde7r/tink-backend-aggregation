@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.pay
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.DebtorEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.entities.TransferData;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.util.TypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -31,19 +32,19 @@ import se.tink.libraries.payment.rpc.Payment;
 
 public class SbabPaymentExecutor implements PaymentExecutor {
 
-    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+    private static final GenericTypeMapper<PaymentType, TypePair>
             accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
+                    GenericTypeMapper.<PaymentType, TypePair>genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
-                                    new Pair<>(
+                                    new TypePair(
                                             AccountIdentifier.Type.SE, AccountIdentifier.Type.SE),
-                                    new Pair<>(
+                                    new TypePair(
                                             AccountIdentifier.Type.SE, AccountIdentifier.Type.IBAN),
-                                    new Pair<>(
+                                    new TypePair(
                                             AccountIdentifier.Type.SE,
                                             AccountIdentifier.Type.SE_BG),
-                                    new Pair<>(
+                                    new TypePair(
                                             AccountIdentifier.Type.SE,
                                             AccountIdentifier.Type.SE_PG))
                             .build();
@@ -58,7 +59,7 @@ public class SbabPaymentExecutor implements PaymentExecutor {
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper
-                .translate(accountIdentifiersKey)
+                .translate(new TypePair(accountIdentifiersKey))
                 .orElseThrow(
                         () ->
                                 new NotImplementedException(
