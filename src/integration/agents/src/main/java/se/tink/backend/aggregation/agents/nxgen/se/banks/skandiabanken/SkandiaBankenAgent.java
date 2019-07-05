@@ -40,7 +40,9 @@ public class SkandiaBankenAgent extends NextGenerationAgent implements RefreshId
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SkandiaBankenAuthenticator(apiClient, sessionStorage));
+                context,
+                new SkandiaBankenAuthenticator(apiClient, sessionStorage),
+                persistentStorage);
     }
 
     @Override

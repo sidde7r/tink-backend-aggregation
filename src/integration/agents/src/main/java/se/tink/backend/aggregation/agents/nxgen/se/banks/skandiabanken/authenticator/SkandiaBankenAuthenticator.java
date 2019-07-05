@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.rpc.InitTokenResponse;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
@@ -151,5 +152,15 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
             sb.append(randomCharacter);
         }
         return sb.toString();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
+        return Optional.empty();
     }
 }
