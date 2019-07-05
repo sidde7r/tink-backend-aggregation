@@ -26,22 +26,12 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
     @JsonProperty("account")
     private Account account;
 
-    @JsonIgnore private int currentPage;
-
     public Transactions getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(final Transactions transactions) {
-        this.transactions = transactions;
-    }
-
     public Account getAccount() {
         return account;
-    }
-
-    public void setAccount(final Account account) {
-        this.account = account;
     }
 
     @JsonIgnore
@@ -89,7 +79,8 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
-    private int getLastPage() {
+    @JsonIgnore
+    public int getLastPage() {
         final URL last = new URL(transactions.getLinks().getLast());
         final String query = last.toUri().getQuery();
         final String[] pairs = query.split("&");
@@ -100,15 +91,5 @@ public class TransactionalTransactionsResponse implements PaginatorResponse {
         }
         final String lastPage = query_pairs.get(QueryParams.PAGE);
         return Integer.parseInt(lastPage);
-    }
-
-    @JsonIgnore
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    @JsonIgnore
-    public void setCurrentPage(final int currentPage) {
-        this.currentPage = currentPage;
     }
 }

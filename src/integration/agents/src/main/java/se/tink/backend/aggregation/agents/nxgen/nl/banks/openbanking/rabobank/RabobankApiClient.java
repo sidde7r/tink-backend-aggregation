@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -83,15 +86,26 @@ public class RabobankApiClient {
         final String clientCert = rabobankConfiguration.getQsealCert();
         final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        return client.request(url)
-                .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
-                .header(QueryParams.IBM_CLIENT_ID, clientId)
-                .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                .header(QueryParams.REQUEST_ID, requestId)
-                .header(QueryParams.DIGEST, digestHeader)
-                .header(QueryParams.SIGNATURE, signatureHeader)
-                .header(QueryParams.DATE, date)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+        final RequestBuilder builder =
+                client.request(url)
+                        .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
+                        .header(QueryParams.IBM_CLIENT_ID, clientId)
+                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
+                        .header(QueryParams.REQUEST_ID, requestId)
+                        .header(QueryParams.DIGEST, digestHeader)
+                        .header(QueryParams.SIGNATURE, signatureHeader)
+                        .header(QueryParams.DATE, date)
+                        .accept(MediaType.APPLICATION_JSON_TYPE);
+
+        // This header must be present iff the request was initiated by the PSU
+        if (requestIsManual) {
+            logger.info("Request is attended -- adding PSU header for {}", url);
+            builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
+        } else {
+            logger.info("Request is unattended -- omitting PSU header for {}", url);
+        }
+
+        return builder;
     }
 
     public TransactionalAccountsResponse fetchAccounts() {
@@ -115,41 +129,13 @@ public class RabobankApiClient {
         final String date = RabobankUtils.getDate();
         final String signatureHeader = buildSignatureHeader(digest, uuid, date);
         final URL url = rabobankConfiguration.getUrls().buildBalanceUrl(accountId);
-        final String clientId = rabobankConfiguration.getClientId();
-        final String clientCert = rabobankConfiguration.getQsealCert();
-        final String digestHeader = Signature.SIGNING_STRING_SHA_512 + digest;
 
-        final RequestBuilder builder =
-                client.request(url)
-                        .addBearerToken(RabobankUtils.getOauthToken(persistentStorage))
-                        .header(QueryParams.IBM_CLIENT_ID, clientId)
-                        .header(QueryParams.TPP_SIGNATURE_CERTIFICATE, clientCert)
-                        .header(QueryParams.REQUEST_ID, uuid)
-                        .header(QueryParams.DIGEST, digestHeader)
-                        .header(QueryParams.SIGNATURE, signatureHeader)
-                        .header(QueryParams.DATE, date);
-
-        // This header must be present iff the request was initiated by the PSU
-        if (requestIsManual) {
-            logger.info("Request for balance is attended -- adding PSU header");
-            builder.header(QueryParams.PSU_IP_ADDRESS, QueryValues.PSU_IP_ADDRESS);
-        } else {
-            logger.info("Request for balance is unattended -- omitting PSU header");
-        }
-
-        return builder.accept(MediaType.APPLICATION_JSON_TYPE).get(BalanceResponse.class);
+        return buildRequest(url, uuid, digest, signatureHeader, date).get(BalanceResponse.class);
     }
 
     public PaginatorResponse getTransactions(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
-        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
-        final String uuid = RabobankUtils.getRequestId();
-        final String date = RabobankUtils.getDate();
-        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
-
         final String accountId = account.getFromTemporaryStorage(StorageKey.RESOURCE_ID);
-        final SimpleDateFormat sdf =
-                new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
         // Order of booking statuses to try fetching transactions with.
@@ -158,12 +144,7 @@ public class RabobankApiClient {
 
         for (final String bookingStatus : bookingStatuses) {
             try {
-                return buildRequest(url, uuid, digest, signatureHeader, date)
-                        .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
-                        .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
-                        .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
-                        .queryParam(QueryParams.SIZE, QueryValues.TRANSACTIONS_SIZE)
-                        .get(TransactionalTransactionsResponse.class);
+                return getTransactionsPages(url, fromDate, toDate, bookingStatus);
             } catch (HttpResponseException e) {
                 final String message = e.getResponse().getBody(String.class);
                 if (message.toLowerCase().contains(ErrorMessages.BOOKING_STATUS_INVALID)) {
@@ -178,6 +159,36 @@ public class RabobankApiClient {
             }
         }
         throw new IllegalStateException("Failed to fetch transactions");
+    }
+
+    private PaginatorResponse getTransactionsPages(
+            final URL url, final Date fromDate, final Date toDate, final String bookingStatus) {
+
+        final SimpleDateFormat sdf =
+                new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
+        final String digest = Base64.getEncoder().encodeToString(Hash.sha512(""));
+        final String uuid = RabobankUtils.getRequestId();
+        final String date = RabobankUtils.getDate();
+        final String signatureHeader = buildSignatureHeader(digest, uuid, date);
+
+        final Collection<PaginatorResponse> pages = new ArrayList<>();
+        int currentPage = 1;
+        TransactionalTransactionsResponse page;
+
+        do {
+            page =
+                    buildRequest(url, uuid, digest, signatureHeader, date)
+                            .queryParam(QueryParams.BOOKING_STATUS, bookingStatus)
+                            .queryParam(QueryParams.DATE_FROM, sdf.format(fromDate))
+                            .queryParam(QueryParams.DATE_TO, sdf.format(toDate))
+                            .queryParam(QueryParams.SIZE, "" + QueryValues.TRANSACTIONS_SIZE)
+                            .queryParam(QueryParams.PAGE, "" + currentPage)
+                            .get(TransactionalTransactionsResponse.class);
+            pages.add(page);
+            currentPage++;
+        } while (currentPage <= page.getLastPage());
+
+        return new CompositePaginatorResponse(pages);
     }
 
     private String buildSignatureHeader(
