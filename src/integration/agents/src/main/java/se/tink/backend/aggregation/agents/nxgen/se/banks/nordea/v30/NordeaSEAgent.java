@@ -55,7 +55,9 @@ public class NordeaSEAgent extends NextGenerationAgent
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new NordeaBankIdAuthenticator(apiClient, sessionStorage));
+                context,
+                new NordeaBankIdAuthenticator(apiClient, sessionStorage),
+                persistentStorage);
     }
 
     @Override

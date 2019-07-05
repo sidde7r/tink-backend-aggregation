@@ -82,6 +82,16 @@ public class NordeaSeBankIdAuthenticator implements BankIdAuthenticator<Object> 
         return Optional.empty();
     }
 
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
+        return Optional.empty();
+    }
+
     private GetTokenForm getGetTokenForm(GetCodeResponse getCodeResponse) {
         return GetTokenForm.builder()
                 .setCode(getCodeResponse.getResponse().getCode())

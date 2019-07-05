@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.authenticator.rpc.ResultBankIdResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -94,6 +95,16 @@ public class NordeaBankIdAuthenticator implements BankIdAuthenticator<BankIdResp
 
     @Override
     public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
     }
 
