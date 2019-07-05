@@ -380,8 +380,7 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
 
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
-        // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
-        return new FetchTransactionsResponse(Collections.emptyMap());
+        return fetchTransactionsPerType(InvestmentRefreshController.class);
     }
 
     private FetchTransactionsResponse fetchTransactionalAccountTransactions() {
