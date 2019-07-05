@@ -40,7 +40,7 @@ public class UpcomingPaymentEntity {
     private String informationMessage;
 
     @JsonProperty("Invoice")
-    private String invoice;
+    private InvoiceEntity invoice;
 
     @JsonProperty("IsChangeable")
     private boolean isChangeable;

@@ -26,7 +26,7 @@ public class SkandiaBankenTest {
         final FetchApprovedPaymentsResponse response =
                 loadTestResponse("approved-payments.json", FetchApprovedPaymentsResponse.class);
 
-        assertEquals(5, response.size());
+        assertEquals(6, response.size());
     }
 
     private TransactionalAccount mockedTransactionalAccount(String accountNumber) {
@@ -50,7 +50,7 @@ public class SkandiaBankenTest {
                 new SkandiaBankenUpcomingTransactionFetcher(apiClient);
         final Collection<UpcomingTransaction> upcomingTransactions1 =
                 fetcher.fetchUpcomingTransactionsFor(account1);
-        assertEquals(4, upcomingTransactions1.size());
+        assertEquals(5, upcomingTransactions1.size());
 
         final Collection<UpcomingTransaction> upcomingTransactions2 =
                 fetcher.fetchUpcomingTransactionsFor(account2);

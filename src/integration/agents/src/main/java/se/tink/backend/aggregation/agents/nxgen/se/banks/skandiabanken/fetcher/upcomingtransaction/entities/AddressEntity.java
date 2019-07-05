@@ -8,8 +8,8 @@ class AddressEntity {
     @JsonProperty("CareOf")
     private String careOf;
 
-    @JsonProperty("Country")
-    private String country;
+    // @JsonProperty("Country")
+    // `Country` is null - cannot define it!
 
     @JsonProperty("PostalAddress")
     private String postalAddress;

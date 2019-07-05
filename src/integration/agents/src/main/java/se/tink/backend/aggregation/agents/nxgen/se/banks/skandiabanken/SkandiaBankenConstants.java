@@ -189,13 +189,13 @@ public class SkandiaBankenConstants {
 
     public static final TypeMapper<AccountIdentifier.Type> PAYMENT_RECIPIENT_TYPE_MAP =
             TypeMapper.<AccountIdentifier.Type>builder()
-                    .put(Type.SE_BG, "BankGiroOCR")
+                    .put(Type.SE_BG, "BankGiroOCR", "BankGiroInvoice")
                     .put(Type.SE, "SingleTransfer")
                     .build();
 
     public static final TypeMapper<TransferType> PAYMENT_TRANSFER_TYPE_MAP =
             TypeMapper.<TransferType>builder()
-                    .put(TransferType.EINVOICE, "BankGiroOCR")
+                    .put(TransferType.EINVOICE, "BankGiroOCR", "BankGiroInvoice")
                     .put(TransferType.BANK_TRANSFER, "SingleTransfer")
                     .build();
 }
