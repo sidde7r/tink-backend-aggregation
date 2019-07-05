@@ -18,6 +18,9 @@
 				if (response.token != null) {
 					token = response.token;
 					document.getElementById('launcher').style.display = 'inline';
+					if (response.image) {
+						document.getElementById('qrcode').src = 'data:image/svg+xml;base64,' + response.image;
+					}
 				}
 			};
 			function pollBankId() {
@@ -55,6 +58,7 @@
 		<div id="launcher">
 			<p><button onclick="launchDirectly();">Launch directly</button></p>
 			<p><button onclick="launchViaBankId();">Launch via bankid.com</button></p>
+			<p><img id="qrcode"></p>
 		</div>
 	</body>
 </html>
