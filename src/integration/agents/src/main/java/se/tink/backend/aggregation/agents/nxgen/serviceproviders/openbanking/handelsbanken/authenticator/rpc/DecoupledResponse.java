@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 public class DecoupledResponse {
@@ -44,5 +46,10 @@ public class DecoupledResponse {
 
     public String getError() {
         return error;
+    }
+
+    @JsonIgnore
+    public OAuth2Token toOauth2Token() {
+        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn);
     }
 }

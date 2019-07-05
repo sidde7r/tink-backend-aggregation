@@ -19,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<InitBankIdResponse> {
     private final HandelsbankenSEApiClient client;
@@ -82,6 +83,16 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
 
     @Override
     public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
     }
 }

@@ -12,9 +12,11 @@ public final class HandelsbankenBaseConstants {
 
         private static final String SUFFIX_V1 = "/psd2/v1";
         private static final String SUFFIX_V2 = "/psd2/v2";
+        private static final String TOKEN_SUFFIX = "/oauth2/token/1.0";
 
         public static final URL ACCOUNTS = new URL(BASE_URL + SUFFIX_V2 + "/accounts");
-        public static final URL TOKEN = new URL(BASE_URL2 + "/oauth2/token/1.0");
+        public static final URL TOKEN = new URL(BASE_URL2 + TOKEN_SUFFIX);
+        public static final URL REFRESH_TOKEN = new URL(BASE_URL2 + "/refresh" + TOKEN_SUFFIX);
         public static final URL AUTHORIZATION = new URL(BASE_URL + SUFFIX_V1 + "/consents");
         public static final URL THIRD_PARTIES = new URL(BASE_URL + SUFFIX_V1 + "/third-parties");
         public static final URL SUBSCRIPTIONS = new URL(BASE_URL + SUFFIX_V1 + "/subscriptions");
@@ -67,6 +69,7 @@ public final class HandelsbankenBaseConstants {
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String STATE = "state";
         public static final String CODE = "code";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class Market {
@@ -85,6 +88,7 @@ public final class HandelsbankenBaseConstants {
         public static final String PERSONAL_ID_TP = "1";
 
         public static final String PRODUCT_ACCOUNTS = "accounts";
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class AccountBalance {
