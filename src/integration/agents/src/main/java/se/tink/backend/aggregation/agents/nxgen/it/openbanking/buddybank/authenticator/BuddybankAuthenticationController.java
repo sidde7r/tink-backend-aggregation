@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.authenticator.rpc.ConsentStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class BuddybankAuthenticationController implements Authenticator {
 
@@ -50,13 +49,6 @@ public class BuddybankAuthenticationController implements Authenticator {
     private Retryer<ConsentStatusResponse> getConsentStatusRetryer() {
         return RetryerBuilder.<ConsentStatusResponse>newBuilder()
                 .retryIfResult(status -> status != null && !status.isValidConsent())
-                .retryIfException( // TODO remove retryIfException for prod (sandbox bug)
-                        throwable ->
-                                throwable instanceof HttpResponseException
-                                        && ((HttpResponseException) throwable)
-                                                        .getResponse()
-                                                        .getStatus()
-                                                == 400)
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();
