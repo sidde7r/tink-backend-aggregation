@@ -21,7 +21,7 @@ public class BalancesResponse {
     public Amount getBalance() {
         return getBalances().stream()
                 .filter(BalanceEntity::isAvailable)
-                .findAny()
+                .findFirst()
                 .map(balanceEntity -> balanceEntity.getBalanceAmount().toAmount())
                 .orElseGet(() -> Amount.inSEK(0));
     }
