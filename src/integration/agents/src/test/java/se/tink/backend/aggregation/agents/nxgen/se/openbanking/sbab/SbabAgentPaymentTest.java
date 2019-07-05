@@ -44,7 +44,6 @@ public class SbabAgentPaymentTest {
             Debtor debtor = mock(Debtor.class);
             doReturn(AccountIdentifier.Type.SE).when(debtor).getAccountIdentifierType();
             doReturn(RandomStringUtils.random(20, false, true)).when(debtor).getAccountNumber();
-            String s = creditor.getAccountNumber();
             Amount amount = Amount.inSEK(new Random().nextInt(40000));
             LocalDate executionDate = LocalDate.now();
             String currency = "SEK";
