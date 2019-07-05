@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.account;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.api.UkOpenBankingApiDefinitions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.base.fetcher.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.entities.account.AccountBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v31.fetcher.rpc.BaseV31Response;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountBalanceV31Response extends BaseResponse<List<AccountBalanceEntity>> {
+public class AccountBalanceV31Response extends BaseV31Response<List<AccountBalanceEntity>> {
 
     public AccountBalanceEntity getBalance() {
 
@@ -27,7 +28,7 @@ public class AccountBalanceV31Response extends BaseResponse<List<AccountBalanceE
     }
 
     private Map<UkOpenBankingApiDefinitions.AccountBalanceType, AccountBalanceEntity> toMap() {
-        return getData().stream()
+        return getData().orElse(Collections.emptyList()).stream()
                 .collect(Collectors.toMap(AccountBalanceEntity::getType, Function.identity()));
     }
 }
