@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.CustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.ErrorStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -82,6 +83,16 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
 
     @Override
     public Optional<String> getAutostartToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> getAcessToken() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<OAuth2Token> refreshAccessToken(String refreshToken) {
         return Optional.empty();
     }
 
