@@ -113,15 +113,13 @@ public class SBABPaymentExecutor implements PaymentExecutor {
     public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         Payment payment = paymentMultiStepRequest.getPayment();
 
-        String nextStep;
-        nextStep = AuthenticationStepConstants.STEP_FINALIZE;
-
         apiClient.signPayment(payment.getUniqueId());
         // For sandbox after making a request for signing it's instantly signed
         // On production sign response will have redirect link
         payment.setStatus(PaymentStatus.PAID);
 
-        return new PaymentMultiStepResponse(payment, nextStep, new ArrayList<>());
+        return new PaymentMultiStepResponse(
+                payment, AuthenticationStepConstants.STEP_FINALIZE, new ArrayList<>());
     }
 
     @Override
