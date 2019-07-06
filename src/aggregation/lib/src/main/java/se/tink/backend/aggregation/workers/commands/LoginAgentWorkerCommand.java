@@ -121,6 +121,10 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             weHavePreviouslyLoggedInSuccessfully = true;
         }
 
+        if (Objects.equals(AgentWorkerCommandResult.CONTINUE, result)) {
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING);
+        }
+
         return result;
     }
 
