@@ -16,6 +16,7 @@ public class RabobankConstants {
                 "Invalid Configuration: %s cannot be empty or null";
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String UNAVAILABLE_TRX_HISTORY = "date can't be further than";
+        public static final CharSequence ACCESS_EXCEEDED = "access_exceeded";
     }
 
     public static class StorageKey {
