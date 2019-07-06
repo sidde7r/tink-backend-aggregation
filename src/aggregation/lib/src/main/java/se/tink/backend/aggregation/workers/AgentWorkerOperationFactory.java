@@ -193,9 +193,6 @@ public class AgentWorkerOperationFactory {
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
-
         List<RefreshableItem> accountItems =
                 items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toList());
 
@@ -876,11 +873,6 @@ public class AgentWorkerOperationFactory {
                 items.stream().map(Enum::name).collect(Collectors.joining(", ")));
 
         ImmutableList.Builder<AgentWorkerCommand> commands = ImmutableList.builder();
-
-        // Update credentials status to updating to inform systems that credentials is being
-        // updated.
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(context, CredentialsStatus.UPDATING));
 
         Set<RefreshableItem> accountItems =
                 items.stream().filter(RefreshableItem::isAccount).collect(Collectors.toSet());
