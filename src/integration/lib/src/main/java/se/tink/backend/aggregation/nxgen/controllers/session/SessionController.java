@@ -27,8 +27,7 @@ public class SessionController {
             Credentials credentials,
             SessionHandler sessionHandler) {
         Preconditions.checkNotNull(
-                sessionHandler,
-                "What are you doing handling sessions without a " + "session handler?");
+                sessionHandler, "What are you doing handling sessions without a session handler?");
         this.httpClient = httpClient;
         this.persistentStorage = persistentStorage;
         this.sessionStorage = sessionStorage;
