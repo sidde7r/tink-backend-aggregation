@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SessionController {
+public final class SessionController {
 
     private final TinkHttpClient httpClient;
     private final PersistentStorage persistentStorage;
