@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
@@ -71,6 +72,11 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
             if (errorCode.get().equals(ErrorCode.NO_ACCESS_TO_MOBILBANK)) {
                 throw LoginError.NO_ACCESS_TO_MOBILE_BANKING.exception();
             }
+
+            if (ErrorCode.BANK_IS_DOWN_ERRORS_LIST.contains(errorCode.get())) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
             throw new IllegalStateException(
                     NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE.getOrDefault(
                             errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
