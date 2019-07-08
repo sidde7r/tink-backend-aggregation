@@ -86,6 +86,8 @@ import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 
 /**
@@ -112,7 +114,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
  * @author pavel.bucek@oracle.com
  */
 public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler {
-
+    private final Logger log = LoggerFactory.getLogger(TinkApacheHttpClient4.class);
     private final HttpClient client;
 
     /**
@@ -272,7 +274,7 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
                 return new BufferedHttpEntity(httpEntity);
             }
         } catch (Exception ex) {
-            // TODO warning/error?
+            log.warn(ex.toString());
         }
 
         return null;
