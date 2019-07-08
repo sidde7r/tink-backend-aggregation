@@ -17,6 +17,12 @@ data:
         publicKeyPath: "/etc/tink-signature-key/public_rsa_key.pem"
       {{- end }}
 
+      eidasProxy:
+        host: https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022
+        caPath: /etc/client-certificate/ca.crt
+        tlsCrtPath: /etc/client-certificate/tls.crt
+        tlsKeyPath: /etc/client-certificate/tls.key
+
       {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
       callbackJwtSignatureKeyPair:
         privateKeyPath: "/etc/tink-callback-jwt-signature-pair/private_ec_key.pem"
