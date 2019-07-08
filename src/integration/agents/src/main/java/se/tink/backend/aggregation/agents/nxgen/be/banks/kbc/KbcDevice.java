@@ -17,8 +17,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.serializer.KeyPairDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.serializer.KeyPairSerializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.utils.KbcOtpUtils;
@@ -31,8 +29,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class KbcDevice {
-
-    private static final Logger logger = LoggerFactory.getLogger(KbcDevice.class);
 
     private static class StaticVectorKeys {
         static final int SEED = 2;
@@ -223,19 +219,12 @@ public class KbcDevice {
         Preconditions.checkNotNull(staticVector, "Static vector has not been set.");
         Preconditions.checkNotNull(dynamicVector, "Dynamic vector has not been set.");
 
-        logger.info(
-                String.format(
-                        "KbcDevice extractTlvField(byte[%d], 4, SEED, 0)", staticVector.length));
         byte[] seed =
                 KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SEED, 0)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
                                                 "Could not find seed in static vector."));
-        logger.info(
-                String.format(
-                        "KbcDevice extractTlvField(byte[%d], 4, SIGNATURE, 0)",
-                        staticVector.length));
         byte[] signature =
                 KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SIGNATURE, 0)
                         .orElseThrow(
@@ -243,30 +232,17 @@ public class KbcDevice {
                                         new IllegalStateException(
                                                 "Could not find signature in static vector."));
 
-        logger.info(String.format("KbcDevice calculateLogId(byte[%d])", dynamicVector.length));
         String logonId = KbcOtpUtils.calculateLogonId(dynamicVector);
 
         // Encrypt the seed with an obfuscated (whitebox) key
-        logger.info(String.format("KbcDevice wbAesEncrypt(byte[%d])", seed.length));
         key0 = KbcOtpUtils.wbAesEncrypt(seed);
-        logger.info(
-                String.format(
-                        "KbcDevice encryptLogonId(byte[%d], byte[%d], %s)",
-                        key0.length, signature.length, logonId));
         key1 = KbcOtpUtils.encryptLogonId(key0, signature, logonId);
-        logger.info(
-                String.format(
-                        "KbcDevice decryptDynamicVector(byte[%d], byte[%d])",
-                        key1.length, dynamicVector.length));
         key2 = KbcOtpUtils.decryptDynamicVector(key1, dynamicVector);
-        logger.info(String.format("KbcDevice encryptConstantA0(byte[%d])", key2.length));
         key3 = KbcOtpUtils.encryptConstantA0(key2);
-        logger.info("KbcDevice internalCalculateKeys return");
     }
 
     private void checkCalculateKeys() {
         if (key0 == null || key1 == null || key2 == null || key3 == null) {
-            logger.info("KbcDevice internalCalculateKeys");
             internalCalculateKeys();
         }
     }
@@ -299,22 +275,15 @@ public class KbcDevice {
     }
 
     public String calculateDeviceCode(String challenge) {
-        logger.info("KbcDevice checkCalculateKeys");
         checkCalculateKeys();
-        logger.info(
-                String.format(
-                        "KbcDevice internalCalculateOtp(byte[%d], 0, [decodeHex(%s)])",
-                        key2.length, challenge));
         String otp =
                 internalCalculateOtp(
                         key2,
                         0,
                         Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
 
-        logger.info("KbcDevice calculateDiversifier");
         byte[] bDiversifier = calculateDiversifier();
         String diversifier = Integer.toString(KbcOtpUtils.bytesToInt(bDiversifier));
-        logger.info("KbcDevice extractTlvFieldAsInt");
         int diversifierLength =
                 KbcOtpUtils.extractTlvFieldAsInt(
                         staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
@@ -323,9 +292,7 @@ public class KbcDevice {
         // last 5 digits of the otp
         otp = otp.substring(otp.length() - 5);
 
-        logger.info("KbcDevice modifyDiversifier");
         String modifiedDiversifier = KbcOtpUtils.modifyDiversifier(diversifier, otp);
-        logger.info("KbcDevice calculateDeviceCode return");
         return modifiedDiversifier + otp;
     }
 
