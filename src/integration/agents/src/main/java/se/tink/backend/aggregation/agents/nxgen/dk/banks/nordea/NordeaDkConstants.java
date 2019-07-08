@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
@@ -583,6 +585,10 @@ public class NordeaDkConstants {
     public static class ErrorCode {
         public static final String NO_ACCESS_TO_MOBILBANK = "MAS0019";
         public static final String TEMPORARY_TECHNICAL_ERROR = "MAS9001";
+        public static final String MOBILBANK_IS_CLOSED = "MAS0018";
+
+        public static final List<String> BANK_IS_DOWN_ERRORS_LIST =
+                ImmutableList.of(TEMPORARY_TECHNICAL_ERROR, MOBILBANK_IS_CLOSED);
     }
 
     public static class Tag {
