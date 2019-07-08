@@ -1,0 +1,34 @@
+{
+    "account": {
+        "iban": "NL08RABO7777777777",
+        "currency": "EUR"
+    },
+    "transactions": {
+        "booked": [
+            {
+                "entryReference": "7777",
+                "bookingDate": "2013-07-31",
+                "valueDate": "2013-08-01",
+                "transactionAmount": {
+                    "currency": "EUR",
+                    "amount": "-434.22"
+                },
+                "creditorAccount": {},
+                "debtorAccount": {
+                    "iban": "NL08RABO7777777777",
+                    "currency": "EUR"
+                },
+                "remittanceInformationStructured": "7777777777777777",
+                "raboBookingDateTime": "2013-07-31T16:26:55.640272Z",
+                "raboDetailedTransactionType": "1",
+                "raboTransactionTypeName": "fb"
+            }
+        ],
+        "_links": {
+            "account": "/v3/accounts/7777777777777-777777777777777777777777777-7777777777777777777777",
+            "first": "/v3/accounts/7777777777777-777777777777777777777777777-7777777777777777777777/transactions?bookingStatus=booked&dateFrom=2013-06-13T15:55:27.908Z&dateTo=2013-09-13T15:55:27.908Z&size=100&page=1",
+            "last": "/v3/accounts/7777777777777-777777777777777777777777777-7777777777777777777777/transactions?bookingStatus=booked&dateFrom=2013-06-13T15:55:27.908Z&dateTo=2013-09-13T15:55:27.908Z&size=100&page=2",
+            "previous": "/v3/accounts/7777777777777-777777777777777777777777777-7777777777777777777777/transactions?bookingStatus=booked&dateFrom=2013-06-13T15:55:27.908Z&dateTo=2013-09-13T15:55:27.908Z&size=100&page=1"
+        }
+    }
+}
