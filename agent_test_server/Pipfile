@@ -22,6 +22,7 @@ Jinja2 = "==2.10"
 MarkupSafe = "==1.0"
 pyOpenSSL = "==18.0.0"
 Werkzeug = "==0.14.1"
+qrcode = "*"
 
 [requires]
 python_version = "3.7"
