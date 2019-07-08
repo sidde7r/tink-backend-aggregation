@@ -6,6 +6,7 @@ import argparse
 import os
 from flask import Flask, jsonify, request, abort, Response, redirect
 import webbrowser
+from bankid import generate_bankid_qrcode
 
 from memqueue import MemoryMessageQueue
 
@@ -202,7 +203,7 @@ def bankid_poll():
         autoStartToken = None
         print("Sending autostart token: '" + currentToken + "'")
 
-    return jsonify({"token": currentToken})
+    return jsonify({"token": currentToken, "image": generate_bankid_qrcode(currentToken)})
 
 
 @app.route("/api/v1/bankid/send/<token>", methods=("POST",))
