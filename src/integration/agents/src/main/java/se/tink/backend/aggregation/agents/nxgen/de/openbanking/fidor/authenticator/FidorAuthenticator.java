@@ -40,7 +40,7 @@ public class FidorAuthenticator implements Authenticator {
         String password = credentials.getField(FieldKeys.PASSWORD);
 
         // getting token
-        OAuth2Token token = apiClient.OAut2_Password(username, password).toTinkToken();
+        OAuth2Token token = apiClient.getToken(username, password).toTinkToken();
         persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
 
         String iban = credentials.getField(FieldKeys.IBAN);

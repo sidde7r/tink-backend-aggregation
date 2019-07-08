@@ -1,17 +1,28 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
+import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Format;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.creditcardaccount.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.rpc.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.utils.DateUtils;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -40,21 +51,28 @@ public final class SebApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-        final String baseUrl = getConfiguration().getBaseUrl();
-
-        return client.request(baseUrl + SebConstants.Urls.ACCOUNTS)
+        return client.request(Urls.ACCOUNTS)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(SebConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
                 .addBearerToken(getTokenFromSession())
-                .queryParam(
-                        SebConstants.QueryKeys.WITH_BALANCE, SebConstants.QueryValues.WITH_BALANCE)
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
+                .queryParam(QueryKeys.WITH_BALANCE, QueryValues.WITH_BALANCE)
                 .get(FetchAccountResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactions(TransactionalAccount account, int page) {
-        final String baseUrl = getConfiguration().getBaseUrl();
+    public CreditCardAccountsResponse fetchCreditCardAccounts() {
+        return client.request(Urls.BASE_URL + Urls.BRANDED_ACCOUNTS)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
+                .addBearerToken(getTokenFromSession())
+                .get(CreditCardAccountsResponse.class);
+    }
+
+    public FetchTransactionsResponse fetchTransactions(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         final URL url =
-                new URL(baseUrl + SebConstants.Urls.TRANSACTIONS)
+                new URL(SebConstants.Urls.TRANSACTIONS)
                         .parameter(
                                 SebConstants.IdTags.ACCOUNT_ID,
                                 account.getFromTemporaryStorage(
@@ -62,23 +80,49 @@ public final class SebApiClient {
 
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(SebConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
                 .addBearerToken(getTokenFromSession())
                 .queryParam(
-                        SebConstants.QueryKeys.TRANSACTION_SEQUENCE_NUMBER, Integer.toString(page))
+                        QueryKeys.DATE_FROM,
+                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(
-                        SebConstants.QueryKeys.BOOKING_STATUS,
-                        SebConstants.QueryValues.BOOKED_TRANSACTIONS)
+                        QueryKeys.DATE_TO,
+                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
                 .get(FetchTransactionsResponse.class);
+    }
+
+    public CreditCardTransactionsResponse fetCreditCardTransactions(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+
+        final URL url =
+                new URL(Urls.BASE_URL + Urls.BRANDED_ACCOUNTS + Urls.BRANDED_TRANSACTIONS)
+                        .parameter(
+                                SebConstants.IdTags.ACCOUNT_ID,
+                                account.getFromTemporaryStorage(
+                                        SebConstants.StorageKeys.ACCOUNT_ID));
+
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(HeaderKeys.PSU_CORPORATE_ID, HeaderValues.PSU_CORPORATE_ID)
+                .addBearerToken(getTokenFromSession())
+                .queryParam(
+                        QueryKeys.DATE_TO,
+                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(
+                        QueryKeys.DATE_FROM,
+                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED_TRANSACTIONS)
+                .get(CreditCardTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(String state) {
         final String clientId = getConfiguration().getClientId();
-
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return createRequestInSession(baseUrl + SebConstants.Urls.OAUTH)
+        return createRequestInSession(Urls.OAUTH)
                 .queryParam(SebConstants.QueryKeys.CLIENT_ID, clientId)
                 .queryParam(
                         SebConstants.QueryKeys.RESPONSE_TYPE,
@@ -86,15 +130,15 @@ public final class SebApiClient {
                 .queryParam(SebConstants.QueryKeys.SCOPE, SebConstants.QueryValues.SCOPE)
                 .queryParam(SebConstants.QueryKeys.REDIRECT_URI, redirectUri)
                 .queryParam(SebConstants.QueryKeys.STATE, state)
+                .queryParam(
+                        SebConstants.QueryKeys.BRAND_ID, SebConstants.QueryValues.EUROCARD_BRAND_ID)
                 .getUrl();
     }
 
     public OAuth2Token getToken(String code) {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String baseUrl = getConfiguration().getBaseUrl();
 
         TokenRequest request =
                 new TokenRequest(
@@ -105,7 +149,7 @@ public final class SebApiClient {
                         SebConstants.QueryValues.GRANT_TYPE,
                         SebConstants.QueryValues.SCOPE);
 
-        return client.request(baseUrl + SebConstants.Urls.TOKEN)
+        return client.request(Urls.TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class, request.toData())
@@ -115,15 +159,13 @@ public final class SebApiClient {
     public OAuth2Token refreshToken(String refreshToken) throws SessionException {
         final String clientId = getConfiguration().getClientId();
         final String clientSecret = getConfiguration().getClientSecret();
-
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String baseUrl = getConfiguration().getBaseUrl();
 
         try {
             RefreshRequest request =
                     new RefreshRequest(refreshToken, clientId, clientSecret, redirectUri);
 
-            return client.request(baseUrl + SebConstants.Urls.TOKEN)
+            return client.request(Urls.TOKEN)
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                     .accept(MediaType.APPLICATION_JSON)
                     .post(TokenResponse.class, request.toData())

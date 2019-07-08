@@ -53,7 +53,7 @@ public class AccountEntity {
                 .filter(BalanceEntity::isAvailableBalance)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(Amount.inDKK(0));
+                .orElseThrow(() -> new IllegalStateException("Balance is not available"));
     }
 
     public String getResourceId() {

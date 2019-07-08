@@ -1,22 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator;
 
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiClient;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.AuthorizeConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.ConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
+import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class AktiaAuthenticator implements Authenticator {
+public class AktiaAuthenticator {
     private final AktiaApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
+    private final String iban;
 
-    public AktiaAuthenticator(AktiaApiClient apiClient, SessionStorage sessionStorage) {
+    public AktiaAuthenticator(
+            AktiaApiClient apiClient, PersistentStorage persistentStorage, String iban) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
+        this.iban = iban;
     }
 
-    @Override
-    public void authenticate(Credentials credentials)
-            throws AuthenticationException, AuthorizationException {}
+    public URL buildAuthorizeUrl(String state) {
+        ConsentBaseRequest consentRequest = new ConsentBaseRequest();
+        consentRequest.getAccess().addIban(iban);
+        ConsentResponse consentResponse = apiClient.createConsent(consentRequest, state);
+
+        persistentStorage.put(StorageKeys.CONSENT_ID, consentResponse.getConsentId());
+
+        AuthorizeConsentResponse authorizeConsentResponse =
+                apiClient.authorizeConsent(consentResponse.getLinks().getStartAuthorisation());
+
+        return new URL(authorizeConsentResponse.getLinks().getScaRedirect());
+    }
 }

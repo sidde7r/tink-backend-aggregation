@@ -13,21 +13,9 @@ public class FetchAccountsResponse {
 
     private List<AccountEntity> accounts;
 
-    public Collection<AccountEntity> getAccounts(String currency) {
+    public Collection<AccountEntity> getAccounts() {
         return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
-                .collect(Collectors.groupingBy(AccountEntity::getResourceId))
-                .entrySet()
-                .stream()
-                .flatMap(
-                        // TODO: This thing is crazy. Why was it approved?
-                        d ->
-                                d.getValue().size() > 1
-                                        ? d.getValue().stream()
-                                                .filter(
-                                                        a ->
-                                                                a.getCurrency()
-                                                                        .equalsIgnoreCase(currency))
-                                        : d.getValue().stream())
+                .filter(l -> l.getCurrency().equalsIgnoreCase("EUR"))
                 .collect(Collectors.toList());
     }
 }

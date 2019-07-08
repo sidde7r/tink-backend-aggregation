@@ -17,9 +17,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticat
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.TokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.configuration.FidorConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.entities.CreateAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.entities.FlagsEntity;
-import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.AccountFetchResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.BalanceFetchResponse;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.fetcher.transactionalaccount.rpc.TransactionFetchResponse;
@@ -50,7 +47,7 @@ public final class FidorApiClient {
         this.configuration = configuration;
     }
 
-    public TokenResponse OAut2_Password(String username, String password) {
+    public TokenResponse getToken(String username, String password) {
         String clientId = getConfiguration().getClientId();
         String clientSecret = getConfiguration().getClientSecret();
 
@@ -74,23 +71,18 @@ public final class FidorApiClient {
     }
 
     public ConsentResponse getConsent(String iban, String bban) {
-
+        // iban and bban are passed through test, as they represent iban and bban of individual user
+        // the third param represents how long the consent is valid, the inserted value means as
+        // much as possible which is 90 days
+        // the last param states number of requests per day, maximum is 4
         CreateConsentRequest request = new CreateConsentRequest(iban, bban, "9999-12-31", true, 4);
 
         return createRequestInSession(new URL(Urls.CONSENTS)).post(ConsentResponse.class, request);
     }
 
     public AccountFetchResponse fetchAccouns() {
-        AccountFetchResponse accountsResponse =
-                createRequestWithConsent(new URL(Urls.FETCH_ACCOUNTS))
-                        .get(AccountFetchResponse.class);
-
-        for (AccountEntity entity : accountsResponse.getAccounts()) {
-            BalanceFetchResponse balanceResponse = fetchBalances(entity.getResourceId());
-            entity.setBalances(balanceResponse.getBalances());
-        }
-
-        return accountsResponse;
+        return createRequestWithConsent(new URL(Urls.FETCH_ACCOUNTS))
+                .get(AccountFetchResponse.class);
     }
 
     public TransactionFetchResponse fetchTransactions(TransactionalAccount account, int page) {
@@ -106,32 +98,6 @@ public final class FidorApiClient {
     public BalanceFetchResponse fetchBalances(String accountId) {
         return createRequestWithConsent(new URL(String.format(Urls.FETCH_BALANCES, accountId)))
                 .get(BalanceFetchResponse.class);
-    }
-
-    // not used currently, but i had to create account this way so i could use their  APIs
-    //// thought i'd leave this if someone else would need it
-    public String createTestAccount(String accessToken) {
-
-        final String baseUrl = getConfiguration().getBaseUrl();
-        CreateAccountEntity entity =
-                new CreateAccountEntity(
-                        "s.jankovic@vegaitsourcing.rs",
-                        "password123",
-                        new FlagsEntity(true, true, true));
-        return client.request(baseUrl + Urls.CREATE_ACCOUNT)
-                .type(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header("Authorization", "Bearer " + accessToken)
-                .post(String.class, entity);
-    }
-
-    // not used currently but i had to onboard first so i could use their APIs
-    // thought i'd leave this if someone else would need it
-    public String onboard() {
-        final String baseUrl = getConfiguration().getBaseUrl();
-        return client.request(baseUrl + Urls.ONBOARDING)
-                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
-                .get(String.class);
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -162,14 +128,16 @@ public final class FidorApiClient {
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public String getConsentIdFromStorage() {
+    private String getConsentIdFromStorage() {
         return persistentStorage
                 .get(StorageKeys.CONSENT_ID, String.class)
                 .orElseThrow(
                         () -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
     }
 
-    public String getPsuIpAddress() {
+    private String getPsuIpAddress() {
+        // This is supposed to be the IP address of the PSU, but we can't supply it on sandbox so we
+        // use dummy value
         return "82.117.210.2";
     }
 }

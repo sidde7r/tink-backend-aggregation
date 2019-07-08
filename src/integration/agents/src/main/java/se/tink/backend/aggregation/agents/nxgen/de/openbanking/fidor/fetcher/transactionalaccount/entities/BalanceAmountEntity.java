@@ -17,6 +17,9 @@ public class BalanceAmountEntity {
     }
 
     public Amount toAmount() {
-        return amount != null ? new Amount(amount, Double.parseDouble(amount)) : Amount.inDKK(0);
+        if (amount == null) {
+            throw new IllegalStateException("Balance amonut is not available");
+        }
+        return new Amount(amount, Double.parseDouble(amount));
     }
 }

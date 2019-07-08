@@ -5,25 +5,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants.Urls;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.AuthorizeConsentResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.authenticator.rpc.ConsentBaseRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class AktiaApiClient {
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final PersistentStorage persistentStorage;
     private AktiaConfiguration configuration;
 
-    public AktiaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public AktiaApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.persistentStorage = persistentStorage;
     }
 
     public AktiaConfiguration getConfiguration() {
@@ -41,17 +49,19 @@ public final class AktiaApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .header(AktiaConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID())
+                .header(AktiaConstants.HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
+                .header(
+                        AktiaConstants.HeaderKeys.X_IBM_CLIENT_SECRET,
+                        configuration.getClientSecret())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
         return createRequest(url)
-                .header(AktiaConstants.HeaderKeys.CONSENT_ID, configuration.getConsentId())
-                .header(AktiaConstants.HeaderKeys.X_IBM_CLIENT_ID, configuration.getClientId())
                 .header(
-                        AktiaConstants.HeaderKeys.X_IBM_CLIENT_SECRET,
-                        configuration.getClientSecret());
+                        AktiaConstants.HeaderKeys.CONSENT_ID,
+                        persistentStorage.get(StorageKeys.CONSENT_ID));
     }
 
     public List<TransactionalAccount> getAccounts() {
@@ -75,5 +85,21 @@ public final class AktiaApiClient {
                 .queryParam(
                         AktiaConstants.QueryKeys.BOOKING_STATUS, AktiaConstants.QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
+    }
+
+    public ConsentResponse createConsent(ConsentBaseRequest consentRequest, String state) {
+        return createRequest(Urls.CREATE_CONSENT)
+                .header(
+                        HeaderKeys.TPP_REDIRECT_URI,
+                        new URL(configuration.getRedirectUrl())
+                                .queryParam(QueryKeys.STATE, state)
+                                .queryParam(QueryKeys.CODE, QueryValues.CODE)
+                                .get())
+                .post(ConsentResponse.class, consentRequest);
+    }
+
+    public AuthorizeConsentResponse authorizeConsent(String startAuthorisation) {
+        return createRequest(new URL(Urls.BASE_URL + startAuthorisation))
+                .post(AuthorizeConsentResponse.class);
     }
 }

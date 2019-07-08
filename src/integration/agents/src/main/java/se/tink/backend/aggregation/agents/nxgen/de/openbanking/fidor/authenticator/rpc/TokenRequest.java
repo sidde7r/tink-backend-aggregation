@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fidor.FidorConsta
 import se.tink.backend.aggregation.nxgen.http.Form;
 
 public class TokenRequest {
-    public String grantType;
-    public String username;
-    public String password;
+    private String grantType;
+    private String username;
+    private String password;
 
     public TokenRequest(String grantType, String username, String password) {
         this.grantType = grantType;
