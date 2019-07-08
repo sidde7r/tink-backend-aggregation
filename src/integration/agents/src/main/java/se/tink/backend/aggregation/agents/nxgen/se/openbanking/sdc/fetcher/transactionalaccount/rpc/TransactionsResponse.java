@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,14 +31,20 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
+        return Optional.empty();
+    }
+
+    public Optional<Date> getOverflowTransactionDate() {
 
         int totalTransactionsReturned =
                 transactions.getBooked().size() + transactions.getPending().size();
 
-        return totalTransactionsReturned == 0
-                ? Optional.empty()
-                : Optional.of(
-                        totalTransactionsReturned
-                                > SdcConstants.Transactions.MAX_TRANSACTIONS_PER_RESPONSE);
+        return totalTransactionsReturned >= SdcConstants.Transactions.MAX_TRANSACTIONS_PER_RESPONSE
+                ? Stream.concat(
+                                transactions.getBooked().stream(),
+                                transactions.getPending().stream())
+                        .map(TransactionEntity::getValueDate)
+                        .min(Date::compareTo)
+                : Optional.empty();
     }
 }

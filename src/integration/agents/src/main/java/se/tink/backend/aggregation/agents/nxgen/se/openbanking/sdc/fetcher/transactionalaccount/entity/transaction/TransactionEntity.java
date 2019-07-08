@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.tran
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.entity.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -42,5 +43,9 @@ public class TransactionEntity {
                 .setDescription(remittanceInformationUnstructured)
                 .setPending(isPending)
                 .build();
+    }
+
+    public Date getValueDate() {
+        return Preconditions.checkNotNull(valueDate);
     }
 }

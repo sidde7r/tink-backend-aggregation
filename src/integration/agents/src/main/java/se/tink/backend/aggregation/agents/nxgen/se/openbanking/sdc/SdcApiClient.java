@@ -21,7 +21,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sdc.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -126,7 +125,7 @@ public final class SdcApiClient {
                 .get(BalancesResponse.class);
     }
 
-    public PaginatorResponse getTransactionsFor(
+    public TransactionsResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return createRequestInSession(
                         Urls.TRANSACTIONS.parameter(
