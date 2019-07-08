@@ -21,12 +21,12 @@ import se.tink.libraries.transfer.rpc.Transfer;
  */
 public class NordeaPaymentExecutor implements PaymentExecutor {
 
-    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER = new NordeaAccountIdentifierFormatter();
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
 
-    public NordeaPaymentExecutor(
-        NordeaSEApiClient apiClient, NordeaExecutorHelper executorHelper) {
+    public NordeaPaymentExecutor(NordeaSEApiClient apiClient, NordeaExecutorHelper executorHelper) {
         this.apiClient = apiClient;
         this.executorHelper = executorHelper;
     }

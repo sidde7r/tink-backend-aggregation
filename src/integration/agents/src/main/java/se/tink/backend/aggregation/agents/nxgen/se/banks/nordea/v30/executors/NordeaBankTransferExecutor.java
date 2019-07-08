@@ -17,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
@@ -80,17 +79,12 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     transferMessageFormatter);
         } else {
             // create destination account
-            final Optional<BeneficiariesEntity> destinationExternalAccount =
-                    createDestinationAccount(transfer.getDestination());
-
-            if (!destinationExternalAccount.isPresent()) {
-                throw executorHelper.invalidDestError();
-            }
+            final BeneficiariesEntity destinationExternalAccount =
+                    executorHelper
+                            .validateDestinationAccount(transfer)
+                            .orElse(createDestinationAccount(transfer.getDestination()));
             executeExternalBankTransfer(
-                    transfer,
-                    sourceAccount,
-                    destinationExternalAccount.get(),
-                    transferMessageFormatter);
+                    transfer, sourceAccount, destinationExternalAccount, transferMessageFormatter);
         }
     }
 
@@ -115,22 +109,25 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private Optional<BeneficiariesEntity> createDestinationAccount(
-            AccountIdentifier accountIdentifier) {
+    private BeneficiariesEntity createDestinationAccount(AccountIdentifier accountIdentifier) {
         BeneficiariesEntity destinationAccount = new BeneficiariesEntity();
 
-        if (accountIdentifier.is(Type.SE)) {
-            destinationAccount.setBankName(((SwedishIdentifier) accountIdentifier).getBankName());
-        } else if (accountIdentifier.is(Type.SE_NDA_SSN)) {
-            destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
-        } else {
-            return Optional.empty();
+        switch (accountIdentifier.getType()) {
+            case SE:
+                destinationAccount.setBankName(
+                        ((SwedishIdentifier) accountIdentifier).getBankName());
+                break;
+            case SE_NDA_SSN:
+                destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
+                break;
+            default:
+                throw executorHelper.invalidDestError();
         }
         destinationAccount.setAccountNumber(
                 accountIdentifier.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
         accountIdentifier.getName().ifPresent(destinationAccount::setName);
 
-        return Optional.of(destinationAccount);
+        return destinationAccount;
     }
 
     private void executeExternalBankTransfer(

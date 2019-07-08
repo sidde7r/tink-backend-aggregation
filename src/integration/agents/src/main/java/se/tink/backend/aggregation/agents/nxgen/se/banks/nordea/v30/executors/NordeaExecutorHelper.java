@@ -74,7 +74,6 @@ public class NordeaExecutorHelper {
     /** Check if payment destination account exist as unconfirmed among user's beneificiaries, */
     protected Optional<BeneficiariesEntity> validateDestinationAccount(Transfer transfer) {
         return apiClient.fetchBeneficiaries().getBeneficiaries().stream()
-                .filter(BeneficiariesEntity::isPgOrBg)
                 .filter(
                         beneficiary ->
                                 isAccountIdentifierEquals(
@@ -347,30 +346,31 @@ public class NordeaExecutorHelper {
 
     public TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
-            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
-            .build();
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
+                .setEndUserMessage(
+                        catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
+                .build();
     }
 
     public TransferExecutionException eInvoiceUpdateDueNotAllowed() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
-            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DUEDATE))
-            .build();
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DUEDATE))
+                .build();
     }
 
     public TransferExecutionException eInvoiceUpdateFromNotAllowed() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
-            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_SOURCE))
-            .build();
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_SOURCE))
+                .build();
     }
 
     public TransferExecutionException eInvoiceUpdateToNotAllowed() {
         return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-            .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
-            .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
-            .build();
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
+                .build();
     }
 
     private TransferExecutionException transferError() {

@@ -45,8 +45,7 @@ public class PaymentRequest {
     @JsonProperty("from_account_number_type")
     private String fromAccountNumberType;
 
-    @JsonIgnore
-    private String id;
+    @JsonIgnore private String id;
 
     @JsonProperty("own_message")
     private String ownMessage;
