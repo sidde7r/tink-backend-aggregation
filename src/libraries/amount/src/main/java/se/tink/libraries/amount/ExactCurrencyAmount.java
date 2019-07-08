@@ -57,7 +57,7 @@ public class ExactCurrencyAmount implements Comparable<ExactCurrencyAmount> {
         ExactCurrencyAmount other = (ExactCurrencyAmount) o;
         boolean currencyCodeEquality =
                 Objects.equals(this.getCurrencyCode(), other.getCurrencyCode());
-        boolean valueEquality = Objects.equals(this.value, other.value);
+        boolean valueEquality = (this.value.compareTo(other.value) == 0);
         return valueEquality && currencyCodeEquality;
     }
 
