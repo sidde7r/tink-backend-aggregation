@@ -8,11 +8,12 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.LoadedAuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStep;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 
-public final class SignStep {
+public final class SignStep implements AuthenticationStep {
 
     private final SupplementalInformationFormer supplementalInformationFormer;
     private final IngCardReaderAuthenticator authenticator;
@@ -29,7 +30,8 @@ public final class SignStep {
         this.authenticator = authenticator;
     }
 
-    public AuthenticationResponse respond(LoadedAuthenticationRequest request)
+    @Override
+    public AuthenticationResponse respond(final AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
         logger.info("ING SignStep: {}", request.getUserInputs());
 
@@ -46,7 +48,6 @@ public final class SignStep {
         request.getCredentials()
                 .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
         return new AuthenticationResponse(
-                IngCardReaderAuthenticationController.STEP_SIGN,
                 supplementalInformationFormer.formChallengeResponseFields(
                         challengeExchangeValues.getChallenge()));
     }

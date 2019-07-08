@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
+import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.Field;
 
 /**
@@ -9,19 +11,13 @@ import se.tink.backend.agents.rpc.Field;
  */
 public final class AuthenticationResponse {
 
-    private final String step;
-    private final List<Field> fields;
+    private final ImmutableList<Field> fields;
 
-    public AuthenticationResponse(String step, List<Field> fields) {
-        this.step = step;
-        this.fields = fields;
+    public AuthenticationResponse(@Nonnull List<Field> fields) {
+        this.fields = ImmutableList.copyOf(fields);
     }
 
-    public String getStep() {
-        return step;
-    }
-
-    public List<Field> getFields() {
+    public ImmutableList<Field> getFields() {
         return fields;
     }
 }
