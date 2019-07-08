@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.StocksResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
@@ -165,8 +166,8 @@ public class SabadellApiClient {
                 .get(String.class);
     }
 
-    public String fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
+    public LoanDetailsResponse fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
         return createRequest(SabadellConstants.Urls.FETCH_LOAN_DETAILS)
-                .post(String.class, loanDetailsRequest);
+                .post(LoanDetailsResponse.class, loanDetailsRequest);
     }
 }
