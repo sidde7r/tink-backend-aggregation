@@ -120,7 +120,7 @@ public abstract class Account {
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
     }
 
-   @Deprecated
+    @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
         switch (type) {
