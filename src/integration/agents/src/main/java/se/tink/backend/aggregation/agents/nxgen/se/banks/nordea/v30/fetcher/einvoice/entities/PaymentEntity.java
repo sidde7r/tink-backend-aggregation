@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.ut
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
@@ -76,6 +78,7 @@ public class PaymentEntity {
         Transfer transfer = new Transfer();
         transfer.setAmount(new Amount(NordeaSEConstants.CURRENCY, amount));
         transfer.setType(getTinkType());
+        transfer.setSource(getSource());
         transfer.setDestination(getDestination());
         transfer.setDueDate(due);
         transfer.setDestinationMessage(getDestinationMessage());
@@ -104,9 +107,19 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    public AccountIdentifier getDestination() {
+    private AccountIdentifier getDestination() {
         return AccountIdentifier.create(
-                getTinkPaymentType(), recipientAccountNumber, getDestinationName());
+                getRecipientTinkType(), recipientAccountNumber, getDestinationName());
+    }
+
+    @JsonIgnore
+    private AccountIdentifier getSource() {
+        AccountIdentifier ssnIdentifier = AccountIdentifier.create(Type.SE_NDA_SSN, from);
+        if (ssnIdentifier.isValid()) {
+            return ssnIdentifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier();
+        } else {
+            return AccountIdentifier.create(Type.SE, from);
+        }
     }
 
     // plusgiro does not seem to have an id but it has a reference field instead.
@@ -121,7 +134,7 @@ public class PaymentEntity {
     }
 
     @JsonIgnore
-    private AccountIdentifier.Type getTinkPaymentType() {
+    private AccountIdentifier.Type getRecipientTinkType() {
         switch (toAccountNumberType.toUpperCase()) {
             case NordeaSEConstants.PaymentAccountTypes.BANKGIRO:
                 return AccountIdentifier.Type.SE_BG;
