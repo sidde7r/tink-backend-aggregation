@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.rpc.ErrorResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -30,18 +32,11 @@ public class SabadellLoanFetcher implements AccountFetcher<LoanAccount> {
                         SerializationUtils.serializeToString(loansResponse),
                         SabadellConstants.Tags.LOANS);
 
-                loansResponse
-                        .getAccounts()
-                        .forEach(
-                                account -> {
-                                    String loanDetailsResponse =
-                                            apiClient.fetchLoanDetails(
-                                                    new LoanDetailsRequest(account));
-
-                                    log.infoExtraLong(
-                                            loanDetailsResponse,
-                                            SabadellConstants.Tags.LOAN_DETAILS);
-                                });
+                return loansResponse.getAccounts().stream()
+                        .map(account -> apiClient.fetchLoanDetails(new LoanDetailsRequest(account)))
+                        .filter(LoanDetailsResponse::hasLoans)
+                        .map(LoanDetailsResponse::toTinkLoanAccount)
+                        .collect(Collectors.toList());
             }
         } catch (HttpResponseException e) {
             ErrorResponse response = e.getResponse().getBody(ErrorResponse.class);
