@@ -5,11 +5,13 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.BecConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.authenticator.BecAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.configuration.BecConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.executor.payment.BecPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.BecTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -66,6 +68,10 @@ public final class BecAgent extends NextGenerationAgent {
     }
 
     @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new BecPaymentExecutor(apiClient)));
+    }
+
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
     }
