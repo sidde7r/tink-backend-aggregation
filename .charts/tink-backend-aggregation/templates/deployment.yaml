@@ -547,6 +547,8 @@ spec:
           mountPath: /tmp
         - name: altered-config-volume
           mountPath: /etc/tink
+        - name: client-certificate
+          mountPath: /etc/client-certificate
         - name: bnppf-cert
           mountPath: /etc/tink/bnppf-cert.p12
           subPath: bnppf-cert.p12
@@ -570,6 +572,9 @@ spec:
       - name: agents-config
         configMap:
           name: agents-config
+      - name: client-certificate
+        secret:
+          secretName: client-certificate
       - name: bnppf-cert
         secret:
           secretName: bnppf-cert
