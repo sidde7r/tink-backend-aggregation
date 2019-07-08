@@ -30,7 +30,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
-    private static final AggregationLogger LOGGER = new AggregationLogger(KbcAuthenticator.class);
+    private static final AggregationLogger logger = new AggregationLogger(KbcAuthenticator.class);
 
     public KbcAuthenticator(
             final SessionStorage sessionStorage,
@@ -208,7 +208,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
     private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(
             IllegalStateException e, String textMessage) {
-        LOGGER.warnExtraLong(
+        logger.warnExtraLong(
                 String.format("Error message: %s", e.getMessage()),
                 KbcConstants.LogTags.ERROR_CODE_MESSAGE);
         return matchesErrorMessage(e, textMessage);
