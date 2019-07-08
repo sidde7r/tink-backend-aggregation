@@ -8,6 +8,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
@@ -16,11 +17,18 @@ import se.tink.libraries.uuid.UUIDUtils;
 public final class UpcomingTransaction extends AggregationTransaction {
     private final Transfer upcomingTransfer;
 
+    @Deprecated
     protected UpcomingTransaction(
             Amount amount, Date date, String description, Transfer upcomingTransfer) {
         this(amount, date, description, upcomingTransfer, null);
     }
 
+    protected UpcomingTransaction(
+            ExactCurrencyAmount amount, Date date, String description, Transfer upcomingTransfer) {
+        this(amount, date, description, upcomingTransfer, null);
+    }
+
+    @Deprecated
     protected UpcomingTransaction(
             Amount amount,
             Date date,
@@ -29,6 +37,20 @@ public final class UpcomingTransaction extends AggregationTransaction {
             String rawDetails) {
         super(amount, date, description, rawDetails);
         this.upcomingTransfer = upcomingTransfer;
+    }
+
+    protected UpcomingTransaction(
+            ExactCurrencyAmount amount,
+            Date date,
+            String description,
+            Transfer upcomingTransfer,
+            String rawDetails) {
+        super(amount, date, description, rawDetails);
+        this.upcomingTransfer = upcomingTransfer;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Optional<Transfer> getUpcomingTransfer() {
@@ -56,10 +78,6 @@ public final class UpcomingTransaction extends AggregationTransaction {
         return transaction;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static final class Builder extends AggregationTransaction.Builder {
         private Transfer upcomingTransfer;
 
@@ -72,8 +90,14 @@ public final class UpcomingTransaction extends AggregationTransaction {
             return this;
         }
 
+        @Deprecated
         @Override
         public Builder setAmount(Amount amount) {
+            return (Builder) super.setAmount(amount);
+        }
+
+        @Override
+        public Builder setAmount(ExactCurrencyAmount amount) {
             return (Builder) super.setAmount(amount);
         }
 
@@ -109,7 +133,11 @@ public final class UpcomingTransaction extends AggregationTransaction {
         @Override
         public UpcomingTransaction build() {
             return new UpcomingTransaction(
-                    getAmount(), getDate(), getDescription(), upcomingTransfer, getRawDetails());
+                    getExactAmount(),
+                    getDate(),
+                    getDescription(),
+                    upcomingTransfer,
+                    getRawDetails());
         }
     }
 }

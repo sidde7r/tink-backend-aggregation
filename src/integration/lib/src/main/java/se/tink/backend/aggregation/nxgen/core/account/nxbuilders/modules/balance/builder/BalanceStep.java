@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balanc
 
 import javax.annotation.Nonnull;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public interface BalanceStep<T> {
 
@@ -11,5 +12,13 @@ public interface BalanceStep<T> {
      * @param balance The balance to be set
      * @return The next step of the builder
      */
+    @Deprecated
     T withBalance(@Nonnull Amount balance);
+    /**
+     * Sets the balance of the account.
+     *
+     * @param balance The balance to be set
+     * @return The next step of the builder
+     */
+    T withBalance(@Nonnull ExactCurrencyAmount balance);
 }

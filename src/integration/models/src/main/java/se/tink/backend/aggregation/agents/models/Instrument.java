@@ -2,17 +2,13 @@ package se.tink.backend.aggregation.agents.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.math.BigDecimal;
 import java.util.Optional;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {
-
-    public enum Type {
-        FUND,
-        STOCK,
-        OTHER
-    }
 
     // Normally the uniqueIdentifier should be isin + market.
     // If isin and market is hard to get hold of and the bank / broker have some other way to
@@ -33,6 +29,17 @@ public class Instrument {
     private String ticker;
     private Type type;
     private String rawType;
+
+    @Deprecated
+    @JsonIgnore
+    private static Double getAmountValue(Amount amount) {
+        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
+    }
+
+    @JsonIgnore
+    private static Double getAmountValueFromExactAmount(ExactCurrencyAmount amount) {
+        return Optional.ofNullable(amount).map(ExactCurrencyAmount::getDoubleValue).orElse(null);
+    }
 
     public String getUniqueIdentifier() {
         return uniqueIdentifier;
@@ -62,8 +69,13 @@ public class Instrument {
         return averageAcquisitionPrice;
     }
 
+    @Deprecated
     public void setAverageAcquisitionPrice(Double averageAcquisitionPrice) {
         this.averageAcquisitionPrice = averageAcquisitionPrice;
+    }
+
+    public void setAverageAcquisitionPrice(BigDecimal averageAcquisitionPrice) {
+        this.averageAcquisitionPrice = averageAcquisitionPrice.doubleValue();
     }
 
     public String getCurrency() {
@@ -138,28 +150,54 @@ public class Instrument {
         this.rawType = rawType;
     }
 
+    @Deprecated
     @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(Amount averageAcquisitionPrice) {
         this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice);
     }
 
     @JsonIgnore
+    public void setAverageAcquisitionPriceFromAmount(ExactCurrencyAmount averageAcquisitionPrice) {
+        this.averageAcquisitionPrice =
+                getAmountValueFromExactAmount(averageAcquisitionPrice).doubleValue();
+    }
+
+    @Deprecated
+    @JsonIgnore
     public void setMarketValueFromAmount(Amount marketValue) {
         this.marketValue = getAmountValue(marketValue);
     }
 
+    @JsonIgnore
+    public void setMarketValueFromAmount(ExactCurrencyAmount marketValue) {
+        this.marketValue = getAmountValueFromExactAmount(marketValue).doubleValue();
+    }
+
+    @Deprecated
     @JsonIgnore
     public void setPriceFromAmount(Amount price) {
         this.price = getAmountValue(price);
     }
 
     @JsonIgnore
+    public void setPriceFromAmount(ExactCurrencyAmount price) {
+        this.price = getAmountValueFromExactAmount(price).doubleValue();
+    }
+
+    @Deprecated
+    @JsonIgnore
     public void setProfitFromAmount(Amount profit) {
         this.profit = getAmountValue(profit);
     }
 
     @JsonIgnore
-    private static Double getAmountValue(Amount amount) {
-        return Optional.ofNullable(amount).map(Amount::getValue).orElse(null);
+    public void setProfitFromAmount(ExactCurrencyAmount profit) {
+        this.profit = getAmountValueFromExactAmount(profit).doubleValue();
+    }
+
+    public enum Type {
+        FUND,
+        STOCK,
+        OTHER
     }
 }

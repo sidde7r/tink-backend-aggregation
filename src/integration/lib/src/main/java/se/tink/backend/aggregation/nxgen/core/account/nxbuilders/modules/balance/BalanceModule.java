@@ -6,29 +6,40 @@ import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceBuilderStep;
 import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.builder.BalanceStep;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public final class BalanceModule {
 
-    private final Amount balance;
+    private final ExactCurrencyAmount exactBalance;
     private final Double interestRate;
-    private final Amount availableCredit;
+    private final ExactCurrencyAmount exactAvailableCredit;
 
     private BalanceModule(Builder builder) {
-        this.balance = builder.balance;
         this.interestRate = builder.interestRate;
-        this.availableCredit = builder.availableCredit;
+        this.exactAvailableCredit = builder.exactAvailableCredit;
+        this.exactBalance = builder.exactBalance;
     }
 
     public static BalanceStep<BalanceBuilderStep> builder() {
         return new Builder();
     }
 
+    @Deprecated
     public static BalanceModule of(Amount amount) {
         return builder().withBalance(amount).build();
     }
 
+    public static BalanceModule of(ExactCurrencyAmount amount) {
+        return builder().withBalance(amount).build();
+    }
+
+    @Deprecated
     public Amount getBalance() {
-        return new Amount(balance.getCurrency(), balance.getValue());
+        return new Amount(exactBalance.getCurrencyCode(), exactBalance.getDoubleValue());
+    }
+
+    public ExactCurrencyAmount getExactBalance() {
+        return ExactCurrencyAmount.of(this.exactBalance);
     }
 
     public Optional<Double> getInterestRate() {
@@ -36,14 +47,19 @@ public final class BalanceModule {
     }
 
     public Optional<Amount> getAvailableCredit() {
-        return Optional.ofNullable(availableCredit);
+        return Optional.ofNullable(exactAvailableCredit)
+                .map(e -> new Amount(e.getCurrencyCode(), e.getDoubleValue()));
+    }
+
+    public Optional<ExactCurrencyAmount> getExactAvaliableCredit() {
+        return Optional.ofNullable(this.exactAvailableCredit);
     }
 
     private static class Builder implements BalanceStep<BalanceBuilderStep>, BalanceBuilderStep {
 
         private Double interestRate;
-        private Amount availableCredit;
-        private Amount balance;
+        private ExactCurrencyAmount exactAvailableCredit;
+        private ExactCurrencyAmount exactBalance;
 
         @Override
         public BalanceBuilderStep setInterestRate(double interestRate) {
@@ -52,18 +68,36 @@ public final class BalanceModule {
             return this;
         }
 
+        @Deprecated
         @Override
         public BalanceBuilderStep setAvailableCredit(@Nonnull Amount availableCredit) {
             Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
-            this.availableCredit =
-                    new Amount(availableCredit.getCurrency(), availableCredit.getValue());
+            this.exactAvailableCredit =
+                    ExactCurrencyAmount.of(
+                            availableCredit.getValue(), availableCredit.getCurrency());
             return this;
         }
 
         @Override
+        public BalanceBuilderStep setAvailableCredit(@Nonnull ExactCurrencyAmount availableCredit) {
+            Preconditions.checkNotNull(availableCredit, "Available Credit must not be null.");
+            this.exactAvailableCredit = ExactCurrencyAmount.of(availableCredit);
+            return this;
+        }
+
+        @Deprecated
+        @Override
         public BalanceBuilderStep withBalance(@Nonnull Amount balance) {
             Preconditions.checkNotNull(balance, "Balance must not be null.");
-            this.balance = new Amount(balance.getCurrency(), balance.getValue());
+            this.exactBalance =
+                    ExactCurrencyAmount.of(balance.doubleValue(), balance.getCurrency());
+            return this;
+        }
+
+        @Override
+        public BalanceBuilderStep withBalance(@Nonnull ExactCurrencyAmount balance) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+            this.exactBalance = ExactCurrencyAmount.of(balance);
             return this;
         }
 

@@ -7,18 +7,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.date.DateUtils;
 
 public class LoanDetails {
     private static final AggregationLogger log = new AggregationLogger(LoanDetails.class);
 
-    private final Amount amortized;
-    private final Amount monthlyAmortization;
-    private final Amount initialBalance;
+    private final ExactCurrencyAmount amortized;
+    private final ExactCurrencyAmount monthlyAmortization;
+    private final ExactCurrencyAmount initialBalance;
     private final Date initialDate;
     private final String loanNumber;
     private final int numMonthsBound;
@@ -33,9 +35,9 @@ public class LoanDetails {
     }
 
     private LoanDetails(
-            Amount amortized,
-            Amount monthlyAmortization,
-            Amount initialBalance,
+            ExactCurrencyAmount amortized,
+            ExactCurrencyAmount monthlyAmortization,
+            ExactCurrencyAmount initialBalance,
             Date initialDate,
             String loanNumber,
             int numMonthsBound,
@@ -57,42 +59,61 @@ public class LoanDetails {
         this.coApplicant = coApplicant;
     }
 
+    public static Builder builder(Type type) {
+        return new Builder(type);
+    }
+
+    @Deprecated
     public Amount getAmortized() {
-        if (amortized != null) {
-            return new Amount(amortized.getCurrency(), amortized.getValue());
-        }
-        return null;
+        return Optional.ofNullable(amortized)
+                .map(a -> new Amount(a.getCurrencyCode(), a.getDoubleValue()))
+                .orElse(null);
+    }
+
+    public ExactCurrencyAmount getExactAmortized() {
+        return Optional.ofNullable(amortized).map(ExactCurrencyAmount::of).orElse(null);
     }
 
     private Double calculateAmortizedValue(LoanAccount account) {
         if (amortized != null) {
-            return amortized.getValue();
+            return amortized.getDoubleValue();
         }
 
         if (initialBalance != null) {
-            if (!Objects.equals(initialBalance.getCurrency(), account.getBalance().getCurrency())) {
+            if (!Objects.equals(
+                    initialBalance.getCurrencyCode(),
+                    account.getExactBalance().getCurrencyCode())) {
                 log.warn(
                         String.format(
                                 "Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
-                                account.getBalance().getCurrency(), initialBalance.getCurrency()));
+                                account.getExactBalance().getCurrencyCode(),
+                                initialBalance.getCurrencyCode()));
             }
 
-            return initialBalance.getValue() - account.getBalance().getValue();
+            return initialBalance.getDoubleValue() - account.getExactBalance().getDoubleValue();
         }
 
         return null;
     }
 
+    @Deprecated
     public Amount getMonthlyAmortization() {
-        if (monthlyAmortization != null) {
-            return Amount.createFromAmount(monthlyAmortization).orElse(null);
-        }
-        return null;
+        return Optional.ofNullable(monthlyAmortization)
+                .map(
+                        e ->
+                                new Amount(
+                                        monthlyAmortization.getCurrencyCode(),
+                                        monthlyAmortization.getDoubleValue()))
+                .orElse(null);
+    }
+
+    public ExactCurrencyAmount getExactMonthlyAmortization() {
+        return Optional.ofNullable(monthlyAmortization).map(ExactCurrencyAmount::of).orElse(null);
     }
 
     private Double calculateMonthlyAmortizationValue(LoanAccount account) {
-        if (monthlyAmortization != null && monthlyAmortization.getValue() != null) {
-            return monthlyAmortization.getValue();
+        if (monthlyAmortization != null) {
+            return monthlyAmortization.getDoubleValue();
         }
         Double amortizedValue = calculateAmortizedValue(account);
 
@@ -105,14 +126,17 @@ public class LoanDetails {
     }
 
     public Amount getInitialBalance() {
-        if (initialBalance != null) {
-            return new Amount(initialBalance.getCurrency(), initialBalance.getValue());
-        }
-        return null;
+        return Optional.ofNullable(initialBalance)
+                .map(
+                        i ->
+                                new Amount(
+                                        initialBalance.getCurrencyCode(),
+                                        initialBalance.getDoubleValue()))
+                .orElse(null);
     }
 
     private Double getInitialBalanceValue() {
-        return initialBalance != null ? initialBalance.getValue() : null;
+        return Optional.ofNullable(initialBalance).map(i -> i.getDoubleValue()).orElse(null);
     }
 
     public Date getInitialDate() {
@@ -140,7 +164,9 @@ public class LoanDetails {
     }
 
     public List<String> getApplicants() {
-        return applicants != null ? ImmutableList.copyOf(applicants) : Collections.emptyList();
+        return Optional.ofNullable(applicants)
+                .<List<String>>map(a -> ImmutableList.copyOf(a))
+                .orElseGet(Collections::emptyList);
     }
 
     public boolean hasCoApplicant() {
@@ -150,7 +176,7 @@ public class LoanDetails {
     public Loan toSystemLoan(LoanAccount account, LoanInterpreter interpreter) {
         Loan loan = new Loan();
 
-        loan.setBalance(account.getBalance().getValue());
+        loan.setBalance(account.getExactBalance().getDoubleValue());
         loan.setInterest(account.getInterestRate());
         loan.setName(account.getName());
         loan.setLoanNumber(
@@ -180,14 +206,35 @@ public class LoanDetails {
         return loan;
     }
 
-    public static Builder builder(Type type) {
-        return new Builder(type);
+    public enum Type {
+        MORTGAGE(Loan.Type.MORTGAGE),
+        BLANCO(Loan.Type.BLANCO),
+        MEMBERSHIP(Loan.Type.MEMBERSHIP),
+        VEHICLE(Loan.Type.VEHICLE),
+        LAND(Loan.Type.LAND),
+        STUDENT(Loan.Type.STUDENT),
+        OTHER(Loan.Type.OTHER),
+        DERIVE_FROM_NAME(null);
+
+        private final Loan.Type type;
+
+        Type(Loan.Type type) {
+            this.type = type;
+        }
+
+        public Loan.Type toSystemType() {
+            Preconditions.checkNotNull(
+                    type,
+                    "System can`t accept null type. "
+                            + "Type must be set explicitly or be derived using LoanInterpreter.");
+            return type;
+        }
     }
 
     public static class Builder {
-        private Amount amortized;
-        private Amount monthlyAmortization;
-        private Amount initialBalance;
+        private ExactCurrencyAmount amortized;
+        private ExactCurrencyAmount monthlyAmortization;
+        private ExactCurrencyAmount initialBalance;
         private Date initialDate;
         private String loanNumber;
         private int numMonthsBound;
@@ -202,40 +249,85 @@ public class LoanDetails {
             this.type = type;
         }
 
+        @Deprecated
         public Amount getAmortized() {
-            if (amortized != null) {
-                return amortized.getValue() != null ? amortized : null;
-            }
-            return null;
+            return Optional.ofNullable(amortized)
+                    .filter(a -> Objects.nonNull(a.getExactValue()))
+                    .map(a -> new Amount(a.getCurrencyCode(), a.getDoubleValue()))
+                    .orElse(null);
         }
 
+        @Deprecated
         public Builder setAmortized(Amount amortized) {
-            this.amortized = amortized;
+            this.amortized = ExactCurrencyAmount.of(amortized.getValue(), amortized.getCurrency());
             return this;
         }
 
+        public Builder setAmortized(ExactCurrencyAmount amortized) {
+            this.amortized = ExactCurrencyAmount.of(amortized);
+            return this;
+        }
+
+        public ExactCurrencyAmount getExactAmortized() {
+            return Optional.ofNullable(amortized)
+                    .filter(a -> Objects.nonNull(a.getExactValue()))
+                    .map(ExactCurrencyAmount::of)
+                    .orElse(null);
+        }
+
+        @Deprecated
         public Amount getMonthlyAmortization() {
-            if (monthlyAmortization != null) {
-                return monthlyAmortization.getValue() != null ? monthlyAmortization : null;
-            }
-            return null;
+            return Optional.ofNullable(monthlyAmortization)
+                    .filter(m -> Objects.nonNull(m.getExactValue()))
+                    .map(m -> new Amount(m.getCurrencyCode(), m.getDoubleValue()))
+                    .orElse(null);
         }
 
+        @Deprecated
         public Builder setMonthlyAmortization(Amount monthlyAmortization) {
-            this.monthlyAmortization = monthlyAmortization;
+            this.monthlyAmortization =
+                    ExactCurrencyAmount.of(
+                            monthlyAmortization.getValue(), monthlyAmortization.getCurrency());
             return this;
         }
 
+        public Builder setMonthlyAmortization(ExactCurrencyAmount monthlyAmortization) {
+            this.monthlyAmortization = ExactCurrencyAmount.of(monthlyAmortization);
+            return this;
+        }
+
+        public ExactCurrencyAmount getExactMonthlyAmortization() {
+            return Optional.ofNullable(monthlyAmortization)
+                    .filter(m -> Objects.nonNull(m.getExactValue()))
+                    .map(ExactCurrencyAmount::of)
+                    .orElse(null);
+        }
+
+        @Deprecated
         public Amount getInitialBalance() {
-            if (initialBalance != null) {
-                return initialBalance.getValue() != null ? initialBalance : null;
-            }
-            return null;
+            return Optional.ofNullable(initialBalance)
+                    .filter(i -> Objects.nonNull(i.getExactValue()))
+                    .map(i -> new Amount(i.getCurrencyCode(), i.getDoubleValue()))
+                    .orElse(null);
         }
 
+        @Deprecated
         public Builder setInitialBalance(Amount initialBalance) {
-            this.initialBalance = initialBalance;
+            this.initialBalance =
+                    ExactCurrencyAmount.of(initialBalance.getValue(), initialBalance.getCurrency());
             return this;
+        }
+
+        public Builder setInitialBalance(ExactCurrencyAmount initialBalance) {
+            this.initialBalance = ExactCurrencyAmount.of(initialBalance);
+            return this;
+        }
+
+        public ExactCurrencyAmount getExactInitialBalance() {
+            return Optional.ofNullable(initialBalance)
+                    .filter(i -> Objects.nonNull(i.getExactValue()))
+                    .map(ExactCurrencyAmount::of)
+                    .orElse(null);
         }
 
         public Date getInitialDate() {
@@ -307,9 +399,9 @@ public class LoanDetails {
 
         public LoanDetails build() {
             return new LoanDetails(
-                    getAmortized(),
-                    getMonthlyAmortization(),
-                    getInitialBalance(),
+                    getExactAmortized(),
+                    getExactMonthlyAmortization(),
+                    getExactInitialBalance(),
                     getInitialDate(),
                     getLoanNumber(),
                     getNumMonthsBound(),
@@ -318,31 +410,6 @@ public class LoanDetails {
                     getSecurity(),
                     getApplicants(),
                     hasCoApplicant());
-        }
-    }
-
-    public enum Type {
-        MORTGAGE(Loan.Type.MORTGAGE),
-        BLANCO(Loan.Type.BLANCO),
-        MEMBERSHIP(Loan.Type.MEMBERSHIP),
-        VEHICLE(Loan.Type.VEHICLE),
-        LAND(Loan.Type.LAND),
-        STUDENT(Loan.Type.STUDENT),
-        OTHER(Loan.Type.OTHER),
-        DERIVE_FROM_NAME(null);
-
-        private final Loan.Type type;
-
-        Type(Loan.Type type) {
-            this.type = type;
-        }
-
-        public Loan.Type toSystemType() {
-            Preconditions.checkNotNull(
-                    type,
-                    "System can`t accept null type. "
-                            + "Type must be set explicitly or be derived using LoanInterpreter.");
-            return type;
         }
     }
 }

@@ -6,9 +6,20 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 @SuppressWarnings("ConstantConditions")
 public class BalanceModuleTest {
+    @Test
+    public void of_exactBalance() {
+        ExactCurrencyAmount amount = ExactCurrencyAmount.of(257.90, "SEK");
+        BalanceModule balance = BalanceModule.of(amount);
+
+        // Test successful build
+        assertEquals(257.90, balance.getExactBalance().getDoubleValue(), 0);
+        assertFalse(balance.getExactAvaliableCredit().isPresent());
+        assertFalse(balance.getInterestRate().isPresent());
+    }
 
     @Test
     public void of() {
@@ -27,24 +38,19 @@ public class BalanceModuleTest {
 
     @Test(expected = NullPointerException.class)
     public void nullBalanceOf() {
-        BalanceModule.of(null);
+        BalanceModule.of((Amount) null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void nullBalance() {
-        BalanceModule.builder().withBalance(null).build();
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void nullCredit() {
-        BalanceModule.builder().withBalance(Amount.inSEK(20)).setAvailableCredit(null).build();
+    public void nullBalanceOf_exactAmount() {
+        BalanceModule.of((ExactCurrencyAmount) null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void negativeInterest() {
         BalanceModule.builder()
-                .withBalance(Amount.inSEK(20))
-                .setAvailableCredit(Amount.inSEK(10_000))
+                .withBalance(ExactCurrencyAmount.of(20, "SEK"))
+                .setAvailableCredit(ExactCurrencyAmount.of(10_000, "SEK"))
                 .setInterestRate(-0.25)
                 .build();
     }
@@ -68,6 +74,27 @@ public class BalanceModuleTest {
         assertTrue(balance.getInterestRate().isPresent());
         assertTrue(balance.getAvailableCredit().isPresent());
         assertEquals(25_506.32, balance.getBalance().getValue(), 0);
+        assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
+        assertEquals("DKK", balance.getBalance().getCurrency());
+        assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());
+        assertEquals(0.0265, balance.getInterestRate().get(), 0);
+    }
+
+    @Test
+    public void successfulBuildWithExactCurrencyAmount() {
+        ExactCurrencyAmount bal = ExactCurrencyAmount.of(25506.32, "DKK");
+        ExactCurrencyAmount credit = ExactCurrencyAmount.of(9473.27, "DKK");
+
+        BalanceModule balance =
+                BalanceModule.builder()
+                        .withBalance(bal)
+                        .setAvailableCredit(credit)
+                        .setInterestRate(0.0265)
+                        .build();
+
+        assertTrue(balance.getInterestRate().isPresent());
+        assertTrue(balance.getAvailableCredit().isPresent());
+        assertEquals(25506.32, balance.getBalance().getValue(), 0);
         assertEquals(9473.27, balance.getAvailableCredit().get().getValue(), 0);
         assertEquals("DKK", balance.getBalance().getCurrency());
         assertEquals("DKK", balance.getAvailableCredit().get().getCurrency());

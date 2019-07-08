@@ -1,11 +1,15 @@
 package se.tink.backend.aggregation.nxgen.core.account.loan;
 
 import com.google.common.base.Preconditions;
+import java.math.BigDecimal;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 
 public class LoanAccount extends Account {
+    public static final int BIGGER_THAN = 1;
     private final Double interestRate;
     private final LoanDetails details;
 
@@ -19,14 +23,20 @@ public class LoanAccount extends Account {
         return new DefaultLoanBuilder(uniqueIdentifier);
     }
 
+    @Deprecated
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier).setBalance(balance);
+        return builder(uniqueIdentifier)
+                .setExactBalance(ExactCurrencyAmount.of(balance.getValue(), balance.getCurrency()));
     }
 
-    private static Amount ensureNegativeSign(Amount amount) {
+    public static Builder<?, ?> builder(String uniqueIdentifier, ExactCurrencyAmount balance) {
+        return builder(uniqueIdentifier).setExactBalance(ExactCurrencyAmount.of(balance));
+    }
+
+    private static ExactCurrencyAmount ensureNegativeSign(ExactCurrencyAmount amount) {
         Preconditions.checkNotNull(amount);
-        Preconditions.checkNotNull(amount.getValue());
-        Preconditions.checkArgument(amount.getValue() <= 0);
+        Preconditions.checkArgument(
+                amount.getExactValue().compareTo(BigDecimal.ZERO) != BIGGER_THAN);
         return amount;
     }
 
@@ -35,9 +45,17 @@ public class LoanAccount extends Account {
         return AccountTypes.LOAN;
     }
 
+    @Deprecated
     @Override
     public Amount getBalance() {
         return Amount.createFromAmount(super.getBalance()).orElseThrow(NullPointerException::new);
+    }
+
+    @Override
+    public ExactCurrencyAmount getExactBalance() {
+        return Optional.ofNullable(super.getExactBalance())
+                .map(ExactCurrencyAmount::of)
+                .orElseThrow(NullPointerException::new);
     }
 
     public Double getInterestRate() {
@@ -84,9 +102,17 @@ public class LoanAccount extends Account {
             return this;
         }
 
+        @Deprecated
         @Override
         public Amount getBalance() {
-            return ensureNegativeSign(super.getBalance());
+            return new Amount(
+                    super.getExactBalance().getCurrencyCode(),
+                    ensureNegativeSign(super.getExactBalance()).getDoubleValue());
+        }
+
+        @Override
+        public ExactCurrencyAmount getExactBalance() {
+            return ensureNegativeSign(super.getExactBalance());
         }
 
         public LoanDetails getDetails() {

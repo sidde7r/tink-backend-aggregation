@@ -18,19 +18,6 @@ public class Amount extends Number {
     private String currency;
     private double value;
 
-    public static Amount valueOf(String currency, long unscaledValue, int scale) {
-        Objects.requireNonNull(currency);
-        return new Amount(currency, unscaledValue, scale);
-    }
-
-    private static BigDecimal toBigDecimal(long unscaledValue, int scale) {
-        BigDecimal value = BigDecimal.valueOf(unscaledValue, scale);
-        if (scale != SCALE) {
-            value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
-        }
-        return value;
-    }
-
     public Amount() {
         this.currency = null;
         this.value = 0D;
@@ -49,11 +36,40 @@ public class Amount extends Number {
         this.value = value;
     }
 
+    public static Amount valueOf(String currency, long unscaledValue, int scale) {
+        Objects.requireNonNull(currency);
+        return new Amount(currency, unscaledValue, scale);
+    }
+
+    private static BigDecimal toBigDecimal(long unscaledValue, int scale) {
+        BigDecimal value = BigDecimal.valueOf(unscaledValue, scale);
+        if (scale != SCALE) {
+            value = value.setScale(SCALE, RoundingMode.HALF_EVEN);
+        }
+        return value;
+    }
+
     public static Optional<Amount> createFromAmount(Amount amount) {
         return Optional.ofNullable(amount)
                 .filter(a -> a.getCurrency() != null)
                 .filter(a -> Double.isFinite(a.getValue()))
                 .map(a -> new Amount(a.getCurrency(), a.getValue()));
+    }
+
+    public static Amount inSEK(Number value) {
+        return new Amount("SEK", value);
+    }
+
+    public static Amount inNOK(Number value) {
+        return new Amount("NOK", value);
+    }
+
+    public static Amount inDKK(Number value) {
+        return new Amount("DKK", value);
+    }
+
+    public static Amount inEUR(Number value) {
+        return new Amount("EUR", value);
     }
 
     public String getCurrency() {
@@ -81,12 +97,12 @@ public class Amount extends Number {
         }
     }
 
-    public void setValue(long unscaledValue, int scale) {
-        setValue(toBigDecimal(unscaledValue, scale));
-    }
-
     public void setValue(double amount) {
         this.value = amount;
+    }
+
+    public void setValue(long unscaledValue, int scale) {
+        setValue(toBigDecimal(unscaledValue, scale));
     }
 
     @Override
@@ -102,22 +118,6 @@ public class Amount extends Number {
         }
 
         return Objects.equals(this.value, other.value);
-    }
-
-    public static Amount inSEK(Number value) {
-        return new Amount("SEK", value);
-    }
-
-    public static Amount inNOK(Number value) {
-        return new Amount("NOK", value);
-    }
-
-    public static Amount inDKK(Number value) {
-        return new Amount("DKK", value);
-    }
-
-    public static Amount inEUR(Number value) {
-        return new Amount("EUR", value);
     }
 
     @Override

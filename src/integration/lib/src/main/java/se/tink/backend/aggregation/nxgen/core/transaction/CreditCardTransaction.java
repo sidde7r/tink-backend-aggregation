@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.user.rpc.User;
 
 public final class CreditCardTransaction extends Transaction {
@@ -18,7 +19,7 @@ public final class CreditCardTransaction extends Transaction {
     private final CreditCard creditCard;
 
     private CreditCardTransaction(
-            Amount amount,
+            ExactCurrencyAmount amount,
             Date date,
             String description,
             boolean pending,
@@ -27,6 +28,10 @@ public final class CreditCardTransaction extends Transaction {
         super(amount, date, description, pending);
         this.creditAccount = creditAccount;
         this.creditCard = creditCard;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Optional<CreditCardAccount> getCreditAccount() {
@@ -63,10 +68,6 @@ public final class CreditCardTransaction extends Transaction {
         return transaction;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static final class Builder extends Transaction.Builder {
         private CreditCardAccount creditAccount;
         private CreditCard creditCard;
@@ -89,8 +90,14 @@ public final class CreditCardTransaction extends Transaction {
             return this;
         }
 
+        @Deprecated
         @Override
         public Builder setAmount(Amount amount) {
+            return (Builder) super.setAmount(amount);
+        }
+
+        @Override
+        public Builder setAmount(ExactCurrencyAmount amount) {
             return (Builder) super.setAmount(amount);
         }
 
@@ -132,7 +139,7 @@ public final class CreditCardTransaction extends Transaction {
         @Override
         public CreditCardTransaction build() {
             return new CreditCardTransaction(
-                    getAmount(),
+                    getExactAmount(),
                     getDate(),
                     getDescription(),
                     isPending(),

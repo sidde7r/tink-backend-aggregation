@@ -23,6 +23,7 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
@@ -33,10 +34,21 @@ import se.tink.libraries.strings.StringUtils;
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Account implements Cloneable {
+    private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR =
+            accountIdentifier -> {
+                if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
+                    Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
+                    return ocr.isPresent();
+                }
+
+                return false;
+            };
     private String accountNumber;
     private AccountExclusion accountExclusion;
     private double availableCredit;
+    private ExactCurrencyAmount exactAvailableCredit;
     private double balance;
+    private ExactCurrencyAmount exactBalance;
     private String currencyCode;
     private String bankId;
     private Date certainDate;
@@ -60,11 +72,6 @@ public class Account implements Cloneable {
     private String flags;
     private String financialInstitutionId;
 
-    @Override
-    public Account clone() throws CloneNotSupportedException {
-        return (Account) super.clone();
-    }
-
     public Account() {
         this.id = StringUtils.generateUUID();
         this.ownership = 1;
@@ -73,16 +80,49 @@ public class Account implements Cloneable {
         this.accountExclusion = AccountExclusion.NONE;
     }
 
+    public ExactCurrencyAmount getExactAvailableCredit() {
+        return exactAvailableCredit;
+    }
+
+    public void setExactAvailableCredit(ExactCurrencyAmount exactAvailableCredit) {
+        this.exactAvailableCredit = exactAvailableCredit;
+    }
+
+    public ExactCurrencyAmount getExactBalance() {
+        return exactBalance;
+    }
+
+    public void setExactBalance(ExactCurrencyAmount exactBalance) {
+        this.exactBalance = exactBalance;
+    }
+
+    @Override
+    public Account clone() throws CloneNotSupportedException {
+        return (Account) super.clone();
+    }
+
     public String getAccountNumber() {
         return this.accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public double getAvailableCredit() {
         return this.availableCredit;
     }
 
+    public void setAvailableCredit(double availableCredit) {
+        this.availableCredit = availableCredit;
+    }
+
     public double getBalance() {
         return this.balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     /**
@@ -93,20 +133,40 @@ public class Account implements Cloneable {
         return this.bankId;
     }
 
+    public void setBankId(String bankId) {
+        this.bankId = bankId;
+    }
+
     public Date getCertainDate() {
         return this.certainDate;
+    }
+
+    public void setCertainDate(Date certainDate) {
+        this.certainDate = certainDate;
     }
 
     public String getCredentialsId() {
         return this.credentialsId;
     }
 
+    public void setCredentialsId(String credentialsId) {
+        this.credentialsId = credentialsId;
+    }
+
     public String getId() {
         return this.id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Forces serialization to use this getter in order to ensure account name fallback similar to
@@ -122,104 +182,82 @@ public class Account implements Cloneable {
         return this.ownership;
     }
 
-    public String getPayload() {
-        return this.payload;
-    }
-
-    public AccountTypes getType() {
-        return this.type;
-    }
-
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public boolean isExcluded() {
-        return this.excluded;
-    }
-
-    public boolean isFavored() {
-        return this.favored;
-    }
-
-    public boolean isUserModifiedName() {
-        return this.userModifiedName;
-    }
-
-    public boolean isUserModifiedType() {
-        return this.userModifiedType;
-    }
-
-    public String getHolderName() {
-        return this.holderName;
-    }
-
-    public List<AccountFlag> getFlags() {
-        return deserializeFlags();
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public void setAvailableCredit(double availableCredit) {
-        this.availableCredit = availableCredit;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public void setBankId(String bankId) {
-        this.bankId = bankId;
-    }
-
-    public void setCertainDate(Date certainDate) {
-        this.certainDate = certainDate;
-    }
-
-    public void setCredentialsId(String credentialsId) {
-        this.credentialsId = credentialsId;
-    }
-
-    public void setExcluded(boolean excluded) {
-        this.excluded = excluded;
-    }
-
-    public void setFavored(boolean favored) {
-        this.favored = favored;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setOwnership(double ownership) {
         this.ownership = ownership;
+    }
+
+    public String getPayload() {
+        return this.payload;
     }
 
     public void setPayload(String payload) {
         this.payload = payload;
     }
 
+    public AccountTypes getType() {
+        return this.type;
+    }
+
     public void setType(AccountTypes type) {
         this.type = type;
+    }
+
+    public String getUserId() {
+        return this.userId;
     }
 
     public void setUserId(String user) {
         this.userId = user;
     }
 
+    public boolean isExcluded() {
+        return this.excluded;
+    }
+
+    public void setExcluded(boolean excluded) {
+        this.excluded = excluded;
+    }
+
+    public boolean isFavored() {
+        return this.favored;
+    }
+
+    public void setFavored(boolean favored) {
+        this.favored = favored;
+    }
+
+    public boolean isUserModifiedName() {
+        return this.userModifiedName;
+    }
+
     public void setUserModifiedName(boolean userModifiedName) {
         this.userModifiedName = userModifiedName;
     }
 
+    public boolean isUserModifiedType() {
+        return this.userModifiedType;
+    }
+
     public void setUserModifiedType(boolean userModifiedType) {
         this.userModifiedType = userModifiedType;
+    }
+
+    public String getHolderName() {
+        return this.holderName;
+    }
+
+    public void setHolderName(String holderName) {
+        this.holderName = holderName;
+    }
+
+    public List<AccountFlag> getFlags() {
+        return deserializeFlags();
+    }
+
+    public void setFlags(Collection<AccountFlag> flags) {
+        for (AccountFlag flag : flags) {
+            this.putFlag(flag);
+        }
     }
 
     public String getFinancialInstitutionId() {
@@ -244,16 +282,6 @@ public class Account implements Cloneable {
 
     public void setClosed(boolean closed) {
         this.closed = closed;
-    }
-
-    public void setHolderName(String holderName) {
-        this.holderName = holderName;
-    }
-
-    public void setFlags(Collection<AccountFlag> flags) {
-        for (AccountFlag flag : flags) {
-            this.putFlag(flag);
-        }
     }
 
     public void putFlag(AccountFlag flag) {
@@ -282,14 +310,14 @@ public class Account implements Cloneable {
         return deserializeIdentifiers();
     }
 
-    public String getIdentifiersSerialized() {
-        return this.identifiers;
-    }
-
     public void setIdentifiers(Collection<AccountIdentifier> identifiers) {
         for (AccountIdentifier identifier : identifiers) {
             this.putIdentifier(identifier);
         }
+    }
+
+    public String getIdentifiersSerialized() {
+        return this.identifiers;
     }
 
     @JsonIgnore
@@ -468,16 +496,6 @@ public class Account implements Cloneable {
                     this.payload, TypeReferences.MAP_OF_STRING_STRING);
         }
     }
-
-    private static final Predicate<AccountIdentifier> FIND_GIRO_WITH_OCR =
-            accountIdentifier -> {
-                if (accountIdentifier.is(Type.SE_BG) || accountIdentifier.is(Type.SE_PG)) {
-                    Optional<String> ocr = accountIdentifier.to(GiroIdentifier.class).getOcr();
-                    return ocr.isPresent();
-                }
-
-                return false;
-            };
 
     @Override
     public boolean equals(Object o) {

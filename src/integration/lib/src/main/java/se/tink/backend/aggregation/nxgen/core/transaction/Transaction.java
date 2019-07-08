@@ -7,23 +7,39 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.amount.ExactCurrencyAmount;
 import se.tink.libraries.user.rpc.User;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;
     private final String externalId;
 
+    @Deprecated
     protected Transaction(Amount amount, Date date, String description, boolean pending) {
+        this(
+                ExactCurrencyAmount.of(amount.getValue(), amount.getCurrency()),
+                date,
+                description,
+                pending,
+                null);
+    }
+
+    protected Transaction(
+            ExactCurrencyAmount amount, Date date, String description, boolean pending) {
         this(amount, date, description, pending, null);
     }
 
     protected Transaction(
-            Amount amount, Date date, String description, boolean pending, String rawDetails) {
+            ExactCurrencyAmount amount,
+            Date date,
+            String description,
+            boolean pending,
+            String rawDetails) {
         this(amount, date, description, pending, rawDetails, null);
     }
 
     protected Transaction(
-            Amount amount,
+            ExactCurrencyAmount amount,
             Date date,
             String description,
             boolean pending,
@@ -32,6 +48,10 @@ public class Transaction extends AggregationTransaction {
         super(amount, date, description, rawDetails);
         this.pending = pending;
         this.externalId = externalId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public boolean isPending() {
@@ -54,16 +74,18 @@ public class Transaction extends AggregationTransaction {
         return transaction;
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static class Builder extends AggregationTransaction.Builder {
         private boolean pending;
         private String externalId;
 
+        @Deprecated
         @Override
         public Builder setAmount(Amount amount) {
+            return (Builder) super.setAmount(amount);
+        }
+
+        @Override
+        public Builder setAmount(ExactCurrencyAmount amount) {
             return (Builder) super.setAmount(amount);
         }
 
@@ -92,27 +114,17 @@ public class Transaction extends AggregationTransaction {
             return (Builder) super.setDescription(description);
         }
 
+        boolean isPending() {
+            return pending;
+        }
+
         public Builder setPending(boolean pending) {
             this.pending = pending;
             return this;
         }
 
-        boolean isPending() {
-            return pending;
-        }
-
         public Builder setRawDetails(Object rawDetails) {
             return (Builder) super.setRawDetails(rawDetails);
-        }
-
-        /**
-         * @deprecated Agents should not set external id. externalid is set by processing and if we
-         *     do it, it will mess up the duplicate transaction detection we have in place.
-         */
-        @Deprecated
-        private Builder setExternalId(String externalId) {
-            this.externalId = externalId;
-            return this;
         }
 
         String getExternalId() {
@@ -122,7 +134,7 @@ public class Transaction extends AggregationTransaction {
         @Override
         public Transaction build() {
             return new Transaction(
-                    getAmount(),
+                    getExactAmount(),
                     getDate(),
                     getDescription(),
                     isPending(),
