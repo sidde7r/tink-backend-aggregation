@@ -1,8 +1,10 @@
 package se.tink.libraries.queue.sqs;
 
 import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
@@ -51,10 +53,10 @@ public class SqsQueue {
         }
 
         // Enable long polling when creating a queue
-        CreateQueueRequest createRequest =
+        final CreateQueueRequest createRequest =
                 new CreateQueueRequest().addAttributesEntry("ReceiveMessageWaitTimeSeconds", "20");
 
-        AmazonSQSClientBuilder amazonSQSClientBuilder =
+        final AmazonSQSClientBuilder amazonSQSClientBuilder =
                 AmazonSQSClientBuilder.standard()
                         .withEndpointConfiguration(
                                 new AwsClientBuilder.EndpointConfiguration(
@@ -62,17 +64,25 @@ public class SqsQueue {
 
         if (validLocalConfiguration(configuration)) {
             createRequest.withQueueName(configuration.getQueueName());
-            amazonSQSClientBuilder.withCredentials(
+
+            final AWSCredentialsProvider staticCredentialsProvider =
                     new AWSStaticCredentialsProvider(
                             new BasicAWSCredentials(
                                     configuration.getAwsAccessKeyId(),
-                                    configuration.getAwsSecretKey())));
+                                    configuration.getAwsSecretKey()));
 
-            this.isAvailable = isQueueCreated(createRequest, amazonSQSClientBuilder);
+            this.isAvailable =
+                    isQueueCreated(
+                            createRequest, amazonSQSClientBuilder, staticCredentialsProvider);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
+            final AWSCredentialsProvider instanceCredentialsProvider =
+                    InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
+
             this.url = configuration.getUrl();
-            this.isAvailable = isQueueCreated(createRequest, amazonSQSClientBuilder);
+            this.isAvailable =
+                    isQueueCreated(
+                            createRequest, amazonSQSClientBuilder, instanceCredentialsProvider);
         }
     }
 
@@ -90,13 +100,15 @@ public class SqsQueue {
     // The retrying is necessary since the IAM access in Kubernetes is not instant.
     // The IAM access is necessary to get access to the queue.
     private boolean isQueueCreated(
-            CreateQueueRequest createRequest, AmazonSQSClientBuilder amazonSQSClientBuilder) {
+            CreateQueueRequest createRequest,
+            AmazonSQSClientBuilder amazonSQSClientBuilder,
+            AWSCredentialsProvider credentialsProvider) {
         do {
             try {
                 // Not 100% sure that IAM is set up completely before this request is done. Hence
                 // retry this on
                 // every iteration to make sure credentials become available.
-                this.sqs = amazonSQSClientBuilder.build();
+                this.sqs = amazonSQSClientBuilder.withCredentials(credentialsProvider).build();
 
                 sqs.createQueue(createRequest);
                 return true;
