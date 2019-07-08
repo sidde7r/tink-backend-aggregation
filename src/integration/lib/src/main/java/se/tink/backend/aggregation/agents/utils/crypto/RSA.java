@@ -71,7 +71,7 @@ public class RSA {
     }
 
     /**
-     * @deprecated Use se.tink.backend.aggregation.agents.utils.crypto.PEM instead
+     * @deprecated Use se.tink.backend.aggregation.agents.utils.crypto.Pem instead
      * @param keyBytes
      * @return
      */

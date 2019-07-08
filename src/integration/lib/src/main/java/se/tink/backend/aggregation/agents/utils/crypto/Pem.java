@@ -12,7 +12,7 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
-public class PEM {
+public class Pem {
 
     public static PrivateKey parsePrivateKey(byte[] pemData) throws IOException {
         PEMParser pemParser =

@@ -64,7 +64,7 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.utils.crypto.PEM;
+import se.tink.backend.aggregation.agents.utils.crypto.Pem;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
@@ -556,11 +556,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         try {
             if (conf.getCaPath() != null) {
                 trustRootCaCertificate(
-                        PEM.parseCertificate(Files.toByteArray(new File(conf.getCaPath()))));
+                        Pem.parseCertificate(Files.toByteArray(new File(conf.getCaPath()))));
             } else if (conf.isLocalEidasDev()) {
                 // Running in local development, we can trust aggregation staging
                 trustRootCaCertificate(
-                        PEM.parseCertificate(
+                        Pem.parseCertificate(
                                 Files.toByteArray(
                                         new File(
                                                 "data/eidas_dev_certificates/aggregation-staging-ca.pem"))));
@@ -570,9 +570,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
             if (conf.getTlsCrtPath() != null && conf.getTlsKeyPath() != null) {
                 Certificate certificate =
-                        PEM.parseCertificate(Files.toByteArray(new File(conf.getTlsCrtPath())));
+                        Pem.parseCertificate(Files.toByteArray(new File(conf.getTlsCrtPath())));
                 PrivateKey privateKey =
-                        PEM.parsePrivateKey(Files.toByteArray(new File(conf.getTlsKeyPath())));
+                        Pem.parsePrivateKey(Files.toByteArray(new File(conf.getTlsKeyPath())));
                 setSslClientCertificate(privateKey, certificate);
             } else if (conf.isLocalEidasDev()) {
                 File clientCertificateFile =

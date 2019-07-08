@@ -50,7 +50,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
         configureHttpClient(client, configuration.getEidasProxy());
     }
 
-    private void configureHttpClient(TinkHttpClient client, EidasProxyConfiguration eidasProxyConfiguration) {
+    private void configureHttpClient(
+            TinkHttpClient client, EidasProxyConfiguration eidasProxyConfiguration) {
         client.setEidasProxy(eidasProxyConfiguration, "Tink");
     }
 
