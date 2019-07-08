@@ -70,6 +70,12 @@ public class RSA {
         }
     }
 
+    /**
+     * @deprecated Use se.tink.backend.aggregation.agents.utils.crypto.PEM instead
+     * @param keyBytes
+     * @return
+     */
+    @Deprecated
     public static RSAPrivateKey getPrivateKeyFromBytes(byte[] keyBytes) {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         try {
