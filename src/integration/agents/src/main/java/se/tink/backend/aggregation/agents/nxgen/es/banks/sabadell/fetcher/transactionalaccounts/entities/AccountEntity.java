@@ -9,6 +9,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -42,6 +43,7 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), iban, amount.parseToTinkAmount())
                 .setAccountNumber(iban)
                 .setName(getTinkName())
+                .setHolderName(new HolderName(owner))
                 .setBankIdentifier(iban)
                 .addIdentifier(new IbanIdentifier(iban))
                 .putInTemporaryStorage(iban, this)
