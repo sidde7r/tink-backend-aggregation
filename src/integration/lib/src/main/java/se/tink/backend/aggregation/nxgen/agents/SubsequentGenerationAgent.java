@@ -296,7 +296,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         if (sessionController == null) {
             sessionController =
                     new SessionController(
-                            context,
                             client,
                             persistentStorage,
                             sessionStorage,
