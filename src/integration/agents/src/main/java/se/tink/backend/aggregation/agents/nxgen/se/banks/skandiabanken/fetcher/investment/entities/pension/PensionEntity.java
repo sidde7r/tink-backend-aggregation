@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -87,11 +88,17 @@ public class PensionEntity {
 
     @JsonIgnore
     private HolderName getHolderName() {
-        final String holderName =
-                Optional.ofNullable(parts.get(0).getHolder().getFullname())
-                        .orElse(holder.getFullname());
-
-        return new HolderName(holderName);
+        return parts.stream()
+                .map(PartsEntity::getHolder)
+                .filter(Objects::nonNull)
+                .map(HolderEntity::getFullName)
+                .findFirst()
+                .map(HolderName::new)
+                .orElse(
+                        Optional.ofNullable(holder)
+                                .map(HolderEntity::getFullName)
+                                .map(HolderName::new)
+                                .orElse(new HolderName(null)));
     }
 
     @JsonIgnore
