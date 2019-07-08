@@ -8,19 +8,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class HolderEntity {
 
     @JsonProperty("Fullname")
-    private String fullname = "";
+    private String fullName;
 
     @JsonProperty("NationalIdentificationNumber")
-    private String nationalIdentificationNumber = "";
+    private String nationalIdentificationNumber;
 
     @JsonProperty("Firstname")
-    private String firstname = "";
+    private String firstName;
 
     @JsonProperty("Surname")
-    private String surname = "";
+    private String surname;
 
     @JsonIgnore
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return (firstName != null && surname != null) ? firstName + " " + surname : fullName;
     }
 }
