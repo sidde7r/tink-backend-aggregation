@@ -5,10 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.IdTags;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.ErstebankConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.rpc.ConsentSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.configuration.ErstebankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.CreatePaymentRequest;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.CreatePaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.erstebank.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.FormValues;
@@ -27,6 +31,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.AccountsBaseResponseBerlinGroup;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.fetcher.transactionalaccount.rpc.TransactionsKeyPaginatorBaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -109,12 +114,11 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
 
         //         TODO: Wait for erste's api to be fixed
         //
-        //                return buildRequestForIbans(Urls.CONSENT, ibans)
-        //                        .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
-        //                        .header(HeaderKeys.WEB_API_KEY,
-        // "a5ace35b-46aa-4d9f-ad9b-5b158a35a559")
-        //                        .type(MediaType.APPLICATION_JSON)
-        //                        .post(ConsentBaseResponse.class);
+        //        return buildRequestForIbans(Urls.CONSENT, ibans)
+        //                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+        //                .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
+        //                .type(MediaType.APPLICATION_JSON)
+        //                .post(ConsentBaseResponse.class);
     }
 
     public ConsentSignResponse signConsent(final String consentId) {
@@ -190,5 +194,41 @@ public final class ErstebankApiClient extends BerlinGroupApiClient<ErstebankConf
         final String payload = consentRequest.toData();
         final String digest = generateDigest(payload);
         return buildRequest(date, digest, reqPath);
+    }
+
+    public CreatePaymentResponse createPayment(CreatePaymentRequest paymentRequest) {
+        URL url;
+        if (paymentRequest.isSepa()) {
+            url = new URL(getConfiguration().getBaseUrl() + Urls.CREATE_SEPA);
+        } else {
+            url = new URL(getConfiguration().getBaseUrl() + Urls.CREATE_CROSS_BORDER);
+        }
+
+        return buildRequestWithTokenAndConsent(url)
+                .body(paymentRequest)
+                .post(CreatePaymentResponse.class);
+    }
+
+    public FetchPaymentResponse fetchPayment(PaymentRequest paymentRequest) {
+        String url;
+        if (paymentRequest.getPayment().isSepa()) {
+            url = getConfiguration().getBaseUrl() + Urls.FETCH_SEPA;
+        } else {
+            url = getConfiguration().getBaseUrl() + Urls.FETCH_CROSS_BORDER;
+        }
+        URL urlWithPaymentId =
+                new URL(url)
+                        .parameter(IdTags.PAYMENT_ID, paymentRequest.getPayment().getUniqueId());
+
+        return buildRequestWithTokenAndConsent(urlWithPaymentId).get(FetchPaymentResponse.class);
+    }
+
+    private RequestBuilder buildRequestWithTokenAndConsent(URL url) {
+        return client.request(url)
+                .header(HeaderKeys.WEB_API_KEY, getConfiguration().getApiKey())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN));
     }
 }
