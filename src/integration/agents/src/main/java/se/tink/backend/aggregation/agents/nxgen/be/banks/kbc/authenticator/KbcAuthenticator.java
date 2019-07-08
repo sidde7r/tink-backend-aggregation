@@ -63,7 +63,28 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                 EncodingUtils.encodeAsBase64String(cipherKey));
         apiClient.prepareSession(cipherKey);
 
-        registerLogon(panNr, cipherKey);
+        String challengeCode = apiClient.challenge(cipherKey);
+        String responseCode =
+                verifyCredentialsNotNullOrEmpty(
+                        supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
+        try {
+            apiClient.registerLogon(panNr, responseCode, cipherKey);
+        } catch (IllegalStateException e) {
+            if (isIncorrectCardNumber(e) || isIncorrectCard(e)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception(
+                        KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
+            }
+
+            if (isIncorrectLoginCodeLastAttempt(e)) {
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+            }
+
+            if (isIncorrectLoginCode(e)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw e;
+        }
 
         String signingId = apiClient.enrollDevice(cipherKey);
         String signTypeId = apiClient.signTypeManual(signingId, cipherKey);
@@ -89,32 +110,6 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
         return value;
-    }
-
-    private void registerLogon(String panNr, final byte[] cipherKey)
-            throws AuthenticationException, AuthorizationException {
-        String challengeCode = apiClient.challenge(cipherKey);
-        String responseCode =
-                verifyCredentialsNotNullOrEmpty(
-                        supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
-        try {
-            apiClient.registerLogon(panNr, responseCode, cipherKey);
-        } catch (IllegalStateException e) {
-            if (isIncorrectCardNumber(e) || isIncorrectCard(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(
-                        KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
-            }
-
-            if (isIncorrectLoginCodeLastAttempt(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
-            }
-
-            if (isIncorrectLoginCode(e)) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            throw e;
-        }
     }
 
     private EnrollDeviceRoundTwoResponse enrollDeviceRoundTwo(
