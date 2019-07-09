@@ -139,13 +139,7 @@ def thirdparty_open():
 def thirdparty_callback():
     args = request.args or request.form
 
-    tink_state = args.get("tink_state", None)
     state = args.get("state", None)
-
-    # Remove tink_state after decision https://tinkab.atlassian.net/browse/IW-19
-    if tink_state:
-        state = tink_state
-
     if not state:
         if request.method == "POST":
             abort(400, "invalid request")
@@ -180,8 +174,7 @@ def thirdparty_callback():
     # when the agent asks for the supplemental information.
     queue.put("tpcb_%s" % state, parameters)
 
-    # Remove tink_state after decision https://tinkab.atlassian.net/browse/IW-19
-    if request.method == "GET" and not tink_state:
+    if request.method == "GET":
         return redirect("tink://open", 302)
     return "tink://open"
 
