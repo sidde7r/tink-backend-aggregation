@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.exceptions.SebKortUnexpectedMediaTypeException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.fetcher.rpc.BillingUnitsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.fetcher.rpc.ReservationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.fetcher.rpc.TransactionsResponse;
@@ -95,7 +96,19 @@ public class SebKortApiClient {
     }
 
     public BillingUnitsResponse fetchBillingUnits() {
-        return createRequest(SebKortConstants.Urls.BILLING_UNITS).get(BillingUnitsResponse.class);
+        HttpResponse response =
+                createRequest(SebKortConstants.Urls.BILLING_UNITS)
+                        .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
+                        .get(HttpResponse.class);
+
+        if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType())
+                && response.getType()
+                        .getSubtype()
+                        .equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
+            return response.getBody(BillingUnitsResponse.class);
+        } else {
+            throw new SebKortUnexpectedMediaTypeException(response.getBody(String.class));
+        }
     }
 
     public TransactionsResponse fetchTransactions(
