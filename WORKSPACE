@@ -130,14 +130,14 @@ bind(
 
 maven_jar(
     name = "io_opencensus_opencensus_api",
-    artifact = "io.opencensus:opencensus-api:0.12.3",
-    sha1 = "743f074095f29aa985517299545e72cc99c87de0",
+    artifact = "io.opencensus:opencensus-api:0.19.2",
+    sha1 = "5c052b432727b1da381b52e263cbcb7463c43378",
 )
 
 maven_jar(
     name = "io_opencensus_opencensus_grpc_metrics",
-    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.12.3",
-    sha1 = "a4c7ff238a91b901c8b459889b6d0d7a9d889b4d",
+    artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.19.2",
+    sha1 = "0f01f5d7f6689abf980bb0649d6673f286a77f61",
 )
 
 maven_jar(
@@ -1964,56 +1964,56 @@ maven_jar(
 
 maven_jar(
     name = "io_grpc_grpc_protobuf",
-    artifact = "io.grpc:grpc-protobuf:1.16.1",
-    sha1 = "1f8ac89924b5de4a94058ae26c9de28f8eff49dd",
+    artifact = "io.grpc:grpc-protobuf:1.20.0",
+    sha1 = "d5216a554532c6d5572321e2ff9624d3eaa40c3c",
 )
 
 maven_jar(
     name = "io_grpc_grpc_auth",
-    artifact = "io.grpc:grpc-auth:jar:1.16.1",
-    sha1 = "e38138938a930a027f3808b3329612903f716a29",
+    artifact = "io.grpc:grpc-auth:1.20.0",
+    sha1 = "bec4a1ea92a79f84b27f8d9ea4e3c26dd56fa8c2",
 )
 
 maven_jar(
     name = "io_grpc_grpc_context",
-    artifact = "io.grpc:grpc-context:jar:1.16.1",
-    sha1 = "4adb6d55045b21cb384bc4498d4a7593f6cab8d7",
+    artifact = "io.grpc:grpc-context:1.20.0",
+    sha1 = "3d98a9a0fd2d881000dfc450c7c2665d5204691b",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
-    artifact = "io.grpc:grpc-protobuf-lite:1.16.1",
-    sha1 = "3d03ee1e5e292f2312d7ca99c00ddcf9d0544c35",
+    artifact = "io.grpc:grpc-protobuf-lite:1.20.0",
+    sha1 = "321427369f3bfba0bda9aea09f121f40579ed0e6",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_nano",
-    artifact = "io.grpc:grpc-protobuf-nano:1.16.1",
-    sha1 = "b8e812b38d69f7cae0b5b642265cb0f387c9bc75",
+    artifact = "io.grpc:grpc-protobuf-nano:1.20.0",
+    sha1 = "b52a2d11e6d81f032e0cc654048f596109d011cc",
 )
 
 maven_jar(
     name = "io_grpc_grpc_stub",
-    artifact = "io.grpc:grpc-stub:1.16.1",
-    sha1 = "f3c30248564608791407bf43b1d4db52a80e6c36",
+    artifact = "io.grpc:grpc-stub:1.20.0",
+    sha1 = "af81b3b84811716d9607dfa43d13bc720e54a0dd",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
-    artifact = "io.grpc:grpc-core:1.16.1",
-    sha1 = "8a938ece0ad8d8bf77d790c502ba51ebec114aa9",
+    artifact = "io.grpc:grpc-core:1.20.0",
+    sha1 = "cc15b7f92867aaf6b837bc4c77899bbe7f63e8c7",
 )
 
 maven_jar(
     name = "io_grpc_grpc_netty",
-    artifact = "io.grpc:grpc-netty:1.16.1",
-    sha1 = "225a188a0b51b60f43586edaa12a79112e03430c",
+    artifact = "io.grpc:grpc-netty:1.20.0",
+    sha1 = "6f4e9423e0430f11ed2dcfb45fa6350156020e8e",
 )
 
 maven_jar(
     name = "io_grpc_grpc_testing",
-    artifact = "io.grpc:grpc-testing:1.16.1",
-    sha1 = "89b82a1748080f120908519fe30fd9931ade2bbe"
+    artifact = "io.grpc:grpc-testing:1.20.0",
+    sha1 = "11a1d97482c40d28dfff5420a6d512b32d578e94",
 )
 
 maven_jar(
