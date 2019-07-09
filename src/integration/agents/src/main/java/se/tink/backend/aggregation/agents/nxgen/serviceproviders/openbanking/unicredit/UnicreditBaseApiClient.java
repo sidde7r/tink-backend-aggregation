@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ber
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.Endpoints;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.PathParameters;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.QueryValues;
@@ -95,8 +96,8 @@ public abstract class UnicreditBaseApiClient {
                         .header(
                                 HeaderKeys.TPP_REDIRECT_URI,
                                 new URL(getConfiguration().getRedirectUrl())
-                                        .queryParam("state", state)
-                                        .queryParam("code", "code"))
+                                        .queryParam(HeaderKeys.STATE, state)
+                                        .queryParam(HeaderKeys.CODE, HeaderValues.CODE))
                         .header(HeaderKeys.TPP_REDIRECT_PREFERED, false) // true for redirect auth
                         .post(getConsentResponseType(), getConsentRequest());
 
