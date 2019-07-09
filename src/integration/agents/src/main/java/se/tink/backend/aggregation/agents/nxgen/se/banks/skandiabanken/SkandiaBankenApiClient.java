@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CLIENT_ID;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CLIENT_ID_VALUE;
 import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.QueryParam.CODE_CHALLENGE;
@@ -18,6 +19,7 @@ import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.Sk
 
 import java.util.UUID;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.HeaderKeys;
@@ -45,6 +47,7 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -122,14 +125,25 @@ public class SkandiaBankenApiClient {
     }
 
     public BankIdResponse collectBankId(String token) {
+        final BankIdResponse response = new BankIdResponse();
+
         final Form formBuilder = new Form();
         formBuilder.put(FormKeys.REQUEST_TOKEN, token);
         formBuilder.put(FormKeys.REQUEST_WITH, FormValues.REQUEST_WITH);
 
-        return httpClient
-                .request(Urls.BANKID_COLLECT)
-                .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
-                .post(BankIdResponse.class);
+        try {
+            return httpClient
+                    .request(Urls.BANKID_COLLECT)
+                    .body(formBuilder, MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(BankIdResponse.class);
+        } catch (HttpResponseException exception) {
+            // done for COB-813.
+            if (exception.getResponse().getStatus() == SC_INTERNAL_SERVER_ERROR) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            } else {
+                throw exception;
+            }
+        }
     }
 
     public HttpResponse fetchCode(String redirect) {
