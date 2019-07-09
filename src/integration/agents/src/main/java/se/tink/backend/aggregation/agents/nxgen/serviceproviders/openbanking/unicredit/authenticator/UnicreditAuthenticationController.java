@@ -53,7 +53,7 @@ public class UnicreditAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        if (!authenticator.isConsentValid()){
+        if (!authenticator.isConsentValid()) {
             throw new IllegalStateException("Authorization failed");
         }
 
