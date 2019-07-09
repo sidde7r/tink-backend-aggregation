@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.configuration.HandelsbankenBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbanken.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
@@ -46,11 +47,12 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
                                                         .CONFIG_MISSING));
 
         apiClient.setConfiguration(handelsbankenBaseConfiguration);
-        configureHttpClient(client);
+        configureHttpClient(client, configuration.getEidasProxy());
     }
 
-    private void configureHttpClient(TinkHttpClient client) {
-        client.setEidasProxy(handelsbankenBaseConfiguration.getEidasUrl(), "Tink");
+    private void configureHttpClient(
+            TinkHttpClient client, EidasProxyConfiguration eidasProxyConfiguration) {
+        client.setEidasProxy(eidasProxyConfiguration, "Tink");
     }
 
     @Override

@@ -29,6 +29,8 @@ public class AgentsServiceConfiguration {
     @JsonProperty("creditsafe")
     private CreditSafeConfiguration creditSafe = new CreditSafeConfiguration();
 
+    @JsonProperty private EidasProxyConfiguration eidasProxy = new EidasProxyConfiguration();
+
     public AbnAmroConfiguration getAbnAmroStaging() {
         return abnAmroStaging;
     }
@@ -63,5 +65,9 @@ public class AgentsServiceConfiguration {
 
     public CreditSafeConfiguration getCreditSafe() {
         return creditSafe;
+    }
+
+    public EidasProxyConfiguration getEidasProxy() {
+        return eidasProxy;
     }
 }
