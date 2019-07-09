@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequest;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemidAuthenticateUserResponse;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filter.NordeaDKHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -26,7 +27,7 @@ public class NordeaDkApiClient extends NordeaV20ApiClient {
             Credentials credentials,
             String marketCode) {
         super(client, credentials, marketCode);
-
+        this.client.addFilter(new NordeaDKHttpFilter());
         this.sessionStorage = sessionStorage;
     }
 
