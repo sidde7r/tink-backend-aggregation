@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.rpc;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.util.Lists;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.UnicreditConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.balance.BalanceAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.unicredit.fetcher.transactionalaccount.entity.balance.BalanceEntity;
@@ -17,7 +17,7 @@ public class BalancesResponse {
     public List<BalanceEntity> balances;
 
     public List<BalanceEntity> getBalances() {
-        return Optional.ofNullable(balances).orElse(Lists.emptyList());
+        return Optional.ofNullable(balances).orElse(Collections.emptyList());
     }
 
     public Amount getBalance() {
