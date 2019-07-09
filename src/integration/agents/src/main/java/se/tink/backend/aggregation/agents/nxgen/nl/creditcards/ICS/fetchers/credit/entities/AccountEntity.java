@@ -38,7 +38,7 @@ public class AccountEntity {
 
     public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
         return CreditCardAccount.builder(
-                        accountId,
+                        creditCardEntity.getCustomerNumber(),
                         balanceResponse.toTinkBalanceAmount(accountId),
                         balanceResponse.toTinkAvailableCreditAmount(accountId))
                 .setName(productEntity.getProductName())
