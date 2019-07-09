@@ -89,8 +89,8 @@ public class RetryableInstanceProfileCredentialsProvider
      *
      * @param eagerlyRefreshCredentialsAsync when set to false will not attempt to refresh
      *     credentials asynchronously until after a call has been made to {@link #getCredentials()}
-     *     - ensures that {@link RetryableEC2CredentialsFetcher#getCredentials()} is only hit when this
-     *     CredentialProvider is actually required
+     *     - ensures that {@link RetryableEC2CredentialsFetcher#getCredentials()} is only hit when
+     *     this CredentialProvider is actually required
      */
     public static RetryableInstanceProfileCredentialsProvider createAsyncRefreshingProvider(
             final boolean eagerlyRefreshCredentialsAsync) {

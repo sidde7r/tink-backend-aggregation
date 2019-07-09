@@ -36,7 +36,8 @@ import org.slf4j.LoggerFactory;
  */
 class RetryableEC2CredentialsFetcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RetryableEC2CredentialsFetcher.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(RetryableEC2CredentialsFetcher.class);
 
     /**
      * The threshold after the last attempt to load credentials (in milliseconds) at which
