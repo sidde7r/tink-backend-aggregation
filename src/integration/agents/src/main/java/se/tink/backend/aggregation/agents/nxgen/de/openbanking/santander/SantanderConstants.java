@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.santander;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.pair.Pair;
+import se.tink.libraries.payment.enums.PaymentType;
 
 public final class SantanderConstants {
 
@@ -10,6 +14,11 @@ public final class SantanderConstants {
     private SantanderConstants() {
         throw new AssertionError();
     }
+
+    public static final GenericTypeMapper<PaymentType, Pair<Type, Type>> PAYMENT_TYPE_MAPPER =
+            GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
+                    .put(PaymentType.SEPA, new Pair<>(Type.IBAN, Type.IBAN))
+                    .build();
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIGURATION =
@@ -23,6 +32,9 @@ public final class SantanderConstants {
         public static final URL CONSENT = new URL(Endpoints.BASE_URL + Endpoints.CONSENT);
         public static final URL ACCOUNTS = new URL(Endpoints.BASE_URL + Endpoints.ACCOUNTS);
         public static final URL TRANSACTIONS = new URL(Endpoints.BASE_URL + Endpoints.BASE_AIS);
+        public static final URL SEPA_PAYMENT = new URL(Endpoints.BASE_URL + Endpoints.SEPA_PAYMENT);
+        public static final URL FETCH_PAYMENT =
+                new URL(Endpoints.BASE_URL + Endpoints.FETCH_PAYMENT);
     }
 
     public static class Endpoints {
@@ -31,6 +43,10 @@ public final class SantanderConstants {
         public static final String CONSENT = "/scb-openapis/sx/v1/consents";
         public static final String ACCOUNTS = "/scb-openapis/sx/v1/accounts";
         public static final String BASE_AIS = "/scb-openapis/sx";
+        public static final String PIS_PRODUCT = "/scb-openapis/sx/v1";
+        public static final String SEPA_PAYMENT = PIS_PRODUCT + "/payments/sepa-credit-transfers";
+        public static final String FETCH_PAYMENT =
+                PIS_PRODUCT + "/payments" + "/{paymentProduct}/{paymentId}/";
     }
 
     public static class StorageKeys {
@@ -38,6 +54,12 @@ public final class SantanderConstants {
         public static final String CONSENT_ID = "consentId";
         public static final String TRANSACTIONS_URL = "TRANSACTIONS_URL";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    }
+
+    public static class IdTag {
+        public static final String PAYMENT_ID = "paymentId";
+        public static final String PAYMENT_PRODUCT = "paymentProduct";
+        public static final String SEPA_PAYMENT = "sepa-credit-transfers";
     }
 
     public static class QueryKeys {
@@ -53,13 +75,21 @@ public final class SantanderConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String X_IBM_CLIENT_ID = "X-IBM-Client-Id";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class HeaderValues {
-        public static final String X_REQUEST_ID = "12345";
+        public static final String PSU_IP_ADDRESS = "192.168.0.1";
     }
 
     public static class CredentialKeys {
         public static final String IBAN = "iban";
+    }
+
+    public static class PaymentDetails {
+        public static final String CREDITOR_NAME = "Creditor name";
+        public static final String CREDITOR_AGENT = "Creditor agent";
+        public static final String END_TO_END_IDENTIFICATION = "EndToEndIdentification";
+        public static final String REMMITANCE_INFORMATION = "Invoice";
     }
 }
