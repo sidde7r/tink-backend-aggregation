@@ -91,7 +91,7 @@ public class PortfolioEntity {
         return toTinkInvestmentAccount(holderName, clearingNumber, toTinkPortfolio(instruments));
     }
 
-    public InvestmentAccount toTinkInvestmentAccount(
+    private InvestmentAccount toTinkInvestmentAccount(
             HolderName holderName, String clearingNumber, Portfolio portfolio) {
         final double interestPayable = totalOwnCapital - portfolio.getTotalValue() - totalBalance;
         final String accountNumber =
