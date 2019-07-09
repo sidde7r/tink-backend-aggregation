@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.authenticator.BecAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.filter.BecFilter;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.investment.BecInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.loan.BecLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.session.BecSessionHandler;
@@ -30,6 +31,7 @@ public class BecAgent extends NextGenerationAgent {
     public BecAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        this.client.addFilter(new BecFilter());
         this.apiClient =
                 new BecApiClient(
                         this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
