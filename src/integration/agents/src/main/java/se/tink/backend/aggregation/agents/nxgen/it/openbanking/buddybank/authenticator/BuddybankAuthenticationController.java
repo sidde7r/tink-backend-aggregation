@@ -8,6 +8,7 @@ import com.github.rholder.retry.WaitStrategies;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +49,7 @@ public class BuddybankAuthenticationController implements Authenticator {
 
     private Retryer<ConsentStatusResponse> getConsentStatusRetryer() {
         return RetryerBuilder.<ConsentStatusResponse>newBuilder()
-                .retryIfResult(status -> status != null && !status.isValidConsent())
+                .retryIfResult(status -> !Objects.isNull(status) && !status.isValidConsent())
                 .withWaitStrategy(WaitStrategies.fixedWait(SLEEP_TIME, TimeUnit.SECONDS))
                 .withStopStrategy(StopStrategies.stopAfterAttempt(RETRY_ATTEMPTS))
                 .build();

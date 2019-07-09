@@ -8,6 +8,7 @@ import com.github.rholder.retry.WaitStrategies;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -70,7 +71,7 @@ public class UnicreditAuthenticationController
 
     private Retryer<ConsentStatusResponse> getConsentStatusRetryer() {
         return RetryerBuilder.<ConsentStatusResponse>newBuilder()
-                .retryIfResult(status -> status != null && !status.isValidConsent())
+                .retryIfResult(status -> !Objects.isNull(status) && !status.isValidConsent())
                 .retryIfException( // TODO remove retryIfException for prod (sandbox bug)
                         throwable ->
                                 throwable instanceof HttpResponseException
