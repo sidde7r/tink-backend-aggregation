@@ -446,7 +446,7 @@
         {
             "accessType": "OPEN_BANKING",
             "className": "nxgen.fr.openbanking.caixa.CaixaAgent",
-            "credentialsType": "PASSWORD",
+            "credentialsType": "THIRD_PARTY_APP",
             "displayName": "Caixa Geral de Depositos (Test)",
             "fields": [
                 {
