@@ -45,9 +45,9 @@ public class LoanDetailsEntity {
         this.loanNumber = loanNumber;
     }
 
-    public Double getOriginalDebt() {
+    private Double getOriginalDebt() {
         if (!Strings.isNullOrEmpty(originalDebt)) {
-            return AgentParsingUtils.parseAmount(originalDebt);
+            return -1 * Math.abs(AgentParsingUtils.parseAmount(originalDebt));
         }
         return null;
     }
@@ -56,9 +56,9 @@ public class LoanDetailsEntity {
         this.originalDebt = originalDebt;
     }
 
-    public Double getCurrentDebt() {
+    private Double getCurrentDebt() {
         if (!Strings.isNullOrEmpty(currentDebt)) {
-            return AgentParsingUtils.parseAmount(currentDebt);
+            return -1 * Math.abs(AgentParsingUtils.parseAmount(currentDebt));
         }
         return null;
     }
@@ -67,7 +67,7 @@ public class LoanDetailsEntity {
         this.currentDebt = currentDebt;
     }
 
-    public Double getCurrentInterestRate() {
+    private Double getCurrentInterestRate() {
         if (!Strings.isNullOrEmpty(currentInterestRate)) {
             return AgentParsingUtils.parsePercentageFormInterest(currentInterestRate);
         }
@@ -78,7 +78,7 @@ public class LoanDetailsEntity {
         this.currentInterestRate = currentInterestRate;
     }
 
-    public Date getRateBoundUntil() throws ParseException {
+    private Date getRateBoundUntil() throws ParseException {
         if (!Strings.isNullOrEmpty(rateBoundUntil)) {
             return ThreadSafeDateFormat.FORMATTER_DAILY.parse(rateBoundUntil);
         }
@@ -89,7 +89,7 @@ public class LoanDetailsEntity {
         this.rateBoundUntil = rateBoundUntil;
     }
 
-    public int getRateBindingPeriodLength() {
+    private int getRateBindingPeriodLength() {
         if (!Strings.isNullOrEmpty(rateBindingPeriodLength)) {
             return AgentParsingUtils.parseNumMonthsBound(rateBindingPeriodLength);
         }
@@ -100,7 +100,7 @@ public class LoanDetailsEntity {
         this.rateBindingPeriodLength = rateBindingPeriodLength;
     }
 
-    public List<String> getBorrowers() {
+    private List<String> getBorrowers() {
         List<String> listOfBorrowers = Lists.newArrayList();
         for (BorrowerEntity borrower : borrowers) {
             listOfBorrowers.add(borrower.getName());
@@ -134,7 +134,7 @@ public class LoanDetailsEntity {
         account.setBankId(getLoanNumber());
         account.setAccountNumber(getLoanNumber());
         account.setName(getLoanName());
-        account.setBalance(-getCurrentDebt());
+        account.setBalance(getCurrentDebt());
         account.setType(AccountTypes.LOAN);
 
         return account;
