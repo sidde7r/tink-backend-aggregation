@@ -9,9 +9,12 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.CurrencyAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -266,23 +269,26 @@ public class AccountDetailsResponse {
         return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
     }
 
-    public <T extends Account> T toTinkAccount(HolderName holderName, Class<T> type) {
+    public TransactionalAccount toTinkAccount(HolderName holderName) {
         final String accountName =
                 Strings.isNullOrEmpty(externalActor) ? accountType : accountType + externalActor;
+        final String accountNumber =
+                clearingNumber != null
+                        ? String.format("%s-%s", clearingNumber, accountId)
+                        : accountId;
 
-        final Account account =
-                Account.builder(toTinkAccountType(), accountId)
-                        .setAccountNumber(accountId)
-                        .setName(accountName)
-                        .setHolderName(holderName)
-                        .setBalance(Amount.inSEK(ownCapital))
-                        .setBankIdentifier(accountId)
-                        .build();
-
-        return type.cast(account);
-    }
-
-    public TransactionalAccount toTinkAccount(HolderName holderName) {
-        return toTinkAccount(holderName, TransactionalAccount.class);
+        return TransactionalAccount.nxBuilder()
+                .withType(TransactionalAccountType.from(toTinkAccountType()))
+                .withId(
+                        IdModule.builder()
+                                .withUniqueIdentifier(accountId)
+                                .withAccountNumber(accountNumber)
+                                .withAccountName(accountName)
+                                .addIdentifier(new SwedishIdentifier(accountId))
+                                .build())
+                .withBalance(BalanceModule.of(Amount.inSEK(ownCapital)))
+                .addHolderName(holderName.toString())
+                .setBankIdentifier(accountId)
+                .build();
     }
 }
