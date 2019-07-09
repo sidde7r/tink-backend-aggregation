@@ -63,6 +63,7 @@ public class NordnetApiClient {
             Pattern.compile("https://nneid\\.nordnet\\.se/std/method/nordnet\\.se/[a-zA-Z\\d]*/");
 
     private static final String BASE_URL = "https://www.nordnet.se";
+    private static final String CLIENT_ID = "MOBILE_IOS_2";
 
     private static final String AUTHENTICATION_BASIC_LOGIN_URL =
             BASE_URL + "/api/2/authentication/basic/login";
@@ -70,11 +71,15 @@ public class NordnetApiClient {
             BASE_URL + "/api/2/authentication/eid/saml/artifact";
     private static final String OAUTH2_AUTHORIZE_URL =
             BASE_URL
-                    + "/oauth2/authorize?client_id=MOBILE_IOS&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
+                    + "/oauth2/authorize?client_id="
+                    + CLIENT_ID
+                    + "&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
     private static final String INIT_LOGIN_SESSION_URL = BASE_URL + "/api/2/login/anonymous";
     private static final String LOGIN_PAGE_URL =
             BASE_URL
-                    + "/oauth2/authorize?authType=&client_id=MOBILE_IOS&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
+                    + "/oauth2/authorize?authType=&client_id="
+                    + CLIENT_ID
+                    + "&response_type=code&redirect_uri=https://www.nordnet.se/now/mobile/token.html";
     private static final String LOGIN_BANKID_PAGE_URL =
             BASE_URL + "/api/2/authentication/eid/saml/request?eid_method=sbidAnother";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/oauth2/token";
@@ -90,7 +95,7 @@ public class NordnetApiClient {
     private String bankIdUrl;
 
     private TinkApacheHttpClient4 client;
-    private static final String CLIENT_SECRET = "00b1fcce-e433-48ca-9b9a-7718178852c8";
+    private static final String CLIENT_SECRET = "6C2B9862-7FEE-CBACE053-3757570ADDEF";
 
     private String referrer;
     private String accessToken;
@@ -345,7 +350,7 @@ public class NordnetApiClient {
             return Optional.empty();
         }
 
-        FetchTokenRequest tokenRequest = FetchTokenRequest.from(CLIENT_SECRET, authCode);
+        FetchTokenRequest tokenRequest = FetchTokenRequest.from(CLIENT_ID, CLIENT_SECRET, authCode);
         TokenResponse response = postForm(FETCH_TOKEN_URL, tokenRequest, TokenResponse.class);
 
         String accessToken = response.getAccessToken();
