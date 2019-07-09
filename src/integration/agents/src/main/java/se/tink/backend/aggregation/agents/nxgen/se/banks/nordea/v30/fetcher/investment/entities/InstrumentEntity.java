@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.inv
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -26,9 +28,9 @@ public class InstrumentEntity {
 
         Instrument instrument = new Instrument();
 
-        instrument.setUniqueIdentifier(isin + market);
+        instrument.setUniqueIdentifier(isin + getMarket());
         instrument.setIsin(isin);
-        instrument.setMarketPlace(market);
+        instrument.setMarketPlace(getMarket());
         instrument.setCurrency(currency);
         instrument.setName(instrumentName);
         instrument.setPrice(price);
@@ -48,5 +50,19 @@ public class InstrumentEntity {
     @JsonIgnore
     public String getRawType() {
         return rawType;
+    }
+
+    public String getMarket() {
+        return Optional.ofNullable(market).orElse(extractMarketFromId());
+    }
+
+    private String extractMarketFromId() {
+        // id format IMC-SE000XXXXXX-MARKET-SEK
+        String[] idParts = id.split("-");
+        if (idParts.length == 4) {
+            return idParts[2];
+        } else {
+            throw new NoSuchElementException("can't determine instrument market");
+        }
     }
 }
