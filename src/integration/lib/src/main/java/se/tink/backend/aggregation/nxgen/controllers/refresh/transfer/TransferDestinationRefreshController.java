@@ -2,15 +2,22 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transfer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.libraries.metrics.MetricId;
 
-public final class TransferDestinationRefreshController implements Refresher {
+public final class TransferDestinationRefreshController
+        implements Refresher, RefreshTransferDestinationExecutor {
     private static final MetricId METRIC_ID =
             Refresher.REFRESHER_METRIC_ID.label(
                     Refresher.METRIC_ITEM_TYPE, "transfer_destinations");
@@ -39,6 +46,12 @@ public final class TransferDestinationRefreshController implements Refresher {
         this.transferDestinationFetcher = Preconditions.checkNotNull(transferDestinationFetcher);
     }
 
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        return new FetchTransferDestinationsResponse(this.refreshTransferDestinationsFor(accounts));
+    }
+
+    @Deprecated
     public Map<Account, List<TransferDestinationPattern>> refreshTransferDestinationsFor(
             Collection<Account> accounts) {
         MetricRefreshAction action =
