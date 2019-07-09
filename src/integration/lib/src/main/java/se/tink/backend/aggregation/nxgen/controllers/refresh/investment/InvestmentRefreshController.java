@@ -10,6 +10,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
@@ -24,7 +27,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
-public final class InvestmentRefreshController implements AccountRefresher, TransactionRefresher {
+public final class InvestmentRefreshController
+        implements AccountRefresher, TransactionRefresher, RefreshInvestmentAccountsExecutor {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "investment");
 
@@ -51,6 +55,17 @@ public final class InvestmentRefreshController implements AccountRefresher, Tran
             TransactionFetcher<InvestmentAccount> transactionFetcher) {
         this(metricRefreshController, updateController, investmentFetcher);
         this.transactionFetcher = Preconditions.checkNotNull(transactionFetcher);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return new FetchInvestmentAccountsResponse(this.fetchAccounts());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
+        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
     @Override
