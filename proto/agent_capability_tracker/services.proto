@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.backend.integration.agentcapabilitytracker.api";
+option java_outer_classname = "Protos";
+option go_package = "proto";
+
+// Stick to one service per app, otherwise your microservice is not so micro.
+service AgentDataAvailabilityTrackerService {
+    rpc TrackAccount (stream TrackAccountRequest) returns (Void) {}
+}
+
+message Void {
+}
+
+message TrackAccountRequest {
+    string agent = 1;
+    repeated AccountField field = 2;
+}
+
+message AccountField {
+    string fieldName = 1;
+    string fieldValue = 2;
+}
