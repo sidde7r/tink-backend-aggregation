@@ -9,9 +9,11 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.balance.BalanceModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.IdModule;
+import se.tink.backend.aggregation.nxgen.core.account.nxbuilders.modules.id.builder.IdBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.CheckingBuildStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccountType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
@@ -74,23 +76,33 @@ public class AccountEntity implements GeneralAccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
         AccountIdentifier identifier = getAccountIdentifier();
-        CheckingBuildStep builder =
-                CheckingAccount.builder()
-                        .setUniqueIdentifier(maskAccountNumber())
-                        .setAccountNumber(formatAccountNumber())
-                        .setBalance(new Amount(currency, availableBalance))
-                        .setAlias(nickname)
-                        .addAccountIdentifier(identifier)
-                        .addAccountIdentifier(
-                                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                        .addHolderName(generalGetName())
-                        .setApiIdentifier(accountNumber);
+
+        IdBuildStep accountIdBuilder =
+                IdModule.builder()
+                        .withUniqueIdentifier(maskAccountNumber())
+                        .withAccountNumber(formatAccountNumber())
+                        .withAccountName(nickname)
+                        .addIdentifier(identifier)
+                        .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban));
 
         if (identifier.is(Type.SE_NDA_SSN)) {
-            builder.addAccountIdentifier(
+            accountIdBuilder.addIdentifier(
                     identifier.to(NDAPersonalNumberIdentifier.class).toSwedishIdentifier());
         }
-        return builder.build();
+        return TransactionalAccount.nxBuilder()
+                .withType(getTinkAccountType())
+                .withId(accountIdBuilder.build())
+                .withBalance(BalanceModule.of(new Amount(currency, availableBalance)))
+                .addHolderName(generalGetName())
+                .setApiIdentifier(accountNumber)
+                .build();
+    }
+
+    private TransactionalAccountType getTinkAccountType() {
+        return TransactionalAccountType.from(
+                NordeaSEConstants.ACCOUNT_TYPE_MAPPER
+                        .translate(category)
+                        .orElse(AccountTypes.OTHER));
     }
 
     @JsonIgnore
@@ -159,9 +171,7 @@ public class AccountEntity implements GeneralAccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        switch (NordeaSEConstants.ACCOUNT_TYPE_MAPPER
-                .translate(category)
-                .orElse(AccountTypes.OTHER)) {
+        switch (getTinkAccountType()) {
             case CHECKING:
             case OTHER:
             case SAVINGS:
