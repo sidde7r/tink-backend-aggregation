@@ -61,6 +61,13 @@ public final class UnicreditConstants {
         public static final String CONSENT_ID = "Consent-ID";
         public static final String TPP_REDIRECT_PREFERED = "TPP-Redirect-Preferred";
         public static final String PSU_ID = "PSU-ID";
+        public static final String STATE = "state";
+        public static final String CODE = "code";
+    }
+
+    public static class HeaderValues {
+
+        public static final String CODE = "code";
     }
 
     public static class FormValues {
