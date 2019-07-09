@@ -4,7 +4,6 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.queue.sqs.auth.RetryableInstanceProfileCredentialsProvider;
 import se.tink.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 
 public class SqsQueue {
@@ -77,7 +77,7 @@ public class SqsQueue {
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
             final AWSCredentialsProvider instanceCredentialsProvider =
-                    InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
+                    RetryableInstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
 
             this.url = configuration.getUrl();
             this.isAvailable =
