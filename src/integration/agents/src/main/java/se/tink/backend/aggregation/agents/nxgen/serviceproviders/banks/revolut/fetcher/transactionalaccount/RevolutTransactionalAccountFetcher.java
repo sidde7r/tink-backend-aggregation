@@ -41,30 +41,18 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
         return wallet.getPockets().stream()
                 .filter(PocketEntity::isActive)
                 .filter(PocketEntity::isOpen)
+                .filter(this::isTransactionalAccount)
                 .map(
                         pocket ->
-                                toTinkAccount(
-                                        pocket,
-                                        currencyIbanMap.get(pocket.getCurrency()),
-                                        holderName))
+                                pocket.toTinkCheckingAccount(
+                                        currencyIbanMap.get(pocket.getCurrency()), holderName))
                 .collect(Collectors.toList());
     }
 
-    private static TransactionalAccount toTinkAccount(
-            PocketEntity pocket, String accountNumber, String holderName) {
-
-        Optional<AccountTypes> accountType =
+    private boolean isTransactionalAccount(PocketEntity pocket) {
+        final Optional<AccountTypes> accountType =
                 RevolutConstants.ACCOUNT_TYPE_MAPPER.translate(pocket.getType());
 
-        return accountType
-                .map(
-                        accountTypes ->
-                                accountTypes == AccountTypes.CHECKING
-                                        ? pocket.toTinkCheckingAccount(accountNumber, holderName)
-                                        : pocket.toTinkSavingsAccount(holderName))
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not construct account from pocket."));
+        return accountType.isPresent() && accountType.get() == AccountTypes.CHECKING;
     }
 }

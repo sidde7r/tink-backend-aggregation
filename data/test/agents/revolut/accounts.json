@@ -1,0 +1,560 @@
+[{
+	"personal": true,
+	"local": true,
+	"bankName": " ",
+	"currency": "GBP",
+	"transferTime": "bank.processing.time_fast",
+	"id": "5cbacb1e-c55d-4557-b579-efc2a9c88222",
+	"sortCode": "11-22-33",
+	"accountNumber": "11111111",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "AED-swift-activate",
+	"currency": "AED",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": true,
+	"bankName": " ",
+	"currency": "EUR",
+	"transferTime": "bank.processing.time_full",
+	"id": "9c4a8d3d-2633-4f4b-be9a-d757e24bde85",
+	"bic": "REVOGB21",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "AUD-swift-activate",
+	"currency": "AUD",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "CAD-swift-activate",
+	"currency": "CAD",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "CHF-swift-activate",
+	"currency": "CHF",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "de19b072-0671-4d1c-aea1-188363be18b2",
+	"currency": "CZK",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "BGN-swift-activate",
+	"currency": "BGN",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "DKK-swift-activate",
+	"currency": "DKK",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "71cb3a62-2071-4b43-80a9-81f038578280",
+	"currency": "EUR",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "e1962ca1-dcd5-4fc9-9088-8da1ce866672",
+	"currency": "GBP",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "HKD-swift-activate",
+	"currency": "HKD",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "HRK-swift-activate",
+	"currency": "HRK",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "HUF-swift-activate",
+	"currency": "HUF",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "ILS-swift-activate",
+	"currency": "ILS",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "JPY-swift-activate",
+	"currency": "JPY",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "MXN-swift-activate",
+	"currency": "MXN",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "NOK-swift-activate",
+	"currency": "NOK",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "NZD-swift-activate",
+	"currency": "NZD",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "8e15f52b-23c7-4c70-9331-a0d977954c2f",
+	"currency": "PLN",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "QAR-swift-activate",
+	"currency": "QAR",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "RON-swift-activate",
+	"currency": "RON",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "RUB-swift-activate",
+	"currency": "RUB",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "SAR-swift-activate",
+	"currency": "SAR",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "19b9b2e1-703c-4dea-b8d6-73d335185103",
+	"currency": "SEK",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "SGD-swift-activate",
+	"currency": "SGD",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "THB-swift-activate",
+	"currency": "THB",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "TRY-swift-activate",
+	"currency": "TRY",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "fa2c7f9e-c9f1-448e-954d-955eccb19bb7",
+	"currency": "USD",
+	"beneficiaryName": "Test Usersson",
+	"iban": "GB76 REVO 0099 1111 2222 33",
+	"bic": "REVOGB21",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"activate": false
+}, {
+	"personal": true,
+	"local": false,
+	"bankName": " ",
+	"transferTime": "bank.processing.time_swift",
+	"id": "ZAR-swift-activate",
+	"currency": "ZAR",
+	"bic": "REVOXXXX",
+	"beneficiaryName": "Test Usersson",
+	"address": {
+		"streetLine1": "Testgatan 1337",
+		"region": "Stockholm",
+		"city": "Stockholm",
+		"country": "SE",
+		"postcode": "12345"
+	},
+	"kycRequired": false,
+	"activate": true
+}, {
+	"id": "id-CHF-local-pooled",
+	"currency": "CHF",
+	"bankName": "Credit Suisse (Schweiz) AG\nParadeplatz 8\n8070 Zürich\nSwitzerland",
+	"beneficiaryName": "REVOLUT LTD, LONDON, UK",
+	"iban": "CH37 1111 2222 3333 4444 0",
+	"bic": "CRESCHZZ80A",
+	"requiredReference": "12345678",
+	"transferTime": "bank.processing.time_full",
+	"personal": true,
+	"address": {
+		"streetLine1": "7 Westferry Circus",
+		"city": "London",
+		"country": "GB",
+		"postcode": "E14 4HD"
+	},
+	"local": true,
+	"kycRequired": false,
+	"activate": false
+}]

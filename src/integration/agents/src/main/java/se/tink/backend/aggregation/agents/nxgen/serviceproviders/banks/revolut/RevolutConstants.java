@@ -78,7 +78,7 @@ public class RevolutConstants {
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
-                    .put(AccountTypes.SAVINGS, "SAVINGS")
+                    .put(AccountTypes.OTHER, "SAVINGS") // Revolut's Vault is not a bank account
                     .put(AccountTypes.CHECKING, "CURRENT")
                     .build();
 
