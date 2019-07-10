@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fe
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.rpc.TransactionalTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidas.QsealcEidasProxySigner;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.CompositePaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.EmptyFinalPaginatorResponse;
@@ -43,6 +44,7 @@ public class RabobankApiClient {
     private final PersistentStorage persistentStorage;
     private final boolean requestIsManual;
     private RabobankConfiguration rabobankConfiguration;
+    private EidasProxyConfiguration eidasProxyConf;
 
     RabobankApiClient(
             final TinkHttpClient client,
@@ -53,8 +55,11 @@ public class RabobankApiClient {
         this.requestIsManual = requestIsManual;
     }
 
-    public void setConfiguration(final RabobankConfiguration configuration) {
+    public void setConfiguration(
+            final RabobankConfiguration configuration,
+            final EidasProxyConfiguration eidasProxyConf) {
         this.rabobankConfiguration = configuration;
+        this.eidasProxyConf = eidasProxyConf;
     }
 
     public TokenResponse exchangeAuthorizationCode(final Form request) {

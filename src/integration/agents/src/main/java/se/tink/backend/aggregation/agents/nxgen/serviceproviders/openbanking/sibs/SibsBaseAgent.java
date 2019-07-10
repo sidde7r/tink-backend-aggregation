@@ -43,7 +43,7 @@ public abstract class SibsBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        apiClient.setConfiguration(getClientConfiguration(), configuration.getEidasProxy());
+        apiClient.setConfiguration(getClientConfiguration());
     }
 
     protected SibsConfiguration getClientConfiguration() {

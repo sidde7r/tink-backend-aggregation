@@ -50,7 +50,7 @@ public class RabobankAgent extends NextGenerationAgent {
                                 RabobankConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException("Rabobank configuration missing."));
-        apiClient.setConfiguration(rabobankConfiguration);
+        apiClient.setConfiguration(rabobankConfiguration, configuration.getEidasProxy());
 
         final String password = rabobankConfiguration.getClientSSLKeyPassword();
         final byte[] p12 = rabobankConfiguration.getClientSSLP12bytes();
