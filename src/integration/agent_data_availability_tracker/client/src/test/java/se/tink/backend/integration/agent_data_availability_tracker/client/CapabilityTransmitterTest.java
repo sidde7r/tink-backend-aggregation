@@ -14,7 +14,8 @@ public class CapabilityTransmitterTest {
     @Test
     public void test() {
 
-        AgentDataAvailabilityTrackerClientImpl transmitter = new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
+        AgentDataAvailabilityTrackerClientImpl transmitter =
+                new AgentDataAvailabilityTrackerClientImpl("192.168.99.100", 30789);
 
         transmitter.beginStream();
         transmitter.sendAccount("TestBank", buildAccount(), new AccountFeatures());

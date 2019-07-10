@@ -22,6 +22,7 @@ java_library(
     deps = [
         "annotations",
         "//src/aggregation/api",
+        "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/api",
         "//src/integration/lib/src/main/java/se/tink/backend/aggregation/nxgen/storage",
         "//src/integration/models",

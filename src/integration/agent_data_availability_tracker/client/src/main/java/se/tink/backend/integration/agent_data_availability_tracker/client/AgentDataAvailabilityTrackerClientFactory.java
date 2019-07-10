@@ -7,7 +7,8 @@ public class AgentDataAvailabilityTrackerClientFactory {
     private static final String TEST_PROVIDER = "tracking-test-provider";
 
     public static AgentDataAvailabilityTrackerClient getClient(
-            final AgentDataAvailabilityTrackerConfiguration configuration, final String providerName) {
+            final AgentDataAvailabilityTrackerConfiguration configuration,
+            final String providerName) {
 
         if (configuration != null && !Strings.isNullOrEmpty(configuration.getHost())) {
 

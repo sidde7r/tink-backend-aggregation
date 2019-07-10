@@ -38,6 +38,9 @@ import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClient;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerClientFactory;
+import se.tink.backend.integration.agent_data_availability_tracker.client.AgentDataAvailabilityTrackerConfiguration;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -76,6 +79,8 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected boolean isWhitelistRefresh;
     protected ControllerWrapper controllerWrapper;
 
+    private final AgentDataAvailabilityTrackerClient agentDataAvailabilityTrackerClient;
+
     public AgentWorkerContext(
             CredentialsRequest request,
             MetricRegistry metricRegistry,
@@ -83,6 +88,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             AggregatorInfo aggregatorInfo,
             SupplementalInformationController supplementalInformationController,
             ControllerWrapper controllerWrapper,
+            AgentDataAvailabilityTrackerConfiguration agentDataAvailabilityTrackerConfiguration,
             String clusterId) {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
@@ -106,6 +112,9 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.supplementalInformationController = supplementalInformationController;
         this.controllerWrapper = controllerWrapper;
+        this.agentDataAvailabilityTrackerClient =
+                AgentDataAvailabilityTrackerClientFactory.getClient(
+                        agentDataAvailabilityTrackerConfiguration, request.getProvider().getName());
     }
 
     @Override
@@ -315,6 +324,24 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         allAvailableAccountsByUniqueId.put(
                 account.getBankId(), new Pair<>(account, accountFeaturesToCache));
+    }
+
+    void openTrackingServiceStream() {
+        agentDataAvailabilityTrackerClient.beginStream();
+    }
+
+    void sendAccountToTrackingService(String uniqueId) {
+        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
+
+        Account account = pair.first;
+        AccountFeatures accountFeatures = pair.second;
+
+        agentDataAvailabilityTrackerClient.sendAccount(
+                request.getProvider().getClassName(), account, accountFeatures);
+    }
+
+    void closeTrackingServiceStream() {
+        agentDataAvailabilityTrackerClient.endStreamBlocking();
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {

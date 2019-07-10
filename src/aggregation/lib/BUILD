@@ -20,6 +20,7 @@ java_library(
     deps = [
         "//src/aggregation/api",
         "//src/aggregationcontroller_api",
+        "//src/integration/agent_data_availability_tracker/client",
         "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",

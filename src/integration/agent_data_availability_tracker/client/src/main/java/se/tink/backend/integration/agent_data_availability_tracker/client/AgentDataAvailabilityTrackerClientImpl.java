@@ -19,7 +19,8 @@ import se.tink.backend.integration.agent_data_availability_tracker.client.serial
 
 public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabilityTrackerClient {
 
-    private static final Logger log = LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
+    private static final Logger log =
+            LoggerFactory.getLogger(AgentDataAvailabilityTrackerClientImpl.class);
 
     private StreamObserver<TrackAccountRequest> requestStream;
 
@@ -56,6 +57,7 @@ public class AgentDataAvailabilityTrackerClientImpl implements AgentDataAvailabi
                         log.warn(
                                 String.format("Tracking error: %s", throwable.getMessage()),
                                 throwable);
+                        latch.countDown();
                     }
 
                     @Override

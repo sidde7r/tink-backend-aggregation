@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 public interface AgentDataAvailabilityTrackerClient {
 
     void beginStream();
+
     void sendAccount(final String agent, final Account account, final AccountFeatures features);
+
     void endStreamBlocking();
 }
