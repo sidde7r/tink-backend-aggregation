@@ -36,7 +36,6 @@ public class TransactionEntity {
 
     private Transaction toTinkTransaction(boolean pending) {
         return Transaction.builder()
-                .setExternalId(transactionId)
                 .setDescription(remittanceInformationUnstructured)
                 .setDate(valueDate)
                 .setAmount(transactionAmount.toTinkAmount())
