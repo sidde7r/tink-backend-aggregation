@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
@@ -91,9 +90,6 @@ public abstract class HandelsbankenAgent<
                 this.handelsbankenConfiguration);
     }
 
-    protected abstract Optional<InvestmentRefreshController> constructInvestmentRefreshController(
-            API bankClient, HandelsbankenSessionStorage handelsbankenSessionStorage);
-
     protected abstract Optional<TransferController> constructTransferController(
             API client, HandelsbankenSessionStorage sessionStorage, AgentContext context);
 
@@ -155,12 +151,6 @@ public abstract class HandelsbankenAgent<
                                 transactionPaginationHelper,
                                 constructCreditCardTransactionPaginator(
                                         this.bankClient, this.handelsbankenSessionStorage))));
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return constructInvestmentRefreshController(
-                this.bankClient, this.handelsbankenSessionStorage);
     }
 
     @Override

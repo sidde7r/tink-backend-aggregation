@@ -4,8 +4,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
@@ -47,14 +50,24 @@ import se.tink.libraries.i18n.Catalog;
 
 public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration>
-        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshEInvoiceExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private EInvoiceRefreshController eInvoiceRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public HandelsbankenSEAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
         eInvoiceRefreshController = null;
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new HandelsbankenSEInvestmentFetcher(
+                                bankClient, handelsbankenSessionStorage, credentials));
     }
 
     @Override
@@ -94,15 +107,13 @@ public class HandelsbankenSEAgent
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(
-            HandelsbankenSEApiClient bankClient,
-            HandelsbankenSessionStorage handelsbankenSessionStorage) {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new HandelsbankenSEInvestmentFetcher(
-                                bankClient, handelsbankenSessionStorage, credentials)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
