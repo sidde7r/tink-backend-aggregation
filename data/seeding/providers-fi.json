@@ -162,21 +162,6 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.fi.openbanking.nordea.NordeaFiAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Nordea",
-            "fields": [],
-            "multiFactor": false,
-            "name": "fi-nordea-oauth2",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "payload": "tink",
-            "popular": true,
-            "status": "DISABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
             "credentialsType": "THIRD_PARTY_APP",
             "displayDescription": "Nordea Codes App",

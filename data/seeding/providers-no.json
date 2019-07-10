@@ -1805,21 +1805,6 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.no.openbanking.nordea.NordeaNoAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Nordea",
-            "fields": [],
-            "multiFactor": false,
-            "name": "no-nordea-oauth2",
-            "passwordHelpText": "Please authenticate to use this bank.",
-            "payload": "tink",
-            "popular": true,
-            "status": "DISABLED",
-            "transactional": true,
-            "tutorialUrl": null,
-            "type": "BANK"
-        },
-        {
             "className": "nxgen.no.banks.sdcno.SdcNoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Odal Sparebank",
