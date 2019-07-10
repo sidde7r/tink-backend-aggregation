@@ -5,7 +5,10 @@ import java.util.Optional;
 import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.identitydata.BankiaIdentityDataFetcher;
@@ -28,15 +31,21 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class BankiaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public final class BankiaAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final BankiaApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public BankiaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new BankiaApiClient(client, persistentStorage);
+
+        BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
+        investmentRefreshController =
+                new InvestmentRefreshController(metricRefreshController, updateController, fetcher);
 
         checkDeviceId();
     }
@@ -92,11 +101,13 @@ public final class BankiaAgent extends NextGenerationAgent implements RefreshIde
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, fetcher));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
