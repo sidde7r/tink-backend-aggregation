@@ -7,7 +7,6 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
-import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -21,17 +20,6 @@ public final class QsealcEidasProxySigner implements Signer {
     private final TinkHttpClient httpClient;
     private final URL eidasProxyBaseUrl;
     private final String certificateId;
-
-    @Deprecated
-    public QsealcEidasProxySigner(final URL eidasProxyBaseUrl, final String certificateId) {
-        this.eidasProxyBaseUrl = eidasProxyBaseUrl;
-        this.certificateId = certificateId;
-        this.httpClient = new TinkHttpClient();
-        httpClient.setTimeout(TIMEOUT_MS);
-        httpClient.setDebugOutput(true);
-        httpClient.setSslClientCertificate(readFile(Eidas.CLIENT_P12), Eidas.CLIENT_PASSWORD);
-        httpClient.trustRootCaCertificate(readFile(Eidas.DEV_CAS_JKS), Eidas.DEV_CAS_PASSWORD);
-    }
 
     public QsealcEidasProxySigner(
             final EidasProxyConfiguration proxyConfig, final String certificateId) {
