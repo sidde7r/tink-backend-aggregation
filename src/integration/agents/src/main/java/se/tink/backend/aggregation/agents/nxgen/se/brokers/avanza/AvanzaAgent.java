@@ -47,11 +47,7 @@ public final class AvanzaAgent extends NextGenerationAgent
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
 
-        AvanzaInvestmentFetcher investmentFetcher =
-                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher);
+        this.investmentRefreshController = constructInvestmentRefreshController();
 
         this.transactionalAccountRefreshController =
                 constructTransactionalAccountRefreshController();
@@ -97,6 +93,19 @@ public final class AvanzaAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionDatePaginationController<>(accountFetcher)));
+    }
+
+    private InvestmentRefreshController constructInvestmentRefreshController() {
+        final AvanzaInvestmentFetcher investmentFetcher =
+                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
+
+        return new InvestmentRefreshController(
+                metricRefreshController,
+                updateController,
+                investmentFetcher,
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        new TransactionDatePaginationController<>(investmentFetcher)));
     }
 
     @Override

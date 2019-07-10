@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,7 +63,7 @@ public class AvanzaTransactionalAccountFetcher
         final String fromDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate);
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
-        Collection<? extends Transaction> transactions =
+        List<Transaction> transactions =
                 authSessionStorage.keySet().stream()
                         .filter(
                                 authSession ->

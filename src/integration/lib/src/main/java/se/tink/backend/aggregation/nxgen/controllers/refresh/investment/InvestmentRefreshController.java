@@ -64,8 +64,7 @@ public final class InvestmentRefreshController
 
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
-        // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
-        return new FetchTransactionsResponse(Collections.emptyMap());
+        return new FetchTransactionsResponse(this.fetchTransactions());
     }
 
     @Deprecated
@@ -111,12 +110,18 @@ public final class InvestmentRefreshController
         try {
             action.start();
 
+            // Added Merger to the Collectors.toMap to remove duplicates.
             Map<Account, List<Transaction>> transactionsMap =
                     getInvestmentAccounts().stream()
                             .map(this::fetchTransactionsFor)
                             .filter(Objects::nonNull)
                             .peek((pair -> action.count(pair.second.size())))
-                            .collect(Collectors.toMap(pair -> pair.first, pair -> pair.second));
+                            .collect(
+                                    Collectors.toMap(
+                                            pair -> pair.first,
+                                            pair -> pair.second,
+                                            (transactionList1, transactionList2) ->
+                                                    transactionList1));
 
             action.completed();
             return transactionsMap;
