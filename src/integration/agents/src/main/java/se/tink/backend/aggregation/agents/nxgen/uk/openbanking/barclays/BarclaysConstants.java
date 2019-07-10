@@ -32,12 +32,13 @@ public final class BarclaysConstants {
 
         class V31 {
             public static final String AIS_AUTH_URL =
-                    "https://elara.api.barclays:443/open-banking/v3.1";
+                    "https://telesto.api.barclays:443/open-banking/v3.1/aisp";
             public static final String AIS_API_URL =
-                    "https://deimos.api.barclays:443/open-banking/v3.1";
+                    "https://telesto.api.barclays:443/open-banking/v3.1/aisp";
             public static final String PIS_AUTH_URL =
-                    "https://elara.api.barclays:443/open-banking/v3.1";
-            public static final String PIS_API_URL = "";
+                    "https://telesto.api.barclays:443/open-banking/v3.1/pisp";
+            public static final String PIS_API_URL =
+                    "https://telesto.api.barclays:443/open-banking/v3.1/pisp";
             public static final String WELL_KNOWN_URL =
                     "https://oauth.tiaa.barclays.com/BarclaysPersonal/.well-known/openid-configuration";
         }
