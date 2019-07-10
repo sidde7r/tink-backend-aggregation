@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.authenticator.BanquePopulaireAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.creditcard.BanquePopulaireCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.BanquePopulaireLoanFetcher;
@@ -20,8 +23,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BanquePopulaireAgent extends NextGenerationAgent {
+public class BanquePopulaireAgent extends NextGenerationAgent
+        implements RefreshLoanAccountsExecutor {
     private BanquePopulaireApiClient apiClient;
+    private final LoanRefreshController loanRefreshController;
 
     public BanquePopulaireAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -31,6 +36,12 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
         apiClient =
                 new BanquePopulaireApiClient(
                         client, sessionStorage, request.getProvider().getPayload());
+
+        loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BanquePopulaireLoanFetcher(apiClient));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -80,12 +91,13 @@ public class BanquePopulaireAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BanquePopulaireLoanFetcher(apiClient)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
