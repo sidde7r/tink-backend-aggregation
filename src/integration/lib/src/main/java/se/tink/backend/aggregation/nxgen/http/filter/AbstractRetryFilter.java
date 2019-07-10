@@ -104,5 +104,4 @@ public abstract class AbstractRetryFilter extends Filter {
     protected boolean shouldRetry(HttpClientException exception) {
         return false;
     }
-
 }

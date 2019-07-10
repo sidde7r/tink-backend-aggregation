@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.http.filter.AbstractRetryFilter;
 public class NordeaDKHttpFilter extends AbstractRetryFilter {
 
     public NordeaDKHttpFilter() {
-        super(3, 0);
+        super(3, 200);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class NordeaDKHttpFilter extends AbstractRetryFilter {
 
     private boolean isUnavailable(HttpResponse response) {
         return response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE
-            || response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT;
+                || response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT;
     }
 }
