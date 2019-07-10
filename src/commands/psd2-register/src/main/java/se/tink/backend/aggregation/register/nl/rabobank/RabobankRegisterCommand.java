@@ -185,7 +185,7 @@ public final class RabobankRegisterCommand {
         final int exp = (int) (System.currentTimeMillis() / 1000) + 6 * 60 * 60;
 
         final Signer jwsSigner =
-                new QsealcEidasProxySigner(Url.EIDAS_PROXY_BASE_URL, certificateId);
+                new QsealcEidasProxySigner(RabobankRegisterConstants.eidasProxyConf, certificateId);
 
         final JwsRequest body = JwsRequest.create(qsealcB64, jwsSigner, exp, email, organization);
 

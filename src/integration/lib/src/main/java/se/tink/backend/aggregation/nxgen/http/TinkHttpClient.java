@@ -608,28 +608,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         }
     }
 
-    @Deprecated
-    public void setEidasProxy(String uri, String certificateId) {
-        try {
-            setSslClientCertificate(
-                    Files.toByteArray(new File("data/eidas_dev_certificates/eidas_client.p12")),
-                    "changeme");
-            trustRootCaCertificate(
-                    Files.toByteArray(new File("data/eidas_dev_certificates/eidas_dev_ca.jks")),
-                    "changeme");
-            setProxy(uri);
-            requestExecutor.setEidasCertificateId(certificateId);
-
-            this.internalHttpClientBuilder =
-                    this.internalHttpClientBuilder.setHostnameVerifier(
-                            new ProxyHostnameVerifier(new URI(uri).getHost()));
-
-        } catch (IOException | URISyntaxException e) {
-            throw new IllegalStateException(
-                    "Could not initialise client certificate for eIDAS proxy", e);
-        }
-    }
-
     public void addRedirectHandler(RedirectHandler handler) {
         this.redirectStrategy.addHandler(handler);
     }
