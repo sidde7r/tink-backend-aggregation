@@ -4,7 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoMultifactorAuthenticator;
@@ -29,14 +32,22 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class EvoBancoAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class EvoBancoAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final EvoBancoApiClient bankClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public EvoBancoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         bankClient = new EvoBancoApiClient(client, sessionStorage);
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new EvoBancoInvestmentFetcher(bankClient));
     }
 
     @Override
@@ -90,12 +101,13 @@ public class EvoBancoAgent extends NextGenerationAgent implements RefreshIdentit
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new EvoBancoInvestmentFetcher(bankClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
