@@ -26,12 +26,6 @@ public class PocketEntity {
         return toTinkAccount(accountNumber, holderName, AccountTypes.CHECKING);
     }
 
-    @JsonIgnore
-    public TransactionalAccount toTinkSavingsAccount(String holderName) {
-        return toTinkAccount(
-                id, holderName, AccountTypes.SAVINGS); // Savings account has no external id
-    }
-
     private TransactionalAccount toTinkAccount(
             String accountNumber, String holderName, AccountTypes accountType) {
         TransactionalAccount.Builder builder =
