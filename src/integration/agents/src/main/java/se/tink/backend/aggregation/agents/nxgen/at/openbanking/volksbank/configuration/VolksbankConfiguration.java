@@ -9,25 +9,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class VolksbankConfiguration implements ClientConfiguration {
 
-    private String clientId;
-    private String clientSecret;
     private String redirectUrl;
-
-    public String getClientId() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
-
-        return clientId;
-    }
-
-    public String getClientSecret() {
-        Preconditions.checkNotNull(
-                Strings.emptyToNull(redirectUrl),
-                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
-
-        return clientSecret;
-    }
 
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
