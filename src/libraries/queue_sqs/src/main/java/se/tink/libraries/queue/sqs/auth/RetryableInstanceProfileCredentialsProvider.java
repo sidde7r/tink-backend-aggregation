@@ -107,13 +107,19 @@ public class RetryableInstanceProfileCredentialsProvider
 
         if (!SDKGlobalConfiguration.isEc2MetadataDisabled()) {
             if (refreshCredentialsAsync) {
-                executor = Executors.newScheduledThreadPool(1);
+                executor =
+                        Executors.newScheduledThreadPool(
+                                1,
+                                r -> {
+                                    Thread t = Executors.defaultThreadFactory().newThread(r);
+                                    t.setName("instance-profile-credentials-refresh");
+                                    t.setDaemon(true);
+                                    return t;
+                                });
                 executor.scheduleWithFixedDelay(
                         () -> {
                             try {
                                 if (shouldRefresh) credentialsFetcher.getCredentials();
-                            } catch (AmazonClientException ace) {
-                                handleError(ace);
                             } catch (RuntimeException re) {
                                 handleError(re);
                             }
