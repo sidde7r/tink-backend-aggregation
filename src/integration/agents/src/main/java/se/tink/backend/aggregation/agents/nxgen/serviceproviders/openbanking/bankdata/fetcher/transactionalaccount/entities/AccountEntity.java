@@ -37,7 +37,7 @@ public class AccountEntity {
                         IdModule.builder()
                                 .withUniqueIdentifier(iban)
                                 .withAccountNumber(iban)
-                                .withAccountName(name)
+                                .withAccountName(name.equals("") ? product : name)
                                 .addIdentifier(new IbanIdentifier(iban))
                                 .build())
                 .withBalance(BalanceModule.of(getBalance()))
@@ -62,7 +62,7 @@ public class AccountEntity {
                 .filter(this::doesMatchWithAccountCurrency)
                 .findFirst()
                 .map(BalanceEntity::toAmount)
-                .orElse(getDefaultAmount());
+                .orElseThrow(() -> new RuntimeException("Unable to fetch balance."));
     }
 
     public List<BalanceEntity> getBalances() {
@@ -73,11 +73,7 @@ public class AccountEntity {
         this.balances = balances;
     }
 
-    private Amount getDefaultAmount() {
-        return new Amount(currency, 0);
-    }
-
     private boolean doesMatchWithAccountCurrency(final BalanceEntity balance) {
-        return balance.isClosingBooked() && balance.isInCurrency(currency);
+        return balance.isForwardAvailable() && balance.isInCurrency(currency);
     }
 }

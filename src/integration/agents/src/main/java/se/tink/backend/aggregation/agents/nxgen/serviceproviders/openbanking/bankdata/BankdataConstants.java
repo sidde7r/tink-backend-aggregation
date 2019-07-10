@@ -32,7 +32,6 @@ public final class BankdataConstants {
                 "/openbanking-consent/v1/consents/{consentId}/authorisations";
         public static final String ACCOUNTS = "/openbanking-account/v1/accounts";
         public static final String AIS_PRODUCT = "/openbanking-account";
-        public static final String TRANSACTIONS = "";
     }
 
     public static class StorageKeys {
@@ -77,6 +76,7 @@ public final class BankdataConstants {
         public static final String X_API_KEY = "x-api-key";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String CONSENT_ID = "Consent-ID";
+        public static final String CONTENT_TYPE = "Content-Type";
     }
 
     public static class FormValues {
@@ -95,7 +95,7 @@ public final class BankdataConstants {
     }
 
     public static class Accounts {
-        public static final String BALANCE_CLOSING_BOOKED = "closingBooked";
+        public static final String BALANCE_FORWARD_AVAILABLE = "forwardAvailable";
     }
 
     public static class Format {

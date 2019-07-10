@@ -10,7 +10,7 @@ public class BookedTransactionEntity {
 
     private String transactionId;
     private BalanceAmountEntity transactionAmount;
-    private String remittanceInformationUnstructured;
+    private RemittanceInformationStructuredEntity remittanceInformationStructured;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
@@ -20,10 +20,10 @@ public class BookedTransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setPending(false)
+                .setPending(true)
                 .setAmount(transactionAmount.toAmount())
                 .setDate(bookingDate)
-                .setDescription(remittanceInformationUnstructured)
+                .setDescription(remittanceInformationStructured.getReference())
                 .build();
     }
 }

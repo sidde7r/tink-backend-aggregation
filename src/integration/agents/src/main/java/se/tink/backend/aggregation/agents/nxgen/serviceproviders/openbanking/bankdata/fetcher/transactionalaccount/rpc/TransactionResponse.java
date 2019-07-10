@@ -22,8 +22,6 @@ public class TransactionResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        // filtering by date is not working on their sandbox, replace it on production with
-        // TODO return Optional.empty();
-        return Optional.of(false);
+        return Optional.empty();
     }
 }

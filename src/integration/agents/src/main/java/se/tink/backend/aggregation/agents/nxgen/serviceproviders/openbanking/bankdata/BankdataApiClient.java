@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentAuthorizationResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.authenticator.rpc.InitialTokenRequest;
@@ -30,15 +29,15 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.rpc.TransactionResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.BankdataUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.utils.DateUtils;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import tink.org.apache.http.HttpHeaders;
 
 public final class BankdataApiClient {
 
@@ -58,6 +57,7 @@ public final class BankdataApiClient {
 
     protected void setConfiguration(BankdataConfiguration configuration) {
         this.configuration = configuration;
+        this.client.setEidasProxy(this.configuration.getEidasProxyBaseUrl(), "Tink");
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -134,6 +134,7 @@ public final class BankdataApiClient {
                 .queryParam(
                         QueryKeys.DATE_FROM,
                         DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
+                .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOOKED)
                 .get(TransactionResponse.class);
     }
 
@@ -142,8 +143,8 @@ public final class BankdataApiClient {
         authorizeConsent(consentId);
         final String clientId = getConfiguration().getClientId();
         final String redirectUri = getConfiguration().getRedirectUrl();
-        final String codeVerifier = BerlinGroupUtils.generateCodeVerifier();
-        final String codeChallenge = BerlinGroupUtils.generateCodeChallenge(codeVerifier);
+        final String codeVerifier = BankdataUtils.generateCodeVerifier();
+        final String codeChallenge = BankdataUtils.generateCodeChallenge(codeVerifier);
         sessionStorage.put(StorageKeys.CODE_VERIFIER, codeVerifier);
         sessionStorage.put(StorageKeys.CONSENT_ID, consentId);
         URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.AUTHORIZE);
@@ -151,11 +152,12 @@ public final class BankdataApiClient {
         return createRequest(url)
                 .queryParam(QueryKeys.RESPONSE_TYPE, BankdataConstants.QueryValues.CODE)
                 .queryParam(QueryKeys.CLIENT_ID, clientId)
-                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE + consentId)
+                .queryParam(QueryKeys.SCOPE, "ais:" + consentId)
                 .queryParam(QueryKeys.STATE, state)
                 .queryParam(QueryKeys.CODE_CHALLENGE_METHOD, QueryValues.CODE_CHALLENGE_METHOD)
                 .queryParam(QueryKeys.CODE_CHALLENGE, codeChallenge)
                 .queryParam(QueryKeys.REDIRECT_URI, redirectUri)
+                .queryParam("acr", "psd2")
                 .getUrl();
     }
 
@@ -167,12 +169,12 @@ public final class BankdataApiClient {
                         getConfiguration().getClientId());
         URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.TOKEN);
 
-        TokenResponse initialToken =
+        TokenResponse response =
                 client.request(url)
                         .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                         .post(TokenResponse.class, request.toData());
 
-        sessionStorage.put(StorageKeys.OAUTH_TOKEN, initialToken.toTinkToken());
+        sessionStorage.put(StorageKeys.OAUTH_TOKEN, response.toTinkToken());
     }
 
     public String getConsentId() {
@@ -181,13 +183,15 @@ public final class BankdataApiClient {
         final String requestId = UUID.randomUUID().toString();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.CONSENT);
 
-        return client.request(url)
-                .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
-                .post(ConsentResponse.class)
-                .getConsentId();
+        ConsentResponse response =
+                client.request(url)
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentRequest.toData(), MediaType.APPLICATION_JSON_TYPE)
+                        .post(ConsentResponse.class);
+
+        return response.getConsentId();
     }
 
     private void authorizeConsent(String consentId) {
@@ -195,12 +199,13 @@ public final class BankdataApiClient {
         final ConsentAuthorizationRequest consentAuthorization = new ConsentAuthorizationRequest();
         URL url = new URL(configuration.getBaseUrl() + Endpoints.AUTHORIZE_CONSENT);
 
-        client.request(url.parameter(IdTags.CONSENT_ID, consentId))
-                .addBearerToken(getTokenFromSession())
-                .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
-                .post(ConsentAuthorizationResponse.class);
+        HttpResponse response =
+                client.request(url.parameter(IdTags.CONSENT_ID, consentId))
+                        .addBearerToken(getTokenFromSession())
+                        .header(HeaderKeys.X_API_KEY, getConfiguration().getApiKey())
+                        .header(HeaderKeys.X_REQUEST_ID, requestId)
+                        .body(consentAuthorization, MediaType.APPLICATION_JSON_TYPE)
+                        .post(HttpResponse.class);
     }
 
     public OAuth2Token getToken(String code) {
@@ -242,7 +247,7 @@ public final class BankdataApiClient {
         URL url = new URL(configuration.getBaseAuthUrl() + Endpoints.TOKEN);
 
         return client.request(url)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .header(HeaderKeys.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(TokenResponse.class, tokenRequest.toData())

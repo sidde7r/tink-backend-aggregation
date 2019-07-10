@@ -2,15 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.sydbank;
 
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
 
+@Ignore
 public class SydbankAgentTest {
 
-    // IBAN for configuration DK5099991234567890
-    // --jvmopt=-Dtink.IBAN=DK5099991234567890
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
     private AgentIntegrationTest.Builder builder;
 
