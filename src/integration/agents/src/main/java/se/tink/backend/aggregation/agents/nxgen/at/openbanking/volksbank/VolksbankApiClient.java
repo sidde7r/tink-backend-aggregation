@@ -131,8 +131,8 @@ public final class VolksbankApiClient {
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
-                                .queryParam("state", state)
-                                .queryParam("code", "code")) // TODO patch server
+                                .queryParam(VolksbankConstants.QueryKeys.STATE, state)
+                                .queryParam(VolksbankConstants.QueryKeys.CODE, VolksbankConstants.QueryValues.CODE)) // TODO patch server
                 .header(HeaderKeys.PSU_ID, credentials.getField(Key.LOGIN_INPUT))
                 .header(HeaderKeys.PSU_ID_TYPE, credentials.getField(Key.LOGIN_DESCRIPTION))
                 .post(ConsentResponse.class, consentRequest);

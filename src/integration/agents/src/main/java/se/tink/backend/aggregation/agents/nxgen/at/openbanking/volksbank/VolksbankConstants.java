@@ -59,6 +59,13 @@ public final class VolksbankConstants {
 
         public static final String DATE_FROM = "dateFrom";
         public static final String DATE_TO = "dateTo";
+        public static final String STATE = "state";
+        public static final String CODE = "code";
+    }
+
+    public static class QueryValues {
+
+        public static final String CODE = "code";
     }
 
     public static class HeaderKeys {
