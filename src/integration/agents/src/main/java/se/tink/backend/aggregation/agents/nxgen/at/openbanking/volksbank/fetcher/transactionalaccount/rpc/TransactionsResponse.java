@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionsResponse implements PaginatorResponse {
 
-    public AccountInfoEntity account;
-    public TransactionsEntity transactions;
+    private AccountInfoEntity account;
+    private TransactionsEntity transactions;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
