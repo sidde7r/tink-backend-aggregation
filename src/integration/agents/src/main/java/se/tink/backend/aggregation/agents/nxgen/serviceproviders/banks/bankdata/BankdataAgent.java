@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.authenticator.BankdataPinAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.BankdataCreditCardTransactionFetcher;
@@ -24,8 +27,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BankdataAgent extends NextGenerationAgent {
+public class BankdataAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
     private BankdataApiClient bankClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public BankdataAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -33,6 +38,11 @@ public class BankdataAgent extends NextGenerationAgent {
         configureHttpClient(client);
 
         bankClient = new BankdataApiClient(client, request.getProvider());
+
+        BankdataInvestmentFetcher investmentFetcher = new BankdataInvestmentFetcher(bankClient);
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -95,12 +105,13 @@ public class BankdataAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        BankdataInvestmentFetcher investmentFetcher = new BankdataInvestmentFetcher(bankClient);
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
 
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher));
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
