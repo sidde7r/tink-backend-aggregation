@@ -5,8 +5,6 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdResponse;
@@ -45,6 +43,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Payme
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.ValidateSignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CommitProfileResponse;
@@ -73,10 +72,10 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         super(client, configuration);
     }
 
-    public InitBankIdResponse initToBank(InitBankIdRequest initBankIdRequest) {
-        return createPostRequest(HandelsbankenSEConstants.Urls.INIT_REQUEST)
-                .body(initBankIdRequest, MediaType.APPLICATION_JSON)
-                .post(InitBankIdResponse.class);
+    public InitBankIdResponse initBankId(
+            EntryPointResponse entryPoint, InitBankIdRequest initBankIdRequest) {
+        return createPostRequest(entryPoint.toBankIdLogin())
+                .post(InitBankIdResponse.class, initBankIdRequest);
     }
 
     public AuthenticateResponse authenticate(InitBankIdResponse initBankId) {
@@ -277,19 +276,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public TransferSignatureResponse signTransfer(Signable signable) {
-        TransferSignatureResponse response = new TransferSignatureResponse();
-        try {
-            response =
-                    createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
-        } catch (HttpResponseException exception) {
-            if (exception.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                // done for COB-758.
-                response = exception.getResponse().getBody(TransferSignatureResponse.class);
-            } else {
-                throw exception;
-            }
-        }
-        return response;
+        return createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
     }
 
     public ValidateRecipientResponse validateRecipient(
