@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -9,11 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaCo
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.FiduciaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.authenticator.FiduciaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.configuration.FiduciaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.executor.payment.FiduciaPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.de.openbanking.fiducia.fetcher.transactionalaccount.FiduciaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -25,7 +28,7 @@ public final class FiduciaAgent extends NextGenerationAgent
 
     private final String clientName;
     private final FiduciaApiClient apiClient;
-    private final TransactionalAccountRefreshController transactionalAccountRefreshController;
+    private TransactionalAccountRefreshController transactionalAccountRefreshController;
 
     public FiduciaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -33,8 +36,6 @@ public final class FiduciaAgent extends NextGenerationAgent
 
         apiClient = new FiduciaApiClient(client, persistentStorage);
         clientName = request.getProvider().getPayload();
-
-        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     @Override
@@ -42,6 +43,7 @@ public final class FiduciaAgent extends NextGenerationAgent
         super.setConfiguration(configuration);
 
         apiClient.setConfiguration(getClientConfiguration());
+        transactionalAccountRefreshController = getTransactionalAccountRefreshController();
     }
 
     protected FiduciaConfiguration getClientConfiguration() {
@@ -94,6 +96,18 @@ public final class FiduciaAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,
                         new TransactionKeyPaginationController<>(accountFetcher)));
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        final FiduciaPaymentExecutor fiduciaPaymentExecutor =
+                new FiduciaPaymentExecutor(
+                        apiClient,
+                        getClientConfiguration(),
+                        credentials.getField(CredentialKeys.PSU_ID),
+                        credentials.getField(CredentialKeys.PASSWORD));
+
+        return Optional.of(new PaymentController(fiduciaPaymentExecutor, fiduciaPaymentExecutor));
     }
 
     @Override
