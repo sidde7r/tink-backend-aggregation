@@ -1,5 +1,3 @@
-load("//tools/bzl:junit.bzl", "junit_test")
-
 java_library(
     name = "net",
     srcs = glob(["src/main/**/*.java"]),
