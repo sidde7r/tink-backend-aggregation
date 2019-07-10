@@ -211,11 +211,10 @@ public class RabobankApiClient {
             final String digest, final String requestId, final String date) {
         final String signingString = RabobankUtils.createSignatureString(date, digest, requestId);
 
-        final URL eidasProxyBaseUrl = rabobankConfiguration.getEidasProxyBaseUrl();
         final String certificateId = rabobankConfiguration.getCertificateId();
 
         final byte[] signatureBytes =
-                new QsealcEidasProxySigner(eidasProxyBaseUrl, certificateId)
+                new QsealcEidasProxySigner(eidasProxyConf, certificateId)
                         .getSignature(signingString.getBytes());
 
         final String b64Signature = Base64.getEncoder().encodeToString(signatureBytes);
