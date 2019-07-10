@@ -70,6 +70,15 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
                         return Collections.emptyList();
                     }
 
+                    // TODO: this is a temporary fix. The endpoint has changed, we have a appstore
+                    // monitor card for this and we are working on upgrading it
+                    if (becErrorResponse.functionIsNotAvailable()) {
+                        log.info(
+                                String.format(
+                                        "%s - Function not available", BecConstants.Log.LOANS));
+                        return Collections.emptyList();
+                    }
+
                     log.warn(
                             String.format(
                                     "%s - Unknown error: [%s] %s",

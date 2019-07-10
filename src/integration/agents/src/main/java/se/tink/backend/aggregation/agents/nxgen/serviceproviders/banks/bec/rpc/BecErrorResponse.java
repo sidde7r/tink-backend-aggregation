@@ -24,4 +24,8 @@ public class BecErrorResponse {
     public boolean noDetailsExist() {
         return getMessage().contains(BecConstants.ErrorMessage.LOAN_NO_DETAILS_EXIST);
     }
+
+    public boolean functionIsNotAvailable() {
+        return getMessage().contains(BecConstants.ErrorMessage.FUNCTION_NOT_AVAILABLE);
+    }
 }

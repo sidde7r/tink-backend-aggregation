@@ -105,6 +105,8 @@ public final class BecConstants {
         public static final String NO_MORTGAGE =
                 "you have not taken out a mortgage loan through us";
         public static final String LOAN_NO_DETAILS_EXIST = "no details exist";
+        public static final String FUNCTION_NOT_AVAILABLE =
+                "the required function is not currently available. try again later.";
     }
 
     public static final class Log {
