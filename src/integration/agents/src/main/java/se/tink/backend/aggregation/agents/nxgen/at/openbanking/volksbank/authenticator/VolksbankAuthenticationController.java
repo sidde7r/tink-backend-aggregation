@@ -55,7 +55,7 @@ public class VolksbankAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        if (!"valid".equalsIgnoreCase(authenticator.getConsentStatus().getConsentStatus())) {
+        if (!authenticator.getConsentStatus().isValid()) {
             throw new IllegalStateException("Invalid consent!");
         }
 
@@ -69,7 +69,7 @@ public class VolksbankAuthenticationController
         this.supplementalInformationHelper.waitForSupplementalInformation(
                 this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
-        if (!"valid".equalsIgnoreCase(authenticator.getConsentStatus().getConsentStatus())) {
+        if (!authenticator.getConsentStatus().isValid()) {
             throw new IllegalStateException("Invalid consent!");
         }
 

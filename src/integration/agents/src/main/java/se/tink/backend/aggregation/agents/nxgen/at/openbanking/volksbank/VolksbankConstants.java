@@ -88,4 +88,9 @@ public final class VolksbankConstants {
         public static final String ALL_ACCOUNTS = "allAccounts";
         public static final String MAX_DATE = "9999-12-31";
     }
+
+  public static class Status {
+
+      public static final String VALID = "valid";
+  }
 }
