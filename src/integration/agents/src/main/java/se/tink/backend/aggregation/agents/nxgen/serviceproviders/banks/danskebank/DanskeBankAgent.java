@@ -4,8 +4,10 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
@@ -27,12 +29,14 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient>
-        extends NextGenerationAgent implements RefreshInvestmentAccountsExecutor {
+        extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
     protected final MarketSpecificApiClient apiClient;
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
 
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public DanskeBankAgent(
             CredentialsRequest request,
@@ -49,6 +53,15 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.metricRefreshController,
                         this.updateController,
                         new DanskeBankInvestmentFetcher(this.apiClient));
+
+        // Fetches loans from the accounts endpoint
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new DanskeBankAccountLoanFetcher(
+                                this.credentials, this.apiClient, this.configuration),
+                        createTransactionFetcherController());
 
         // Must add the filter here because `configureHttpClient` is called before the agent
         // constructor
@@ -92,16 +105,14 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         return investmentRefreshController.fetchInvestmentTransactions();
     }
 
-    // Fetches loans from the accounts endpoint
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new DanskeBankAccountLoanFetcher(
-                                this.credentials, this.apiClient, this.configuration),
-                        createTransactionFetcherController()));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     private <A extends Account>
