@@ -33,7 +33,9 @@ public class RetryableInstanceMetadataCredentialsEndpointProvider
         String securityCredentialsList =
                 EC2CredentialsUtils.getInstance()
                         .readResource(
-                                new URI(host + EC2MetadataUtils.SECURITY_CREDENTIALS_RESOURCE));
+                                new URI(host + EC2MetadataUtils.SECURITY_CREDENTIALS_RESOURCE),
+                                getRetryPolicy(),
+                                getHeaders());
         String[] securityCredentials = securityCredentialsList.trim().split("\n");
         if (securityCredentials.length == 0) {
             throw new SdkClientException("Unable to load credentials path");
