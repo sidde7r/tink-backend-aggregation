@@ -21,6 +21,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.ConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -34,18 +35,21 @@ public class SibsBaseApiClient {
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
     protected SibsConfiguration configuration;
+    protected EidasProxyConfiguration eidasConf;
 
     public SibsBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
     }
 
-    protected void setConfiguration(SibsConfiguration configuration) {
+    protected void setConfiguration(
+            SibsConfiguration configuration, EidasProxyConfiguration eidasConf) {
         this.configuration = Preconditions.checkNotNull(configuration);
+        this.eidasConf = Preconditions.checkNotNull(eidasConf);
     }
 
     protected SibsRequestBuilder createRequest(URL url) {
-        return SibsRequest.builder(client, configuration, url);
+        return SibsRequest.builder(client, configuration, eidasConf, url);
     }
 
     private String getConsentFromStorage() {

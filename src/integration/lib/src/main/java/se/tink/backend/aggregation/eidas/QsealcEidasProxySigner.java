@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Eidas;
 import se.tink.backend.aggregation.eidas.EidasProxyConstants.Url;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -21,10 +22,23 @@ public final class QsealcEidasProxySigner implements Signer {
     private final URL eidasProxyBaseUrl;
     private final String certificateId;
 
+    @Deprecated
     public QsealcEidasProxySigner(final URL eidasProxyBaseUrl, final String certificateId) {
         this.eidasProxyBaseUrl = eidasProxyBaseUrl;
         this.certificateId = certificateId;
         this.httpClient = new TinkHttpClient();
+        httpClient.setTimeout(TIMEOUT_MS);
+        httpClient.setDebugOutput(true);
+        httpClient.setSslClientCertificate(readFile(Eidas.CLIENT_P12), Eidas.CLIENT_PASSWORD);
+        httpClient.trustRootCaCertificate(readFile(Eidas.DEV_CAS_JKS), Eidas.DEV_CAS_PASSWORD);
+    }
+
+    public QsealcEidasProxySigner(
+            final EidasProxyConfiguration proxyConfig, final String certificateId) {
+        this.eidasProxyBaseUrl = new URL(proxyConfig.getHost());
+        this.certificateId = certificateId;
+        this.httpClient = new TinkHttpClient();
+        this.httpClient.setEidasSign(proxyConfig);
         httpClient.setTimeout(TIMEOUT_MS);
         httpClient.setDebugOutput(true);
     }
@@ -40,9 +54,6 @@ public final class QsealcEidasProxySigner implements Signer {
     }
 
     private String getSignatureFromProxy(final byte[] signingBytes) {
-        httpClient.setSslClientCertificate(readFile(Eidas.CLIENT_P12), Eidas.CLIENT_PASSWORD);
-        httpClient.trustRootCaCertificate(readFile(Eidas.DEV_CAS_JKS), Eidas.DEV_CAS_PASSWORD);
-
         final String signingString = Base64.getEncoder().encodeToString(signingBytes);
         final URL url = eidasProxyBaseUrl.concatWithSeparator(Url.EIDAS_SIGN);
 
