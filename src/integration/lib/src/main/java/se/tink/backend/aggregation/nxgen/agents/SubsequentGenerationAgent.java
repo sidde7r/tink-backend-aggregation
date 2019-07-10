@@ -14,14 +14,12 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.SuperAbstractAgent;
@@ -30,7 +28,6 @@ import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -54,7 +51,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -78,7 +74,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
-                RefreshLoanAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
@@ -253,7 +248,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
             refreshers = new ArrayList<>();
             constructTransactionalAccountRefreshController().ifPresent(refreshers::add);
             constructCreditCardRefreshController().ifPresent(refreshers::add);
-            constructLoanRefreshController().ifPresent(refreshers::add);
             constructTransferDestinationRefreshController().ifPresent(refreshers::add);
         }
         return refreshers;
@@ -311,10 +305,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return Optional.empty();
     }
 
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
-    }
-
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
         return Optional.empty();
@@ -340,17 +330,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchAccountsResponse fetchCreditCardAccounts() {
         return fetchTransactionalAccountsPerType(CreditCardRefreshController.class);
-    }
-
-    @Override
-    public FetchLoanAccountsResponse fetchLoanAccounts() {
-        Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher :
-                getRefreshControllersOfType(LoanRefreshController.class)) {
-            accounts.putAll(refresher.fetchAccounts());
-        }
-
-        return new FetchLoanAccountsResponse(accounts);
     }
 
     private FetchAccountsResponse fetchTransactionalAccounts() {
@@ -385,11 +364,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         return fetchTransactionsPerType(CreditCardRefreshController.class);
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchLoanTransactions() {
-        return fetchTransactionsPerType(LoanRefreshController.class);
     }
 
     private FetchTransactionsResponse fetchTransactionalAccountTransactions() {
