@@ -61,7 +61,9 @@ public final class VolksbankApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-                .header(VolksbankConstants.HeaderKeys.X_REQUEST_ID, getRequestId())
+                .header(
+                        VolksbankConstants.HeaderKeys.X_REQUEST_ID,
+                        java.util.UUID.randomUUID().toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON);
     }
@@ -91,10 +93,6 @@ public final class VolksbankApiClient {
                                 UrlParameters.CONSENT_ID,
                                 persistentStorage.get(StorageKeys.CONSENT_ID)))
                 .get(ConsentStatusResponse.class);
-    }
-
-    public String getRequestId() {
-        return java.util.UUID.randomUUID().toString();
     }
 
     public AccountsResponse fetchAccounts() {
