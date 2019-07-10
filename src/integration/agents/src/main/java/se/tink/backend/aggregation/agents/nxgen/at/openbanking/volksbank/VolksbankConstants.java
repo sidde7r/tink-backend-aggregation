@@ -18,6 +18,7 @@ public final class VolksbankConstants {
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String MISSING_SCA_URL = "Missing sca redirect url.";
         public static final String MISSING_BALANCE = "No balance found.";
+        public static final String INVALID_CONSENT = "Invalid consent!";
     }
 
     public static class Urls {
@@ -43,6 +44,7 @@ public final class VolksbankConstants {
     public static class StorageKeys {
         public static final String OAUTH_TOKEN = OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN;
         public static final String CONSENT_ID = "CONSENT_ID";
+        public static final String CACHED_ACCOUNTS = "CACHED_ACCOUNTS";
     }
 
     public static class QueryKeys {

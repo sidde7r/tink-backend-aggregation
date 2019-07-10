@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.authenticator.rpc.ConsentResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -53,7 +54,7 @@ public class VolksbankAuthenticationController
     public ThirdPartyAppResponse<String> collect(String reference) {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                this.formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         if (!authenticator.getConsentStatus().isValid()) {
             throw new IllegalStateException("Invalid consent!");
@@ -64,48 +65,56 @@ public class VolksbankAuthenticationController
         return openThirdPartyApp(new URL(detailedConsent.getLinks().getScaRedirect()));
     }
 
-    private ThirdPartyAppResponse<String> collectDetailedConsent(String reference) {
+    private ThirdPartyAppResponse<String> collectDetailedConsent() {
 
         this.supplementalInformationHelper.waitForSupplementalInformation(
-                this.formatSupplementalKey(this.state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
+                formatSupplementalKey(state), WAIT_FOR_MINUTES, TimeUnit.MINUTES);
 
         if (!authenticator.getConsentStatus().isValid()) {
-            throw new IllegalStateException("Invalid consent!");
+            throw new IllegalStateException(VolksbankConstants.ErrorMessages.INVALID_CONSENT);
         }
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     private ThirdPartyAppResponse<String> openThirdPartyApp(URL authorizeUrl) {
-        ThirdPartyAppAuthenticationPayload payload = this.getAppPayload(authorizeUrl);
+        ThirdPartyAppAuthenticationPayload payload = getAppPayload(authorizeUrl);
         Preconditions.checkNotNull(payload);
-        this.supplementalInformationHelper.openThirdPartyApp(payload);
-        ThirdPartyAppResponse<String> response =
-                ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.WAITING);
-        return this.collectDetailedConsent(response.getReference());
+
+        supplementalInformationHelper.openThirdPartyApp(payload);
+
+        return collectDetailedConsent();
     }
 
-    public ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+    private ThirdPartyAppAuthenticationPayload getAppPayload(URL authorizeUrl) {
+
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
+
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
+
         Ios iOsPayload = new Ios();
         iOsPayload.setAppScheme(authorizeUrl.getScheme());
         iOsPayload.setDeepLinkUrl(authorizeUrl.get());
+
+        payload.setAndroid(androidPayload);
         payload.setIos(iOsPayload);
         return payload;
     }
 
     public ThirdPartyAppAuthenticationPayload getAppPayload() {
-        URL authorizeUrl = this.authenticator.buildAuthorizeUrl(this.state);
+
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
+        URL authorizeUrl = this.authenticator.buildAuthorizeUrl(state);
+
         Android androidPayload = new Android();
         androidPayload.setIntent(authorizeUrl.get());
-        payload.setAndroid(androidPayload);
+
         Ios iOsPayload = new Ios();
         iOsPayload.setAppScheme(authorizeUrl.getScheme());
         iOsPayload.setDeepLinkUrl(authorizeUrl.get());
+
+        payload.setAndroid(androidPayload);
         payload.setIos(iOsPayload);
         return payload;
     }
