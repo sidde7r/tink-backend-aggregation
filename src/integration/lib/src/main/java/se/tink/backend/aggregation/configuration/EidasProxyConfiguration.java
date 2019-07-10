@@ -10,6 +10,13 @@ public class EidasProxyConfiguration {
     private String tlsKeyPath;
     private boolean localEidasDev;
 
+    public EidasProxyConfiguration() {}
+
+    public EidasProxyConfiguration(String host, boolean localEidasDev) {
+        this.host = host;
+        this.localEidasDev = localEidasDev;
+    }
+
     public String getHost() {
         return host;
     }

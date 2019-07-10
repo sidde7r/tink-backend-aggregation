@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.register.nl.rabobank;
 
+import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class RabobankRegisterConstants {
@@ -9,6 +10,9 @@ public final class RabobankRegisterConstants {
         public static final URL EIDAS_PROXY_BASE_URL =
                 new URL("https://eidas-proxy.staging.aggregation.tink.network");
     }
+
+    public static EidasProxyConfiguration eidasProxyConf =
+            new EidasProxyConfiguration(Url.EIDAS_PROXY_BASE_URL.get(), true);
 
     public static class Cli {
         public static final String CERTIFICATE_PATH = "c";
