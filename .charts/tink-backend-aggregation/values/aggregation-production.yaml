@@ -160,6 +160,8 @@ clients:
     aggregatorIdentifier: "Sandnes Sparebank"
   no-storebrand-production:
     aggregatorIdentifier: "Storebrand"
+  no-storebrand-testing:
+    aggregatorIdentifier: "Storebrand"
   no-totens-sparebank-production:
     aggregatorIdentifier: "Totens Sparebank"
   no-totens-sparebank-testing:
