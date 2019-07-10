@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sib
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.SibsConstants.HeaderValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.configuration.SibsConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.sibs.utils.SibsUtils;
-import se.tink.backend.aggregation.configuration.EidasProxyConfiguration;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -21,32 +20,23 @@ public final class SibsRequest {
     private SibsRequest() {}
 
     public static SibsRequestBuilder builder(
-            TinkHttpClient client,
-            SibsConfiguration configuration,
-            EidasProxyConfiguration eidasConf,
-            URL url) {
-        return new SibsRequestBuilder(client, configuration, eidasConf, url);
+            TinkHttpClient client, SibsConfiguration configuration, URL url) {
+        return new SibsRequestBuilder(client, configuration, url);
     }
 
     public static class SibsRequestBuilder {
 
         private final TinkHttpClient client;
         private final SibsConfiguration configuration;
-        private final EidasProxyConfiguration eidasConf;
         private final URL url;
 
         private String digest = null;
         private String consent = null;
         private boolean isSigned = false;
 
-        public SibsRequestBuilder(
-                TinkHttpClient client,
-                SibsConfiguration configuration,
-                EidasProxyConfiguration eidasConf,
-                URL url) {
+        public SibsRequestBuilder(TinkHttpClient client, SibsConfiguration configuration, URL url) {
             this.client = client;
             this.configuration = configuration;
-            this.eidasConf = eidasConf;
             this.url = url;
         }
 
@@ -89,7 +79,7 @@ public final class SibsRequest {
                                 transactionId,
                                 requestId,
                                 requestTimestamp,
-                                eidasConf,
+                                configuration.getEidasProxyBaseUrl(),
                                 configuration.getClientSigningCertificateSerialNumber(),
                                 configuration.getCertificateId());
 
