@@ -122,6 +122,8 @@ public class SkandiaBankenApiClient {
     }
 
     public BankIdResponse collectBankId(String token) {
+        final BankIdResponse response = new BankIdResponse();
+
         final Form formBuilder = new Form();
         formBuilder.put(FormKeys.REQUEST_TOKEN, token);
         formBuilder.put(FormKeys.REQUEST_WITH, FormValues.REQUEST_WITH);

@@ -38,4 +38,9 @@ public class BankIdResponse {
     public String getRedirectUrl() {
         return redirectUrl;
     }
+
+    @JsonIgnore
+    public int getState() {
+        return state;
+    }
 }
