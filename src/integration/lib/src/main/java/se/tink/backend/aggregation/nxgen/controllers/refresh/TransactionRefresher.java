@@ -23,5 +23,6 @@ public interface TransactionRefresher extends Refresher {
                     .add(20000)
                     .build();
 
+    @Deprecated
     Map<Account, List<Transaction>> fetchTransactions();
 }

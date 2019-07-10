@@ -22,5 +22,6 @@ public interface AccountRefresher extends Refresher {
                     .add(21)
                     .build();
 
+    @Deprecated
     Map<Account, AccountFeatures> fetchAccounts();
 }
