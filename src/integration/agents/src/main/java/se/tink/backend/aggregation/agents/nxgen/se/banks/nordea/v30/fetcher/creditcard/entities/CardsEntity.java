@@ -67,6 +67,7 @@ public class CardsEntity {
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
     @JsonIgnore
     private String maskCreditCardNumber() {
-        return "************" + cardId.substring(cardId.length() - 4);
+        String cardNumber = credit.getMaskedCreditCardNumber();
+        return "************" + cardNumber.substring(cardNumber.length() - 4);
     }
 }
