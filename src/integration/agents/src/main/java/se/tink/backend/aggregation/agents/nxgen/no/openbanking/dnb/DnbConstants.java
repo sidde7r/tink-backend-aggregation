@@ -16,7 +16,7 @@ public final class DnbConstants {
         public static final String OAUTH_TOKEN_ERROR =
                 "This version of Dnb API doesn't support tokens.";
         public static final String WRONG_BALANCE_TYPE =
-                "Wrong balance type. InterimAvailable not found.";
+                "Wrong balance type. Expected type not found.";
         public static final String MISSING_CONFIGURATION = "Agent configuration is missing.";
         public static final String INVALID_CONFIGURATION =
                 "Invalid Configuration: %s cannot be empty or null";
@@ -48,7 +48,7 @@ public final class DnbConstants {
     }
 
     public static class BalanceTypes {
-        public static final String INTERIM_AVAILABLE = "interimAvailable";
+        public static final String EXPECTED = "expected";
     }
 
     public static class QueryKeys {

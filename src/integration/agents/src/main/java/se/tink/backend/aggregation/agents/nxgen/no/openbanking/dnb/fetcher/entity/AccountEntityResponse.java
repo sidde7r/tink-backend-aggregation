@@ -42,7 +42,7 @@ public class AccountEntityResponse {
     private Amount getAmount(final BalancesResponse balancesResponse) {
         final Balance balance =
                 balancesResponse.getBalances().stream()
-                        .filter(this::isInterimAvailableType)
+                        .filter(this::isUsableBalanceType)
                         .findFirst()
                         .orElseThrow(
                                 () -> new IllegalStateException(ErrorMessages.WRONG_BALANCE_TYPE));
@@ -50,7 +50,7 @@ public class AccountEntityResponse {
         return new Amount(currency, Double.valueOf(balance.getBalanceAmount().getAmount()));
     }
 
-    private boolean isInterimAvailableType(final Balance balance) {
-        return balance.getBalanceType().equalsIgnoreCase(BalanceTypes.INTERIM_AVAILABLE);
+    private boolean isUsableBalanceType(final Balance balance) {
+        return balance.getBalanceType().equalsIgnoreCase(BalanceTypes.EXPECTED);
     }
 }
