@@ -59,4 +59,9 @@ public class MessageEntity {
     public boolean isShowRetryButton() {
         return showRetryButton;
     }
+
+    @JsonIgnore
+    public String getHeader() {
+        return header;
+    }
 }

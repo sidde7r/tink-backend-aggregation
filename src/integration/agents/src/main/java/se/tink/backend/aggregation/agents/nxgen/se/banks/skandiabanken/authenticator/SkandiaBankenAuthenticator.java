@@ -51,23 +51,29 @@ public class SkandiaBankenAuthenticator implements BankIdAuthenticator<String> {
     public BankIdStatus collect(String reference) throws AuthenticationException {
         final BankIdResponse bankIdResponse = apiClient.collectBankId(reference);
         final String redirectUrl = bankIdResponse.getRedirectUrl();
+
         if (redirectUrl.equalsIgnoreCase("/message/")
                 || redirectUrl.equalsIgnoreCase("/otpchooser/")) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
+
         if (!Strings.isNullOrEmpty(redirectUrl)) {
             final String code = fetchCode(redirectUrl);
             fetchBearerToken(code);
             return BankIdStatus.DONE;
         }
-        if (!bankIdResponse.getMessage().isContinueCollect()
-                && bankIdResponse.getMessage().isShowInstallBankIdButton()) {
-            return BankIdStatus.NO_CLIENT;
+
+        if (bankIdResponse.getState() == 4 && !bankIdResponse.getMessage().isContinueCollect()) {
+            if (bankIdResponse.getMessage().isShowInstallBankIdButton()) {
+                return BankIdStatus.NO_CLIENT;
+            } else if (bankIdResponse.getMessage().isShowRetryButton()) {
+                return BankIdStatus.TIMEOUT;
+            } else if (bankIdResponse.getMessage().getHeader().contains("avbryta inloggningen")) {
+                return BankIdStatus.CANCELLED;
+            }
+            return BankIdStatus.FAILED_UNKNOWN;
         }
-        if (!bankIdResponse.getMessage().isContinueCollect()
-                && !bankIdResponse.getMessage().isShowRetryButton()) {
-            return BankIdStatus.TIMEOUT;
-        }
+
         return BankIdStatus.WAITING;
     }
 
