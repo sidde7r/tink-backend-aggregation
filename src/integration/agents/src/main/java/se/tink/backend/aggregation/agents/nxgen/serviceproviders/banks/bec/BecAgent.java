@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
@@ -24,9 +27,10 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BecAgent extends NextGenerationAgent {
+public class BecAgent extends NextGenerationAgent implements RefreshInvestmentAccountsExecutor {
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public BecAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -36,6 +40,11 @@ public class BecAgent extends NextGenerationAgent {
                 new BecApiClient(
                         this.client, new BecUrlConfiguration(request.getProvider().getPayload()));
         this.transactionFetcher = new BecAccountTransactionsFetcher(this.apiClient);
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new BecInvestmentFetcher(this.apiClient));
     }
 
     @Override
@@ -71,12 +80,13 @@ public class BecAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new BecInvestmentFetcher(this.apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
