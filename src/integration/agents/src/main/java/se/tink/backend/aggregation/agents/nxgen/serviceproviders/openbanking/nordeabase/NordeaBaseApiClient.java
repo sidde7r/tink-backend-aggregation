@@ -25,7 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.payment.enums.PaymentType;
 
-public class NordeaBaseApiClient {
+public class NordeaBaseApiClient implements TokenInterface {
     protected final TinkHttpClient client;
     protected final SessionStorage sessionStorage;
     protected NordeaBaseConfiguration configuration;
@@ -58,7 +58,7 @@ public class NordeaBaseApiClient {
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        OAuth2Token token = getTokenFromSession();
+        OAuth2Token token = getStoredToken();
         return createRequest(url)
                 .header(
                         NordeaBaseConstants.HeaderKeys.AUTHORIZATION,
@@ -120,14 +120,16 @@ public class NordeaBaseApiClient {
         return createRequestInSession(url).get(GetTransactionsResponse.class);
     }
 
-    public void setTokenToSession(OAuth2Token accessToken) {
-        sessionStorage.put(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, accessToken);
-    }
-
-    private OAuth2Token getTokenFromSession() {
+    @Override
+    public OAuth2Token getStoredToken() {
         return sessionStorage
                 .get(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+    }
+
+    @Override
+    public void storeToken(OAuth2Token token) {
+        sessionStorage.put(NordeaBaseConstants.StorageKeys.ACCESS_TOKEN, token);
     }
 
     public CreatePaymentResponse createPayment(

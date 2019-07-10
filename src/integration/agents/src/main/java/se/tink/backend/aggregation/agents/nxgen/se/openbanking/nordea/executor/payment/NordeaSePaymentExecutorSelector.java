@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentType;
 
@@ -15,9 +14,12 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
     // The key is a pair where the key is debtor account type and value is creditor account type.
     // The mapping follows the instructions in:
     // https://developer.nordeaopenbanking.com/app/documentation?api=Payments%20API%20Domestic%20transfer&version=3.3#payment_types_field_combinations
-    private static final GenericTypeMapper<PaymentType, Pair<Type, Type>>
+    private static final GenericTypeMapper<
+                    PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
             accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<PaymentType, Pair<Type, Type>>genericBuilder()
+                    GenericTypeMapper
+                            .<PaymentType, Pair<AccountIdentifier.Type, AccountIdentifier.Type>>
+                                    genericBuilder()
                             .put(
                                     PaymentType.DOMESTIC,
                                     new Pair<>(
@@ -38,7 +40,7 @@ public class NordeaSePaymentExecutorSelector extends NordeaBasePaymentExecutor {
 
     @Override
     protected PaymentType getPaymentType(PaymentRequest paymentRequest) {
-        Pair<Type, Type> accountIdentifiersKey =
+        Pair<AccountIdentifier.Type, AccountIdentifier.Type> accountIdentifiersKey =
                 paymentRequest.getPayment().getCreditorAndDebtorAccountType();
 
         return accountIdentifiersToPaymentTypeMapper
