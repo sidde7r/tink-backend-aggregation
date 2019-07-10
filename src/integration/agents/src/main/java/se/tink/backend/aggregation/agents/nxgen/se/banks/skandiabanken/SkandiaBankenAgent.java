@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.Fetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.authenticator.SkandiaBankenAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.creditcard.SkandiaBankenCreditCardFetcher;
@@ -28,13 +31,21 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SkandiaBankenAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class SkandiaBankenAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
     private final SkandiaBankenApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public SkandiaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new SkandiaBankenApiClient(client, sessionStorage);
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SkandiaBankenInvestmentFetcher(apiClient));
     }
 
     @Override
@@ -72,12 +83,13 @@ public class SkandiaBankenAgent extends NextGenerationAgent implements RefreshId
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SkandiaBankenInvestmentFetcher(apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
