@@ -5,8 +5,11 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.IcaBankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorHelper;
@@ -40,12 +43,15 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IcaBankenAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshEInvoiceExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshEInvoiceExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
     private final IcabankenPersistentStorage icaBankenPersistentStorage;
     private EInvoiceRefreshController eInvoiceRefreshController;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public IcaBankenAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -56,6 +62,12 @@ public class IcaBankenAgent extends NextGenerationAgent
         this.apiClient =
                 new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
         this.eInvoiceRefreshController = null;
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IcaBankenInvestmentFetcher(apiClient));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -103,12 +115,13 @@ public class IcaBankenAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new IcaBankenInvestmentFetcher(apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
