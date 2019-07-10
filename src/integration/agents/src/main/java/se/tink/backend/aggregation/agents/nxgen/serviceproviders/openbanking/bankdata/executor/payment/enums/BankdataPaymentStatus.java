@@ -8,10 +8,10 @@ public enum BankdataPaymentStatus {
     CANCELED("CANC", PaymentStatus.CANCELLED),
     PARTIALLY_ACCEPTED_TECHNICAL("PATC", PaymentStatus.PENDING),
     ACCEPTED_SETTLEMENT_IN_PROCESS("ACSP", PaymentStatus.PENDING),
-    ACCEPTED_WITH_CHANGE("ACWC", PaymentStatus.CREATED),
+    ACCEPTED_WITH_CHANGE("ACWC", PaymentStatus.PENDING),
     PENDING("PDNG", PaymentStatus.PENDING),
     REJECTED("RJCT", PaymentStatus.REJECTED),
-    ACCEPTED_SETTLEMENT_COMPLETED("ACSC", PaymentStatus.CREATED),
+    ACCEPTED_SETTLEMENT_COMPLETED("ACSC", PaymentStatus.PAID),
     UNKNOWN("Unknown", PaymentStatus.UNDEFINED);
 
     private String statusText;
