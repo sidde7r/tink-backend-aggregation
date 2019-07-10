@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -32,21 +31,26 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public final class VolksbankApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
+    private final SessionStorage sessionStorage;
     private final Credentials credentials;
+
     private VolksbankConfiguration configuration;
 
-    private AccountsResponse accountsResponse = null;
-
     public VolksbankApiClient(
-            TinkHttpClient client, PersistentStorage persistentStorage, Credentials credentials) {
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage,
+            Credentials credentials) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
         this.credentials = credentials;
     }
 
@@ -97,10 +101,19 @@ public final class VolksbankApiClient {
 
     public AccountsResponse fetchAccounts() {
 
-        return Objects.isNull(accountsResponse)
-                ? accountsResponse =
-                        createRequestInSession(Urls.ACCOUNTS).get(AccountsResponse.class)
-                : accountsResponse;
+        // Is called two times in quick succession, caching the first call
+        return sessionStorage
+                .get(StorageKeys.CACHED_ACCOUNTS, AccountsResponse.class)
+                .orElseGet(
+                        () -> {
+                            AccountsResponse accountsResponse =
+                                    createRequestInSession(Urls.ACCOUNTS)
+                                            .get(AccountsResponse.class);
+
+                            sessionStorage.put(StorageKeys.CACHED_ACCOUNTS, accountsResponse);
+
+                            return accountsResponse;
+                        });
     }
 
     public BalanceResponse fetchAccountBalance(String accountId) {
@@ -126,19 +139,21 @@ public final class VolksbankApiClient {
         return consentResponse;
     }
 
-    public ConsentResponse getConsentResponse(String state, ConsentRequest consentRequest) {
+    private ConsentResponse getConsentResponse(String state, ConsentRequest consentRequest) {
         return createRequest(Urls.CONSENTS)
                 .header(
                         HeaderKeys.TPP_REDIRECT_URI,
                         new URL(getConfiguration().getRedirectUrl())
                                 .queryParam(VolksbankConstants.QueryKeys.STATE, state)
-                                .queryParam(VolksbankConstants.QueryKeys.CODE, VolksbankConstants.QueryValues.CODE)) // TODO patch server
+                                .queryParam(
+                                        VolksbankConstants.QueryKeys.CODE,
+                                        VolksbankConstants.QueryValues.CODE)) // TODO patch server
                 .header(HeaderKeys.PSU_ID, credentials.getField(Key.LOGIN_INPUT))
                 .header(HeaderKeys.PSU_ID_TYPE, credentials.getField(Key.LOGIN_DESCRIPTION))
                 .post(ConsentResponse.class, consentRequest);
     }
 
-    public ConsentRequest getConsentRequest(ConsentAccessEntity consentAccessEntity) {
+    private ConsentRequest getConsentRequest(ConsentAccessEntity consentAccessEntity) {
         return new ConsentRequest(
                 true, VolksbankConstants.FormValues.MAX_DATE, 100, false, consentAccessEntity);
     }

@@ -34,7 +34,7 @@ public final class VolksbankAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new VolksbankApiClient(client, persistentStorage, credentials);
+        apiClient = new VolksbankApiClient(client, persistentStorage, sessionStorage, credentials);
         clientName = request.getProvider().getPayload();
     }
 
