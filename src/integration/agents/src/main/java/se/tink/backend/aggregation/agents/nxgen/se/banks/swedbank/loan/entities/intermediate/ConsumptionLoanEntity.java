@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.libraries.amount.Amount;
 
 public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
 
@@ -39,13 +40,20 @@ public class ConsumptionLoanEntity extends BaseAbstractLoanDetailedEntity {
     }
 
     private LoanDetails buildLoanDetails(List<String> borrowers) {
-        return LoanDetails.builder(
-                        getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN)
-                                ? LoanDetails.Type.MEMBERSHIP
-                                : LoanDetails.Type.BLANCO)
-                .setMonthlyAmortization(getMonthlyAmortization())
-                .setApplicants(borrowers)
-                .setCoApplicant(borrowers.size() > 1)
-                .build();
+        LoanDetails.Builder builder =
+                LoanDetails.builder(
+                                getName().contains(SwedbankSEConstants.MEMBERSHIP_LOAN)
+                                        ? LoanDetails.Type.MEMBERSHIP
+                                        : LoanDetails.Type.BLANCO)
+                        .setApplicants(borrowers)
+                        .setCoApplicant(borrowers.size() > 1);
+
+        Amount monthlyAmortization = getMonthlyAmortization();
+
+        if (monthlyAmortization != null) {
+            builder.setMonthlyAmortization(monthlyAmortization);
+        }
+
+        return builder.build();
     }
 }
