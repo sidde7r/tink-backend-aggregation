@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankIdentityFetcher;
@@ -28,16 +31,24 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class OpBankAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class OpBankAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final OpBankApiClient bankClient;
     private OpBankPersistentStorage opBankPersistentStorage;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public OpBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         bankClient = new OpBankApiClient(client);
         this.opBankPersistentStorage = new OpBankPersistentStorage(credentials, persistentStorage);
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new OpBankInvestmentFetcher(bankClient, credentials));
     }
 
     @Override
@@ -86,12 +97,13 @@ public class OpBankAgent extends NextGenerationAgent implements RefreshIdentityD
     }
 
     @Override
-    public Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new OpBankInvestmentFetcher(bankClient, credentials)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
