@@ -60,12 +60,42 @@ git_repository(
     shallow_since = "1562076445 +0000",
 )
 
+git_repository(
+    name = "com_tink_api_grpc",
+    commit = "5b83d5cd0f4604b2005c111a5decc724173b545c",
+    remote = "git@github.com:tink-ab/tink-grpc.git",
+    shallow_since = "1562579502 +0000",
+)
+
+git_repository(
+    name = "tink_backend",
+    remote = "git@github.com:tink-ab/tink-backend",
+    commit = "9b2dc75b459e9a1995aac9c76e8c43e95781a6ac",
+    shallow_since = "1562770241 +0000",
+)
+
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
     strip_prefix = "rules_docker-0.7.0",
     urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+)
+
+# Google api types.
+http_archive(
+    name = "com_google_googleapis",
+    sha256 = "ddd2cd7b6b310028b8ba08057d2990ced6f78c35fdf5083ff142704f1c2c5e49",
+    strip_prefix = "googleapis-10049e8ea946100bb7da66f63b0ecd1a345e8760",
+    urls = ["https://github.com/googleapis/googleapis/archive/10049e8ea946100bb7da66f63b0ecd1a345e8760.zip"],
+)
+
+load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+
+switched_rules_by_language(
+    name = "com_google_googleapis_imports",
+    grpc = True,
+    java = True,
 )
 
 # This is NOT needed when going through the language lang_image

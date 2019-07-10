@@ -98,6 +98,8 @@ java_library(
         "//third_party:org_springframework_spring_core",
         "//third_party:org_springframework_spring_expression",
         "//third_party:org_xerial_snappy_snappy_java",
+        "@tink_backend//src/libraries/event_producer_service_client",
+        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
     ],
 )
 
