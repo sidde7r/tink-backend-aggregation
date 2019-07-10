@@ -74,28 +74,22 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     private AccountIdentifierEntity getDefaultIdentifier() {
-        Optional<AccountIdentifierEntity> sortCodeIdentifier =
-                identifierEntity.stream()
-                        .filter(
-                                e ->
-                                        e.getIdentifierType()
-                                                        .equals(
-                                                                ExternalAccountIdentification4Code
-                                                                        .SORT_CODE_ACCOUNT_NUMBER)
-                                                || e.getIdentifierType()
-                                                        .equals(
-                                                                ExternalAccountIdentification4Code
-                                                                        .PAN)
-                                                || e.getIdentifierType()
-                                                        .equals(
-                                                                ExternalAccountIdentification4Code
-                                                                        .IBAN))
-                        .findFirst();
-
-        return sortCodeIdentifier.orElseThrow(
-                () ->
-                        new IllegalStateException(
-                                "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER or IBAN identifier."));
+        return identifierEntity.stream()
+                .filter(
+                        e ->
+                                e.getIdentifierType()
+                                                .equals(
+                                                        ExternalAccountIdentification4Code
+                                                                .SORT_CODE_ACCOUNT_NUMBER)
+                                        || e.getIdentifierType()
+                                                .equals(ExternalAccountIdentification4Code.IBAN)
+                                        || e.getIdentifierType()
+                                                .equals(ExternalAccountIdentification4Code.PAN))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Account details did not specify any SORT_CODE_ACCOUNT_NUMBER or IBAN or PAN identifier."));
     }
 
     public String getUniqueIdentifier() {
