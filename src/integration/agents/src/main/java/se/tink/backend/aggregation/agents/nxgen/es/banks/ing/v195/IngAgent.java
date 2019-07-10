@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
@@ -29,9 +32,11 @@ import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IngAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class IngAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final IngApiClient ingApiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -39,6 +44,11 @@ public class IngAgent extends NextGenerationAgent implements RefreshIdentityData
         super(request, context, signatureKeyPair);
 
         this.ingApiClient = new IngApiClient(this.client);
+
+        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, accountFetcher);
     }
 
     @Override
@@ -97,14 +107,13 @@ public class IngAgent extends NextGenerationAgent implements RefreshIdentityData
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
 
-        InvestmentRefreshController refreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, accountFetcher);
-
-        return Optional.of(refreshController);
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
