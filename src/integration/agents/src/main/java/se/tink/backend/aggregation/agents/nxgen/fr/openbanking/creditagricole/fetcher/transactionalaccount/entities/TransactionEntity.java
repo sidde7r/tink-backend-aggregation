@@ -12,10 +12,10 @@ public class TransactionEntity {
     private String creditDebitIndicator;
     private String entryReference;
     private List<String> remittanceInformation;
-    private Object resourcesId;
+    private String resourcesId;
     private String status;
     private AmountEntity transactionAmount;
-    private Object transactionDate;
+    private Date transactionDate;
     private String valueDate;
 
     public Transaction toTinkTransaction() {

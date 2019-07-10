@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fr.openbanking.creditagricole.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,9 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
-    private LinksEntity _links;
+    @JsonProperty("_links")
+    private LinksEntity links;
+
     private AccountIdEntity accountId;
     private List<BalanceEntity> balances;
     private String bicFi;
