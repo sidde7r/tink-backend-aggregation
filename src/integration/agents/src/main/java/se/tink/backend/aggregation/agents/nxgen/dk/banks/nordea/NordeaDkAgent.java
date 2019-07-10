@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.NordeaNemIdAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.filter.NordeaDKHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkParser;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.NordeaDkFilter;
@@ -26,7 +27,7 @@ public class NordeaDkAgent extends NordeaV20Agent {
                 context,
                 signatureKeyPair,
                 new NordeaDkParser(new NordeaDkTransactionParser(), request.getCredentials()));
-        this.client.addFilter(new NordeaDkFilter());
+        this.client.addFilter(new NordeaDKHttpFilter());
         configureHttpClient(client);
     }
 
