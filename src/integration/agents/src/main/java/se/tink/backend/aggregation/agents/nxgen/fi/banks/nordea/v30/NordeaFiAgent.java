@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.authenticator.NordeaCodesAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.investment.NordeaInvestmentFetcher;
@@ -23,9 +26,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class NordeaFiAgent extends NextGenerationAgent {
+public class NordeaFiAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
 
     private final NordeaFiApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public NordeaFiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -33,6 +38,12 @@ public class NordeaFiAgent extends NextGenerationAgent {
         this.apiClient =
                 new NordeaFiApiClient(
                         client, sessionStorage, credentials.getField(Field.Key.USERNAME));
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaInvestmentFetcher(apiClient));
     }
 
     @Override
@@ -74,13 +85,13 @@ public class NordeaFiAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
 
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NordeaInvestmentFetcher(apiClient)));
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
