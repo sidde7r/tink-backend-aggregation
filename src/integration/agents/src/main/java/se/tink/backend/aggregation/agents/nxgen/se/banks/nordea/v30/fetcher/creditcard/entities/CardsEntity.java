@@ -61,6 +61,7 @@ public class CardsEntity {
     public boolean isCreditCard() {
         return NordeaSEConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cardCategory)
+                .orElse(AccountTypes.OTHER)
                 .equals(AccountTypes.CREDIT_CARD);
     }
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
