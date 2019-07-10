@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.authentication.EuroInformationPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.fetcher.creditcard.nopfm.EuroInformationNoPfmCreditCardTransactionsFetcher;
@@ -28,9 +31,10 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class EuroInformationAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
     protected final EuroInformationApiClient apiClient;
     private final EuroInformationConfiguration config;
+    private final InvestmentRefreshController investmentRefreshController;
 
     protected EuroInformationAgent(
             CredentialsRequest request,
@@ -40,6 +44,13 @@ public abstract class EuroInformationAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = new EuroInformationApiClient(this.client, sessionStorage, config);
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        EuroInformationInvestmentAccountFetcher.create(
+                                this.apiClient, this.sessionStorage));
     }
 
     protected EuroInformationAgent(
@@ -51,6 +62,13 @@ public abstract class EuroInformationAgent extends NextGenerationAgent
         super(request, context, signatureKeyPair);
         this.config = config;
         this.apiClient = apiClientFactory.getApiClient(client, sessionStorage, config);
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        EuroInformationInvestmentAccountFetcher.create(
+                                this.apiClient, this.sessionStorage));
     }
 
     @Override
@@ -95,13 +113,13 @@ public abstract class EuroInformationAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        EuroInformationInvestmentAccountFetcher.create(
-                                this.apiClient, this.sessionStorage)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
