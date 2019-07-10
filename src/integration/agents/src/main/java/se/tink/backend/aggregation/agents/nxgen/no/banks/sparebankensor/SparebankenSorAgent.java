@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.SparebankenSorMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.FirstLoginRequest;
@@ -36,14 +39,20 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
  * investment fetching, 2018-02-13 they seemed to route to the netbank - Add provider to provider
  * config - Add rules to appstore monitor
  */
-public class SparebankenSorAgent extends NextGenerationAgent {
+public class SparebankenSorAgent extends NextGenerationAgent
+        implements RefreshLoanAccountsExecutor {
     private final SparebankenSorApiClient apiClient;
+    private final LoanRefreshController loanRefreshController;
 
     public SparebankenSorAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         configureHttpClient(client);
         apiClient = new SparebankenSorApiClient(client, sessionStorage);
+
+        SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
+        loanRefreshController =
+                new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -111,10 +120,13 @@ public class SparebankenSorAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        SparebankenSorLoanFetcher loanFetcher = new SparebankenSorLoanFetcher(apiClient);
-        return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
