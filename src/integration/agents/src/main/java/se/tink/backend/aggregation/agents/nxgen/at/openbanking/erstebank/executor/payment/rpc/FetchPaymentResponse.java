@@ -19,13 +19,14 @@ public class FetchPaymentResponse {
     public FetchPaymentResponse() {}
 
     public PaymentResponse toTinkPaymentResponse(PaymentRequest paymentRequest) {
+        Payment paymentFromRequest = paymentRequest.getPayment();
         Payment payment =
                 new Payment.Builder()
-                        .withCreditor(paymentRequest.getPayment().getCreditor())
-                        .withDebtor(paymentRequest.getPayment().getDebtor())
-                        .withAmount(paymentRequest.getPayment().getAmount())
-                        .withExecutionDate(paymentRequest.getPayment().getExecutionDate())
-                        .withCurrency(paymentRequest.getPayment().getAmount().getCurrency())
+                        .withCreditor(paymentFromRequest.getCreditor())
+                        .withDebtor(paymentFromRequest.getDebtor())
+                        .withAmount(paymentFromRequest.getAmount())
+                        .withExecutionDate(paymentFromRequest.getExecutionDate())
+                        .withCurrency(paymentFromRequest.getAmount().getCurrency())
                         .withUniqueId(paymentId)
                         .withStatus(
                                 ErstebankConstants.PAYMENT_STATUS_MAPPER

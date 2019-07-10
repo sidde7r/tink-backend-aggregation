@@ -45,13 +45,5 @@ public class InstructedAmountRequest {
         public InstructedAmountRequest build() {
             return new InstructedAmountRequest(currency, amount);
         }
-
-        public String toString() {
-            return "InstructedAmountRequest.InstructedAmountBuilder(currency="
-                    + this.currency
-                    + ", amount="
-                    + this.amount
-                    + ")";
-        }
     }
 }

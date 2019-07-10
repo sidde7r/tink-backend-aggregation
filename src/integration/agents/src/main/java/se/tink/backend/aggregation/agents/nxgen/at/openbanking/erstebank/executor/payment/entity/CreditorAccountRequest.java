@@ -82,21 +82,5 @@ public class CreditorAccountRequest {
         public CreditorAccountRequest build() {
             return new CreditorAccountRequest(iban, bban, pan, maskedPan, msisdn, currency);
         }
-
-        public String toString() {
-            return "CreditorAccountRequest.CreditorAccountBuilder(iban="
-                    + this.iban
-                    + ", bban="
-                    + this.bban
-                    + ", pan="
-                    + this.pan
-                    + ", maskedPan="
-                    + this.maskedPan
-                    + ", msisdn="
-                    + this.msisdn
-                    + ", currency="
-                    + this.currency
-                    + ")";
-        }
     }
 }

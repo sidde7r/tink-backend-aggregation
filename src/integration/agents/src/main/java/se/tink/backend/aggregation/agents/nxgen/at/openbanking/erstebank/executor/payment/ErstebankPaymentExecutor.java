@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepRes
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.payment.rpc.Payment;
 
 public class ErstebankPaymentExecutor implements PaymentExecutor {
 
@@ -27,29 +28,28 @@ public class ErstebankPaymentExecutor implements PaymentExecutor {
 
     @Override
     public PaymentResponse create(PaymentRequest paymentRequest) {
+        final Payment payment = paymentRequest.getPayment();
 
-        CreditorAccountRequest creditorAccount =
+        final CreditorAccountRequest creditorAccount =
                 CreditorAccountRequest.builder()
-                        .iban(paymentRequest.getPayment().getCreditor().getAccountNumber())
+                        .iban(payment.getCreditor().getAccountNumber())
                         .build();
 
-        DebtorAccountRequest debtorAccount =
-                DebtorAccountRequest.builder()
-                        .iban(paymentRequest.getPayment().getDebtor().getAccountNumber())
-                        .build();
+        final DebtorAccountRequest debtorAccount =
+                DebtorAccountRequest.builder().iban(payment.getDebtor().getAccountNumber()).build();
 
-        InstructedAmountRequest instructedAmount =
+        final InstructedAmountRequest instructedAmount =
                 InstructedAmountRequest.builder()
-                        .amount(paymentRequest.getPayment().getAmount().doubleValue())
-                        .currency(paymentRequest.getPayment().getCurrency())
+                        .amount(payment.getAmount().doubleValue())
+                        .currency(payment.getCurrency())
                         .build();
 
-        CreatePaymentRequest payment =
+        final CreatePaymentRequest createPaymentRequest =
                 CreatePaymentRequest.builder()
                         .creditorAccount(creditorAccount)
                         .debtorAccount(debtorAccount)
                         .instructedAmount(instructedAmount)
-                        .creditorName(paymentRequest.getPayment().getCreditor().getName())
+                        .creditorName(payment.getCreditor().getName())
                         .requestedExecutionDate(
                                 paymentRequest
                                         .getPayment()
@@ -58,12 +58,12 @@ public class ErstebankPaymentExecutor implements PaymentExecutor {
                         .build();
 
         return apiClient
-                .createPayment(payment)
+                .createPayment(createPaymentRequest)
                 .toTinkPaymentResponse(
                         creditorAccount,
                         debtorAccount,
-                        paymentRequest.getPayment().getAmount(),
-                        paymentRequest.getPayment().getExecutionDate());
+                        payment.getAmount(),
+                        payment.getExecutionDate());
     }
 
     @Override

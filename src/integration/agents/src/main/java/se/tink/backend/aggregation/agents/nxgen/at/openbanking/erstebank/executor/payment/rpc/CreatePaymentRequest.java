@@ -48,6 +48,11 @@ public class CreatePaymentRequest {
         return new CreatePaymentRequestBuilder();
     }
 
+    @JsonIgnore
+    public boolean isSepa() {
+        return isSepa;
+    }
+
     public static class CreatePaymentRequestBuilder {
 
         private CreditorAccountRequest creditorAccount;
@@ -128,34 +133,5 @@ public class CreatePaymentRequest {
                     requestedExecutionDate,
                     isSepa);
         }
-
-        public String toString() {
-            return "CreatePaymentRequest.CreatePaymentRequestBuilder(creditorAccount="
-                    + this.creditorAccount
-                    + ", creditorAddress="
-                    + this.creditorAddress
-                    + ", creditorAgent="
-                    + this.creditorAgent
-                    + ", creditorName="
-                    + this.creditorName
-                    + ", debtorAccount="
-                    + this.debtorAccount
-                    + ", endToEndIdentification="
-                    + this.endToEndIdentification
-                    + ", instructedAmount="
-                    + this.instructedAmount
-                    + ", remittanceInformationUnstructured="
-                    + this.remittanceInformationUnstructured
-                    + ", requestedExecutionDate="
-                    + this.requestedExecutionDate
-                    + ", isSepa="
-                    + this.isSepa
-                    + ")";
-        }
-    }
-
-    @JsonIgnore
-    public boolean isSepa() {
-        return isSepa;
     }
 }
