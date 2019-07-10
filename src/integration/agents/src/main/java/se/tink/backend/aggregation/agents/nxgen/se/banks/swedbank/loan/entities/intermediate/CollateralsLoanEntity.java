@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.libraries.amount.Amount;
 
 public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
 
@@ -44,14 +45,21 @@ public class CollateralsLoanEntity extends BaseAbstractLoanDetailedEntity {
     }
 
     private LoanDetails buildLoanDetails(List<String> borrowers) {
-        return LoanDetails.builder(LoanDetails.Type.MORTGAGE)
-                .setNumMonthsBound(getNumMonthsBound())
-                .setNextDayOfTermsChange(getNextDayOfTermsChange())
-                .setMonthlyAmortization(getMonthlyAmortization())
-                .setSecurity(getSecurity())
-                .setApplicants(borrowers)
-                .setCoApplicant(borrowers.size() > 1)
-                .build();
+        LoanDetails.Builder builder =
+                LoanDetails.builder(LoanDetails.Type.MORTGAGE)
+                        .setNumMonthsBound(getNumMonthsBound())
+                        .setNextDayOfTermsChange(getNextDayOfTermsChange())
+                        .setSecurity(getSecurity())
+                        .setApplicants(borrowers)
+                        .setCoApplicant(borrowers.size() > 1);
+
+        Amount monthlyAmortization = getMonthlyAmortization();
+
+        if (monthlyAmortization != null) {
+            builder.setMonthlyAmortization(monthlyAmortization);
+        }
+
+        return builder.build();
     }
 
     protected int getNumMonthsBound() {
