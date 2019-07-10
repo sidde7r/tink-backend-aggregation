@@ -6,9 +6,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
@@ -35,11 +37,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor {
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
     private InvestmentRefreshController investmentRefreshController;
+    private LoanRefreshController loanRefreshController;
 
     public NextGenerationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -115,14 +120,29 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
         return lazyLoadInvestmentRefreshController().fetchInvestmentTransactions();
     }
 
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
+    private LoanRefreshController lazyLoadLoanRefreshController() {
+        if (loanRefreshController != null) {
+            return loanRefreshController;
+        }
+
+        loanRefreshController =
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
                         new NextGenerationDemoLoanFetcher(
-                                currency, catalog, getDemoLoanAccounts())));
+                                currency, catalog, getDemoLoanAccounts()));
+
+        return loanRefreshController;
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return lazyLoadLoanRefreshController().fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return lazyLoadLoanRefreshController().fetchLoanTransactions();
     }
 
     @Override
