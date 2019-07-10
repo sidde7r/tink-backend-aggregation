@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.r
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.PermissionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -40,5 +41,10 @@ public class BankPaymentResponse {
     @JsonIgnore
     public String getId() {
         return id;
+    }
+
+    @JsonIgnore
+    public String getApiIdentifier() {
+        return Strings.isNullOrEmpty(id) ? reference : id;
     }
 }

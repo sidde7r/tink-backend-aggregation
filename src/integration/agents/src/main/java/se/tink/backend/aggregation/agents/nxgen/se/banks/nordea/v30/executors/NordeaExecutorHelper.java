@@ -1,59 +1,47 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors;
 
-import static com.google.common.base.Predicates.not;
-
-import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.entities.SignatureEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.RecipientRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchEInvoiceResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.rpc.FetchPaymentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaExecutorHelper {
 
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
-            new DefaultAccountIdentifierFormatter();
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private final AgentContext context;
     private final Catalog catalog;
-    private final SupplementalInformationHelper supplementalInformationHelper;
     private final NordeaSEApiClient apiClient;
 
     public NordeaExecutorHelper(
-            AgentContext context,
-            Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper,
-            NordeaSEApiClient apiClient) {
+            AgentContext context, Catalog catalog, NordeaSEApiClient apiClient) {
         this.context = context;
         this.catalog = catalog;
-        this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
     }
 
@@ -65,13 +53,19 @@ public class NordeaExecutorHelper {
         if (isPayment) {
             return accounts.stream()
                     .filter(this::isCanPayPgbgFromAccount)
-                    .filter(account -> isSourceEqualsTransfer(transfer, account))
+                    .filter(
+                            account ->
+                                    isAccountIdentifierEquals(
+                                            transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
                     .orElseThrow(this::invalidSourceAccountError);
         } else {
             return accounts.stream()
                     .filter(this::isCanTransferFromAccount)
-                    .filter(account -> isSourceEqualsTransfer(transfer, account))
+                    .filter(
+                            account ->
+                                    isAccountIdentifierEquals(
+                                            transfer.getSource(), account.getAccountIdentifier()))
                     .findFirst()
                     .orElseThrow(this::invalidSourceAccountError);
         }
@@ -80,10 +74,11 @@ public class NordeaExecutorHelper {
     /** Check if payment destination account exist as unconfirmed among user's beneificiaries, */
     protected Optional<BeneficiariesEntity> validateDestinationAccount(Transfer transfer) {
         return apiClient.fetchBeneficiaries().getBeneficiaries().stream()
-                .filter(BeneficiariesEntity::isPgOrBg)
                 .filter(
                         beneficiary ->
-                                isDestEqualsTransfer(transfer, beneficiary.getAccountNumber()))
+                                isAccountIdentifierEquals(
+                                        transfer.getDestination(),
+                                        beneficiary.generalGetAccountIdentifier()))
                 .findFirst();
     }
 
@@ -94,18 +89,14 @@ public class NordeaExecutorHelper {
                 .filter(account -> account.getPermissions().isCanTransferToAccount())
                 .filter(
                         account ->
-                                isDestEqualsTransfer(transfer, account.getTransferAccountNumber()))
+                                isAccountIdentifierEquals(
+                                        transfer.getDestination(), account.getAccountIdentifier()))
                 .findFirst();
     }
 
-    private boolean isSourceEqualsTransfer(Transfer transfer, AccountEntity account) {
-        return transfer.getSource()
-                .getIdentifier(DEFAULT_FORMATTER)
-                .equals(account.getTransferAccountNumber());
-    }
-
-    private boolean isDestEqualsTransfer(Transfer transfer, String destination) {
-        return transfer.getDestination().getIdentifier(DEFAULT_FORMATTER).equals(destination);
+    private boolean isAccountIdentifierEquals(AccountIdentifier id1, AccountIdentifier id2) {
+        return id1.getIdentifier(NORDEA_ACCOUNT_FORMATTER)
+                .equals(id2.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
     }
 
     private boolean isCanTransferFromAccount(AccountEntity accountEntity) {
@@ -116,22 +107,7 @@ public class NordeaExecutorHelper {
         return accountEntity.getPermissions().isCanPayPgbgFromAccount();
     }
 
-    protected Optional<BeneficiariesEntity> createRecipient(Transfer transfer) {
-        AccountIdentifier destination = transfer.getDestination();
-
-        RecipientRequest recipientRequest = new RecipientRequest();
-        recipientRequest.setPaymentType(getPaymentType(destination));
-        recipientRequest.setAccountNumber(
-                transfer.getDestination().getIdentifier(DEFAULT_FORMATTER));
-        recipientRequest.setName(findDestinationNameFor(destination));
-        recipientRequest.setAccountNumberType(getPaymentAccountType(destination));
-
-        apiClient.registerRecipient(recipientRequest);
-
-        return validateDestinationAccount(transfer);
-    }
-
-    protected String getPaymentType(final AccountIdentifier destination) {
+    public String getPaymentType(final AccountIdentifier destination) {
         if (!destination.is(AccountIdentifier.Type.SE_PG)
                 && !destination.is(AccountIdentifier.Type.SE_BG)) {
             throw invalidPaymentType();
@@ -141,58 +117,15 @@ public class NordeaExecutorHelper {
                 : NordeaSEConstants.PaymentTypes.BANKGIRO;
     }
 
-    protected String getPaymentAccountType(final AccountIdentifier destination) {
+    public String getPaymentAccountType(final AccountIdentifier destination) {
         return destination.is(AccountIdentifier.Type.SE_PG)
                 ? NordeaSEConstants.PaymentAccountTypes.PLUSGIRO
                 : NordeaSEConstants.PaymentAccountTypes.BANKGIRO;
     }
 
-    /**
-     * Try to get destination name from destination. Otherwise ask user for destination name via a
-     * supplemental information.
-     */
-    private String findDestinationNameFor(final AccountIdentifier destination) {
-        Optional<String> destinationName = destination.getName();
-
-        return destinationName.orElseGet(this::askUserForDestinationName);
-    }
-
-    private String askUserForDestinationName() {
+    public void confirm(String id) {
         try {
-            Map<String, String> nameResponse =
-                    supplementalInformationHelper.askSupplementalInformation(getNameInputField());
-            String destinationName =
-                    nameResponse.get(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_NAME);
-
-            if (!Strings.isNullOrEmpty(destinationName)) {
-                return destinationName;
-            }
-
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            context.getCatalog()
-                                    .getString(NordeaSEConstants.LogMessages.NO_RECIPIENT_NAME))
-                    .build();
-
-        } catch (SupplementalInfoException e) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(
-                            context.getCatalog()
-                                    .getString(NordeaSEConstants.LogMessages.NO_RECIPIENT_NAME))
-                    .build();
-        }
-    }
-
-    private Field getNameInputField() {
-        Field nameField = new Field();
-        nameField.setDescription(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_DESCRIPTION);
-        nameField.setName(NordeaSEConstants.Transfer.RECIPIENT_NAME_FIELD_NAME);
-
-        return nameField;
-    }
-
-    public void confirm(ConfirmTransferRequest confirmTransferRequest, String id) {
-        try {
+            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(id);
             ConfirmTransferResponse confirmTransferResponse =
                     apiClient.confirmBankTransfer(confirmTransferRequest);
 
@@ -266,12 +199,12 @@ public class NordeaExecutorHelper {
 
     /** Check the transfer did not receive status rejected in the outbox */
     private void assertSuccessfulSign(String transferId) {
-        FetchEInvoiceResponse fetchOutbox = apiClient.fetchEInvoice();
+        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
 
-        Optional<EInvoiceEntity> rejectedTransfer =
-                fetchOutbox.getEInvoices().stream()
-                        .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
-                        .filter(EInvoiceEntity::isRejected)
+        Optional<PaymentEntity> rejectedTransfer =
+                fetchOutbox.getPayments().stream()
+                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
+                        .filter(PaymentEntity::isRejected)
                         .findFirst();
 
         if (rejectedTransfer.isPresent()) {
@@ -284,18 +217,29 @@ public class NordeaExecutorHelper {
      * the outbox.
      */
     private boolean isTransferFailedButWasSuccessful(String transferId) {
-        FetchEInvoiceResponse fetchOutbox = apiClient.fetchEInvoice();
+        FetchPaymentsResponse fetchOutbox = apiClient.fetchPayments();
 
-        Optional<EInvoiceEntity> failedTransfer =
-                fetchOutbox.getEInvoices().stream()
-                        .filter(not(EInvoiceEntity::isConfirmed))
-                        .filter(
-                                EInvoiceEntity
-                                        ::isNotPlusgiro) // plusgiro does not have any id-field
-                        .filter(entity -> entity.getId().equalsIgnoreCase(transferId))
+        Optional<PaymentEntity> failedTransfer =
+                fetchOutbox.getPayments().stream()
+                        .filter(PaymentEntity::isUnconfirmed)
+                        .filter(entity -> entity.getApiIdentifier().equalsIgnoreCase(transferId))
                         .findFirst();
 
         return !failedTransfer.isPresent();
+    }
+
+    /**
+     * Check if payment already exist in outbox as unconfirmed if it does then return the existing
+     * payment entity
+     */
+    protected Optional<PaymentEntity> findInOutbox(Transfer transfer) {
+        return apiClient.fetchPayments().getPayments().stream()
+                .filter(PaymentEntity::isUnconfirmed)
+                .map(
+                        paymentEntity ->
+                                apiClient.fetchPaymentDetails(paymentEntity.getApiIdentifier()))
+                .filter(paymentEntity -> paymentEntity.isEqualToTransfer(transfer))
+                .findFirst();
     }
 
     protected TransferExecutionException invalidDestError() {
@@ -390,6 +334,42 @@ public class NordeaExecutorHelper {
                 .setEndUserMessage(
                         catalog.getString(
                                 TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateAmountNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_AMOUNT)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_AMOUNT))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateMessageNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION_MESSAGE)
+                .setEndUserMessage(
+                        catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateDueNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DUEDATE)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DUEDATE))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateFromNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_SOURCE)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_SOURCE))
+                .build();
+    }
+
+    public TransferExecutionException eInvoiceUpdateToNotAllowed() {
+        return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setMessage(NordeaSEConstants.LogMessages.EINVOICE_MODIFY_DESTINATION)
+                .setEndUserMessage(catalog.getString(EndUserMessage.EINVOICE_MODIFY_DESTINATION))
                 .build();
     }
 

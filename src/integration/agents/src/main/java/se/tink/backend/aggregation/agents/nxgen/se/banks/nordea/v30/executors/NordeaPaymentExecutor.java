@@ -5,15 +5,14 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
@@ -21,51 +20,43 @@ import se.tink.libraries.transfer.rpc.Transfer;
  * outbox.
  */
 public class NordeaPaymentExecutor implements PaymentExecutor {
-    private final Catalog catalog;
+
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
 
-    public NordeaPaymentExecutor(
-            NordeaSEApiClient apiClient, Catalog catalog, NordeaExecutorHelper executorHelper) {
+    public NordeaPaymentExecutor(NordeaSEApiClient apiClient, NordeaExecutorHelper executorHelper) {
         this.apiClient = apiClient;
-        this.catalog = catalog;
         this.executorHelper = executorHelper;
     }
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
         // check if transfer already exist in outbox, if it does then user can confirm that one
-        isInOutbox(transfer);
+        createNewOrConfirmExisting(transfer);
     }
 
     /**
      * Check if payment already exist in outbox as unconfirmed if it does then execute a payment on
      * that id instead. Otherwise, proceeds to create a new payment
      */
-    private void isInOutbox(Transfer transfer) {
-        final Optional<EInvoiceEntity> payment =
-                apiClient.fetchEInvoice().getEInvoices().stream()
-                        .filter(EInvoiceEntity::isPayment)
-                        .filter(EInvoiceEntity::isUnconfirmed)
-                        .filter(eInvoiceEntity -> eInvoiceEntity.isEqualToTransfer(transfer))
-                        .findFirst();
+    private void createNewOrConfirmExisting(Transfer transfer) {
+        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
 
         if (payment.isPresent()) {
-            String paymentId = payment.get().getId();
-            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(paymentId);
-            executorHelper.confirm(confirmTransferRequest, paymentId);
-            return;
+            executorHelper.confirm(payment.get().getApiIdentifier());
+        } else {
+            createNewPayment(transfer);
         }
-        createNewPayment(transfer);
     }
 
     private BeneficiariesEntity createDestination(Transfer transfer) {
-        return executorHelper
-                // create plusgiro or bankgiro destination if it
-                // does not exist in beneficiaries
-                .createRecipient(transfer)
-                // throw exception if destination does not exist
-                .orElseThrow(() -> executorHelper.invalidDestError());
+        BeneficiariesEntity destination = new BeneficiariesEntity();
+        destination.setAccountNumber(
+                transfer.getDestination().getIdentifier(NORDEA_ACCOUNT_FORMATTER));
+        transfer.getDestination().getName().ifPresent(destination::setName);
+        return destination;
     }
 
     private void createNewPayment(Transfer transfer) {
@@ -104,12 +95,12 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
             AccountEntity sourceAccount,
             BeneficiariesEntity destinationAccount) {
         PaymentRequest paymentRequest = new PaymentRequest();
-        paymentRequest.setAmount(transfer);
+        paymentRequest.setAmount(transfer.getAmount());
         paymentRequest.setFrom(sourceAccount);
         paymentRequest.setBankName(destinationAccount);
         paymentRequest.setTo(destinationAccount);
         paymentRequest.setMessage(transfer.getDestinationMessage());
-        paymentRequest.setDue(transfer);
+        paymentRequest.setDue(transfer.getDueDate());
         paymentRequest.setType(executorHelper.getPaymentType(transfer.getDestination()));
         paymentRequest.setToAccountNumberType(
                 executorHelper.getPaymentAccountType(transfer.getDestination()));
@@ -120,9 +111,7 @@ public class NordeaPaymentExecutor implements PaymentExecutor {
     private void executeBankPayment(PaymentRequest paymentRequest) {
         try {
             BankPaymentResponse paymentResponse = apiClient.executeBankPayment(paymentRequest);
-            String paymentId = paymentResponse.getId();
-            ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(paymentId);
-            executorHelper.confirm(confirmTransferRequest, paymentId);
+            executorHelper.confirm(paymentResponse.getApiIdentifier());
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
                 throw executorHelper.paymentFailedError();

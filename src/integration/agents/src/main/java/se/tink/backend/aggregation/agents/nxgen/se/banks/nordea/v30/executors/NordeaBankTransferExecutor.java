@@ -5,12 +5,11 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.BankPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ConfirmTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.utilities.NordeaAccountIdentifierFormatter;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.EInvoiceEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.einvoice.entities.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer.entities.BeneficiariesEntity;
@@ -18,11 +17,16 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.se.ClearingNumber.Bank;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public class NordeaBankTransferExecutor implements BankTransferExecutor {
+
+    private static final NordeaAccountIdentifierFormatter NORDEA_ACCOUNT_FORMATTER =
+            new NordeaAccountIdentifierFormatter();
     private final Catalog catalog;
     private NordeaSEApiClient apiClient;
     private NordeaExecutorHelper executorHelper;
@@ -36,6 +40,17 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
+        final Optional<PaymentEntity> payment = executorHelper.findInOutbox(transfer);
+
+        if (payment.isPresent()) {
+            executorHelper.confirm(payment.get().getApiIdentifier());
+        } else {
+            createNewTransfer(transfer);
+        }
+        return Optional.empty();
+    }
+
+    private void createNewTransfer(Transfer transfer) {
         final FetchAccountResponse accountResponse =
                 Optional.ofNullable(apiClient.fetchAccount())
                         .orElseThrow(executorHelper::failedFetchAccountsError);
@@ -64,20 +79,13 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                     transferMessageFormatter);
         } else {
             // create destination account
-            final Optional<BeneficiariesEntity> destinationExternalAccount =
-                    createDestinationAccount(transfer.getDestination());
-
-            if (!destinationExternalAccount.isPresent()) {
-                throw executorHelper.invalidDestError();
-            }
+            final BeneficiariesEntity destinationExternalAccount =
+                    executorHelper
+                            .validateDestinationAccount(transfer)
+                            .orElse(createDestinationAccount(transfer.getDestination()));
             executeExternalBankTransfer(
-                    transfer,
-                    sourceAccount,
-                    destinationExternalAccount.get(),
-                    transferMessageFormatter);
+                    transfer, sourceAccount, destinationExternalAccount, transferMessageFormatter);
         }
-
-        return Optional.empty();
     }
 
     private void executeInternalBankTransfer(
@@ -101,16 +109,25 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private Optional<BeneficiariesEntity> createDestinationAccount(
-            AccountIdentifier accountIdentifier) {
+    private BeneficiariesEntity createDestinationAccount(AccountIdentifier accountIdentifier) {
         BeneficiariesEntity destinationAccount = new BeneficiariesEntity();
-        NordeaAccountIdentifierFormatter identifierFormatter =
-                new NordeaAccountIdentifierFormatter();
 
-        destinationAccount.setBankName(((SwedishIdentifier) accountIdentifier).getBankName());
-        destinationAccount.setAccountNumber(accountIdentifier.getIdentifier(identifierFormatter));
+        switch (accountIdentifier.getType()) {
+            case SE:
+                destinationAccount.setBankName(
+                        ((SwedishIdentifier) accountIdentifier).getBankName());
+                break;
+            case SE_NDA_SSN:
+                destinationAccount.setBankName(Bank.NORDEA_PERSONKONTO.getDisplayName());
+                break;
+            default:
+                throw executorHelper.invalidDestError();
+        }
+        destinationAccount.setAccountNumber(
+                accountIdentifier.getIdentifier(NORDEA_ACCOUNT_FORMATTER));
+        accountIdentifier.getName().ifPresent(destinationAccount::setName);
 
-        return Optional.of(destinationAccount);
+        return destinationAccount;
     }
 
     private void executeExternalBankTransfer(
@@ -124,20 +141,12 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
                 createPaymentRequest(
                         transfer, sourceAccount, destinationAccount, transferMessageFormatter);
 
-        /*
-         * Nordea will return an error saying unconfirmed payment already exists in outbox if
-         * someone tries to create a payment to the same recipient. So we need to check if transfer
-         * already exists in outbox and remove it in that case to make room for a new one
-         */
-        removeIfAlreadyExist(transferRequest);
-
         // execute external transfer
         BankPaymentResponse transferResponse = apiClient.executeBankPayment(transferRequest);
 
-        String transferId = transferResponse.getId();
-        ConfirmTransferRequest confirmTransferRequest = new ConfirmTransferRequest(transferId);
+        String transferId = transferResponse.getApiIdentifier();
         // confirm external transfer
-        executorHelper.confirm(confirmTransferRequest, transferId);
+        executorHelper.confirm(transferId);
     }
 
     private PaymentRequest createPaymentRequest(
@@ -147,32 +156,21 @@ public class NordeaBankTransferExecutor implements BankTransferExecutor {
             TransferMessageFormatter transferMessageFormatter) {
 
         PaymentRequest transferRequest = new PaymentRequest();
-        transferRequest.setAmount(transfer);
+        transferRequest.setAmount(transfer.getAmount());
         transferRequest.setFrom(sourceAccount);
         transferRequest.setBankName(destinationAccount);
         transferRequest.setTo(destinationAccount);
         transferRequest.setMessage(transfer, transferMessageFormatter);
-        transferRequest.setDue(transfer);
+        transferRequest.setDue(transfer.getDueDate());
         transferRequest.setType(NordeaSEConstants.PaymentTypes.LBAN);
-        transferRequest.setToAccountNumberType(NordeaSEConstants.PaymentAccountTypes.IBAN);
+        transferRequest.setToAccountNumberType(getToAccountType(transfer));
 
         return transferRequest;
     }
 
-    private void removeIfAlreadyExist(PaymentRequest transferRequest) {
-        // find first transfer in outbox that is a copy of the transferRequest object
-        apiClient.fetchEInvoice().getEInvoices().stream()
-                .filter(
-                        entity ->
-                                entity.getRecipientAccountNumber().equals(transferRequest.getTo()))
-                .filter(entity -> entity.getType().equals(transferRequest.getType()))
-                .filter(entity -> !entity.isConfirmed())
-                .findFirst()
-                .map(EInvoiceEntity::getId)
-                .ifPresent(this::deleteTransfer); // delete transfer if it already exists in outbox
-    }
-
-    private void deleteTransfer(String transferId) {
-        apiClient.deleteTransfer(transferId);
+    private String getToAccountType(Transfer transfer) {
+        return transfer.getDestination() instanceof NDAPersonalNumberIdentifier
+                ? NordeaSEConstants.PaymentAccountTypes.NDASE
+                : NordeaSEConstants.PaymentAccountTypes.LBAN;
     }
 }

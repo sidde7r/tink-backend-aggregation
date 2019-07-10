@@ -41,10 +41,10 @@ public class InvestmentAccountEntity {
     @JsonProperty private List<HoldingEntity> holdings;
 
     public InvestmentAccount toTinkInvestmentAccount() {
-
-        // Temporary solution since pension accounts does not have any holdings
         // TODO: create pension account builder
-        if (classification.equalsIgnoreCase("PENSION")) {
+
+        // In some cases (e.g. some Pension accounts) the account doesn't have any holdings
+        if (!hasInstruments()) {
             return InvestmentAccount.builder(id)
                     .setBalance(new Amount(NordeaSEConstants.CURRENCY, value))
                     .setBankIdentifier(id)
@@ -93,6 +93,10 @@ public class InvestmentAccountEntity {
                 .filter(HoldingEntity::isInstrument)
                 .map(HoldingEntity::toTinkInstrument)
                 .collect(Collectors.toList());
+    }
+
+    private boolean hasInstruments() {
+        return !getInstruments().isEmpty();
     }
 
     private String getRawType() {

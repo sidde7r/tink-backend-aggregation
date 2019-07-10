@@ -55,8 +55,8 @@ public class NordeaSEConstants {
         public static final URL FETCH_INVESTMENTS = new URL(BASE + ApiService.FETCH_INVESTMENTS);
         public static final URL FETCH_LOANS = new URL(BASE + ApiService.FETCH_LOANS);
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE + ApiService.FETCH_LOAN_DETAILS);
-        public static final URL FETCH_EINVOICES = new URL(BASE + ApiService.FETCH_PAYMENTS);
-        public static final URL FETCH_EINVOICES_DETAILS =
+        public static final URL FETCH_PAYMENTS = new URL(BASE + ApiService.FETCH_PAYMENTS);
+        public static final URL FETCH_PAYMENT_DETAILS =
                 new URL(BASE + ApiService.FETCH_PAYMENTS_DETAILS);
         public static final URL FETCH_BENEFICIARIES =
                 new URL(BASE + ApiService.FETCH_BENEFICIARIES);
@@ -66,6 +66,7 @@ public class NordeaSEConstants {
         public static final URL POLL_SIGN_TRANSFER = new URL(BASE + ApiService.POLL_SIGN_TRANSFER);
         public static final URL COMPLETE_TRANSFER = new URL(BASE + ApiService.COMPLETE_TRANSFER);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT);
+        public static final URL UPDATE_PAYMENT = new URL(BASE + ApiService.FETCH_PAYMENTS_DETAILS);
     }
 
     public static class ApiService {
@@ -81,7 +82,7 @@ public class NordeaSEConstants {
         public static final String FETCH_LOANS = "ca/loans-v1/loans/";
         public static final String FETCH_LOAN_DETAILS = "ca/loans-v1/loans/{loanId}";
         public static final String FETCH_PAYMENTS = "se/payments-v2/payments/";
-        public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{eInvoiceId}";
+        public static final String FETCH_PAYMENTS_DETAILS = "se/payments-v2/payments/{paymentId}";
         public static final String FETCH_BENEFICIARIES = "ca/beneficiary-v1/beneficiaries";
         public static final String CONFIRM_TRANSFER = "se/payments-v2/payments/confirm";
         public static final String SIGN_TRANSFER = "ca/signing-v1/signing/bankid_se/signature/";
@@ -120,7 +121,7 @@ public class NordeaSEConstants {
         public static final String ACCOUNT_NUMBER = "accountNumber";
         public static final String CARD_ID = "cardId";
         public static final String LOAN_ID = "loanId";
-        public static final String EINVOICE_ID = "eInvoiceId";
+        public static final String PAYMENT_ID = "paymentId";
         public static final String ORDER_REF = "orderRef";
     }
 
@@ -152,10 +153,12 @@ public class NordeaSEConstants {
         public static final int CAN_FETCH_MORE = 30;
     }
 
-    public static final class EInvoiceStatus {
+    public static final class PaymentStatus {
         public static final String CONFIRMED = "confirmed";
         public static final String REJECTED = "rejected";
         public static final String UNCONFIRMED = "unconfirmed";
+        public static final String INPROGRESS = "inprogress";
+        public static final String PAID = "paid";
     }
 
     public static final class PaymentTypes {
@@ -164,13 +167,15 @@ public class NordeaSEConstants {
         public static final String EINVOICE = "einvoice";
         public static final String IBAN = "iban";
         public static final String LBAN = "lban";
+        public static final String NORMAL = "normal";
         public static final String UNKNOWN_TYPE = "UNKNOWN TYPE";
     }
 
     public static final class PaymentAccountTypes {
         public static final String BANKGIRO = "BG";
         public static final String PLUSGIRO = "PG";
-        public static final String IBAN = "LBAN-SE";
+        public static final String LBAN = "LBAN-SE";
+        public static final String NDASE = "NDA-SE";
         public static final String UNKNOWN_ACCOUNT_TYPE = "UNKNOWN ACCOUNT TYPE";
     }
 
@@ -194,6 +199,16 @@ public class NordeaSEConstants {
         public static final String NO_CONFIRMED_INVESTMENTS =
                 "User has not confirmed classification for investments";
         public static final String NO_CUSTODY_ACCOUNT = "No account connected to custody account";
+        public static final String EINVOICE_MODIFY_AMOUNT =
+                "Not allowed to update e-invoice amount";
+        public static final String EINVOICE_MODIFY_DESTINATION_MESSAGE =
+                "Not allowed to update e-invoice message";
+        public static final String EINVOICE_MODIFY_DUEDATE =
+                "Not allowed to update e-invoice due date";
+        public static final String EINVOICE_MODIFY_SOURCE =
+                "Not allowed to update e-invoice source";
+        public static final String EINVOICE_MODIFY_DESTINATION =
+                "Not allowed to update e-invoice destination";
     }
 
     public static class TransactionalAccounts {

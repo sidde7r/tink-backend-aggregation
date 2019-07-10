@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSEConstants.PaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -41,7 +42,8 @@ public class InternalBankTransferResponse {
 
     @JsonIgnore
     public boolean isTransferAccepted() {
-        return status.equalsIgnoreCase("paid");
+        return status.equalsIgnoreCase(PaymentStatus.PAID)
+                || status.equalsIgnoreCase(PaymentStatus.CONFIRMED);
     }
 
     @JsonIgnore

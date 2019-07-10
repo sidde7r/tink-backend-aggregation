@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.NordeaSECons
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
@@ -50,7 +51,13 @@ public class BeneficiariesEntity implements GeneralAccountEntity {
             case NordeaSEConstants.PaymentAccountTypes.PLUSGIRO:
                 return new PlusGiroIdentifier(accountNumber);
             default:
-                return new SwedishIdentifier(accountNumber);
+                NDAPersonalNumberIdentifier ssnIdentifier =
+                        new NDAPersonalNumberIdentifier(accountNumber);
+                if (ssnIdentifier.isValid()) {
+                    return ssnIdentifier.toSwedishIdentifier();
+                } else {
+                    return new SwedishIdentifier(accountNumber);
+                }
         }
     }
 
@@ -58,9 +65,10 @@ public class BeneficiariesEntity implements GeneralAccountEntity {
     @Override
     public String generalGetBank() {
         AccountIdentifier accountIdentifier = generalGetAccountIdentifier();
-        return accountIdentifier.isValid() && accountIdentifier.is(AccountIdentifier.Type.SE)
-                ? accountIdentifier.to(SwedishIdentifier.class).getBankName()
-                : null;
+        if (accountIdentifier.isValid() && accountIdentifier.is(AccountIdentifier.Type.SE)) {
+            return accountIdentifier.to(SwedishIdentifier.class).getBankName();
+        }
+        return null;
     }
 
     @JsonIgnore

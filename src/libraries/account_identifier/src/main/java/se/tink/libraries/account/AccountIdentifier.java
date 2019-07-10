@@ -18,6 +18,7 @@ import se.tink.libraries.account.identifiers.BelgianIdentifier;
 import se.tink.libraries.account.identifiers.DanishIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.NDAPersonalNumberIdentifier;
 import se.tink.libraries.account.identifiers.NorwegianIdentifier;
 import se.tink.libraries.account.identifiers.PaymPhoneNumberIdentifier;
 import se.tink.libraries.account.identifiers.PaymentCardNumberIdentifier;
@@ -40,6 +41,7 @@ public abstract class AccountIdentifier {
         DK("dk"),
         SE("se"),
         SE_SHB_INTERNAL("se-internal"),
+        SE_NDA_SSN("se-nda-ssn"),
         FI("fi"),
         NO("no"),
         IBAN("iban"),
@@ -250,6 +252,8 @@ public abstract class AccountIdentifier {
                 return new SwedishIdentifier(id);
             case SE_SHB_INTERNAL:
                 return new SwedishSHBInternalIdentifier(id);
+            case SE_NDA_SSN:
+                return new NDAPersonalNumberIdentifier(id);
             case FI:
                 return new FinnishIdentifier(id);
             case NO:

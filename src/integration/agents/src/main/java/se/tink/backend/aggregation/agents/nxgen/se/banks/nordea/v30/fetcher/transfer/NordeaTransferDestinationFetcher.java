@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.transfer;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
@@ -71,9 +73,17 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
 
         // all accounts that can transfer to
         final List<GeneralAccountEntity> destinationAccounts =
-                accountEntityList.stream()
-                        .filter(account -> Objects.nonNull(account.getPermissions()))
-                        .filter(account -> account.getPermissions().isCanTransferToAccount())
+                Stream.concat(
+                                accountEntityList.stream()
+                                        .filter(
+                                                account ->
+                                                        Objects.nonNull(account.getPermissions()))
+                                        .filter(
+                                                account ->
+                                                        account.getPermissions()
+                                                                .isCanTransferToAccount()),
+                                apiClient.fetchBeneficiaries().getBeneficiaries().stream()
+                                        .filter(Predicates.not(BeneficiariesEntity::isPgOrBg)))
                         .collect(Collectors.toList());
 
         return new TransferDestinationPatternBuilder()
@@ -81,6 +91,8 @@ public class NordeaTransferDestinationFetcher implements TransferDestinationFetc
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                .addMultiMatchPattern(
+                        AccountIdentifier.Type.SE_NDA_SSN, TransferDestinationPattern.ALL)
                 .build();
     }
 }
