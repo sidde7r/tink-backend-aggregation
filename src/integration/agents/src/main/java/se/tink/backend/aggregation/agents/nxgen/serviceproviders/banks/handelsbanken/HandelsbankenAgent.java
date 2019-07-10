@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.HandelsbankenAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.HandelsbankenLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.HandelsbankenTransactionalAccountFetcher;
@@ -28,12 +31,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class HandelsbankenAgent<
                 API extends HandelsbankenApiClient, Config extends HandelsbankenConfiguration>
-        extends NextGenerationAgent {
+        extends NextGenerationAgent implements RefreshLoanAccountsExecutor {
 
     protected final API bankClient;
     private final HandelsbankenPersistentStorage handelsbankenPersistentStorage;
     protected final HandelsbankenSessionStorage handelsbankenSessionStorage;
     private final Config handelsbankenConfiguration;
+
+    private final LoanRefreshController loanRefreshController;
 
     public HandelsbankenAgent(
             CredentialsRequest request,
@@ -48,6 +53,15 @@ public abstract class HandelsbankenAgent<
         this.bankClient = constructApiClient(handelsbankenConfiguration);
         this.handelsbankenSessionStorage =
                 new HandelsbankenSessionStorage(this.sessionStorage, handelsbankenConfiguration);
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new HandelsbankenLoanFetcher(
+                                this.bankClient,
+                                this.handelsbankenSessionStorage,
+                                this.credentials));
     }
 
     protected abstract API constructApiClient(Config handelsbankenConfiguration);
@@ -154,15 +168,13 @@ public abstract class HandelsbankenAgent<
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new HandelsbankenLoanFetcher(
-                                this.bankClient,
-                                this.handelsbankenSessionStorage,
-                                this.credentials)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
