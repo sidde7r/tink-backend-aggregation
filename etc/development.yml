@@ -260,12 +260,6 @@ agentsServiceConfiguration:
         clientSigningCertificateSerialNumber: ""
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
         aspspCode: "CEMG"
-    bankdata:
-      tink:
-        clientId: "PSDSE-FINA-44059"
-        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        apiKey: "DummyKey"
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
     bankinter:
       tink:
         baseUrl: "https://site1.sibsapimarket.com:8444/sibs/apimarket"
