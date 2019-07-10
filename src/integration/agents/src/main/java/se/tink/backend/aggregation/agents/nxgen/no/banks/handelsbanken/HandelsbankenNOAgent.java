@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.HandelsbankenNOMultiFactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.HandelsbankenNOInvestmentFetcher;
@@ -21,10 +24,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class HandelsbankenNOAgent extends NextGenerationAgent {
+public class HandelsbankenNOAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
 
     private final HandelsbankenNOApiClient apiClient;
     private EncapClient encapClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public HandelsbankenNOAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,6 +42,13 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
                         client,
                         true,
                         credentials.getField(Field.Key.USERNAME));
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new HandelsbankenNOInvestmentFetcher(
+                                apiClient, credentials.getField(Field.Key.USERNAME)));
     }
 
     @Override
@@ -75,13 +87,13 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new HandelsbankenNOInvestmentFetcher(
-                                apiClient, credentials.getField(Field.Key.USERNAME))));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
