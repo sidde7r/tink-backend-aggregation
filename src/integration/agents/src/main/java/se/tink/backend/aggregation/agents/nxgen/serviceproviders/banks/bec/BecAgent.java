@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.BecAccountTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.creditcard.BecCreditCardFetcher;
@@ -27,10 +29,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BecAgent extends NextGenerationAgent implements RefreshInvestmentAccountsExecutor {
+public class BecAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
     private final BecApiClient apiClient;
     private final BecAccountTransactionsFetcher transactionFetcher;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public BecAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -45,6 +49,11 @@ public class BecAgent extends NextGenerationAgent implements RefreshInvestmentAc
                         this.metricRefreshController,
                         this.updateController,
                         new BecInvestmentFetcher(this.apiClient));
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new BecLoanFetcher(this.apiClient, this.credentials));
     }
 
     @Override
@@ -90,12 +99,13 @@ public class BecAgent extends NextGenerationAgent implements RefreshInvestmentAc
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new BecLoanFetcher(this.apiClient, this.credentials)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
