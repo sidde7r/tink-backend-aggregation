@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.fetche
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.at.openbanking.volksbank.VolksbankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities.BalanceAmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
@@ -21,6 +22,6 @@ public class BalanceEntity {
     public Amount getBalanceAmount() {
         return Optional.ofNullable(balanceAmount)
                 .map(BalanceAmountEntity::toAmount)
-                .orElseGet(() -> Amount.inEUR(0));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));
     }
 }

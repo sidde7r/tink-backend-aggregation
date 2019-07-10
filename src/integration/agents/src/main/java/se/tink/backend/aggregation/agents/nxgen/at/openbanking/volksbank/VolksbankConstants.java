@@ -17,7 +17,7 @@ public final class VolksbankConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
         public static final String MISSING_TOKEN = "Cannot find token.";
         public static final String MISSING_SCA_URL = "Missing sca redirect url.";
-        public static final String MISSING_BALANCE = "No balance found";
+        public static final String MISSING_BALANCE = "No balance found.";
     }
 
     public static class Urls {
@@ -89,8 +89,8 @@ public final class VolksbankConstants {
         public static final String MAX_DATE = "9999-12-31";
     }
 
-  public static class Status {
+    public static class Status {
 
-      public static final String VALID = "valid";
-  }
+        public static final String VALID = "valid";
+    }
 }
