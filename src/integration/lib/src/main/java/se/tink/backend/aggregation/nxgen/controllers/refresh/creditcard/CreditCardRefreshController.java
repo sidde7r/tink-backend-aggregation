@@ -1,8 +1,17 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard;
 
 import com.google.common.base.Preconditions;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
@@ -17,7 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
-public final class CreditCardRefreshController implements AccountRefresher, TransactionRefresher {
+public final class CreditCardRefreshController
+        implements AccountRefresher, TransactionRefresher, RefreshCreditCardAccountsExecutor {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "credit_card");
 
@@ -37,6 +47,17 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
         this.updateController = Preconditions.checkNotNull(updateController);
         this.accountFetcher = Preconditions.checkNotNull(accountFetcher);
         this.transactionFetcher = Preconditions.checkNotNull(transactionFetcher);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        List<Account> accounts = new ArrayList<>(this.fetchAccounts().keySet());
+        return new FetchAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return new FetchTransactionsResponse(this.fetchTransactions());
     }
 
     @Override

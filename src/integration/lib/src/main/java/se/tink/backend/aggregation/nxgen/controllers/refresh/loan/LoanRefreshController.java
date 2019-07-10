@@ -1,8 +1,16 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.loan;
 
 import com.google.common.base.Preconditions;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
@@ -17,7 +25,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
-public final class LoanRefreshController implements AccountRefresher, TransactionRefresher {
+public final class LoanRefreshController
+        implements AccountRefresher, TransactionRefresher, RefreshLoanAccountsExecutor {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "loan");
 
@@ -44,6 +53,16 @@ public final class LoanRefreshController implements AccountRefresher, Transactio
         this.updateController = Preconditions.checkNotNull(updateController);
         this.loanFetcher = Preconditions.checkNotNull(loanFetcher);
         this.transactionFetcher = transactionFetcher;
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return new FetchLoanAccountsResponse(this.fetchAccounts());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return new FetchTransactionsResponse(this.fetchTransactions());
     }
 
     @Override

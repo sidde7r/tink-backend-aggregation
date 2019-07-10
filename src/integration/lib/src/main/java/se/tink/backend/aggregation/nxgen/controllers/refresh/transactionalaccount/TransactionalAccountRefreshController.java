@@ -1,8 +1,18 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount;
 
 import com.google.common.base.Preconditions;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
@@ -18,7 +28,10 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
 public final class TransactionalAccountRefreshController
-        implements AccountRefresher, TransactionRefresher {
+        implements AccountRefresher,
+                TransactionRefresher,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
             new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "transactional");
 
@@ -29,6 +42,10 @@ public final class TransactionalAccountRefreshController
 
     private Collection<TransactionalAccount> accounts;
 
+    // Until we can refresh CHECKING and SAVING accounts & transactions separately.
+    private boolean hasRefreshedCheckingAccounts = false;
+    private boolean hasRefreshedCheckingTransactions = false;
+
     public TransactionalAccountRefreshController(
             MetricRefreshController metricController,
             UpdateController updateController,
@@ -38,6 +55,37 @@ public final class TransactionalAccountRefreshController
         this.updateController = Preconditions.checkNotNull(updateController);
         this.accountFetcher = Preconditions.checkNotNull(accountFetcher);
         this.transactionFetcher = Preconditions.checkNotNull(transactionFetcher);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        if (hasRefreshedCheckingAccounts) {
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+        hasRefreshedCheckingAccounts = true;
+
+        List<Account> accounts = new ArrayList<>(this.fetchAccounts().keySet());
+        return new FetchAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        if (hasRefreshedCheckingTransactions) {
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+        hasRefreshedCheckingTransactions = true;
+
+        return new FetchTransactionsResponse(this.fetchTransactions());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchCheckingAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return fetchCheckingTransactions();
     }
 
     @Override
