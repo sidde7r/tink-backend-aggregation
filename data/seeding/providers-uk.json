@@ -117,33 +117,6 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
-            "credentialsType": "PASSWORD",
-            "displayName": "Barclays",
-            "fields": [
-                {
-                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back!",
-                    "immutable": true,
-                    "name": "info",
-                    "value": "Connecting your bank"
-                }
-            ],
-            "groupDisplayName": "",
-            "multiFactor": false,
-            "name": "uk-barclays-oauth2",
-            "passwordhelptext": "Authentication is done on external page",
-            "payload": "tink:barclays",
-            "popular": true,
-            "refreshFrequency": 1,
-            "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
-            "transactional": true,
-            "type": "BANK"
-        },
-        {
-            "capabilities": [
-                "TRANSFERS"
-            ],
             "className": "nxgen.uk.openbanking.barclays.BarclaysV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Barclays",
@@ -157,7 +130,7 @@
             ],
             "groupDisplayName": "",
             "multiFactor": false,
-            "name": "uk-barclaysv31-oauth2",
+            "name": "uk-barclays-oauth2",
             "passwordhelptext": "Authentication is done on external page",
             "payload": "tink:barclays",
             "popular": true,
@@ -195,7 +168,7 @@
             "type": "BANK"
         },
         {
-            "className": "nxgen.uk.openbanking.firstdirect.FirstDirectAgent",
+            "className": "nxgen.uk.openbanking.firstdirect.FirstDirectV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "First Direct",
             "fields": [
@@ -477,7 +450,7 @@
             "capabilities": [
                 "TRANSFERS"
             ],
-            "className": "nxgen.uk.openbanking.santander.SantanderAgent",
+            "className": "nxgen.uk.openbanking.santander.SantanderV31Agent",
             "credentialsType": "PASSWORD",
             "displayName": "Santander",
             "fields": [
