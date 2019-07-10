@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup;
 
+import java.util.UUID;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.BerlinGroupConstants.HeaderKeys;
@@ -59,6 +60,16 @@ public abstract class BerlinGroupApiClient<TConfiguration extends BerlinGroupCon
                 .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
                 .queryParam(QueryKeys.BOOKING_STATUS, QueryValues.BOTH)
                 .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID));
+    }
+
+    protected RequestBuilder getPaymentRequestBuilder(final URL url) {
+        return client.request(url)
+                .addBearerToken(getTokenFromSession(StorageKeys.OAUTH_TOKEN))
+                .type(MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID().toString())
+                .header(HeaderKeys.TPP_REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .header(HeaderKeys.CONSENT_ID, sessionStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.PSU_IP_ADDRESS, getConfiguration().getPsuIpAddress());
     }
 
     public abstract URL getAuthorizeUrl(String state);
