@@ -4,29 +4,30 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.CredentialKeys;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SBABConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SBABConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.SbabConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class SBABAuthenticator implements Authenticator {
+public class SbabAuthenticator implements Authenticator {
 
-    private final SBABApiClient apiClient;
+    private final SbabApiClient apiClient;
     private final PersistentStorage persistentStorage;
-    private final SBABConfiguration configuration;
+    private final SbabConfiguration configuration;
 
-    public SBABAuthenticator(
-            SBABApiClient apiClient,
+    public SbabAuthenticator(
+            SbabApiClient apiClient,
             PersistentStorage persistentStorage,
-            SBABConfiguration configuration) {
+            SbabConfiguration configuration) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
     }
 
-    private SBABConfiguration getConfiguration() {
+    private SbabConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
@@ -34,9 +35,8 @@ public class SBABAuthenticator implements Authenticator {
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        persistentStorage.put(
-                CredentialKeys.USERNAME, credentials.getField(CredentialKeys.USERNAME));
-        persistentStorage.put(
-                CredentialKeys.PASSWORD, credentials.getField(CredentialKeys.PASSWORD));
+        String code = apiClient.getPendingAuthorizationCode();
+        OAuth2Token token = apiClient.getToken(code);
+        persistentStorage.put(StorageKeys.OAUTH_TOKEN, token);
     }
 }
