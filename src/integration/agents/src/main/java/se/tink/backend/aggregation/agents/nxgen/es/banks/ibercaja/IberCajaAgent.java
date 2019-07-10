@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.authenticator.IberCajaPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.identitydata.IberCajaIdentityDataFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.IberCajaAccountFetcher;
@@ -24,16 +27,24 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class IberCajaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class IberCajaAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final IberCajaApiClient apiClient;
     private final IberCajaSessionStorage iberCajaSessionStorage;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public IberCajaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.iberCajaSessionStorage = new IberCajaSessionStorage(sessionStorage);
         this.apiClient = new IberCajaApiClient(client, iberCajaSessionStorage);
+
+        IberCajaInvestmentAccountFetcher investmentAccountFetcher =
+                new IberCajaInvestmentAccountFetcher(apiClient);
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentAccountFetcher);
     }
 
     @Override
@@ -76,13 +87,13 @@ public class IberCajaAgent extends NextGenerationAgent implements RefreshIdentit
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
 
-        IberCajaInvestmentAccountFetcher investmentAccountFetcher =
-                new IberCajaInvestmentAccountFetcher(apiClient);
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentAccountFetcher));
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
