@@ -30,7 +30,8 @@ public final class NordeaSeAgent extends NordeaBaseAgent {
 
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new NordeaSeBankIdAuthenticator((NordeaSeApiClient) apiClient, sessionStorage));
+                new NordeaSeBankIdAuthenticator((NordeaSeApiClient) apiClient, sessionStorage),
+                persistentStorage);
     }
 
     @Override

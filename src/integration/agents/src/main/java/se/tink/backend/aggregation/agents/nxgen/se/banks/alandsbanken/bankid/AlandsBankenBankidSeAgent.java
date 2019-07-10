@@ -21,6 +21,7 @@ public class AlandsBankenBankidSeAgent extends CrossKeyAgent {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
                 new CrossKeyBankIdAuthenticator(
-                        apiClient, agentConfiguration, sessionStorage, credentials));
+                        apiClient, agentConfiguration, sessionStorage, credentials),
+                persistentStorage);
     }
 }

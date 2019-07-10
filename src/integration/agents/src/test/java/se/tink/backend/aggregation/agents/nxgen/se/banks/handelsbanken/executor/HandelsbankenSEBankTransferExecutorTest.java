@@ -87,7 +87,8 @@ public class HandelsbankenSEBankTransferExecutorTest {
         new BankIdAuthenticationController<>(
                         mock(AgentContext.class),
                         new HandelsbankenBankIdAuthenticator(
-                                client, credentials, persistentStorage, sessionStorage))
+                                client, credentials, persistentStorage, sessionStorage),
+                        new PersistentStorage())
                 .authenticate(credentials);
 
         Transfer transfer = new Transfer();

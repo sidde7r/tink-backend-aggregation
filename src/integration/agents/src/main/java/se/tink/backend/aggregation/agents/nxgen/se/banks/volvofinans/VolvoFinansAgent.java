@@ -36,7 +36,8 @@ public class VolvoFinansAgent extends NextGenerationAgent implements RefreshIden
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new VolvoFinansBankIdAutenticator(apiClient, sessionStorage));
+                new VolvoFinansBankIdAutenticator(apiClient, sessionStorage),
+                persistentStorage);
     }
 
     @Override

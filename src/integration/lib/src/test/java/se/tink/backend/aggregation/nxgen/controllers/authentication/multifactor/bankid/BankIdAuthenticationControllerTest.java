@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BankIdAuthenticationControllerTest {
     private static final String REFERENCE = "reference";
@@ -26,6 +27,7 @@ public class BankIdAuthenticationControllerTest {
     private BankIdAuthenticationController authenticationController;
     private BankIdAuthenticator authenticator;
     private AgentContext context;
+    private PersistentStorage persistentStorage;
 
     @Before
     public void setup() throws AuthenticationException, AuthorizationException {
@@ -34,24 +36,26 @@ public class BankIdAuthenticationControllerTest {
         Mockito.when(authenticator.init(Mockito.anyString())).thenReturn(REFERENCE);
         Mockito.when(authenticator.collect(REFERENCE)).thenReturn(BankIdStatus.DONE);
 
-        authenticationController = new BankIdAuthenticationController(context, authenticator);
+        persistentStorage = new PersistentStorage();
+        authenticationController =
+                new BankIdAuthenticationController(context, authenticator, persistentStorage);
 
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(context, null);
+        new BankIdAuthenticationController(context, null, persistentStorage);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenContext_isNull() {
-        new BankIdAuthenticationController(null, authenticator);
+        new BankIdAuthenticationController(null, authenticator, persistentStorage);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenBothContextAndBankIdAuthenticator_isNull() {
-        new BankIdAuthenticationController(null, null);
+        new BankIdAuthenticationController(null, null, persistentStorage);
     }
 
     @Test

@@ -41,7 +41,8 @@ public final class AvanzaAgent extends NextGenerationAgent implements RefreshIde
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 supplementalRequester,
-                new AvanzaBankIdAuthenticator(apiClient, authSessionStorage, temporaryStorage));
+                new AvanzaBankIdAuthenticator(apiClient, authSessionStorage, temporaryStorage),
+                persistentStorage);
     }
 
     @Override

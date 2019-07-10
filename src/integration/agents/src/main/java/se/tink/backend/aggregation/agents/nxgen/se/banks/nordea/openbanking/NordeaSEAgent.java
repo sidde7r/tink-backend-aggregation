@@ -29,7 +29,8 @@ public class NordeaSEAgent extends NordeaBaseAgent {
                 new NordeaBankIDAuthenticator(
                         apiClient,
                         new NordeaSessionStorage(sessionStorage),
-                        getNordeaPersistentStorage()));
+                        getNordeaPersistentStorage()),
+                persistentStorage);
     }
 
     @Override

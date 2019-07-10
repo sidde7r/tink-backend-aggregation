@@ -89,7 +89,8 @@ public class HandelsbankenSEAgent
                             bankClient,
                             credentials,
                             handelsbankenPersistentStorage,
-                            handelsbankenSessionStorage))
+                            handelsbankenSessionStorage),
+                    persistentStorage)
         };
     }
 
