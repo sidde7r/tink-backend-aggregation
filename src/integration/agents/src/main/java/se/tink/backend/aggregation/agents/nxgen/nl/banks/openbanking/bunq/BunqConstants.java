@@ -10,6 +10,13 @@ public final class BunqConstants {
         public static final URL TOKEN_EXCHANGE =
                 new URL("https://api-oauth.sandbox.bunq.com/v1/token");
         public static final URL AUTHORIZE = new URL("https://oauth.sandbox.bunq.com/auth");
+        public static final String PAYMENT =
+                "/v1/user/{userId}/monetary-account/{accountId}/payment";
+        public static final String DRAFT_PAYMENT =
+                "/v1/user/{userId}/monetary-account/{accountId}/draft-payment";
+        public static final String DRAFT_PAYMENT_SPECIFIC_PAYMENT =
+                "/v1/user/{userId}/monetary-account/{accountId}/draft-payment/{paymentId}";
+        public static final String EVENTS_DEEP_LINK = "https://go.bunq.com/link/events";
     }
 
     public static final class QueryParams {
@@ -35,5 +42,9 @@ public final class BunqConstants {
 
     public static final class Market {
         public static final String INTEGRATION_NAME = "bunq";
+    }
+
+    public static final class Payment {
+        public static final int MAX_POLL_ATTEMPTS = 60;
     }
 }

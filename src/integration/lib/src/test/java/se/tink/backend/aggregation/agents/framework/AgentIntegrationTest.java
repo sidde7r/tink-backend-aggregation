@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -337,13 +336,13 @@ public final class AgentIntegrationTest extends AbstractConfigurationBase {
                     nextStep = paymentMultiStepResponse.getStep();
                     fields = paymentMultiStepResponse.getFields();
                     retrievedPayment = paymentMultiStepResponse.getPayment();
+                    storage = paymentMultiStepResponse.getStorage();
                 }
 
-                Assert.assertThat(
-                        paymentMultiStepResponse.getPayment().getStatus(),
-                        Matchers.anyOf(
-                                Matchers.is(PaymentStatus.SIGNED),
-                                Matchers.is(PaymentStatus.PAID)));
+                PaymentStatus statusResult = paymentMultiStepResponse.getPayment().getStatus();
+                Assert.assertTrue(
+                        statusResult.equals(PaymentStatus.SIGNED)
+                                || statusResult.equals(PaymentStatus.PAID));
 
                 log.info("Done with bank transfer.");
             }

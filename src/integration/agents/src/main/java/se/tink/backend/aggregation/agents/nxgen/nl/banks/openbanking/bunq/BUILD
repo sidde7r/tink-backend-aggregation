@@ -9,6 +9,8 @@ java_library(
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
+        "//src/libraries/payment:enums",
+        "//src/libraries/payment:rpc",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//third_party:bouncycastle",

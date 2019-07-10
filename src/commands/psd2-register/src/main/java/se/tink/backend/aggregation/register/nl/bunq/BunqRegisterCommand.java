@@ -113,7 +113,7 @@ public class BunqRegisterCommand {
                         .required()
                         .hasArg()
                         .argName("URL")
-                        .desc("Redirect URL to use when for the registration.")
+                        .desc("Redirect URL to use for the registration.")
                         .build();
         options.addOption(redirectUrlOption);
 
