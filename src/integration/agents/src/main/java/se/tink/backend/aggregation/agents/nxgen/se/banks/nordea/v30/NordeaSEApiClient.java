@@ -15,8 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rp
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.InternalBankTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.PaymentRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.RecipientRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.RecipientResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.ResultSignResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.executors.rpc.SignatureResponse;
@@ -249,16 +247,6 @@ public class NordeaSEApiClient {
         return requestRefreshableGet(request, ResultSignResponse.class);
     }
 
-    public RecipientResponse registerRecipient(RecipientRequest recipientRequest) {
-        final RequestBuilder request =
-                httpClient
-                        .request(NordeaSEConstants.Urls.FETCH_BENEFICIARIES)
-                        .accept(MediaType.APPLICATION_JSON_TYPE)
-                        .body(recipientRequest, MediaType.APPLICATION_JSON_TYPE);
-
-        return requestRefreshablePost(request, RecipientResponse.class);
-    }
-
     public CompleteTransferResponse completeTransfer(String orderRef) {
         final RequestBuilder request =
                 httpClient
@@ -269,21 +257,6 @@ public class NordeaSEApiClient {
                         .type(MediaType.APPLICATION_JSON_TYPE);
 
         return requestRefreshablePost(request, CompleteTransferResponse.class);
-    }
-
-    public void deleteTransfer(String transferId) {
-        try {
-            httpClient
-                    .request(
-                            NordeaSEConstants.Urls.FETCH_PAYMENT_DETAILS.parameter(
-                                    NordeaSEConstants.IdTags.PAYMENT_ID, transferId))
-                    .header(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken())
-                    .header(HttpHeaders.ACCEPT_LANGUAGE, NordeaSEConstants.HeaderParams.LANGUAGE)
-                    .delete();
-        } catch (HttpResponseException hre) {
-            tryRefreshAccessToken(hre);
-            deleteTransfer(transferId);
-        }
     }
 
     public void keepAlive() throws SessionException {
