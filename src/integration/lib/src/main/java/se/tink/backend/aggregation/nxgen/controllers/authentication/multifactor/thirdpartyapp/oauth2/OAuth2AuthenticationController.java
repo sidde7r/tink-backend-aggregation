@@ -1,14 +1,17 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import com.google.common.base.Strings;
 import java.security.SecureRandom;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -23,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants.ErrorType;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.utils.OAuthUtils;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.utils.OpenBankingTokenExpirationDateHelper;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -37,10 +41,15 @@ public class OAuth2AuthenticationController
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
     private static final Logger logger =
             LoggerFactory.getLogger(OAuth2AuthenticationController.class);
+    private static final int DEFAULT_TOKEN_LIFETIME = 90;
+    private static final TemporalUnit DEFAULT_TOKEN_LIFETIME_UNIT = ChronoUnit.DAYS;
 
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
+    private final Credentials credentials;
+    private final int tokenLifetime;
+    private final TemporalUnit tokenLifetimeUnit;
 
     private final String state;
 
@@ -51,10 +60,30 @@ public class OAuth2AuthenticationController
     public OAuth2AuthenticationController(
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator) {
+            OAuth2Authenticator authenticator,
+            Credentials credentials) {
+        this(
+                persistentStorage,
+                supplementalInformationHelper,
+                authenticator,
+                credentials,
+                DEFAULT_TOKEN_LIFETIME,
+                DEFAULT_TOKEN_LIFETIME_UNIT);
+    }
+
+    public OAuth2AuthenticationController(
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OAuth2Authenticator authenticator,
+            Credentials credentials,
+            int tokenLifetime,
+            TemporalUnit tokenLifetimeUnit) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
+        this.credentials = credentials;
+        this.tokenLifetime = tokenLifetime;
+        this.tokenLifetimeUnit = tokenLifetimeUnit;
 
         this.state = generateRandomState();
     }
@@ -157,6 +186,10 @@ public class OAuth2AuthenticationController
             throw new IllegalStateException(
                     String.format("Unknown token type '%s'.", accessToken.getTokenType()));
         }
+
+        credentials.setSessionExpiryDate(
+                OpenBankingTokenExpirationDateHelper.getExpirationDateFrom(
+                        accessToken, tokenLifetime, tokenLifetimeUnit));
 
         persistentStorage.put(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
 

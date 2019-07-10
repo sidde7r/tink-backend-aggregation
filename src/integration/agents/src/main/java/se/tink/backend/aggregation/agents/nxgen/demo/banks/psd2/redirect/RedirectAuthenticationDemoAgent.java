@@ -47,7 +47,8 @@ public class RedirectAuthenticationDemoAgent extends NextGenerationDemoAgent {
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        redirectOAuth2Authenticator);
+                        redirectOAuth2Authenticator,
+                        credentials);
 
         return new ThirdPartyAppAuthenticationController<>(
                 oAuth2AuthenticationController, supplementalInformationHelper);

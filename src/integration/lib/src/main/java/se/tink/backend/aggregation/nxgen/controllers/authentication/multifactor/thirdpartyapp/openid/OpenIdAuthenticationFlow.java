@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -17,7 +18,8 @@ public class OpenIdAuthenticationFlow {
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdAuthenticator authenticator,
             OpenIdApiClient apiClient,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            Credentials credentials) {
 
         OpenIdAuthenticationController openIdAuthenticationController =
                 new OpenIdAuthenticationController(
@@ -26,7 +28,8 @@ public class OpenIdAuthenticationFlow {
                         apiClient,
                         authenticator,
                         callbackJWTSignatureKeyPair,
-                        request.getCallbackRedirectUriId());
+                        request.getCallbackRedirectUriId(),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

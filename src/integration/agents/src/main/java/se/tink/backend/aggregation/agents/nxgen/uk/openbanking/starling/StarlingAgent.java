@@ -92,7 +92,8 @@ public class StarlingAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new StarlingAuthenticator(apiClient, aisConfiguration));
+                        new StarlingAuthenticator(apiClient, aisConfiguration),
+                        credentials);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyController =
                 new ThirdPartyAppAuthenticationController<>(

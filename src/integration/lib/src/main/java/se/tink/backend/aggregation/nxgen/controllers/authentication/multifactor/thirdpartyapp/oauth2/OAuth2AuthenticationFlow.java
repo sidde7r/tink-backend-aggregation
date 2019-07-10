@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -14,11 +15,15 @@ public class OAuth2AuthenticationFlow {
             SystemUpdater systemUpdater,
             PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
-            OAuth2Authenticator authenticator) {
+            OAuth2Authenticator authenticator,
+            Credentials credentials) {
 
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
-                        persistentStorage, supplementalInformationHelper, authenticator);
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        authenticator,
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

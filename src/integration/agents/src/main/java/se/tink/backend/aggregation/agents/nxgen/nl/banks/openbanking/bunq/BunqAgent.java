@@ -66,7 +66,8 @@ public class BunqAgent extends BunqBaseAgent {
                                 sessionStorage,
                                 temporaryStorage,
                                 getAggregatorInfo().getAggregatorIdentifier(),
-                                bunqConfiguration));
+                                bunqConfiguration),
+                        credentials);
 
         return new AutoAuthenticationController(
                 request,

@@ -87,7 +87,8 @@ public class SbabAgent extends NextGenerationAgent
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new SbabAuthenticator(apiClient, sessionStorage)),
+                        new SbabAuthenticator(apiClient, sessionStorage),
+                        credentials),
                 supplementalInformationHelper);
     }
 
