@@ -39,19 +39,13 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
-    private final InvestmentRefreshController investmentRefreshController;
+    private InvestmentRefreshController investmentRefreshController;
 
     public NextGenerationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
-
-        this.investmentRefreshController =
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts()));
     }
 
     @Override
@@ -97,14 +91,28 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
                                 transactionPaginationHelper, transactionAndAccountFetcher)));
     }
 
+    private InvestmentRefreshController lazyLoadInvestmentRefreshController() {
+        if (investmentRefreshController != null) {
+            return investmentRefreshController;
+        }
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts()));
+
+        return investmentRefreshController;
+    }
+
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return investmentRefreshController.fetchInvestmentAccounts();
+        return lazyLoadInvestmentRefreshController().fetchInvestmentAccounts();
     }
 
     @Override
     public FetchTransactionsResponse fetchInvestmentTransactions() {
-        return investmentRefreshController.fetchInvestmentTransactions();
+        return lazyLoadInvestmentRefreshController().fetchInvestmentTransactions();
     }
 
     @Override
