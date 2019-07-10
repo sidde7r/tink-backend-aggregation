@@ -5,6 +5,7 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.rpc.bankid.InitBankIdRequest;
@@ -44,7 +45,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Payme
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PendingTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.EntryPointResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.AuthorizeResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.auto.ValidateSignatureResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.device.CommitProfileResponse;
@@ -73,10 +73,10 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         super(client, configuration);
     }
 
-    public InitBankIdResponse initBankId(
-            EntryPointResponse entryPoint, InitBankIdRequest initBankIdRequest) {
-        return createPostRequest(entryPoint.toBankIdLogin())
-                .post(InitBankIdResponse.class, initBankIdRequest);
+    public InitBankIdResponse initToBank(InitBankIdRequest initBankIdRequest) {
+        return createPostRequest(HandelsbankenSEConstants.Urls.INIT_REQUEST)
+                .body(initBankIdRequest, MediaType.APPLICATION_JSON)
+                .post(InitBankIdResponse.class);
     }
 
     public AuthenticateResponse authenticate(InitBankIdResponse initBankId) {
