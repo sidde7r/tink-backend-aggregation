@@ -26,6 +26,7 @@ public class NordeaDkAgent extends NordeaV20Agent {
                 context,
                 signatureKeyPair,
                 new NordeaDkParser(new NordeaDkTransactionParser(), request.getCredentials()));
+        this.client.addFilter(new NordeaDkFilter());
         configureHttpClient(client);
     }
 
