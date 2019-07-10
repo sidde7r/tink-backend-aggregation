@@ -28,6 +28,8 @@ public final class DnbConstants {
         public static final String ACCOUNTS = "/v1/accounts";
         public static final String BALANCES = ACCOUNTS + "/%s/balances";
         public static final String TRANSACTIONS = ACCOUNTS + "/%s/transactions";
+        public static final String PAYMENTS = "/v1/payments/{paymentType}";
+        public static final String GET_PAYMENT = PAYMENTS + "/{paymentId}";
     }
 
     public static class StorageKeys {
@@ -41,6 +43,7 @@ public final class DnbConstants {
         public static final String CONSENT_ID = "Consent-ID";
         public static final String X_REQUEST_ID = "X-Request-ID";
         public static final String TPP_REDIRECT_URI = "TPP-Redirect-Uri";
+        public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
     }
 
     public static class CredentialsKeys {
@@ -62,5 +65,16 @@ public final class DnbConstants {
 
     public static class QueryValues {
         public static final String BOTH = "both";
+    }
+
+    public static class IdTags {
+        public static final String PAYMENT_TYPE = "paymentType";
+        public static final String PAYMENT_ID = "paymentId";
+    }
+
+    public static class PaymentRequestValues {
+        public static final String REGULATORY_REPORTING_CODE = "14";
+        public static final String REGULATORY_REPORTING_INFORMATION = "Text message to creditor";
+        public static final String CREDITOR_AGENT = "DNBADKKK";
     }
 }

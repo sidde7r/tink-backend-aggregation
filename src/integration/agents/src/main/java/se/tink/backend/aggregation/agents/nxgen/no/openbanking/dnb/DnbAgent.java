@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.DnbConstants.
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.authenticator.DnbAuthenticatorController;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.configuration.DnbConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.executor.payment.DndPaymentExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.openbanking.dnb.fetcher.DnbTransactionFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -90,6 +92,11 @@ public final class DnbAgent extends NextGenerationAgent {
     @Override
     protected SessionHandler constructSessionHandler() {
         return SessionHandler.alwaysFail();
+    }
+
+    @Override
+    public Optional<PaymentController> constructPaymentController() {
+        return Optional.of(new PaymentController(new DndPaymentExecutor(apiClient)));
     }
 
     private byte[] readFile(String path) {
