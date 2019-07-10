@@ -554,34 +554,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public void setEidasProxy(EidasProxyConfiguration conf, String certificateId) {
 
         try {
-            if (conf.getCaPath() != null) {
-                trustRootCaCertificate(
-                        Pem.parseCertificate(Files.toByteArray(new File(conf.getCaPath()))));
-            } else if (conf.isLocalEidasDev()) {
-                // Running in local development, we can trust aggregation staging
-                trustRootCaCertificate(
-                        Pem.parseCertificate(
-                                Files.toByteArray(
-                                        new File(
-                                                "data/eidas_dev_certificates/aggregation-staging-ca.pem"))));
-            } else {
-                throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
-            }
-
-            if (conf.getTlsCrtPath() != null && conf.getTlsKeyPath() != null) {
-                Certificate certificate =
-                        Pem.parseCertificate(Files.toByteArray(new File(conf.getTlsCrtPath())));
-                PrivateKey privateKey =
-                        Pem.parsePrivateKey(Files.toByteArray(new File(conf.getTlsKeyPath())));
-                setSslClientCertificate(privateKey, certificate);
-            } else if (conf.isLocalEidasDev()) {
-                File clientCertificateFile =
-                        new File(System.getProperty("user.home"), "eidas_client.p12");
-                setSslClientCertificate(Files.toByteArray(clientCertificateFile), "changeme");
-            } else {
-                throw new IllegalStateException(
-                        "Client certificate for eIDAS proxy not configured");
-            }
+            setEidasClient(conf);
 
             setProxy(conf.getHost());
             requestExecutor.setEidasCertificateId(certificateId);
@@ -592,6 +565,46 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         } catch (IOException | CertificateException | URISyntaxException e) {
             throw new IllegalStateException(
                     "Could not initialise client certificate for eIDAS proxy", e);
+        }
+    }
+
+    public void setEidasSign(EidasProxyConfiguration conf) {
+        try {
+            setEidasClient(conf);
+        } catch (CertificateException | IOException e) {
+            throw new IllegalStateException(
+                    "Could not initialise client cert for eIDAS signing", e);
+        }
+    }
+
+    private void setEidasClient(EidasProxyConfiguration conf)
+            throws CertificateException, IOException {
+        if (conf.getCaPath() != null) {
+            trustRootCaCertificate(
+                    Pem.parseCertificate(Files.toByteArray(new File(conf.getCaPath()))));
+        } else if (conf.isLocalEidasDev()) {
+            // Running in local development, we can trust aggregation staging
+            trustRootCaCertificate(
+                    Pem.parseCertificate(
+                            Files.toByteArray(
+                                    new File(
+                                            "data/eidas_dev_certificates/aggregation-staging-ca.pem"))));
+        } else {
+            throw new IllegalStateException("Trusted CA for eiDAS proxy not configured");
+        }
+
+        if (conf.getTlsCrtPath() != null && conf.getTlsKeyPath() != null) {
+            Certificate certificate =
+                    Pem.parseCertificate(Files.toByteArray(new File(conf.getTlsCrtPath())));
+            PrivateKey privateKey =
+                    Pem.parsePrivateKey(Files.toByteArray(new File(conf.getTlsKeyPath())));
+            setSslClientCertificate(privateKey, certificate);
+        } else if (conf.isLocalEidasDev()) {
+            File clientCertificateFile =
+                    new File(System.getProperty("user.home"), "eidas_client.p12");
+            setSslClientCertificate(Files.toByteArray(clientCertificateFile), "changeme");
+        } else {
+            throw new IllegalStateException("Client certificate for eIDAS proxy not configured");
         }
     }
 
