@@ -68,6 +68,7 @@ public final class InvestmentRefreshController
         return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
+    @Deprecated
     @Override
     public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action =
@@ -99,6 +100,7 @@ public final class InvestmentRefreshController
         }
     }
 
+    @Deprecated
     @Override
     public Map<Account, List<Transaction>> fetchTransactions() {
         MetricRefreshAction action =

@@ -4,7 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.SpankkiAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.SpankkiKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.authenticator.entities.CustomerEntity;
@@ -28,10 +31,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SpankkiAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class SpankkiAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
     private final SpankkiSessionStorage spankkiSessionStorage;
     private final SpankkiPersistentStorage spankkiPersistentStorage;
     private final SpankkiApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public SpankkiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -41,6 +46,11 @@ public class SpankkiAgent extends NextGenerationAgent implements RefreshIdentity
         this.apiClient =
                 new SpankkiApiClient(
                         this.client, this.spankkiSessionStorage, this.spankkiPersistentStorage);
+
+        SpankkiInvestmentFetcher investmentFetcher = new SpankkiInvestmentFetcher(this.apiClient);
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        this.metricRefreshController, this.updateController, investmentFetcher);
     }
 
     @Override
@@ -92,11 +102,13 @@ public class SpankkiAgent extends NextGenerationAgent implements RefreshIdentity
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        SpankkiInvestmentFetcher investmentFetcher = new SpankkiInvestmentFetcher(this.apiClient);
-        return Optional.of(
-                new InvestmentRefreshController(
-                        this.metricRefreshController, this.updateController, investmentFetcher));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

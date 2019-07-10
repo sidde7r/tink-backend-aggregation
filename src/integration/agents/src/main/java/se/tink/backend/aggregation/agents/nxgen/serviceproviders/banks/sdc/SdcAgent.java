@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetcher.SdcInvestmentFetcher;
@@ -21,13 +24,15 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class SdcAgent extends NextGenerationAgent {
+public abstract class SdcAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
 
     protected final SdcTransactionParser parser;
     protected SdcConfiguration agentConfiguration;
     protected SdcApiClient bankClient;
     protected SdcSessionStorage sdcSessionStorage;
     protected SdcPersistentStorage sdcPersistentStorage;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public SdcAgent(
             CredentialsRequest request,
@@ -42,6 +47,13 @@ public abstract class SdcAgent extends NextGenerationAgent {
         this.sdcSessionStorage = new SdcSessionStorage(this.sessionStorage);
         sdcPersistentStorage = new SdcPersistentStorage(this.persistentStorage);
         this.bankClient = this.createApiClient(agentConfiguration);
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new SdcInvestmentFetcher(
+                                this.bankClient, this.sdcSessionStorage, this.agentConfiguration));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -103,12 +115,12 @@ public abstract class SdcAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new SdcInvestmentFetcher(
-                                this.bankClient, this.sdcSessionStorage, this.agentConfiguration)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 }

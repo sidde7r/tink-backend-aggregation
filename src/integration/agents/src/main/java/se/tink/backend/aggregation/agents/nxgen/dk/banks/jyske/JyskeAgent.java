@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.JyskeAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.JyskeTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.creditcard.JyskeCreditCardFetcher;
@@ -23,13 +26,20 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class JyskeAgent extends NextGenerationAgent {
+public class JyskeAgent extends NextGenerationAgent implements RefreshInvestmentAccountsExecutor {
     private final JyskeApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public JyskeAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new JyskeApiClient(client);
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new JyskeInvestmentFetcher(apiClient));
     }
 
     @Override
@@ -76,12 +86,13 @@ public class JyskeAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new JyskeInvestmentFetcher(apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

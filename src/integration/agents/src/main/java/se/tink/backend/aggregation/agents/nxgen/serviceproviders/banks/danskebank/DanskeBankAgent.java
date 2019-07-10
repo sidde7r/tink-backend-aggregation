@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
@@ -24,10 +27,12 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient>
-        extends NextGenerationAgent {
+        extends NextGenerationAgent implements RefreshInvestmentAccountsExecutor {
     protected final MarketSpecificApiClient apiClient;
     protected final DanskeBankConfiguration configuration;
     protected final String deviceId;
+
+    private final InvestmentRefreshController investmentRefreshController;
 
     public DanskeBankAgent(
             CredentialsRequest request,
@@ -38,6 +43,12 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
         this.apiClient = createApiClient(this.client, configuration);
         this.configuration = configuration;
         this.deviceId = Hash.sha1AsHex(this.credentials.getField(Field.Key.USERNAME) + "-TINK");
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new DanskeBankInvestmentFetcher(this.apiClient));
 
         // Must add the filter here because `configureHttpClient` is called before the agent
         // constructor
@@ -72,12 +83,13 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new DanskeBankInvestmentFetcher(this.apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     // Fetches loans from the accounts endpoint

@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
@@ -32,16 +35,23 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
     private final NextGenerationDemoAuthenticator authenticator;
     // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public NextGenerationDemoAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts()));
     }
 
     @Override
@@ -88,13 +98,13 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NextGenerationDemoInvestmentFetcher(
-                                currency, getInvestmentAccounts())));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

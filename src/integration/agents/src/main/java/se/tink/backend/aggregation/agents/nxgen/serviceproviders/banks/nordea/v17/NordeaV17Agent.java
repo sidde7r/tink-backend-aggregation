@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.NordeaV17CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.investment.NordeaV17InvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.loan.NordeaV17LoanFetcher;
@@ -19,10 +22,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class NordeaV17Agent extends NextGenerationAgent {
+public abstract class NordeaV17Agent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
 
     protected final NordeaV17ApiClient nordeaClient;
     protected final NordeaV17Parser parser;
+    private final InvestmentRefreshController investmentRefreshController;
 
     protected NordeaV17Agent(
             CredentialsRequest request,
@@ -33,6 +38,12 @@ public abstract class NordeaV17Agent extends NextGenerationAgent {
 
         this.parser = parser;
         this.nordeaClient = constructNordeaClient();
+
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaV17InvestmentFetcher(nordeaClient, parser));
     }
 
     protected abstract NordeaV17ApiClient constructNordeaClient();
@@ -69,12 +80,13 @@ public abstract class NordeaV17Agent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NordeaV17InvestmentFetcher(nordeaClient, parser)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

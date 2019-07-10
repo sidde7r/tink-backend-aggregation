@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.SantanderEsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.identitydata.SantanderEsIdentityDataFetcher;
@@ -28,15 +31,24 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SantanderEsAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class SantanderEsAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
     private final SantanderEsApiClient apiClient;
     private final SantanderEsSessionStorage santanderEsSessionStorage;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public SantanderEsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         santanderEsSessionStorage = new SantanderEsSessionStorage(sessionStorage);
         this.apiClient = new SantanderEsApiClient(client);
+
+        SantanderEsInvestmentFetcher investmentFetcher =
+                new SantanderEsInvestmentFetcher(apiClient, santanderEsSessionStorage);
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher);
+
         configureHttpClient(client);
     }
 
@@ -80,13 +92,13 @@ public class SantanderEsAgent extends NextGenerationAgent implements RefreshIden
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        SantanderEsInvestmentFetcher investmentFetcher =
-                new SantanderEsInvestmentFetcher(apiClient, santanderEsSessionStorage);
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
 
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher));
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

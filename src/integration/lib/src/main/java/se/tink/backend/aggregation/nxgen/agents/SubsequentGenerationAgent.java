@@ -14,7 +14,6 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
@@ -22,7 +21,6 @@ import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
@@ -56,7 +54,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginationHelper;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -82,7 +79,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
                 RefreshSavingsAccountsExecutor,
                 RefreshCreditCardAccountsExecutor,
                 RefreshLoanAccountsExecutor,
-                RefreshInvestmentAccountsExecutor,
                 RefreshTransferDestinationExecutor,
                 TransferExecutorNxgen,
                 PersistentLogin,
@@ -257,7 +253,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
             refreshers = new ArrayList<>();
             constructTransactionalAccountRefreshController().ifPresent(refreshers::add);
             constructCreditCardRefreshController().ifPresent(refreshers::add);
-            constructInvestmentRefreshController().ifPresent(refreshers::add);
             constructLoanRefreshController().ifPresent(refreshers::add);
             constructTransferDestinationRefreshController().ifPresent(refreshers::add);
         }
@@ -316,10 +311,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return Optional.empty();
     }
 
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
-    }
-
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.empty();
     }
@@ -362,17 +353,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
         return new FetchLoanAccountsResponse(accounts);
     }
 
-    @Override
-    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher :
-                getRefreshControllersOfType(InvestmentRefreshController.class)) {
-            accounts.putAll(refresher.fetchAccounts());
-        }
-
-        return new FetchInvestmentAccountsResponse(accounts);
-    }
-
     private FetchAccountsResponse fetchTransactionalAccounts() {
         if (hasRefreshedCheckingAccounts) {
             return new FetchAccountsResponse(Collections.emptyList());
@@ -410,12 +390,6 @@ public abstract class SubsequentGenerationAgent extends SuperAbstractAgent
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
         return fetchTransactionsPerType(LoanRefreshController.class);
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchInvestmentTransactions() {
-        // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
-        return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
     private FetchTransactionsResponse fetchTransactionalAccountTransactions() {

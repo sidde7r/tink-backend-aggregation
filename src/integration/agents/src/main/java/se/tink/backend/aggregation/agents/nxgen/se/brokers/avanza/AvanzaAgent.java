@@ -4,7 +4,10 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.AvanzaBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.AvanzaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.AvanzaTransactionalAccountFetcher;
@@ -22,11 +25,13 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.countries.SeIdentityData;
 
-public final class AvanzaAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public final class AvanzaAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
 
     private final AvanzaAuthSessionStorage authSessionStorage;
     private final AvanzaApiClient apiClient;
     private final TemporaryStorage temporaryStorage;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public AvanzaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -35,6 +40,12 @@ public final class AvanzaAgent extends NextGenerationAgent implements RefreshIde
         this.authSessionStorage = new AvanzaAuthSessionStorage();
         this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
+
+        AvanzaInvestmentFetcher investmentFetcher =
+                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
+        this.investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher);
     }
 
     @Override
@@ -63,12 +74,13 @@ public final class AvanzaAgent extends NextGenerationAgent implements RefreshIde
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        AvanzaInvestmentFetcher investmentFetcher =
-                new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage);
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController, updateController, investmentFetcher));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

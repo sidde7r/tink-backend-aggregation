@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1;
 import com.google.common.base.Preconditions;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.Sparebank1Authenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.authenticator.rpc.authentication.RestRootResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.FinancialInstitutionEntity;
@@ -30,9 +33,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class Sparebank1Agent extends NextGenerationAgent {
+public class Sparebank1Agent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
     private final Sparebank1ApiClient apiClient;
     private final RestRootResponse restRootResponse;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public Sparebank1Agent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -43,6 +48,12 @@ public class Sparebank1Agent extends NextGenerationAgent {
         apiClient = new Sparebank1ApiClient(client, bankId);
         FinancialInstitutionEntity financialInstitution = apiClient.getFinancialInstitution();
         restRootResponse = getRestRootResponse(financialInstitution);
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new Sparebank1InvestmentsFetcher(apiClient));
     }
 
     private RestRootResponse getRestRootResponse(FinancialInstitutionEntity financialInstitution) {
@@ -100,12 +111,13 @@ public class Sparebank1Agent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new Sparebank1InvestmentsFetcher(apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override

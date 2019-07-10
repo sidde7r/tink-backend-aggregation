@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.UpcomingTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.TransactionPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
@@ -62,13 +61,6 @@ public class HandelsbankenFIAgent
                                     handelsbankenSessionStorage,
                                     handelsbankenConfiguration)))
         };
-    }
-
-    @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(
-            HandelsbankenFIApiClient bankClient,
-            HandelsbankenSessionStorage handelsbankenSessionStorage) {
-        return Optional.empty();
     }
 
     @Override
