@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.authenticator.BawagPskPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.creditcard.BawagPskCreditCardFetcher;
@@ -24,9 +27,11 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BawagPskAgent extends NextGenerationAgent {
+public class BawagPskAgent extends NextGenerationAgent
+        implements RefreshInvestmentAccountsExecutor {
 
     private final BawagPskApiClient apiClient;
+    private final InvestmentRefreshController investmentRefreshController;
 
     public BawagPskAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -35,6 +40,12 @@ public class BawagPskAgent extends NextGenerationAgent {
         this.apiClient =
                 new BawagPskApiClient(
                         this.client, sessionStorage, persistentStorage, request.getProvider());
+
+        investmentRefreshController =
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BawagPskInvestmentFetcher(apiClient));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -79,12 +90,13 @@ public class BawagPskAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(
-                new InvestmentRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BawagPskInvestmentFetcher(apiClient)));
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return investmentRefreshController.fetchInvestmentAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return investmentRefreshController.fetchInvestmentTransactions();
     }
 
     @Override
