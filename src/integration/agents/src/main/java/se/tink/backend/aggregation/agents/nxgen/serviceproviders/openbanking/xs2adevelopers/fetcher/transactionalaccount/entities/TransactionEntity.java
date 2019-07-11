@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.xs
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -39,12 +40,11 @@ public class TransactionEntity {
     }
 
     private String getDescription() {
-        if (remittanceInformationUnstructured != null) {
+        if (Strings.isNullOrEmpty(remittanceInformationUnstructured)) {
             return remittanceInformationUnstructured;
-        } else {
-            if (debtorName != null) {
-                return debtorName;
-            }
+        }
+        if (Strings.isNullOrEmpty(debtorName)) {
+            return debtorName;
         }
         return creditorName;
     }
