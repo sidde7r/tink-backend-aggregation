@@ -60,6 +60,13 @@ public class AccountsEntity {
         return accounts;
     }
 
+    @JsonIgnore
+    public List<AccountEntity> getTransferSourceAccounts() {
+        List<AccountEntity> accounts = Lists.newArrayList();
+
+        accounts.addAll(getOwnAccounts());
+        accounts.addAll(getJointAccounts());
+
         return accounts;
     }
 }

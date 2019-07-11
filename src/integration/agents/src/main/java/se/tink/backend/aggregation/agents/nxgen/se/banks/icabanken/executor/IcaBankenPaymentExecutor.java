@@ -24,9 +24,10 @@ public class IcaBankenPaymentExecutor implements PaymentExecutor {
     public void executePayment(Transfer transfer) throws TransferExecutionException {
         executorHelper.validateNoUnsignedTransfers();
 
-        Collection<AccountEntity> ownAccounts = apiClient.fetchAccounts().getOwnAccounts();
+        Collection<AccountEntity> transferSourceAccounts =
+                apiClient.fetchAccounts().getTransferSourceAccounts();
         AccountEntity sourceAccount =
-                executorHelper.findSourceAccount(transfer.getSource(), ownAccounts);
+                executorHelper.findSourceAccount(transfer.getSource(), transferSourceAccounts);
 
         RecipientEntity destinationAccount =
                 executorHelper.findDestinationAccount(transfer.getDestination());
