@@ -61,11 +61,13 @@ public class CardsEntity {
     public boolean isCreditCard() {
         return NordeaSEConstants.ACCOUNT_TYPE_MAPPER
                 .translate(cardCategory)
+                .orElse(AccountTypes.OTHER)
                 .equals(AccountTypes.CREDIT_CARD);
     }
     // This method used for setting uniqueId is taken from the legacy Nordea agent.
     @JsonIgnore
     private String maskCreditCardNumber() {
-        return "************" + cardId.substring(cardId.length() - 4);
+        String cardNumber = credit.getMaskedCreditCardNumber();
+        return "************" + cardNumber.substring(cardNumber.length() - 4);
     }
 }

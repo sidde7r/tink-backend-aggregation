@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.v30.fetcher.cre
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
@@ -48,6 +49,6 @@ public class CardTransactionEntity {
     }
 
     private Date getDate() {
-        return booked ? bookingDate : transactionDate;
+        return Objects.nonNull(bookingDate) ? bookingDate : transactionDate;
     }
 }
