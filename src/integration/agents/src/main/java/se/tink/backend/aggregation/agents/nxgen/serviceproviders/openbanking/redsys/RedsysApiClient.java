@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JwtUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.redsys.RedsysConstants.FormValues;
@@ -242,7 +242,7 @@ public final class RedsysApiClient {
         }
 
         final String keyPath = getConfiguration().getClientSigningKeyPath();
-        final PrivateKey privateKey = JWTUtils.readSigningKey(keyPath, Signature.KEY_ALGORITHM);
+        final PrivateKey privateKey = JwtUtils.readSigningKey(keyPath, Signature.KEY_ALGORITHM);
         final String signature =
                 Base64.getEncoder()
                         .encodeToString(RSA.signSha256(privateKey, payloadToSign.getBytes()));

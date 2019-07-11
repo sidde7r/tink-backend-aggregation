@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.transactionalaccount.TransactionalAccountTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.session.CrosskeySessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.JWTUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -31,6 +30,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
     protected final CrosskeyBaseApiClient apiClient;
     private final CreditCardRefreshController creditCardRefreshController;
+    private final String clientName;
 
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -44,11 +44,18 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
                         updateController,
                         new CreditCardAccountFetcher(apiClient),
                         new CreditCardTransactionFetcher(apiClient));
+        this.clientName = request.getProvider().getPayload();
     }
 
     protected abstract String getIntegrationName();
 
     protected abstract String getClientName();
+
+    protected abstract String getBaseAPIUrl();
+
+    protected abstract String getBaseAuthUrl();
+
+    protected abstract String getxFapiFinancialId();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -56,18 +63,22 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent
 
         final CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration();
 
-        apiClient.setConfiguration(crosskeyBaseConfiguration);
-
-        client.setSslClientCertificate(
-                JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
-                crosskeyBaseConfiguration.getClientKeyStorePassword());
+        apiClient.setConfiguration(crosskeyBaseConfiguration, configuration.getEidasProxy());
     }
 
     private CrosskeyBaseConfiguration getClientConfiguration() {
+        CrosskeyBaseConfiguration crosskeyBaseConfiguration = getClientConfiguration("crosskey");
+        crosskeyBaseConfiguration.setBaseAPIUrl(getBaseAPIUrl());
+        crosskeyBaseConfiguration.setBaseAuthUrl(getBaseAuthUrl());
+        crosskeyBaseConfiguration.setxFapiFinancialId(getxFapiFinancialId());
+        return crosskeyBaseConfiguration;
+    }
+
+    protected CrosskeyBaseConfiguration getClientConfiguration(String integrationName) {
         return configuration
                 .getIntegrations()
                 .getClientConfiguration(
-                        getIntegrationName(), getClientName(), CrosskeyBaseConfiguration.class)
+                        integrationName, clientName, CrosskeyBaseConfiguration.class)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 

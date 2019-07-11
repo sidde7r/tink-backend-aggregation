@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.LinksEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.MetaEntity;
@@ -26,23 +25,22 @@ public class CrosskeyTransactionsResponse {
 
     @JsonIgnore private TransactionTypeEntity transactionType;
 
+    public Collection<? extends Transaction> getTinkCreditCardTransactions() {
+        return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
+                .orElse(Collections.emptyList()).stream()
+                .map(TransactionEntity::constructCreditCardTransaction)
+                .collect(Collectors.toList());
+    }
+
     public Collection<? extends Transaction> getTinkTransactions() {
         return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
                 .orElse(Collections.emptyList()).stream()
-                .filter(getTransactionFilter())
-                .map(transactionEntity -> transactionEntity.toTinkTransaction(transactionType))
+                .map(TransactionEntity::constructTransactionalAccountTransaction)
                 .collect(Collectors.toList());
     }
 
     public CrosskeyTransactionsResponse setTransactionType(TransactionTypeEntity transactionType) {
         this.transactionType = transactionType;
         return this;
-    }
-
-    private Predicate<TransactionEntity> getTransactionFilter() {
-        return transactionEntity ->
-                transactionEntity
-                        .getCreditDebitIndicator()
-                        .equalsIgnoreCase(transactionType.getValue());
     }
 }
