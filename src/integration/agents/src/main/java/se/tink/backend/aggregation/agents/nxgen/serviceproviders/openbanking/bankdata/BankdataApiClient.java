@@ -36,9 +36,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.BankdataErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.CreatePaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchCrossBorderPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchDomesticPaymentResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchSepaPaymentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.FetchPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.rpc.GetPaymentDetails;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.fetcher.transactionalaccount.entities.BalanceEntity;
@@ -151,43 +149,19 @@ public final class BankdataApiClient {
                 .get(GetPaymentDetails.class);
     }
 
-    public FetchDomesticPaymentResponse fetchDomesticPayment(String paymentId) {
+    public FetchPaymentResponse fetchPayment(String paymentId, PaymentType type) {
         final String requestId = UUID.randomUUID().toString();
+        final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
+
         URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.FETCH_DOMESTIC_PAYMENT)
+                new URL(configuration.getBaseUrl() + productType + Endpoints.PAYMENT_ID)
                         .parameter(IdTags.PAYMENT_ID, paymentId);
 
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
                 .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
                 .header(HeaderKeys.X_REQUEST_ID, requestId)
                 .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(FetchDomesticPaymentResponse.class);
-    }
-
-    public FetchCrossBorderPaymentResponse fetchCrossBorderPayment(String paymentId) {
-        final String requestId = UUID.randomUUID().toString();
-        URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.FETCH_CROSS_BORDER_PAYMENT)
-                        .parameter(IdTags.PAYMENT_ID, paymentId);
-
-        return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(FetchCrossBorderPaymentResponse.class);
-    }
-
-    public FetchSepaPaymentResponse fetchSepaPayment(String paymentId) {
-        final String requestId = UUID.randomUUID().toString();
-        URL url =
-                new URL(configuration.getBaseUrl() + Endpoints.FETCH_SEPA_PAYMENT)
-                        .parameter(IdTags.PAYMENT_ID, paymentId);
-
-        return createRequestInSession(url, StorageKeys.INITIAL_TOKEN)
-                .header(HeaderKeys.X_API_KEY, configuration.getApiKey())
-                .header(HeaderKeys.X_REQUEST_ID, requestId)
-                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
-                .get(FetchSepaPaymentResponse.class);
+                .get(FetchPaymentResponse.class);
     }
 
     private AccountEntity fetchBalances(final AccountEntity accountEntity) {

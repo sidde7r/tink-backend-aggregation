@@ -40,10 +40,9 @@ public final class BankdataConstants {
     public static final Map<PaymentType, String> TYPE_TO_DOMAIN_MAPPER = new HashMap<>();
 
     static {
-        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.DOMESTIC, Endpoints.INITIATE_DOMESTIC_PAYMENT);
-        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.SEPA, Endpoints.INITIATE_SEPA_PAYMENT);
-        TYPE_TO_DOMAIN_MAPPER.put(
-                PaymentType.INTERNATIONAL, Endpoints.INITIATE_CROSS_BORDER_PAYMENT);
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.DOMESTIC, Endpoints.DOMESTIC_PAYMENT);
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.SEPA, Endpoints.SEPA_PAYMENT);
+        TYPE_TO_DOMAIN_MAPPER.put(PaymentType.INTERNATIONAL, Endpoints.CROSS_BORDER_PAYMENT);
     }
 
     public static class Endpoints {
@@ -55,19 +54,14 @@ public final class BankdataConstants {
         public static final String ACCOUNTS = "/openbanking-account/v1/accounts";
         public static final String AIS_PRODUCT = "/openbanking-account";
         public static final String PIS_PRODUCT = "/openbanking-payment";
-        public static final String FETCH_DOMESTIC_PAYMENT =
-                PIS_PRODUCT + "/v1/payments/domestic-credit-transfers/{paymentId}";
-        public static final String FETCH_SEPA_PAYMENT =
-                PIS_PRODUCT + "/v1/payments/sepa-credit-transfers/{paymentId}";
-        public static final String FETCH_CROSS_BORDER_PAYMENT =
-                PIS_PRODUCT + "/v1/payments/cross-border-credit-transfers/{paymentId}";
-        public static final String INITIATE_DOMESTIC_PAYMENT =
+        public static final String DOMESTIC_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/domestic-credit-transfers";
-        public static final String INITIATE_SEPA_PAYMENT =
+        public static final String SEPA_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/sepa-credit-transfers";
-        public static final String INITIATE_CROSS_BORDER_PAYMENT =
+        public static final String CROSS_BORDER_PAYMENT =
                 PIS_PRODUCT + "/v1/payments/cross-border-credit-transfers";
         public static final String AUTHORIZE_PAYMENT = "/{paymentId}" + "/authorisations";
+        public static final String PAYMENT_ID = "/{paymentId}";
     }
 
     public static class StorageKeys {

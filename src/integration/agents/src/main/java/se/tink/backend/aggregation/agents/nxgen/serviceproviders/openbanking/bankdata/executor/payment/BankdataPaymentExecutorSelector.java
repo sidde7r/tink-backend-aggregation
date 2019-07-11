@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.BankdataConstants.PaymentRequests;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.bankdata.executor.payment.entities.CreditorAddressEntity;
@@ -102,16 +101,7 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
         String paymentId = paymentRequest.getPayment().getUniqueId();
         PaymentType type = paymentRequest.getPayment().getType();
 
-        switch (type) {
-            case DOMESTIC:
-                return apiClient.fetchDomesticPayment(paymentId).toTinkPayment(paymentId);
-            case SEPA:
-                return apiClient.fetchSepaPayment(paymentId).toTinkPayment(paymentId);
-            case INTERNATIONAL:
-                return apiClient.fetchCrossBorderPayment(paymentId).toTinkPayment(paymentId);
-            default:
-                throw new IllegalStateException(ErrorMessages.UNSUPPORTED_PAYMENT_TYPE);
-        }
+        return apiClient.fetchPayment(paymentId, type).toTinkPayment(paymentId, type);
     }
 
     @Override
