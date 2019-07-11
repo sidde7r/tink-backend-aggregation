@@ -146,4 +146,9 @@ public class SecuritiesAccountsEntity {
     public HolderEntity getHolder() {
         return holder;
     }
+
+    @JsonIgnore
+    public String getTypeName() {
+        return typeName;
+    }
 }

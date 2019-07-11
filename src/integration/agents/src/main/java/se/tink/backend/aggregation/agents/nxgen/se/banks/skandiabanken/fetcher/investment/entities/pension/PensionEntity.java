@@ -61,9 +61,6 @@ public class PensionEntity {
     @JsonProperty("Parts")
     private List<PartsEntity> parts;
 
-    @JsonProperty("SecuritiesAccounts")
-    private List<SecuritiesAccountsEntity> securitiesAccounts;
-
     @JsonProperty("Type")
     private int type;
 
@@ -84,29 +81,31 @@ public class PensionEntity {
                 .setAccountNumber(getNumber())
                 .setName(displayName)
                 .setHolderName(getHolderName())
-                .setPortfolios(
-                        parts.stream().map(this::getTinkPortfolio).collect(Collectors.toList()))
+                .setPortfolios(getPortfolio())
                 .setCashBalance(Amount.inSEK(0.0)) // Amount is set in framework from parts.
                 .build();
     }
 
+    private List<Portfolio> getPortfolio() {
+        if (hasSecuritiesAccountPart) {
+            return parts.stream()
+                    .filter(p -> p.getTypeName().equalsIgnoreCase("SecuritiesAccountPart"))
+                    .map(PartsEntity::getSecuritiesAccount)
+                    .map(this::getTinkPortfolio)
+                    .collect(Collectors.toList());
+        }
+        return parts.stream().map(this::getTinkPortfolio).collect(Collectors.toList());
+    }
+
     @JsonIgnore
     private String getNumber() {
-        return Optional.ofNullable(number).orElse(getNumberFromParts());
+        return number != null ? number : getNumberFromParts();
     }
 
     @JsonIgnore
     private String getNumberFromParts() {
         return Optional.ofNullable(parts).orElse(Collections.emptyList()).stream()
                 .map(PartsEntity::getNumber)
-                .findFirst()
-                .orElse(getNumberFromSecuritiesAccount());
-    }
-
-    @JsonIgnore
-    private String getNumberFromSecuritiesAccount() {
-        return securitiesAccounts.stream()
-                .map(SecuritiesAccountsEntity::getNumber)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(INVESTMENT_NUMBER_NOT_FOUND));
     }
@@ -134,6 +133,16 @@ public class PensionEntity {
         portfolio.setType(Type.PENSION);
         portfolio.setTotalValue(part.getValue());
         portfolio.setInstruments(getInstrumentsList(part));
+        return portfolio;
+    }
+
+    @JsonIgnore
+    private Portfolio getTinkPortfolio(SecuritiesAccountsEntity part) {
+        final Portfolio portfolio = new Portfolio();
+        portfolio.setUniqueIdentifier(part.getNumber());
+        portfolio.setRawType(part.getTypeName());
+        portfolio.setType(Type.PENSION);
+        portfolio.setTotalValue(part.getTotalValue().doubleValue());
         return portfolio;
     }
 

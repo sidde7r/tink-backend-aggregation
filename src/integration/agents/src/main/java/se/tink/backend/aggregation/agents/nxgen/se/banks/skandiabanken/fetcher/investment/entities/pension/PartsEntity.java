@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.HolderEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -147,6 +148,9 @@ public class PartsEntity {
     @JsonProperty("Secrecy")
     private String secrecy;
 
+    @JsonProperty("SecuritiesAccount")
+    private SecuritiesAccountsEntity securitiesAccount;
+
     @JsonProperty("SkandiaLivValue")
     private double skandiaLivValue;
 
@@ -217,6 +221,11 @@ public class PartsEntity {
     private int valueWithoutDecimals;
 
     @JsonIgnore private PensionFundsResponse pensionFunds;
+
+    @JsonIgnore
+    public SecuritiesAccountsEntity getSecuritiesAccount() {
+        return securitiesAccount;
+    }
 
     @JsonIgnore
     public String getNumber() {
