@@ -102,11 +102,17 @@ public final class BecConstants {
     public static final class ErrorMessage {
         public static final String INVALID_CREDENTIAL = "cpr no./user no. or pin code is incorrect";
         public static final String PIN_LOCKED = "your chosen pin code is locked";
+        public static final String USER_LOCKED = "user has been locked for security reasons";
+        public static final String NETBANK_REQUIRED = "to gain access you must first enter netbank";
+        public static final String NETBANK_REQUIRED_DANISH =
+                "du skal tilmelde dig mobilbanken i netbank";
         public static final String NO_MORTGAGE =
                 "you have not taken out a mortgage loan through us";
         public static final String LOAN_NO_DETAILS_EXIST = "no details exist";
         public static final String FUNCTION_NOT_AVAILABLE =
                 "the required function is not currently available. try again later.";
+        public static final String FUNCTION_NOT_AVAILABLE_DANISH =
+                "den ønskede funktion er ikke tilgængelig i øjeblikket";
     }
 
     public static final class Log {
