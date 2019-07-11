@@ -165,6 +165,11 @@ public class SkandiaBankenConstants {
         public static final LogTag CREDIT_CARDS = LogTag.from("se_skandia_credit_cards");
     }
 
+    public static final class ErrorMessages {
+        public static final String INVESTMENT_NUMBER_NOT_FOUND =
+                "Investment account number was not found";
+    }
+
     public static class PaymentStatus {
         public static final String APPROVED = "Approved";
     }

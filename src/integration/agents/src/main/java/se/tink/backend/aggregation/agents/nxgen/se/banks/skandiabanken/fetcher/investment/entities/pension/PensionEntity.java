@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.pension;
 
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.SkandiaBankenConstants.ErrorMessages.INVESTMENT_NUMBER_NOT_FOUND;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Portfolio.Type;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.HolderEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.entities.SecuritiesAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.skandiabanken.fetcher.investment.rpc.PensionFundsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -19,7 +22,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PensionEntity {
-
     @JsonProperty("Category1")
     private String category1;
 
@@ -59,6 +61,9 @@ public class PensionEntity {
     @JsonProperty("Parts")
     private List<PartsEntity> parts;
 
+    @JsonProperty("SecuritiesAccounts")
+    private List<SecuritiesAccountsEntity> securitiesAccounts;
+
     @JsonProperty("Type")
     private int type;
 
@@ -75,16 +80,35 @@ public class PensionEntity {
 
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
-        return InvestmentAccount.builder(number.replaceAll("[^\\d]", ""))
-                .setAccountNumber(number)
+        return InvestmentAccount.builder(getNumber().replaceAll("[^\\d]", ""))
+                .setAccountNumber(getNumber())
                 .setName(displayName)
                 .setHolderName(getHolderName())
                 .setPortfolios(
-                        parts.stream()
-                                .map(this::getTinkPortfolio)
-                                .collect(Collectors.toList()))
+                        parts.stream().map(this::getTinkPortfolio).collect(Collectors.toList()))
                 .setCashBalance(Amount.inSEK(0.0)) // Amount is set in framework from parts.
                 .build();
+    }
+
+    @JsonIgnore
+    private String getNumber() {
+        return Optional.ofNullable(number).orElse(getNumberFromParts());
+    }
+
+    @JsonIgnore
+    private String getNumberFromParts() {
+        return Optional.ofNullable(parts).orElse(Collections.emptyList()).stream()
+                .map(PartsEntity::getNumber)
+                .findFirst()
+                .orElse(getNumberFromSecuritiesAccount());
+    }
+
+    @JsonIgnore
+    private String getNumberFromSecuritiesAccount() {
+        return securitiesAccounts.stream()
+                .map(SecuritiesAccountsEntity::getNumber)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(INVESTMENT_NUMBER_NOT_FOUND));
     }
 
     @JsonIgnore
