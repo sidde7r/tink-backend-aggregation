@@ -32,7 +32,7 @@ public class IcaBankenTransferDestinationFetcher implements TransferDestinationF
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
         this.tinkAccounts = accounts;
-        this.accountEntities = apiClient.fetchAccounts().getOwnAccounts();
+        this.accountEntities = apiClient.fetchAccounts().getTransferSourceAccounts();
         this.recipientEntities = apiClient.fetchDestinationAccounts();
 
         TransferDestinationsResponse transferDestinations = new TransferDestinationsResponse();

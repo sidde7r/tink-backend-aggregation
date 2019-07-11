@@ -59,9 +59,10 @@ public class IcaBankenEInvoiceExecutor implements ApproveEInvoiceExecutor {
         executorHelper.validateNoUnsignedTransfers();
         String invoiceId = getInvoiceIdFrom(transfer);
 
-        Collection<AccountEntity> ownAccounts = apiClient.fetchAccounts().getOwnAccounts();
+        Collection<AccountEntity> transferSourceAccounts =
+                apiClient.fetchAccounts().getTransferSourceAccounts();
         AccountEntity sourceAccount =
-                executorHelper.findSourceAccount(transfer.getSource(), ownAccounts);
+                executorHelper.findSourceAccount(transfer.getSource(), transferSourceAccounts);
 
         // In the ICA-banken app a user can change amount and due date of the e-invoice. If the
         // change occurs after

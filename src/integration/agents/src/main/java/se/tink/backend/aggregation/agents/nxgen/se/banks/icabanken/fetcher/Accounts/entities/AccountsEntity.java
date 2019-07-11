@@ -1,14 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountsEntity {
+    private static final Logger log = LoggerFactory.getLogger(AccountsEntity.class);
+
     @JsonProperty("OwnAccounts")
     private List<AccountEntity> ownAccounts;
 
@@ -19,23 +23,49 @@ public class AccountsEntity {
     private List<AccountEntity> minorsAccounts;
 
     public List<AccountEntity> getOwnAccounts() {
+        if (ownAccounts == null) {
+            log.warn("Expected ownAccounts to be an empty list, was null.");
+            return Collections.emptyList();
+        }
+
         return ownAccounts;
     }
 
     public List<AccountEntity> getJointAccounts() {
+        if (jointAccounts == null) {
+            log.warn("Expected jointAccounts to be an empty list, was null.");
+            return Collections.emptyList();
+        }
+
         return jointAccounts;
     }
 
     public List<AccountEntity> getMinorsAccounts() {
+        if (minorsAccounts == null) {
+            log.warn("Expected minorsAccounts to be an empty list, was null.");
+            return Collections.emptyList();
+        }
+
         return minorsAccounts;
     }
 
+    @JsonIgnore
     public List<AccountEntity> getAllAccounts() {
         List<AccountEntity> accounts = Lists.newArrayList();
 
-        accounts.addAll(Optional.ofNullable(ownAccounts).orElseGet(Collections::emptyList));
-        accounts.addAll(Optional.ofNullable(jointAccounts).orElseGet(Collections::emptyList));
-        accounts.addAll(Optional.ofNullable(minorsAccounts).orElseGet(Collections::emptyList));
+        accounts.addAll(getOwnAccounts());
+        accounts.addAll(getJointAccounts());
+        accounts.addAll(getMinorsAccounts());
+
+        return accounts;
+    }
+
+    @JsonIgnore
+    public List<AccountEntity> getTransferSourceAccounts() {
+        List<AccountEntity> accounts = Lists.newArrayList();
+
+        accounts.addAll(getOwnAccounts());
+        accounts.addAll(getJointAccounts());
 
         return accounts;
     }

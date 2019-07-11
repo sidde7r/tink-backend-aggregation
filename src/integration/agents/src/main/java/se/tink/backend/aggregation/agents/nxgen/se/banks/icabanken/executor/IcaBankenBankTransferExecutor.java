@@ -38,11 +38,12 @@ public class IcaBankenBankTransferExecutor implements BankTransferExecutor {
 
         executorHelper.validateNoUnsignedTransfers();
 
-        Collection<AccountEntity> ownAccounts = apiClient.fetchAccounts().getOwnAccounts();
+        Collection<AccountEntity> transferSourceAccounts =
+                apiClient.fetchAccounts().getTransferSourceAccounts();
         AccountEntity sourceAccount =
-                executorHelper.findSourceAccount(transfer.getSource(), ownAccounts);
+                executorHelper.findSourceAccount(transfer.getSource(), transferSourceAccounts);
 
-        RecipientEntity destinationAccount = getRecipient(transfer, ownAccounts);
+        RecipientEntity destinationAccount = getRecipient(transfer, transferSourceAccounts);
 
         BankTransferRequest transferRequest =
                 BankTransferRequest.create(
