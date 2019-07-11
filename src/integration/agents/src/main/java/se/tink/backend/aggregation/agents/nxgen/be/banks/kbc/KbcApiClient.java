@@ -74,7 +74,7 @@ public class KbcApiClient {
 
     private final TinkHttpClient client;
     private AccountsResponse accountResponse;
-    private static final AggregationLogger LOGGER = new AggregationLogger(KbcApiClient.class);
+    private static final AggregationLogger logger = new AggregationLogger(KbcApiClient.class);
 
     KbcApiClient(TinkHttpClient client) {
         this.client = client;
@@ -105,7 +105,7 @@ public class KbcApiClient {
                                 headerDto.getResultMessage(),
                                 KbcConstants.ErrorMessage.ACCOUNT_BLOCKED2);
         if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue) && matchesErrorMessages) {
-            LOGGER.warnExtraLong(
+            logger.warnExtraLong(
                     String.format(
                             "Header: %s Error message:%s",
                             errorHeader, headerDto.getResultMessage()),
@@ -237,7 +237,7 @@ public class KbcApiClient {
         byte[] decryptedResponse =
                 AES.decryptCbc(cipherKey, getCipherIv(cipherBytes), getCipherBody(cipherBytes));
         String response = new String(decryptedResponse, Charsets.UTF_8);
-        // Uncomment to decrypted response in log LOGGER.infoExtraLong(response,
+        // Uncomment to decrypted response in log logger.infoExtraLong(response,
         // KbcConstants.LogTags.ACCOUNTS);
         return deserializeFromString(response, responseClass);
     }
