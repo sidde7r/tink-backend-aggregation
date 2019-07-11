@@ -11,14 +11,14 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.eventproducerservice.events.grpc.CredentialsRefreshCommandChainStartedProto.CredentialsRefreshCommandChainStarted;
 import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 import se.tink.libraries.serialization.proto.utils.ProtobufTypeUtil;
-//import se.tink.backend.agents.rpc.Credentials;
-//import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
+
+// import se.tink.backend.agents.rpc.Credentials;
+// import se.tink.libraries.event_producer_service_client.grpc.EventProducerServiceClient;
 
 public class CredentialsEventProducer {
 
     private static final Logger logger = LoggerFactory.getLogger(CredentialsEventProducer.class);
     private final EventProducerServiceClient eventProducerServiceClient;
-
 
     @Inject
     public CredentialsEventProducer(
