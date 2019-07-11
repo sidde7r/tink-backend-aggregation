@@ -71,6 +71,7 @@ java_library(
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_extensions_guice_multibindings",
         "//third_party:com_google_inject_guice",
+        "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
