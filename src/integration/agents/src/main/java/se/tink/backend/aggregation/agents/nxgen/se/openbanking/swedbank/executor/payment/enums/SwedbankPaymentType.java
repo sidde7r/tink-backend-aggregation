@@ -1,41 +1,54 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums;
 
-import java.util.EnumMap;
-import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
+import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.payment.enums.PaymentType;
 
 public enum SwedbankPaymentType {
-    SeDomesticCreditTransfers("se-domestic-credit-transfers"),
-    SeInternationalCreditTransfers("se-international-credit-transfers"),
-    Undefined("undefined");
+    SeDomesticCreditTransfers("se-domestic-credit-transfers", PaymentType.DOMESTIC),
+    SeInternationalCreditTransfers("se-international-credit-transfers", PaymentType.INTERNATIONAL),
+    Undefined("undefined", PaymentType.UNDEFINED);
 
     private String text;
+    private PaymentType paymentType;
 
-    private static final EnumMap<SwedbankPaymentType, PaymentType> paymentTypeMapper =
-            new EnumMap<>(SwedbankPaymentType.class);
-
-    static {
-        paymentTypeMapper.put(SeDomesticCreditTransfers, PaymentType.DOMESTIC);
-        paymentTypeMapper.put(SeInternationalCreditTransfers, PaymentType.INTERNATIONAL);
-        paymentTypeMapper.put(Undefined, PaymentType.UNDEFINED);
-    }
-
-    SwedbankPaymentType(String text) {
+    SwedbankPaymentType(String text, PaymentType paymentType) {
         this.text = text;
+        this.paymentType = paymentType;
     }
 
-    public static PaymentType mapToTinkPaymentType(SwedbankPaymentType swedbankPaymentType) {
-        return Optional.ofNullable(paymentTypeMapper.get(swedbankPaymentType))
-                .orElseThrow(
-                        () ->
-                                new IllegalArgumentException(
-                                        "Cannot map payment product: "
-                                                + swedbankPaymentType.toString()
-                                                + " to Tink payment type"));
+    public PaymentType getTinkPaymentType() {
+        return paymentType;
     }
 
     @Override
     public String toString() {
         return text;
     }
+
+    public static SwedbankPaymentType getPaymentType(AccountTypePair accountTypePair) {
+        return accountIdentifiersToPaymentTypeMapper
+                .translate(accountTypePair)
+                .orElseThrow(
+                        () ->
+                                new NotImplementedException(
+                                        "No SwedbankPaymentType found for AccountIdentifiers pair "
+                                                + accountTypePair));
+    }
+
+    private static final GenericTypeMapper<SwedbankPaymentType, AccountTypePair>
+            accountIdentifiersToPaymentTypeMapper =
+                    GenericTypeMapper.<SwedbankPaymentType, AccountTypePair>genericBuilder()
+                            .put(
+                                    SwedbankPaymentType.SeDomesticCreditTransfers,
+                                    new AccountTypePair(Type.SE, Type.SE),
+                                    new AccountTypePair(Type.SE, Type.IBAN),
+                                    new AccountTypePair(Type.SE, Type.SE_BG),
+                                    new AccountTypePair(Type.SE, Type.SE_PG))
+                            .put(
+                                    SwedbankPaymentType.SeInternationalCreditTransfers,
+                                    new AccountTypePair(Type.IBAN, Type.IBAN))
+                            .build();
 }

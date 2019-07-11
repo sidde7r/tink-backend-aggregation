@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.enums.SwedbankPaymentStatus;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.payment.rpc.Payment;
 
 @JsonObject
@@ -22,21 +21,15 @@ public class GetPaymentResponse {
                         .withUniqueId(payment.getUniqueId())
                         .withType(payment.getType())
                         .withCurrency(instructedAmount.getCurrency())
-                        .withExecutionDate(null)
                         .withStatus(
-                                SwedbankPaymentStatus.mapToTinkPaymentStatus(
-                                        SwedbankPaymentStatus.fromString(transactionStatus)))
-                        .withAmount(
-                                Amount.valueOf(
-                                        instructedAmount.getCurrency(),
-                                        Double.valueOf(instructedAmount.getParsedAmount() * 100)
-                                                .longValue(),
-                                        2))
+                                SwedbankPaymentStatus.fromString(transactionStatus)
+                                        .getTinkPaymentStatus())
+                        .withAmount(instructedAmount.toTinkAmount())
                         .withCreditor(
                                 creditorAccount.toTinkCreditor(
                                         payment.getCreditor().getAccountIdentifierType()))
                         .withDebtor(
-                                debtorAccount.toTinkDebotor(
+                                debtorAccount.toTinkDebtor(
                                         payment.getDebtor().getAccountIdentifierType()));
 
         Payment tinkPayment = buildingPaymentResponse.build();

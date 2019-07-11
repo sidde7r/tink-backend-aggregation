@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment;
 
 import java.util.ArrayList;
-import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.SwedbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.entities.AmountEntity;
@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.CreatePaymentRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.GetPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.executor.payment.rpc.PaymentAuthorisationResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.swedbank.util.AccountTypePair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.CreateBeneficiaryMultiStepResponse;
@@ -19,16 +20,13 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
-import se.tink.backend.aggregation.nxgen.core.account.GenericTypeMapper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.rpc.Payment;
 
 public class SwedbankPaymentExecutor implements PaymentExecutor {
     private SwedbankApiClient apiClient;
-    private ArrayList<PaymentResponse> createdPaymentsList;
+    private List<PaymentResponse> createdPaymentsList;
 
     public SwedbankPaymentExecutor(SwedbankApiClient apiClient) {
         this.apiClient = apiClient;
@@ -36,26 +34,24 @@ public class SwedbankPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse create(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse create(PaymentRequest paymentRequest) {
         AccountEntity creditor = AccountEntity.creditorOf(paymentRequest);
-
         AccountEntity debtor = AccountEntity.debtorOf(paymentRequest);
-
-        AmountEntity amount =
-                new AmountEntity(
-                        paymentRequest.getPayment().getAmount().doubleValue(),
-                        paymentRequest.getPayment().getCurrency());
+        AmountEntity amount = AmountEntity.amountOf(paymentRequest);
 
         CreatePaymentRequest createPaymentRequest =
                 new CreatePaymentRequest(creditor, debtor, amount);
 
+        AccountTypePair accountTypePair =
+                new AccountTypePair(paymentRequest.getPayment().getCreditorAndDebtorAccountType());
+
+        SwedbankPaymentType paymentType = SwedbankPaymentType.getPaymentType(accountTypePair);
+
         PaymentResponse paymentResponse =
                 apiClient
-                        .createPayment(
-                                createPaymentRequest, getSwedbankePaymentType(paymentRequest))
+                        .createPayment(createPaymentRequest, paymentType)
                         .toTinkPaymentResponse(
-                                paymentRequest.getPayment(),
-                                getSwedbankePaymentType(paymentRequest));
+                                creditor, debtor, amount, paymentType, accountTypePair);
 
         createdPaymentsList.add(paymentResponse);
 
@@ -63,7 +59,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentResponse fetch(PaymentRequest paymentRequest) throws PaymentException {
+    public PaymentResponse fetch(PaymentRequest paymentRequest) {
         return apiClient
                 .getPayment(paymentRequest.getPayment().getUniqueId())
                 .toTinkPaymentResponse(
@@ -74,8 +70,7 @@ public class SwedbankPaymentExecutor implements PaymentExecutor {
     }
 
     @Override
-    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest)
-            throws PaymentException {
+    public PaymentMultiStepResponse sign(PaymentMultiStepRequest paymentMultiStepRequest) {
         PaymentStatus paymentStatus;
         String nextStep;
         switch (paymentMultiStepRequest.getStep()) {
@@ -119,31 +114,4 @@ public class SwedbankPaymentExecutor implements PaymentExecutor {
     public PaymentListResponse fetchMultiple(PaymentListRequest paymentListRequest) {
         return new PaymentListResponse(createdPaymentsList);
     }
-
-    private SwedbankPaymentType getSwedbankePaymentType(PaymentRequest paymentRequest) {
-        Pair<Type, Type> accountIdentifiersKey =
-                paymentRequest.getPayment().getCreditorAndDebtorAccountType();
-
-        return accountIdentifiersToPaymentTypeMapper
-                .translate(accountIdentifiersKey)
-                .orElseThrow(
-                        () ->
-                                new NotImplementedException(
-                                        "No SwedbankPaymentType found for your AccountIdentifiers pair "
-                                                + accountIdentifiersKey));
-    }
-
-    private static final GenericTypeMapper<SwedbankPaymentType, Pair<Type, Type>>
-            accountIdentifiersToPaymentTypeMapper =
-                    GenericTypeMapper.<SwedbankPaymentType, Pair<Type, Type>>genericBuilder()
-                            .put(
-                                    SwedbankPaymentType.SeDomesticCreditTransfers,
-                                    new Pair<>(Type.SE, Type.SE),
-                                    new Pair<>(Type.SE, Type.IBAN),
-                                    new Pair<>(Type.SE, Type.SE_BG),
-                                    new Pair<>(Type.SE, Type.SE_PG))
-                            .put(
-                                    SwedbankPaymentType.SeInternationalCreditTransfers,
-                                    new Pair<>(Type.IBAN, Type.IBAN))
-                            .build();
 }

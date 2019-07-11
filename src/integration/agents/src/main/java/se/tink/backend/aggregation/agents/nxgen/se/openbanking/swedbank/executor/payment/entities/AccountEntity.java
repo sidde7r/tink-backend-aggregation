@@ -15,14 +15,22 @@ public class AccountEntity {
     private String iban;
     private String bban;
 
-    public AccountEntity(String accountIdentifierValue, Type accountIdentifierType) {
+    public AccountEntity(String accountNumber, Type accountIdentifierType) {
         switch (accountIdentifierType) {
             case IBAN:
-                this.iban = accountIdentifierValue;
+                this.iban = accountNumber;
+                break;
+            case SE:
+                this.bban = accountNumber;
+            case SE_BG:
+                this.bban = accountNumber;
+                break;
+            case SE_PG:
+                this.bban = accountNumber;
                 break;
             default:
-                this.bban = accountIdentifierValue;
-                break;
+                throw new IllegalStateException(
+                        "Invalid account type: " + accountIdentifierType.toString());
         }
     }
 
@@ -43,16 +51,16 @@ public class AccountEntity {
     public Creditor toTinkCreditor(Type accountIdentifierType) {
         return new Creditor(
                 AccountIdentifier.create(
-                        accountIdentifierType, getAccountIdentifierValue(accountIdentifierType)));
+                        accountIdentifierType, getAccountNumber(accountIdentifierType)));
     }
 
-    public Debtor toTinkDebotor(Type accountIdentifierType) {
+    public Debtor toTinkDebtor(Type accountIdentifierType) {
         return new Debtor(
                 AccountIdentifier.create(
-                        accountIdentifierType, getAccountIdentifierValue(accountIdentifierType)));
+                        accountIdentifierType, getAccountNumber(accountIdentifierType)));
     }
 
-    private String getAccountIdentifierValue(Type accountIdentifierType) {
+    private String getAccountNumber(Type accountIdentifierType) {
         return accountIdentifierType.equals(Type.IBAN) ? iban : bban;
     }
 }
