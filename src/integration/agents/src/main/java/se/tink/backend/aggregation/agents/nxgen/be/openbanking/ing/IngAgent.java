@@ -86,7 +86,6 @@ public class IngAgent extends NextGenerationAgent {
                                         new IngTransactionsFetcher(apiClient)))));
     }
 
-
     @Override
     protected IngSessionHandler constructSessionHandler() {
         return new IngSessionHandler();
