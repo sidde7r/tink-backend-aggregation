@@ -140,6 +140,7 @@ junit_test(
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_google_inject_guice",
+        "//third_party:com_google_protobuf_protobuf_java",
         "//third_party:com_nimbusds_srp6a",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:commons_io_commons_io",
@@ -152,5 +153,8 @@ junit_test(
         "//third_party:org_mockito_mockito_core",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
+        "@tink_backend//src/libraries/event_producer_service_client",
+        "@tink_backend//src/libraries/uuid",
+        "@com_tink_api_grpc//event_producer_service/events:events_java_proto",
     ],
 )
