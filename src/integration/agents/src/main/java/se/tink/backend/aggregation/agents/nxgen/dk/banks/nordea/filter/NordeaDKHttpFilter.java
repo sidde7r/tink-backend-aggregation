@@ -6,25 +6,35 @@ import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.AbstractRetryFilter;
 
-public class NordeaDKHttpFilter extends Filter {
+public class NordeaDKHttpFilter extends AbstractRetryFilter {
+
+    public NordeaDKHttpFilter() {
+        super(3, 200);
+    }
 
     @Override
     public HttpResponse handle(HttpRequest httpRequest)
             throws HttpClientException, HttpResponseException {
 
-        HttpResponse response = nextFilter(httpRequest);
+        HttpResponse response = super.handle(httpRequest);
 
-        throwIfUnavailable(response);
+        // if retried many times and still unavailable, throw exception
+        if (isUnavailable(response)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
 
         return response;
     }
 
-    private void throwIfUnavailable(HttpResponse response) {
-        if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE
-                || response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
-            throw BankServiceError.BANK_SIDE_FAILURE.exception();
-        }
+    @Override
+    protected boolean shouldRetry(HttpResponse response) {
+        return isUnavailable(response);
+    }
+
+    private boolean isUnavailable(HttpResponse response) {
+        return response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE
+                || response.getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT;
     }
 }
