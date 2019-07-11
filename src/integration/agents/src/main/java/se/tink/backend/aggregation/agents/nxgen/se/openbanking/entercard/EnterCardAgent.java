@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
@@ -75,11 +74,6 @@ public final class EnterCardAgent extends NextGenerationAgent {
                                 transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
                                         new CreditCardTransactionFetcher(apiClient)))));
-    }
-
-    @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
     }
 
     @Override

@@ -5,9 +5,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
@@ -27,13 +29,16 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrossKeyAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     protected final CrossKeyApiClient apiClient;
     protected final CrossKeyConfiguration agentConfiguration;
     protected final CrossKeyPersistentStorage agentPersistentStorage;
 
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public CrossKeyAgent(
             CredentialsRequest request,
@@ -50,6 +55,12 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
                         this.metricRefreshController,
                         this.updateController,
                         new CrossKeyInvestmentsFetcher(this.apiClient, agentConfiguration));
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new CrossKeyLoanFetcher(this.apiClient, agentConfiguration));
     }
 
     @Override
@@ -92,12 +103,13 @@ public abstract class CrossKeyAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new CrossKeyLoanFetcher(this.apiClient, agentConfiguration)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

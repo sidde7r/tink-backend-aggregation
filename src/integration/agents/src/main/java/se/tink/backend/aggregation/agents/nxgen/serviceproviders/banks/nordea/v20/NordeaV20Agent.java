@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard.NordeaV20CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.investment.NordeaV20InvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.loan.NordeaV20LoanFetcher;
@@ -23,11 +25,12 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaV20Agent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
 
     protected final NordeaV20ApiClient nordeaClient;
     protected final NordeaV20Parser parser;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     protected NordeaV20Agent(
             CredentialsRequest request,
@@ -43,6 +46,12 @@ public abstract class NordeaV20Agent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new NordeaV20InvestmentFetcher(nordeaClient, parser));
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaV20LoanFetcher(nordeaClient, parser));
     }
 
     protected abstract NordeaV20ApiClient constructNordeaClient();
@@ -89,12 +98,13 @@ public abstract class NordeaV20Agent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NordeaV20LoanFetcher(nordeaClient, parser)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

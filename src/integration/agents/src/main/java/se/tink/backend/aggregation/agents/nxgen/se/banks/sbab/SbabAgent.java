@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
@@ -27,9 +30,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class SbabAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class SbabAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
     private final SbabApiClient apiClient;
     private final String clientName;
+
+    private final LoanRefreshController loanRefreshController;
 
     public SbabAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -37,6 +43,10 @@ public class SbabAgent extends NextGenerationAgent implements RefreshIdentityDat
 
         apiClient = new SbabApiClient(client, sessionStorage);
         clientName = request.getProvider().getPayload();
+
+        loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController, updateController, new SbabLoanFetcher(apiClient));
     }
 
     @Override
@@ -89,10 +99,13 @@ public class SbabAgent extends NextGenerationAgent implements RefreshIdentityDat
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController, updateController, new SbabLoanFetcher(apiClient)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

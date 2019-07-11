@@ -4,8 +4,10 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.authenticator.NordeaCodesAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.creditcard.NordeaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.investment.NordeaInvestmentFetcher;
@@ -27,10 +29,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordeaFiAgent extends NextGenerationAgent
-        implements RefreshInvestmentAccountsExecutor {
+        implements RefreshInvestmentAccountsExecutor, RefreshLoanAccountsExecutor {
 
     private final NordeaFiApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public NordeaFiAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -44,6 +47,12 @@ public class NordeaFiAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new NordeaInvestmentFetcher(apiClient));
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NordeaLoanFetcher(apiClient));
     }
 
     @Override
@@ -95,13 +104,13 @@ public class NordeaFiAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
 
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new NordeaLoanFetcher(apiClient)));
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

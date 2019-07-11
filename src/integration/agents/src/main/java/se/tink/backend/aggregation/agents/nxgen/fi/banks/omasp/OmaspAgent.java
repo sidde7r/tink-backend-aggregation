@@ -4,7 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.OmaspConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.OmaspAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.authentication.OmaspKeyCardAuthenticator;
@@ -27,8 +30,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
-public class OmaspAgent extends NextGenerationAgent implements RefreshIdentityDataExecutor {
+public class OmaspAgent extends NextGenerationAgent
+        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
     private final OmaspApiClient apiClient;
+    private final LoanRefreshController loanRefreshController;
 
     public OmaspAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -36,6 +41,10 @@ public class OmaspAgent extends NextGenerationAgent implements RefreshIdentityDa
         configureHttpClient(client);
 
         apiClient = new OmaspApiClient(client, sessionStorage);
+
+        loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController, updateController, new OmaspLoanFetcher(apiClient));
     }
 
     protected void configureHttpClient(TinkHttpClient client) {
@@ -85,12 +94,13 @@ public class OmaspAgent extends NextGenerationAgent implements RefreshIdentityDa
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new OmaspLoanFetcher(apiClient)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

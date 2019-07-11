@@ -3,7 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinanciali
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.DemoFinancialInstitutionConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.authenticator.DemoFinancialInstitutionAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.openbanking.demofinancialinstitution.configuration.DemoFinancialInstitutionConfiguration;
@@ -30,11 +33,13 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 /* This is the agent for the Demo Financial Institution which is a Tink developed test & demo bank */
 
 public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
 
     private final String clientName;
     private final DemoFinancialInstitutionApiClient apiClient;
     private final SessionStorage sessionStorage;
+
+    private final LoanRefreshController loanRefreshController;
 
     public DemoFinancialInstitutionAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -43,6 +48,12 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
         clientName = request.getProvider().getPayload();
         sessionStorage = new SessionStorage();
         apiClient = new DemoFinancialInstitutionApiClient(client, sessionStorage);
+
+        final DemoFinancialInstitutionLoanFetcher loanFetcher =
+                new DemoFinancialInstitutionLoanFetcher(apiClient, sessionStorage);
+
+        loanRefreshController =
+                new LoanRefreshController(metricRefreshController, updateController, loanFetcher);
     }
 
     @Override
@@ -101,12 +112,13 @@ public final class DemoFinancialInstitutionAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        final DemoFinancialInstitutionLoanFetcher loanFetcher =
-                new DemoFinancialInstitutionLoanFetcher(apiClient, sessionStorage);
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
 
-        return Optional.of(
-                new LoanRefreshController(metricRefreshController, updateController, loanFetcher));
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

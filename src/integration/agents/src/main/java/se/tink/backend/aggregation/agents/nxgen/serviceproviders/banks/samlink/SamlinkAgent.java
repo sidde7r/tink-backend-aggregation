@@ -5,7 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.authenticator.SamlinkKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.SamlinkCreditCardFetcher;
@@ -27,11 +30,12 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.identitydata.IdentityData;
 
 public abstract class SamlinkAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor {
+        implements RefreshIdentityDataExecutor, RefreshLoanAccountsExecutor {
 
     private final SamlinkApiClient apiClient;
     private final SamlinkSessionStorage samlinkSessionStorage;
     private final SamlinkPersistentStorage samlinkPersistentStorage;
+    private final LoanRefreshController loanRefreshController;
 
     public SamlinkAgent(
             CredentialsRequest request,
@@ -42,6 +46,12 @@ public abstract class SamlinkAgent extends NextGenerationAgent
         samlinkSessionStorage = new SamlinkSessionStorage(sessionStorage);
         apiClient = new SamlinkApiClient(client, samlinkSessionStorage, agentConfiguration);
         samlinkPersistentStorage = new SamlinkPersistentStorage(persistentStorage);
+
+        loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SamlinkLoanFetcher(apiClient));
     }
 
     @Override
@@ -88,12 +98,13 @@ public abstract class SamlinkAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new SamlinkLoanFetcher(apiClient)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

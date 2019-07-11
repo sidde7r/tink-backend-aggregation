@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
@@ -22,13 +25,23 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class DanskeBankDKAgent extends DanskeBankAgent {
+public class DanskeBankDKAgent extends DanskeBankAgent implements RefreshLoanAccountsExecutor {
 
     private static final int DK_MAX_CONSECUTIVE_EMPTY_PAGES = 8;
+    private final LoanRefreshController loanRefreshController;
 
     public DanskeBankDKAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new DanskeBankDKConfiguration());
+
+        // DK fetches loans at a separate loan endpoint
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        this.metricRefreshController,
+                        this.updateController,
+                        new DanskeBankLoanFetcher(
+                                this.credentials, this.apiClient, this.configuration));
+
         configureHttpClient(client);
     }
 
@@ -61,15 +74,14 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
                 danskeBankChallengeAuthenticator);
     }
 
-    // DK fetches loans at a separate loan endpoint
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        new DanskeBankLoanFetcher(
-                                this.credentials, this.apiClient, this.configuration)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

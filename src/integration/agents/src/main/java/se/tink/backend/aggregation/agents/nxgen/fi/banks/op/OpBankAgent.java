@@ -4,9 +4,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankIdentityFetcher;
@@ -32,11 +34,14 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OpBankAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final OpBankApiClient bankClient;
     private OpBankPersistentStorage opBankPersistentStorage;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public OpBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -49,6 +54,12 @@ public class OpBankAgent extends NextGenerationAgent
                         metricRefreshController,
                         updateController,
                         new OpBankInvestmentFetcher(bankClient, credentials));
+
+        this.loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new OpBankLoanFetcher(bankClient, credentials));
     }
 
     @Override
@@ -107,12 +118,13 @@ public class OpBankAgent extends NextGenerationAgent
     }
 
     @Override
-    public Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new OpBankLoanFetcher(bankClient, credentials)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override

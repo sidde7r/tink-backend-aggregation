@@ -4,9 +4,11 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
@@ -33,10 +35,13 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IngAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final IngApiClient ingApiClient;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public IngAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -49,6 +54,8 @@ public class IngAgent extends NextGenerationAgent
         this.investmentRefreshController =
                 new InvestmentRefreshController(
                         metricRefreshController, updateController, accountFetcher);
+
+        this.loanRefreshController = constructLoanRefreshController();
     }
 
     @Override
@@ -117,7 +124,16 @@ public class IngAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
+    }
+
+    private LoanRefreshController constructLoanRefreshController() {
         IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
@@ -129,14 +145,8 @@ public class IngAgent extends NextGenerationAgent
                 new TransactionFetcherController<>(
                         transactionPaginationHelper, paginationController);
 
-        LoanRefreshController refreshController =
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        accountFetcher,
-                        fetcherController);
-
-        return Optional.of(refreshController);
+        return new LoanRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
     }
 
     @Override

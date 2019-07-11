@@ -65,6 +65,7 @@ public final class LoanRefreshController
         return new FetchTransactionsResponse(this.fetchTransactions());
     }
 
+    @Deprecated
     @Override
     public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action =
@@ -96,6 +97,7 @@ public final class LoanRefreshController
         }
     }
 
+    @Deprecated
     @Override
     public Map<Account, List<Transaction>> fetchTransactions() {
         if (transactionFetcher == null) {

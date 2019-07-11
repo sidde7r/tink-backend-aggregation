@@ -6,9 +6,11 @@ import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.FetchIdentityDataResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshIdentityDataExecutor;
 import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.identitydata.BankiaIdentityDataFetcher;
@@ -32,10 +34,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BankiaAgent extends NextGenerationAgent
-        implements RefreshIdentityDataExecutor, RefreshInvestmentAccountsExecutor {
+        implements RefreshIdentityDataExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor {
 
     private final BankiaApiClient apiClient;
     private final InvestmentRefreshController investmentRefreshController;
+    private final LoanRefreshController loanRefreshController;
 
     public BankiaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -46,6 +51,12 @@ public final class BankiaAgent extends NextGenerationAgent
         BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
         investmentRefreshController =
                 new InvestmentRefreshController(metricRefreshController, updateController, fetcher);
+
+        loanRefreshController =
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BankiaLoanFetcher(apiClient));
 
         checkDeviceId();
     }
@@ -111,12 +122,13 @@ public final class BankiaAgent extends NextGenerationAgent
     }
 
     @Override
-    protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(
-                new LoanRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new BankiaLoanFetcher(apiClient)));
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        return loanRefreshController.fetchLoanAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return loanRefreshController.fetchLoanTransactions();
     }
 
     @Override
