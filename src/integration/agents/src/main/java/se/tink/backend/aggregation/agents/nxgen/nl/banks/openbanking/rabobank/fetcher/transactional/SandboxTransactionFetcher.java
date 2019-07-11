@@ -6,17 +6,18 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public final class TransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public final class SandboxTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final RabobankApiClient apiClient;
 
-    public TransactionFetcher(final RabobankApiClient apiClient) {
+    public SandboxTransactionFetcher(final RabobankApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
     public PaginatorResponse getTransactionsFor(
             final TransactionalAccount account, final Date fromDate, final Date toDate) {
-        return apiClient.getTransactions(account, fromDate, toDate, false);
+        return apiClient.getTransactions(account, fromDate, toDate, true);
     }
 }

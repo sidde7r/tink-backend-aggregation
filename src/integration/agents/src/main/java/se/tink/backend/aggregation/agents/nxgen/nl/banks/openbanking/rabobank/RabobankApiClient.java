@@ -150,7 +150,10 @@ public class RabobankApiClient {
     }
 
     public PaginatorResponse getTransactions(
-            final TransactionalAccount account, final Date fromDate, final Date toDate) {
+            final TransactionalAccount account,
+            final Date fromDate,
+            final Date toDate,
+            final boolean isSandbox) {
         final String accountId = account.getFromTemporaryStorage(StorageKey.RESOURCE_ID);
         final URL url = rabobankConfiguration.getUrls().buildTransactionsUrl(accountId);
 
@@ -160,7 +163,7 @@ public class RabobankApiClient {
 
         for (final String bookingStatus : bookingStatuses) {
             try {
-                return getTransactionsPages(url, fromDate, toDate, bookingStatus);
+                return getTransactionsPages(url, fromDate, toDate, bookingStatus, isSandbox);
             } catch (HttpResponseException e) {
                 final String message = e.getResponse().getBody(String.class);
                 if (message.toLowerCase().contains(ErrorMessages.BOOKING_STATUS_INVALID)) {
@@ -178,7 +181,11 @@ public class RabobankApiClient {
     }
 
     private PaginatorResponse getTransactionsPages(
-            final URL url, final Date fromDate, final Date toDate, final String bookingStatus) {
+            final URL url,
+            final Date fromDate,
+            final Date toDate,
+            final String bookingStatus,
+            final boolean isSandbox) {
 
         final SimpleDateFormat sdf =
                 new SimpleDateFormat(RabobankConstants.TRANSACTION_DATE_FORMAT);
@@ -202,7 +209,7 @@ public class RabobankApiClient {
                             .get(TransactionalTransactionsResponse.class);
             pages.add(page);
             currentPage++;
-        } while (currentPage <= page.getLastPage());
+        } while (currentPage <= page.getLastPage() && !isSandbox);
 
         return new CompositePaginatorResponse(pages);
     }
