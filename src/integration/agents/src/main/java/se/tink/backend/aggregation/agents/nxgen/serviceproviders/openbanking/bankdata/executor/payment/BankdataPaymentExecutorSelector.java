@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepReq
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentMultiStepResponse;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentRequest;
 import se.tink.backend.aggregation.nxgen.controllers.payment.PaymentResponse;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.libraries.payment.enums.PaymentStatus;
 import se.tink.libraries.payment.enums.PaymentType;
 import se.tink.libraries.payment.rpc.Payment;
@@ -210,12 +211,14 @@ public class BankdataPaymentExecutorSelector implements PaymentExecutor {
     @Override
     public CreateBeneficiaryMultiStepResponse createBeneficiary(
             CreateBeneficiaryMultiStepRequest createBeneficiaryMultiStepRequest) {
-        return null;
+        throw new NotImplementedException(
+                "Create beneficiary not yet implemented for " + this.getClass().getName());
     }
 
     @Override
     public PaymentResponse cancel(PaymentRequest paymentRequest) {
-        return null;
+        throw new NotImplementedException(
+                "Cancel not yet implemented for " + this.getClass().getName());
     }
 
     @Override
