@@ -164,6 +164,94 @@ data:
         {{- end }}
 
         {{- if $agentsConfig.sibs }}
+        activobank:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "ABPT"
+        atlanticoeuropa:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "ATLEU"
+        bancobpi-pt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BBPI"
+        bancoctt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BCTT"
+        bancomontepio:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "CEMG"
+        bankinter:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BNKI"
+        big:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BIG"
+        bpg:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BPG"
         caixa-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
@@ -175,7 +263,7 @@ data:
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "CGDPT"
-        santander-pt:
+        caixacrl-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
@@ -185,7 +273,51 @@ data:
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
-            aspspCode: "BST"
+            aspspCode: "CCAML"
+        caixa-fr:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "CGDFR"
+        cemah:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "CEMAH"
+        creditoagricola:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "GCA"
+        eurobic-pt:
+          tink:
+            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
+            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
+            certificateId: Tink-qsealc
+            clientId: "SIBS_CLIENT_ID_TINK_TAG"
+            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
+            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
+            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
+            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
+            aspspCode: "BIC"
         millenniumbcp:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
@@ -208,7 +340,7 @@ data:
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
             aspspCode: "NVB"
-        bancobpi-pt:
+        novobancoacores:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
@@ -218,8 +350,8 @@ data:
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
-            aspspCode: "BSBPI"
-        bankinter:
+            aspspCode: "NVBA"
+        santander-pt:
           tink:
             baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
             eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
@@ -229,18 +361,7 @@ data:
             clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
             clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
             redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
-            aspspCode: "BNKI"
-        bancomontepio:
-          tink:
-            baseUrl: "https://site1.sibsapimarket.com/sibs/apimarket"
-            eidasProxyBaseUrl: "https://tink-integration-eidas-proxy.eidas-proxy.svc.cluster.local:9022"
-            certificateId: Tink-qsealc
-            clientId: "SIBS_CLIENT_ID_TINK_TAG"
-            clientSecret: "SIBS_CLIENT_SECRET_TINK_TAG"
-            clientSigningCertificate: "SIBS_CERTIFICATE_P12_TINK_TAG"
-            clientSigningCertificateSerialNumber: "SIBS_CERTIFICATE_SERIAL_NUMBER_TINK_TAG"
-            redirectUrl: "https://main.staging.cardiff.tink.se/api/v1/credentials/third-party/callback"
-            aspspCode: "CEMG"
+            aspspCode: "BST"
         {{- end }}
 
         {{- if $agentsConfig.abnamro }}
