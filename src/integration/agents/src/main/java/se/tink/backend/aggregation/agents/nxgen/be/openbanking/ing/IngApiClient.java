@@ -1,15 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Urls.ACCOUNTS;
+import static se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Urls.TOKEN;
+
 import java.util.Date;
 import java.util.Optional;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.FormValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.HeaderKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.QueryKeys;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.QueryValues;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Signature;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.entities.AuthorizationEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.entities.SignatureEntity;
@@ -24,6 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.F
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.FetchBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.utils.IngUtils;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.berlingroup.utils.BerlinGroupUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -31,14 +28,14 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import tink.org.apache.http.client.utils.DateUtils;
 
-public final class IngApiClient {
+public class IngApiClient {
 
-    private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    protected final TinkHttpClient client;
+    protected final SessionStorage sessionStorage;
     private final String market;
     private IngConfiguration configuration;
 
-    IngApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
+    public IngApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.market = market;
@@ -46,7 +43,10 @@ public final class IngApiClient {
 
     public IngConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
-                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        IngConstants.ErrorMessages.MISSING_CONFIGURATION));
     }
 
     public void setConfiguration(IngConfiguration configuration) {
@@ -54,15 +54,27 @@ public final class IngApiClient {
     }
 
     public FetchAccountsResponse fetchAccounts() {
-        return buildRequestWithSignature(Urls.ACCOUNTS, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(
+                        ACCOUNTS,
+                        IngConstants.Signature.HTTP_METHOD_GET,
+                        IngConstants.FormValues.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchAccountsResponse.class);
     }
 
     public FetchBalancesResponse fetchBalances(final AccountEntity account) {
+
+        // TODO - Temporary fix due to Sandbox bugs
+        String balanceUrl =
+                account.getBalancesUrl()
+                        .replaceAll("/v3/", "/v3/accounts/")
+                        .replaceAll("currency=EUR", "balanceType=expected&currency=EUR");
+
         return buildRequestWithSignature(
-                        account.getBalancesUrl(), Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+                        balanceUrl,
+                        IngConstants.Signature.HTTP_METHOD_GET,
+                        IngConstants.FormValues.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchBalancesResponse.class);
@@ -70,32 +82,60 @@ public final class IngApiClient {
 
     public FetchTransactionsResponse fetchTransactions(
             final String reqPath, final Date fromDate, final Date toDate) {
+
         final String completeReqPath =
                 new URL(reqPath)
                         .queryParam(
-                                QueryKeys.DATE_FROM,
-                                DateUtils.formatDate(fromDate, QueryValues.DATE_FORMAT))
+                                IngConstants.QueryKeys.DATE_FROM,
+                                DateUtils.formatDate(
+                                        fromDate, IngConstants.QueryValues.DATE_FORMAT))
                         .queryParam(
-                                QueryKeys.DATE_TO,
-                                DateUtils.formatDate(toDate, QueryValues.DATE_FORMAT))
+                                IngConstants.QueryKeys.DATE_TO,
+                                DateUtils.formatDate(toDate, IngConstants.QueryValues.DATE_FORMAT))
+                        .queryParam(
+                                IngConstants.QueryKeys.LIMIT,
+                                "10") // TODO - Temporary added for Sandbox specification
                         .toString();
-
         return fetchTransactions(completeReqPath);
     }
 
-    public FetchTransactionsResponse fetchTransactions(final String reqPath) {
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+    public FetchTransactionsResponse fetchTransactions(String reqPath) {
+
+        // TODO - Temporary fix for Sandbnox API
+        String transactionUrl =
+                reqPath.replaceAll("/v2/", "/v2/accounts/")
+                        .replaceAll(
+                                "currency=EUR&dateFrom=2016-10-01&dateTo=2016-11-21&limit=10",
+                                "dateFrom=2018-05-15&dateTo=2018-05-16&limit=10&currency=EUR");
+
+        // TODO - Temporary fix for Sandbnox API
+        transactionUrl =
+                transactionUrl.substring(0, 13)
+                        + "5d8af012-89f0-4c1e-85d1-67d1adb45a04"
+                        + transactionUrl.substring(49);
+
+        return buildRequestWithSignature(
+                        transactionUrl,
+                        IngConstants.Signature.HTTP_METHOD_GET,
+                        IngConstants.FormValues.EMPTY)
                 .addBearerToken(getTokenFromSession())
                 .type(MediaType.APPLICATION_JSON)
                 .get(FetchTransactionsResponse.class);
     }
 
     public URL getAuthorizeUrl(final String state) {
-        final TokenResponse applicationTokenResponse = getApplicationAccessToken();
+        final TokenResponse tokenResponse = getApplicationAccessToken();
 
-        setApplicationTokenToSession(applicationTokenResponse.toTinkToken());
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
+        setClientIdToSession(tokenResponse.getClientId());
 
-        return new URL(getAuthorizationUrl(applicationTokenResponse).getLocation());
+        return new URL(getAuthorizationUrl(tokenResponse).getLocation())
+                .queryParam(IngConstants.QueryKeys.CLIENT_ID, tokenResponse.getClientId())
+                .queryParam(IngConstants.QueryKeys.SCOPE, tokenResponse.getScope())
+                .queryParam(IngConstants.QueryKeys.STATE, state)
+                .queryParam(
+                        IngConstants.QueryKeys.REDIRECT_URI, getConfiguration().getRedirectUrl())
+                .queryParam(IngConstants.QueryKeys.RESPONSE_TYPE, IngConstants.QueryValues.CODE);
     }
 
     public OAuth2Token getToken(final String code) {
@@ -113,7 +153,7 @@ public final class IngApiClient {
     }
 
     public void setTokenToSession(final OAuth2Token accessToken) {
-        sessionStorage.put(StorageKeys.TOKEN, accessToken);
+        sessionStorage.put(IngConstants.StorageKeys.TOKEN, accessToken);
     }
 
     private TokenResponse getApplicationAccessToken() {
@@ -121,16 +161,22 @@ public final class IngApiClient {
         final String date = getFormattedDate();
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
+
         final String authHeader =
-                Signature.SIGNATURE
+                IngConstants.Signature.SIGNATURE
                         + " "
                         + getAuthorization(
-                                Signature.HTTP_METHOD_POST, Urls.TOKEN, reqId, date, digest);
+                                getConfiguration().getClientCertificateId(),
+                                IngConstants.Signature.HTTP_METHOD_POST,
+                                TOKEN,
+                                reqId,
+                                date,
+                                digest);
 
-        return buildRequest(reqId, date, digest, Urls.TOKEN)
-                .header(HeaderKeys.AUTHORIZATION, authHeader)
+        return buildRequest(reqId, date, digest, TOKEN)
+                .header(IngConstants.HeaderKeys.AUTHORIZATION, authHeader)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getCertificate())
+                .header(IngConstants.HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getCertificate())
                 .post(TokenResponse.class, payload);
     }
 
@@ -139,18 +185,21 @@ public final class IngApiClient {
 
         final String reqPath =
                 new URL(Urls.OAUTH)
-                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
-                        .queryParam(QueryKeys.SCOPE, tokenResponse.getScope())
-                        .queryParam(QueryKeys.COUNTRY_CODE, market)
+                        .queryParam(IngConstants.QueryKeys.REDIRECT_URI, redirectUrl)
+                        .queryParam(IngConstants.QueryKeys.SCOPE, tokenResponse.getScope())
+                        .queryParam(IngConstants.QueryKeys.COUNTRY_CODE, market)
                         .toString();
 
-        return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
+        return buildRequestWithSignature(
+                        reqPath,
+                        IngConstants.Signature.HTTP_METHOD_GET,
+                        IngConstants.FormValues.EMPTY)
                 .addBearerToken(tokenResponse.toTinkToken())
                 .get(AuthorizationUrl.class);
     }
 
     private OAuth2Token fetchToken(final String payload) {
-        return buildRequestWithSignature(Urls.TOKEN, Signature.HTTP_METHOD_POST, payload)
+        return buildRequestWithSignature(TOKEN, IngConstants.Signature.HTTP_METHOD_POST, payload)
                 .addBearerToken(getApplicationTokenFromSession())
                 .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class)
@@ -165,52 +214,69 @@ public final class IngApiClient {
 
         return buildRequest(reqId, date, digest, reqPath)
                 .header(
-                        HeaderKeys.SIGNATURE,
-                        getAuthorization(httpMethod, reqPath, reqId, date, digest));
+                        IngConstants.HeaderKeys.SIGNATURE,
+                        getAuthorization(
+                                getClientIdFromSession(),
+                                httpMethod,
+                                reqPath,
+                                reqId,
+                                date,
+                                digest));
     }
 
     private RequestBuilder buildRequest(
             final String reqId, final String date, final String digest, final String reqPath) {
-        final String baseUrl = getConfiguration().getBaseUrl();
 
-        return client.request(baseUrl + reqPath)
+        return client.request(Urls.BASE_URL + reqPath)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.DIGEST, digest)
-                .header(HeaderKeys.DATE, date)
-                .header(HeaderKeys.X_ING_REQUEST_ID, reqId);
+                .header(IngConstants.HeaderKeys.DIGEST, digest)
+                .header(IngConstants.HeaderKeys.DATE, date)
+                .header(IngConstants.HeaderKeys.X_ING_REQUEST_ID, reqId);
     }
 
     private OAuth2Token getApplicationTokenFromSession() {
         return sessionStorage
-                .get(StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find application token!"));
+                .get(IngConstants.StorageKeys.APPLICATION_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(IngConstants.ErrorMessages.MISSING_TOKEN));
     }
 
     private void setApplicationTokenToSession(OAuth2Token token) {
-        sessionStorage.put(StorageKeys.APPLICATION_TOKEN, token);
+        sessionStorage.put(IngConstants.StorageKeys.APPLICATION_TOKEN, token);
+    }
+
+    private void setClientIdToSession(final String clientId) {
+        sessionStorage.put(IngConstants.StorageKeys.CLIENT_ID, clientId);
     }
 
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
-                .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+                .get(IngConstants.StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () -> new IllegalStateException(IngConstants.ErrorMessages.MISSING_TOKEN));
+    }
+
+    private String getClientIdFromSession() {
+        return sessionStorage
+                .get(IngConstants.StorageKeys.CLIENT_ID, String.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        IngConstants.ErrorMessages.MISSING_CLIENT_ID));
     }
 
     private String getCertificate() {
-        final String clientSigningCertificatePath =
-                getConfiguration().getClientSigningCertificatePath();
-
-        return new String(IngUtils.readFile(clientSigningCertificatePath));
+        return new String(
+                BerlinGroupUtils.readFile(getConfiguration().getClientSigningCertificatePath()));
     }
 
     private String getAuthorization(
+            final String clientId,
             final String httpMethod,
             final String reqPath,
             final String xIngRequestId,
             final String date,
             final String digest) {
-        final String clientId = getConfiguration().getClientId();
-
         return new AuthorizationEntity(
                         clientId, getSignature(httpMethod, reqPath, xIngRequestId, date, digest))
                 .toString();
@@ -222,20 +288,33 @@ public final class IngApiClient {
             final String xIngRequestId,
             final String date,
             final String digest) {
-        final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
+
+        final String clientSigningKey =
+                new String(BerlinGroupUtils.readFile(getConfiguration().getClientSigningKeyPath()));
 
         final SignatureEntity signatureEntity =
                 new SignatureEntity(httpMethod, reqPath, date, digest, xIngRequestId);
 
         return IngUtils.generateSignature(
-                signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
+                signatureEntity.toString(),
+                clientSigningKey,
+                IngConstants.Signature.SIGNING_ALGORITHM);
     }
 
     private String generateDigest(final String data) {
-        return Signature.DIGEST_PREFIX + IngUtils.calculateDigest(data);
+        return IngConstants.Signature.DIGEST_PREFIX + IngUtils.calculateDigest(data);
     }
 
     private String getFormattedDate() {
-        return IngUtils.getFormattedCurrentDate(Signature.DATE_FORMAT, Signature.TIMEZONE);
+        return IngUtils.getFormattedCurrentDate(
+                IngConstants.Signature.DATE_FORMAT, IngConstants.Signature.TIMEZONE);
+    }
+
+    public void authenticate() {
+
+        final TokenResponse tokenResponse = getApplicationAccessToken();
+
+        setApplicationTokenToSession(tokenResponse.toTinkToken());
+        setClientIdToSession(tokenResponse.getClientId());
     }
 }

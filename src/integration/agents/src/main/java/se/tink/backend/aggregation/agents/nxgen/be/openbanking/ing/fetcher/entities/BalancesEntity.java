@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Arrays;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -18,16 +19,19 @@ public class BalancesEntity {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date lastChangeDateTime;
 
-    public boolean isExpected() {
-        return balanceType.equalsIgnoreCase(IngConstants.BalanceTypes.EXPECTED);
-    }
+    public int getBalanceMappingPriority() {
 
-    public boolean isInterimBooked() {
-        return balanceType.equalsIgnoreCase(IngConstants.BalanceTypes.INTERIM_BOOKED);
-    }
-
-    public boolean isClosingBooked() {
-        return balanceType.equalsIgnoreCase(IngConstants.BalanceTypes.CLOSING_BOOKED);
+        return Arrays.stream(BalanceType.values())
+                .filter(enumBalanceType -> enumBalanceType.getValue().equalsIgnoreCase(balanceType))
+                .findAny()
+                .map(BalanceType::getPriority)
+                .orElseThrow(
+                        () ->
+                                new IllegalArgumentException(
+                                        String.format(
+                                                IngConstants.ErrorMessages.UNDEFINED_BALANCE_TYPE,
+                                                balanceType,
+                                                BalanceType.class.getName())));
     }
 
     public String getCurrency() {

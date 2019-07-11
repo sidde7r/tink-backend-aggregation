@@ -130,7 +130,7 @@ public abstract class NordeaBasePaymentExecutor implements PaymentExecutor {
                                     paymentResponses1.addAll(paymentResponses2);
                                     return paymentResponses1;
                                 },
-                                paymentResponses -> new PaymentListResponse(paymentResponses));
+                                PaymentListResponse::new);
 
         List<Try<PaymentListResponse>> allTries =
                 getSupportedPaymentTypes().stream()

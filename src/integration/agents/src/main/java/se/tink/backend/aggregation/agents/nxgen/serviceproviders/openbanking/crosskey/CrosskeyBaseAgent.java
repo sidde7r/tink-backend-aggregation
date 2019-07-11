@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
@@ -23,15 +26,24 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
+public abstract class CrosskeyBaseAgent extends NextGenerationAgent
+        implements RefreshCreditCardAccountsExecutor {
 
     protected final CrosskeyBaseApiClient apiClient;
+    private final CreditCardRefreshController creditCardRefreshController;
 
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
+
+        creditCardRefreshController =
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new CreditCardAccountFetcher(apiClient),
+                        new CreditCardTransactionFetcher(apiClient));
     }
 
     protected abstract String getIntegrationName();
@@ -87,17 +99,17 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    public Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.of(
-                new CreditCardRefreshController(
-                        metricRefreshController,
-                        updateController,
-                        new CreditCardAccountFetcher(apiClient),
-                        new CreditCardTransactionFetcher(apiClient)));
+    protected SessionHandler constructSessionHandler() {
+        return new CrosskeySessionHandler(apiClient);
     }
 
     @Override
-    protected SessionHandler constructSessionHandler() {
-        return new CrosskeySessionHandler(apiClient);
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return creditCardRefreshController.fetchCreditCardAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return creditCardRefreshController.fetchCreditCardTransactions();
     }
 }
