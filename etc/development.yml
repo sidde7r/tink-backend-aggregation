@@ -142,7 +142,6 @@ agentsServiceConfiguration:
         baseUrl: "https://api-sandbox.rabobank.nl/openapi/sandbox"
         clientSSLP12: "dummyCertificateBase64"
         clientSSLKeyPassword: ""
-        eidasProxyBaseUrl: "https://eidas-proxy.staging.aggregation.tink.network"
         certificateId: "Tink-qsealc"
       tink:
         clientId: "dummyClientId"
