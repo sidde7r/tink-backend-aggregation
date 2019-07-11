@@ -42,7 +42,7 @@ public class AktiaPaymentExecutor implements PaymentExecutor {
                         new AmountEntity(payment.getAmount()),
                         FormValues.REMITTANCE_INFORMATION_UNSTRUCTURED,
                         payment.getExecutionDate()
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                                .format(DateTimeFormatter.ofPattern(FormValues.DATE_FORMAT)));
 
         return apiClient
                 .createPayment(createPaymentRequest)

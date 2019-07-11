@@ -70,6 +70,7 @@ public final class AktiaConstants {
     public static class FormValues {
         public static final String END_TO_END_IDENTIFICATION = "100";
         public static final String REMITTANCE_INFORMATION_UNSTRUCTURED = "mock";
+        public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class ErrorMessages {
