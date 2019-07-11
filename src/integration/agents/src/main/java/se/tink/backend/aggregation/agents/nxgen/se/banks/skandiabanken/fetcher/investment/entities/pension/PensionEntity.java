@@ -75,12 +75,12 @@ public class PensionEntity {
 
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount() {
-        return InvestmentAccount.builder(this.number.replaceAll("[^\\d]", ""))
-                .setAccountNumber(this.number)
-                .setName(this.displayName)
+        return InvestmentAccount.builder(number.replaceAll("[^\\d]", ""))
+                .setAccountNumber(number)
+                .setName(displayName)
                 .setHolderName(getHolderName())
                 .setPortfolios(
-                        this.parts.stream()
+                        parts.stream()
                                 .map(this::getTinkPortfolio)
                                 .collect(Collectors.toList()))
                 .setCashBalance(Amount.inSEK(0.0)) // Amount is set in framework from parts.
