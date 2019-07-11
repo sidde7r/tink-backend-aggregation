@@ -63,10 +63,6 @@ public final class BankdataApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    private static String generateRandomState() {
-        return BerlinGroupUtils.getRequestId();
-    }
-
     private BankdataConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
@@ -95,7 +91,6 @@ public final class BankdataApiClient {
 
     public CreatePaymentResponse createPayment(
             CreatePaymentRequest paymentRequest, PaymentType type) throws PaymentException {
-
         final String productType = BankdataConstants.TYPE_TO_DOMAIN_MAPPER.get(type);
 
         URL url = new URL(configuration.getBaseUrl() + productType);
@@ -126,7 +121,7 @@ public final class BankdataApiClient {
         }
     }
 
-    public GetPaymentDetails getPaymentDetails(URL url) {
+    private GetPaymentDetails getPaymentDetails(URL url) {
         return createRequestInSession(url, StorageKeys.INITIAL_TOKEN).get(GetPaymentDetails.class);
     }
 
